@@ -1,0 +1,16 @@
+{
+  "aFieldUsedAcrossMultipleSchemas": "123456789012346",
+  "aFieldDefinedInline": "bar",
+  "links": [
+    {
+      "href": "/insert/context/AA11112A",
+      "rel": "self",
+      "method": "GET"
+    },
+    {
+      "href": "/insert/context/AA111112A/foo/bar",
+      "rel": "another-resource",
+      "method": "GET"
+    }
+  ]
+}
