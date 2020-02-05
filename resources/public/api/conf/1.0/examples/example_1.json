@@ -1,5 +1,5 @@
 {
-  "aFieldUsedAcrossMultipleSchemas": "123456789012345",
+  "anIdUsedAcrossMultipleSchemas": "123456789012345",
   "aFieldDefinedInline": "foo",
   "links": [
     {
