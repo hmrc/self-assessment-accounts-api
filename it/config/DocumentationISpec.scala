@@ -40,7 +40,7 @@ class DocumentationISpec extends IntegrationBaseSpec {
       |  "api":{
       |    "name":"Self Assessment Accounts API (MTD)",
       |    "description":"An API for retrieving accounts data for Self Assessment",
-      |    "context":"accounts/self-assessment",
+      |    "context":"individuals/accounts/self-assessment",
       |    "categories":["INCOME_TAX_MTD"],
       |    "versions":[
       |      {
