@@ -28,18 +28,18 @@ class DocumentationISpec extends IntegrationBaseSpec {
       |  "scopes":[
       |    {
       |      "key":"read:self-assessment",
-      |      "name":"#name#",
-      |      "description":"#desc#"
+      |      "name":"View your Self Assessment information",
+      |      "description":"Allow read access to self assessment data"
       |    },
       |    {
       |      "key":"write:self-assessment",
-      |      "name":"#name#",
-      |      "description":"#desc#"
+      |      "name":"Change your Self Assessment information",
+      |      "description":"Allow write access to self assessment data"
       |    }
       |  ],
       |  "api":{
       |    "name":"Self Assessment Accounts API (MTD)",
-      |    "description":"#desc#",
+      |    "description":"An API for retrieving accounts data for Self Assessment",
       |    "context":"accounts/self-assessment",
       |    "categories":["INCOME_TAX_MTD"],
       |    "versions":[
