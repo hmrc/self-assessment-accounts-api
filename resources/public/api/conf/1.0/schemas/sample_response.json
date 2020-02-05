@@ -10,7 +10,7 @@
       "type": "string",
       "example": "example"
     },
-    "links": { "$ref": "definitions.json#definitions/hateoasLinks"}
+    "links": { "$ref": "definitions.json#/definitions/hateoasLinks"}
   },
   "required": [
     "anIdUsedAcrossMultipleSchemas",

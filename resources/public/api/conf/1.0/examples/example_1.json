@@ -9,7 +9,7 @@
     },
     {
       "href": "/sample/context/AA111111A/foo/bar",
-      "rel": "another-resource",
+      "rel": "sample-rel",
       "method": "GET"
     }
   ]
