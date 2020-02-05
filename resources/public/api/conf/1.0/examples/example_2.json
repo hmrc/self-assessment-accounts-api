@@ -1,5 +1,5 @@
 {
-  "aFieldUsedAcrossMultipleSchemas": "123456789012346",
+  "anIdUsedAcrossMultipleSchemas": "123456789012346",
   "aFieldDefinedInline": "bar",
   "links": [
     {
