@@ -29,6 +29,7 @@ object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is inv
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 object FromDateFormatError extends MtdError("FORMAT_FROM_DATE", "The provided From date is invalid")
 object ToDateFormatError extends MtdError("FORMAT_TO_DATE", "The provided To date is invalid")
+object PaymentIdFormatError extends MtdError("FORMAT_PAYMENT_ID", "The provided payment ID is invalid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
