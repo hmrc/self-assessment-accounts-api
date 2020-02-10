@@ -16,6 +16,6 @@
 
 package v1.models.requestData
 
-import play.api.libs.json.JsValue
+import uk.gov.hmrc.domain.Nino
 
-case class SampleRawData(nino: String, taxYear: String, body: JsValue) extends RawData
+case class RetrieveAllocationsRequest(nino: Nino, paymentId: String)

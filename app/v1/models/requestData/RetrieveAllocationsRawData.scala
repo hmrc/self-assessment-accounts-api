@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-package v1.models.domain
+package v1.models.requestData
 
-import play.api.libs.json.{Json, Reads}
-
-case class SampleRequestBody(data: String)
-
-object SampleRequestBody {
-  implicit val reads: Reads[SampleRequestBody] = Json.reads[SampleRequestBody]
-}
+case class RetrieveAllocationsRawData(nino: String, paymentId: String) extends RawData

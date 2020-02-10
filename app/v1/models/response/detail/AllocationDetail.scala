@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.response.detail
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.SampleRequestBody
-
-case class SampleRequestData(nino: Nino, desTaxYear: DesTaxYear, body: SampleRequestBody)
+case class AllocationDetail(id: String,
+                            fromDate: String,
+                            toDate: String,
+                            typeOfTransaction: String,
+                            amount: BigDecimal,
+                            clearedAmount: BigDecimal)
