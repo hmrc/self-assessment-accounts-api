@@ -16,7 +16,7 @@
 
 package v1.models.response.detail
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
 class RetrieveAllocationsResponseSpec extends UnitSpec {
@@ -43,6 +43,53 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
+  val invalidDesJson: JsValue = Json.parse(
+    """
+      |{
+      | "paymentDetools": [
+      |   {
+      |    "paymentAmount": 1000.00,
+      |    "paymentMethod": "buttons",
+      |    "valueDate": "a date",
+      |    "sapClearingDocsDetails": [
+      |    {
+      |      "sapDocNumber": "someID",
+      |      "taxPeriodStartDate": "another date",
+      |      "taxPeriodEndDate": "an even later date",
+      |      "chargeType": "some type thing",
+      |      "amount": 600.00,
+      |      "clearedAmount": 100.00
+      |      }
+      |    ]
+      |   }
+      | ]
+      |}
+      |""".stripMargin)
+
+  val mtdJson: JsValue = Json.parse(
+    """
+      |{
+      | "paymentDetails": [
+      |   {
+      |     "amount": 1000.00,
+      |     "method": "buttons",
+      |     "transactionDate": "a date",
+      |     "allocations": [
+      |       {
+      |         "id": "someID",
+      |         "from": "another date",
+      |         "to": "an even later date",
+      |         "type": "some type thing",
+      |         "amount": 600.00,
+      |         "clearedAmount": 100.00
+      |       }
+      |     ]
+      |    }
+      |  ]
+      |}
+      |""".stripMargin
+  )
+
   val retrieveAllocationsResponse: RetrieveAllocationsResponse =
     RetrieveAllocationsResponse(
       Seq(PaymentDetails(
@@ -66,7 +113,19 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
   "RetrieveAllocationResponse" when {
     "read from valid JSON" should {
       "return the expected RetrieveAllocationResponse object" in {
-        desJson.as[PaymentDetails] shouldBe retrieveAllocationsResponse
+        desJson.as[RetrieveAllocationsResponse] shouldBe retrieveAllocationsResponse
+      }
+    }
+
+    "read from invalid JSON" should {
+      "return a JSError" in {
+        invalidDesJson.validate[RetrieveAllocationsResponse] shouldBe a[JsError]
+      }
+    }
+
+    "written to JSON" should {
+      "return the expected JsValue" in {
+        Json.toJson(retrieveAllocationsResponse) shouldBe mtdJson
       }
     }
   }

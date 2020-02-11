@@ -33,6 +33,19 @@ val desJson: JsValue = Json.parse(
     |   }
     |""".stripMargin)
 
+  val mtdJson: JsValue = Json.parse(
+    """
+      |{
+      | "id": "someID",
+      | "from": "another date",
+      | "to": "an even later date",
+      | "type": "some type thing",
+      | "amount": 600.00,
+      | "clearedAmount": 100.00
+      |}
+      |""".stripMargin
+  )
+
   val allocationDetail: AllocationDetail =
     AllocationDetail(
     "someID",
@@ -46,6 +59,12 @@ val desJson: JsValue = Json.parse(
     "read from valid JSON" should {
       "return the expected RetrieveAllocationResponse object" in {
         desJson.as[AllocationDetail] shouldBe allocationDetail
+      }
+
+      "written to JSON" should {
+        "return the expected JSValue" in {
+          Json.toJson(allocationDetail) shouldBe mtdJson
+        }
       }
     }
   }

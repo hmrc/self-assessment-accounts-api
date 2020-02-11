@@ -57,10 +57,37 @@ class PaymentDetailsSpec extends UnitSpec{
     )
   )
 
+  val mtdJson: JsValue = Json.parse(
+    """
+      |{
+      |   "amount": 1000.00,
+      |   "method": "buttons",
+      |   "transactionDate": "a date",
+      |   "allocations": [
+      |   {
+      |     "id": "someID",
+      |     "from": "another date",
+      |     "to": "an even later date",
+      |     "type": "some type thing",
+      |     "amount": 600.00,
+      |     "clearedAmount": 100.00
+      |   }
+      | ]
+      |}
+      |""".stripMargin
+  )
+
+
   "PaymentDetails" when {
     "read from valid JSON" should {
       "return the expected RetrieveAllocationResponse object" in {
         desJson.as[PaymentDetails] shouldBe paymentDetails
+      }
+    }
+
+    "written to JSON" should {
+      "return the expected JSValue" in {
+        Json.toJson(paymentDetails) shouldBe mtdJson
       }
     }
   }
