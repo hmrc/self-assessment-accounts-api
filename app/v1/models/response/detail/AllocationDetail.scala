@@ -16,9 +16,25 @@
 
 package v1.models.response.detail
 
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
+
 case class AllocationDetail(id: String,
-                            fromDate: String,
-                            toDate: String,
-                            typeOfTransaction: String,
+                            from: String,
+                            to: String,
+                            `type`: String,
                             amount: BigDecimal,
                             clearedAmount: BigDecimal)
+object AllocationDetail {
+
+  implicit val writes: OWrites[AllocationDetail] = Json.writes[AllocationDetail]
+
+  implicit val reads: Reads[AllocationDetail] = (
+    (JsPath \  "sapDocNumber").read[String] and
+      (JsPath \ "taxPeriodStartDate").read[String] and
+      (JsPath \ "taxPeriodEndDate").read[String] and
+      (JsPath \ "chargeType").read[String] and
+      (JsPath \ "amount").read[BigDecimal] and
+      (JsPath \ "clearedAmount").read[BigDecimal]
+    )(AllocationDetail.apply _)
+}

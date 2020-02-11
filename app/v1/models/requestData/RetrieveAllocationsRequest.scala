@@ -18,4 +18,4 @@ package v1.models.requestData
 
 import uk.gov.hmrc.domain.Nino
 
-case class RetrieveAllocationsRequest(nino: Nino, paymentId: String)
+case class RetrieveAllocationsRequest(nino: Nino, paymentLot: String, paymentLotItem: String)

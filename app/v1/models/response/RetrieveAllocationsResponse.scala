@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package v1.models.response
+package v1.models.response.detail
 
-import v1.models.response.detail.AllocationDetail
+import play.api.libs.json.{Json, OWrites, Reads}
 
-case class RetrieveAllocationsResponse(amount: BigDecimal,
-                                       method: String,
-                                       transactionDate: String,
-                                       allocations: Seq[AllocationDetail])
+case class RetrieveAllocationsResponse(paymentDetails: Seq[PaymentDetails])
+
+object RetrieveAllocationsResponse {
+  implicit val writes: OWrites[RetrieveAllocationsResponse] = Json.writes[RetrieveAllocationsResponse]
+
+  implicit val reads: Reads[RetrieveAllocationsResponse] = Json.reads[RetrieveAllocationsResponse]
+}
