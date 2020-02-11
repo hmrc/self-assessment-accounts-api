@@ -187,6 +187,17 @@ traits:
                 description: The format of the supplied payment identifier field is not valid
                 value:
                   code: FORMAT_PAYMENT_ID
+  formatLossId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatLossId:
+                description: The format of the loss ID is not valid.
+                value:
+                  code: FORMAT_LOSS_ID
   formatLossAmount:
     responses:
       400:
