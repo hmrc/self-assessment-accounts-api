@@ -4,7 +4,7 @@ title: Hello World
 version: 1.0
 
 protocols: [ HTTPS ]
-baseUri: https://helloworld.service.hmrc.gov.uk/
+baseUri: https://api.service.hmrc.gov.uk/
 
 documentation:
  - title: Overview
@@ -14,7 +14,7 @@ documentation:
  - title: Errors
    content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/errors.md
 
-mediaType: application/hal+json
+mediaType: application/json
 
 uses:
   sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
@@ -40,3 +40,6 @@ uses:
           name: Sample Endpoint
           description: This is a sample endpoint
         post: !include sample_post.raml
+    /payments:
+      /{paymentId}:
+        get: !include retrieveAllocations.raml

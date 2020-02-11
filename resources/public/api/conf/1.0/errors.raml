@@ -12,7 +12,7 @@ traits:
           application/json:
             type: types.errorResponse
             example:
-              description: The matching resource is not found.
+              description: The supplied income source could not be found
               value:
                 code: MATCHING_RESOURCE_NOT_FOUND
   notFoundIncomeSource:
@@ -176,17 +176,17 @@ traits:
                 description: A self-employment ID can only be supplied for a self-employment business type
                 value:
                   code: RULE_SELF_EMPLOYMENT_ID
-  formatLossId:
+  formatPaymentId:
     responses:
       400:
         body:
           application/json:
             type: types.errorResponse
             examples:
-              formatLossId:
-                description: The format of the loss ID is not valid.
+              formatPaymentId:
+                description: The format of the supplied payment identifier field is not valid
                 value:
-                  code: FORMAT_LOSS_ID
+                  code: FORMAT_PAYMENT_ID
   formatLossAmount:
     responses:
       400:
