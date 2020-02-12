@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.response.detail
+package v1.models.response.retrieveAllocations
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
+import v1.models.response.retrieveAllocations.detail.{AllocationDetail, PaymentDetails, RetrieveAllocationsResponse}
 
 class RetrieveAllocationsResponseSpec extends UnitSpec {
   val desJson: JsValue = Json.parse(

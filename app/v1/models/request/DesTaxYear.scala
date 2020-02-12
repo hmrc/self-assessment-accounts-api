@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.requestData
+package v1.models.request
 
 /**
   * Represents a tax year for DES

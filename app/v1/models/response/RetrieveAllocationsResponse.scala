@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.detail
+package v1.models.response.retrieveAllocations.detail
 
 import play.api.libs.json.{Json, OWrites, Reads}
 
