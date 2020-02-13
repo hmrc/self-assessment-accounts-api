@@ -21,17 +21,26 @@ import support.UnitSpec
 
 class AllocationDetailSpec extends UnitSpec {
 
-val desJson: JsValue = Json.parse(
-  """
-    | {
-    |   "sapDocNumber": "someID",
-    |   "taxPeriodStartDate": "another date",
-    |   "taxPeriodEndDate": "an even later date",
-    |   "chargeType": "some type thing",
-    |   "amount": 600.00,
-    |   "clearedAmount": 100.00
-    |   }
-    |""".stripMargin)
+  val desJson: JsValue = Json.parse(
+    """
+      | {
+      |   "sapDocNumber": "someID",
+      |   "taxPeriodStartDate": "another date",
+      |   "taxPeriodEndDate": "an even later date",
+      |   "chargeType": "some type thing",
+      |   "amount": 600.00,
+      |   "clearedAmount": 100.00
+      |   }
+      |""".stripMargin)
+
+  val desJsonWithMissing: JsValue = Json.parse(
+    """
+      | {
+      |   "taxPeriodStartDate": "another date",
+      |   "chargeType": "some type thing",
+      |   "clearedAmount": 100.00
+      |   }
+      |""".stripMargin)
 
   val mtdJson: JsValue = Json.parse(
     """
@@ -46,14 +55,33 @@ val desJson: JsValue = Json.parse(
       |""".stripMargin
   )
 
+  val mtdJsonWithMissing: JsValue = Json.parse(
+    """
+      |{
+      | "from": "another date",
+      | "type": "some type thing",
+      | "clearedAmount": 100.00
+      |}
+      |""".stripMargin
+  )
+
   val allocationDetail: AllocationDetail =
     AllocationDetail(
-    "someID",
-    "another date",
-    "an even later date",
-    "some type thing",
-    600.00,
-    100.00)
+      Some("someID"),
+      Some("another date"),
+      Some("an even later date"),
+      Some("some type thing"),
+      Some(600.00),
+      Some(100.00))
+
+  val allocationDetailWithMissing: AllocationDetail =
+    AllocationDetail(
+      None,
+      Some("another date"),
+      None,
+      Some("some type thing"),
+      None,
+      Some(100.00))
 
   "AllocationDetail" when {
     "read from valid JSON" should {
@@ -66,6 +94,19 @@ val desJson: JsValue = Json.parse(
           Json.toJson(allocationDetail) shouldBe mtdJson
         }
       }
+
+      "read from valid JSON with missing values" should {
+        "return the expected RetrieveAllocationResponse object" in {
+          desJsonWithMissing.as[AllocationDetail] shouldBe allocationDetailWithMissing
+        }
+      }
+
+      "written to JSON with missing values" should {
+        "return the expected JSValue" in {
+          Json.toJson(allocationDetailWithMissing) shouldBe mtdJsonWithMissing
+        }
+      }
+
     }
   }
 }

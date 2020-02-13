@@ -19,22 +19,22 @@ package v1.models.response.retrieveAllocations.detail
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
 
-case class AllocationDetail(id: String,
-                            from: String,
-                            to: String,
-                            `type`: String,
-                            amount: BigDecimal,
-                            clearedAmount: BigDecimal)
+case class AllocationDetail(id: Option[String],
+                            from: Option[String],
+                            to: Option[String],
+                            `type`: Option[String],
+                            amount: Option[BigDecimal],
+                            clearedAmount: Option[BigDecimal])
 object AllocationDetail {
 
   implicit val writes: OWrites[AllocationDetail] = Json.writes[AllocationDetail]
 
   implicit val reads: Reads[AllocationDetail] = (
-    (JsPath \  "sapDocNumber").read[String] and
-      (JsPath \ "taxPeriodStartDate").read[String] and
-      (JsPath \ "taxPeriodEndDate").read[String] and
-      (JsPath \ "chargeType").read[String] and
-      (JsPath \ "amount").read[BigDecimal] and
-      (JsPath \ "clearedAmount").read[BigDecimal]
+    (JsPath \  "sapDocNumber").readNullable[String] and
+      (JsPath \ "taxPeriodStartDate").readNullable[String] and
+      (JsPath \ "taxPeriodEndDate").readNullable[String] and
+      (JsPath \ "chargeType").readNullable[String] and
+      (JsPath \ "amount").readNullable[BigDecimal] and
+      (JsPath \ "clearedAmount").readNullable[BigDecimal]
     )(AllocationDetail.apply _)
 }

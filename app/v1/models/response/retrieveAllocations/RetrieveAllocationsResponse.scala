@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveAllocations.detail
+package v1.models.response.retrieveAllocations
+
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 case class RetrieveAllocationsResponse(amount: BigDecimal,
                                        method: String,

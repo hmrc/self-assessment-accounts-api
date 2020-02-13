@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveAllocations.detail
+package v1.models.response.retrieveAllocations
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 class RetrieveAllocationsResponseSpec extends UnitSpec {
 
@@ -87,12 +88,12 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       "a date",
       Some(Seq(
         AllocationDetail(
-          "someID",
-          "another date",
-          "an even later date",
-          "some type thing",
-          600.00,
-          100.00
+          Some("someID"),
+          Some("another date"),
+          Some("an even later date"),
+          Some("some type thing"),
+          Some(600.00),
+          Some(100.00)
         )
       ))
     )
