@@ -24,8 +24,11 @@ object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]
 }
 
+// Format Errors
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
+object FromDateFormatError extends MtdError("FORMAT_FROM_DATE", "The provided From date is invalid")
+object ToDateFormatError extends MtdError("FORMAT_TO_DATE", "The provided To date is invalid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
@@ -36,8 +39,17 @@ object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_B
 object RuleTaxYearRangeExceededError
     extends MtdError("RULE_TAX_YEAR_RANGE_EXCEEDED", "Tax year range exceeded. A tax year range of one year is required.")
 
+object RuleFromDateNotSupportedError extends MtdError("RULE_FROM_DATE_NOT_SUPPORTED", "The specified from date is not supported as too early")
+
+object MissingFromDateError extends MtdError("MISSING_FROM_DATE", "The From date parameter is missing")
+object MissingToDateError extends MtdError("MISSING_TO_DATE", "The To date parameter is missing")
+object ToDateBeforeFromDateError extends MtdError("RANGE_TO_DATE_BEFORE_FROM_DATE", "The To date must be after the From date")
+object RangeDateTooLongError extends MtdError("RANGE_DATE_TOO_LONG", "The specified date range is too big")
+
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
+
+object NoPaymentsFoundError extends MtdError("NO_PAYMENTS_FOUND", "No payments were found for this NINO")
 
 object DownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
 
