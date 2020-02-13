@@ -49,7 +49,7 @@ object RangeDateTooLongError extends MtdError("RANGE_DATE_TOO_LONG", "The specif
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
 
-object NoPaymentsFoundError extends MtdError("NO_PAYMENTS_FOUND", "No payments were found for this NINO")
+object NoPaymentsFoundError extends MtdError("NO_PAYMENTS_FOUND", "No payments found")
 
 object DownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
 
