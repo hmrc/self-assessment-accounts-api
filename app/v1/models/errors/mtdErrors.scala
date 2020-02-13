@@ -41,10 +41,11 @@ object RuleTaxYearRangeExceededError
 
 object RuleFromDateNotSupportedError extends MtdError("RULE_FROM_DATE_NOT_SUPPORTED", "The specified from date is not supported as too early")
 
+object RuleDateRangeInvalidError extends MtdError("RULE_DATE_RANGE_INVALID", "The specified date range is invalid")
+
 object MissingFromDateError extends MtdError("MISSING_FROM_DATE", "The From date parameter is missing")
 object MissingToDateError extends MtdError("MISSING_TO_DATE", "The To date parameter is missing")
-object ToDateBeforeFromDateError extends MtdError("RANGE_TO_DATE_BEFORE_FROM_DATE", "The To date must be after the From date")
-object RangeDateTooLongError extends MtdError("RANGE_DATE_TOO_LONG", "The specified date range is too big")
+object RangeToDateBeforeFromDateError extends MtdError("RANGE_TO_DATE_BEFORE_FROM_DATE", "The To date must be after the From date")
 
 //Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")

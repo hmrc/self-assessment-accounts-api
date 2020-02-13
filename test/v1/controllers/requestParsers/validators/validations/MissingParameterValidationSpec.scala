@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import support.UnitSpec
+import v1.models.errors.MissingFromDateError
 
-package object validations {
-
-  val dateFormat = DateTimeFormatter ofPattern "yyyy-MM-dd"
-  val maxDateRange = 732
-  val earliestDate = LocalDate.parse("2018-04-06", dateFormat)
-
-  val NoValidationErrors = List()
-
+class MissingParameterValidationSpec extends UnitSpec {
+  "validate" should {
+    "return an empty list" when {
+      "passed a non-empty Option" in {
+        MissingParameterValidation.validate(Some("from date"), MissingFromDateError) shouldBe List()
+      }
+    }
+    "return a list containing an error" when {
+      "passed an empty Option" in {
+        MissingParameterValidation.validate(None, MissingFromDateError) shouldBe List(MissingFromDateError)
+      }
+    }
+  }
 }

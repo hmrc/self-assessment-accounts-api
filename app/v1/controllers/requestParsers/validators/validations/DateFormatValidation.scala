@@ -14,17 +14,21 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
-package object validations {
+import v1.models.errors.MtdError
 
-  val dateFormat = DateTimeFormatter ofPattern "yyyy-MM-dd"
-  val maxDateRange = 732
-  val earliestDate = LocalDate.parse("2018-04-06", dateFormat)
+import scala.util.{Failure, Success, Try}
 
-  val NoValidationErrors = List()
+object DateFormatValidation {
+
+  def validate(date: String, error: MtdError): List[MtdError] = Try {
+    LocalDate.parse(date, dateFormat)
+  } match {
+    case Success(_) => NoValidationErrors
+    case Failure(_) => List(error)
+  }
 
 }

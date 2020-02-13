@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.ListPaymentsValidator
+import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
 
-package object validations {
+class ListPaymentsRequestDataParser @Inject()(val validator: ListPaymentsValidator)
+  extends RequestParser[ListPaymentsRawRequest, ListPaymentsParsedRequest] {
 
-  val dateFormat = DateTimeFormatter ofPattern "yyyy-MM-dd"
-  val maxDateRange = 732
-  val earliestDate = LocalDate.parse("2018-04-06", dateFormat)
-
-  val NoValidationErrors = List()
-
+  override protected def requestFor(data: ListPaymentsRawRequest): ListPaymentsParsedRequest =
+    ListPaymentsParsedRequest(Nino(data.nino), data.from.get, data.to.get)
 }

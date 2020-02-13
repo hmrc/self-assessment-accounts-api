@@ -18,4 +18,4 @@ package v1.models.request.listPayments
 
 import v1.models.request.RawData
 
-case class ListPaymentsRawRequest(nino: String, from: String, to: String) extends RawData
+case class ListPaymentsRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawData
