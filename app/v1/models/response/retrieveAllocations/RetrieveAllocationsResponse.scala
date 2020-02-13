@@ -16,12 +16,22 @@
 
 package v1.models.response.retrieveAllocations.detail
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class RetrieveAllocationsResponse(paymentDetails: Seq[PaymentDetails])
+case class RetrieveAllocationsResponse(amount: BigDecimal,
+                                       method: String,
+                                       transactionDate: String,
+                                       allocations: Option[Seq[AllocationDetail]])
 
 object RetrieveAllocationsResponse {
+
   implicit val writes: OWrites[RetrieveAllocationsResponse] = Json.writes[RetrieveAllocationsResponse]
 
-  implicit val reads: Reads[RetrieveAllocationsResponse] = Json.reads[RetrieveAllocationsResponse]
+  implicit val reads: Reads[RetrieveAllocationsResponse] = (
+      (JsPath \ "paymentDetails" \\ "paymentAmount").read[BigDecimal] and
+      (JsPath \ "paymentDetails" \\ "paymentMethod").read[String] and
+      (JsPath \ "paymentDetails" \\ "valueDate").read[String] and
+      (JsPath \ "paymentDetails" \\ "sapClearingDocsDetails").readNullable[Seq[AllocationDetail]]
+    )(RetrieveAllocationsResponse.apply _)
 }
