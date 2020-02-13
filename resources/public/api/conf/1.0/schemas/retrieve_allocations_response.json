@@ -74,10 +74,5 @@
         "allocationDetail"
       ]
     }
-  },
-  "required": [
-    "amount",
-    "method",
-    "transactionDate"
-  ]
+  }
 }
