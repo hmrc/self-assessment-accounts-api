@@ -18,17 +18,20 @@ package v1.models.response.listPayments
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class Payment(id: String, amount: BigDecimal, method: String, transactionDate: String)
+case class Payment(id: Option[String], amount: Option[BigDecimal], method: Option[String], transactionDate: Option[String])
 
 object Payment {
   implicit val reads: Reads[Payment] = for {
-    paymentLot <- (JsPath \ "paymentLot").read[String]
-    paymentLotItem <- (JsPath \ "paymentLotItem").read[String]
-    amount <- (JsPath \ "paymentAmount").read[BigDecimal]
-    method <- (JsPath \ "paymentMethod").read[String]
-    transactionDate <- (JsPath \ "valueDate").read[String]
+    paymentLot <- (JsPath \ "paymentLot").readNullable[String]
+    paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
+    amount <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
+    method <- (JsPath \ "paymentMethod").readNullable[String]
+    transactionDate <- (JsPath \ "valueDate").readNullable[String]
   } yield {
-    val id = s"$paymentLot-$paymentLotItem"
+    val id: Option[String] = for {
+      pl <- paymentLot
+      pli <- paymentLotItem
+    } yield s"$pl-$pli"
     Payment(id, amount, method, transactionDate)
   }
 

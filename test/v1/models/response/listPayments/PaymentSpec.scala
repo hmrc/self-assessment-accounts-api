@@ -32,6 +32,26 @@ class PaymentSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
+  private val desJsonWithNoPL = Json.parse(
+    """
+      |{
+      |  "paymentLotItem": "456",
+      |  "paymentAmount": 10.25,
+      |  "paymentMethod": "beans",
+      |  "valueDate": "10/01/2020"
+      |}
+      |""".stripMargin)
+
+  private val desJsonWithNoPLI = Json.parse(
+    """
+      |{
+      |  "paymentLot": "123",
+      |  "paymentAmount": 10.25,
+      |  "paymentMethod": "beans",
+      |  "valueDate": "10/01/2020"
+      |}
+      |""".stripMargin)
+
   private val invalidDesJson = Json.parse(
     """
       |{
@@ -43,7 +63,8 @@ class PaymentSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val mtdModel = Payment("123-456", 10.25, "beans", "10/01/2020")
+  private val mtdModel = Payment(Some("123-456"), Some(10.25), Some("beans"), Some("10/01/2020"))
+  private val mtdModelNoId = Payment(None, Some(10.25), Some("beans"), Some("10/01/2020"))
 
   private val mtdJson = Json.parse(
     """
@@ -55,19 +76,25 @@ class PaymentSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  "Payment" when {
-    "passed valid json" should {
-      "read to a valid model" in {
+  "Payment" should {
+    "read to a valid model" when {
+      "passed valid json" in {
         desJson.as[Payment] shouldBe mtdModel
       }
+      "passed valid json with no paymentLot" in {
+        desJsonWithNoPL.as[Payment] shouldBe mtdModelNoId
+      }
+      "passed valid json with no paymentLotItem" in {
+        desJsonWithNoPLI.as[Payment] shouldBe mtdModelNoId
+      }
     }
-    "passed invalid json" should {
-      "return a JsError" in {
+    "return a JsError" when {
+      "passed invalid json" in {
         invalidDesJson.validate[Payment] shouldBe a[JsError]
       }
     }
-    "passed a valid model" should {
-      "write to valid json" in {
+    "write to valid json" when {
+      "passed a valid model" in {
         Json.toJson(mtdModel) shouldBe mtdJson
       }
     }

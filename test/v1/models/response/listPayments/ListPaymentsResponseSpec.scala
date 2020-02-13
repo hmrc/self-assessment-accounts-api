@@ -51,7 +51,7 @@ class ListPaymentsResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val mtdModel = ListPaymentsResponse(Seq(Payment("123-456", 10.25, "beans", "10/01/2020")))
+  private val mtdModel = ListPaymentsResponse(Seq(Payment(Some("123-456"), Some(10.25), Some("beans"), Some("10/01/2020"))))
 
   private val mtdJson = Json.parse(
     """
