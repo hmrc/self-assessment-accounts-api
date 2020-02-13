@@ -5,17 +5,16 @@ uses:
 
 
 traits:
-  noDataFound:
+  notFound:
     responses:
       404:
         body:
           application/json:
             type: types.errorResponse
             example:
-              noDataFound:
-                description: The supplied income source could not be found
-                value:
-                  code: MATCHING_RESOURCE_NOT_FOUND
+              description: The supplied income source could not be found
+              value:
+                code: MATCHING_RESOURCE_NOT_FOUND
   notFoundIncomeSource:
     responses:
       404:
