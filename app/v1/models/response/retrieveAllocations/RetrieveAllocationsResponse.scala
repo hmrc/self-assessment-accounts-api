@@ -16,9 +16,6 @@
 
 package v1.models.response.retrieveAllocations
 
-
-import java.lang.management.MemoryType
-
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
