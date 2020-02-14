@@ -69,10 +69,10 @@
             "example": "100.25"
           }
         }
-      },
-      "required": [
-        "allocationDetail"
-      ]
+      }
     }
-  }
+  },
+  "required": [
+    "allocations"
+  ]
 }
