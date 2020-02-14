@@ -20,14 +20,14 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockRetrieveAllocationsValidator
 import v1.models.errors._
-import v1.models.requestData.{RetrieveAllocationsRawData, RetrieveAllocationsRequest}
+import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
 
 class RetreiveAllocationsDataParserSpec extends UnitSpec {
 
   val nino = "AA123456B"
-  val paymentId = "anId"
+  val paymentId = "anId-anotherId"
 
-  val inputData: RetrieveAllocationsRawData = RetrieveAllocationsRawData(nino, paymentId)
+  val inputData: RetrieveAllocationsRawRequest = RetrieveAllocationsRawRequest(nino, paymentId)
 
   trait Test extends MockRetrieveAllocationsValidator {
     lazy val parser = new RetrieveAllocationsDataParser(mockValidator)
@@ -41,7 +41,7 @@ class RetreiveAllocationsDataParserSpec extends UnitSpec {
           .returns(Nil)
 
         parser.parseRequest(inputData) shouldBe
-          Right(RetrieveAllocationsRequest(Nino(nino), "anId"))
+          Right(RetrieveAllocationsParsedRequest(Nino(nino), "anId", "anotherId"))
       }
     }
 

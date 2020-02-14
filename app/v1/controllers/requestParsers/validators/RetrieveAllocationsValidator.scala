@@ -18,20 +18,20 @@ package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
-import v1.models.requestData.RetrieveAllocationsRawData
+import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
 
-class RetrieveAllocationsValidator extends Validator[RetrieveAllocationsRawData] {
+class RetrieveAllocationsValidator extends Validator[RetrieveAllocationsRawRequest] {
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveAllocationsRawData => List[List[MtdError]] = (data: RetrieveAllocationsRawData) => {
+  private def parameterFormatValidation: RetrieveAllocationsRawRequest => List[List[MtdError]] = (data: RetrieveAllocationsRawRequest) => {
     List(
       NinoValidation.validate(data.nino),
       PaymentIdValidation.validate(data.paymentId)
     )
   }
 
-  override def validate(data: RetrieveAllocationsRawData): List[MtdError] = {
+  override def validate(data: RetrieveAllocationsRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
 }

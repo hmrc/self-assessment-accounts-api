@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.RetrieveAllocationsValidator
 import v1.models.errors.MtdError
-import v1.models.requestData.RetrieveAllocationsRawData
+import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
 
 class MockRetrieveAllocationsValidator extends MockFactory {
 
@@ -28,9 +28,9 @@ class MockRetrieveAllocationsValidator extends MockFactory {
 
   object MockRetrieveAllocationsValidator {
 
-    def validate(data: RetrieveAllocationsRawData): CallHandler1[RetrieveAllocationsRawData, List[MtdError]] = {
+    def validate(data: RetrieveAllocationsRawRequest): CallHandler1[RetrieveAllocationsRawRequest, List[MtdError]] = {
       (mockValidator
-        .validate(_: RetrieveAllocationsRawData))
+        .validate(_: RetrieveAllocationsRawRequest))
         .expects(data)
     }
   }

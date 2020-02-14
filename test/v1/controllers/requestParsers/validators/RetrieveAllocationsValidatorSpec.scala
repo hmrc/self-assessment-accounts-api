@@ -18,12 +18,12 @@ package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
 import v1.models.errors._
-import v1.models.requestData.RetrieveAllocationsRawData
+import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
 
 class RetrieveAllocationsValidatorSpec extends UnitSpec {
 
   private val validNino = "AA123456A"
-  private val validPaymentId = "thisPaymentIdIsPerfectlyValid"
+  private val validPaymentId = "AF234F-12DFA"
 
 
   val validator = new RetrieveAllocationsValidator()
@@ -31,27 +31,27 @@ class RetrieveAllocationsValidatorSpec extends UnitSpec {
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in {
-        validator.validate(RetrieveAllocationsRawData(validNino, validPaymentId)) shouldBe Nil
+        validator.validate(RetrieveAllocationsRawRequest(validNino, validPaymentId)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
       "an invalid nino is supplied" in {
-        validator.validate(RetrieveAllocationsRawData("A12344A", validPaymentId)) shouldBe
+        validator.validate(RetrieveAllocationsRawRequest("A12344A", validPaymentId)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return PaymentIdFormatError error" when {
       "an invalid paymentId is supplied" in {
-        validator.validate(RetrieveAllocationsRawData(validNino, "not a valid payment ID")) shouldBe
+        validator.validate(RetrieveAllocationsRawRequest(validNino, "not a valid payment ID")) shouldBe
           List(PaymentIdFormatError)
       }
     }
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {
-        validator.validate(RetrieveAllocationsRawData("A12344A", "not a valid payment ID")) shouldBe
+        validator.validate(RetrieveAllocationsRawRequest("A12344A", "not a valid payment ID")) shouldBe
           List(NinoFormatError, PaymentIdFormatError)
       }
     }

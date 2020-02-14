@@ -19,12 +19,17 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveAllocationsValidator
-import v1.models.requestData.{RetrieveAllocationsRawData, RetrieveAllocationsRequest}
+import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
 
 class RetrieveAllocationsDataParser @Inject()(val validator: RetrieveAllocationsValidator)
-  extends RequestParser[RetrieveAllocationsRawData, RetrieveAllocationsRequest] {
+  extends RequestParser[RetrieveAllocationsRawRequest, RetrieveAllocationsParsedRequest] {
 
-  override protected def requestFor(data: RetrieveAllocationsRawData): RetrieveAllocationsRequest =
-    RetrieveAllocationsRequest(Nino(data.nino), data.paymentId)
+  override protected def requestFor(data: RetrieveAllocationsRawRequest): RetrieveAllocationsParsedRequest = {
+
+    val paymentLot = data.paymentId.split("-")(0)
+    val paymentLotItem  = data.paymentId.split("-")(1)
+
+    RetrieveAllocationsParsedRequest(Nino(data.nino), paymentLot, paymentLotItem)
+  }
 
 }
