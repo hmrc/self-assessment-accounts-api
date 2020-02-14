@@ -37,7 +37,7 @@ object RetrieveAllocationsResponse {
       (JsPath \ "paymentDetails" \\ "paymentMethod").readNullable[String] and
       (JsPath \ "paymentDetails" \\ "valueDate").readNullable[String] and
       (JsPath \ "paymentDetails" \\ "sapClearingDocsDetails").readNullable[Seq[AllocationDetail]]
-        .map(_.map(_.filterNot((_ == AllocationDetail.emptyAllocation))))
+        .map(_.map(_.filterNot(_ == AllocationDetail.emptyAllocation)))
         .map{
         case Some(Nil) => None
         case notEmpty => notEmpty
