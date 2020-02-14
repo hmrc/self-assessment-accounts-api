@@ -27,6 +27,8 @@ case class AllocationDetail(id: Option[String],
                             clearedAmount: Option[BigDecimal])
 object AllocationDetail {
 
+ val emptyAllocation: AllocationDetail = AllocationDetail(None,None,None,None,None,None)
+
   implicit val writes: OWrites[AllocationDetail] = Json.writes[AllocationDetail]
 
   implicit val reads: Reads[AllocationDetail] = (

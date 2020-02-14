@@ -17,13 +17,15 @@
 package v1.models.response.retrieveAllocations
 
 
+import java.lang.management.MemoryType
+
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
-case class RetrieveAllocationsResponse(amount: BigDecimal,
-                                       method: String,
-                                       transactionDate: String,
+case class RetrieveAllocationsResponse(amount: Option[BigDecimal],
+                                       method: Option[String],
+                                       transactionDate: Option[String],
                                        allocations: Option[Seq[AllocationDetail]])
 
 object RetrieveAllocationsResponse {
@@ -31,9 +33,14 @@ object RetrieveAllocationsResponse {
   implicit val writes: OWrites[RetrieveAllocationsResponse] = Json.writes[RetrieveAllocationsResponse]
 
   implicit val reads: Reads[RetrieveAllocationsResponse] = (
-      (JsPath \ "paymentDetails" \\ "paymentAmount").read[BigDecimal] and
-      (JsPath \ "paymentDetails" \\ "paymentMethod").read[String] and
-      (JsPath \ "paymentDetails" \\ "valueDate").read[String] and
+      (JsPath \ "paymentDetails" \\ "paymentAmount").readNullable[BigDecimal] and
+      (JsPath \ "paymentDetails" \\ "paymentMethod").readNullable[String] and
+      (JsPath \ "paymentDetails" \\ "valueDate").readNullable[String] and
       (JsPath \ "paymentDetails" \\ "sapClearingDocsDetails").readNullable[Seq[AllocationDetail]]
+        .map(_.map(_.filterNot((_ == AllocationDetail.emptyAllocation))))
+        .map{
+        case Some(Nil) => None
+        case notEmpty => notEmpty
+        }
     )(RetrieveAllocationsResponse.apply _)
 }

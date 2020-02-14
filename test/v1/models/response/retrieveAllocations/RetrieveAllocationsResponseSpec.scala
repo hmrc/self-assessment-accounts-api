@@ -81,11 +81,29 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
+  val desJsonWithEmptyAllocations: JsValue = Json.parse(
+    """
+      |{
+      | "paymentDetails": [
+      |   {
+      |   "paymentAmount": 1000.00,
+      |   "paymentMethod": "buttons",
+      |   "valueDate": "a date",
+      |   "sapClearingDocsDetails": [
+      |     {
+      |
+      |     }
+      |    ]
+      |   }
+      |  ]
+      |}
+      |""".stripMargin)
+
   val paymentDetails: RetrieveAllocationsResponse =
     RetrieveAllocationsResponse(
-      1000.00,
-      "buttons",
-      "a date",
+      Some(1000.00),
+      Some("buttons"),
+      Some("a date"),
       Some(Seq(
         AllocationDetail(
           Some("someID"),
@@ -100,9 +118,9 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
 
   val paymentDetailsWithoutAllocations: RetrieveAllocationsResponse =
     RetrieveAllocationsResponse(
-      1000.00,
-      "buttons",
-      "a date",
+      Some(1000.00),
+      Some("buttons"),
+      Some("a date"),
       None
     )
 
@@ -151,9 +169,15 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       }
     }
 
-    "written from valid JSON without allocations" should {
+    "read from valid JSON without allocations" should {
       "return the expected object" in {
         desJsonWithoutAllocations.as[RetrieveAllocationsResponse] shouldBe paymentDetailsWithoutAllocations
+      }
+    }
+
+    "read from valid JSON with empty allocations" should {
+      "return the expected object" in {
+        desJsonWithEmptyAllocations.as[RetrieveAllocationsResponse] shouldBe paymentDetailsWithoutAllocations
       }
     }
 
