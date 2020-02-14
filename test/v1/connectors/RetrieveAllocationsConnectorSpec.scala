@@ -21,17 +21,31 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.domain.EmptyJsonBody
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.RetrieveAllocationsRequest
-import v1.models.response.RetrieveAllocationsResponse
+import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
+import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 
 import scala.concurrent.Future
 
 class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
-  val paymentId = "anId"
 
-  val retrieveAllocationsResponse = RetrieveAllocationsResponse(1000)
+  val paymentLot = "anId"
+  val paymentLotItem = "anotherId"
+
+  val queryParams: Seq[(String, String)] =
+    Seq(
+      "paymentLot" -> paymentLot,
+      "paymentLotItem" -> paymentLotItem
+    )
+
+  val retrieveAllocationsResponse: RetrieveAllocationsResponse =
+    RetrieveAllocationsResponse(
+      amount = Some(100.00),
+      method = Some("aMethod"),
+      transactionDate = Some("aDate"),
+      allocations = None
+    )
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -45,20 +59,20 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
 
   "RetrieveAllocationsConnector" when {
     "retrieving allocations" must {
-      val request: RetrieveAllocationsRequest = RetrieveAllocationsRequest(nino, paymentId)
+      val request: RetrieveAllocationsParsedRequest = RetrieveAllocationsParsedRequest(nino, paymentLot, paymentLotItem)
 
       "return a valid response" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))
 
         MockedHttpClient
-          .post(
-            url = s"$baseUrl/cross-regime/payment-allocation/nino/$nino/ITSA?paymentReference=${request.paymentId}",
-            body = EmptyJsonBody,
+          .get(
+            url = s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+            queryParams = queryParams,
             requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieve(request)) shouldBe outcome
+        await(connector.retrieveAllocations(request)) shouldBe outcome
       }
     }
   }

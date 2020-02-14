@@ -20,8 +20,8 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.requestData.RetrieveAllocationsRequest
-import v1.models.response.RetrieveAllocationsResponse
+import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
+import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,7 +29,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
                                              val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrieve(request: RetrieveAllocationsRequest)(
+  def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext): Future[DesOutcome[RetrieveAllocationsResponse]] = {
 
@@ -37,8 +37,15 @@ class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
 
     val nino = request.nino.nino
 
+    val queryParams: Seq[(String, String)] =
+      Seq(
+        "paymentLot" -> request.paymentLot,
+        "paymentLotItem" -> request.paymentLotItem
+      )
+
     get(
-      DesUri[RetrieveAllocationsResponse](s"cross-regime/payment-allocation/nino/$nino/ITSA?paymentReference=${request.paymentId}")
+      uri = DesUri[RetrieveAllocationsResponse](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
+      queryParams = queryParams
     )
   }
 }
