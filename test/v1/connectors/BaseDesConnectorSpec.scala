@@ -32,7 +32,7 @@ class BaseDesConnectorSpec extends ConnectorSpec {
 
   // WLOG
   val body = "body"
-
+  val queryParams: Seq[(String, String)] = Seq("aParam" -> "aValue")
   val outcome = Right(ResponseWrapper(correlationId, Result(2)))
 
   val url = "some/url?param=value"
@@ -67,6 +67,16 @@ class BaseDesConnectorSpec extends ConnectorSpec {
         .returns(Future.successful(outcome))
 
       await(connector.get(DesUri[Result](url))) shouldBe outcome
+    }
+  }
+
+  "get (with query parameters)" must {
+    "get with the requred des headers and return the result" in new Test {
+      MockedHttpClient
+        .get(absoluteUrl, queryParams,"Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+        .returns(Future.successful(outcome))
+
+      await(connector.get(DesUri[Result](url), queryParams)) shouldBe outcome
     }
   }
 }
