@@ -25,8 +25,8 @@ import v1.connectors.RetrieveAllocationsConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors.{DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, PaymentIdFormatError}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.RetrieveAllocationsRequest
-import v1.models.response.RetrieveAllocationsResponse
+import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
+import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,13 +34,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveAllocationsService @Inject()(retrieveAllocationsConnector: RetrieveAllocationsConnector) extends DesResponseMappingSupport with Logging {
 
-  def retrieve(request: RetrieveAllocationsRequest)(
+  def retrieve(request: RetrieveAllocationsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(retrieveAllocationsConnector.retrieve(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(retrieveAllocationsConnector.retrieveAllocations(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper.map(des => des)
 
     result.value

@@ -23,8 +23,8 @@ import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockRetrieveAllocationsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.requestData.RetrieveAllocationsRequest
-import v1.models.response.RetrieveAllocationsResponse
+import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
+import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -32,10 +32,16 @@ import scala.concurrent.Future
 class RetrieveAllocationsServiceSpec extends UnitSpec {
 
   private val nino = "AA123456A"
-  private val paymentId = "anId"
+  private val paymentLot = "anId"
+  private val paymentLotItem = "anotherId"
   private val correlationId = "X-123"
 
-  private val requestData: RetrieveAllocationsRequest = RetrieveAllocationsRequest(Nino(nino), paymentId)
+  private val requestData: RetrieveAllocationsParsedRequest =
+    RetrieveAllocationsParsedRequest(
+      nino = Nino(nino),
+      paymentLot = paymentLot,
+      paymentLotItem = paymentLotItem
+    )
 
   trait Test extends MockRetrieveAllocationsConnector {
 
@@ -50,10 +56,19 @@ class RetrieveAllocationsServiceSpec extends UnitSpec {
   "service" when {
     "service call successsful" must {
       "return mapped result" in new Test {
-        MockRetrieveAllocationsConnector.retrieve(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, RetrieveAllocationsResponse(100)))))
 
-        await(service.retrieve(requestData)) shouldBe Right(ResponseWrapper(correlationId, RetrieveAllocationsResponse(100)))
+        val connectorResponse: RetrieveAllocationsResponse =
+          RetrieveAllocationsResponse(
+            amount = Some(100.5),
+            method = Some("Beanz"),
+            transactionDate = Some("31/2/2003"),
+            allocations = None
+          )
+
+        MockRetrieveAllocationsConnector.retrieve(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
+
+        await(service.retrieve(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
       }
     }
 
