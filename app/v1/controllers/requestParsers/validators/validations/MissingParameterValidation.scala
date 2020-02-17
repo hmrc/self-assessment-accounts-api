@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.controllers.requestParsers.validators.validations
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import v1.models.errors.MtdError
 
-package object validations {
+object MissingParameterValidation {
 
-  val dateFormat = DateTimeFormatter ofPattern "yyyy-MM-dd"
-  val maxDateRange = 732
-  val earliestDate = LocalDate.parse("2018-04-06", dateFormat)
-
-  val NoValidationErrors = List()
+  def validate[T](input: Option[T], error: MtdError): List[MtdError] = input match {
+    case Some(_) => NoValidationErrors
+    case None => List(error)
+  }
 
 }
