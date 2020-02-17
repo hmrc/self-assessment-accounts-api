@@ -95,6 +95,7 @@ class RetrieveAllocationsServiceSpec extends UnitSpec {
           ("INVALID_DATE_FROM", DownstreamError),
           ("INVALID_DATE_TO", DownstreamError),
           ("REQUEST_NOT_PROCESSED", DownstreamError),
+          ("PARTIALLY_MIGRATED", DownstreamError),
           ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
