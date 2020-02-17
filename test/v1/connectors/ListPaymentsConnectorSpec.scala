@@ -20,35 +20,43 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
-import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
+import v1.models.request.listPayments.ListPaymentsParsedRequest
+import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
 import scala.concurrent.Future
 
-class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
+class ListPaymentsConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
 
-  val paymentLot = "anId"
-  val paymentLotItem = "anotherId"
+  val from = "2020-01-01"
+  val to = "2020-01-02"
 
-  val queryParams: Seq[(String, String)] =
-    Seq(
-      "paymentLot" -> paymentLot,
-      "paymentLotItem" -> paymentLotItem
-    )
+  val queryParams: Seq[(String, String)] = Seq(
+    "dateFrom" -> from,
+    "dateTo" -> to
+  )
 
-  val retrieveAllocationsResponse: RetrieveAllocationsResponse =
-    RetrieveAllocationsResponse(
-      amount = Some(100.00),
-      method = Some("aMethod"),
-      transactionDate = Some("aDate"),
-      allocations = None
+  val response = ListPaymentsResponse(
+    payments = Seq(
+      Payment(
+        id = Some("123-456"),
+        amount = Some(10.25),
+        method = Some("beans"),
+        transactionDate = Some("2020-01-01")
+      ),
+      Payment(
+        id = Some("234-567"),
+        amount = Some(20.25),
+        method = Some("more beans"),
+        transactionDate = Some("2020-01-02")
+      )
     )
+  )
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveAllocationsConnector = new RetrieveAllocationsConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: ListPaymentsConnector = new ListPaymentsConnector(http = mockHttpClient, appConfig = mockAppConfig)
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -56,12 +64,11 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "RetrieveAllocationsConnector" when {
-    "retrieving allocations" must {
-      val request: RetrieveAllocationsParsedRequest = RetrieveAllocationsParsedRequest(nino, paymentLot, paymentLotItem)
-
+  "ListPaymentsConnector" when {
+    "retrieving a list of payments" should {
       "return a valid response" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))
+        val request: ListPaymentsParsedRequest = ListPaymentsParsedRequest(nino, from, to)
+        val outcome = Right(ResponseWrapper(correlationId, response))
 
         MockedHttpClient
           .get(
@@ -71,8 +78,9 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveAllocations(request)) shouldBe outcome
+        await(connector.listPayments(request)) shouldBe outcome
       }
     }
   }
+
 }
