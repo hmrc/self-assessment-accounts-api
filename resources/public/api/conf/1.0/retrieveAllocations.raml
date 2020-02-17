@@ -5,7 +5,7 @@ is:
   - errors.formatPaymentId
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
-displayName: "Retrieve A Self Assessment Payment's Allocation Details"
+displayName: "Retrieve A Self Assessment Payment's Allocation Details [Test Only]"
 description: This endpoint allows a developer to retrieve the allocation details of a specific payment against one or more liabilities. The unique identifier must be used for both the account (National Insurance Number) and the payment (Payment Reference).
 (annotations.sandboxData): !include scenarios/retrieveAllocations.md
 (annotations.scope): "read:self-assessment"
@@ -17,8 +17,11 @@ responses:
         type: !include schemas/retrieve_allocations_response.json
         examples:
           example-1:
-            description: Example Allocations Response
+            description: Example Response with Allocations
             value: !include examples/retrieveAllocations/retrieve_response.json
+          example-2:
+            description: Example Response with no Allocations
+            value: !include examples/retrieveAllocations/retrieve_no_allocations_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
