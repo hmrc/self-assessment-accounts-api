@@ -12,6 +12,10 @@
             <td><p>Simulate a successful response.</p></td>
         </tr>
         <tr>
+            <td><p>NO_ALLOCATIONS</p></td>
+            <td><p>Simulates the scenario where no allocations can be found.</p></td>
+        </tr>
+        <tr>
             <td><p>NOT_FOUND</p></td>
             <td><p>Simulates the scenario where no data can be found.</p></td>
         </tr>
