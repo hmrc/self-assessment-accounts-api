@@ -21,6 +21,7 @@ import utils.Logging
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
+import v1.models.response.listPayments.ListPaymentsResponse
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 
@@ -41,6 +42,21 @@ class DesResponseMappingSupportSpec extends UnitSpec {
     case "ERR1" => Error1
     case "ERR2" => Error2
     case "DS" => DownstreamError
+  }
+
+  "validateListPaymentsSuccessResponse" when {
+    "passed a ListPaymentsResponse with an empty payments list" should {
+      "return a NoPaymentsFoundError error" in {
+        mapping.validateListPaymentsSuccessResponse(ResponseWrapper(correlationId, ListPaymentsResponse(payments = Seq()))) shouldBe
+          Left(ErrorWrapper(Some(correlationId), NoPaymentsFoundError))
+      }
+    }
+    "passed anything else " should {
+      "pass it through" in {
+        mapping.validateListPaymentsSuccessResponse(ResponseWrapper(correlationId, NotFoundError)) shouldBe
+          Right(ResponseWrapper(correlationId, NotFoundError))
+      }
+    }
   }
 
   "mapping Des errors" when {
