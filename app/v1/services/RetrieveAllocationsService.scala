@@ -32,15 +32,15 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAllocationsService @Inject()(retrieveAllocationsConnector: RetrieveAllocationsConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveAllocationsService @Inject()(connector: RetrieveAllocationsConnector) extends DesResponseMappingSupport with Logging {
 
-  def retrieve(request: RetrieveAllocationsParsedRequest)(
+  def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(retrieveAllocationsConnector.retrieveAllocations(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieveAllocations(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper.map(des => des)
 
     result.value

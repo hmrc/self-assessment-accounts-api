@@ -49,7 +49,7 @@ class RetrieveAllocationsServiceSpec extends UnitSpec {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new RetrieveAllocationsService(
-      retrieveAllocationsConnector = mockRetrieveAllocationsConnector
+      connector = mockRetrieveAllocationsConnector
     )
   }
 
@@ -68,7 +68,7 @@ class RetrieveAllocationsServiceSpec extends UnitSpec {
         MockRetrieveAllocationsConnector.retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
-        await(service.retrieve(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
+        await(service.retrieveAllocations(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
       }
     }
 
@@ -81,7 +81,7 @@ class RetrieveAllocationsServiceSpec extends UnitSpec {
             MockRetrieveAllocationsConnector.retrieve(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.retrieve(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.retrieveAllocations(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input: Seq[(String, MtdError)] = Seq(
