@@ -1,0 +1,23 @@
+{
+  "amount": 2000.00,
+  "method": "Payment by Card",
+  "transactionDate": "2020-01-29",
+  "allocations": [
+    {
+      "id": "XA012599973Z11",
+      "from": "2018-04-06",
+      "to": "2019-04-05",
+      "type": "ITSA Balancing Charge Debit",
+      "amount": 400.00,
+      "clearedAmount": 400.00
+    },
+    {
+      "id": "XA012599973Z12",
+      "from": "2019-04-06",
+      "to": "2020-04-05",
+      "type": "ITSA Payment On Account Charge",
+      "amount": 800.00,
+      "clearedAmount": 800.00
+    }
+  ]
+}

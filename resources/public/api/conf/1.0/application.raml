@@ -40,6 +40,10 @@ uses:
           name: Sample Endpoint
           description: This is a sample endpoint
         post: !include sample_post.raml
-    /payments:
-      /{paymentId}:
-        get: !include retrieveAllocations.raml
+    /{paymentId}:
+      uriParameters:
+        paymentId:
+          description: 'A unique identifier for the payment.<br><br>Must conform to the regular expression: `^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$`'
+          type: string
+          example: "X234567891BY-AT3456"
+      get: !include retrieveAllocations.raml

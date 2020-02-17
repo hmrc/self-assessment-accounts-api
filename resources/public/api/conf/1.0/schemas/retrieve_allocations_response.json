@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve a self assessment payment's allocation details",
+  "description": "Retrieve a self assessment payment's allocation details",
+  "type": "object",
+  "properties": {
+    "amount": {
+      "description": "The amount of the payment received into the account.",
+      "type": "number",
+      "multipleOf": 0.01,
+      "minimum": -99999999999.99,
+      "maximum": 99999999999.99,
+      "example": "1000.25"
+    },
+    "method": {
+      "description": "The method used to make the payment.",
+      "type": "string",
+      "pattern": "^[0-9A-Za-z\\s]{1,30}$",
+      "example": "Payment by Card"
+    },
+    "transactionDate": {
+      "description": "The date the payment was received into the account. Date in the format: YYYY-MM-DD.",
+      "type": "string",
+      "example": "2019-12-29"
+    },
+    "allocations": {
+      "description": "A list of charges, allocated amounts from the payment.",
+      "type": "array",
+      "items": {
+        "title": "allocationDetail",
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The unique identifier for the charge.",
+            "type": "string",
+            "pattern": "^[0-9A-Za-z]{1,16}$",
+            "example": "XA012599973Z11"
+          },
+          "from": {
+            "description": "The 'from' date of this tax period. Date in the format: YYYY-MM-DD.",
+            "type": "string",
+            "example": "2019-11-29"
+          },
+          "to": {
+            "description": "The 'to' date of this tax period. Date in the format: YYYY-MM-DD.",
+            "type": "string",
+            "example": "2019-12-29"
+          },
+          "type": {
+            "description": "The type of financial transaction.",
+            "type": "string",
+            "pattern": "^[0-9A-Za-z\\s]{1,30}$",
+            "example": "ITSA"
+          },
+          "amount": {
+            "description": "The original value of this transaction.",
+            "type": "number",
+            "multipleOf": 0.01,
+            "minimum": -99999999999.99,
+            "maximum": 99999999999.99,
+            "example": "100.25"
+          },
+          "clearedAmount": {
+            "description": "The cleared value of this transaction.",
+            "type": "number",
+            "multipleOf": 0.01,
+            "minimum": -99999999999.99,
+            "maximum": 99999999999.99,
+            "example": "100.25"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "allocations"
+  ]
+}
