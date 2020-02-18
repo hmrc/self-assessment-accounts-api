@@ -85,7 +85,7 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       Some(1000.00),
       Some("buttons"),
       Some("a date"),
-      None
+      Seq.empty[AllocationDetail]
     )
 
   val mtdJson: JsValue = RetrieveAllocationsResponseFixture.mtdJson
@@ -95,7 +95,8 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |{
       |   "amount": 1000.00,
       |   "method": "buttons",
-      |   "transactionDate": "a date"
+      |   "transactionDate": "a date",
+      |   "allocations" : []
       |}
       |""".stripMargin
   )

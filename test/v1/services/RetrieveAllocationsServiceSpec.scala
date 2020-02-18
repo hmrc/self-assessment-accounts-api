@@ -25,6 +25,7 @@ import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -62,7 +63,7 @@ class RetrieveAllocationsServiceSpec extends UnitSpec {
             amount = Some(100.5),
             method = Some("Beanz"),
             transactionDate = Some("31/2/2003"),
-            allocations = None
+            allocations = Seq.empty[AllocationDetail]
           )
 
         MockRetrieveAllocationsConnector.retrieve(requestData)
