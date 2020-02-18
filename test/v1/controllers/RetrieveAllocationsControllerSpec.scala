@@ -76,8 +76,8 @@ class RetrieveAllocationsControllerSpec
 
   val retrieveAllocationsResponse: RetrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
 
-  "handleRequest" should {
-    "return CREATED" when {
+  "retrieveAllocations" should {
+    "return OK" when {
       "happy path" in new Test {
 
         MockRetrieveAllocationsRequestParser
