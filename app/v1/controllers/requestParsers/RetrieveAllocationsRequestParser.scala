@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveAllocationsValidator
 import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
 
-class RetrieveAllocationsDataParser @Inject()(val validator: RetrieveAllocationsValidator)
+class RetrieveAllocationsRequestParser @Inject()(val validator: RetrieveAllocationsValidator)
   extends RequestParser[RetrieveAllocationsRawRequest, RetrieveAllocationsParsedRequest] {
 
   override protected def requestFor(data: RetrieveAllocationsRawRequest): RetrieveAllocationsParsedRequest = {
