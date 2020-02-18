@@ -72,7 +72,6 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | PaymentIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case UnauthorisedError => Forbidden(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
