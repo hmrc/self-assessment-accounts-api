@@ -24,7 +24,6 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
 import v1.controllers.requestParsers.RetrieveAllocationsRequestParser
-import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveAllocationsService}
