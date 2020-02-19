@@ -1,2 +1,1 @@
-POST       /:nino/:taxYear/sampleEndpoint                  v1.controllers.SampleController.handleRequest(nino: String, taxYear: String)
 GET        /:nino/payments/:paymentId                      v1.controllers.RetrieveAllocationsController.retrieveAllocations(nino: String, paymentId: String)
