@@ -17,7 +17,12 @@
 package v1.models.hateoas
 
 object RelType {
-  val SAMPLE_ENDPOINT_REL = "sample-rel"
-
   val SELF = "self"
+
+  val RETRIEVE_BALANCE = "retrieve-balance"
+  val RETRIEVE_TRANSACTIONS = "retrieve-transactions"
+  val LIST_CHARGES = "list-charges"
+  val RETRIEVE_CHARGE_HISTORY = "retrieve-charge-history"
+  val LIST_PAYMENTS = "list-payments"
+  val RETRIEVE_PAYMENT_ALLOCATIONS = "retrieve-payment-allocations"
 }
