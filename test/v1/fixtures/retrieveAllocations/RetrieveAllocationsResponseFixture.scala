@@ -88,7 +88,7 @@ object RetrieveAllocationsResponseFixture {
       Some(1000.00),
       Some("buttons"),
       Some("a date"),
-      Some(Seq(
+      Seq(
         AllocationDetail(
           Some("someID"),
           Some("another date"),
@@ -97,7 +97,7 @@ object RetrieveAllocationsResponseFixture {
           Some(600.00),
           Some(100.00)
         )
-      ))
+      )
     )
 
 }

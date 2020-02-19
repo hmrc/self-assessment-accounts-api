@@ -26,7 +26,7 @@ import v1.models.response.retrieveAllocations.detail.AllocationDetail
 case class RetrieveAllocationsResponse(amount: Option[BigDecimal],
                                        method: Option[String],
                                        transactionDate: Option[String],
-                                       allocations: Option[Seq[AllocationDetail]])
+                                       allocations: Seq[AllocationDetail])
 
 object RetrieveAllocationsResponse extends HateoasLinks {
 
@@ -39,8 +39,8 @@ object RetrieveAllocationsResponse extends HateoasLinks {
       (JsPath \ "paymentDetails" \\ "sapClearingDocsDetails").readNullable[Seq[AllocationDetail]]
         .map(_.map(_.filterNot(_ == AllocationDetail.emptyAllocation)))
         .map{
-        case Some(Nil) => None
-        case notEmpty => notEmpty
+        case Some(notEmpty) => notEmpty
+        case _ => Seq.empty[AllocationDetail]
         }
     )(RetrieveAllocationsResponse.apply _)
 
