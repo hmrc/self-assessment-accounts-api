@@ -19,6 +19,7 @@ package v1.models.response.retrieveAllocations
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 class RetrieveAllocationsResponseSpec extends UnitSpec {
 
