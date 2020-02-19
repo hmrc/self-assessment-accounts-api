@@ -16,16 +16,21 @@
 
 package v1.controllers
 
+import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
+import v1.hateoas.HateoasLinks
+import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
 import v1.models.errors._
+import v1.models.hateoas.HateoasWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
+import v1.models.response.retrieveAllocations.RetrieveAllocationsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,7 +40,10 @@ class RetrieveAllocationsControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockRetrieveAllocationsService
-    with MockRetrieveAllocationsRequestParser {
+    with MockHateoasFactory
+    with MockAppConfig
+    with MockRetrieveAllocationsRequestParser
+    with HateoasLinks {
 
   private val nino = "AA123456A"
   private val paymentId = "anId-anotherId"
@@ -57,7 +65,7 @@ class RetrieveAllocationsControllerSpec
     )
 
   private val retrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
-  private val mtdResponse = RetrieveAllocationsResponseFixture.mtdJson
+  private val mtdResponse = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas(nino, paymentId)
 
   trait Test {
     val hc = HeaderCarrier()
@@ -67,6 +75,7 @@ class RetrieveAllocationsControllerSpec
       lookupService = mockMtdIdLookupService,
       requestParser = mockRetrieveAllocationsRequestParser,
       service = mockRetrieveAllocationsService,
+      hateoasFactory = mockHateoasFactory,
       cc = cc
     )
 
@@ -78,6 +87,8 @@ class RetrieveAllocationsControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
+        MockedAppConfig.apiGatewayContext returns "individuals/accounts/self-assessment" anyNumberOfTimes()
+
         MockRetrieveAllocationsRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
@@ -85,6 +96,11 @@ class RetrieveAllocationsControllerSpec
         MockRetrieveAllocationsService
           .retrieveAllocations(parsedRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))))
+
+        MockHateoasFactory
+          .wrap(retrieveAllocationsResponse, RetrieveAllocationsHateoasData(nino, paymentId))
+          .returns(HateoasWrapper(retrieveAllocationsResponse, Seq(retrievePaymentAllocations(mockAppConfig, nino, paymentId, isSelf = true),
+            listPayments(mockAppConfig, nino, isSelf = false))))
 
         val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
 

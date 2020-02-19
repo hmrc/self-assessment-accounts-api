@@ -24,8 +24,10 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
 import v1.controllers.requestParsers.RetrieveAllocationsRequestParser
+import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
+import v1.models.response.retrieveAllocations.RetrieveAllocationsHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveAllocationsService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,6 +37,7 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
                                               val lookupService: MtdIdLookupService,
                                               requestParser: RetrieveAllocationsRequestParser,
                                               service: RetrieveAllocationsService,
+                                              hateoasFactory: HateoasFactory,
                                               cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
 
@@ -52,12 +55,14 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveAllocations(parsedRequest))
+          vendorResponse <- EitherT.fromEither[Future](
+            hateoasFactory.wrap(serviceResponse.responseData, RetrieveAllocationsHateoasData(nino, paymentId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          Ok(Json.toJson(serviceResponse.responseData))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }

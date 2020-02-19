@@ -16,8 +16,11 @@
 
 package v1.models.response.retrieveAllocations
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 case class RetrieveAllocationsResponse(amount: Option[BigDecimal],
@@ -25,7 +28,7 @@ case class RetrieveAllocationsResponse(amount: Option[BigDecimal],
                                        transactionDate: Option[String],
                                        allocations: Option[Seq[AllocationDetail]])
 
-object RetrieveAllocationsResponse {
+object RetrieveAllocationsResponse extends HateoasLinks {
 
   implicit val writes: OWrites[RetrieveAllocationsResponse] = Json.writes[RetrieveAllocationsResponse]
 
@@ -40,4 +43,16 @@ object RetrieveAllocationsResponse {
         case notEmpty => notEmpty
         }
     )(RetrieveAllocationsResponse.apply _)
+
+  implicit object RetrieveAllocationsLinksFactory extends HateoasLinksFactory[RetrieveAllocationsResponse, RetrieveAllocationsHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveAllocationsHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        retrievePaymentAllocations(appConfig, nino, paymentId, isSelf = true),
+        listPayments(appConfig, nino, isSelf = false)
+      )
+    }
+  }
 }
+
+case class RetrieveAllocationsHateoasData(nino: String, paymentId: String) extends HateoasData
