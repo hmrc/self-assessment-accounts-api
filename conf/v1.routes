@@ -1,1 +1,2 @@
 GET        /:nino/payments/:paymentId                      v1.controllers.RetrieveAllocationsController.retrieveAllocations(nino: String, paymentId: String)
+GET        /:nino/payments                                 v1.controllers.ListPaymentsController.retrieveList(nino: String, from: Option[String], to: Option[String])
