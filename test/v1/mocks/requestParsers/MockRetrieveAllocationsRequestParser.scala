@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers
+package v1.mocks.requestParsers
 
-import javax.inject.Inject
-import uk.gov.hmrc.domain.Nino
-import v1.controllers.requestParsers.validators.RetrieveAllocationsValidator
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
+import v1.controllers.requestParsers.RetrieveAllocationsRequestParser
+import v1.models.errors.ErrorWrapper
 import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
 
-class RetrieveAllocationsDataParser @Inject()(val validator: RetrieveAllocationsValidator)
-  extends RequestParser[RetrieveAllocationsRawRequest, RetrieveAllocationsParsedRequest] {
+trait MockRetrieveAllocationsRequestParser extends MockFactory {
 
-  override protected def requestFor(data: RetrieveAllocationsRawRequest): RetrieveAllocationsParsedRequest = {
+  val mockRetrieveAllocationsRequestParser: RetrieveAllocationsRequestParser = mock[RetrieveAllocationsRequestParser]
 
-    val paymentLot = data.paymentId.split("-")(0)
-    val paymentLotItem  = data.paymentId.split("-")(1)
-
-    RetrieveAllocationsParsedRequest(Nino(data.nino), paymentLot, paymentLotItem)
+  object MockRetrieveAllocationsRequestParser {
+    def parse(data: RetrieveAllocationsRawRequest): CallHandler[Either[ErrorWrapper, RetrieveAllocationsParsedRequest]] = {
+      (mockRetrieveAllocationsRequestParser.parseRequest(_: RetrieveAllocationsRawRequest)).expects(data)
+    }
   }
 
 }

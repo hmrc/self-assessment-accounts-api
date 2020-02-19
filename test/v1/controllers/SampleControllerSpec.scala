@@ -49,7 +49,7 @@ class SampleControllerSpec
     val controller = new SampleController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestDataParser = mockRequestDataParser,
+      requestDataParser = mockSampleRequestDataParser,
       sampleService = mockSampleService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,

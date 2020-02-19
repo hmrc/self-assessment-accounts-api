@@ -22,7 +22,7 @@ import v1.mocks.validators.MockRetrieveAllocationsValidator
 import v1.models.errors._
 import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
 
-class RetreiveAllocationsDataParserSpec extends UnitSpec {
+class RetrieveAllocationsRequestParserSpec extends UnitSpec {
 
   val nino = "AA123456B"
   val paymentId = "anId-anotherId"
@@ -30,7 +30,7 @@ class RetreiveAllocationsDataParserSpec extends UnitSpec {
   val inputData: RetrieveAllocationsRawRequest = RetrieveAllocationsRawRequest(nino, paymentId)
 
   trait Test extends MockRetrieveAllocationsValidator {
-    lazy val parser = new RetrieveAllocationsDataParser(mockValidator)
+    lazy val parser = new RetrieveAllocationsRequestParser(mockValidator)
   }
 
   "parse" should {

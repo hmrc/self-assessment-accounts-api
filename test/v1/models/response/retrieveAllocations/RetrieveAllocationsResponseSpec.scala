@@ -18,32 +18,11 @@ package v1.models.response.retrieveAllocations
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.models.response.retrieveAllocations.detail.AllocationDetail
+import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 
 class RetrieveAllocationsResponseSpec extends UnitSpec {
 
-  val desJson: JsValue = Json.parse(
-    """
-      |{
-      | "paymentDetails": [
-      |   {
-      |   "paymentAmount": 1000.00,
-      |   "paymentMethod": "buttons",
-      |   "valueDate": "a date",
-      |   "sapClearingDocsDetails": [
-      |   {
-      |     "sapDocNumber": "someID",
-      |     "taxPeriodStartDate": "another date",
-      |     "taxPeriodEndDate": "an even later date",
-      |     "chargeType": "some type thing",
-      |     "amount": 600.00,
-      |     "clearedAmount": 100.00
-      |     }
-      |    ]
-      |   }
-      |  ]
-      |}
-      |""".stripMargin)
+  val desJson: JsValue = RetrieveAllocationsResponseFixture.desJson
 
   val invalidDesJson: JsValue = Json.parse(
     """
@@ -99,22 +78,7 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  val paymentDetails: RetrieveAllocationsResponse =
-    RetrieveAllocationsResponse(
-      Some(1000.00),
-      Some("buttons"),
-      Some("a date"),
-      Some(Seq(
-        AllocationDetail(
-          Some("someID"),
-          Some("another date"),
-          Some("an even later date"),
-          Some("some type thing"),
-          Some(600.00),
-          Some(100.00)
-        )
-      ))
-    )
+  val paymentDetails: RetrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
 
   val paymentDetailsWithoutAllocations: RetrieveAllocationsResponse =
     RetrieveAllocationsResponse(
@@ -124,26 +88,7 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       None
     )
 
-  val mtdJson: JsValue = Json.parse(
-    """
-      |{
-      |   "amount": 1000.00,
-      |   "method": "buttons",
-      |   "transactionDate": "a date",
-      |   "allocations": [
-      |   {
-      |     "id": "someID",
-      |     "from": "another date",
-      |     "to": "an even later date",
-      |     "type": "some type thing",
-      |     "amount": 600.00,
-      |     "clearedAmount": 100.00
-      |   }
-      | ]
-      |}
-      |""".stripMargin
-  )
-
+  val mtdJson: JsValue = RetrieveAllocationsResponseFixture.mtdJson
 
   val mtdJsonWithoutAllocations: JsValue = Json.parse(
     """

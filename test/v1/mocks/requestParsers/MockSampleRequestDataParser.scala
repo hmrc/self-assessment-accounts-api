@@ -24,11 +24,11 @@ import v1.models.request.{SampleRawData, SampleRequestData}
 
 trait MockSampleRequestDataParser extends MockFactory {
 
-  val mockRequestDataParser: SampleRequestDataParser = mock[SampleRequestDataParser]
+  val mockSampleRequestDataParser: SampleRequestDataParser = mock[SampleRequestDataParser]
 
   object MockSampleRequestDataParser {
     def parse(data: SampleRawData): CallHandler[Either[ErrorWrapper, SampleRequestData]] = {
-      (mockRequestDataParser.parseRequest(_: SampleRawData)).expects(data)
+      (mockSampleRequestDataParser.parseRequest(_: SampleRawData)).expects(data)
     }
   }
 
