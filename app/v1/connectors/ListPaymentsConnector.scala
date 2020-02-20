@@ -41,7 +41,7 @@ class ListPaymentsConnector @Inject()(val http: HttpClient,
     )
 
     get(
-      uri = DesUri[ListPaymentsResponse](s"cross-regime/payment-allocation/NINO/${nino}/ITSA"),
+      uri = DesUri[ListPaymentsResponse](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
       queryParams = queryParams
     )
 
