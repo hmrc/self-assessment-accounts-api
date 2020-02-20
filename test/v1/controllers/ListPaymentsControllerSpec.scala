@@ -143,6 +143,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
           (FromDateFormatError, BAD_REQUEST),
           (ToDateFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
+          (NoPaymentsFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

@@ -58,7 +58,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
 
       "valid request is made" in new Test {
 
-        val desQueryParams = Map("dateFrom" -> from.get, "dateTo" -> to.get)
+        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -72,6 +72,26 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdResponse
+      }
+    }
+
+    "return a 404 NO_PAYMENTS_FOUND error" when {
+      "a success response with no payments is returned" in new Test {
+
+        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, Json.parse(desSuccessResponseNoPayments))
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe NOT_FOUND
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe Json.toJson(NoPaymentsFoundError)
       }
     }
 
@@ -121,7 +141,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
       def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"des returns an $desCode error and status $desStatus" in new Test {
 
-          val desQueryParams = Map("dateFrom" -> from.get, "dateTo" -> to.get)
+          val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
