@@ -59,8 +59,8 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
   }
 
   private val nino          = "AA123456A"
-  private val from       = "2018-10-1"
-  private val to       = "2019-10-1"
+  private val from          = "2018-10-1"
+  private val to            = "2019-10-1"
   private val correlationId = "X-123"
   private val rawRequest = ListPaymentsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListPaymentsParsedRequest(Nino(nino), from, to)
@@ -143,6 +143,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
           (FromDateFormatError, BAD_REQUEST),
           (ToDateFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
+          (NoPaymentsFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

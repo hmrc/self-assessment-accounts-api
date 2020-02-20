@@ -18,8 +18,9 @@ package v1.stubs
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.Status.OK
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import support.WireMockMethods
+import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 
 object DesStub extends WireMockMethods {
 
@@ -43,23 +44,11 @@ object DesStub extends WireMockMethods {
       .thenReturn(status = errorStatus, errorBody)
   }
 
-  private val responseBody = Json.parse(
-    """
-      | {
-      | "responseData" : "someResponse"
-      | }
-    """.stripMargin)
+  private def url(nino: String): String =
+    s"/cross-regime/payment-allocation/NINO/$nino/ITSA"
 
-  private def url(nino: String, taxYear: String): String =
-    s"/income-tax/nino/$nino/taxYear/$taxYear/someService"
-
-  def serviceSuccess(nino: String, taxYear: String): StubMapping = {
-    when(method = POST, uri = url(nino, taxYear))
-      .thenReturn(status = OK, responseBody)
-  }
-
-  def serviceError(nino: String, taxYear: String, errorStatus: Int, errorBody: String): StubMapping = {
-    when(method = POST, uri = url(nino, taxYear))
-      .thenReturn(status = errorStatus, errorBody)
+  def serviceSuccess(nino: String, paymentLot: String, paymentLotItem: String): StubMapping = {
+    when(method = GET, uri = url(nino), queryParams = Map("paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem))
+      .thenReturn(status = OK, RetrieveAllocationsResponseFixture.desJson)
   }
 }

@@ -23,11 +23,27 @@ import v1.models.hateoas.RelType._
 
 trait HateoasLinks {
 
-  //Domain URIs
-  private def sampleUri(appConfig: AppConfig, nino: String): String =
-    s"/${appConfig.apiGatewayContext}/$nino/sample-endpoint"
+  // L1
+  def retrieveBalance(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/balance", method = GET, rel = if(isSelf) SELF else RETRIEVE_BALANCE)
 
-  //API resource links
-  def sampleLink(appConfig: AppConfig, nino: String): Link =
-    Link(href = sampleUri(appConfig, nino), method = GET, rel = SAMPLE_ENDPOINT_REL)
+  // L2
+  def retrieveTransactions(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/transactions", method = GET, rel = if(isSelf) SELF else RETRIEVE_TRANSACTIONS)
+
+  // L3
+  def listCharges(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges", method = GET, rel = if(isSelf) SELF else LIST_CHARGES)
+
+  // L4
+  def retrieveChargeHistory(appConfig: AppConfig, nino: String, chargeId: String, isSelf: Boolean): Link =
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges/$chargeId", method = GET, rel = if(isSelf) SELF else RETRIEVE_CHARGE_HISTORY)
+
+  // L5
+  def listPayments(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/payments", method = GET, rel = if(isSelf) SELF else LIST_PAYMENTS)
+
+  // L6
+  def retrievePaymentAllocations(appConfig: AppConfig, nino: String, paymentId: String, isSelf: Boolean): Link =
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/payments/$paymentId", method = GET, rel = if(isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS)
 }

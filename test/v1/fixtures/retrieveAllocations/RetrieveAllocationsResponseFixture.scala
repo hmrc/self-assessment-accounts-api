@@ -16,7 +16,7 @@
 
 package v1.fixtures.retrieveAllocations
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
@@ -66,12 +66,29 @@ object RetrieveAllocationsResponseFixture {
     """.stripMargin
   )
 
+  def mtdJsonWithHateoas(nino: String, paymentId: String): JsValue = mtdJson.as[JsObject] ++ Json.obj(
+    "links" -> JsArray(
+      Seq(
+        Json.obj(
+          "href" -> s"/individuals/accounts/self-assessment/$nino/payments/$paymentId",
+          "method" -> "GET",
+          "rel" -> "self"
+        ),
+        Json.obj(
+          "href" -> s"/individuals/accounts/self-assessment/$nino/payments",
+          "method" -> "GET",
+          "rel" -> "list-payments"
+        )
+      )
+    )
+  )
+
   val paymentDetails: RetrieveAllocationsResponse =
     RetrieveAllocationsResponse(
       Some(1000.00),
       Some("buttons"),
       Some("a date"),
-      Some(Seq(
+      Seq(
         AllocationDetail(
           Some("someID"),
           Some("another date"),
@@ -80,7 +97,7 @@ object RetrieveAllocationsResponseFixture {
           Some(600.00),
           Some(100.00)
         )
-      ))
+      )
     )
 
 }

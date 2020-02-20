@@ -16,13 +16,13 @@
 
 package v1.fixtures
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
 object ListPaymentsFixture {
 
-  val desSuccessResponse =
-    """
+  val desSuccessResponse: String =
+  """
       |{
       |   "idType":"NINO",
       |   "idValue":"AB123456C",
@@ -116,7 +116,19 @@ object ListPaymentsFixture {
       |}
       |""".stripMargin
 
-  val mtdResponse = Json.parse(
+  val desSuccessResponseNoPayments: String =
+    """
+      |{
+      |   "idType":"NINO",
+      |   "idValue":"AB123456C",
+      |   "regimeType":"ITSA",
+      |   "businessPartner":"1122334455",
+      |   "paymentDetails": [
+      |   ]
+      |}
+      |""".stripMargin
+
+  val mtdResponse: JsValue = Json.parse(
     """
       |{
       |  "payments": [
@@ -135,7 +147,9 @@ object ListPaymentsFixture {
       |  ]
       |}""".stripMargin)
 
-  val mtdResponseObj = ListPaymentsResponse(
+  val mtdResponseObj: ListPaymentsResponse = ListPaymentsResponse(
     payments = Seq(Payment(Some("123456789012-123456"), Some(BigDecimal(11.99)), Some("A"), Some("2019-02-26")),
       Payment(Some("223456789012-123456"), Some(BigDecimal(12.99)), Some("B"), Some("2019-02-27"))))
+
+  val emptyResponseObj: ListPaymentsResponse = ListPaymentsResponse(Seq.empty[Payment])
 }

@@ -14,12 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.audit
+package v1.models.request
 
-import play.api.libs.json.{Json, OFormat}
+import support.UnitSpec
 
-case class AuditError(errorCode: String)
+class DesTaxYearSpec extends UnitSpec {
 
-object AuditError {
-  implicit val format: OFormat[AuditError] = Json.format[AuditError]
+  "DesTaxYear" when {
+    "toString" should {
+      "produce the correct String" in {
+        DesTaxYear("2019").toString shouldBe "2019"
+      }
+    }
+  }
+
 }

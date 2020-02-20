@@ -19,6 +19,7 @@ package v1.models.response.retrieveAllocations
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 class RetrieveAllocationsResponseSpec extends UnitSpec {
 
@@ -85,7 +86,7 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       Some(1000.00),
       Some("buttons"),
       Some("a date"),
-      None
+      Seq.empty[AllocationDetail]
     )
 
   val mtdJson: JsValue = RetrieveAllocationsResponseFixture.mtdJson
@@ -95,7 +96,8 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |{
       |   "amount": 1000.00,
       |   "method": "buttons",
-      |   "transactionDate": "a date"
+      |   "transactionDate": "a date",
+      |   "allocations" : []
       |}
       |""".stripMargin
   )

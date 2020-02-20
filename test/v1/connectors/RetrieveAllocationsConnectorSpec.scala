@@ -22,6 +22,7 @@ import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 import scala.concurrent.Future
 
@@ -43,7 +44,7 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
       amount = Some(100.00),
       method = Some("aMethod"),
       transactionDate = Some("aDate"),
-      allocations = None
+      allocations = Seq.empty[AllocationDetail]
     )
 
   class Test extends MockHttpClient with MockAppConfig {

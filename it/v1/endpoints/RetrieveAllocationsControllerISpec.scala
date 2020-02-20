@@ -37,7 +37,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
     val correlationId = "X-123"
 
     val desResponse: JsValue = RetrieveAllocationsResponseFixture.desJson
-    val mtdResponse: JsValue = RetrieveAllocationsResponseFixture.mtdJson
+    val mtdResponse: JsValue = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas(nino, paymentId)
 
     val queryParams: Map[String, String] = Map("paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem)
 

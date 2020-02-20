@@ -14,28 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.audit
+package v1.models.domain
 
 import play.api.libs.json.Json
 import support.UnitSpec
 
-class AuditErrorSpec extends UnitSpec {
+class EmptyJsonBodySpec extends UnitSpec {
 
-  private val auditError = AuditError("FORMAT_NINO")
-
-  "writes" when {
-    "passed an audit error model" should {
-      "produce valid json" in {
-
-         val json = Json.parse(
-          s"""
-             |{
-             |  "errorCode": "FORMAT_NINO"
-             |}
-           """.stripMargin)
-
-        Json.toJson(auditError) shouldBe json
+  "EmptyJsonBody" when {
+    "written to JSON" should {
+      "produce an empty JSON body" in {
+        Json.toJson(EmptyJsonBody) shouldBe Json.parse("""{}""")
       }
     }
   }
+
 }
