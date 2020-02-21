@@ -87,7 +87,7 @@ class RetrieveAllocationsControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockedAppConfig.apiGatewayContext returns "individuals/accounts/self-assessment" anyNumberOfTimes()
+        MockedAppConfig.apiGatewayContext returns "accounts/self-assessment" anyNumberOfTimes()
 
         MockRetrieveAllocationsRequestParser
           .parse(rawRequest)
