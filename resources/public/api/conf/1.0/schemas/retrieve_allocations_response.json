@@ -80,7 +80,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/individuals/accounts/self-assessment/AA999999A/payments"
+            "example": "/accounts/self-assessment/AA999999A/payments"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",

@@ -22,12 +22,12 @@
   ],
   "links": [
     {
-      "href": "/individuals/accounts/self-assessment/AA999999A/payments/123456789012-123456",
+      "href": "/accounts/self-assessment/AA999999A/payments/123456789012-123456",
       "method": "GET",
       "rel": "self"
     },
     {
-      "href": "/individuals/accounts/self-assessment/AA999999A/payments",
+      "href": "/accounts/self-assessment/AA999999A/payments",
       "method": "GET",
       "rel": "list-payments"
     }
