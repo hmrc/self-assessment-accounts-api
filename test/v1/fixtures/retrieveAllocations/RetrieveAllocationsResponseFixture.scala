@@ -70,12 +70,12 @@ object RetrieveAllocationsResponseFixture {
     "links" -> JsArray(
       Seq(
         Json.obj(
-          "href" -> s"/individuals/accounts/self-assessment/$nino/payments/$paymentId",
+          "href" -> s"/accounts/self-assessment/$nino/payments/$paymentId",
           "method" -> "GET",
           "rel" -> "self"
         ),
         Json.obj(
-          "href" -> s"/individuals/accounts/self-assessment/$nino/payments",
+          "href" -> s"/accounts/self-assessment/$nino/payments",
           "method" -> "GET",
           "rel" -> "list-payments"
         )
