@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package v1.connectors
+package v1.mocks.connectors
 
-import config.AppConfig
-import javax.inject.{Inject, Singleton}
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.bootstrap.http.HttpClient
+import v1.connectors.{DesOutcome, RetrieveBalanceConnector}
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class RetrieveBalanceConnector @Inject()(val http: HttpClient,
-                                         val appConfig: AppConfig) extends BaseDesConnector {
+class MockRetrieveBalanceConnector extends MockFactory {
 
-  def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit hc: HeaderCarrier,
-                                                             ec: ExecutionContext): Future[DesOutcome[RetrieveBalanceResponse]] = {
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+  val mockRetrieveBalanceConnector: RetrieveBalanceConnector = mock[RetrieveBalanceConnector]
 
-    val nino = request.nino.nino
+  object MockRetrieveBalanceConnector {
 
-    get(
-      uri = DesUri[RetrieveBalanceResponse](s"cross-regime/balance/NINO/$nino/ITSA")
-    )
+    def retrieve(requestData: RetrieveBalanceParsedRequest): CallHandler[Future[DesOutcome[RetrieveBalanceResponse]]] = {
+      (mockRetrieveBalanceConnector
+        .retrieveBalance(_: RetrieveBalanceParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
+        .expects(requestData, *, *)
+    }
   }
 }

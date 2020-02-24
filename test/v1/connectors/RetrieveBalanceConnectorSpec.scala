@@ -20,6 +20,8 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
+import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
+import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 
 import scala.concurrent.Future
 
@@ -30,10 +32,10 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
   val retrieveBalanceResponse: RetrieveBalanceResponse =
     RetrieveBalanceResponse(
       overdueAmount = Some(1000.00),
-      payableAmount = Some(1000.00),
+      payableAmount = 1000.00,
       payableDueDate = Some("2018-04-05"),
-      notYetDueAmount = Some(1000.00),
-      notYetDueDate = Some("2019-11-05")
+      pendingChargeDueAmount = Some(1000.00),
+      pendingChargeDueDate = Some("2019-11-05")
     )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -50,7 +52,7 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
     "getting balance" must {
       val request: RetrieveBalanceParsedRequest = RetrieveBalanceParsedRequest(nino)
 
-      "return a valid response" when {
+      "return a valid response" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, retrieveBalanceResponse))
 
         MockedHttpClient
@@ -65,3 +67,4 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
     }
   }
 }
+
