@@ -20,32 +20,21 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.listPayments.ListPaymentsParsedRequest
-import v1.models.response.listPayments.ListPaymentsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsConnector @Inject()(val http: HttpClient,
-                                      val appConfig: AppConfig) extends BaseDesConnector {
+class RetrieveBalanceConnector @Inject()(val http: HttpClient,
+                                         val appConfig: AppConfig) extends BaseDesConnector {
 
-  def listPayments(request: ListPaymentsParsedRequest)(implicit hc: HeaderCarrier,
-                                                       ec: ExecutionContext): Future[DesOutcome[ListPaymentsResponse]] = {
-
+  def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit hc: HeaderCarrier,
+                                                             ec: ExecutionContext): Future[DesOutcome[RetrieveBalanceResponse]] = {
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
 
-    val queryParams: Seq[(String, String)] = Seq(
-      "dateFrom" -> request.from,
-      "dateTo" -> request.to
-    )
-
     get(
-      uri = DesUri[ListPaymentsResponse](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
-      queryParams = queryParams
+      uri = DesUri[RetrieveBalanceResponse](s"cross-regime/balance/NINO/$nino/ITSA")
     )
-
   }
-
 }
