@@ -18,7 +18,7 @@ package v1.models.response.listPayments
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class Payment(id: Option[String], amount: Option[BigDecimal], method: Option[String], transactionDate: Option[String])
+case class Payment(paymentId: Option[String], amount: Option[BigDecimal], method: Option[String], transactionDate: Option[String])
 
 object Payment {
   implicit val reads: Reads[Payment] = for {
