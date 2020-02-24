@@ -62,7 +62,7 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          Ok(Json.toJson(vendorResponse))
+          Ok(toSerializedString(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }

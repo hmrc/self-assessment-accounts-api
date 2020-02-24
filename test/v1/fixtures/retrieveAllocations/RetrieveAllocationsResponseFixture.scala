@@ -66,7 +66,8 @@ object RetrieveAllocationsResponseFixture {
     """.stripMargin
   )
 
-  def mtdJsonWithHateoas(nino: String, paymentId: String): JsValue = mtdJson.as[JsObject] ++ Json.obj(
+  def mtdJsonWithHateoas(nino: String, paymentId: String): JsValue = Json.obj(
+    "payload" -> mtdJson.as[JsObject],
     "links" -> JsArray(
       Seq(
         Json.obj(

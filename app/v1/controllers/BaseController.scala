@@ -18,13 +18,49 @@ package v1.controllers
 
 import java.util.UUID
 
+import org.json4s.{CustomSerializer, DefaultFormats, Formats, JString, JsonAST}
+import org.json4s.JsonAST.{JDecimal, JObject}
+import org.json4s.native.Serialization
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import utils.Logging
 import v1.models.errors.ErrorWrapper
+import v1.models.hateoas.{HateoasWrapper, Method}
 
 trait BaseController {
   self: Logging =>
+
+  private object BigDecimalSerializer extends CustomSerializer[BigDecimal](_ =>
+    ({
+      case jde: JDecimal => jde.num
+    },
+      {
+        case bd: BigDecimal => JDecimal(bd.setScale(2, BigDecimal.RoundingMode.HALF_UP))
+      })
+  )
+
+  private object MethodSerializer extends CustomSerializer[String](_ =>
+    ({
+      case js: JString => js.s
+    },
+      {
+        case method: Method => JString(method.toString)
+      })
+  )
+
+  private object ThingSerializer extends CustomSerializer[List[(String, JsonAST.JValue)]](_ =>
+    ({
+      case jo: JObject => jo.obj
+    },
+      {
+        case hw: HateoasWrapper[a] => JObject(HateoasWrapper.writes.writes(hw))
+      })
+  )
+
+  def toSerializedString[A](a: A): String = {
+    implicit val formats: Formats = DefaultFormats ++ Seq(BigDecimalSerializer) ++ Seq(MethodSerializer)
+    Serialization.write(a)
+  }
 
   implicit class Response(result: Result) {
 
