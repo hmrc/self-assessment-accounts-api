@@ -26,18 +26,19 @@ case class ListPaymentsResponse[I](payments: Seq[I])
 
 object ListPaymentsResponse extends HateoasLinks {
 
-  implicit def reads[I: Reads]: Reads[ListPaymentsResponse[I]] = (JsPath \ "paymentDetails").read[Seq[I]].map(ListPaymentsResponse(_))
+  implicit def reads[I: Reads]: Reads[ListPaymentsResponse[I]] =
+    implicitly(JsPath \ "paymentDetails").read[Seq[I]].map(ListPaymentsResponse(_))
 
   implicit def writes[I: Writes]: OWrites[ListPaymentsResponse[I]] = Json.writes[ListPaymentsResponse[I]]
 
   implicit object LinksFactory extends HateoasListLinksFactory[ListPaymentsResponse, Payment, ListPaymentsHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: ListPaymentsHateoasData, item: Payment): Seq[Link] =
-      Seq(retrievePaymentAllocations(appConfig, data.nino, item.id.getOrElse(""), false))
+      Seq(retrievePaymentAllocations(appConfig, data.nino, item.id.getOrElse(""), isSelf = false))
 
     override def links(appConfig: AppConfig, data: ListPaymentsHateoasData): Seq[Link] = Seq(
-      listPayments(appConfig, data.nino, true),
-      retrieveTransactions(appConfig, data.nino, false)
+      listPayments(appConfig, data.nino, isSelf = true),
+      retrieveTransactions(appConfig, data.nino, isSelf = false)
     )
   }
 

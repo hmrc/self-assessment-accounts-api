@@ -50,20 +50,20 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
     val result =
       for {
         parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        response <- EitherT(service.list(parsedRequest))
+        serviceResponse <- EitherT(service.list(parsedRequest))
         vendorResponse <- EitherT.fromEither[Future](
           hateoasFactory
-            .wrapList(response.responseData, ListPaymentsHateoasData(nino))
+            .wrapList(serviceResponse.responseData, ListPaymentsHateoasData(nino))
             .asRight[ErrorWrapper]
         )
       } yield {
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received with correlationId: ${response.correlationId}"
+            s"Success response received with correlationId: ${serviceResponse.correlationId}"
         )
 
         Ok(Json.toJson(vendorResponse))
-          .withApiHeaders(response.correlationId)
+          .withApiHeaders(serviceResponse.correlationId)
           .as(MimeTypes.JSON)
       }
     result.leftMap { errorWrapper =>

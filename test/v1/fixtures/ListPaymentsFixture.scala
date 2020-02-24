@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
 object ListPaymentsFixture {
