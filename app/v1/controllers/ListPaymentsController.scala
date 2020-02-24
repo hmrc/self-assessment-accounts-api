@@ -18,7 +18,7 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -27,10 +27,12 @@ import v1.controllers.requestParsers.ListPaymentsRequestDataParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.listPayments.ListPaymentsRawRequest
+import v1.models.response.listPayments.ListPaymentsHateoasData
 import v1.services.{EnrolmentsAuthService, ListPaymentsService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
                                        val lookupService: MtdIdLookupService,
                                        requestParser: ListPaymentsRequestDataParser,
@@ -48,15 +50,20 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
     val result =
       for {
         parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        response <- EitherT(service.list(parsedRequest))
+        serviceResponse <- EitherT(service.list(parsedRequest))
+        vendorResponse <- EitherT.fromEither[Future](
+          hateoasFactory
+            .wrapList(serviceResponse.responseData, ListPaymentsHateoasData(nino))
+            .asRight[ErrorWrapper]
+        )
       } yield {
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received with correlationId: ${response.correlationId}"
+            s"Success response received with correlationId: ${serviceResponse.correlationId}"
         )
 
-        Ok(Json.toJson(response.responseData))
-          .withApiHeaders(response.correlationId)
+        Ok(Json.toJson(vendorResponse))
+          .withApiHeaders(serviceResponse.correlationId)
           .as(MimeTypes.JSON)
       }
     result.leftMap { errorWrapper =>

@@ -26,7 +26,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.ListPaymentsParsedRequest
-import v1.models.response.listPayments.ListPaymentsResponse
+import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,7 +37,7 @@ class ListPaymentsService @Inject()(listPaymentsConnector: ListPaymentsConnector
   def list(request: ListPaymentsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse]]] = {
+    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(listPaymentsConnector.listPayments(request)).leftMap(mapDesErrors(desErrorMap))

@@ -70,12 +70,12 @@ class ListPaymentsResponseSpec extends UnitSpec {
   "ListPaymentsResponse" when {
     "passed valid json" should {
       "read to a valid model" in {
-        desJson.as[ListPaymentsResponse] shouldBe mtdModel
+        desJson.as[ListPaymentsResponse[Payment]] shouldBe mtdModel
       }
     }
     "passed invalid json" should {
       "return a JsError" in {
-        invalidDesJson.validate[ListPaymentsResponse] shouldBe a[JsError]
+        invalidDesJson.validate[ListPaymentsResponse[Payment]] shouldBe a[JsError]
       }
     }
     "passed a valid model" should {

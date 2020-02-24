@@ -21,7 +21,7 @@ import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.listPayments.ListPaymentsParsedRequest
-import v1.models.response.listPayments.ListPaymentsResponse
+import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -29,7 +29,7 @@ class ListPaymentsConnector @Inject()(val http: HttpClient,
                                       val appConfig: AppConfig) extends BaseDesConnector {
 
   def listPayments(request: ListPaymentsParsedRequest)(implicit hc: HeaderCarrier,
-                                                       ec: ExecutionContext): Future[DesOutcome[ListPaymentsResponse]] = {
+                                                       ec: ExecutionContext): Future[DesOutcome[ListPaymentsResponse[Payment]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -41,7 +41,7 @@ class ListPaymentsConnector @Inject()(val http: HttpClient,
     )
 
     get(
-      uri = DesUri[ListPaymentsResponse](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
+      uri = DesUri[ListPaymentsResponse[Payment]](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
       queryParams = queryParams
     )
 

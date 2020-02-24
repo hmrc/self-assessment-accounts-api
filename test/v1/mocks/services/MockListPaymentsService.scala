@@ -23,7 +23,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.ListPaymentsParsedRequest
-import v1.models.response.listPayments.ListPaymentsResponse
+import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 import v1.services.ListPaymentsService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +34,8 @@ trait MockListPaymentsService extends MockFactory{
 
   object MockListPaymentsService{
 
-    def listPayments(requestData: ListPaymentsParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse]]]] = {
+    def listPayments(requestData: ListPaymentsParsedRequest):
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]]] = {
       (mockService
         .list(_: ListPaymentsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(requestData, *, *, *)
