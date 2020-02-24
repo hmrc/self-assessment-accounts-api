@@ -16,13 +16,35 @@
 
 package v1.models.response.listPayments
 
+import cats.Functor
+import config.AppConfig
 import play.api.libs.json._
+import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 
-case class ListPaymentsResponse(payments: Seq[Payment])
+case class ListPaymentsResponse[I](payments: Seq[I])
 
-object ListPaymentsResponse {
-  implicit val reads: Reads[ListPaymentsResponse] =
-    (JsPath \ "paymentDetails").read[Seq[Payment]].map(ListPaymentsResponse(_))
+object ListPaymentsResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[ListPaymentsResponse] = Json.writes[ListPaymentsResponse]
+  implicit def reads[I: Reads]: Reads[ListPaymentsResponse[I]] = (JsPath \ "paymentDetails").read[Seq[I]].map(ListPaymentsResponse(_))
+
+  implicit def writes[I: Writes]: OWrites[ListPaymentsResponse[I]] = Json.writes[ListPaymentsResponse[I]]
+
+  implicit object LinksFactory extends HateoasListLinksFactory[ListPaymentsResponse, Payment, ListPaymentsHateoasData] {
+
+    override def itemLinks(appConfig: AppConfig, data: ListPaymentsHateoasData, item: Payment): Seq[Link] =
+      Seq(retrievePaymentAllocations(appConfig, data.nino, item.id.getOrElse(""), false))
+
+    override def links(appConfig: AppConfig, data: ListPaymentsHateoasData): Seq[Link] = Seq(
+      listPayments(appConfig, data.nino, true),
+      retrieveTransactions(appConfig, data.nino, false)
+    )
+  }
+
+  implicit object ResponseFunctor extends Functor[ListPaymentsResponse] {
+    override def map[A, B](fa: ListPaymentsResponse[A])(f: A => B): ListPaymentsResponse[B] =
+      ListPaymentsResponse(fa.payments.map(f))
+  }
 }
+
+case class ListPaymentsHateoasData(nino: String) extends HateoasData

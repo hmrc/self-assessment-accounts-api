@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
 object ListPaymentsFixture {
@@ -129,27 +129,45 @@ object ListPaymentsFixture {
       |""".stripMargin
 
   val mtdResponse: JsValue = Json.parse(
-    """
+    s"""
       |{
-      |  "payments": [
-      |    {
-      |      "id": "123456789012-123456",
-      |      "amount": 11.99,
-      |      "method": "A",
-      |      "transactionDate": "2019-02-26"
-      |    },
-      |    {
-      |      "id": "223456789012-123456",
-      |      "amount": 12.99,
-      |      "method": "B",
-      |      "transactionDate": "2019-02-27"
-      |    }
-      |  ]
+      |	"payments": [{
+      |		"id": "123456789012-123456",
+      |		"amount": 11.99,
+      |		"method": "A",
+      |		"transactionDate": "2019-02-26",
+      |		"links": [{
+      |			"href": "/accounts/self-assessment/AA123456A/payments/123456789012-123456",
+      |			"method": "GET",
+      |			"rel": "retrieve-payment-allocations"
+      |		}]
+      |	}, {
+      |		"id": "223456789012-123456",
+      |		"amount": 12.99,
+      |		"method": "B",
+      |		"transactionDate": "2019-02-27",
+      |		"links": [{
+      |			"href": "/accounts/self-assessment/AA123456A/payments/223456789012-123456",
+      |			"method": "GET",
+      |			"rel": "retrieve-payment-allocations"
+      |		}]
+      |	}],
+      |	"links": [{
+      |		"href": "/accounts/self-assessment/AA123456A/payments",
+      |		"method": "GET",
+      |		"rel": "self"
+      |	},
+      | {
+      |		"href": "/accounts/self-assessment/AA123456A/transactions",
+      |		"method": "GET",
+      |		"rel": "retrieve-transactions"
+      |	}]
       |}""".stripMargin)
 
-  val mtdResponseObj: ListPaymentsResponse = ListPaymentsResponse(
-    payments = Seq(Payment(Some("123456789012-123456"), Some(BigDecimal(11.99)), Some("A"), Some("2019-02-26")),
-      Payment(Some("223456789012-123456"), Some(BigDecimal(12.99)), Some("B"), Some("2019-02-27"))))
+  val payment1 = Payment(Some("123456789012-123456"), Some(BigDecimal(11.99)), Some("A"), Some("2019-02-26"))
+  val payment2 = Payment(Some("223456789012-123456"), Some(BigDecimal(12.99)), Some("B"), Some("2019-02-27"))
 
-  val emptyResponseObj: ListPaymentsResponse = ListPaymentsResponse(Seq.empty[Payment])
+  val mtdResponseObj: ListPaymentsResponse[Payment] = ListPaymentsResponse(payments = Seq(payment1, payment2))
+
+  val emptyResponseObj: ListPaymentsResponse[Payment] = ListPaymentsResponse(Seq.empty[Payment])
 }

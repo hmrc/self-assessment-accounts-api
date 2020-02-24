@@ -21,14 +21,18 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.fixtures.ListPaymentsFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListPaymentsRequestDataParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockListPaymentsService, MockMtdIdLookupService}
 import v1.models.errors._
+import v1.models.hateoas.Method.GET
+import v1.models.hateoas.RelType.{RETRIEVE_PAYMENT_ALLOCATIONS, RETRIEVE_TRANSACTIONS, SELF}
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
-import v1.fixtures.ListPaymentsFixture._
+import v1.models.response.listPayments.{ListPaymentsHateoasData, ListPaymentsResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -65,6 +69,17 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
   private val rawRequest = ListPaymentsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListPaymentsParsedRequest(Nino(nino), from, to)
 
+  private val paymentHateoasLink1       =
+    Link(href = "/accounts/self-assessment/AA123456A/payments/123456789012-123456", method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS)
+  private val paymentHateoasLink2       =
+    Link(href = "/accounts/self-assessment/AA123456A/payments/223456789012-123456", method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS)
+
+  private val listPaymentsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/payments", method = GET, rel = SELF)
+  private val transactionsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = RETRIEVE_TRANSACTIONS)
+
+  private val hateoasResponse = ListPaymentsResponse(
+    Seq(HateoasWrapper(payment1, Seq(paymentHateoasLink1)), HateoasWrapper(payment2, Seq(paymentHateoasLink2))))
+
   "retrieveList" should {
     "return a valid payments response" when {
       "a request sent has valid details" in new Test {
@@ -76,6 +91,10 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
         MockListPaymentsService
           .listPayments(parsedRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponseObj))))
+
+        MockHateoasFactory
+          .wrapList(mtdResponseObj, ListPaymentsHateoasData(nino))
+          .returns(HateoasWrapper(hateoasResponse, Seq(listPaymentsHateoasLink, transactionsHateoasLink)))
 
         val result: Future[Result] = controller.retrieveList(nino, Some(from), Some(to))(fakeGetRequest)
 

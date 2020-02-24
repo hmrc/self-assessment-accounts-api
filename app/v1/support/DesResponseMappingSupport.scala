@@ -20,14 +20,14 @@ import utils.Logging
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.listPayments.ListPaymentsResponse
+import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
 trait DesResponseMappingSupport {
   self: Logging =>
 
   final def validateListPaymentsSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
     desResponseWrapper.responseData match {
-      case listPaymentsResponse: ListPaymentsResponse if listPaymentsResponse.payments.isEmpty =>
+      case listPaymentsResponse: ListPaymentsResponse[Payment] if listPaymentsResponse.payments.isEmpty =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), NoPaymentsFoundError, None))
       case _ => Right(desResponseWrapper)
     }

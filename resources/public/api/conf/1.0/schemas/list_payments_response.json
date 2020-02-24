@@ -35,12 +35,80 @@
             "description": "The date the payment was received into the account. Date in the format: YYYY-MM-DD.",
             "type": "string",
             "example": "2019-12-29"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "A list of endpoint links that indicate possible actions related to the current resource",
+              "properties": {
+                "href": {
+                  "description": "The relative url of the endpoint",
+                  "type": "string",
+                  "example": "/accounts/self-assessment/{nino}/payments/{paymentId}"
+                },
+                "rel": {
+                  "description": "A label for the endpoint, which describes how it is related to the current resource.",
+                  "type": "string",
+                  "enum": [
+                    "retrieve-payment-allocations"
+                  ]
+                },
+                "method": {
+                  "description": "The HTTP method type for the endpoint",
+                  "type": "string",
+                  "enum": [
+                    "GET"
+                  ]
+                }
+              },
+              "required": [
+                "href",
+                "rel",
+                "method"
+              ]
+            }
           }
         }
       },
       "required": [
         "payment"
       ]
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource",
+        "properties": {
+          "href": {
+            "description": "The relative url of the endpoint",
+            "type": "string",
+            "example": "/accounts/self-assessment/{nino}/payments"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
+            "type": "string",
+            "enum": [
+              "self",
+              "retrieve-transactions"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint",
+            "type": "string",
+            "enum": [
+              "GET",
+              "POST"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
     }
   },
   "required": [

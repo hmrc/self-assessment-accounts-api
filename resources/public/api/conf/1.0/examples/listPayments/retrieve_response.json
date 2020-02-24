@@ -1,16 +1,33 @@
 {
-  "payments": [
+  "payments": [{
+    "id": "123456789012-123456",
+    "amount": 11.99,
+    "method": "A",
+    "transactionDate": "2019-02-26",
+    "links": [{
+      "href": "/accounts/self-assessment/AA123456A/payments/123456789012-123456",
+      "method": "GET",
+      "rel": "retrieve-payment-allocations"
+    }]
+  }, {
+    "id": "223456789012-123456",
+    "amount": 12.99,
+    "method": "B",
+    "transactionDate": "2019-02-27",
+    "links": [{
+      "href": "/accounts/self-assessment/AA123456A/payments/223456789012-123456",
+      "method": "GET",
+      "rel": "retrieve-payment-allocations"
+    }]
+  }],
+  "links": [{
+    "href": "/accounts/self-assessment/AA123456A/payments",
+    "method": "GET",
+    "rel": "self"
+  },
     {
-      "id": "123456789012-123456",
-      "amount": 11.99,
-      "method": "Payment by card",
-      "transactionDate": "2019-02-26"
-    },
-    {
-      "id": "223456789012-123456",
-      "amount": 12.99,
-      "method": "Payment by card",
-      "transactionDate": "2019-02-27"
-    }
-  ]
+      "href": "/accounts/self-assessment/AA123456A/transactions",
+      "method": "GET",
+      "rel": "retrieve-transactions"
+    }]
 }
