@@ -17,9 +17,16 @@
 package v1.fixtures
 
 import play.api.libs.json.{JsValue, Json}
+import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 
 object RetrieveBalanceFixture {
+
+  val validNino = "AA123456A"
+  val invalidNino = "A12344A"
+
+  val validRetrieveBalanceRawRequest: RetrieveBalanceRawRequest = RetrieveBalanceRawRequest(validNino)
+  val invalidRetrieveBalanceRawRequest: RetrieveBalanceRawRequest = RetrieveBalanceRawRequest(invalidNino)
 
   val fullDesResponse: JsValue = Json.parse(
     """
