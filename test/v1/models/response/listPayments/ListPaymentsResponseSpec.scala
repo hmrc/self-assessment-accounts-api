@@ -58,7 +58,7 @@ class ListPaymentsResponseSpec extends UnitSpec {
       |{
       |  "payments": [
       |    {
-      |      "id": "123-456",
+      |      "paymentId": "123-456",
       |      "amount": 10.25,
       |      "method": "beans",
       |      "transactionDate": "10/01/2020"

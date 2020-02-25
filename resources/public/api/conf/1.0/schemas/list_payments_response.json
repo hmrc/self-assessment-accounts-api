@@ -11,7 +11,7 @@
         "title": "payment",
         "type": "object",
         "properties": {
-          "id": {
+          "paymentId": {
             "description": "A unique identifier for the payment.",
             "type": "string",
             "pattern": "^[0-9A-Za-z]{1,12}\\-[0-9A-Za-z]{1,6}$",

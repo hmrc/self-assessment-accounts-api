@@ -34,7 +34,7 @@ object ListPaymentsResponse extends HateoasLinks {
   implicit object LinksFactory extends HateoasListLinksFactory[ListPaymentsResponse, Payment, ListPaymentsHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: ListPaymentsHateoasData, item: Payment): Seq[Link] =
-      Seq(retrievePaymentAllocations(appConfig, data.nino, item.id.getOrElse(""), isSelf = false))
+      Seq(retrievePaymentAllocations(appConfig, data.nino, item.paymentId.getOrElse(""), isSelf = false))
 
     override def links(appConfig: AppConfig, data: ListPaymentsHateoasData): Seq[Link] = Seq(
       listPayments(appConfig, data.nino, isSelf = true),

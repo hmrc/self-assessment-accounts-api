@@ -132,7 +132,7 @@ object ListPaymentsFixture {
     s"""
       |{
       |	"payments": [{
-      |		"id": "123456789012-123456",
+      |		"paymentId": "123456789012-123456",
       |		"amount": 11.99,
       |		"method": "A",
       |		"transactionDate": "2019-02-26",
@@ -142,7 +142,7 @@ object ListPaymentsFixture {
       |			"rel": "retrieve-payment-allocations"
       |		}]
       |	}, {
-      |		"id": "223456789012-123456",
+      |		"paymentId": "223456789012-123456",
       |		"amount": 12.99,
       |		"method": "B",
       |		"transactionDate": "2019-02-27",

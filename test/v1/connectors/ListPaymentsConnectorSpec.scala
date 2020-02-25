@@ -40,13 +40,13 @@ class ListPaymentsConnectorSpec extends ConnectorSpec {
   val response = ListPaymentsResponse(
     payments = Seq(
       Payment(
-        id = Some("123-456"),
+        paymentId = Some("123-456"),
         amount = Some(10.25),
         method = Some("beans"),
         transactionDate = Some("2020-01-01")
       ),
       Payment(
-        id = Some("234-567"),
+        paymentId = Some("234-567"),
         amount = Some(20.25),
         method = Some("more beans"),
         transactionDate = Some("2020-01-02")
