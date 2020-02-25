@@ -57,7 +57,7 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/cross-regime/balance/NINO/$nino/ITSA",
+            url = s"$baseUrl/cross-regime/balance-placeholder/NINO/$nino/ITSA",
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))

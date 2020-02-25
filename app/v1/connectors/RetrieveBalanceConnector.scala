@@ -36,7 +36,7 @@ class RetrieveBalanceConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
 
     get(
-      uri = DesUri[RetrieveBalanceResponse](s"cross-regime/balance/NINO/$nino/ITSA")
+      uri = DesUri[RetrieveBalanceResponse](s"cross-regime/balance-placeholder/NINO/$nino/ITSA")
     )
   }
 }
