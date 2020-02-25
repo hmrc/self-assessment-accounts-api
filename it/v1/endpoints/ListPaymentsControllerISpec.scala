@@ -163,6 +163,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_RANGE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_PAYMENT_LOT", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_PAYMENT_LOT_ITEM", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, DownstreamError),

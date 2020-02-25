@@ -57,6 +57,7 @@ class ListPaymentsService @Inject()(listPaymentsConnector: ListPaymentsConnector
       "INVALID_CLEARING_DOC" -> DownstreamError,
       "INVALID_DATE_FROM" -> FromDateFormatError,
       "INVALID_DATE_TO" -> ToDateFormatError,
+      "INVALID_DATE_RANGE" -> DownstreamError,
       "INVALID_CORRELATIONID" -> DownstreamError,
       "REQUEST_NOT_PROCESSED" -> DownstreamError,
       "NO_DATA_FOUND" -> NotFoundError,
