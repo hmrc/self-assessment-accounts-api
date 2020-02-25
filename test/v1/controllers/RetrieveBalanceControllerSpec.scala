@@ -17,14 +17,22 @@
 package v1.controllers
 
 import mocks.MockAppConfig
+import play.api.libs.json.Json
+import play.api.mvc.Result
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveBalanceFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.requestParsers.MockRetrieveBalanceRequestParser
+import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveBalanceService}
+import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError}
+import v1.models.hateoas.HateoasWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, RetrieveBalanceRawRequest}
+import v1.models.response.retrieveBalance.{RetrieveBalanceHateoasData, RetrieveBalanceResponse}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveBalanceControllerSpec
@@ -45,11 +53,11 @@ class RetrieveBalanceControllerSpec
 
   private val parsedRequest: RetrieveBalanceParsedRequest =
     RetrieveBalanceParsedRequest(
-      nino = nino
+      nino = Nino(nino)
     )
 
-  private val retrieveBalanceResponse = RetrieveBalanceFixture.fullDesResponse
-  private val mtdResponse = RetrieveBalanceFixture.mtdJsonWithHateoas(nino = nino)
+  private val retrieveBalanceResponse = RetrieveBalanceFixture.fullModel
+  private val mtdResponse = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
 
   trait Test {
     val hc = HeaderCarrier()
@@ -82,7 +90,71 @@ class RetrieveBalanceControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBalanceResponse))))
 
         MockHateoasFactory
-          .wrap(retrieveBalanceResponse, )
+          .wrap(retrieveBalanceResponse, RetrieveBalanceHateoasData(nino))
+          .returns(HateoasWrapper(retrieveBalanceResponse, Seq(retrieveBalance(mockAppConfig, nino, isSelf = true),
+            retrieveTransactions(mockAppConfig, nino, isSelf = false))))
+
+        val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
+
+        status(result) shouldBe OK
+        contentAsJson(result) shouldBe mtdResponse
+        header("X-CorrelationId", result) shouldBe Some(correlationId)
+      }
+    }
+
+    "return the error as per spec" when {
+      "parser errors occur" must {
+        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
+          s"a ${error.code} error is returned from the parser" in new Test {
+
+            MockRetrieveBalanceRequestParser
+              .parse(rawRequest)
+              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+
+            val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(error)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+          }
+        }
+
+        val input = Seq(
+          (BadRequestError, BAD_REQUEST),
+          (NinoFormatError, BAD_REQUEST),
+          (DownstreamError, INTERNAL_SERVER_ERROR)
+        )
+
+        input.foreach(args => (errorsFromParserTester _).tupled(args))
+      }
+
+      "service errors occur" must {
+        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+          s"a $mtdError error is returned from the service" in new Test {
+
+            MockRetrieveBalanceRequestParser
+              .parse(rawRequest)
+              .returns(Right(parsedRequest))
+
+            MockRetrieveBalanceService
+              .retrieveBalance(parsedRequest)
+              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+
+            val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
+
+            status(result) shouldBe expectedStatus
+            contentAsJson(result) shouldBe Json.toJson(mtdError)
+            header("X-CorrelationId", result) shouldBe Some(correlationId)
+          }
+        }
+
+        val input = Seq(
+          (NinoFormatError, BAD_REQUEST),
+          (NotFoundError, NOT_FOUND),
+          (DownstreamError, INTERNAL_SERVER_ERROR)
+        )
+
+        input.foreach(args => (serviceErrors _).tupled(args))
       }
     }
   }

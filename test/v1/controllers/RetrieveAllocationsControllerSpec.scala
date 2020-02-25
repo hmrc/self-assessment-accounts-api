@@ -45,6 +45,7 @@ class RetrieveAllocationsControllerSpec
     with MockRetrieveAllocationsRequestParser
     with HateoasLinks {
 
+
   private val nino = "AA123456A"
   private val paymentId = "anId-anotherId"
   private val paymentLot = "anId"

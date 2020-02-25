@@ -17,26 +17,29 @@
 package v1.controllers
 
 import cats.data.EitherT
+import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
+import v1.controllers.requestParsers.RetrieveBalanceRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, NinoFormatError, NotFoundError}
 import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
+import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveBalanceService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveBalanceController @Inject()(
-                                         authService: EnrolmentsAuthService,
+                                         val authService: EnrolmentsAuthService,
                                          val lookupService: MtdIdLookupService,
                                          requestParser: RetrieveBalanceRequestParser,
                                          service: RetrieveBalanceService,
                                          hateoasFactory: HateoasFactory,
-                                         cc: ControllerComponents)(implicit ec: ExecutionContext) extends AuthorisedController with BaseController with Logging {
+                                         cc: ControllerComponents)(implicit ec: ExecutionContext) extends AuthorisedController(cc) with BaseController with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
