@@ -21,61 +21,52 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
+import v1.fixtures.RetrieveBalanceFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
-import v1.models.errors._
+import v1.mocks.requestParsers.MockRetrieveBalanceRequestParser
+import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveBalanceService}
+import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError}
 import v1.models.hateoas.HateoasWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
-import v1.models.response.retrieveAllocations.RetrieveAllocationsHateoasData
+import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, RetrieveBalanceRawRequest}
+import v1.models.response.retrieveBalance.{RetrieveBalanceHateoasData, RetrieveBalanceResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveAllocationsControllerSpec
+class RetrieveBalanceControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrieveAllocationsService
+    with MockRetrieveBalanceService
     with MockHateoasFactory
     with MockAppConfig
-    with MockRetrieveAllocationsRequestParser
+    with MockRetrieveBalanceRequestParser
     with HateoasLinks {
 
-
   private val nino = "AA123456A"
-  private val paymentId = "anId-anotherId"
-  private val paymentLot = "anId"
-  private val paymentLotItem = "anotherId"
   private val correlationId = "X-123"
 
-  private val rawRequest: RetrieveAllocationsRawRequest =
-    RetrieveAllocationsRawRequest(
-      nino = nino,
-      paymentId = paymentId
+  private val rawRequest: RetrieveBalanceRawRequest =
+    RetrieveBalanceRawRequest(nino = nino)
+
+  private val parsedRequest: RetrieveBalanceParsedRequest =
+    RetrieveBalanceParsedRequest(
+      nino = Nino(nino)
     )
 
-  private val parsedRequest: RetrieveAllocationsParsedRequest =
-    RetrieveAllocationsParsedRequest(
-      nino = Nino(nino),
-      paymentLot = paymentLot,
-      paymentLotItem = paymentLotItem
-    )
-
-  private val retrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
-  private val mtdResponse = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas(nino, paymentId)
+  private val retrieveBalanceResponse = RetrieveBalanceFixture.fullModel
+  private val mtdResponse = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
 
   trait Test {
     val hc = HeaderCarrier()
 
-    val controller = new RetrieveAllocationsController(
+    val controller = new RetrieveBalanceController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveAllocationsRequestParser,
-      service = mockRetrieveAllocationsService,
+      requestParser = mockRetrieveBalanceRequestParser,
+      service = mockRetrieveBalanceService,
       hateoasFactory = mockHateoasFactory,
       cc = cc
     )
@@ -84,31 +75,30 @@ class RetrieveAllocationsControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
   }
 
-  "retrieveAllocations" should {
+  "retrieveBalance" should {
     "return OK" when {
       "happy path" in new Test {
 
         MockedAppConfig.apiGatewayContext returns "accounts/self-assessment" anyNumberOfTimes()
 
-        MockRetrieveAllocationsRequestParser
+        MockRetrieveBalanceRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
 
-        MockRetrieveAllocationsService
-          .retrieveAllocations(parsedRequest)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))))
+        MockRetrieveBalanceService
+          .retrieveBalance(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBalanceResponse))))
 
         MockHateoasFactory
-          .wrap(retrieveAllocationsResponse, RetrieveAllocationsHateoasData(nino, paymentId))
-          .returns(HateoasWrapper(retrieveAllocationsResponse, Seq(retrievePaymentAllocations(mockAppConfig, nino, paymentId, isSelf = true),
-            listPayments(mockAppConfig, nino, isSelf = false))))
+          .wrap(retrieveBalanceResponse, RetrieveBalanceHateoasData(nino))
+          .returns(HateoasWrapper(retrieveBalanceResponse, Seq(retrieveBalance(mockAppConfig, nino, isSelf = true),
+            retrieveTransactions(mockAppConfig, nino, isSelf = false))))
 
-        val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
       }
     }
 
@@ -117,11 +107,11 @@ class RetrieveAllocationsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockRetrieveAllocationsRequestParser
+            MockRetrieveBalanceRequestParser
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -132,7 +122,6 @@ class RetrieveAllocationsControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (PaymentIdFormatError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
@@ -143,15 +132,15 @@ class RetrieveAllocationsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockRetrieveAllocationsRequestParser
+            MockRetrieveBalanceRequestParser
               .parse(rawRequest)
               .returns(Right(parsedRequest))
 
-            MockRetrieveAllocationsService
-              .retrieveAllocations(parsedRequest)
+            MockRetrieveBalanceService
+              .retrieveBalance(parsedRequest)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -161,7 +150,6 @@ class RetrieveAllocationsControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (PaymentIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
@@ -171,3 +159,8 @@ class RetrieveAllocationsControllerSpec
     }
   }
 }
+
+
+
+
+

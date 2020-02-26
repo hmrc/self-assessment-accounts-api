@@ -16,7 +16,7 @@
 
 package v1.fixtures
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
 import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 
@@ -50,6 +50,23 @@ object RetrieveBalanceFixture {
       | "pendingChargeDueDate" : "12/12/2020"
       |}
       |""".stripMargin
+  )
+
+  def fullMtdResponseJsonWithHateoas(nino: String): JsValue = fullMtdResponseJson.as[JsObject] ++ Json.obj(
+    "links" -> JsArray(
+      Seq(
+        Json.obj(
+          "href" -> s"/accounts/self-assessment/$nino/balance",
+          "method" -> "GET",
+          "rel" -> "self"
+        ),
+        Json.obj(
+          "href" -> s"/accounts/self-assessment/$nino/transactions",
+          "method" -> "GET",
+          "rel" -> "retrieve-transactions"
+        )
+      )
+    )
   )
 
   val fullModel: RetrieveBalanceResponse = RetrieveBalanceResponse(overdueAmount = Some(BigDecimal(1000)),

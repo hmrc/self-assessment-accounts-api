@@ -16,8 +16,11 @@
 
 package v1.models.response.retrieveBalance
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveBalanceResponse (overdueAmount : Option[BigDecimal],
                                     payableAmount: BigDecimal,
@@ -25,7 +28,7 @@ case class RetrieveBalanceResponse (overdueAmount : Option[BigDecimal],
                                     pendingChargeDueAmount: Option[BigDecimal],
                                     pendingChargeDueDate: Option[String])
 
-object RetrieveBalanceResponse {
+object RetrieveBalanceResponse extends HateoasLinks {
 
   implicit val writes: OWrites[RetrieveBalanceResponse] = Json.writes[RetrieveBalanceResponse]
 
@@ -36,4 +39,17 @@ object RetrieveBalanceResponse {
       (JsPath \ "pendingChargeDueAmount").readNullable[BigDecimal] and
       (JsPath \ "pendingChargeDueDate").readNullable[String]
     )(RetrieveBalanceResponse.apply _)
+
+  implicit object  RetrieveBalanceLinksFactory extends HateoasLinksFactory[RetrieveBalanceResponse, RetrieveBalanceHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveBalanceHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        retrieveBalance(appConfig, nino, isSelf = true),
+        retrieveTransactions(appConfig, nino, isSelf = false)
+      )
+    }
+  }
 }
+
+case class RetrieveBalanceHateoasData(nino: String) extends HateoasData
+
