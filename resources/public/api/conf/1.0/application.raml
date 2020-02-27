@@ -48,4 +48,11 @@ uses:
         get: !include retrieveAllocations.raml
     /balance:
       get: !include retrieveBalance.raml
-      
+    /charges:
+      /{chargeId}:
+        uriParameters:
+          chargeId:
+            description: A unique identifier for the charge.
+            type: string
+            example: f9034ndfsji0toufgbgb
+        get: !include retrieveChargeHistory.raml
