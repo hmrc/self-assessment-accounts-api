@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve a self assessment balance",
+  "description": "Retrieve a self assessment balance",
+  "type": "object",
+  "properties": {
+    "overdueAmount": {
+      "description": "The sum of any non-zero charges whose payment due date has passed.",
+      "type": "number",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum": 99999999999.99,
+      "example": "1000.25"
+    },
+    "payableAmount": {
+      "description": "The sum of any non-zero charges whose payment due date is imminent.",
+      "type": "number",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum": 99999999999.99,
+      "example": "1000.25"
+    },
+    "payableDueDate": {
+      "description": "The date by when the amount is due to be paid. Date in the format YYYY-MM-DD",
+      "type": "string",
+      "example": "2020-03-01"
+    },
+    "pendingChargeDueAmount": {
+      "description": "The sum of any charges whose payment is pending (not yet due).",
+      "type": "number",
+      "multipleOf": 0.01,
+      "minimum": 0,
+      "maximum": 99999999999.99,
+      "example": "1000.25"
+    },
+    "pendingChargeDueDate": {
+      "description": "The date by when the next pending (not yet due) charge must be paid.",
+      "type": "string",
+      "example": "2020-04-01"
+    }
+  },
+  "required": [
+    "payableAmount"
+  ]
+}
