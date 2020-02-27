@@ -24,9 +24,9 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
   val desResponse: JsValue = Json.parse(
     """
       |{
-      |   "history":[
+      |   "history": [
       |      {
-      |         "taxYear":"2020",
+      |         "taxYear":2020,
       |         "id":"X123456790A",
       |         "transactionDate":"2019-06-01",
       |         "type":"Balancing Charge Debit",
@@ -42,15 +42,15 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
   val mtdResponse: JsValue = Json.parse(
     """
       |{
-      |   "history":[
+      |   "history": [
       |      {
-      |         "taxYear":"2020",
-      |         "id":"X123456790A",
-      |         "transactionDate":"2019-06-01",
-      |         "type":"Balancing Charge Debit",
-      |         "amount":600.01,
-      |         "reversalDate":"2019-06-05",
-      |         "reversalReason":"Example reason"
+      |         "taxYear": "2019-20",
+      |         "id": "X123456790A",
+      |         "transactionDate": "2019-06-01",
+      |         "type": "Balancing Charge Debit",
+      |         "amount": 600.01,
+      |         "reversalDate": "2019-06-05",
+      |         "reversalReason": "Example reason"
       |      }
       |   ]
       |}
@@ -60,37 +60,36 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
   val desResponseWithMultipleHHistory: JsValue = Json.parse(
     """
       |{
-      |   "history":[
+      |   "history": [
       |      {
-      |         "taxYear":"2020",
-      |         "id":"X123456790A",
-      |         "transactionDate":"2019-06-01",
-      |         "type":"Balancing Charge Debit",
-      |         "amount":600.01,
-      |         "reversalDate":"2019-06-05",
-      |         "reversalReason":"Example reason"
+      |         "taxYear": 2020,
+      |         "id": "X123456790A",
+      |         "transactionDate": "2019-06-01",
+      |         "type": "Balancing Charge Debit",
+      |         "amount": 600.01,
+      |         "reversalDate": "2019-06-05",
+      |         "reversalReason": "Example reason"
       |      },
       |      {
-      |         "taxYear":"2020",
-      |         "id":"X123456790A",
-      |         "transactionDate":"2019-06-01",
-      |         "type":"Balancing Charge Debit",
-      |         "amount":600.01,
-      |         "reversalDate":"2019-06-07",
-      |         "reversalReason":"Example reason 2"
+      |         "taxYear": 2020,
+      |         "id": "X123456790A",
+      |         "transactionDate": "2019-06-01",
+      |         "type": "Balancing Charge Debit",
+      |         "amount": 600.01,
+      |         "reversalDate": "2019-06-07",
+      |         "reversalReason": "Example reason 2"
       |      }
       |   ]
       |}
     """.stripMargin
   )
 
-
   val mtdResponseWithMultipleHHistory: JsValue = Json.parse(
     """
       |{
-      |   "history":[
+      |   "history": [
       |      {
-      |         "taxYear":"2020",
+      |         "taxYear":"2019-20",
       |         "id":"X123456790A",
       |         "transactionDate":"2019-06-01",
       |         "type":"Balancing Charge Debit",
@@ -99,7 +98,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
       |         "reversalReason":"Example reason"
       |      },
       |      {
-      |         "taxYear":"2020",
+      |         "taxYear":"2019-20",
       |         "id":"X123456790A",
       |         "transactionDate":"2019-06-01",
       |         "type":"Balancing Charge Debit",
@@ -115,8 +114,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
   val desResponseEmptyHistory: JsValue = Json.parse(
     """
       |{
-      |   "history":[
-      |   ]
+      |   "history": []
       |}
     """.stripMargin
   )
@@ -124,8 +122,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
   val mtdResponseEmptyHistory: JsValue = Json.parse(
     """
       |{
-      |   "history":[
-      |   ]
+      |   "history": []
       |}
     """.stripMargin
   )
@@ -141,16 +138,11 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val desReponseEmpty: JsValue = Json.parse(
-    """
-      |{
-      |}
-    """.stripMargin
-  )
+  val desReponseEmpty: JsValue = Json.parse("""{}""")
 
   val chargeHistoryResponse: ChargeHistory =
     ChargeHistory(
-      taxYear = Some("2020"),
+      taxYear = Some("2019-20"),
       id = Some("X123456790A"),
       transactionDate = Some("2019-06-01"),
       `type` = Some("Balancing Charge Debit"),
@@ -161,7 +153,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
   val chargeHistoryResponse2: ChargeHistory =
     ChargeHistory(
-      taxYear = Some("2020"),
+      taxYear = Some("2019-20"),
       id = Some("X123456790A"),
       transactionDate = Some("2019-06-01"),
       `type` = Some("Balancing Charge Debit"),

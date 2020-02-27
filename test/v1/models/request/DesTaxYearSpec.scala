@@ -17,6 +17,7 @@
 package v1.models.request
 
 import support.UnitSpec
+import v1.models.domain.DesTaxYear
 
 class DesTaxYearSpec extends UnitSpec {
 
@@ -24,6 +25,18 @@ class DesTaxYearSpec extends UnitSpec {
     "toString" should {
       "produce the correct String" in {
         DesTaxYear("2019").toString shouldBe "2019"
+      }
+    }
+
+    "fromMtd" should {
+      "produce the correct String" in {
+        DesTaxYear.fromMtd("2019-20") shouldBe DesTaxYear("2020")
+      }
+    }
+
+    "fromDesIntToString" should {
+      "produce the correct String" in {
+        DesTaxYear.fromDesIntToString(2019) shouldBe "2018-19"
       }
     }
   }
