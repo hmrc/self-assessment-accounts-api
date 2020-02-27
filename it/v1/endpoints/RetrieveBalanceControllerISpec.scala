@@ -120,7 +120,6 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
