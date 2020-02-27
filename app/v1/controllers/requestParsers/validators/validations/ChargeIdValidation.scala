@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveChargeHistory
+package v1.controllers.requestParsers.validators.validations
 
-import v1.models.request.RawData
+import v1.models.errors.{ChargeIdFormatError, MtdError}
 
-case class RetrieveChargeHistoryRawRequest(nino: String, chargeId: String) extends RawData
+object ChargeIdValidation {
+
+  private val chargeIdRegex =
+    "^[0-9A-Za-z]{1,35}$"
+
+  def validate(chargeId: String): List[MtdError] = {
+    if (chargeId.matches(chargeIdRegex)) NoValidationErrors else List(ChargeIdFormatError)
+  }
+}
