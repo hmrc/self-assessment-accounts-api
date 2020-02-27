@@ -14,7 +14,6 @@
           "taxYear": {
             "description": "The tax year to which the charge relates.",
             "type": "string",
-            "pattern": "^\\d{4}-\\d{2}$",
             "example": "2019-20"
           },
           "id": {
@@ -25,12 +24,11 @@
           "transactionDate": {
             "description": "The date the charge was created.",
             "type": "string",
-            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            "example": "2019-08-11"
           },
           "type": {
             "description": "A description of the type of charge.",
-            "type": "string",
-            "pattern": "^[0-9a-zA-Z\\s]{1,30}$"
+            "type": "string"
           },
           "totalAmount": {
             "description": "The original amount of the charge.",
