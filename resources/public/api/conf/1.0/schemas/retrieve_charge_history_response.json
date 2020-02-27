@@ -23,7 +23,7 @@
             "example": "X123456790A"
           },
           "transactionDate" : {
-            "description": "The date the charge was created. Date in the format YYYY-MM-DD",
+            "description": "The date the charge was created. Date in the format: YYYY-MM-DD.",
             "type": "string",
             "example": "2018-04-05"
           },
