@@ -49,6 +49,17 @@ traits:
                 description: The format of the supplied NINO field is not valid
                 value:
                   code: FORMAT_NINO
+  formatChargeId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatChargeId:
+                description: The format of the supplied unique identifier field is not valid
+                value:
+                  code: FORMAT_CHARGE_ID
   formatTaxYear:
     responses:
       400:
