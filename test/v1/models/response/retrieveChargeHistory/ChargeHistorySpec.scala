@@ -90,7 +90,7 @@ class ChargeHistorySpec extends UnitSpec {
 
     "read from empty JSON" should {
       "produce an empty ChargeHistory object" in {
-        desReponseEmpty.as[ChargeHistory] shouldBe ChargeHistory(None, None, None, None, None, None, None)
+        desReponseEmpty.as[ChargeHistory] shouldBe ChargeHistory.empty
       }
     }
 

@@ -28,6 +28,9 @@ case class ChargeHistory(taxYear: Option[String],
                          reversalReason: Option[String])
 
 object ChargeHistory {
+
+  val empty: ChargeHistory = ChargeHistory(None, None, None, None, None, None, None)
+
   implicit val reads: Reads[ChargeHistory] = (
     (JsPath \ "taxYear").readNullable[String] and
       (JsPath \ "id").readNullable[String] and

@@ -22,7 +22,8 @@ case class RetrieveChargeHistoryResponse(history: Seq[ChargeHistory])
 
 object RetrieveChargeHistoryResponse {
   implicit val reads: Reads[RetrieveChargeHistoryResponse] =
-    (JsPath \ "history").read[Seq[ChargeHistory]].map(RetrieveChargeHistoryResponse(_))
+    (JsPath \ "history").read[Seq[ChargeHistory]]
+      .map(items => RetrieveChargeHistoryResponse(items.filterNot(_ == ChargeHistory.empty)))
 
   implicit val writes: OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
 }

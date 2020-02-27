@@ -141,17 +141,6 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
-  val mtdResponseEmptyHistoryObject: JsValue = Json.parse(
-    """
-      |{
-      |   "history":[
-      |    {
-      |    }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
   val desReponseEmpty: JsValue = Json.parse(
     """
       |{
@@ -194,11 +183,9 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
       )
     )
 
-  val emptyChargeHistory = ChargeHistory(None, None, None, None, None, None, None)
-
   val retrieveChargeHistoryResponseEmptyItem: RetrieveChargeHistoryResponse =
     RetrieveChargeHistoryResponse(
-      Seq(emptyChargeHistory)
+      history = Seq()
     )
 
   "RetrieveChargeHistoryResponse" when {
@@ -251,8 +238,8 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
     }
 
     "written to JSON (empty history item)" should {
-      "produce the expected JSON" in {
-        Json.toJson(retrieveChargeHistoryResponseEmptyItem) shouldBe mtdResponseEmptyHistoryObject
+      "not write empty history items" in {
+        Json.toJson(retrieveChargeHistoryResponseEmptyItem) shouldBe mtdResponseEmptyHistory
       }
     }
   }
