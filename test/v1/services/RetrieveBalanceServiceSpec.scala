@@ -62,7 +62,7 @@ class RetrieveBalanceServiceSpec extends UnitSpec {
           pendingChargeDueDate = Some("a date")
         )
 
-      MockRetrieveBalanceConnector.retrieve(requestData)
+      MockRetrieveBalanceConnector.retrieveBalance(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
       await(service.retrieveBalance(requestData)) shouldBe Right(ResponseWrapper(correlationId,connectorResponse))
@@ -75,7 +75,7 @@ class RetrieveBalanceServiceSpec extends UnitSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveBalanceConnector.retrieve(requestData)
+          MockRetrieveBalanceConnector.retrieveBalance(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.retrieveBalance(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))

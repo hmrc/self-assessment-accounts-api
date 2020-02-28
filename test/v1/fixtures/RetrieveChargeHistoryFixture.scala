@@ -17,6 +17,7 @@
 package v1.fixtures
 
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
+import v1.models.response.retrieveChargeHistory.{ChargeHistory, RetrieveChargeHistoryResponse}
 
 object RetrieveChargeHistoryFixture {
 
@@ -34,4 +35,20 @@ object RetrieveChargeHistoryFixture {
   val invalidRetrieveChargeHistoryRawRequestInvalidNinoAndChargeId: RetrieveChargeHistoryRawRequest =
     RetrieveChargeHistoryRawRequest(invalidNino, invalidChargeId)
 
+
+  val chargeHistoryResponse: ChargeHistory =
+    ChargeHistory(
+      taxYear = Some("2019-20"),
+      id = Some("X123456790A"),
+      transactionDate = Some("2019-06-01"),
+      `type` = Some("Balancing Charge Debit"),
+      amount = Some(600.01),
+      reversalDate = Some("2019-06-05"),
+      reversalReason = Some("Example reason")
+    )
+
+  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
+    RetrieveChargeHistoryResponse(
+      history = Seq(chargeHistoryResponse)
+    )
 }
