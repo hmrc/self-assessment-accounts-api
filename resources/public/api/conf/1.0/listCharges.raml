@@ -12,22 +12,22 @@ is:
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
   - errors.notFoundPayments
-  - queryParameters.fromPayments
-  - queryParameters.toPayments
-displayName: "List Self Assessment Payments [test only]"
-description: This endpoint allows a developer to retrieve a list of payments for a given date range. The developer must use a unique identifier for the account (National Insurance Number) and provide a date range.
-(annotations.sandboxData): !include scenarios/listPayments.md
+  - queryParameters.fromCharges
+  - queryParameters.toCharges
+displayName: "List Self Assessment Charges [test only]"
+description: This endpoint allows a developer to retrieve the details of charges made to an account between two dates. The developer must use a unique identifier for the account (National Insurance number) and provide a valid date range.
+(annotations.sandboxData): !include scenarios/listCharges.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:
   200:
     body:
       application/json:
-        type: !include schemas/list_payments_response.json
+        type: !include schemas/list_charges_response.json
         examples:
           example-1:
             description:
-            value: !include examples/listPayments/retrieve_response.json
+            value: !include examples/listCharges/retrieve_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435

@@ -49,6 +49,7 @@ uses:
     /balance:
       get: !include retrieveBalance.raml
     /charges:
+      get: !include listCharges.raml
       /{chargeId}:
         uriParameters:
           chargeId:
