@@ -12,7 +12,7 @@
         "type": "object",
         "properties": {
           "taxYear": {
-            "description": "The tax year to which the charge relates.",
+            "description": "The tax year that this charge relates to in the format: YYYY-YY.",
             "type": "string",
             "example": "2019-20"
           },
