@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.response.retrieveChargeHistory
 
-import config.FixedConfig
-import v1.models.domain.DesTaxYear
-import v1.models.errors.MtdError
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-object MtdTaxYearValidation extends FixedConfig {
+case class RetrieveChargeHistoryResponse(history: Seq[ChargeHistory])
 
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String, error: MtdError): List[MtdError] = {
+object RetrieveChargeHistoryResponse {
+  implicit val reads: Reads[RetrieveChargeHistoryResponse] =
+    (JsPath \ "history").read[Seq[ChargeHistory]]
+      .map(items => RetrieveChargeHistoryResponse(items.filterNot(_ == ChargeHistory.empty)))
 
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
-
-    if (desTaxYear >= minimumTaxYear) NoValidationErrors else List(error)
-  }
+  implicit val writes: OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
 }

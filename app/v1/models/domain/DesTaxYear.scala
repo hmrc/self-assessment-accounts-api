@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.domain
 
 /**
   * Represents a tax year for DES
@@ -32,4 +32,7 @@ object DesTaxYear {
     */
   def fromMtd(taxYear: String): DesTaxYear =
     DesTaxYear(taxYear.take(2) + taxYear.drop(5))
+
+  def fromDesIntToString(taxYear: Int): String =
+    (taxYear - 1) + "-" + taxYear.toString.drop(2)
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.request
+package v1.models.domain
 
 import support.UnitSpec
 
@@ -24,6 +24,18 @@ class DesTaxYearSpec extends UnitSpec {
     "toString" should {
       "produce the correct String" in {
         DesTaxYear("2019").toString shouldBe "2019"
+      }
+    }
+
+    "fromMtd" should {
+      "produce the correct String" in {
+        DesTaxYear.fromMtd("2019-20") shouldBe DesTaxYear("2020")
+      }
+    }
+
+    "fromDesIntToString" should {
+      "produce the correct String" in {
+        DesTaxYear.fromDesIntToString(2019) shouldBe "2018-19"
       }
     }
   }
