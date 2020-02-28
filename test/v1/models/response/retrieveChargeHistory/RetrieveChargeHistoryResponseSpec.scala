@@ -175,7 +175,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
       )
     )
 
-  val retrieveChargeHistoryResponseEmptyItem: RetrieveChargeHistoryResponse =
+  val retrieveChargeHistoryResponseEmpty: RetrieveChargeHistoryResponse =
     RetrieveChargeHistoryResponse(
       history = Seq()
     )
@@ -195,7 +195,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
     "read from valid JSON with an empty History array" should {
       "produce the expected RetrieveChargeHistoryResponse object" in {
-        desResponseEmptyHistory.as[RetrieveChargeHistoryResponse] shouldBe RetrieveChargeHistoryResponse(Seq())
+        desResponseEmptyHistory.as[RetrieveChargeHistoryResponse] shouldBe retrieveChargeHistoryResponseEmpty
       }
     }
 
@@ -206,8 +206,8 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
     }
 
     "read from valid JSON with an empty history item" should {
-      "produce the expected RetrieveChargeHistoryResponse object" in {
-        desResponseEmptyHistoryObject.as[RetrieveChargeHistoryResponse] shouldBe retrieveChargeHistoryResponseEmptyItem
+      "not read empty charge history items" in {
+        desResponseEmptyHistoryObject.as[RetrieveChargeHistoryResponse] shouldBe retrieveChargeHistoryResponseEmpty
       }
     }
 
@@ -225,13 +225,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
     "written to JSON (empty history array)" should {
       "produce the expected JSON" in {
-        Json.toJson(retrieveChargeHistoryResponseEmptyItem) shouldBe mtdResponseEmptyHistory
-      }
-    }
-
-    "written to JSON (empty history item)" should {
-      "not write empty history items" in {
-        Json.toJson(retrieveChargeHistoryResponseEmptyItem) shouldBe mtdResponseEmptyHistory
+        Json.toJson(retrieveChargeHistoryResponseEmpty) shouldBe mtdResponseEmptyHistory
       }
     }
   }
