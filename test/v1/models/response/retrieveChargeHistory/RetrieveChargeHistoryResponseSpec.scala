@@ -225,7 +225,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
     "written to JSON (empty history array)" should {
       "produce the expected JSON" in {
-        Json.toJson(RetrieveChargeHistoryResponse(Seq())) shouldBe mtdResponseEmptyHistory
+        Json.toJson(retrieveChargeHistoryResponseEmptyItem) shouldBe mtdResponseEmptyHistory
       }
     }
 
