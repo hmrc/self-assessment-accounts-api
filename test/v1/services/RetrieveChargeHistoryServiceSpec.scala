@@ -61,7 +61,7 @@ class RetrieveChargeHistoryServiceSpec extends UnitSpec {
       MockRetrieveChargeHistoryConnector.retrieveChargeHistory(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
-      await(service.retrieveBalance(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
+      await(service.retrieveChargeHistory(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
     }
   }
 
@@ -74,7 +74,7 @@ class RetrieveChargeHistoryServiceSpec extends UnitSpec {
           MockRetrieveChargeHistoryConnector.retrieveChargeHistory(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.retrieveBalance(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.retrieveChargeHistory(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
         }
 
       val input: Seq[(String, MtdError)] = Seq(
