@@ -20,52 +20,48 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.mocks.connectors.MockRetrieveBalanceConnector
+import v1.fixtures.RetrieveChargeHistoryFixture
+import v1.mocks.connectors.MockRetrieveChargeHistoryConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
-import v1.models.response.retrieveBalance.RetrieveBalanceResponse
+import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
+import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveBalanceServiceSpec extends UnitSpec {
+class RetrieveChargeHistoryServiceSpec extends UnitSpec {
 
-  private val nino = "AA123456A"
+  private val nino = Nino("AA123456A")
+  private val chargeId = "anId"
   private val correlationId = "X-123"
 
-  private val requestData: RetrieveBalanceParsedRequest =
-    RetrieveBalanceParsedRequest(
-      nino = Nino(nino)
+  private val requestData: RetrieveChargeHistoryParsedRequest =
+    RetrieveChargeHistoryParsedRequest(
+      nino = nino,
+      chargeId = chargeId
     )
 
-  trait Test extends MockRetrieveBalanceConnector {
+  trait Test extends MockRetrieveChargeHistoryConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "retrieveBalance")
+    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveChargeHistoryController", "retrieveChargeHistory")
 
-    val service = new RetrieveBalanceService(
-      connector = mockRetrieveBalanceConnector
+    val service = new RetrieveChargeHistoryService(
+      connector = mockRetrieveChargeHistoryConnector
     )
   }
 
-  "service" when {
+  "RetrieveChargeHistoryService" when {
     "service call successful" must {}
     "return mapped result" in new Test {
 
-      val connectorResponse: RetrieveBalanceResponse =
-        RetrieveBalanceResponse(
-          overdueAmount = Some(100.00),
-          payableAmount = 100.00,
-          payableDueDate = Some("18-02-2031"),
-          pendingChargeDueAmount = Some(100.00),
-          pendingChargeDueDate = Some("a date")
-        )
+      val connectorResponse: RetrieveChargeHistoryResponse = RetrieveChargeHistoryFixture.retrieveChargeHistoryResponse
 
-      MockRetrieveBalanceConnector.retrieveBalance(requestData)
+      MockRetrieveChargeHistoryConnector.retrieveChargeHistory(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
-      await(service.retrieveBalance(requestData)) shouldBe Right(ResponseWrapper(correlationId,connectorResponse))
+      await(service.retrieveBalance(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
     }
   }
 
@@ -75,16 +71,17 @@ class RetrieveBalanceServiceSpec extends UnitSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveBalanceConnector.retrieveBalance(requestData)
+          MockRetrieveChargeHistoryConnector.retrieveChargeHistory(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.retrieveBalance(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
-      }
+        }
 
       val input: Seq[(String, MtdError)] = Seq(
         ("INVALID_IDTYPE", DownstreamError),
         ("INVALID_IDVALUE", NinoFormatError),
         ("INVALID_REGIME_TYPE", DownstreamError),
+        ("INVALID_DOCUMENT_ID", ChargeIdFormatError),
         ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)

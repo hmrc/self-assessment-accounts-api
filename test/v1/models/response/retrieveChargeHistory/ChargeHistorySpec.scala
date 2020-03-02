@@ -18,6 +18,7 @@ package v1.models.response.retrieveChargeHistory
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveChargeHistoryFixture
 
 class ChargeHistorySpec extends UnitSpec {
 
@@ -65,21 +66,10 @@ class ChargeHistorySpec extends UnitSpec {
 
   val desResponseEmpty: JsValue = Json.parse("""{}""")
 
-  val chargeHistoryResponse: ChargeHistory =
-    ChargeHistory(
-      taxYear = Some("2019-20"),
-      id = Some("X123456790A"),
-      transactionDate = Some("2019-06-01"),
-      `type` = Some("Balancing Charge Debit"),
-      amount = Some(600.01),
-      reversalDate = Some("2019-06-05"),
-      reversalReason = Some("Example reason")
-    )
-
   "ChargeHistory" when {
     "read from valid JSON" should {
       "produce the expected ChargeHistory object" in {
-        desResponse.as[ChargeHistory] shouldBe chargeHistoryResponse
+        desResponse.as[ChargeHistory] shouldBe RetrieveChargeHistoryFixture.chargeHistoryResponse
       }
     }
 
@@ -97,7 +87,7 @@ class ChargeHistorySpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JSON object" in {
-        Json.toJson(chargeHistoryResponse) shouldBe mtdResponse
+        Json.toJson(RetrieveChargeHistoryFixture.chargeHistoryResponse) shouldBe mtdResponse
       }
     }
   }

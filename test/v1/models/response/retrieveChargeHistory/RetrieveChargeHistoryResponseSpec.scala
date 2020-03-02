@@ -18,6 +18,7 @@ package v1.models.response.retrieveChargeHistory
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
+import v1.fixtures.RetrieveChargeHistoryFixture
 
 class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
@@ -140,17 +141,6 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
   val desReponseEmpty: JsValue = Json.parse("""{}""")
 
-  val chargeHistoryResponse: ChargeHistory =
-    ChargeHistory(
-      taxYear = Some("2019-20"),
-      id = Some("X123456790A"),
-      transactionDate = Some("2019-06-01"),
-      `type` = Some("Balancing Charge Debit"),
-      amount = Some(600.01),
-      reversalDate = Some("2019-06-05"),
-      reversalReason = Some("Example reason")
-    )
-
   val chargeHistoryResponse2: ChargeHistory =
     ChargeHistory(
       taxYear = Some("2019-20"),
@@ -162,15 +152,10 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
       reversalReason = Some("Example reason 2")
     )
 
-  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
-    RetrieveChargeHistoryResponse(
-      history = Seq(chargeHistoryResponse)
-    )
-
   val retrieveChargeHistoryResponseMultiple: RetrieveChargeHistoryResponse =
     RetrieveChargeHistoryResponse(
       history = Seq(
-        chargeHistoryResponse,
+        RetrieveChargeHistoryFixture.chargeHistoryResponse,
         chargeHistoryResponse2
       )
     )
@@ -183,7 +168,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
   "RetrieveChargeHistoryResponse" when {
     "read from valid JSON" should {
       "produce the expected RetrieveChargeHistoryResponse object" in {
-        desResponse.as[RetrieveChargeHistoryResponse] shouldBe retrieveChargeHistoryResponse
+        desResponse.as[RetrieveChargeHistoryResponse] shouldBe RetrieveChargeHistoryFixture.retrieveChargeHistoryResponse
       }
     }
 
@@ -213,7 +198,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
     "written to JSON" should {
       "produce the expected JSON" in {
-        Json.toJson(retrieveChargeHistoryResponse) shouldBe mtdResponse
+        Json.toJson(RetrieveChargeHistoryFixture.retrieveChargeHistoryResponse) shouldBe mtdResponse
       }
     }
 

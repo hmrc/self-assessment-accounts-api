@@ -19,22 +19,23 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, RetrieveBalanceConnector}
-import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
-import v1.models.response.retrieveBalance.RetrieveBalanceResponse
+import v1.connectors.{DesOutcome, RetrieveChargeHistoryConnector}
+import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
+import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveBalanceConnector extends MockFactory {
+trait MockRetrieveChargeHistoryConnector extends MockFactory {
 
-  val mockRetrieveBalanceConnector: RetrieveBalanceConnector = mock[RetrieveBalanceConnector]
+  val mockRetrieveChargeHistoryConnector: RetrieveChargeHistoryConnector = mock[RetrieveChargeHistoryConnector]
 
-  object MockRetrieveBalanceConnector {
+  object MockRetrieveChargeHistoryConnector {
 
-    def retrieveBalance(requestData: RetrieveBalanceParsedRequest): CallHandler[Future[DesOutcome[RetrieveBalanceResponse]]] = {
-      (mockRetrieveBalanceConnector
-        .retrieveBalance(_: RetrieveBalanceParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
+    def retrieveChargeHistory(requestData: RetrieveChargeHistoryParsedRequest): CallHandler[Future[DesOutcome[RetrieveChargeHistoryResponse]]] = {
+      (mockRetrieveChargeHistoryConnector
+        .retrieveChargeHistory(_: RetrieveChargeHistoryParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(requestData, *, *)
     }
   }
+
 }
