@@ -130,10 +130,8 @@ class RetrieveAllocationsControllerSpec
         }
 
         val input = Seq(
-          (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (PaymentIdFormatError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (PaymentIdFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

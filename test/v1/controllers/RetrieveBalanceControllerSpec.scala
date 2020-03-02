@@ -120,9 +120,7 @@ class RetrieveBalanceControllerSpec
         }
 
         val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (NinoFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -150,8 +148,7 @@ class RetrieveBalanceControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (NotFoundError, NOT_FOUND)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))
