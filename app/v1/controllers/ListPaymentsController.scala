@@ -39,39 +39,39 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
                                        service: ListPaymentsService,
                                        hateoasFactory: HateoasFactory,
                                        cc: ControllerComponents)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging{
+  extends AuthorisedController(cc) with BaseController with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListPaymentsController", endpointName = "retrieveList")
 
   def retrieveList(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async {
     implicit request =>
-    val rawData = ListPaymentsRawRequest(nino, from, to)
-    val result =
-      for {
-        parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.list(parsedRequest))
-        vendorResponse <- EitherT.fromEither[Future](
-          hateoasFactory
-            .wrapList(serviceResponse.responseData, ListPaymentsHateoasData(nino))
-            .asRight[ErrorWrapper]
-        )
-      } yield {
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received with correlationId: ${serviceResponse.correlationId}"
-        )
+      val rawData = ListPaymentsRawRequest(nino, from, to)
+      val result =
+        for {
+          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.list(parsedRequest))
+          vendorResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrapList(serviceResponse.responseData, ListPaymentsHateoasData(nino))
+              .asRight[ErrorWrapper]
+          )
+        } yield {
+          logger.info(
+            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+              s"Success response received with correlationId: ${serviceResponse.correlationId}"
+          )
 
-        Ok(Json.toJson(vendorResponse))
-          .withApiHeaders(serviceResponse.correlationId)
-          .as(MimeTypes.JSON)
-      }
-    result.leftMap { errorWrapper =>
-      val correlationId = getCorrelationId(errorWrapper)
-      val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+          Ok(Json.toJson(vendorResponse))
+            .withApiHeaders(serviceResponse.correlationId)
+            .as(MimeTypes.JSON)
+        }
+      result.leftMap { errorWrapper =>
+        val correlationId = getCorrelationId(errorWrapper)
+        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
 
-      result
-    }.merge
+        result
+      }.merge
   }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {

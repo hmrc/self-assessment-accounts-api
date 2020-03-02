@@ -25,7 +25,7 @@ import play.mvc.Http.MimeTypes
 import utils.Logging
 import v1.controllers.requestParsers.RetrieveBalanceRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, NinoFormatError, NotFoundError}
+import v1.models.errors._
 import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveBalanceService}
@@ -33,13 +33,13 @@ import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveBalanceSe
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceController @Inject()(
-                                         val authService: EnrolmentsAuthService,
-                                         val lookupService: MtdIdLookupService,
-                                         requestParser: RetrieveBalanceRequestParser,
-                                         service: RetrieveBalanceService,
-                                         hateoasFactory: HateoasFactory,
-                                         cc: ControllerComponents)(implicit ec: ExecutionContext) extends AuthorisedController(cc) with BaseController with Logging {
+class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService,
+                                          val lookupService: MtdIdLookupService,
+                                          requestParser: RetrieveBalanceRequestParser,
+                                          service: RetrieveBalanceService,
+                                          hateoasFactory: HateoasFactory,
+                                          cc: ControllerComponents)(implicit ec: ExecutionContext)
+  extends AuthorisedController(cc) with BaseController with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -60,14 +60,14 @@ class RetrieveBalanceController @Inject()(
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
+              s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
 
           Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }
 
-      result.leftMap {errorWrapper =>
+      result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
         val result = errorResult(errorWrapper).withApiHeaders(correlationId)
         result
