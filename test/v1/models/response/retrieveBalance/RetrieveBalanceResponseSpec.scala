@@ -22,8 +22,6 @@ import v1.fixtures.RetrieveBalanceFixture._
 
 class RetrieveBalanceResponseSpec extends UnitSpec {
 
-
-
   "BalanceDetail" should {
 
     "return a successful Json model" when {
