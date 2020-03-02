@@ -1,0 +1,57 @@
+{
+  "transactions":[
+    {
+      "taxYear":"2020",
+      "id":"X123456790A",
+      "transactionDate":"2020-01-01",
+      "type":"Balancing Charge Debit",
+      "originalAmount":12.34,
+      "outstandingAmount":10.33,
+      "lastClearingDate":"2020-01-02",
+      "lastClearingReason":"Incoming payment",
+      "lastClearedAmount":2.01,
+      "links": [
+        {
+          "href": "/individuals/accounts/self-assessment/AA999999A/charges",
+          "method": "GET",
+          "rel": "list-charges"
+        }
+      ]
+    },
+    {
+      "taxYear":"2020",
+      "id":"X1234567891B",
+      "transactionDate":"2020-01-05",
+      "type":"Payment On Account",
+      "originalAmount":12.34,
+      "outstandingAmount":10.33,
+      "lastClearingDate":"2020-01-06",
+      "lastClearingReason":"Outgoing payment paid",
+      "lastClearedAmount":2.01,
+      "links": [
+        {
+          "href": "/individuals/accounts/self-assessment/AA999999A/payments",
+          "method": "GET",
+          "rel": "list-payments"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/transactions",
+      "method": "GET",
+      "rel": "self"
+    },
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/charges",
+      "method": "GET",
+      "rel": "list-charges"
+    },
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/payments",
+      "method": "GET",
+      "rel": "list-payments"
+    }
+  ]
+}

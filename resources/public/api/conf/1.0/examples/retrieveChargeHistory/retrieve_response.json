@@ -9,5 +9,17 @@
       "reversalDate": "2019-06-05",
       "reversalReason": "Customer request"
     }
+  ],
+  "links": [
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/charges/X1234567890A",
+      "method": "GET",
+      "rel": "self"
+    },
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/transactions",
+      "method": "GET",
+      "rel": "retrieve-transactions"
+    }
   ]
 }

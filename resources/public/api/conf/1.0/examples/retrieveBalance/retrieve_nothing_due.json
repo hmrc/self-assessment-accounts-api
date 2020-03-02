@@ -1,3 +1,15 @@
 {
-  "payableAmount": 0.00
+  "payableAmount": 0.00,
+  "links": [
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/balance",
+      "method": "GET",
+      "rel": "self"
+    },
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/transactions",
+      "method": "GET",
+      "rel": "retrieve-transactions"
+    }
+  ]
 }
