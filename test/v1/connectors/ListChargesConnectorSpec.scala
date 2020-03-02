@@ -39,8 +39,23 @@ class ListChargesConnectorSpec extends ConnectorSpec {
   )
 
   val response = ListChargesResponse(
-    charge = Seq(
-      ???
+    charges = Seq(
+      Charge(
+        taxYear = Some("2019-20"),
+        id= Some("1234567890AB"),
+        transactionDate= Some("2020-02-01"),
+        `type`= Some("Charge Type"),
+        totalAmount = Some(11.23),
+        outstandingAmount = Some(4.56)
+      ),
+      Charge(
+        taxYear = Some("2019-20"),
+        id= Some("1234567890AC"),
+        transactionDate= Some("2020-02-04"),
+        `type`= Some("Charge Type"),
+        totalAmount = Some(17.89),
+        outstandingAmount = Some(12.23)
+      )
     )
   )
 

@@ -39,7 +39,7 @@ class ListChargesConnector @Inject()(val http: HttpClient,
     val queryParams: Seq[(String, String)] = Seq(
       "dateFrom" -> request.from,
       "dateTo" -> request.to,
-      "type" -> "charges"
+      "type" -> "charge"
     )
 
     get(
