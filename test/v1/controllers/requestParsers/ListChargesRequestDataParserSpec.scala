@@ -18,37 +18,37 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.validators.MockListPaymentsValidator
+import v1.mocks.validators.MockListChargesValidator
 import v1.models.errors._
-import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
+import v1.models.request.listCharges.{ListChargesParsedRequest, ListChargesRawRequest}
 
-class ListPaymentsRequestDataParserSpec extends UnitSpec {
+class ListChargesRequestDataParserSpec extends UnitSpec {
 
   val nino = "AA123456B"
   val from = "2019/02/02"
   val to = "2019/02/03"
 
-  trait Test extends MockListPaymentsValidator {
-    lazy val parser = new ListPaymentsRequestDataParser(mockValidator)
+  trait Test extends MockListChargesValidator {
+    lazy val parser = new ListChargesRequestDataParser(mockValidator)
   }
 
   "parse" should {
     "return a parsed request" when {
       "no validation errors occur" in new Test {
-        private val inputData = ListPaymentsRawRequest(nino, Some(from), Some(to))
-        MockListPaymentsValidator.validate(inputData).returns(Nil)
-        parser.parseRequest(inputData) shouldBe Right(ListPaymentsParsedRequest(Nino(nino), from, to))
+        private val inputData = ListChargesRawRequest(nino, Some(from), Some(to))
+        MockListChargesValidator.validate(inputData).returns(Nil)
+        parser.parseRequest(inputData) shouldBe Right(ListChargesParsedRequest(Nino(nino), from, to))
       }
     }
     "return an error wrapper" when {
       "the validator returns a single error" in new Test {
-        private val inputData = ListPaymentsRawRequest("AA123", Some(from), Some(to))
-        MockListPaymentsValidator.validate(inputData).returns(List(NinoFormatError))
+        private val inputData = ListChargesRawRequest("AA123", Some(from), Some(to))
+        MockListChargesValidator.validate(inputData).returns(List(NinoFormatError))
         parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, NinoFormatError))
       }
       "the validator returns multiple errors" in new Test {
-        private val inputData = ListPaymentsRawRequest(nino, None, None)
-        MockListPaymentsValidator.validate(inputData).returns(List(MissingFromDateError, MissingToDateError))
+        private val inputData = ListChargesRawRequest(nino, None, None)
+        MockListChargesValidator.validate(inputData).returns(List(MissingFromDateError, MissingToDateError))
         parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(MissingFromDateError, MissingToDateError))))
       }
     }
