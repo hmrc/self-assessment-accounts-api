@@ -20,7 +20,7 @@
     },
     {
       "taxYear":"2020",
-      "id":"X1234567891B",
+      "id":"X23456789012-A23456",
       "transactionDate":"2020-01-05",
       "type":"Payment On Account",
       "originalAmount":12.34,
@@ -30,7 +30,7 @@
       "lastClearedAmount":2.01,
       "links": [
         {
-          "href": "/individuals/accounts/self-assessment/AA999999A/payments/123456789012-123456",
+          "href": "/individuals/accounts/self-assessment/AA999999A/payments/X23456789012-A23456",
           "method": "GET",
           "rel": "retrieve-payment-allocations"
         }
