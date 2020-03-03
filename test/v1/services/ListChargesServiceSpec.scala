@@ -63,13 +63,13 @@ class ListChargesServiceSpec extends UnitSpec {
 
   "service" when {
     "connector call is successful" should {
-      "return a Right(ResponseWrapper) when the payments list is not empty" in new Test {
+      "return a Right(ResponseWrapper) when the charges list is not empty" in new Test {
         MockListChargesConnector.retrieve(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.list(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
-      "return a NoChargesFoundError when the payments list is empty" in new Test {
+      "return a NoChargesFoundError when the charges list is empty" in new Test {
         MockListChargesConnector.retrieve(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ListChargesResponse(Seq())))))
 
@@ -91,18 +91,11 @@ class ListChargesServiceSpec extends UnitSpec {
         "INVALID_IDTYPE" -> DownstreamError,
         "INVALID_IDVALUE" -> NinoFormatError,
         "INVALID_REGIME_TYPE" -> DownstreamError,
-        "INVALID_PAYMENT_LOT" -> DownstreamError,
-        "INVALID_PAYMENT_LOT_ITEM" -> DownstreamError,
-        "INVALID_CLEARING_DOC" -> DownstreamError,
         "INVALID_DATE_FROM" -> FromDateFormatError,
         "INVALID_DATE_TO" -> ToDateFormatError,
-        "INVALID_DATE_RANGE" -> DownstreamError,
-        "INVALID_CORRELATIONID" -> DownstreamError,
-        "REQUEST_NOT_PROCESSED" -> DownstreamError,
         "NO_DATA_FOUND" -> NotFoundError,
-        "PARTIALLY_MIGRATED" -> DownstreamError,
         "SERVER_ERROR" -> DownstreamError,
-        "SERVICE_UNAVAILABLE" -> DownstreamError
+        "SERVICE_UNAVAILABLE" -> DownstreamError,
       )
 
       input.foreach(args => (serviceError _).tupled(args))
