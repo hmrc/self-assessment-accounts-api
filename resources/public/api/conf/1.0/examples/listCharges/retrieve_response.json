@@ -6,7 +6,21 @@
       "transactionDate":"2019-01-01",
       "type":"Charge Type",
       "totalAmount":100.23,
-      "outstandingAmount":50.01
+      "outstandingAmount":50.01,
+      "links": [
+        {
+          "href": "/individuals/accounts/self-assessment/AA999999A/charges/X1234567890A",
+          "method": "GET",
+          "rel": "retrieve-charge-history"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/charges",
+      "method": "GET",
+      "rel": "self"
     }
   ]
 }

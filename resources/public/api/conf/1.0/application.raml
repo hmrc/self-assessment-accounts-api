@@ -37,6 +37,8 @@ uses:
         description: National Insurance number, in the format AA999999A.
         type: string
         example: TC663795B
+    /balance:
+      get: !include retrieveBalance.raml
     /payments:
       get: !include listPayments.raml
       /{paymentId}:
@@ -46,10 +48,10 @@ uses:
             type: string
             example: "X234567891BY-AT3456"
         get: !include retrieveAllocations.raml
-    /balance:
-      get: !include retrieveBalance.raml
     /charges:
       get: !include listCharges.raml
+    /transactions:
+      get: !include retrieveTransactions.raml
       /{chargeId}:
         uriParameters:
           chargeId:

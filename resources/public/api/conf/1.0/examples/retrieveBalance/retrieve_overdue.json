@@ -1,5 +1,17 @@
 {
   "overdueAmount": 10.99,
   "payableAmount": 20.99,
-  "payableDueDate": "2020-01-31"
+  "payableDueDate": "2020-01-31",
+  "links": [
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/balance",
+      "method": "GET",
+      "rel": "self"
+    },
+    {
+      "href": "/individuals/accounts/self-assessment/AA999999A/transactions",
+      "method": "GET",
+      "rel": "retrieve-transactions"
+    }
+  ]
 }
