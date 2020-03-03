@@ -54,6 +54,8 @@ object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching r
 
 object NoPaymentsFoundError extends MtdError("NO_PAYMENTS_FOUND", "No payments found")
 
+object NoChargesFoundError extends MtdError("NO_CHARGES_FOUND", "No charges found")
+
 object DownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
 
 object BadRequestError extends MtdError("INVALID_REQUEST", "Invalid request")
