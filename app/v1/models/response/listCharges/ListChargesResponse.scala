@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.response.listSelfAssessmentCharges
+package v1.models.response.listCharges
 
 import play.api.libs.json._
 
 
-case class ListSelfAssessmentChargesResponse[I](charges: Seq[I])
+case class ListChargesResponse[I](charges: Seq[I])
 
-object ListSelfAssessmentChargesResponse {
+object ListChargesResponse {
 
-  implicit def reads[I: Reads]: Reads[ListSelfAssessmentChargesResponse[I]] =
-    implicitly(JsPath \ "charges").read[Seq[I]].map(ListSelfAssessmentChargesResponse(_))
+  implicit def reads[I: Reads]: Reads[ListChargesResponse[I]] =
+    implicitly(JsPath \ "charges").read[Seq[I]].map(ListChargesResponse(_))
 
-  implicit def writes[I: Writes]: OWrites[ListSelfAssessmentChargesResponse[I]] =
-    Json.writes[ListSelfAssessmentChargesResponse[I]]
+  implicit def writes[I: Writes]: OWrites[ListChargesResponse[I]] =
+    Json.writes[ListChargesResponse[I]]
 
 }

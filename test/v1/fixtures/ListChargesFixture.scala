@@ -17,9 +17,9 @@
 package v1.fixtures
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.response.listSelfAssessmentCharges.{Charge, ListSelfAssessmentChargesResponse}
+import v1.models.response.listCharges.{Charge, ListChargesResponse}
 
-object ListSelfAssessmentChargeFixture {
+object ListChargesFixture {
 
   val fullDesChargeResponse: JsValue = Json.parse(
     """
@@ -65,7 +65,7 @@ object ListSelfAssessmentChargeFixture {
 
   val minimalChargeModel = Charge(None, None, None, None, None, None)
 
-  val fullDesListSAChargesSingleResponseResponse: JsValue = Json.parse(
+  val fullDesListChargesSingleResponseResponse: JsValue = Json.parse(
     s"""
        |{
        | "charges" : [$fullDesChargeResponse]
@@ -73,7 +73,7 @@ object ListSelfAssessmentChargeFixture {
        |""".stripMargin
   )
 
-  val fullDesListSAChargesMultipleResponseResponse: JsValue = Json.parse(
+  val fullDesListChargesMultipleResponseResponse: JsValue = Json.parse(
     s"""
        |{
        | "charges" : [$fullDesChargeResponse, $fullDesChargeResponse]
@@ -81,7 +81,7 @@ object ListSelfAssessmentChargeFixture {
        |""".stripMargin
   )
 
-  val minimalDesListSAChargesResponseResponse: JsValue = Json.parse(
+  val minimalDesListChargesResponseResponse: JsValue = Json.parse(
     """
       |{
       |   "charges" : []
@@ -89,7 +89,7 @@ object ListSelfAssessmentChargeFixture {
       |""".stripMargin
   )
 
-  val invalidDesListSAChargesResponseResponse: JsValue = Json.parse(
+  val invalidDesListChargesResponseResponse: JsValue = Json.parse(
     """
       |{
       |
@@ -97,9 +97,9 @@ object ListSelfAssessmentChargeFixture {
       |""".stripMargin
   )
 
-  val fullListSASingleChargeModel: ListSelfAssessmentChargesResponse[Charge] = ListSelfAssessmentChargesResponse(Seq(fullChargeModel))
+  val fullListSingleChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullChargeModel))
 
-  val fullListSAMultipleChargeModel: ListSelfAssessmentChargesResponse[Charge] = ListSelfAssessmentChargesResponse(Seq(fullChargeModel, fullChargeModel))
+  val fullListMultipleChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullChargeModel, fullChargeModel))
 
-  val minimalListSAChargeModel: ListSelfAssessmentChargesResponse[Charge] = ListSelfAssessmentChargesResponse(Seq.empty[Charge])
+  val minimalListChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq.empty[Charge])
 }

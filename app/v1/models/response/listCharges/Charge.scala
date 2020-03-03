@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.listSelfAssessmentCharges
+package v1.models.response.listCharges
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}

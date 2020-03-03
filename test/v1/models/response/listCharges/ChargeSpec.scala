@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package v1.models.response.listSelfAssessmentCharges
+package v1.models.response.listCharges
 
 import play.api.libs.json.JsError
 import support.UnitSpec
-import v1.fixtures.ListSelfAssessmentChargeFixture._
+import v1.fixtures.ListChargesFixture._
+import v1.models.response.listCharges.Charge
 
 class ChargeSpec extends UnitSpec {
 

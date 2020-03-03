@@ -14,33 +14,34 @@
  * limitations under the License.
  */
 
-package v1.models.response.listSelfAssessmentCharges
+package v1.models.response.listCharges
 
 import play.api.libs.json.JsError
 import support.UnitSpec
-import v1.fixtures.ListSelfAssessmentChargeFixture._
+import v1.fixtures.ListChargesFixture._
+import v1.models.response.listCharges.{Charge, ListChargesResponse}
 
-class ListSelfAssessmentChargesResponseSpec extends UnitSpec {
+class ListChargesResponseSpec extends UnitSpec {
 
-  "listSelfAssessmentChargesResponse" should {
+  "listChargesResponse" should {
     "return a successful Json model" when {
       "the json contains all fields with a single charge" in {
-        fullDesListSAChargesSingleResponseResponse.as[ListSelfAssessmentChargesResponse[Charge]] shouldBe fullListSASingleChargeModel
+        fullDesListChargesSingleResponseResponse.as[ListChargesResponse[Charge]] shouldBe fullListSingleChargeModel
       }
 
       "the json contains all fields with a multiple charges" in {
-        fullDesListSAChargesMultipleResponseResponse.as[ListSelfAssessmentChargesResponse[Charge]] shouldBe fullListSAMultipleChargeModel
+        fullDesListChargesMultipleResponseResponse.as[ListChargesResponse[Charge]] shouldBe fullListMultipleChargeModel
       }
 
       "the json contains minimal fields with no charges" in {
-        minimalDesListSAChargesResponseResponse.as[ListSelfAssessmentChargesResponse[Charge]] shouldBe minimalListSAChargeModel
+        minimalDesListChargesResponseResponse.as[ListChargesResponse[Charge]] shouldBe minimalListChargeModel
 
       }
     }
 
     "throw an error" when {
       "there are no mandatory fields" in {
-        invalidDesListSAChargesResponseResponse.validate[ListSelfAssessmentChargesResponse[Charge]] shouldBe a[JsError]
+        invalidDesListChargesResponseResponse.validate[ListChargesResponse[Charge]] shouldBe a[JsError]
 
       }
     }
