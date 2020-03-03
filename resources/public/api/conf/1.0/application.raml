@@ -51,7 +51,7 @@ uses:
     /charges:
       get: !include listCharges.raml
     /transactions:
-    get: !include retrieveTransactions.raml
+      get: !include retrieveTransactions.raml
       /{chargeId}:
         uriParameters:
           chargeId:
