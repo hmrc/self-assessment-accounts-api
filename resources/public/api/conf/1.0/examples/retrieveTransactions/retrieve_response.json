@@ -14,7 +14,7 @@
         {
           "href": "/individuals/accounts/self-assessment/AA999999A/charges",
           "method": "GET",
-          "rel": "list-charges"
+          "rel": "retrieve-charge-history"
         }
       ]
     },
@@ -32,7 +32,7 @@
         {
           "href": "/individuals/accounts/self-assessment/AA999999A/payments",
           "method": "GET",
-          "rel": "list-payments"
+          "rel": "retrieve-payment-allocations"
         }
       ]
     }
