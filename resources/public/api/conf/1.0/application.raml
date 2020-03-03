@@ -39,6 +39,17 @@ uses:
         example: TC663795B
     /balance:
       get: !include retrieveBalance.raml
+    /transactions:
+      get: !include retrieveTransactions.raml
+    /charges:
+      get: !include listCharges.raml
+      /{chargeId}:
+        uriParameters:
+          chargeId:
+            description: A unique identifier for the charge.
+            type: string
+            example: f9034ndfsji0toufgbgb
+        get: !include retrieveChargeHistory.raml
     /payments:
       get: !include listPayments.raml
       /{paymentId}:
@@ -48,14 +59,3 @@ uses:
             type: string
             example: "X234567891BY-AT3456"
         get: !include retrieveAllocations.raml
-    /charges:
-      get: !include listCharges.raml
-    /transactions:
-      get: !include retrieveTransactions.raml
-      /{chargeId}:
-        uriParameters:
-          chargeId:
-            description: A unique identifier for the charge.
-            type: string
-            example: f9034ndfsji0toufgbgb
-        get: !include retrieveChargeHistory.raml
