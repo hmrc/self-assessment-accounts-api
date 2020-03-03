@@ -119,7 +119,8 @@
             "type": "string",
             "enum": [
               "self",
-              "retrieve-transactions"
+              "list-charges",
+              "list-payments"
             ]
           },
           "method": {
