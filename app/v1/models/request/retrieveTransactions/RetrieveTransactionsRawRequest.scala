@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveSelfAssessmentTransaction
+package v1.models.request.retrieveTransactions
 
 import v1.models.request.RawData
 
