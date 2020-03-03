@@ -12,7 +12,7 @@
       "lastClearedAmount":2.01,
       "links": [
         {
-          "href": "/individuals/accounts/self-assessment/AA999999A/charges",
+          "href": "/individuals/accounts/self-assessment/AA999999A/charges/X1234567890A",
           "method": "GET",
           "rel": "retrieve-charge-history"
         }
@@ -30,7 +30,7 @@
       "lastClearedAmount":2.01,
       "links": [
         {
-          "href": "/individuals/accounts/self-assessment/AA999999A/payments",
+          "href": "/individuals/accounts/self-assessment/AA999999A/payments/123456789012-123456",
           "method": "GET",
           "rel": "retrieve-payment-allocations"
         }
