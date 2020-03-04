@@ -49,7 +49,10 @@
             "description": "The reason for the change.",
             "type": "string"
           }
-        }
+        },
+        "required": [
+          "id"
+        ]
       }
     },
     "links": {
