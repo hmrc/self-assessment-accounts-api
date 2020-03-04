@@ -9,7 +9,7 @@
       "outstandingAmount":50.01,
       "links": [
         {
-          "href": "/individuals/accounts/self-assessment/AA999999A/charges/X1234567890A",
+          "href": "/individuals/accounts/self-assessment/AA999999A/charges/1234567890AB",
           "method": "GET",
           "rel": "retrieve-charge-history"
         }
