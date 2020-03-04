@@ -22,14 +22,14 @@ import v1.mocks.validators.MockListPaymentsValidator
 import v1.models.errors._
 import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
 
-class ListPaymentsRequestDataParserSpec extends UnitSpec {
+class ListPaymentsRequestParserSpec extends UnitSpec {
 
   val nino = "AA123456B"
   val from = "2019/02/02"
   val to = "2019/02/03"
 
   trait Test extends MockListPaymentsValidator {
-    lazy val parser = new ListPaymentsRequestDataParser(mockValidator)
+    lazy val parser = new ListPaymentsRequestParser(mockValidator)
   }
 
   "parse" should {

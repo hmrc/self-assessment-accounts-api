@@ -14,21 +14,16 @@
  * limitations under the License.
  */
 
-package v1.mocks.requestParsers
+package v1.controllers.requestParsers
 
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.ListPaymentsRequestDataParser
-import v1.models.errors.ErrorWrapper
+import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.ListPaymentsValidator
 import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
 
-trait MockListPaymentsRequestDataParser extends MockFactory {
+class ListPaymentsRequestParser @Inject()(val validator: ListPaymentsValidator)
+  extends RequestParser[ListPaymentsRawRequest, ListPaymentsParsedRequest] {
 
-  val mockRequestParser = mock[ListPaymentsRequestDataParser]
-
-  object MockListPaymentsRequestDataParser {
-    def parse(data: ListPaymentsRawRequest): CallHandler[Either[ErrorWrapper, ListPaymentsParsedRequest]] = {
-      (mockRequestParser.parseRequest(_: ListPaymentsRawRequest)).expects(data)
-    }
-  }
+  override protected def requestFor(data: ListPaymentsRawRequest): ListPaymentsParsedRequest =
+    ListPaymentsParsedRequest(Nino(data.nino), data.from.get, data.to.get)
 }

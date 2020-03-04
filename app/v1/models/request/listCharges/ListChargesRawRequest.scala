@@ -16,7 +16,7 @@
 
 package v1.models.request.listCharges
 
-import v1.models.request.RawData
+import v1.models.request.RawDataWithDateRange
 
-case class ListChargesRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawData
+case class ListChargesRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange
 

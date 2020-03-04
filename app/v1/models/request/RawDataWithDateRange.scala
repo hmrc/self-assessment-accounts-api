@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveSelfAssessmentTransaction
+package v1.models.request
 
-import uk.gov.hmrc.domain.Nino
-
-case class RetrieveTransactionsParsedRequest(nino: Nino, from: String, to: String)
+trait RawDataWithDateRange extends RawData {
+  val nino: String
+  val from: Option[String]
+  val to: Option[String]
+}

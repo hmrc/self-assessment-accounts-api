@@ -16,34 +16,6 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.controllers.requestParsers.validators.validations.{DateFormatValidation, DateRangeValidation, MissingParameterValidation, NinoValidation}
-import v1.models.errors._
 import v1.models.request.listCharges.ListChargesRawRequest
 
-class ListChargesValidator extends Validator[ListChargesRawRequest] {
-  private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
-
-  private def parameterFormatValidation: ListChargesRawRequest => List[List[MtdError]] = (data: ListChargesRawRequest) => {
-    List(
-      NinoValidation.validate(data.nino),
-      data.from.map(DateFormatValidation.validate(_, FromDateFormatError)).getOrElse(Nil),
-      data.to.map(DateFormatValidation.validate(_, ToDateFormatError)).getOrElse(Nil)
-    )
-  }
-
-  private def parameterRuleValidation: ListChargesRawRequest => List[List[MtdError]] = { data =>
-    List(
-      MissingParameterValidation.validate(data.from, MissingFromDateError),
-      MissingParameterValidation.validate(data.to, MissingToDateError),
-      (for {
-        from <- data.from
-        to <- data.to
-      } yield DateRangeValidation.validate(from, to)).getOrElse(Nil)
-    )
-  }
-
-  override def validate(data: ListChargesRawRequest): List[MtdError] = {
-    run(validationSet, data).distinct
-  }
-
-}
+class ListChargesValidator extends ValidatorWithDateRange[ListChargesRawRequest]

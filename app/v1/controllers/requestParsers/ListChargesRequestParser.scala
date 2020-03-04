@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.ListChargesValidator
 import v1.models.request.listCharges.{ListChargesParsedRequest, ListChargesRawRequest}
 
-class ListChargesRequestDataParser @Inject()(val validator: ListChargesValidator)
+class ListChargesRequestParser @Inject()(val validator: ListChargesValidator)
   extends RequestParser[ListChargesRawRequest, ListChargesParsedRequest] {
 
   override protected def requestFor(data: ListChargesRawRequest): ListChargesParsedRequest =

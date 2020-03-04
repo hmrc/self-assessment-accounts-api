@@ -24,7 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListPaymentsFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockListPaymentsRequestDataParser
+import v1.mocks.requestParsers.MockListPaymentsRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockListPaymentsService, MockMtdIdLookupService}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
@@ -40,7 +40,7 @@ import scala.concurrent.Future
 class ListPaymentsControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
-  with MockListPaymentsRequestDataParser
+  with MockListPaymentsRequestParser
   with MockListPaymentsService
   with MockHateoasFactory
   with MockAppConfig
@@ -84,7 +84,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
     "return a valid payments response" when {
       "a request sent has valid details" in new Test {
 
-        MockListPaymentsRequestDataParser
+        MockListPaymentsRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
 
@@ -109,7 +109,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockListPaymentsRequestDataParser
+            MockListPaymentsRequestParser
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
@@ -139,7 +139,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockListPaymentsRequestDataParser
+            MockListPaymentsRequestParser
               .parse(rawRequest)
               .returns(Right(parsedRequest))
 

@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers
+package v1.models.request.retrieveTransactions
 
-import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import v1.controllers.requestParsers.validators.ListPaymentsValidator
-import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
 
-class ListPaymentsRequestDataParser @Inject()(val validator: ListPaymentsValidator)
-  extends RequestParser[ListPaymentsRawRequest, ListPaymentsParsedRequest] {
-
-  override protected def requestFor(data: ListPaymentsRawRequest): ListPaymentsParsedRequest =
-    ListPaymentsParsedRequest(Nino(data.nino), data.from.get, data.to.get)
-}
+case class RetrieveTransactionsParsedRequest(nino: Nino, from: String, to: String)
