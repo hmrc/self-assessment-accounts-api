@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveTransactions
 
-import v1.models.request.RawData
+import v1.models.request.RawDataWithDateRange
 
-case class RetrieveTransactionsRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawData
+case class RetrieveTransactionsRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange

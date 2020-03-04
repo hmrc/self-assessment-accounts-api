@@ -18,13 +18,12 @@ package v1.controllers.requestParsers
 
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
-import v1.controllers.requestParsers.validators.RetrieveTransactionsValidator
-import v1.models.request.retrieveTransactions.{RetrieveTransactionsParsedRequest, RetrieveTransactionsRawRequest}
+import v1.controllers.requestParsers.validators.ListPaymentsValidator
+import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
 
-class RetrieveTransactionsRequestDataParser  @Inject()(val validator: RetrieveTransactionsValidator)
-  extends RequestParser[RetrieveTransactionsRawRequest, RetrieveTransactionsParsedRequest] {
+class ListPaymentsRequestParser @Inject()(val validator: ListPaymentsValidator)
+  extends RequestParser[ListPaymentsRawRequest, ListPaymentsParsedRequest] {
 
-  override protected def requestFor(data: RetrieveTransactionsRawRequest): RetrieveTransactionsParsedRequest =
-    RetrieveTransactionsParsedRequest(Nino(data.nino), data.from.get, data.to.get)
-
+  override protected def requestFor(data: ListPaymentsRawRequest): ListPaymentsParsedRequest =
+    ListPaymentsParsedRequest(Nino(data.nino), data.from.get, data.to.get)
 }

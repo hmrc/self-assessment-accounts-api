@@ -18,15 +18,15 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.ListPaymentsRequestDataParser
+import v1.controllers.requestParsers.ListPaymentsRequestParser
 import v1.models.errors.ErrorWrapper
 import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
 
-trait MockListPaymentsRequestDataParser extends MockFactory {
+trait MockListPaymentsRequestParser extends MockFactory {
 
-  val mockRequestParser = mock[ListPaymentsRequestDataParser]
+  val mockRequestParser = mock[ListPaymentsRequestParser]
 
-  object MockListPaymentsRequestDataParser {
+  object MockListPaymentsRequestParser {
     def parse(data: ListPaymentsRawRequest): CallHandler[Either[ErrorWrapper, ListPaymentsParsedRequest]] = {
       (mockRequestParser.parseRequest(_: ListPaymentsRawRequest)).expects(data)
     }

@@ -23,7 +23,7 @@ import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.Logging
-import v1.controllers.requestParsers.ListPaymentsRequestDataParser
+import v1.controllers.requestParsers.ListPaymentsRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.listPayments.ListPaymentsRawRequest
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
                                        val lookupService: MtdIdLookupService,
-                                       requestParser: ListPaymentsRequestDataParser,
+                                       requestParser: ListPaymentsRequestParser,
                                        service: ListPaymentsService,
                                        hateoasFactory: HateoasFactory,
                                        cc: ControllerComponents)(implicit ec: ExecutionContext)

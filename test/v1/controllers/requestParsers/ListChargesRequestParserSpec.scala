@@ -22,14 +22,14 @@ import v1.mocks.validators.MockListChargesValidator
 import v1.models.errors._
 import v1.models.request.listCharges.{ListChargesParsedRequest, ListChargesRawRequest}
 
-class ListChargesRequestDataParserSpec extends UnitSpec {
+class ListChargesRequestParserSpec extends UnitSpec {
 
   val nino = "AA123456B"
   val from = "2019/02/02"
   val to = "2019/02/03"
 
   trait Test extends MockListChargesValidator {
-    lazy val parser = new ListChargesRequestDataParser(mockValidator)
+    lazy val parser = new ListChargesRequestParser(mockValidator)
   }
 
   "parse" should {

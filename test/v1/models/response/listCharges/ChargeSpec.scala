@@ -19,7 +19,6 @@ package v1.models.response.listCharges
 import play.api.libs.json.JsError
 import support.UnitSpec
 import v1.fixtures.ListChargesFixture._
-import v1.models.response.listCharges.Charge
 
 class ChargeSpec extends UnitSpec {
 

@@ -18,64 +18,66 @@ package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
 import v1.models.errors._
-import v1.models.request.retrieveTransactions.RetrieveTransactionsRawRequest
+import v1.models.request.RawDataWithDateRange
 
-class RetrieveTransactionsValidatorSpec extends UnitSpec {
+class ValidatorWithDateRangeSpec extends UnitSpec {
 
-  val validator = new RetrieveTransactionsValidator()
+  case class TestRawDataWithDateRange(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange
+  class TestValidatorWithDateRange extends ValidatorWithDateRange[TestRawDataWithDateRange]
+  val validator = new TestValidatorWithDateRange
 
   "validation" should {
     "return no errors" when {
       "passed valid raw data" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2019-02-01"), Some("2019-02-02"))
+        val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-01"), Some("2019-02-02"))
         validator.validate(input) shouldBe List()
       }
     }
     "return a single error" when {
       "passed an invalid nino" in {
-        val input = RetrieveTransactionsRawRequest("AA999999AA", Some("2019-02-01"), Some("2019-02-02"))
+        val input = TestRawDataWithDateRange("AA999999AA", Some("2019-02-01"), Some("2019-02-02"))
         validator.validate(input) shouldBe List(NinoFormatError)
       }
       "passed an invalid from date format" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2019-022-01"), Some("2019-02-02"))
+        val input = TestRawDataWithDateRange("AA999999A", Some("2019-022-01"), Some("2019-02-02"))
         validator.validate(input) shouldBe List(FromDateFormatError)
       }
       "passed an invalid to date format" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2019-02-01"), Some("2019-022-02"))
+        val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-01"), Some("2019-022-02"))
         validator.validate(input) shouldBe List(ToDateFormatError)
       }
       "passed a missing from date" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", None, Some("2019-02-02"))
+        val input = TestRawDataWithDateRange("AA999999A", None, Some("2019-02-02"))
         validator.validate(input) shouldBe List(MissingFromDateError)
       }
       "passed a missing to date" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2019-02-01"), None)
+        val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-01"), None)
         validator.validate(input) shouldBe List(MissingToDateError)
       }
       "passed a to date before the from date" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2019-02-02"), Some("2019-02-01"))
+        val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2019-02-01"))
         validator.validate(input) shouldBe List(RangeToDateBeforeFromDateError)
       }
       "passed a to date which is the same as the from date" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2019-02-02"), Some("2019-02-02"))
+        val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2019-02-02"))
         validator.validate(input) shouldBe List(RuleDateRangeInvalidError)
       }
       "passed a date range which is too large" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2019-02-02"), Some("2021-02-03"))
+        val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2021-02-03"))
         validator.validate(input) shouldBe List(RuleDateRangeInvalidError)
       }
       "passed a from date which is too early" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2017-02-02"), Some("2018-02-03"))
+        val input = TestRawDataWithDateRange("AA999999A", Some("2017-02-02"), Some("2018-02-03"))
         validator.validate(input) shouldBe List(RuleFromDateNotSupportedError)
       }
     }
     "return multiple errors" when {
       "multiple parameters are missing" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", None, None)
+        val input = TestRawDataWithDateRange("AA999999A", None, None)
         validator.validate(input) shouldBe List(MissingFromDateError, MissingToDateError)
       }
       "multiple invalid parameters are provided" in {
-        val input = RetrieveTransactionsRawRequest("AA999999A", Some("2017-02-02"), Some("2021-02-03"))
+        val input = TestRawDataWithDateRange("AA999999A", Some("2017-02-02"), Some("2021-02-03"))
         validator.validate(input) shouldBe List(RuleFromDateNotSupportedError, RuleDateRangeInvalidError)
       }
     }
