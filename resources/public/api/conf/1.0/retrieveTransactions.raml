@@ -11,6 +11,7 @@ is:
   - errors.ruleFromDateNotSupported
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
+  - errors.notFoundTransactions
   - queryParameters.fromCharges
   - queryParameters.toCharges
 displayName: "Retrieve Self Assessment Transactions [test only]"
@@ -27,9 +28,6 @@ responses:
           example-1:
             description: Example response
             value: !include examples/retrieveTransactions/retrieve_response.json
-          example-2:
-            description: Example response with no transactions
-            value: !include examples/retrieveTransactions/retrieve_no_transactions_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
