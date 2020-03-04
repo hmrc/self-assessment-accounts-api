@@ -65,31 +65,47 @@ object ListChargesFixture {
 
   val minimalChargeModel = Charge(None, None, None, None, None, None)
 
-  val fullDesListChargesSingleResponseResponse: JsValue = Json.parse(
+  val fullDesListChargesSingleResponse: JsValue = Json.parse(
     s"""
        |{
-       | "charges" : [$fullDesChargeResponse]
+       | "transactions" : [$fullDesChargeResponse]
        |}
        |""".stripMargin
   )
 
-  val fullDesListChargesMultipleResponseResponse: JsValue = Json.parse(
-    s"""
-       |{
-       | "charges" : [$fullDesChargeResponse, $fullDesChargeResponse]
-       |}
-       |""".stripMargin
-  )
-
-  val minimalDesListChargesResponseResponse: JsValue = Json.parse(
+  val test: JsValue = Json.parse(
     """
       |{
-      |   "charges" : []
+      |  "transactions": [
+      |     {
+      |     "taxYear" : "2020-12",
+      |     "id" : "1234567890AB",
+      |     "transactionDate" : "2019-01-01",
+      |     "type" : "Charge Type",
+      |     "totalAmount" : 100.23,
+      |     "outstandingAmount" : 50.01
+      |     }
+      |   ]
+      |}
+      |""".stripMargin)
+
+  val fullDesListChargesMultipleResponse: JsValue = Json.parse(
+    s"""
+       |{
+       | "transactions" : [$fullDesChargeResponse, $fullDesChargeResponse]
+       |}
+       |""".stripMargin
+  )
+
+  val minimalDesListChargesResponse: JsValue = Json.parse(
+    """
+      |{
+      | "transactions" : []
       |}
       |""".stripMargin
   )
 
-  val invalidDesListChargesResponseResponse: JsValue = Json.parse(
+  val invalidDesListChargesResponse: JsValue = Json.parse(
     """
       |{
       |
@@ -102,4 +118,57 @@ object ListChargesFixture {
   val fullListMultipleChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullChargeModel, fullChargeModel))
 
   val minimalListChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq.empty[Charge])
+
+  val mtdResponse: JsValue = Json.parse(
+    s"""
+       |{
+       |  "charges":[
+       |    {
+       |      "taxYear":"2019-20",
+       |      "id":"1234567890AB",
+       |      "transactionDate":"2019-01-01",
+       |      "type":"Charge Type",
+       |      "totalAmount":100.23,
+       |      "outstandingAmount":50.01,
+       |      "links": [
+       |        {
+       |          "href": "/individuals/accounts/self-assessment/AA999999A/charges/1234567890AB",
+       |          "method": "GET",
+       |          "rel": "retrieve-charge-history"
+       |        }
+       |      ]
+       |    },
+       |    {
+       |      "taxYear":"2019-20",
+       |      "id":"1234567890AC",
+       |      "transactionDate":"2019-01-01",
+       |      "type":"Charge Type",
+       |      "totalAmount":100.56,
+       |      "outstandingAmount":10.56,
+       |      "links": [
+       |        {
+       |          "href": "/individuals/accounts/self-assessment/AA999999A/charges/1234567890AC",
+       |          "method": "GET",
+       |          "rel": "retrieve-charge-history"
+       |        }
+       |      ]
+       |    }
+       |  ],
+       |  "links": [
+       |    {
+       |      "href": "/individuals/accounts/self-assessment/AA999999A/charges",
+       |      "method": "GET",
+       |      "rel": "self"
+       |    }
+       |  ]
+       |}
+       |}""".stripMargin)
+
+  val charge1 = Charge(Some("2019-20"), Some("1234567890AB"), Some("2019-01-01"), Some("Charge Type"), Some(100.23), Some(50.01))
+  val charge2 = Charge(Some("2019-20"), Some("1234567890AC"), Some("2019-01-01"), Some("Charge Type"), Some(100.56), Some(10.56))
+
+  val mtdResponseObj: ListChargesResponse[Charge] = ListChargesResponse(charges = Seq(charge1, charge2))
+
+  val emptyResponseObj: ListChargesResponse[Charge] = ListChargesResponse(Seq.empty[Charge])
+
 }

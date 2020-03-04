@@ -25,23 +25,21 @@ class ListChargesResponseSpec extends UnitSpec {
   "listChargesResponse" should {
     "return a successful Json model" when {
       "the json contains all fields with a single charge" in {
-        fullDesListChargesSingleResponseResponse.as[ListChargesResponse[Charge]] shouldBe fullListSingleChargeModel
+        test.as[ListChargesResponse[Charge]] shouldBe fullListSingleChargeModel
       }
 
       "the json contains all fields with a multiple charges" in {
-        fullDesListChargesMultipleResponseResponse.as[ListChargesResponse[Charge]] shouldBe fullListMultipleChargeModel
+        fullDesListChargesMultipleResponse.as[ListChargesResponse[Charge]] shouldBe fullListMultipleChargeModel
       }
 
       "the json contains minimal fields with no charges" in {
-        minimalDesListChargesResponseResponse.as[ListChargesResponse[Charge]] shouldBe minimalListChargeModel
-
+        minimalDesListChargesResponse.as[ListChargesResponse[Charge]] shouldBe minimalListChargeModel
       }
     }
 
     "throw an error" when {
       "there are no mandatory fields" in {
-        invalidDesListChargesResponseResponse.validate[ListChargesResponse[Charge]] shouldBe a[JsError]
-
+        invalidDesListChargesResponse.validate[ListChargesResponse[Charge]] shouldBe a[JsError]
       }
     }
   }
