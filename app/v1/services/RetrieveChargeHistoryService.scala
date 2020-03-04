@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveChargeHistoryService @Inject()(connector: RetrieveChargeHistoryConnector) extends DesResponseMappingSupport with Logging {
 
-  def retrieveBalance(request: RetrieveChargeHistoryParsedRequest)(
+  def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {

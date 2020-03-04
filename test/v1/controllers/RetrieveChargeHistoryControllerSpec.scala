@@ -21,61 +21,57 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
+import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
+import v1.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
+import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
 import v1.models.errors._
 import v1.models.hateoas.HateoasWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
-import v1.models.response.retrieveAllocations.RetrieveAllocationsHateoasData
+import v1.models.request.retrieveChargeHistory.{RetrieveChargeHistoryParsedRequest, RetrieveChargeHistoryRawRequest}
+import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveAllocationsControllerSpec
+class RetrieveChargeHistoryControllerSpec
   extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrieveAllocationsService
+    with MockRetrieveChargeHistoryService
     with MockHateoasFactory
     with MockAppConfig
-    with MockRetrieveAllocationsRequestParser
+    with MockRetrieveChargeHistoryRequestParser
     with HateoasLinks {
 
-
   private val nino = "AA123456A"
-  private val paymentId = "anId-anotherId"
-  private val paymentLot = "anId"
-  private val paymentLotItem = "anotherId"
+  private val chargeId = "anId"
   private val correlationId = "X-123"
 
-  private val rawRequest: RetrieveAllocationsRawRequest =
-    RetrieveAllocationsRawRequest(
+  private val rawRequest: RetrieveChargeHistoryRawRequest =
+    RetrieveChargeHistoryRawRequest(
       nino = nino,
-      paymentId = paymentId
+      chargeId = chargeId
     )
 
-  private val parsedRequest: RetrieveAllocationsParsedRequest =
-    RetrieveAllocationsParsedRequest(
+  private val parsedRequest: RetrieveChargeHistoryParsedRequest =
+    RetrieveChargeHistoryParsedRequest(
       nino = Nino(nino),
-      paymentLot = paymentLot,
-      paymentLotItem = paymentLotItem
+      chargeId = chargeId
     )
 
-  private val retrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
-  private val mtdResponse = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas(nino, paymentId)
+  private val retrieveChargeHistoryResponse = RetrieveChargeHistoryFixture.retrieveChargeHistoryResponseMultiple
+  private val mtdResponse = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, chargeId)
 
   trait Test {
     val hc = HeaderCarrier()
 
-    val controller = new RetrieveAllocationsController(
+    val controller = new RetrieveChargeHistoryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveAllocationsRequestParser,
-      service = mockRetrieveAllocationsService,
+      requestParser = mockRetrieveChargeHistoryRequestParser,
+      service = mockRetrieveChargeHistoryService,
       hateoasFactory = mockHateoasFactory,
       cc = cc
     )
@@ -84,31 +80,34 @@ class RetrieveAllocationsControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
   }
 
-  "retrieveAllocations" should {
+  "retrieveChargeHistory" should {
     "return OK" when {
       "happy path" in new Test {
 
         MockedAppConfig.apiGatewayContext returns "accounts/self-assessment" anyNumberOfTimes()
 
-        MockRetrieveAllocationsRequestParser
+        MockRetrieveChargeHistoryRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
 
-        MockRetrieveAllocationsService
-          .retrieveAllocations(parsedRequest)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))))
+        MockRetrieveChargeHistoryService
+          .retrieveChargeHistory(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))))
 
         MockHateoasFactory
-          .wrap(retrieveAllocationsResponse, RetrieveAllocationsHateoasData(nino, paymentId))
-          .returns(HateoasWrapper(retrieveAllocationsResponse, Seq(retrievePaymentAllocations(mockAppConfig, nino, paymentId, isSelf = true),
-            listPayments(mockAppConfig, nino, isSelf = false))))
+          .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, chargeId))
+          .returns(HateoasWrapper(retrieveChargeHistoryResponse,
+            Seq(
+              retrieveChargeHistory(mockAppConfig, nino, chargeId, isSelf = true),
+              retrieveTransactions(mockAppConfig, nino, isSelf = false)
+            )
+          ))
 
-        val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
-
       }
     }
 
@@ -117,11 +116,11 @@ class RetrieveAllocationsControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockRetrieveAllocationsRequestParser
+            MockRetrieveChargeHistoryRequestParser
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -131,7 +130,7 @@ class RetrieveAllocationsControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (PaymentIdFormatError, BAD_REQUEST)
+          (ChargeIdFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -141,15 +140,15 @@ class RetrieveAllocationsControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockRetrieveAllocationsRequestParser
+            MockRetrieveChargeHistoryRequestParser
               .parse(rawRequest)
               .returns(Right(parsedRequest))
 
-            MockRetrieveAllocationsService
-              .retrieveAllocations(parsedRequest)
+            MockRetrieveChargeHistoryService
+              .retrieveChargeHistory(parsedRequest)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
@@ -159,7 +158,7 @@ class RetrieveAllocationsControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (PaymentIdFormatError, BAD_REQUEST),
+          (ChargeIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
@@ -169,3 +168,8 @@ class RetrieveAllocationsControllerSpec
     }
   }
 }
+
+
+
+
+

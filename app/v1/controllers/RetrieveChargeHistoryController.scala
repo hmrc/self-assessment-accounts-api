@@ -23,40 +23,40 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.Logging
-import v1.controllers.requestParsers.RetrieveBalanceRequestParser
+import v1.controllers.requestParsers.RetrieveChargeHistoryRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
-import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
-import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveBalanceService}
+import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
+import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
+import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveChargeHistoryService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService,
-                                          val lookupService: MtdIdLookupService,
-                                          requestParser: RetrieveBalanceRequestParser,
-                                          service: RetrieveBalanceService,
-                                          hateoasFactory: HateoasFactory,
-                                          cc: ControllerComponents)(implicit ec: ExecutionContext)
+class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthService,
+                                                val lookupService: MtdIdLookupService,
+                                                requestParser: RetrieveChargeHistoryRequestParser,
+                                                service: RetrieveChargeHistoryService,
+                                                hateoasFactory: HateoasFactory,
+                                                cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "RetrieveBalanceController",
-      endpointName = "retrieveBalance"
+      controllerName = "RetrieveChargeHistoryController",
+      endpointName = "retrieveChargeHistory"
     )
 
-  def retrieveBalance(nino: String): Action[AnyContent] =
+  def retrieveChargeHistory(nino: String, chargeId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
-      val rawRequest = RetrieveBalanceRawRequest(nino)
+      val rawRequest = RetrieveChargeHistoryRawRequest(nino, chargeId)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-          serviceResponse <- EitherT(service.retrieveBalance(parsedRequest))
+          serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(serviceResponse.responseData, RetrieveBalanceHateoasData(nino)).asRight[ErrorWrapper])
+            hateoasFactory.wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, chargeId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -76,7 +76,7 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | ChargeIdFormatError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

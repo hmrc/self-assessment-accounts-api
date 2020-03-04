@@ -22,22 +22,23 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.fixtures.RetrieveBalanceFixture
-import v1.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError}
+import v1.fixtures.RetrieveChargeHistoryFixture
+import v1.models.errors.{ChargeIdFormatError, DownstreamError, MtdError, NinoFormatError, NotFoundError}
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
+class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
     private trait Test {
 
       val nino: String = "AA111111A"
+      val chargeId: String = "anId"
       val correlationId = "X-123"
 
-      val desResponse: JsValue = RetrieveBalanceFixture.fullDesResponse
-      val mtdResponse: JsValue = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
+      val desResponse: JsValue = RetrieveChargeHistoryFixture.desResponseWithMultipleHHistory
+      val mtdResponse: JsValue = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, chargeId)
 
-      def uri: String = s"/$nino/balance"
-      def desUrl: String = s"/cross-regime/balance-placeholder/NINO/$nino/ITSA"
+      def uri: String = s"/$nino/charges/$chargeId"
+      def desUrl: String = s"/cross-regime/charge-history-placeholder/NINO/$nino/ITSA"
 
       def setupStubs(): StubMapping
 
@@ -45,18 +46,19 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
         setupStubs()
         buildRequest(uri)
           .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+          .withQueryStringParameters(("documentId", chargeId))
       }
 
       def errorBody(code: String): String =
         s"""
-           |      {
-           |        "code": "$code",
-           |        "reason": "des message"
-           |      }
-    """.stripMargin
+           |{
+           |   "code": "$code",
+           |   "reason": "des message"
+           |}
+          """.stripMargin
     }
 
-    "Calling the 'retrieve a self assessment balance' endpoint" should {
+    "Calling the 'retrieve a self assessment charge's history' endpoint" should {
       "return a 200 status code" when {
         "any valid request is made" in new Test {
 
@@ -123,6 +125,7 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_DOCUMENT_ID", BAD_REQUEST, ChargeIdFormatError),
           (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)

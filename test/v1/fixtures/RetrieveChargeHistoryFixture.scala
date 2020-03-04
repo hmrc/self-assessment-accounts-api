@@ -16,10 +16,84 @@
 
 package v1.fixtures
 
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
 import v1.models.response.retrieveChargeHistory.{ChargeHistory, RetrieveChargeHistoryResponse}
 
 object RetrieveChargeHistoryFixture {
+
+  val desResponseWithMultipleHHistory: JsValue = Json.parse(
+    """
+      |{
+      |   "history": [
+      |      {
+      |         "taxYear": 2020,
+      |         "id": "X123456790A",
+      |         "transactionDate": "2019-06-01",
+      |         "type": "Balancing Charge Debit",
+      |         "amount": 600.01,
+      |         "reversalDate": "2019-06-05",
+      |         "reversalReason": "Example reason"
+      |      },
+      |      {
+      |         "taxYear": 2020,
+      |         "id": "X123456790A",
+      |         "transactionDate": "2019-06-01",
+      |         "type": "Balancing Charge Debit",
+      |         "amount": 600.01,
+      |         "reversalDate": "2019-06-07",
+      |         "reversalReason": "Example reason 2"
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  val mtdResponseWithMultipleHHistory: JsValue = Json.parse(
+    """
+      |{
+      |   "history": [
+      |      {
+      |         "taxYear":"2019-20",
+      |         "id":"X123456790A",
+      |         "transactionDate":"2019-06-01",
+      |         "type":"Balancing Charge Debit",
+      |         "amount":600.01,
+      |         "reversalDate":"2019-06-05",
+      |         "reversalReason":"Example reason"
+      |      },
+      |      {
+      |         "taxYear":"2019-20",
+      |         "id":"X123456790A",
+      |         "transactionDate":"2019-06-01",
+      |         "type":"Balancing Charge Debit",
+      |         "amount":600.01,
+      |         "reversalDate":"2019-06-07",
+      |         "reversalReason":"Example reason 2"
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  def mtdResponseMultipleWithHateoas(nino: String, chargeId: String): JsObject = mtdResponseWithMultipleHHistory.as[JsObject] ++ Json.parse(
+    s"""
+      |{
+      |   "links":[
+      |      {
+      |         "href":"/accounts/self-assessment/$nino/charges/$chargeId",
+      |         "method":"GET",
+      |         "rel":"self"
+      |      },
+      |      {
+      |         "href":"/accounts/self-assessment/$nino/transactions",
+      |         "method":"GET",
+      |         "rel":"retrieve-transactions"
+      |      }
+      |   ]
+      |}
+    """.stripMargin
+  ).as[JsObject]
 
   val validNino = "AA123456A"
   val validChargeId = "ABC123"
@@ -50,5 +124,24 @@ object RetrieveChargeHistoryFixture {
   val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
     RetrieveChargeHistoryResponse(
       history = Seq(chargeHistoryResponse)
+    )
+
+  val chargeHistoryResponse2: ChargeHistory =
+    ChargeHistory(
+      taxYear = Some("2019-20"),
+      id = Some("X123456790A"),
+      transactionDate = Some("2019-06-01"),
+      `type` = Some("Balancing Charge Debit"),
+      amount = Some(600.01),
+      reversalDate = Some("2019-06-07"),
+      reversalReason = Some("Example reason 2")
+    )
+
+  val retrieveChargeHistoryResponseMultiple: RetrieveChargeHistoryResponse =
+    RetrieveChargeHistoryResponse(
+      history = Seq(
+        chargeHistoryResponse,
+        chargeHistoryResponse2
+      )
     )
 }

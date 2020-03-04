@@ -122,7 +122,6 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
         }
 
         val input = Seq(
-          (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (FromDateFormatError, BAD_REQUEST),
           (ToDateFormatError, BAD_REQUEST),
@@ -130,8 +129,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
           (MissingToDateError, BAD_REQUEST),
           (RuleDateRangeInvalidError, BAD_REQUEST),
           (RuleFromDateNotSupportedError, BAD_REQUEST),
-          (RangeToDateBeforeFromDateError, BAD_REQUEST),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
+          (RangeToDateBeforeFromDateError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))

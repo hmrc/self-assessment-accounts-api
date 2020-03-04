@@ -40,7 +40,7 @@ object RetrieveBalanceResponse extends HateoasLinks {
       (JsPath \ "pendingChargeDueDate").readNullable[String]
     )(RetrieveBalanceResponse.apply _)
 
-  implicit object  RetrieveBalanceLinksFactory extends HateoasLinksFactory[RetrieveBalanceResponse, RetrieveBalanceHateoasData] {
+  implicit object RetrieveBalanceLinksFactory extends HateoasLinksFactory[RetrieveBalanceResponse, RetrieveBalanceHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveBalanceHateoasData): Seq[Link] = {
       import data._
       Seq(
