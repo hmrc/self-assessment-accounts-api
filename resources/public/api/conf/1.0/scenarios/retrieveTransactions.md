@@ -12,7 +12,7 @@
             <td><p>Simulate a successful response.</p></td>
         </tr>
         <tr>
-            <td><p>NO_TRANSACTIONS</p></td>
+            <td><p>NO_TRANSACTIONS_FOUND</p></td>
             <td><p>Simulates the scenario where no transactions can be found.</p></td>
         </tr>
         <tr>

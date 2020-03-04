@@ -56,6 +56,8 @@ object NoPaymentsFoundError extends MtdError("NO_PAYMENTS_FOUND", "No payments f
 
 object NoChargesFoundError extends MtdError("NO_CHARGES_FOUND", "No charges found")
 
+object NoTransactionsFoundError extends MtdError("NO_TRANSACTIONS_FOUND", "No transactions found")
+
 object DownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
 
 object BadRequestError extends MtdError("INVALID_REQUEST", "Invalid request")

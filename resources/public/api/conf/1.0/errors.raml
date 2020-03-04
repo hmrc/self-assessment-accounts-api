@@ -38,6 +38,17 @@ traits:
                   description: No charges found for this NINO and date range
                   value:
                     code: NO_CHARGES_FOUND
+    notFoundTransactions:
+        responses:
+          404:
+            body:
+              application/json:
+                type: types.errorResponse
+                examples:
+                  notFoundTransactions:
+                    description: No transactions found for this NINO and date range
+                    value:
+                      code: NO_TRANSACTIONS_FOUND
   clientOrAgentNotAuthorised:
     responses:
       403:
