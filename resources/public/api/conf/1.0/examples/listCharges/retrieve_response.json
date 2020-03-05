@@ -4,7 +4,7 @@
       "taxYear":"2019-20",
       "id":"1234567890AB",
       "transactionDate":"2019-01-01",
-      "type":"Charge Type",
+      "type":"Balancing charge debit",
       "totalAmount":100.23,
       "outstandingAmount":50.01,
       "links": [
