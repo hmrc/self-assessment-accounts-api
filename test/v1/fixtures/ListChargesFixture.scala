@@ -55,7 +55,7 @@ object ListChargesFixture {
       |""".stripMargin
   )
 
-  val fullChargeModel: Charge = Charge(taxYear = Some("2020-12"),
+  val fullChargeModel: Charge = Charge(taxYear = Some("2019-20"),
     id = Some("1234567890AB"),
     transactionDate = Some("2019-01-01"),
     `type` = Some("Charge Type"),
