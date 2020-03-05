@@ -72,7 +72,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
   private val chargeHateoasLink1       =
     Link(href = "/accounts/self-assessment/AA123456A/charges/1234567890AB", method = GET, rel = RETRIEVE_CHARGE_HISTORY)
   private val chargeHateoasLink2       =
-    Link(href = "/accounts/self-assessment/AA123456A/charges/1234567890AC", method = GET, rel = RETRIEVE_CHARGE_HISTORY)
+    Link(href = "/accounts/self-assessment/AA123456A/charges/1234567890AB", method = GET, rel = RETRIEVE_CHARGE_HISTORY)
 
   private val listChargesHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/charges", method = GET, rel = SELF)
   private val transactionsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = RETRIEVE_TRANSACTIONS)
@@ -96,10 +96,10 @@ class ListChargesControllerSpec extends ControllerBaseSpec
           .wrapList(mtdResponseObj, ListChargesHateoasData(nino))
           .returns(HateoasWrapper(hateoasResponse, Seq(listChargesHateoasLink, transactionsHateoasLink)))
 
-        val result: Future[Result] = controller.retrieveList(nino, Some(from), Some(to))(fakeGetRequest)
+        val result: Future[Result] = controller.listCharges(nino, Some(from), Some(to))(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
+        contentAsJson(result) shouldBe mtdResponse(nino = "AA123456A")
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }
@@ -113,7 +113,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveList(nino, Some(from), Some(to))(fakeGetRequest)
+            val result: Future[Result] = controller.listCharges(nino, Some(from), Some(to))(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -149,7 +149,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
               .listCharges(parsedRequest)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.retrieveList(nino, Some(from), Some(to))(fakeGetRequest)
+            val result: Future[Result] = controller.listCharges(nino, Some(from), Some(to))(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

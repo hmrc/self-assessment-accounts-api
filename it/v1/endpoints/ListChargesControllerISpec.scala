@@ -33,7 +33,7 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     val correlationId = "X-123"
     val from: Option[String] = Some("2018-10-01")
     val to : Option[String]  = Some("2019-10-01")
-    def uri: String = s"/$nino/payments"
+    def uri: String = s"/$nino/charges"
 
     def desUrl: String = s"/cross-regime/transactions-placeholder/NINO/$nino/ITSA"
 
@@ -52,7 +52,7 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling the list Bsas endpoint" should {
+  "Calling the list charges endpoint" should {
 
     "return a valid response with status OK" when {
 
@@ -71,12 +71,12 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdResponse
+        response.json shouldBe mtdResponse(nino = "AA123456A")
       }
     }
 
-    "return a 404 NO_PAYMENTS_FOUND error" when {
-      "a success response with no payments is returned" in new Test {
+    "return a 404 NO_CHARGES_FOUND error" when {
+      "a success response with no charges is returned" in new Test {
 
         val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
 
@@ -97,13 +97,13 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, fromDate: String,
-                              toDate: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, fromDate: Option[String],
+                              toDate: Option[String], expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String = requestNino
-          override val from: Option[String] = Some(fromDate)
-          override val to: Option[String] = Some(toDate)
+          override val from: Option[String] = fromDate
+          override val to: Option[String] = toDate
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -119,12 +119,14 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        ("AA1123A", "2018-10-01", "2019-10-01", BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "2018-100-01", "2019-10-01", BAD_REQUEST, FromDateFormatError),
-        ("AA123456A", "2018-10-01", "2019-100-01", BAD_REQUEST, ToDateFormatError),
-        ("AA123456A", "2018-03-01", "2019-10-01", BAD_REQUEST, RuleFromDateNotSupportedError),
-        ("AA123456A", "2018-10-01", "2021-10-01", BAD_REQUEST, RuleDateRangeInvalidError),
-        ("AA123456A", "2018-10-01", "2018-06-01", BAD_REQUEST, RangeToDateBeforeFromDateError)
+        ("AA1123A", Some("2018-10-01"), Some("2019-10-01"), BAD_REQUEST, NinoFormatError),
+        ("AA123456A", Some("2018-100-01"), Some("2019-10-01"), BAD_REQUEST, FromDateFormatError),
+        ("AA123456A", Some("2018-10-01"), Some("2019-100-01"), BAD_REQUEST, ToDateFormatError),
+        ("AA123456A", None, Some("2019-10-01"), BAD_REQUEST, MissingFromDateError),
+        ("AA123456A", Some("2018-10-01"), None, BAD_REQUEST, MissingToDateError),
+        ("AA123456A", Some("2018-10-01"), Some("2018-06-01"), BAD_REQUEST, RangeToDateBeforeFromDateError),
+        ("AA123456A", Some("2018-10-01"), Some("2021-10-01"), BAD_REQUEST, RuleDateRangeInvalidError),
+        ("AA123456A", Some("2018-03-01"), Some("2019-10-01"), BAD_REQUEST, RuleFromDateNotSupportedError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))

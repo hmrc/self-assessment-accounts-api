@@ -25,7 +25,7 @@ class ListChargesResponseSpec extends UnitSpec {
   "listChargesResponse" should {
     "return a successful Json model" when {
       "the json contains all fields with a single charge" in {
-        test.as[ListChargesResponse[Charge]] shouldBe fullListSingleChargeModel
+        listChargesDesJson.as[ListChargesResponse[Charge]] shouldBe fullListSingleChargeModel
       }
 
       "the json contains all fields with a multiple charges" in {

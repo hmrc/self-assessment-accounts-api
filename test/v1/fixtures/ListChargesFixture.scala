@@ -24,8 +24,8 @@ object ListChargesFixture {
   val fullDesChargeResponse: JsValue = Json.parse(
     """
       |{
-      |  "taxYear" : "2020-12",
-      |  "id" : "1234567890AB",
+      |  "taxYear" : "2019-20",
+      |  "documentId" : "1234567890AB",
       |  "transactionDate" : "2019-01-01",
       |  "type" : "Charge Type",
       |  "totalAmount" : 100.23,
@@ -45,8 +45,8 @@ object ListChargesFixture {
   val invalidDesChargeResponse: JsValue = Json.parse(
     """
       |{
-      |  "taxYear" : "2020-12",
-      |  "id" : "1234567890AB",
+      |  "taxYear" : "2019-20",
+      |  "documentId" : "1234567890AB",
       |  "transactionDate" : "2019-01-01",
       |  "type" : 100.23,
       |  "totalAmount" : "Charge Type",
@@ -73,13 +73,13 @@ object ListChargesFixture {
        |""".stripMargin
   )
 
-  val test: JsValue = Json.parse(
+  val listChargesDesJson: JsValue = Json.parse(
     """
       |{
       |  "transactions": [
       |     {
-      |     "taxYear" : "2020-12",
-      |     "id" : "1234567890AB",
+      |     "taxYear" : "2019-20",
+      |     "documentId" : "1234567890AB",
       |     "transactionDate" : "2019-01-01",
       |     "type" : "Charge Type",
       |     "totalAmount" : 100.23,
@@ -119,20 +119,20 @@ object ListChargesFixture {
 
   val minimalListChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq.empty[Charge])
 
-  val mtdResponse: JsValue = Json.parse(
+  def mtdResponse(nino: String = "AA999999A", chargeId: String = "1234567890AB"): JsValue = Json.parse(
     s"""
        |{
        |  "charges":[
        |    {
        |      "taxYear":"2019-20",
-       |      "id":"1234567890AB",
+       |      "id":"$chargeId",
        |      "transactionDate":"2019-01-01",
        |      "type":"Charge Type",
        |      "totalAmount":100.23,
        |      "outstandingAmount":50.01,
        |      "links": [
        |        {
-       |          "href": "/individuals/accounts/self-assessment/AA999999A/charges/1234567890AB",
+       |          "href": "/accounts/self-assessment/$nino/charges/$chargeId",
        |          "method": "GET",
        |          "rel": "retrieve-charge-history"
        |        }
@@ -140,14 +140,14 @@ object ListChargesFixture {
        |    },
        |    {
        |      "taxYear":"2019-20",
-       |      "id":"1234567890AC",
+       |      "id":"$chargeId",
        |      "transactionDate":"2019-01-01",
        |      "type":"Charge Type",
-       |      "totalAmount":100.56,
-       |      "outstandingAmount":10.56,
+       |      "totalAmount":100.23,
+       |      "outstandingAmount":50.01,
        |      "links": [
        |        {
-       |          "href": "/individuals/accounts/self-assessment/AA999999A/charges/1234567890AC",
+       |          "href": "/accounts/self-assessment/$nino/charges/$chargeId",
        |          "method": "GET",
        |          "rel": "retrieve-charge-history"
        |        }
@@ -156,16 +156,20 @@ object ListChargesFixture {
        |  ],
        |  "links": [
        |    {
-       |      "href": "/individuals/accounts/self-assessment/AA999999A/charges",
+       |      "href": "/accounts/self-assessment/$nino/charges",
        |      "method": "GET",
        |      "rel": "self"
+       |    },
+       |    {
+       |      "href": "/accounts/self-assessment/$nino/transactions",
+       |      "method": "GET",
+       |      "rel": "retrieve-transactions"
        |    }
        |  ]
-       |}
        |}""".stripMargin)
 
   val charge1 = Charge(Some("2019-20"), Some("1234567890AB"), Some("2019-01-01"), Some("Charge Type"), Some(100.23), Some(50.01))
-  val charge2 = Charge(Some("2019-20"), Some("1234567890AC"), Some("2019-01-01"), Some("Charge Type"), Some(100.56), Some(10.56))
+  val charge2 = Charge(Some("2019-20"), Some("1234567890AB"), Some("2019-01-01"), Some("Charge Type"), Some(100.23), Some(50.01))
 
   val mtdResponseObj: ListChargesResponse[Charge] = ListChargesResponse(charges = Seq(charge1, charge2))
 

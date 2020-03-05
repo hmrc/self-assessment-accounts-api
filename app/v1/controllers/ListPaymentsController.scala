@@ -44,7 +44,7 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListPaymentsController", endpointName = "listPayments")
 
-  def retrieveList(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async {
+  def listPayments(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async {
     implicit request =>
       val rawData = ListPaymentsRawRequest(nino, from, to)
       val result =

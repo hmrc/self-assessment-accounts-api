@@ -96,7 +96,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
           .wrapList(mtdResponseObj, ListPaymentsHateoasData(nino))
           .returns(HateoasWrapper(hateoasResponse, Seq(listPaymentsHateoasLink, transactionsHateoasLink)))
 
-        val result: Future[Result] = controller.retrieveList(nino, Some(from), Some(to))(fakeGetRequest)
+        val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
@@ -113,7 +113,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveList(nino, Some(from), Some(to))(fakeGetRequest)
+            val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -147,7 +147,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
               .listPayments(parsedRequest)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.retrieveList(nino, Some(from), Some(to))(fakeGetRequest)
+            val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)

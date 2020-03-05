@@ -52,7 +52,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "Calling the list Bsas endpoint" should {
+  "Calling the list payments endpoint" should {
 
     "return a valid response with status OK" when {
 

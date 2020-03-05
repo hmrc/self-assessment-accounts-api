@@ -31,7 +31,7 @@ object Charge {
 
   implicit val reads: Reads[Charge] = (
     (JsPath \ "taxYear").readNullable[String] and
-      (JsPath \ "id").readNullable[String] and
+      (JsPath \ "documentId").readNullable[String] and
       (JsPath \ "transactionDate").readNullable[String] and
       (JsPath \ "type").readNullable[String] and
       (JsPath \ "totalAmount").readNullable[BigDecimal] and
