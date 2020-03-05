@@ -21,7 +21,7 @@ import v1.models.errors.{ChargeIdFormatError, MtdError}
 object ChargeIdValidation {
 
   private val chargeIdRegex =
-    "^[0-9A-Za-z]{1,35}$"
+    "^[0-9A-Za-z]{1,12}$"
 
   def validate(chargeId: String): List[MtdError] = {
     if (chargeId.matches(chargeIdRegex)) NoValidationErrors else List(ChargeIdFormatError)
