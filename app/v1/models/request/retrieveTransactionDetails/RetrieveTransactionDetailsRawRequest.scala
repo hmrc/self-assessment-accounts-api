@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveSelfAssessmentTransaction
+package v1.models.request.retrieveTransactionDetails
 
 import v1.models.request.RawData
 
-case class RetrieveTransactionsRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawData
+case class RetrieveTransactionDetailsRawRequest(nino: String, transactionId: String) extends RawData

@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveSelfAssessmentTransaction
+package v1.models.request.retrieveTransactionDetails
 
 import uk.gov.hmrc.domain.Nino
 
-case class RetrieveTransactionsParsedRequest(nino: Nino, from: String, to: String)
+case class RetrieveTransactionDetailsParsedRequest(nino: Nino, transactionId: String)
