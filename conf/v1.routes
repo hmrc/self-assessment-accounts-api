@@ -1,5 +1,5 @@
 GET        /:nino/payments/:paymentId                      v1.controllers.RetrieveAllocationsController.retrieveAllocations(nino: String, paymentId: String)
-GET        /:nino/payments                                 v1.controllers.ListPaymentsController.retrieveList(nino: String, from: Option[String], to: Option[String])
+GET        /:nino/payments                                 v1.controllers.ListPaymentsController.listPayments(nino: String, from: Option[String], to: Option[String])
 GET        /:nino/balance                                  v1.controllers.RetrieveBalanceController.retrieveBalance(nino: String)
-GET        /:nino/charges                                  v1.controllers.ListChargesController.retrieveList(nino: String, from: Option[String], to: Option[String])
+GET        /:nino/charges                                  v1.controllers.ListChargesController.listCharges(nino: String, from: Option[String], to: Option[String])
 GET        /:nino/charges/:chargeId                        v1.controllers.RetrieveChargeHistoryController.retrieveChargeHistory(nino: String, chargeId: String)
