@@ -18,50 +18,28 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
+import v1.fixtures.RetrieveTransactionFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.listCharges.ListChargesParsedRequest
-import v1.models.response.listCharges.{ListChargesResponse, Charge}
+import v1.models.request.retrieveTransactions.RetrieveTransactionsParsedRequest
 
 import scala.concurrent.Future
 
-class ListChargesConnectorSpec extends ConnectorSpec {
+class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
-
-  val from = "2020-01-01"
-  val to = "2020-01-02"
+  val chargeId = "anId"
+  val dateFrom = "2018-04-05"
+  val dateTo = "2019-11-05"
 
   val queryParams: Seq[(String, String)] = Seq(
-    "dateFrom" -> from,
-    "dateTo" -> to,
-    "type" -> "charge"
-  )
-
-  val response = ListChargesResponse(
-    charges = Seq(
-      Charge(
-        taxYear = Some("2019-20"),
-        id= Some("1234567890AB"),
-        transactionDate= Some("2020-02-01"),
-        `type`= Some("Charge Type"),
-        totalAmount = Some(11.23),
-        outstandingAmount = Some(4.56)
-      ),
-      Charge(
-        taxYear = Some("2019-20"),
-        id= Some("1234567890AC"),
-        transactionDate= Some("2020-02-04"),
-        `type`= Some("Charge Type"),
-        totalAmount = Some(17.89),
-        outstandingAmount = Some(12.23)
-      )
-    )
+    "dateFrom" -> dateFrom,
+    "dateTo" -> dateTo
   )
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: ListChargesConnector = new ListChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveTransactionsConnector = new RetrieveTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -69,11 +47,11 @@ class ListChargesConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "ListChargesConnector" when {
-    "retrieving a list of charges" should {
+  "RetrieveTransactionsConnector" when {
+    "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
-        val request: ListChargesParsedRequest = ListChargesParsedRequest(nino, from, to)
-        val outcome = Right(ResponseWrapper(correlationId, response))
+        val request: RetrieveTransactionsParsedRequest = RetrieveTransactionsParsedRequest(nino, dateFrom, dateTo)
+        val outcome = Right(ResponseWrapper(correlationId, fullDesSingleRetreiveTransactionResponse))
 
         MockedHttpClient
           .get(
@@ -83,7 +61,7 @@ class ListChargesConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.listCharges(request)) shouldBe outcome
+        await(connector.retrieveTransactions(request)) shouldBe outcome
       }
     }
   }
