@@ -52,7 +52,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
     val controller = new ListPaymentsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRequestParser,
+      requestParser = mockListPaymentsRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       cc = cc

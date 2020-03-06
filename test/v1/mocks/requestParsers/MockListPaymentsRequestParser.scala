@@ -24,11 +24,11 @@ import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRa
 
 trait MockListPaymentsRequestParser extends MockFactory {
 
-  val mockRequestParser = mock[ListPaymentsRequestParser]
+  val mockListPaymentsRequestParser: ListPaymentsRequestParser = mock[ListPaymentsRequestParser]
 
   object MockListPaymentsRequestParser {
     def parse(data: ListPaymentsRawRequest): CallHandler[Either[ErrorWrapper, ListPaymentsParsedRequest]] = {
-      (mockRequestParser.parseRequest(_: ListPaymentsRawRequest)).expects(data)
+      (mockListPaymentsRequestParser.parseRequest(_: ListPaymentsRawRequest)).expects(data)
     }
   }
 }

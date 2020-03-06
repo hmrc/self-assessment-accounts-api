@@ -24,7 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListChargesFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockListChargesRequestDataParser
+import v1.mocks.requestParsers.MockListChargesRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockListChargesService, MockMtdIdLookupService}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
@@ -40,7 +40,7 @@ import scala.concurrent.Future
 class ListChargesControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
-  with MockListChargesRequestDataParser
+  with MockListChargesRequestParser
   with MockListChargesService
   with MockHateoasFactory
   with MockAppConfig
@@ -52,7 +52,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
     val controller = new ListChargesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRequestParser,
+      requestParser = mockListChargesRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       cc = cc
@@ -84,7 +84,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
     "return a valid charges response" when {
       "a request sent has valid details" in new Test {
 
-        MockListChargesRequestDataParser
+        MockListChargesRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
 
@@ -109,7 +109,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockListChargesRequestDataParser
+            MockListChargesRequestParser
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
@@ -141,7 +141,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockListChargesRequestDataParser
+            MockListChargesRequestParser
               .parse(rawRequest)
               .returns(Right(parsedRequest))
 
