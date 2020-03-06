@@ -22,6 +22,7 @@ import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.response.listPayments.ListPaymentsResponse
 import v1.models.response.listCharges.ListChargesResponse
+import v1.models.response.retrieveTransaction.RetrieveTransactionsResponse
 
 trait DesResponseMappingSupport {
   self: Logging =>
@@ -38,6 +39,14 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case listChargesResponse: ListChargesResponse[_] if listChargesResponse.charges.isEmpty =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), NoChargesFoundError, None))
+      case _ => Right(desResponseWrapper)
+    }
+  }
+
+  final def validateListTransactionsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
+    desResponseWrapper.responseData match {
+      case listTransactionsResponse: RetrieveTransactionsResponse[_] if listTransactionsResponse.transactions.isEmpty =>
+        Left(ErrorWrapper(Some(desResponseWrapper.correlationId), NoTransactionsFoundError, None))
       case _ => Right(desResponseWrapper)
     }
   }

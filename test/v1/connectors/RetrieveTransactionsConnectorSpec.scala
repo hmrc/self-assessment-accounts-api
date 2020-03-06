@@ -17,20 +17,15 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
 import v1.fixtures.RetrieveTransactionFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveTransactions.RetrieveTransactionsParsedRequest
 
 import scala.concurrent.Future
 
 class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
   val chargeId = "anId"
-  val dateFrom = "2018-04-05"
-  val dateTo = "2019-11-05"
 
   val queryParams: Seq[(String, String)] = Seq(
     "dateFrom" -> dateFrom,
@@ -50,7 +45,6 @@ class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
   "RetrieveTransactionsConnector" when {
     "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
-        val request: RetrieveTransactionsParsedRequest = RetrieveTransactionsParsedRequest(nino, dateFrom, dateTo)
         val outcome = Right(ResponseWrapper(correlationId, fullDesSingleRetreiveTransactionResponse))
 
         MockedHttpClient
@@ -61,7 +55,7 @@ class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveTransactions(request)) shouldBe outcome
+        await(connector.retrieveTransactions(requestData)) shouldBe outcome
       }
     }
   }
