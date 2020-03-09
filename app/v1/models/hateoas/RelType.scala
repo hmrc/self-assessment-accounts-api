@@ -21,6 +21,7 @@ object RelType {
 
   val RETRIEVE_BALANCE = "retrieve-balance"
   val RETRIEVE_TRANSACTIONS = "retrieve-transactions"
+  val RETRIEVE_TRANSACTION_DETAILS = "retrieve-transaction-details"
   val LIST_CHARGES = "list-charges"
   val RETRIEVE_CHARGE_HISTORY = "retrieve-charge-history"
   val LIST_PAYMENTS = "list-payments"
