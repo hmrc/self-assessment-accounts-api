@@ -41,12 +41,19 @@ uses:
       get: !include retrieveBalance.raml
     /transactions:
       get: !include retrieveTransactions.raml
+      /{transactionId}:
+        uriParameters:
+          transactionId:
+            description: "A unique identifier for the transaction. <br><br>  Must conform to the regular expression <br/> `^[0-9A-Za-z]{1,12}$`"
+            type: string
+            example: X92AM39DLE3D
+        get: !include retrieveTransactionDetails.raml
     /charges:
       get: !include listCharges.raml
       /{chargeId}:
         uriParameters:
           chargeId:
-            description: "A unique identifier for the charge. <br><br>  Must conform to the regular expression <br/> `^[0-9A-Za-z]{1,12}$` "
+            description: "A unique identifier for the charge. <br><br>  Must conform to the regular expression <br/> `^[0-9A-Za-z]{1,12}$`"
             type: string
             example: A3948472839A
         get: !include retrieveChargeHistory.raml
