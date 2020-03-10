@@ -7,14 +7,14 @@
     "transactionItems": {
       "description": "A list of the items that make up the overall transaction. The items may include subitems.",
       "type": "array",
-      "transactionItem": {
-        "title": "TransactionItem",
+      "items": {
+        "title": "transactionItem",
         "type": "object",
         "properties": {
           "transactionItemId": {
             "description": "An identifier for this part of the overall transaction.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$",
+            "pattern": "^[0-9]{1,4}$",
             "example": "X234567891BY-AT3579"
           },
           "type": {
@@ -25,95 +25,98 @@
           "taxPeriodFrom": {
             "description": "The 'from' date of this tax period. Date in the format: YYYY-MM-DD",
             "type": "string",
-            "example": "For example: 2018-04-05"
+            "example": "2018-04-05"
           },
           "taxPeriodTo": {
             "description": "The 'to' date of this tax period. Date in the format: YYYY-MM-DD",
             "type": "string",
-            "example": "For example: 2018-04-05"
+            "example": "2018-04-05"
           },
           "originalAmount": {
             "description": "The original value of this transaction.",
-            "type": "numeric",
+            "type": "number",
             "minimum": -99999999999.99,
             "maximum": 99999999999.99,
-            "example": "600.00"
+            "example": "600.00",
+            "multipleOf": 0.01
           },
           "outstandingAmount": {
             "description": "The remaining amount due on this transaction.",
-            "type": "numeric",
+            "type": "number",
             "minimum": -99999999999.99,
             "maximum": 99999999999.99,
-            "example": "600.00"
+            "example": "600.00",
+            "multipleOf": 0.01
           },
           "dueDate": {
             "description": "The date by when the amount is due to be paid. Date in the format: YYYY-MM-DD",
-            "type": "String",
-            "example": "For example: 2018-04-05"
+            "type": "string",
+            "example": "2018-04-05"
           },
           "paymentMethod": {
             "description": "The method used to make the payment.",
-            "type": "String",
+            "type": "string",
             "pattern": "^[0-9A-Za-z\\s]{1,30}$",
             "example": "BACS RECEIPTS"
           },
           "paymentId": {
             "description": "The unique identifier for the payment.",
-            "type": "String",
+            "type": "string",
             "pattern": "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$",
             "example": "AB1023456789-000001"
           },
           "subItems": {
             "description": "The list of updates to this part of the charge or payment.",
             "type": "array",
-            "subItem": {
-              "title": "SubItem",
+            "items": {
+              "title": "subItem",
               "type": "object",
               "properties": {
                 "subItemId": {
                   "description": "The unique identifier for this entry.",
                   "type": "string",
-                  "pattern": "^[0-9]{1,3}$",
-                  "minimum": "001"
+                  "pattern": "^[0-9]{1,3}$"
                 },
                 "amount": {
                   "description": "The amount that this entry changed the transaction by.",
-                  "type": "numeric",
+                  "type": "number",
                   "minimum": -99999999999.99,
                   "maximum": 99999999999.99,
-                  "example": "350.00"
+                  "example": "350.00",
+                  "multipleOf": 0.01
                 },
                 "clearingDate": {
                   "description": "The date this entry changed the item. Date in the format: YYYY-MM-DD",
-                  "type": "String",
-                  "example": "For example: 2018-04-05"
+                  "type": "string",
+                  "example": "2018-04-05"
                 },
                 "clearingReason": {
                   "description": "The reason given for clearing",
-                  "type": "String",
-                  "pattern": "^[0-9A-Za-z]{1,30}$"
+                  "type": "string",
+                  "pattern": "^[0-9A-Za-z\\s-]{1,30}$"
                 },
                 "outgoingPaymentMethod": {
                   "description": "The method used to make the outgoing payment.",
-                  "type": "String",
-                  "pattern": "^[0-9A-Za-z]{1,30}$"
+                  "type": "string",
+                  "pattern": "^[0-9A-Za-z\\s-]{1,30}$"
                 },
                 "paymentAmount": {
                   "description": "The amount that this entry changed the transaction by.",
-                  "type": "numeric",
+                  "type": "number",
                   "minimum": -99999999999.99,
                   "maximum": 99999999999.99,
-                  "example": "350.00"
+                  "example": "350.00",
+                  "multipleOf": 0.01
                 },
                 "paymentMethod": {
                   "description": "The method used to make the payment.",
-                  "type": "String",
+                  "type": "string",
                   "pattern": "^[0-9A-Za-z\\s]{1,30}$",
                   "example": "BACS RECEIPTS"
                 },
                 "paymentId": {
                   "description": "The unique identifier for the payment.",
-                  "type": "String",
+                  "type": "string",
                   "pattern": "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$",
                   "example": "AB1023456789-000001"
                 }
@@ -123,5 +126,8 @@
         }
       }
     }
-  }
+  },
+  "required": [
+    "transactionItems"
+  ]
 }

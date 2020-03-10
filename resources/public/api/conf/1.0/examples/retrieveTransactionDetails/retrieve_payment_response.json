@@ -23,7 +23,7 @@
         },
         {
           "subItemId": "003",
-          "Amount": -900.00,
+          "amount": -900.00,
           "clearingDate": "2021-01-31",
           "clearingReason": "Outgoing Payment - Paid",
           "paymentMethod": "Payable Order Repayment"

@@ -23,7 +23,7 @@
           "amount": -10.11,
           "clearingDate": "2021-01-31",
           "clearingReason": "Outgoing payment - Paid",
-          "OutgoingPaymentMethod": "Payable Order Repayment"
+          "outgoingPaymentMethod": "Payable Order Repayment"
         }
       ]
     },
