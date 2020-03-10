@@ -56,7 +56,7 @@
           "paymentMethod": {
             "description": "The method used to make the payment.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z\\s]{1,30}$",
+            "pattern": "^[0-9A-Za-z\\s-]{1,30}$",
             "example": "BACS RECEIPTS"
           },
           "paymentId": {
