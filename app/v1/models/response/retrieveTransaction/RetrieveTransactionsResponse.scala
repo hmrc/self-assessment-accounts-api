@@ -39,7 +39,7 @@ object RetrieveTransactionsResponse extends HateoasLinks {
     override def itemLinks(appConfig: AppConfig, data: RetrieveTransactionsHateoasData, item: TransactionItem): Seq[Link] = {
       val id = item.id.getOrElse("")
 
-      val isPayment = PaymentIdValidation.validate(id) == Seq()
+      val isPayment = PaymentIdValidation.validate(id) == Nil
 
       if (isPayment) {
         Seq(retrievePaymentAllocations(appConfig, data.nino, id, isSelf = false))
