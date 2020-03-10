@@ -248,7 +248,7 @@ object RetrieveTransactionDetailsFixture {
     """.stripMargin
   )
 
-  val desResponseEmptyTransactionItemDetailsObject: JsValue = Json.parse(
+  val desResponseEmptySubItemsObject: JsValue = Json.parse(
     """
       |{
       |   "transactionItems": [

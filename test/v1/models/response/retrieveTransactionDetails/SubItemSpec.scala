@@ -90,22 +90,22 @@ class SubItemSpec extends UnitSpec {
 
   val desResponseEmpty: JsValue = Json.parse("""{}""")
 
-  "ItemDetail" when {
+  "SubItem" when {
     "read from valid JSON" should {
-      "produce the expected ItemDetail object for a charge" in {
+      "produce the expected SubItem object for a charge" in {
         desResponseCharge.as[SubItem] shouldBe RetrieveTransactionDetailsFixture.subItemResponseCharge
       }
     }
 
-    "ItemDetail" when {
+    "SubItem" when {
       "read from valid JSON" should {
-        "produce the expected ItemDetail object for a payment" in {
+        "produce the expected SubItem object for a payment" in {
           desResponsePayment.as[SubItem] shouldBe RetrieveTransactionDetailsFixture.subItemResponsePayment
         }
       }
 
     "read from empty JSON" should {
-      "produce an empty ItemDetail object" in {
+      "produce an empty SubItem object" in {
         desResponseEmpty.as[SubItem] shouldBe SubItem.empty
       }
     }
