@@ -42,7 +42,7 @@ class RetrieveTransactionsServiceSpec extends UnitSpec {
     )
   }
 
-  "retrieveDetails" should {
+  "retrieveTransactionDetails" should {
     "return a successful response" when {
       "received a valid response for the supplied request" in new Test {
 

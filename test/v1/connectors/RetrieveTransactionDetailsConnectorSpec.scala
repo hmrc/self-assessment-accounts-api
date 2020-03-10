@@ -49,7 +49,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveDetails(requestData)) shouldBe outcome
+        await(connector.retrieveTransactionDetails(requestData)) shouldBe outcome
       }
     }
 
@@ -64,7 +64,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveDetails(RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId))) shouldBe outcome
+        await(connector.retrieveTransactionDetails(RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId))) shouldBe outcome
       }
     }
   }

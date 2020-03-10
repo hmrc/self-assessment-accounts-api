@@ -42,7 +42,7 @@ class RetrieveTransactionDetailsServiceSpec extends UnitSpec {
     )
   }
 
-  "retrieveDetails" should {
+  "retrieveTransactionDetails" should {
     "return a successful response" when {
       "received a valid response for the supplied request" in new Test {
         val response = Right(ResponseWrapper(correlationId, retrieveTransactionDetailsResponsePayment))
@@ -50,7 +50,7 @@ class RetrieveTransactionDetailsServiceSpec extends UnitSpec {
         MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
           .returns(Future.successful(response))
 
-        await(service.retrieveDetails(requestData)) shouldBe response
+        await(service.retrieveTransactionDetails(requestData)) shouldBe response
       }
     }
 
@@ -59,7 +59,7 @@ class RetrieveTransactionDetailsServiceSpec extends UnitSpec {
         MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, RetrieveTransactionDetailsResponse(Seq())))))
 
-        await(service.retrieveDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionDetailsFoundError, None))
+        await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionDetailsFoundError, None))
       }
     }
 
@@ -71,7 +71,7 @@ class RetrieveTransactionDetailsServiceSpec extends UnitSpec {
           MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.retrieveDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
         }
 
         val input: Seq[(String, MtdError)] = Seq(
