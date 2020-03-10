@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.{ChargeIdFormatError, TransactionIdFormatError}
+import v1.models.errors.TransactionIdFormatError
 import v1.models.utils.JsonErrorValidators
 
 class TransactionIdValidationSpec extends UnitSpec with JsonErrorValidators {

@@ -23,6 +23,7 @@ import v1.mocks.connectors.MockRetrieveTransactionsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.fixtures.RetrieveTransactionFixture._
+import v1.models.response.retrieveTransaction.RetrieveTransactionsResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,14 +42,24 @@ class RetrieveTransactionsServiceSpec extends UnitSpec {
     )
   }
 
-  "service" when {
-    "service call successful" must {}
-    "return mapped result" in new Test {
+  "retrieveDetails" should {
+    "return a successful response" when {
+      "received a valid response for the supplied request" in new Test {
 
-      MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
-        .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))))
+        MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))))
 
-      await(service.list(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
+        await(service.list(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
+      }
+    }
+
+    "return NoTransactionDetailsFoundError response" when {
+      "the transactionItems are empty" in new Test {
+        MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, RetrieveTransactionsResponse(Seq())))))
+
+        await(service.list(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionsFoundError, None))
+      }
     }
   }
 

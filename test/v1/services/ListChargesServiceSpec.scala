@@ -69,6 +69,7 @@ class ListChargesServiceSpec extends UnitSpec {
 
         await(service.list(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
+
       "return a NoChargesFoundError when the charges list is empty" in new Test {
         MockListChargesConnector.retrieve(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ListChargesResponse(Seq())))))
