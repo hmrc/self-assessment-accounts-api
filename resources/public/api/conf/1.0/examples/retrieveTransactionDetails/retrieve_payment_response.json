@@ -1,0 +1,34 @@
+{
+  "transactionItems": [
+    {
+      "transactionItemId": "0001",
+      "type": "Payment on account",
+      "originalAmount": -5000.00,
+      "outstandingAmount": 0.00,
+      "dueDate": "2021-01-31",
+      "paymentMethod": "BACS RECEIPTS",
+      "paymentId": "P0101180112-000001",
+      "subItems": [
+        {
+          "subItemId": "001",
+          "clearingDate": "2021-01-31",
+          "clearingReason": "Payment allocation",
+          "paymentAmount": -1100.00
+        },
+        {
+          "subItemId": "002",
+          "clearingDate": "2021-01-31",
+          "clearingReason": "Payment allocation",
+          "paymentAmount": -3000.00
+        },
+        {
+          "subItemId": "003",
+          "Amount": -900.00,
+          "clearingDate": "2021-01-31",
+          "clearingReason": "Outgoing Payment - Paid",
+          "paymentMethod": "Payable Order Repayment"
+        }
+      ]
+    }
+  ]
+}
