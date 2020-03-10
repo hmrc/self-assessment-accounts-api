@@ -47,5 +47,17 @@
         }
       ]
     }
+  ],
+  "links": [
+    {
+      "href": "/accounts/self-assessment/AA123456A/transactions/X92AM39DLE3D",
+      "method": "GET",
+      "rel": "self"
+    },
+    {
+      "href": "/accounts/self-assessment/AA123456A/charges/X92AM39DLE3D",
+      "method": "GET",
+      "rel": "retrieve-charge-history"
+    }
   ]
 }

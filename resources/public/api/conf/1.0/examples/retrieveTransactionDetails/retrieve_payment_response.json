@@ -30,5 +30,17 @@
         }
       ]
     }
+  ],
+  "links":[
+    {
+      "href":"/accounts/self-assessment/AA123456A/transactions/X92AM39DLE3D",
+      "method":"GET",
+      "rel":"self"
+    },
+    {
+      "href":"/accounts/self-assessment/AA123456A/payments/P0101180112-000001",
+      "method":"GET",
+      "rel":"retrieve-payment-allocations"
+    }
   ]
 }
