@@ -27,6 +27,7 @@ import v1.controllers.requestParsers.RetrieveTransactionsRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.retrieveTransactions.RetrieveTransactionsRawRequest
+import v1.models.response.retrieveTransaction.RetrieveTransactionsHateoasData
 import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveTransactionsService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -53,13 +54,18 @@ class RetrieveTransactionsController @Inject()(val authService: EnrolmentsAuthSe
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveTransactions(parsedRequest))
+          vendorResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrapList(serviceResponse.responseData, RetrieveTransactionsHateoasData(nino))
+              .asRight[ErrorWrapper]
+          )
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${serviceResponse.correlationId}"
           )
 
-          Ok(Json.toJson(serviceResponse.responseData))
+          Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }
