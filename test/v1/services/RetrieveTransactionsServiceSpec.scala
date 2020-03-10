@@ -23,6 +23,7 @@ import v1.mocks.connectors.MockRetrieveTransactionsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.fixtures.RetrieveTransactionFixture._
+import v1.models.response.retrieveTransaction.RetrieveTransactionsResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,43 +42,54 @@ class RetrieveTransactionsServiceSpec extends UnitSpec {
     )
   }
 
-  "service" when {
-    "service call successful" must {}
-    "return mapped result" in new Test {
+  "retrieveTransactions" should {
+    "return a successful response" when {
+      "received a valid response for the supplied request" in new Test {
 
-      MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
-        .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))))
+        MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))))
 
-      await(service.retrieveTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
+        await(service.retrieveTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
+      }
     }
-  }
 
-  "unsuccessful" must {
-    "map errors according to spec" when {
+    "return NoTransactionDetailsFoundError response" when {
+      "the transactionItems are empty" in new Test {
+        MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, RetrieveTransactionsResponse(Seq())))))
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+        await(service.retrieveTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionsFoundError, None))
+
+      }
+    }
+
+    "unsuccessful" must {
+      "map errors according to spec" when {
+
+        def serviceError(desErrorCode: String, error: MtdError): Unit =
+          s"a $desErrorCode error is returned from the service" in new Test {
 
 
-          MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.retrieveTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
-        }
+            await(service.retrieveTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          }
 
-      val input: Seq[(String, MtdError)] = Seq(
-        ("NO_TRANSACTIONS_FOUND", NotFoundError),
-        ("INVALID_IDTYPE", DownstreamError),
-        ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-        ("INVALID_REGIME_TYPE", DownstreamError),
-        ("INVALID_DATE_FROM", FromDateFormatError),
-        ("INVALID_DATE_TO", ToDateFormatError),
-        ("NO_DATA_FOUND", NotFoundError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
-      )
+        val input: Seq[(String, MtdError)] = Seq(
+          ("NO_TRANSACTIONS_FOUND", NotFoundError),
+          ("INVALID_IDTYPE", DownstreamError),
+          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
+          ("INVALID_REGIME_TYPE", DownstreamError),
+          ("INVALID_DATE_FROM", FromDateFormatError),
+          ("INVALID_DATE_TO", ToDateFormatError),
+          ("NO_DATA_FOUND", NotFoundError),
+          ("SERVER_ERROR", DownstreamError),
+          ("SERVICE_UNAVAILABLE", DownstreamError)
+        )
 
-      input.foreach(args => (serviceError _).tupled(args))
+        input.foreach(args => (serviceError _).tupled(args))
+      }
     }
   }
 }

@@ -17,9 +17,16 @@
 package v1.fixtures
 
 import play.api.libs.json.{JsValue, Json}
-import v1.models.response.retrieveTransactionDetails.{SubItem, RetrieveTransactionDetailsResponse, TransactionItem}
+import uk.gov.hmrc.domain.Nino
+import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
+import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
 object RetrieveTransactionDetailsFixture {
+
+  val transactionId = "0001"
+  val nino = "AA123456A"
+
+  val requestData = RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId)
 
   val desResponseWithMultipleTransactionItemForCharges: JsValue = Json.parse(
     """
