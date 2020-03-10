@@ -48,7 +48,7 @@ class RetrieveTransactionsServiceSpec extends UnitSpec {
       MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))))
 
-      await(service.list(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
+      await(service.retrieveTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
     }
   }
 
@@ -62,7 +62,7 @@ class RetrieveTransactionsServiceSpec extends UnitSpec {
           MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.list(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.retrieveTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
         }
 
       val input: Seq[(String, MtdError)] = Seq(
