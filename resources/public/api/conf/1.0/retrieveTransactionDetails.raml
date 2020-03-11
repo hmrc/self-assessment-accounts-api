@@ -13,8 +13,11 @@ responses:
         type: !include schemas/retrieve_transaction_details_response.json
         examples:
           example-1:
-            description: Example response
-            value: !include examples/retrieveTransactionDetails/retrieve_response.json
+            description: Payment example
+            value: !include examples/retrieveTransactionDetails/retrieve_payment_response.json
+          example-2:
+            description: Charge example
+            value: !include examples/retrieveTransactionDetails/retrieve_charge_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435
