@@ -52,7 +52,7 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
       val rawRequest = RetrieveTransactionDetailsRawRequest(nino, transactionId)
       val result = for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-          serviceResponse <- EitherT(service.retrieveDetails(parsedRequest))
+          serviceResponse <- EitherT(service.retrieveTransactionDetails(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
               .wrap(serviceResponse.responseData,
