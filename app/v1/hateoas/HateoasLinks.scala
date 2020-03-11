@@ -25,29 +25,30 @@ trait HateoasLinks {
 
   // L1
   def retrieveBalance(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
-    Link(href = s"/${appConfig.apiGatewayContext}/$nino/balance", method = GET, rel = if(isSelf) SELF else RETRIEVE_BALANCE)
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/balance", method = GET, rel = if (isSelf) SELF else RETRIEVE_BALANCE)
 
   // L2
   def retrieveTransactions(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
-    Link(href = s"/${appConfig.apiGatewayContext}/$nino/transactions", method = GET, rel = if(isSelf) SELF else RETRIEVE_TRANSACTIONS)
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/transactions", method = GET, rel = if (isSelf) SELF else RETRIEVE_TRANSACTIONS)
 
   // L3
   def retrieveTransactionDetails(appConfig: AppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
-    Link(href = s"/${appConfig.apiGatewayContext}/$nino/transactions/$transactionId", method = GET, rel = if(isSelf) SELF else RETRIEVE_TRANSACTION_DETAILS)
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/transactions/$transactionId", method = GET, rel = if (isSelf) SELF else RETRIEVE_TRANSACTION_DETAILS)
 
   // L4
   def listCharges(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
-    Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges", method = GET, rel = if(isSelf) SELF else LIST_CHARGES)
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges", method = GET, rel = if (isSelf) SELF else LIST_CHARGES)
 
   // L5
   def retrieveChargeHistory(appConfig: AppConfig, nino: String, chargeId: String, isSelf: Boolean): Link =
-    Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges/$chargeId", method = GET, rel = if(isSelf) SELF else RETRIEVE_CHARGE_HISTORY)
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges/$chargeId", method = GET, rel = if (isSelf) SELF else RETRIEVE_CHARGE_HISTORY)
 
   // L6
   def listPayments(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
-    Link(href = s"/${appConfig.apiGatewayContext}/$nino/payments", method = GET, rel = if(isSelf) SELF else LIST_PAYMENTS)
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/payments", method = GET, rel = if (isSelf) SELF else LIST_PAYMENTS)
 
   // L7
   def retrievePaymentAllocations(appConfig: AppConfig, nino: String, paymentId: String, isSelf: Boolean): Link =
-    Link(href = s"/${appConfig.apiGatewayContext}/$nino/payments/$paymentId", method = GET, rel = if(isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS)
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/payments/$paymentId", method = GET, rel = if (isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS)
+
 }

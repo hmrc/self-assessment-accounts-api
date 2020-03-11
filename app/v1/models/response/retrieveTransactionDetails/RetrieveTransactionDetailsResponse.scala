@@ -16,15 +16,32 @@
 
 package v1.models.response.retrieveTransactionDetails
 
+import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveTransactionDetailsResponse(transactionItems: Seq[TransactionItem])
 
-object RetrieveTransactionDetailsResponse {
+object RetrieveTransactionDetailsResponse extends HateoasLinks {
   implicit val reads: Reads[RetrieveTransactionDetailsResponse] =
    (JsPath \ "transactionItems").read[Seq[TransactionItem]]
      .map(items => RetrieveTransactionDetailsResponse(items.filterNot(_ == TransactionItem.empty)))
 
   implicit val writes: OWrites[RetrieveTransactionDetailsResponse] = Json.writes[RetrieveTransactionDetailsResponse]
 
+  implicit object RetrieveAllocationsLinksFactory extends HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveTransactionDetailsHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = true),
+        paymentId match {
+          case Some(pid) => retrievePaymentAllocations(appConfig, nino, pid, isSelf = true)
+          case None => retrieveChargeHistory(appConfig, nino, transactionId, isSelf = true)
+        }
+      )
+    }
+  }
 }
+
+case class RetrieveTransactionDetailsHateoasData(nino: String, transactionId: String, paymentId: Option[String]) extends HateoasData
