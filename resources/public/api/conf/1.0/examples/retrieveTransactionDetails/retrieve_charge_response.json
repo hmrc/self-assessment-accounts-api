@@ -1,0 +1,63 @@
+{
+  "transactionItems": [
+    {
+      "transactionItemId": "0001",
+      "type": "National Insurance Class 2",
+      "taxPeriodFrom": "2019-04-06",
+      "taxPeriodTo": "2020-04-05",
+      "originalAmount": 100.45,
+      "outstandingAmount": 10.23,
+      "dueDate": "2021-01-31",
+      "subItems": [
+        {
+          "subItemId": "001",
+          "amount": 100.11,
+          "clearingDate": "2021-01-31",
+          "clearingReason": "Incoming payment",
+          "paymentAmount": 100.11,
+          "paymentMethod": "BACS RECEIPTS",
+          "paymentId": "P0101180112-000001"
+        },
+        {
+          "subItemId": "002",
+          "amount": -10.11,
+          "clearingDate": "2021-01-31",
+          "clearingReason": "Outgoing payment - Paid",
+          "outgoingPaymentMethod": "Payable Order Repayment"
+        }
+      ]
+    },
+    {
+      "transactionItemId": "0002",
+      "type": "National Insurance Class 4",
+      "taxPeriodFrom": "2019-04-06",
+      "taxPeriodTo": "2020-04-05",
+      "originalAmount": 100.23,
+      "outstandingAmount": 10.45,
+      "dueDate": "2021-01-31",
+      "subItems": [
+        {
+          "subItemId": "001",
+          "amount": 89.78,
+          "clearingDate": "2021-01-31",
+          "clearingReason": "Incoming payment",
+          "paymentAmount": 89.78,
+          "paymentMethod": "BACS RECEIPTS",
+          "paymentId": "P0101180112-000001"
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "href": "/accounts/self-assessment/AA123456A/transactions/X92AM39DLE3D",
+      "method": "GET",
+      "rel": "self"
+    },
+    {
+      "href": "/accounts/self-assessment/AA123456A/charges/X92AM39DLE3D",
+      "method": "GET",
+      "rel": "retrieve-charge-history"
+    }
+  ]
+}

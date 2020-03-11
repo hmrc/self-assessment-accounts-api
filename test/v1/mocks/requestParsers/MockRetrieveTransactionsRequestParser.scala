@@ -18,18 +18,17 @@ package v1.mocks.requestParsers
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.RetrieveChargeHistoryRequestParser
+import v1.controllers.requestParsers.RetrieveTransactionsRequestParser
 import v1.models.errors.ErrorWrapper
-import v1.models.request.retrieveChargeHistory.{RetrieveChargeHistoryParsedRequest, RetrieveChargeHistoryRawRequest}
+import v1.models.request.retrieveTransactions.{RetrieveTransactionsParsedRequest, RetrieveTransactionsRawRequest}
 
-trait MockRetrieveChargeHistoryRequestParser extends MockFactory {
+trait MockRetrieveTransactionsRequestParser extends MockFactory {
 
-  val mockRetrieveChargeHistoryRequestParser: RetrieveChargeHistoryRequestParser = mock[RetrieveChargeHistoryRequestParser]
+  val mockRetrieveTransactionsRequestParser: RetrieveTransactionsRequestParser = mock[RetrieveTransactionsRequestParser]
 
-  object MockRetrieveChargeHistoryRequestParser {
-    def parse(data: RetrieveChargeHistoryRawRequest): CallHandler[Either[ErrorWrapper, RetrieveChargeHistoryParsedRequest]] = {
-      (mockRetrieveChargeHistoryRequestParser.parseRequest(_: RetrieveChargeHistoryRawRequest)).expects(data)
+  object MockRetrieveTransactionsRequestParser {
+    def parse(data: RetrieveTransactionsRawRequest): CallHandler[Either[ErrorWrapper, RetrieveTransactionsParsedRequest]] = {
+      (mockRetrieveTransactionsRequestParser.parseRequest(_: RetrieveTransactionsRawRequest)).expects(data)
     }
   }
-
 }

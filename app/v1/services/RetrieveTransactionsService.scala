@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveTransactionsService @Inject()(val connector: RetrieveTransactionsConnector) extends DesResponseMappingSupport with Logging {
 
-  def list(request: RetrieveTransactionsParsedRequest)(
+  def retrieveTransactions(request: RetrieveTransactionsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionsResponse[TransactionItem]]]] = {
