@@ -20,7 +20,8 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.domain.DesTaxYear
 
 case class TransactionItem(taxYear: Option[String],
-                           id: Option[String],
+                           transactionId: Option[String],
+                           paymentId: Option[String],
                            transactionDate: Option[String],
                            `type`: Option[String],
                            originalAmount: Option[BigDecimal],
@@ -31,14 +32,14 @@ case class TransactionItem(taxYear: Option[String],
 
 object TransactionItem {
 
-  val empty: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None)
+  val empty: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None, None)
 
   implicit val reads: Reads[TransactionItem] = (
     for {
       taxYear <- (JsPath \ "taxYear").readNullable[String].map(_.map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear))))
       paymentLot <- (JsPath \ "paymentLot").readNullable[String]
       paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
-      documentId <- (JsPath \ "documentId").readNullable[String]
+      transactionId <- (JsPath \ "documentId").readNullable[String]
       transactionDate <- (JsPath \ "transactionDate").readNullable[String]
       aType <- (JsPath \ "type").readNullable[String]
       originalAmount <- (JsPath \ "originalAmount").readNullable[BigDecimal]
@@ -48,10 +49,9 @@ object TransactionItem {
       lastClearedAmount <- (JsPath \ "lastClearedAmount").readNullable[BigDecimal]
     } yield {
 
-      val id: Option[String] =
-        if (paymentLot.nonEmpty && paymentLotItem.nonEmpty) Some(s"${paymentLot.get}-${paymentLotItem.get}") else documentId
+      val paymentId = paymentLot.map(a => s"${a}-${paymentLotItem.get}")
 
-      TransactionItem(taxYear, id, transactionDate, aType, originalAmount, outstandingAmount,
+      TransactionItem(taxYear, transactionId, paymentId, transactionDate, aType, originalAmount, outstandingAmount,
         lastClearingDate, lastClearingReason, lastClearedAmount)
     })
 

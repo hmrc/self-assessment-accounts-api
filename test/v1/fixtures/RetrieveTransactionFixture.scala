@@ -103,7 +103,8 @@ object RetrieveTransactionFixture {
     """
       |{
       |         "taxYear":"2018-19",
-      |         "id":"081203010024-000001",
+      |         "transactionId": "X123456790A",
+      |         "paymentId":"081203010024-000001",
       |         "transactionDate":"2020-01-01",
       |         "type":"Balancing Charge Debit",
       |         "originalAmount":12.34,
@@ -115,7 +116,8 @@ object RetrieveTransactionFixture {
       |""".stripMargin)
 
   val fullDocIdTransactionItemModel: TransactionItem = TransactionItem(taxYear = Some("2018-19"),
-                                                                  id = Some("X123456790A"),
+                                                                  transactionId = Some("X123456790A"),
+                                                                  paymentId = None,
                                                                   transactionDate = Some("2020-01-01"),
                                                                   `type` = Some("Balancing Charge Debit"),
                                                                   originalAmount = Some(12.34),
@@ -126,7 +128,8 @@ object RetrieveTransactionFixture {
     )
 
   val fullTransactionItemModel: TransactionItem = TransactionItem(taxYear = Some("2018-19"),
-                                                                  id = Some("081203010024-000001"),
+                                                                  transactionId = Some("X123456790A"),
+                                                                  paymentId = Some("081203010024-000001"),
                                                                   transactionDate = Some("2020-01-01"),
                                                                   `type` = Some("Balancing Charge Debit"),
                                                                   originalAmount = Some(12.34),
@@ -136,7 +139,19 @@ object RetrieveTransactionFixture {
                                                                   lastClearedAmount = Some(2.01)
   )
 
-  val minimalTransactionItemModel: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None)
+  val fullPaymentIdTransactionItemModel: TransactionItem = TransactionItem(taxYear = Some("2018-19"),
+                                                                  transactionId = None,
+                                                                  paymentId = Some("081203010024-000001"),
+                                                                  transactionDate = Some("2020-01-01"),
+                                                                  `type` = Some("Balancing Charge Debit"),
+                                                                  originalAmount = Some(12.34),
+                                                                  outstandingAmount = Some(10.33),
+                                                                  lastClearingDate = Some("2020-01-02"),
+                                                                  lastClearingReason = Some("Example reason"),
+                                                                  lastClearedAmount = Some(2.01)
+  )
+
+  val minimalTransactionItemModel: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None, None)
 
   val fullDesSingleRetreiveTransactionResponse: JsValue = Json.parse(
     s"""

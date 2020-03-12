@@ -24,7 +24,8 @@ import v1.connectors.DesOutcome
 import v1.models.errors.{DownstreamError, OutboundError}
 import v1.models.outcomes.ResponseWrapper
 
-object StandardDesHttpParser extends HttpParser {
+object
+StandardDesHttpParser extends HttpParser {
 
   case class SuccessCode(status: Int) extends AnyVal
 
