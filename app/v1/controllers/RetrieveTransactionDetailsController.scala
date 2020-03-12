@@ -76,7 +76,8 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
       case BadRequestError | NinoFormatError | TransactionIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError | NoTransactionDetailsFoundError => NotFound(Json.toJson(errorWrapper))
+      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case NoTransactionDetailsFoundError => NotFound(Json.toJson(NoTransactionDetailsFoundError))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }
