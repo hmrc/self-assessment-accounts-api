@@ -57,6 +57,6 @@ class RetrieveTransactionsService @Inject()(val connector: RetrieveTransactionsC
       "INVALID_DATE_TO" -> ToDateFormatError,
       "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError,
+      "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 }

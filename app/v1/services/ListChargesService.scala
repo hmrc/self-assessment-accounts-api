@@ -56,7 +56,7 @@ class ListChargesService @Inject()(listChargesConnector: ListChargesConnector) e
       "INVALID_DATE_TO" -> ToDateFormatError,
       "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError,
+      "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 
 }

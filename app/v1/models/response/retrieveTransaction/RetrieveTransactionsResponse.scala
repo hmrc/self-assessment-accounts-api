@@ -51,7 +51,7 @@ object RetrieveTransactionsResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: RetrieveTransactionsHateoasData): Seq[Link] = Seq(
       retrieveTransactions(appConfig, data.nino, isSelf = true),
       listPayments(appConfig, data.nino, isSelf = false),
-      listCharges(appConfig, data.nino, isSelf = false),
+      listCharges(appConfig, data.nino, isSelf = false)
     )
   }
 
