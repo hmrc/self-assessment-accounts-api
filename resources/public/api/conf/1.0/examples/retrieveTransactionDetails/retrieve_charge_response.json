@@ -6,7 +6,7 @@
       "taxPeriodFrom": "2019-04-06",
       "taxPeriodTo": "2020-04-05",
       "originalAmount": 100.45,
-      "outstandingAmount": 10.23,
+      "outstandingAmount": 10.45,
       "dueDate": "2021-01-31",
       "subItems": [
         {
@@ -16,7 +16,7 @@
           "clearingReason": "Incoming payment",
           "paymentAmount": 100.11,
           "paymentMethod": "BACS RECEIPTS",
-          "paymentId": "P0101180112-000001"
+          "paymentId": "P0101180112-000005"
         },
         {
           "subItemId": "002",
@@ -43,7 +43,7 @@
           "clearingReason": "Incoming payment",
           "paymentAmount": 89.78,
           "paymentMethod": "BACS RECEIPTS",
-          "paymentId": "P0101180112-000001"
+          "paymentId": "P0101180112-000006"
         }
       ]
     }
