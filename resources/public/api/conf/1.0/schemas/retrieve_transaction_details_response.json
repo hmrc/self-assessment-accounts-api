@@ -25,12 +25,12 @@
           "taxPeriodFrom": {
             "description": "The 'from' date of this tax period. Date in the format: YYYY-MM-DD",
             "type": "string",
-            "example": "2018-04-05"
+            "example": "2019-04-06"
           },
           "taxPeriodTo": {
             "description": "The 'to' date of this tax period. Date in the format: YYYY-MM-DD",
             "type": "string",
-            "example": "2018-04-05"
+            "example": "2020-04-05"
           },
           "originalAmount": {
             "description": "The original value of this transaction.",
@@ -51,7 +51,7 @@
           "dueDate": {
             "description": "The date by when the amount is due to be paid. Date in the format: YYYY-MM-DD",
             "type": "string",
-            "example": "2018-04-05"
+            "example": "2021-01-31"
           },
           "paymentMethod": {
             "description": "The method used to make the payment.",
@@ -88,7 +88,7 @@
                 "clearingDate": {
                   "description": "The date this entry changed the item. Date in the format: YYYY-MM-DD",
                   "type": "string",
-                  "example": "2018-04-05"
+                  "example": "2020-01-21"
                 },
                 "clearingReason": {
                   "description": "The reason given for clearing",
@@ -135,7 +135,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/transactions/{transactionId}"
+            "example": "/accounts/self-assessment\n/{nino}/transactions/{transactionId}"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",

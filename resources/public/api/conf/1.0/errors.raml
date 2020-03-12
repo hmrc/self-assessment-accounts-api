@@ -49,6 +49,17 @@ traits:
                   description: No transactions found for this NINO and date range
                   value:
                     code: NO_TRANSACTIONS_FOUND
+  notFoundTransactionDetails:
+      responses:
+        404:
+          body:
+            application/json:
+              type: types.errorResponse
+              examples:
+                notFoundTransactionDetails:
+                  description: No transaction details found for the supplied transaction ID
+                  value:
+                    code: NO_DETAILS_FOUND
   clientOrAgentNotAuthorised:
     responses:
       403:
@@ -82,6 +93,17 @@ traits:
                 description: The format of the supplied unique identifier field is not valid
                 value:
                   code: FORMAT_CHARGE_ID
+  formatTransactionId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatTransactionId:
+                description: The format of the supplied transaction identifier field is not valid
+                value:
+                  code: FORMAT_TRANSACTION_ID
   formatTaxYear:
     responses:
       400:
