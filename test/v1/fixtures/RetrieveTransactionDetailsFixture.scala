@@ -28,6 +28,83 @@ object RetrieveTransactionDetailsFixture {
 
   val requestData = RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId)
 
+  private val subItem11 = SubItem(subItemId = Some("001"), amount= Some(100.11), clearingDate=Some("2021-01-31"),
+    clearingReason= Some("Incoming payment"), paymentAmount=Some(100.11), paymentMethod=Some("BACS RECEIPTS"),
+    paymentId=Some("P0101180112-000001"),outgoingPaymentMethod = None)
+
+  private val subItem12 = SubItem(subItemId = Some("002"), amount= Some(-10.11), clearingDate=Some("2021-01-31"),
+    clearingReason= Some("Outgoing payment - Paid"), paymentAmount=None, paymentMethod=None,
+    paymentId=None, outgoingPaymentMethod = Some("Payable Order Repayment"))
+
+  private val subItem21 = SubItem(subItemId = Some("001"), amount= Some(89.78), clearingDate=Some("2021-01-31"),
+    clearingReason= Some("Incoming payment"), paymentAmount=Some(89.78), paymentMethod=Some("BACS RECEIPTS"),
+    paymentId=Some("P0101180112-000001"),outgoingPaymentMethod = None)
+
+  val mtdResponse = RetrieveTransactionDetailsResponse(
+    transactionItems = Seq(TransactionItem(transactionItemId = Some("0001"), `type` = Some("National Insurance Class 2"),
+      taxPeriodFrom = Some("2019-04-06"), taxPeriodTo = Some("2020-04-05"), originalAmount= Some(100.45),
+      outstandingAmount = Some(10.23), dueDate = Some("2021-01-31"), paymentMethod = None,
+      paymentId = None, subItems = Some(Seq(subItem11, subItem12))),
+      TransactionItem(transactionItemId = Some("0002"), `type` = Some("National Insurance Class 4"),
+        taxPeriodFrom = Some("2019-04-06"), taxPeriodTo = Some("2020-04-05"), originalAmount= Some(100.23),
+        outstandingAmount = Some(10.45), dueDate = Some("2021-01-31"), paymentMethod = None,
+        paymentId = None, subItems = Some(Seq(subItem21)))))
+
+  val mtdJson = Json.parse(
+    """
+      |{
+      |   "transactionItems":[
+      |      {
+      |         "transactionItemId":"0001",
+      |         "type":"National Insurance Class 2",
+      |         "taxPeriodFrom":"2019-04-06",
+      |         "taxPeriodTo":"2020-04-05",
+      |         "originalAmount":100.45,
+      |         "outstandingAmount":10.23,
+      |         "dueDate":"2021-01-31",
+      |         "subItems":[
+      |            {
+      |               "subItemId":"001",
+      |               "amount":100.11,
+      |               "clearingDate":"2021-01-31",
+      |               "clearingReason":"Incoming payment",
+      |               "paymentAmount":100.11,
+      |               "paymentMethod":"BACS RECEIPTS",
+      |               "paymentId":"P0101180112-000001"
+      |            },
+      |            {
+      |               "subItemId":"002",
+      |               "amount":-10.11,
+      |               "clearingDate":"2021-01-31",
+      |               "clearingReason":"Outgoing payment - Paid",
+      |               "outgoingPaymentMethod":"Payable Order Repayment"
+      |            }
+      |         ]
+      |      },
+      |      {
+      |         "transactionItemId":"0002",
+      |         "type":"National Insurance Class 4",
+      |         "taxPeriodFrom":"2019-04-06",
+      |         "taxPeriodTo":"2020-04-05",
+      |         "originalAmount":100.23,
+      |         "outstandingAmount":10.45,
+      |         "dueDate":"2021-01-31",
+      |         "subItems":[
+      |            {
+      |               "subItemId":"001",
+      |               "amount":89.78,
+      |               "clearingDate":"2021-01-31",
+      |               "clearingReason":"Incoming payment",
+      |               "paymentAmount":89.78,
+      |               "paymentMethod":"BACS RECEIPTS",
+      |               "paymentId":"P0101180112-000001"
+      |            }
+      |         ]
+      |      }
+      |   ]
+      |}
+    """.stripMargin)
+
   val desResponseWithMultipleTransactionItemForCharges: JsValue = Json.parse(
     """
       |{
