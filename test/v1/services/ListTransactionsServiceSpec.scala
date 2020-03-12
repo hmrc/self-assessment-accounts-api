@@ -19,25 +19,25 @@ package v1.services
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.mocks.connectors.MockRetrieveTransactionsConnector
+import v1.mocks.connectors.MockListTransactionsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.fixtures.RetrieveTransactionFixture._
-import v1.models.response.retrieveTransaction.RetrieveTransactionsResponse
+import v1.fixtures.ListTransactionFixture._
+import v1.models.response.listTransaction.RetrieveTransactionsResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveTransactionsServiceSpec extends UnitSpec {
+class ListTransactionsServiceSpec extends UnitSpec {
 
   private val correlationId = "X-123"
 
-  trait Test extends MockRetrieveTransactionsConnector {
+  trait Test extends MockListTransactionsConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "retrieveTransactions")
 
-    val service = new RetrieveTransactionsService(
+    val service = new ListTransactionsService(
       connector = mockRetrieveTransactionsConnector
     )
   }

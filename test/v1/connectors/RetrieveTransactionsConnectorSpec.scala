@@ -17,7 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1.fixtures.RetrieveTransactionFixture._
+import v1.fixtures.ListTransactionFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 

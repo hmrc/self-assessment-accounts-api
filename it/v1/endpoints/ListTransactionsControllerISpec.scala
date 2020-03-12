@@ -24,9 +24,9 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
-import v1.fixtures.RetrieveTransactionFixture._
+import v1.fixtures.ListTransactionFixture._
 
-class RetrieveTransactionsControllerISpec extends IntegrationBaseSpec {
+class ListTransactionsControllerISpec extends IntegrationBaseSpec {
 
   private val desJsonNoTransactions = Json.parse(
     """

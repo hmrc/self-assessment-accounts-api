@@ -20,17 +20,17 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.RetrieveTransactionsValidator
 import v1.models.errors.MtdError
-import v1.models.request.retrieveTransactions.RetrieveTransactionsRawRequest
+import v1.models.request.listTransactions.ListTransactionsRawRequest
 
-class MockRetrieveTransactionsValidator extends MockFactory {
+class MockListTransactionsValidator extends MockFactory {
 
   val mockValidator: RetrieveTransactionsValidator = mock[RetrieveTransactionsValidator]
 
   object MockRetrieveTransactionsValidator {
 
-    def validate(data: RetrieveTransactionsRawRequest): CallHandler1[RetrieveTransactionsRawRequest, List[MtdError]] = {
+    def validate(data: ListTransactionsRawRequest): CallHandler1[ListTransactionsRawRequest, List[MtdError]] = {
       (mockValidator
-        .validate(_: RetrieveTransactionsRawRequest))
+        .validate(_: ListTransactionsRawRequest))
         .expects(data)
     }
   }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveTransaction
+package v1.models.response.listTransaction
 
 import cats.Functor
 import config.AppConfig

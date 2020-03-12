@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveTransaction
+package v1.models.response.listTransaction
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveTransactionFixture._
+import v1.fixtures.ListTransactionFixture._
 
 class TransactionItemSpec extends UnitSpec {
 

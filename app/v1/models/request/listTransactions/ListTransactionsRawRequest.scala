@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveTransactions
+package v1.models.request.listTransactions
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.request.RawDataWithDateRange
 
-case class RetrieveTransactionsParsedRequest(nino: Nino, from: String, to: String)
+case class ListTransactionsRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange

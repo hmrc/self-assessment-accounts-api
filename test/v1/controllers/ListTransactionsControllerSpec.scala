@@ -16,35 +16,33 @@
 
 package v1.controllers
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockRetrieveTransactionsRequestParser
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveTransactionsService}
-import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
+import v1.mocks.requestParsers.MockListTransactionsRequestParser
+import v1.mocks.services.{MockEnrolmentsAuthService, MockListTransactionsService, MockMtdIdLookupService}
 import v1.models.errors._
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveTransactions.{RetrieveTransactionsParsedRequest, RetrieveTransactionsRawRequest}
-import v1.models.response.retrieveTransaction.{RetrieveTransactionsHateoasData, RetrieveTransactionsResponse, TransactionItem}
-import v1.fixtures.RetrieveTransactionFixture._
+import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
+import v1.models.response.listTransaction.{ListTransactionsHateoasData, RetrieveTransactionsHateoasData, RetrieveTransactionsResponse, TransactionItem}
+import v1.fixtures.ListTransactionFixture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
+class ListTransactionsControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
-  with MockRetrieveTransactionsRequestParser
-  with MockRetrieveTransactionsService
+  with MockListTransactionsRequestParser
+  with MockListTransactionsService
   with MockHateoasFactory
-  with MockAppConfig
   with HateoasLinks
   with MockAuditService {
 
@@ -54,8 +52,8 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
   private val from          = "2018-10-1"
   private val to            = "2019-10-1"
   private val correlationId = "X-123"
-  private val rawRequest = RetrieveTransactionsRawRequest(nino, Some(from), Some(to))
-  private val parsedRequest = RetrieveTransactionsParsedRequest(Nino(nino), from, to)
+  private val rawRequest = ListTransactionsRawRequest(nino, Some(from), Some(to))
+  private val parsedRequest = ListTransactionsParsedRequest(Nino(nino), from, to)
 
   private val mtdResponse = RetrieveTransactionsResponse(
     transactions = Seq(
@@ -146,11 +144,11 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new RetrieveTransactionsController(
+    val controller = new ListTransactionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveTransactionsRequestParser,
-      service = mockRetrieveTransactionsService,
+      requestParser = mockListTransactionsRequestParser,
+      service = mockListTransactionsService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc
@@ -178,16 +176,16 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
     "return a valid transactions response" when {
       "a request sent has valid details" in new Test {
 
-        MockRetrieveTransactionsRequestParser
+        MockListTransactionsRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
 
-        MockRetrieveTransactionsService
-          .retrieveTransactions(parsedRequest)
+        MockListTransactionsService
+          .listTransactions(parsedRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponse))))
 
         MockHateoasFactory
-          .wrapList(mtdResponse, RetrieveTransactionsHateoasData(nino))
+          .wrapList(mtdResponse, ListTransactionsHateoasData(nino))
           .returns(HateoasWrapper(hateoasResponse,
             Seq(transactionsHateoasLink, listPaymentsHateoasLink, listChargesHateoasLink)))
 
@@ -206,7 +204,7 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockRetrieveTransactionsRequestParser
+            MockListTransactionsRequestParser
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
@@ -240,12 +238,12 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
         s"a $mtdError error is returned from the service" in new Test {
 
-          MockRetrieveTransactionsRequestParser
+          MockListTransactionsRequestParser
             .parse(rawRequest)
             .returns(Right(parsedRequest))
 
-          MockRetrieveTransactionsService
-            .retrieveTransactions(parsedRequest)
+          MockListTransactionsService
+            .listTransactions(parsedRequest)
             .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
           val result: Future[Result] = controller.retrieveTransactions(nino, Some(from), Some(to))(fakeGetRequest)

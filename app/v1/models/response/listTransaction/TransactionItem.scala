@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveTransaction
+package v1.models.response.listTransaction
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.domain.DesTaxYear

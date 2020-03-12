@@ -20,15 +20,15 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.RetrieveTransactionsRequestParser
 import v1.models.errors.ErrorWrapper
-import v1.models.request.retrieveTransactions.{RetrieveTransactionsParsedRequest, RetrieveTransactionsRawRequest}
+import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
 
-trait MockRetrieveTransactionsRequestParser extends MockFactory {
+trait MockListTransactionsRequestParser extends MockFactory {
 
   val mockRetrieveTransactionsRequestParser: RetrieveTransactionsRequestParser = mock[RetrieveTransactionsRequestParser]
 
   object MockRetrieveTransactionsRequestParser {
-    def parse(data: RetrieveTransactionsRawRequest): CallHandler[Either[ErrorWrapper, RetrieveTransactionsParsedRequest]] = {
-      (mockRetrieveTransactionsRequestParser.parseRequest(_: RetrieveTransactionsRawRequest)).expects(data)
+    def parse(data: ListTransactionsRawRequest): CallHandler[Either[ErrorWrapper, ListTransactionsParsedRequest]] = {
+      (mockRetrieveTransactionsRequestParser.parseRequest(_: ListTransactionsRawRequest)).expects(data)
     }
   }
 }

@@ -18,9 +18,9 @@ package v1.controllers.requestParsers
 
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
-import v1.mocks.validators.MockRetrieveTransactionsValidator
+import v1.mocks.validators.MockListTransactionsValidator
 import v1.models.errors._
-import v1.models.request.retrieveTransactions.{RetrieveTransactionsParsedRequest, RetrieveTransactionsRawRequest}
+import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
 
 class RetrieveTransactionsRequestParserSpec extends UnitSpec {
 
@@ -28,26 +28,26 @@ class RetrieveTransactionsRequestParserSpec extends UnitSpec {
   val from = "2019/02/02"
   val to = "2019/02/03"
 
-  trait Test extends MockRetrieveTransactionsValidator {
+  trait Test extends MockListTransactionsValidator {
     lazy val parser = new RetrieveTransactionsRequestParser(mockValidator)
   }
 
   "parse" should {
     "return a parsed request" when {
       "no validation errors occur" in new Test {
-        private val inputData = RetrieveTransactionsRawRequest(nino, Some(from), Some(to))
+        private val inputData = ListTransactionsRawRequest(nino, Some(from), Some(to))
         MockRetrieveTransactionsValidator.validate(inputData).returns(Nil)
-        parser.parseRequest(inputData) shouldBe Right(RetrieveTransactionsParsedRequest(Nino(nino), from, to))
+        parser.parseRequest(inputData) shouldBe Right(ListTransactionsParsedRequest(Nino(nino), from, to))
       }
     }
     "return an error wrapper" when {
       "the validator returns a single error" in new Test {
-        private val inputData = RetrieveTransactionsRawRequest("AA123", Some(from), Some(to))
+        private val inputData = ListTransactionsRawRequest("AA123", Some(from), Some(to))
         MockRetrieveTransactionsValidator.validate(inputData).returns(List(NinoFormatError))
         parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, NinoFormatError))
       }
       "the validator returns multiple errors" in new Test {
-        private val inputData = RetrieveTransactionsRawRequest(nino, None, None)
+        private val inputData = ListTransactionsRawRequest(nino, None, None)
         MockRetrieveTransactionsValidator.validate(inputData).returns(List(MissingFromDateError, MissingToDateError))
         parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(MissingFromDateError, MissingToDateError))))
       }

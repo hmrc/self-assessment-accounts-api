@@ -20,15 +20,15 @@ import config.AppConfig
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.retrieveTransactions.RetrieveTransactionsParsedRequest
-import v1.models.response.retrieveTransaction.{RetrieveTransactionsResponse, TransactionItem}
+import v1.models.request.listTransactions.ListTransactionsParsedRequest
+import v1.models.response.listTransaction.{RetrieveTransactionsResponse, TransactionItem}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class RetrieveTransactionsConnector @Inject()(val http: HttpClient,
                                               val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrieveTransactions(request: RetrieveTransactionsParsedRequest)
+  def retrieveTransactions(request: ListTransactionsParsedRequest)
                           (implicit hc: HeaderCarrier,
                            ec: ExecutionContext): Future[DesOutcome[RetrieveTransactionsResponse[TransactionItem]]] = {
 

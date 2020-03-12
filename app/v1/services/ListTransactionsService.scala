@@ -25,16 +25,16 @@ import v1.connectors.RetrieveTransactionsConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors.{DownstreamError, ErrorWrapper, FromDateFormatError, MtdError, NinoFormatError, NotFoundError, ToDateFormatError}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveTransactions.RetrieveTransactionsParsedRequest
-import v1.models.response.retrieveTransaction.{RetrieveTransactionsResponse, TransactionItem}
+import v1.models.request.listTransactions.ListTransactionsParsedRequest
+import v1.models.response.listTransaction.{RetrieveTransactionsResponse, TransactionItem}
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveTransactionsService @Inject()(val connector: RetrieveTransactionsConnector) extends DesResponseMappingSupport with Logging {
+class ListTransactionsService @Inject()(val connector: RetrieveTransactionsConnector) extends DesResponseMappingSupport with Logging {
 
-  def retrieveTransactions(request: RetrieveTransactionsParsedRequest)(
+  def retrieveTransactions(request: ListTransactionsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionsResponse[TransactionItem]]]] = {

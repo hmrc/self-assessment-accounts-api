@@ -18,16 +18,16 @@ package v1.fixtures
 
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.domain.Nino
-import v1.models.request.retrieveTransactions.RetrieveTransactionsParsedRequest
-import v1.models.response.retrieveTransaction.{RetrieveTransactionsResponse, TransactionItem}
+import v1.models.request.listTransactions.ListTransactionsParsedRequest
+import v1.models.response.listTransaction.{RetrieveTransactionsResponse, TransactionItem}
 
-object RetrieveTransactionFixture {
+object ListTransactionFixture {
 
   val nino = Nino("AA123456A")
   val dateFrom = "2018-04-05"
   val dateTo = "2019-11-05"
 
-  val requestData: RetrieveTransactionsParsedRequest = RetrieveTransactionsParsedRequest(nino, dateFrom, dateTo)
+  val requestData: ListTransactionsParsedRequest = ListTransactionsParsedRequest(nino, dateFrom, dateTo)
 
   val fullDesDocIdTransactionItemResponse: JsValue = Json.parse(
     """
