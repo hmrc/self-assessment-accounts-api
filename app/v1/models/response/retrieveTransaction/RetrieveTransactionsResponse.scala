@@ -37,14 +37,14 @@ object RetrieveTransactionsResponse extends HateoasLinks {
   implicit object LinksFactory extends HateoasListLinksFactory[RetrieveTransactionsResponse, TransactionItem, RetrieveTransactionsHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: RetrieveTransactionsHateoasData, item: TransactionItem): Seq[Link] = {
-      val id = item.id.getOrElse("")
+      val id = item.paymentId.getOrElse("")
 
       val isPayment = PaymentIdValidation.validate(id) == Nil
 
       if (isPayment) {
         Seq(retrievePaymentAllocations(appConfig, data.nino, id, isSelf = false))
       } else {
-        Seq(retrieveChargeHistory(appConfig, data.nino, id, isSelf = false))
+        Seq(retrieveChargeHistory(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false))
       }
     }
 

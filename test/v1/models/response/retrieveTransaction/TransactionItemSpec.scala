@@ -29,11 +29,11 @@ class TransactionItemSpec extends UnitSpec {
       }
 
       "the json contains exclusively document Id" in {
-        fullDesDocIdTransactionItemResponse.as[TransactionItem] shouldBe fullDocIdTransactionItemModel
+        fullDesDocIdTransactionItemResponse.as[TransactionItem] shouldBe chargeTransactionItemModel
       }
 
       "the json contains exclusively payment lot and payment lot item" in {
-        fullDesPaymentLotIdTransactionItemResponse.as[TransactionItem] shouldBe fullPaymentIdTransactionItemModel
+        fullDesPaymentLotIdTransactionItemResponse.as[TransactionItem] shouldBe paymentTransactionItemModel
       }
 
       "the json contains only mandatory fields" in {

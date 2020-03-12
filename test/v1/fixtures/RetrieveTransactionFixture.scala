@@ -32,14 +32,14 @@ object RetrieveTransactionFixture {
   val fullDesDocIdTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2019",
+      |         "taxYear":"2020",
       |         "documentId":"X123456790A",
       |         "transactionDate":"2020-01-01",
       |         "type":"Balancing Charge Debit",
       |         "originalAmount":12.34,
       |         "outstandingAmount":10.33,
       |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Example reason",
+      |         "lastClearingReason":"Refund",
       |         "lastClearedAmount":2.01
       |}
       |""".stripMargin)
@@ -47,15 +47,15 @@ object RetrieveTransactionFixture {
   val fullDesPaymentLotIdTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2019",
+      |         "taxYear":"2020",
       |         "paymentLot":"081203010024",
       |         "paymentLotItem":"000001",
       |         "transactionDate":"2020-01-01",
-      |         "type":"Balancing Charge Debit",
+      |         "type":"Payment On Account",
       |         "originalAmount":12.34,
       |         "outstandingAmount":10.33,
       |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Example reason",
+      |         "lastClearingReason":"Payment Allocation",
       |         "lastClearedAmount":2.01
       |}
       |""".stripMargin)
@@ -115,7 +115,7 @@ object RetrieveTransactionFixture {
       |}
       |""".stripMargin)
 
-  val fullDocIdTransactionItemModel: TransactionItem = TransactionItem(taxYear = Some("2018-19"),
+  val chargeTransactionItemModel: TransactionItem = TransactionItem(taxYear = Some("2019-20"),
                                                                   transactionId = Some("X123456790A"),
                                                                   paymentId = None,
                                                                   transactionDate = Some("2020-01-01"),
@@ -123,7 +123,7 @@ object RetrieveTransactionFixture {
                                                                   originalAmount = Some(12.34),
                                                                   outstandingAmount = Some(10.33),
                                                                   lastClearingDate = Some("2020-01-02"),
-                                                                  lastClearingReason = Some("Example reason"),
+                                                                  lastClearingReason = Some("Refund"),
                                                                   lastClearedAmount = Some(2.01)
     )
 
@@ -139,15 +139,15 @@ object RetrieveTransactionFixture {
                                                                   lastClearedAmount = Some(2.01)
   )
 
-  val fullPaymentIdTransactionItemModel: TransactionItem = TransactionItem(taxYear = Some("2018-19"),
+  val paymentTransactionItemModel: TransactionItem = TransactionItem(taxYear = Some("2019-20"),
                                                                   transactionId = None,
                                                                   paymentId = Some("081203010024-000001"),
                                                                   transactionDate = Some("2020-01-01"),
-                                                                  `type` = Some("Balancing Charge Debit"),
+                                                                  `type` = Some("Payment On Account"),
                                                                   originalAmount = Some(12.34),
                                                                   outstandingAmount = Some(10.33),
                                                                   lastClearingDate = Some("2020-01-02"),
-                                                                  lastClearingReason = Some("Example reason"),
+                                                                  lastClearingReason = Some("Payment Allocation"),
                                                                   lastClearedAmount = Some(2.01)
   )
 
@@ -204,4 +204,62 @@ object RetrieveTransactionFixture {
     RetrieveTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel, fullTransactionItemModel))
 
   val minimalRetreiveTransactionModel: RetrieveTransactionsResponse[TransactionItem] = RetrieveTransactionsResponse(transactions = Seq.empty[TransactionItem])
+
+  val mtdJson = Json.parse(
+    """
+      |{
+      |   "transactions":[
+      |      {
+      |         "taxYear":"2019-20",
+      |         "transactionId":"X123456790A",
+      |         "transactionDate":"2020-01-01",
+      |         "type":"Balancing Charge Debit",
+      |         "originalAmount":12.34,
+      |         "outstandingAmount":10.33,
+      |         "lastClearingDate":"2020-01-02",
+      |         "lastClearingReason":"Refund",
+      |         "lastClearedAmount":2.01,
+      |         "links": [{
+      |           "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
+      |			      "method": "GET",
+      |			      "rel": "retrieve-charge-history"
+      |		      }]
+      |      },
+      |      {
+      |         "taxYear":"2019-20",
+      |         "paymentId":"081203010024-000001",
+      |         "transactionDate":"2020-01-01",
+      |         "type":"Payment On Account",
+      |         "originalAmount":12.34,
+      |         "outstandingAmount":10.33,
+      |         "lastClearingDate":"2020-01-02",
+      |         "lastClearingReason":"Payment Allocation",
+      |         "lastClearedAmount":2.01,
+      |          "links": [{
+      |             "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
+      |			        "method": "GET",
+      |			        "rel": "retrieve-payment-allocations"
+      |		        }]
+      |      }
+      |   ],
+      |   "links": [
+      |      {
+      |        "href": "/accounts/self-assessment/AA123456A/transactions",
+      |			   "method": "GET",
+      |			   "rel": "self"
+      |		   },
+      |      {
+      |        "href": "/accounts/self-assessment/AA123456A/payments",
+      |			   "method": "GET",
+      |			   "rel": "list-payments"
+      |		   },
+      |      {
+      |        "href": "/accounts/self-assessment/AA123456A/charges",
+      |			   "method": "GET",
+      |			   "rel": "list-charges"
+      |		   }
+      |     ]
+      |
+      |}
+    """.stripMargin)
 }

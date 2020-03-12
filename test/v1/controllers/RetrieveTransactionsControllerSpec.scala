@@ -33,6 +33,7 @@ import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactions.{RetrieveTransactionsParsedRequest, RetrieveTransactionsRawRequest}
 import v1.models.response.retrieveTransaction.{RetrieveTransactionsHateoasData, RetrieveTransactionsResponse, TransactionItem}
+import v1.fixtures.RetrieveTransactionFixture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -56,36 +57,10 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
   private val rawRequest = RetrieveTransactionsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = RetrieveTransactionsParsedRequest(Nino(nino), from, to)
 
-  private val chargeTransaction =
-    TransactionItem(
-      taxYear = Some("2019-20"),
-      id = Some("X123456790A"),
-      transactionDate = Some("2020-01-01"),
-      `type` = Some("Balancing Charge Debit"),
-      originalAmount = Some(12.34),
-      outstandingAmount = Some(10.33),
-      lastClearingDate = Some("2020-01-02"),
-      lastClearingReason = Some("Refund"),
-      lastClearedAmount = Some(2.01)
-    )
-
-  private val paymentTransaction =
-    TransactionItem(
-      taxYear = Some("2019-20"),
-      id = Some("081203010024-000001"),
-      transactionDate = Some("2020-01-01"),
-      `type` = Some("Payment On Account"),
-      originalAmount = Some(12.34),
-      outstandingAmount = Some(10.33),
-      lastClearingDate = Some("2020-01-02"),
-      lastClearingReason = Some("Payment Allocation"),
-      lastClearedAmount = Some(2.01)
-    )
-
   private val mtdResponse = RetrieveTransactionsResponse(
     transactions = Seq(
-      chargeTransaction,
-      paymentTransaction
+      chargeTransactionItemModel,
+      paymentTransactionItemModel
     )
   )
 
@@ -100,11 +75,11 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
   private val hateoasResponse = RetrieveTransactionsResponse(
     Seq(
       HateoasWrapper(
-        payload = chargeTransaction,
+        payload = chargeTransactionItemModel,
         links = Seq(chargeHistoryHateoasLink)
       ),
       HateoasWrapper(
-        payload = paymentTransaction,
+        payload = paymentTransactionItemModel,
         links = Seq(paymentAllocationHateoasLink)
       )
     )
@@ -116,7 +91,7 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       |   "transactions":[
       |      {
       |         "taxYear":"2019-20",
-      |         "id":"X123456790A",
+      |         "transactionId":"X123456790A",
       |         "transactionDate":"2020-01-01",
       |         "type":"Balancing Charge Debit",
       |         "originalAmount":12.34,
@@ -132,7 +107,7 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       |      },
       |      {
       |         "taxYear":"2019-20",
-      |         "id":"081203010024-000001",
+      |         "paymentId":"081203010024-000001",
       |         "transactionDate":"2020-01-01",
       |         "type":"Payment On Account",
       |         "originalAmount":12.34,
