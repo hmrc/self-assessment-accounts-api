@@ -61,7 +61,6 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
         }
 
         val response: WSResponse = await(request.get)
-        println(Json.prettyPrint(response.json))
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdChargeJson
@@ -77,8 +76,6 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
         }
 
         val response: WSResponse = await(request.get)
-        println(Json.prettyPrint(response.json))
-
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdPaymentJson
