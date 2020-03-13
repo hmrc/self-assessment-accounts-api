@@ -50,4 +50,5 @@ trait HateoasLinks {
   // L7
   def retrievePaymentAllocations(appConfig: AppConfig, nino: String, paymentId: String, isSelf: Boolean): Link =
     Link(href = s"/${appConfig.apiGatewayContext}/$nino/payments/$paymentId", method = GET, rel = if(isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS)
+
 }

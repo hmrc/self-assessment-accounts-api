@@ -63,7 +63,7 @@ class ListPaymentsService @Inject()(listPaymentsConnector: ListPaymentsConnector
       "NO_DATA_FOUND" -> NotFoundError,
       "PARTIALLY_MIGRATED" -> DownstreamError,
       "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError,
+      "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 
 }

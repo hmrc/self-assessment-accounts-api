@@ -29,8 +29,8 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
                                                     val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(implicit hc: HeaderCarrier,
-                                                                                   ec: ExecutionContext): Future[DesOutcome[RetrieveTransactionDetailsResponse]] = {
+  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)
+                                (implicit hc: HeaderCarrier, ec: ExecutionContext): Future[DesOutcome[RetrieveTransactionDetailsResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -40,7 +40,6 @@ class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
     get(
       uri = DesUri[RetrieveTransactionDetailsResponse](s"cross-regime/transactions-placeholder/NINO/$nino/ITSA/$transactionId")
     )
-
   }
 
 }

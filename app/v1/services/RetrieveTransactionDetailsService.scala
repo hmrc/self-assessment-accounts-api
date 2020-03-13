@@ -34,16 +34,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveTransactionDetailsService @Inject()(val connector: RetrieveTransactionDetailsConnector) extends DesResponseMappingSupport with Logging {
 
-  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
-
+  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)
+                                (implicit hc: HeaderCarrier, ec: ExecutionContext,
+                                 logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDesErrors(desErrorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTransactionDetailsResponse(desResponseWrapper))
     } yield mtdResponseWrapper
-
     result.value
   }
 
@@ -55,6 +52,6 @@ class RetrieveTransactionDetailsService @Inject()(val connector: RetrieveTransac
       "INVALID_SAP_DOCUMENT_NUMBER" -> TransactionIdFormatError,
       "NOT_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError,
+      "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 }
