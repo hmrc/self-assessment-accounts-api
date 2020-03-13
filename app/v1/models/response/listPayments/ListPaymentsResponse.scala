@@ -36,16 +36,20 @@ object ListPaymentsResponse extends HateoasLinks {
     override def itemLinks(appConfig: AppConfig, data: ListPaymentsHateoasData, item: Payment): Seq[Link] =
       Seq(retrievePaymentAllocations(appConfig, data.nino, item.paymentId.getOrElse(""), isSelf = false))
 
-    override def links(appConfig: AppConfig, data: ListPaymentsHateoasData): Seq[Link] = Seq(
-      listPayments(appConfig, data.nino, isSelf = true),
-      listTransactions(appConfig, data.nino, isSelf = false)
-    )
+    override def links(appConfig: AppConfig, data: ListPaymentsHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        listPayments(appConfig, nino, from, to, isSelf = true),
+        listTransactions(appConfig, nino, from, to, isSelf = false)
+      )
+    }
   }
 
   implicit object ResponseFunctor extends Functor[ListPaymentsResponse] {
     override def map[A, B](fa: ListPaymentsResponse[A])(f: A => B): ListPaymentsResponse[B] =
       ListPaymentsResponse(fa.payments.map(f))
   }
+
 }
 
-case class ListPaymentsHateoasData(nino: String) extends HateoasData
+case class ListPaymentsHateoasData(nino: String, from: String, to: String) extends HateoasData

@@ -35,10 +35,11 @@ object RetrieveChargeHistoryResponse extends HateoasLinks {
       import data._
       Seq(
         retrieveChargeHistory(appConfig, nino, transactionId, isSelf = true),
-        listTransactions(appConfig, nino, isSelf = false)
+        retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = false)
       )
     }
   }
+
 }
 
 case class RetrieveChargeHistoryHateoasData(nino: String, transactionId: String) extends HateoasData

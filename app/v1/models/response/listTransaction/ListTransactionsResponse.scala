@@ -33,25 +33,34 @@ object ListTransactionsResponse extends HateoasLinks {
   implicit def writes[I: Writes]: OWrites[ListTransactionsResponse[I]] =
     Json.writes[ListTransactionsResponse[I]]
 
-  implicit object LinksFactory extends HateoasListLinksFactory[ListTransactionsResponse, TransactionItem, ListTransactionsHateoasData] {
+  implicit object ListTransactionsLinksFactory extends HateoasListLinksFactory[ListTransactionsResponse, TransactionItem, ListTransactionsHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: ListTransactionsHateoasData, item: TransactionItem): Seq[Link] = {
-
-      val id = item.paymentId.getOrElse("")
+      import data.nino
+      val id = item.id.getOrElse("")
       val isPayment = PaymentIdValidation.validate(id) == Nil
 
       if (isPayment) {
-        Seq(retrievePaymentAllocations(appConfig, data.nino, id, isSelf = false))
+        Seq(
+          retrievePaymentAllocations(appConfig, nino, id, isSelf = false),
+          retrieveTransactionDetails(appConfig, nino, id, isSelf = false) // TODO: id needs to be replaced by transactionId
+        )
       } else {
-        Seq(retrieveChargeHistory(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false))
+        Seq(
+          retrieveChargeHistory(appConfig, nino, id, isSelf = false),
+          retrieveTransactionDetails(appConfig, nino, id, isSelf = false)
+        )
       }
     }
 
-    override def links(appConfig: AppConfig, data: ListTransactionsHateoasData): Seq[Link] = Seq(
-      listTransactions(appConfig, data.nino, isSelf = true),
-      listPayments(appConfig, data.nino, isSelf = false),
-      listCharges(appConfig, data.nino, isSelf = false)
-    )
+    override def links(appConfig: AppConfig, data: ListTransactionsHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        listTransactions(appConfig, nino, from, to, isSelf = true),
+        listCharges(appConfig, nino, from, to, isSelf = false),
+        listPayments(appConfig, nino, from, to, isSelf = false)
+      )
+    }
   }
 
   implicit object ResponseFunctor extends Functor[ListTransactionsResponse] {
@@ -61,4 +70,4 @@ object ListTransactionsResponse extends HateoasLinks {
 
 }
 
-case class ListTransactionsHateoasData(nino: String) extends HateoasData
+case class ListTransactionsHateoasData(nino: String, from: String, to: String) extends HateoasData
