@@ -18,41 +18,39 @@ package v1.models.response.retrieveAllocations
 
 import config.AppConfig
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads, Writes}
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
-import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
-case class RetrieveAllocationsResponse(amount: Option[BigDecimal],
+case class RetrieveAllocationsResponse[I](amount: Option[BigDecimal],
                                        method: Option[String],
                                        transactionDate: Option[String],
-                                       allocations: Seq[AllocationDetail])
+                                       allocations: Seq[I]) // TODO: This also needs wrapping in HATEOAS
 
 object RetrieveAllocationsResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[RetrieveAllocationsResponse] = Json.writes[RetrieveAllocationsResponse]
+  implicit def writes[I: Writes]: OWrites[RetrieveAllocationsResponse[I]] = Json.writes[RetrieveAllocationsResponse[I]]
 
-  implicit val reads: Reads[RetrieveAllocationsResponse] = (
-      (JsPath \ "paymentDetails" \\ "paymentAmount").readNullable[BigDecimal] and
+  implicit def reads[I: Reads]: Reads[RetrieveAllocationsResponse[I]] = (
+    (JsPath \ "paymentDetails" \\ "paymentAmount").readNullable[BigDecimal] and
       (JsPath \ "paymentDetails" \\ "paymentMethod").readNullable[String] and
       (JsPath \ "paymentDetails" \\ "valueDate").readNullable[String] and
-      (JsPath \ "paymentDetails" \\ "sapClearingDocsDetails").readNullable[Seq[AllocationDetail]]
-        .map(_.map(_.filterNot(_ == AllocationDetail.emptyAllocation)))
-        .map{
-        case Some(notEmpty) => notEmpty
-        case _ => Seq.empty[AllocationDetail]
+      (JsPath \ "paymentDetails").readNullable[Seq[I]]
+        .map {
+          case Some(notEmpty) => notEmpty
+          case _ => Seq.empty[I]
         }
-    )(RetrieveAllocationsResponse.apply _)
+    ) (RetrieveAllocationsResponse.apply _)
 
   implicit object RetrieveAllocationsLinksFactory extends HateoasLinksFactory[RetrieveAllocationsResponse, RetrieveAllocationsHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveAllocationsHateoasData): Seq[Link] = {
       import data._
       Seq(
-        retrievePaymentAllocations(appConfig, nino, paymentId, isSelf = true),
-        listPayments(appConfig, nino, isSelf = false)
+        retrievePaymentAllocations(appConfig, nino, paymentId, isSelf = true)
       )
     }
   }
+
 }
 
 case class RetrieveAllocationsHateoasData(nino: String, paymentId: String) extends HateoasData

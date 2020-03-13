@@ -39,4 +39,7 @@ object AllocationDetail {
       (JsPath \ "amount").readNullable[BigDecimal] and
       (JsPath \ "clearedAmount").readNullable[BigDecimal]
     )(AllocationDetail.apply _)
+
+ implicit val seqReads: Reads[Seq[AllocationDetail]] =
+  (JsPath \ "sapClearingDocsDetails").read[Seq[AllocationDetail]].map(_.filterNot(_ == AllocationDetail.emptyAllocation))
 }
