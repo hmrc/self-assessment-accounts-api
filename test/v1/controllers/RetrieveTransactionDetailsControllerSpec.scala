@@ -32,7 +32,7 @@ import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
 import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsHateoasData, RetrieveTransactionDetailsResponse, TransactionItem}
-import v1.fixtures.RetrieveTransactionDetailsFixture._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -99,6 +99,37 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
   private val listChargesHateoasLink = Link(href = s"/accounts/self-assessment/$nino/charges", method = GET, rel = LIST_CHARGES)
 
   private val hateoasResponse = RetrieveTransactionDetailsResponse(Seq(chargeTransaction,paymentTransaction))
+
+  private val mtdJson = Json.parse(
+    """
+      |{
+      |	"transactionItems": [{
+      |		"transactionItemId": "2019-20",
+      |		"type": "Payment On Account",
+      |		"originalAmount": 12.34,
+      |		"outstandingAmount": 10.33
+      |	}, {
+      |		"transactionItemId": "2019-20",
+      |		"type": "Payment On Account",
+      |		"originalAmount": 12.34,
+      |		"outstandingAmount": 10.33,
+      |		"paymentId": "081203010024-000001"
+      |	}],
+      |	"links": [{
+      |		"href": "/accounts/self-assessment/AA123456A/transactions",
+      |		"method": "GET",
+      |		"rel": "self"
+      |	}, {
+      |		"href": "/accounts/self-assessment/AA123456A/payments",
+      |		"method": "GET",
+      |		"rel": "list-payments"
+      |	}, {
+      |		"href": "/accounts/self-assessment/AA123456A/charges",
+      |		"method": "GET",
+      |		"rel": "list-charges"
+      |	}]
+      |}
+    """.stripMargin)
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
