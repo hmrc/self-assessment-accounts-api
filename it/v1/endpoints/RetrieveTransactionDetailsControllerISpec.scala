@@ -122,7 +122,8 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
       }
 
       val input = Seq(
-        ("AA1123A", "111111111111111111111111", BAD_REQUEST, NinoFormatError)
+        ("a", "11111", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "1111111111111111111111111111", BAD_REQUEST, TransactionIdFormatError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
