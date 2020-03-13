@@ -47,7 +47,6 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
 
   private val nino = "AA123456A"
   private val transactionId = "11111"
-  private val chargeId = "X123456790A"
   private val paymentId = "081203010024-000001"
   private val correlationId = "X-123"
   private val rawRequest = RetrieveTransactionDetailsRawRequest(nino, transactionId)
