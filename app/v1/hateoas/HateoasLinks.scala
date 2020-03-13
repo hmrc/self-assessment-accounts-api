@@ -56,9 +56,9 @@ trait HateoasLinks {
     )
 
   // L5
-  def retrieveChargeHistory(appConfig: AppConfig, nino: String, chargeId: String, isSelf: Boolean): Link =
+  def retrieveChargeHistory(appConfig: AppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
     Link(
-      href = s"/${appConfig.apiGatewayContext}/$nino/charges/$chargeId",
+      href = s"/${appConfig.apiGatewayContext}/$nino/charges/$transactionId",
       method = GET,
       rel = if(isSelf) SELF else RETRIEVE_CHARGE_HISTORY
     )
