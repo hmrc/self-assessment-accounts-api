@@ -28,6 +28,38 @@ object RetrieveTransactionDetailsFixture {
 
   val requestData = RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId)
 
+
+  val mtdJson = Json.parse(
+    """
+      |{
+      |	"transactionItems": [{
+      |		"transactionItemId": "2019-20",
+      |		"type": "Payment On Account",
+      |		"originalAmount": 12.34,
+      |		"outstandingAmount": 10.33
+      |	}, {
+      |		"transactionItemId": "2019-20",
+      |		"type": "Payment On Account",
+      |		"originalAmount": 12.34,
+      |		"outstandingAmount": 10.33,
+      |		"paymentId": "081203010024-000001"
+      |	}],
+      |	"links": [{
+      |		"href": "/accounts/self-assessment/AA123456A/transactions",
+      |		"method": "GET",
+      |		"rel": "self"
+      |	}, {
+      |		"href": "/accounts/self-assessment/AA123456A/payments",
+      |		"method": "GET",
+      |		"rel": "list-payments"
+      |	}, {
+      |		"href": "/accounts/self-assessment/AA123456A/charges",
+      |		"method": "GET",
+      |		"rel": "list-charges"
+      |	}]
+      |}
+    """.stripMargin)
+
   val desResponseWithMultipleTransactionItemForCharges: JsValue = Json.parse(
     """
       |{
