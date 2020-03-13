@@ -82,7 +82,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
       }
     }
 
-    "return a 404 NO_TRANSACTIONS_FOUND error" when {
+    "return a 404 NO_DETAILS_FOUND error" when {
       "a success response with no data is returned" in new Test {
 
         override def setupStubs(): StubMapping = {
@@ -102,11 +102,11 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, fromDate: String,
-                              toDate: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, requestTransactionId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String = requestNino
+          override val transactionId: String = requestTransactionId
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -122,7 +122,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
       }
 
       val input = Seq(
-        ("AA1123A", "2018-10-01", "2019-10-01", BAD_REQUEST, NinoFormatError)
+        ("AA1123A", "111111111111111111111111", BAD_REQUEST, NinoFormatError)
       )
 
       input.foreach(args => (validationErrorTest _).tupled(args))
@@ -157,7 +157,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
         (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
         (BAD_REQUEST, "INVALID_SAP_DOCUMENT_NUMBER", BAD_REQUEST, TransactionIdFormatError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
