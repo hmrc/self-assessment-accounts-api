@@ -107,27 +107,18 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
       |		"transactionItemId": "2019-20",
       |		"type": "Payment On Account",
       |		"originalAmount": 12.34,
-      |		"outstandingAmount": 10.33
-      |	}, {
-      |		"transactionItemId": "2019-20",
-      |		"type": "Payment On Account",
-      |		"originalAmount": 12.34,
       |		"outstandingAmount": 10.33,
       |		"paymentId": "081203010024-000001"
       |	}],
       |	"links": [{
-      |		"href": "/accounts/self-assessment/AA123456A/transactions",
+      |		"href": "/accounts/self-assessment/AA123456A/transactions/11111",
       |		"method": "GET",
       |		"rel": "self"
       |	}, {
-      |		"href": "/accounts/self-assessment/AA123456A/payments",
+      |		"href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
       |		"method": "GET",
-      |		"rel": "list-payments"
-      |	}, {
-      |		"href": "/accounts/self-assessment/AA123456A/charges",
-      |		"method": "GET",
-      |		"rel": "list-charges"
-      |	}]
+      |		"rel": "retrieve-payment-allocations"
+      |	}
       |}
     """.stripMargin)
 
