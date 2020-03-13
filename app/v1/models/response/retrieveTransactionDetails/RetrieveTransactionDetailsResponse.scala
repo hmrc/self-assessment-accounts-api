@@ -30,7 +30,8 @@ object RetrieveTransactionDetailsResponse extends HateoasLinks {
 
   implicit val writes: OWrites[RetrieveTransactionDetailsResponse] = Json.writes[RetrieveTransactionDetailsResponse]
 
-  implicit object RetrieveAllocationsLinksFactory extends HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData] {
+  implicit object RetrieveTransactionDetailsLinksFactory extends
+    HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveTransactionDetailsHateoasData): Seq[Link] = {
       import data._
       Seq(
