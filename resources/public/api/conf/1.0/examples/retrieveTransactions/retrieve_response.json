@@ -2,7 +2,7 @@
   "transactions":[
     {
       "taxYear":"2020",
-      "id":"X123456790A",
+      "transactionId":"X123456790A",
       "transactionDate":"2020-01-01",
       "type":"Balancing Charge Debit",
       "originalAmount":12.34,
@@ -20,7 +20,7 @@
     },
     {
       "taxYear":"2020",
-      "id":"X23456789012-A23456",
+      "paymentId":"X23456789012-A23456",
       "transactionDate":"2020-01-05",
       "type":"Payment On Account",
       "originalAmount":12.34,

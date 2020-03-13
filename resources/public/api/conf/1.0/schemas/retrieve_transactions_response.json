@@ -16,11 +16,17 @@
             "type": "string",
             "example": "2018-19"
           },
-          "id": {
+          "transactionId": {
             "description": "A unique identifier for this item.",
             "type": "string",
-            "pattern": "^[A-Za-z0-9]{1,12}|[A-Za-z0-9]{1,12}\\-[A-Za-z0-9]{4}$",
+            "pattern": "^[A-Za-z0-9]{1,12}$",
             "example": "X123456790A"
+          },
+          "paymentId": {
+            "description": "A unique identifier for the payment.",
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{1,12}\\-[A-Za-z0-9]{1,6}$",
+            "example": "081203010024-000001"
           },
           "transactionDate": {
             "description": "The date the item was created. Date in the format YYYY-MM-DD.",
