@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v1.endpoints.testdata
+package v1.fixture
 
 import play.api.libs.json.{JsValue, Json}
 
-trait RetrieveTransactionDetailsTestData {
+trait RetrieveTransactionDetailsFixture {
 
   val desJsonNoTransactions: JsValue = Json.parse(
     """
@@ -129,30 +129,30 @@ trait RetrieveTransactionDetailsTestData {
   val mtdChargeJson: JsValue = Json.parse(
     s"""
        |{
-       |  "transactionItems" : [ {
-       |    "type" : "National Insurance Class 2",
-       |    "taxPeriodFrom" : "2019-04-06",
-       |    "taxPeriodTo" : "2020-04-05",
-       |    "originalAmount" : 100.45,
-       |    "outstandingAmount" : 10.23,
-       |    "dueDate" : "2021-01-31"
-       |  }, {
-       |    "type" : "National Insurance Class 4",
-       |    "taxPeriodFrom" : "2019-04-06",
-       |    "taxPeriodTo" : "2020-04-05",
-       |    "originalAmount" : 100.23,
-       |    "outstandingAmount" : 10.45,
-       |    "dueDate" : "2021-01-31"
-       |  } ],
-       |  "links" : [ {
-       |    "href" : "/accounts/self-assessment/AA123456A/transactions/1111111111",
-       |    "method" : "GET",
-       |    "rel" : "self"
-       |  }, {
-       |    "href" : "/accounts/self-assessment/AA123456A/charges/1111111111",
-       |    "method" : "GET",
-       |    "rel" : "self"
-       |  } ]
+       |	"transactionItems": [{
+       |		"type": "National Insurance Class 2",
+       |		"taxPeriodFrom": "2019-04-06",
+       |		"taxPeriodTo": "2020-04-05",
+       |		"originalAmount": 100.45,
+       |		"outstandingAmount": 10.23,
+       |		"dueDate": "2021-01-31"
+       |	}, {
+       |		"type": "National Insurance Class 4",
+       |		"taxPeriodFrom": "2019-04-06",
+       |		"taxPeriodTo": "2020-04-05",
+       |		"originalAmount": 100.23,
+       |		"outstandingAmount": 10.45,
+       |		"dueDate": "2021-01-31"
+       |	}],
+       |	"links": [{
+       |		"href": "/accounts/self-assessment/AA123456A/transactions/1111111111",
+       |		"method": "GET",
+       |		"rel": "self"
+       |	}, {
+       |		"href": "/accounts/self-assessment/AA123456A/charges/1111111111",
+       |		"method": "GET",
+       |		"rel": "retrieve-charge-history"
+       |	}]
        |}
     """.stripMargin
   )
@@ -160,41 +160,41 @@ trait RetrieveTransactionDetailsTestData {
   val mtdPaymentJson: JsValue = Json.parse(
     s"""
        |{
-       |  "transactionItems" : [ {
-       |    "transactionItemId" : "0001",
-       |    "type" : "Payment on account",
-       |    "originalAmount" : -5000,
-       |    "outstandingAmount" : 0,
-       |    "dueDate" : "2021-01-31",
-       |    "paymentMethod" : "BACS RECEIPTS",
-       |    "paymentId" : "P0101180112-000004",
-       |    "subItems" : [ {
-       |      "subItemId" : "001",
-       |      "clearingDate" : "2021-01-31",
-       |      "clearingReason" : "Payment allocation",
-       |      "paymentAmount" : -1100
-       |    }, {
-       |      "subItemId" : "002",
-       |      "clearingDate" : "2021-01-31",
-       |      "clearingReason" : "Payment allocation",
-       |      "paymentAmount" : -3000
-       |    }, {
-       |      "subItemId" : "003",
-       |      "amount" : -900,
-       |      "clearingDate" : "2021-01-31",
-       |      "clearingReason" : "Outgoing Payment - Paid",
-       |      "paymentMethod" : "Payable Order Repayment"
-       |    } ]
-       |  } ],
-       |  "links" : [ {
-       |    "href" : "/accounts/self-assessment/AA123456A/transactions/1111111111",
-       |    "method" : "GET",
-       |    "rel" : "self"
-       |  }, {
-       |    "href" : "/accounts/self-assessment/AA123456A/payments/P0101180112-000004",
-       |    "method" : "GET",
-       |    "rel" : "self"
-       |  } ]
+       |	"transactionItems": [{
+       |		"transactionItemId": "0001",
+       |		"type": "Payment on account",
+       |		"originalAmount": -5000,
+       |		"outstandingAmount": 0,
+       |		"dueDate": "2021-01-31",
+       |		"paymentMethod": "BACS RECEIPTS",
+       |		"paymentId": "P0101180112-000004",
+       |		"subItems": [{
+       |			"subItemId": "001",
+       |			"clearingDate": "2021-01-31",
+       |			"clearingReason": "Payment allocation",
+       |			"paymentAmount": -1100
+       |		}, {
+       |			"subItemId": "002",
+       |			"clearingDate": "2021-01-31",
+       |			"clearingReason": "Payment allocation",
+       |			"paymentAmount": -3000
+       |		}, {
+       |			"subItemId": "003",
+       |			"amount": -900,
+       |			"clearingDate": "2021-01-31",
+       |			"clearingReason": "Outgoing Payment - Paid",
+       |			"paymentMethod": "Payable Order Repayment"
+       |		}]
+       |	}],
+       |	"links": [{
+       |		"href": "/accounts/self-assessment/AA123456A/transactions/1111111111",
+       |		"method": "GET",
+       |		"rel": "self"
+       |	}, {
+       |		"href": "/accounts/self-assessment/AA123456A/payments/P0101180112-000004",
+       |		"method": "GET",
+       |		"rel": "retrieve-payment-allocations"
+       |	}]
        |}
     """.stripMargin
   )

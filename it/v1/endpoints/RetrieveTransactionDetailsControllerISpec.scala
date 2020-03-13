@@ -22,11 +22,11 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.endpoints.testdata.RetrieveTransactionDetailsTestData
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.fixture.RetrieveTransactionDetailsFixture
 
-class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with RetrieveTransactionDetailsTestData {
+class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with RetrieveTransactionDetailsFixture {
 
   private trait Test {
     val nino = "AA123456A"

@@ -37,8 +37,8 @@ object RetrieveTransactionDetailsResponse extends HateoasLinks {
       Seq(
         retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = true),
         paymentId match {
-          case Some(pid) => retrievePaymentAllocations(appConfig, nino, pid, isSelf = true)
-          case None => retrieveChargeHistory(appConfig, nino, transactionId, isSelf = true)
+          case Some(pid) => retrievePaymentAllocations(appConfig, nino, pid, isSelf = false)
+          case None => retrieveChargeHistory(appConfig, nino, transactionId, isSelf = false)
         }
       )
     }
