@@ -13,13 +13,13 @@
           "subItemId": "001",
           "clearingDate": "2021-01-31",
           "clearingReason": "Payment allocation",
-          "paymentAmount": -1100.21
+          "paymentAmount": 1100.21
         },
         {
           "subItemId": "002",
           "clearingDate": "2021-01-31",
           "clearingReason": "Payment allocation",
-          "paymentAmount": -3000.22
+          "paymentAmount": 3000.22
         },
         {
           "subItemId": "003",
