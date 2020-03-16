@@ -25,33 +25,33 @@ class ListTransactionsResponseSpec extends UnitSpec {
   "ListTransactionsResponse" should {
     "return a successful Json model" when {
       "the json contains all fields with a document id transaction" in {
-        fullDesSingleRetreiveTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullSingleRetreiveTransactionModel
+        fullDesSingleListTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullSingleListTransactionModel
       }
 
       "the json contains all fields with a multiple transaction" in {
-        fullDesMultipleRetreiveTransactionMultipleResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleRetreiveTransactionModel
+        fullDesMultipleListTransactionMultipleResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleListTransactionModel
       }
 
       "the json contains minimal fields with no transaction" in {
-        minimalDesRetreiveTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalRetreiveTransactionModel
+        minimalDesListTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionModel
       }
     }
 
     "return a successful empty Json model" when {
       "a transactionItem is present but empty" in {
-        emptyItemDesRetrieveTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalRetreiveTransactionModel
+        emptyItemDesListTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionModel
       }
     }
 
     "throw an error" when {
       "there are no mandatory fields" in {
-        invalidDesRetrieveTransactionResponse.validate[ListTransactionsResponse[TransactionItem]] shouldBe a[JsError]
+        invalidDesListTransactionResponse.validate[ListTransactionsResponse[TransactionItem]] shouldBe a[JsError]
       }
     }
 
     "successfully write the model to Json" when {
       "using a standard Json Owrites" in {
-        Json.toJson(fullSingleRetreiveTransactionModel) shouldBe mtdRetrievetransactionResponse
+        Json.toJson(fullSingleListTransactionModel) shouldBe mtdListTransactionResponse
       }
     }
   }

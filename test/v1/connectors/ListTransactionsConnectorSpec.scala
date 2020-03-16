@@ -23,7 +23,7 @@ import v1.models.outcomes.ResponseWrapper
 
 import scala.concurrent.Future
 
-class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
+class ListTransactionsConnectorSpec extends ConnectorSpec {
 
   val chargeId = "anId"
 
@@ -45,7 +45,7 @@ class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
   "RetrieveTransactionsConnector" when {
     "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, fullDesSingleRetreiveTransactionResponse))
+        val outcome = Right(ResponseWrapper(correlationId, fullDesSingleListTransactionResponse))
 
         MockedHttpClient
           .get(
@@ -55,7 +55,7 @@ class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.ListTransactions(requestData)) shouldBe outcome
+        await(connector.listTransactions(requestData)) shouldBe outcome
       }
     }
   }

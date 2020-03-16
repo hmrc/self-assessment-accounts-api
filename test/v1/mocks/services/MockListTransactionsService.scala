@@ -30,12 +30,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 trait MockListTransactionsService extends MockFactory {
 
-  val mockRetrieveTransactionsService: ListTransactionsService = mock[ListTransactionsService]
+  val mockListTransactionsService: ListTransactionsService = mock[ListTransactionsService]
 
-  object MockRetrieveTransactionsService {
+  object MockListTransactionsService {
     def retrieveTransactions(request: ListTransactionsParsedRequest):
+
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]]] = {
-      (mockRetrieveTransactionsService
+      (mockListTransactionsService
         .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(request, *, *, *)
     }

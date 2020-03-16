@@ -21,6 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
 import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
+
 object ListTransactionFixture {
 
   val nino = Nino("AA123456A")
@@ -99,7 +100,7 @@ object ListTransactionFixture {
       |}
       |""".stripMargin)
 
-  val mtdRetrieveTransactionItemResponse: JsValue = Json.parse(
+  val mtdListTransactionItemResponse: JsValue = Json.parse(
     """
       |{
       |         "taxYear":"2018-19",
@@ -153,28 +154,28 @@ object ListTransactionFixture {
 
   val minimalTransactionItemModel: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None, None)
 
-  val fullDesSingleRetreiveTransactionResponse: JsValue = Json.parse(
+  val fullDesSingleListTransactionResponse: JsValue = Json.parse(
     s"""
       |{
       |  "transactions" : [$fullDesTransactionItemResponse]
       |}
       |""".stripMargin)
 
-  val fullDesMultipleRetreiveTransactionMultipleResponse: JsValue = Json.parse(
+  val fullDesMultipleListTransactionMultipleResponse: JsValue = Json.parse(
     s"""
       |{
       |  "transactions" : [$fullDesTransactionItemResponse, $fullDesTransactionItemResponse]
       |}
       |""".stripMargin)
 
-  val minimalDesRetreiveTransactionResponse: JsValue = Json.parse(
+  val minimalDesListTransactionResponse: JsValue = Json.parse(
     """
       |{
       |  "transactions" : []
       |}
       |""".stripMargin)
 
-  val emptyItemDesRetrieveTransactionResponse: JsValue = Json.parse(
+  val emptyItemDesListTransactionResponse: JsValue = Json.parse(
     s"""
       |{
       |  "transactions" : [$minimalDesTransactionItemResponse]
@@ -182,28 +183,28 @@ object ListTransactionFixture {
       |""".stripMargin
   )
 
-  val invalidDesRetrieveTransactionResponse: JsValue = Json.parse(
+  val invalidDesListTransactionResponse: JsValue = Json.parse(
     """
       |{
       |
       |}
       |""".stripMargin)
 
-  val mtdRetrievetransactionResponse: JsValue = Json.parse(
+  val mtdListTransactionResponse: JsValue = Json.parse(
     s"""
       |{
-      |   "transactions": [$mtdRetrieveTransactionItemResponse]
+      |   "transactions": [$mtdListTransactionItemResponse]
       |}
       |""".stripMargin)
 
-  val fullSingleRetreiveTransactionModel: ListTransactionsResponse[TransactionItem] =
+  val fullSingleListTransactionModel: ListTransactionsResponse[TransactionItem] =
     ListTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel))
 
 
-  val fullMultipleRetreiveTransactionModel: ListTransactionsResponse[TransactionItem] =
+  val fullMultipleListTransactionModel: ListTransactionsResponse[TransactionItem] =
     ListTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel, fullTransactionItemModel))
 
-  val minimalRetreiveTransactionModel: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse(transactions = Seq.empty[TransactionItem])
+  val minimalListTransactionModel: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse(transactions = Seq.empty[TransactionItem])
 
   val mtdJson = Json.parse(
     """

@@ -23,7 +23,9 @@ import v1.mocks.connectors.MockListTransactionsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.fixtures.ListTransactionFixture._
+
 import v1.models.response.listTransaction.ListTransactionsResponse
+
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,7 +40,9 @@ class ListTransactionsServiceSpec extends UnitSpec {
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "listTransactions")
 
     val service = new ListTransactionsService(
+
       connector = mockListTransactionsConnector
+
     )
   }
 
@@ -47,9 +51,9 @@ class ListTransactionsServiceSpec extends UnitSpec {
       "received a valid response for the supplied request" in new Test {
 
         MockListTransactionsConnector.listTransactions(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleListTransactionModel))))
 
-        await(service.listTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
+        await(service.listTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleListTransactionModel))
       }
     }
 

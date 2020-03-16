@@ -24,11 +24,13 @@ import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTr
 
 trait MockListTransactionsRequestParser extends MockFactory {
 
-  val MockListTransactionsRequestParser: ListTransactionsRequestParser = mock[ListTransactionsRequestParser]
+  val mockListTransactionsRequestParser: ListTransactionsRequestParser = mock[ListTransactionsRequestParser]
 
-  object MockRetrieveTransactionsRequestParser {
+  object MockListTransactionsRequestParser {
+
     def parse(data: ListTransactionsRawRequest): CallHandler[Either[ErrorWrapper, ListTransactionsParsedRequest]] = {
-      (MockListTransactionsRequestParser.parseRequest(_: ListTransactionsRawRequest)).expects(data)
+      (mockListTransactionsRequestParser.parseRequest(_: ListTransactionsRawRequest)).expects(data)
+
     }
   }
 }

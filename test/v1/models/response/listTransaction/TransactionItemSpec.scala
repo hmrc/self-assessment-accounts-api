@@ -50,7 +50,7 @@ class TransactionItemSpec extends UnitSpec {
 
   "successfully write the model to Json" when {
     "using a standard Json Owrites" in {
-      Json.toJson(fullTransactionItemModel) shouldBe mtdRetrieveTransactionItemResponse
+      Json.toJson(fullTransactionItemModel) shouldBe mtdListTransactionItemResponse
     }
   }
 }

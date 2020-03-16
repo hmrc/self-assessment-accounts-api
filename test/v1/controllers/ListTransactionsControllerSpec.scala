@@ -33,7 +33,7 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
 import v1.models.response.listTransaction.ListTransactionsResponse
 import v1.models.response.listTransaction.{ListTransactionsHateoasData}
-import v1.fixtures.ListTransactionFixture._
+import v1.fixtures.ListTransactionsFixture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

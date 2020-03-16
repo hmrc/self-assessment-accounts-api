@@ -27,6 +27,7 @@ import v1.models.errors.{DownstreamError, ErrorWrapper, FromDateFormatError, Mtd
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
 import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
+
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,6 +36,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class ListTransactionsService @Inject()(val connector: ListTransactionsConnector) extends DesResponseMappingSupport with Logging {
 
   def listTransactions(request: ListTransactionsParsedRequest)(
+
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]] = {

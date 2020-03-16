@@ -30,25 +30,26 @@ class ListTransactionsRequestParserSpec extends UnitSpec {
 
   trait Test extends MockListTransactionsValidator {
     lazy val parser = new ListTransactionsRequestParser(mockValidator)
+
   }
 
   "parse" should {
     "return a parsed request" when {
       "no validation errors occur" in new Test {
         private val inputData = ListTransactionsRawRequest(nino, Some(from), Some(to))
-        MockRetrieveTransactionsValidator.validate(inputData).returns(Nil)
+        MockListTransactionsValidator.validate(inputData).returns(Nil)
         parser.parseRequest(inputData) shouldBe Right(ListTransactionsParsedRequest(Nino(nino), from, to))
       }
     }
     "return an error wrapper" when {
       "the validator returns a single error" in new Test {
         private val inputData = ListTransactionsRawRequest("AA123", Some(from), Some(to))
-        MockRetrieveTransactionsValidator.validate(inputData).returns(List(NinoFormatError))
+        MockListTransactionsValidator.validate(inputData).returns(List(NinoFormatError))
         parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, NinoFormatError))
       }
       "the validator returns multiple errors" in new Test {
         private val inputData = ListTransactionsRawRequest(nino, None, None)
-        MockRetrieveTransactionsValidator.validate(inputData).returns(List(MissingFromDateError, MissingToDateError))
+        MockListTransactionsValidator.validate(inputData).returns(List(MissingFromDateError, MissingToDateError))
         parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(MissingFromDateError, MissingToDateError))))
       }
     }
