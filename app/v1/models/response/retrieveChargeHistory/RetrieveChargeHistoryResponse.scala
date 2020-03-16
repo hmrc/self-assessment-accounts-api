@@ -35,7 +35,7 @@ object RetrieveChargeHistoryResponse extends HateoasLinks {
       import data._
       Seq(
         retrieveChargeHistory(appConfig, nino, chargeId, isSelf = true),
-        retrieveTransactions(appConfig, nino, isSelf = false)
+        listTransactions(appConfig, nino, isSelf = false)
       )
     }
   }

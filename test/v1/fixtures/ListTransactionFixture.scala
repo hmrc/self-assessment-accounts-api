@@ -19,7 +19,7 @@ package v1.fixtures
 import play.api.libs.json.{JsValue, Json}
 import uk.gov.hmrc.domain.Nino
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
-import v1.models.response.listTransaction.{RetrieveTransactionsResponse, TransactionItem}
+import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
 object ListTransactionFixture {
 
@@ -196,14 +196,14 @@ object ListTransactionFixture {
       |}
       |""".stripMargin)
 
-  val fullSingleRetreiveTransactionModel: RetrieveTransactionsResponse[TransactionItem] =
-    RetrieveTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel))
+  val fullSingleRetreiveTransactionModel: ListTransactionsResponse[TransactionItem] =
+    ListTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel))
 
 
-  val fullMultipleRetreiveTransactionModel: RetrieveTransactionsResponse[TransactionItem] =
-    RetrieveTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel, fullTransactionItemModel))
+  val fullMultipleRetreiveTransactionModel: ListTransactionsResponse[TransactionItem] =
+    ListTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel, fullTransactionItemModel))
 
-  val minimalRetreiveTransactionModel: RetrieveTransactionsResponse[TransactionItem] = RetrieveTransactionsResponse(transactions = Seq.empty[TransactionItem])
+  val minimalRetreiveTransactionModel: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse(transactions = Seq.empty[TransactionItem])
 
   val mtdJson = Json.parse(
     """

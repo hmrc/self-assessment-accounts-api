@@ -23,7 +23,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
-import v1.models.response.listTransaction.{RetrieveTransactionsResponse, TransactionItem}
+import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 import v1.services.ListTransactionsService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,9 +34,9 @@ trait MockListTransactionsService extends MockFactory {
 
   object MockRetrieveTransactionsService {
     def retrieveTransactions(request: ListTransactionsParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionsResponse[TransactionItem]]]]] = {
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]]] = {
       (mockRetrieveTransactionsService
-        .retrieveTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+        .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(request, *, *, *)
     }
   }

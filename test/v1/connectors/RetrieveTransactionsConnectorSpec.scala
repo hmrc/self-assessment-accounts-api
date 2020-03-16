@@ -34,7 +34,7 @@ class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveTransactionsConnector = new RetrieveTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: ListTransactionsConnector = new ListTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -55,7 +55,7 @@ class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
           )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveTransactions(requestData)) shouldBe outcome
+        await(connector.ListTransactions(requestData)) shouldBe outcome
       }
     }
   }

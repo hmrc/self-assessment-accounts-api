@@ -111,7 +111,7 @@ class RetrieveBalanceControllerSpec
         MockHateoasFactory
           .wrap(retrieveBalanceResponse, RetrieveBalanceHateoasData(nino))
           .returns(HateoasWrapper(retrieveBalanceResponse, Seq(retrieveBalance(mockAppConfig, nino, isSelf = true),
-            retrieveTransactions(mockAppConfig, nino, isSelf = false))))
+            listTransactions(mockAppConfig, nino, isSelf = false))))
 
         val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
 

@@ -20,32 +20,32 @@ import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v1.fixtures.ListTransactionFixture._
 
-class RetrieveTransactionsResponseSpec extends UnitSpec {
+class ListTransactionsResponseSpec extends UnitSpec {
 
-  "RetrieveTransactionsResponse" should {
+  "ListTransactionsResponse" should {
     "return a successful Json model" when {
       "the json contains all fields with a document id transaction" in {
-        fullDesSingleRetreiveTransactionResponse.as[RetrieveTransactionsResponse[TransactionItem]] shouldBe fullSingleRetreiveTransactionModel
+        fullDesSingleRetreiveTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullSingleRetreiveTransactionModel
       }
 
       "the json contains all fields with a multiple transaction" in {
-        fullDesMultipleRetreiveTransactionMultipleResponse.as[RetrieveTransactionsResponse[TransactionItem]] shouldBe fullMultipleRetreiveTransactionModel
+        fullDesMultipleRetreiveTransactionMultipleResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleRetreiveTransactionModel
       }
 
       "the json contains minimal fields with no transaction" in {
-        minimalDesRetreiveTransactionResponse.as[RetrieveTransactionsResponse[TransactionItem]] shouldBe minimalRetreiveTransactionModel
+        minimalDesRetreiveTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalRetreiveTransactionModel
       }
     }
 
     "return a successful empty Json model" when {
       "a transactionItem is present but empty" in {
-        emptyItemDesRetrieveTransactionResponse.as[RetrieveTransactionsResponse[TransactionItem]] shouldBe minimalRetreiveTransactionModel
+        emptyItemDesRetrieveTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalRetreiveTransactionModel
       }
     }
 
     "throw an error" when {
       "there are no mandatory fields" in {
-        invalidDesRetrieveTransactionResponse.validate[RetrieveTransactionsResponse[TransactionItem]] shouldBe a[JsError]
+        invalidDesRetrieveTransactionResponse.validate[ListTransactionsResponse[TransactionItem]] shouldBe a[JsError]
       }
     }
 

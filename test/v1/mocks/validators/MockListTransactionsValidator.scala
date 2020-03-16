@@ -18,15 +18,15 @@ package v1.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.validators.RetrieveTransactionsValidator
+import v1.controllers.requestParsers.validators.ListTransactionsValidator
 import v1.models.errors.MtdError
 import v1.models.request.listTransactions.ListTransactionsRawRequest
 
-class MockListTransactionsValidator extends MockFactory {
+trait MockListTransactionsValidator extends MockFactory {
 
-  val mockValidator: RetrieveTransactionsValidator = mock[RetrieveTransactionsValidator]
+  val mockValidator: ListTransactionsValidator = mock[ListTransactionsValidator]
 
-  object MockRetrieveTransactionsValidator {
+  object MockListTransactionsValidator {
 
     def validate(data: ListTransactionsRawRequest): CallHandler1[ListTransactionsRawRequest, List[MtdError]] = {
       (mockValidator
@@ -34,4 +34,5 @@ class MockListTransactionsValidator extends MockFactory {
         .expects(data)
     }
   }
+
 }

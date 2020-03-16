@@ -99,7 +99,7 @@ class RetrieveChargeHistoryControllerSpec
           .returns(HateoasWrapper(retrieveChargeHistoryResponse,
             Seq(
               retrieveChargeHistory(mockAppConfig, nino, chargeId, isSelf = true),
-              retrieveTransactions(mockAppConfig, nino, isSelf = false)
+              listTransactions(mockAppConfig, nino, isSelf = false)
             )
           ))
 

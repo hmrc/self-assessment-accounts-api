@@ -22,14 +22,14 @@ import v1.mocks.validators.MockListTransactionsValidator
 import v1.models.errors._
 import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
 
-class RetrieveTransactionsRequestParserSpec extends UnitSpec {
+class ListTransactionsRequestParserSpec extends UnitSpec {
 
   val nino = "AA123456B"
   val from = "2019/02/02"
   val to = "2019/02/03"
 
   trait Test extends MockListTransactionsValidator {
-    lazy val parser = new RetrieveTransactionsRequestParser(mockValidator)
+    lazy val parser = new ListTransactionsRequestParser(mockValidator)
   }
 
   "parse" should {

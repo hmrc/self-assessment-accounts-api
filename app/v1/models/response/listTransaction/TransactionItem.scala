@@ -34,7 +34,7 @@ object TransactionItem {
 
   val empty: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None, None)
 
-  implicit val reads: Reads[TransactionItem] = (
+  implicit val reads: Reads[TransactionItem] =
     for {
       taxYear <- (JsPath \ "taxYear").readNullable[String].map(_.map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear))))
       paymentLot <- (JsPath \ "paymentLot").readNullable[String]
@@ -53,7 +53,7 @@ object TransactionItem {
 
       TransactionItem(taxYear, transactionId, paymentId, transactionDate, aType, originalAmount, outstandingAmount,
         lastClearingDate, lastClearingReason, lastClearedAmount)
-    })
+    }
 
   implicit val writes: OWrites[TransactionItem] = Json.writes[TransactionItem]
 }

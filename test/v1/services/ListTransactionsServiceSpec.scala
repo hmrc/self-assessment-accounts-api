@@ -23,7 +23,7 @@ import v1.mocks.connectors.MockListTransactionsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.fixtures.ListTransactionFixture._
-import v1.models.response.listTransaction.RetrieveTransactionsResponse
+import v1.models.response.listTransaction.ListTransactionsResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -35,30 +35,30 @@ class ListTransactionsServiceSpec extends UnitSpec {
   trait Test extends MockListTransactionsConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "retrieveTransactions")
+    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "listTransactions")
 
     val service = new ListTransactionsService(
-      connector = mockRetrieveTransactionsConnector
+      connector = mockListTransactionsConnector
     )
   }
 
-  "retrieveTransactions" should {
+  "listTransactions" should {
     "return a successful response" when {
       "received a valid response for the supplied request" in new Test {
 
-        MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
+        MockListTransactionsConnector.listTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))))
 
-        await(service.retrieveTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
+        await(service.listTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleRetreiveTransactionModel))
       }
     }
 
     "return NoTransactionDetailsFoundError response" when {
       "the transactionItems are empty" in new Test {
-        MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, RetrieveTransactionsResponse(Seq())))))
+        MockListTransactionsConnector.listTransactions(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ListTransactionsResponse(Seq())))))
 
-        await(service.retrieveTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionsFoundError, None))
+        await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionsFoundError, None))
 
       }
     }
@@ -70,10 +70,10 @@ class ListTransactionsServiceSpec extends UnitSpec {
           s"a $desErrorCode error is returned from the service" in new Test {
 
 
-            MockRetrieveTransactionsConnector.retrieveTransactions(requestData)
+            MockListTransactionsConnector.listTransactions(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.retrieveTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
           }
 
         val input: Seq[(String, MtdError)] = Seq(

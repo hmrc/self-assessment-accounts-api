@@ -19,20 +19,20 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, RetrieveTransactionsConnector}
+import v1.connectors.{DesOutcome, ListTransactionsConnector}
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
-import v1.models.response.listTransaction.{RetrieveTransactionsResponse, TransactionItem}
+import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockListTransactionsConnector extends MockFactory {
-  val mockRetrieveTransactionsConnector: RetrieveTransactionsConnector = mock[RetrieveTransactionsConnector]
+  val mockListTransactionsConnector: ListTransactionsConnector = mock[ListTransactionsConnector]
 
-  object MockRetrieveTransactionsConnector {
+  object MockListTransactionsConnector {
 
-    def retrieveTransactions(requestData: ListTransactionsParsedRequest): CallHandler[Future[DesOutcome[RetrieveTransactionsResponse[TransactionItem]]]] = {
-      (mockRetrieveTransactionsConnector
-        .retrieveTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
+    def listTransactions(requestData: ListTransactionsParsedRequest): CallHandler[Future[DesOutcome[ListTransactionsResponse[TransactionItem]]]] = {
+      (mockListTransactionsConnector
+        .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(requestData, *, *)
     }
   }

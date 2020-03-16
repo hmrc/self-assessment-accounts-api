@@ -31,7 +31,8 @@ import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
-import v1.models.response.listTransaction.{ListTransactionsHateoasData, RetrieveTransactionsHateoasData, RetrieveTransactionsResponse, TransactionItem}
+import v1.models.response.listTransaction.ListTransactionsResponse
+import v1.models.response.listTransaction.{ListTransactionsHateoasData}
 import v1.fixtures.ListTransactionFixture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -55,7 +56,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
   private val rawRequest = ListTransactionsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListTransactionsParsedRequest(Nino(nino), from, to)
 
-  private val mtdResponse = RetrieveTransactionsResponse(
+  private val mtdResponse = ListTransactionsResponse(
     transactions = Seq(
       chargeTransactionItemModel,
       paymentTransactionItemModel
@@ -70,7 +71,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
   private val listPaymentsHateoasLink = Link(href = s"/accounts/self-assessment/$nino/payments", method = GET, rel = LIST_PAYMENTS)
   private val listChargesHateoasLink = Link(href = s"/accounts/self-assessment/$nino/charges", method = GET, rel = LIST_CHARGES)
 
-  private val hateoasResponse = RetrieveTransactionsResponse(
+  private val hateoasResponse = ListTransactionsResponse(
     Seq(
       HateoasWrapper(
         payload = chargeTransactionItemModel,
@@ -189,7 +190,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
           .returns(HateoasWrapper(hateoasResponse,
             Seq(transactionsHateoasLink, listPaymentsHateoasLink, listChargesHateoasLink)))
 
-        val result: Future[Result] = controller.retrieveTransactions(nino, Some(from), Some(to))(fakeGetRequest)
+        val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdJson
@@ -208,7 +209,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveTransactions(nino, Some(from), Some(to))(fakeGetRequest)
+            val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -246,7 +247,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
             .listTransactions(parsedRequest)
             .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-          val result: Future[Result] = controller.retrieveTransactions(nino, Some(from), Some(to))(fakeGetRequest)
+          val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)

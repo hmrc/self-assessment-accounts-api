@@ -47,11 +47,11 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "RetrieveTransactionsController",
-      endpointName = "retrieveTransactions"
+      controllerName = "ListTransactionsController",
+      endpointName = "listTransactions"
     )
 
-  def retrieveTransactions(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async{
+  def listTransactions(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async{
     implicit request =>
       val rawRequest: ListTransactionsRawRequest = ListTransactionsRawRequest (nino, from, to)
       val result =
