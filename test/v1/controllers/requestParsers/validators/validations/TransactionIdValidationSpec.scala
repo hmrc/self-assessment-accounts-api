@@ -25,7 +25,7 @@ class TransactionIdValidationSpec extends UnitSpec with JsonErrorValidators {
   "validate" should {
     "return no errors" when {
       "when a valid transaction ID is supplied" in {
-        val validationResult = TransactionIdValidation.validate("aChargeId")
+        val validationResult = TransactionIdValidation.validate("AX")
         validationResult.isEmpty shouldBe true
       }
     }

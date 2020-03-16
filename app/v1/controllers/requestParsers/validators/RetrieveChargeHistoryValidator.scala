@@ -27,7 +27,7 @@ class RetrieveChargeHistoryValidator extends Validator[RetrieveChargeHistoryRawR
   private def parameterFormatValidation: RetrieveChargeHistoryRawRequest => List[List[MtdError]] = (data: RetrieveChargeHistoryRawRequest) => {
     List(
       NinoValidation.validate(data.nino),
-      TransactionIdValidation.validate(data.chargeId)
+      TransactionIdValidation.validate(data.transactionId)
     )
   }
   override def validate(data: RetrieveChargeHistoryRawRequest): List[MtdError] = {

@@ -34,11 +34,11 @@ object RetrieveChargeHistoryResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: RetrieveChargeHistoryHateoasData): Seq[Link] = {
       import data._
       Seq(
-        retrieveChargeHistory(appConfig, nino, chargeId, isSelf = true),
+        retrieveChargeHistory(appConfig, nino, transactionId, isSelf = true),
         listTransactions(appConfig, nino, isSelf = false)
       )
     }
   }
 }
 
-case class RetrieveChargeHistoryHateoasData(nino: String, chargeId: String) extends HateoasData
+case class RetrieveChargeHistoryHateoasData(nino: String, transactionId: String) extends HateoasData

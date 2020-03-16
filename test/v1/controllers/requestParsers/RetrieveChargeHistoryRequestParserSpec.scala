@@ -20,7 +20,7 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.fixtures.RetrieveChargeHistoryFixture._
 import v1.mocks.validators.MockRetrieveChargeHistoryValidator
-import v1.models.errors.{BadRequestError, ChargeIdFormatError, ErrorWrapper, NinoFormatError}
+import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
 
 class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
@@ -38,7 +38,7 @@ class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
           .returns(Nil)
 
         parser.parseRequest(validRetrieveChargeHistoryRawRequest) shouldBe
-          Right(RetrieveChargeHistoryParsedRequest(Nino(validNino), validChargeId))
+          Right(RetrieveChargeHistoryParsedRequest(Nino(validNino), validTransactionId))
       }
     }
   }
@@ -52,20 +52,20 @@ class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
         Left(ErrorWrapper(None, NinoFormatError, None))
     }
     "an invalid charge id is provided" in new Test{
-      MockRetrieveChargeHistoryValidator.validate(invalidRetrieveChargeHistoryRawRequestInvalidChargeId)
-        .returns(List(ChargeIdFormatError))
+      MockRetrieveChargeHistoryValidator.validate(invalidRetrieveChargeHistoryRawRequestInvalidTransactionId)
+        .returns(List(TransactionIdFormatError))
 
-      parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidChargeId) shouldBe
-        Left(ErrorWrapper(None, ChargeIdFormatError, None))
+      parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidTransactionId) shouldBe
+        Left(ErrorWrapper(None, TransactionIdFormatError, None))
     }
   }
   "return multiple errors" when {
     "an invalid nino and invalid charge id are provided" in new Test{
-      MockRetrieveChargeHistoryValidator.validate(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndChargeId)
-        .returns(List(NinoFormatError, ChargeIdFormatError))
+      MockRetrieveChargeHistoryValidator.validate(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId)
+        .returns(List(NinoFormatError, TransactionIdFormatError))
 
-      parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndChargeId) shouldBe
-        Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, ChargeIdFormatError))))
+      parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId) shouldBe
+        Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TransactionIdFormatError))))
     }
   }
 }

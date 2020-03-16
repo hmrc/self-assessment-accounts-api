@@ -78,7 +78,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
   private val transactionsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = RETRIEVE_TRANSACTIONS)
 
   private val hateoasResponse = ListChargesResponse(
-    Seq(HateoasWrapper(charge1, Seq(chargeHateoasLink1)), HateoasWrapper(charge2, Seq(chargeHateoasLink2))))
+    Seq(HateoasWrapper(fullChargeModel, Seq(chargeHateoasLink1)), HateoasWrapper(fullChargeModel, Seq(chargeHateoasLink2))))
 
   "retrieveList" should {
     "return a valid charges response" when {

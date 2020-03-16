@@ -33,13 +33,13 @@ import scala.concurrent.Future
 class RetrieveChargeHistoryServiceSpec extends UnitSpec {
 
   private val nino = Nino("AA123456A")
-  private val chargeId = "anId"
+  "anId"
   private val correlationId = "X-123"
 
   private val requestData: RetrieveChargeHistoryParsedRequest =
     RetrieveChargeHistoryParsedRequest(
       nino = nino,
-      chargeId = chargeId
+      transactionId = "anId"
     )
 
   trait Test extends MockRetrieveChargeHistoryConnector {

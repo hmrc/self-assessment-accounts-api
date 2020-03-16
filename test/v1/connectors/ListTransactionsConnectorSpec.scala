@@ -24,7 +24,7 @@ import v1.models.outcomes.ResponseWrapper
 import scala.concurrent.Future
 
 class ListTransactionsConnectorSpec extends ConnectorSpec {
-  val chargeId = "anId"
+  val transactionId = "anId"
 
   val queryParams: Seq[(String, String)] = Seq(
     "dateFrom" -> dateFrom,
