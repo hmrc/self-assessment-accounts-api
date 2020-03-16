@@ -6,15 +6,15 @@
       "taxPeriodFrom": "2019-04-06",
       "taxPeriodTo": "2020-04-05",
       "originalAmount": 100.45,
-      "outstandingAmount": 10.45,
+      "outstandingAmount": 0.00,
       "dueDate": "2021-01-31",
       "subItems": [
         {
           "subItemId": "001",
-          "amount": 100.11,
+          "amount": 110.56,
           "clearingDate": "2021-01-31",
           "clearingReason": "Incoming payment",
-          "paymentAmount": 100.11,
+          "paymentAmount": 110.56,
           "paymentMethod": "BACS RECEIPTS",
           "paymentId": "P0101180112-000005"
         },
