@@ -23,7 +23,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveChargeHistoryFixture
-import v1.models.errors.{ChargeIdFormatError, DownstreamError, MtdError, NinoFormatError, NotFoundError}
+import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
@@ -125,7 +125,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_DOCUMENT_ID", BAD_REQUEST, ChargeIdFormatError),
+          (BAD_REQUEST, "FORMAT_TRANSACTION_ID", BAD_REQUEST, TransactionIdFormatError),
           (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
           (BAD_REQUEST, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)

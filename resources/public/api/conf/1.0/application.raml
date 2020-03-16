@@ -50,9 +50,9 @@ uses:
         get: !include retrieveTransactionDetails.raml
     /charges:
       get: !include listCharges.raml
-      /{chargeId}:
+      /{transactionId}:
         uriParameters:
-          chargeId:
+          transactionId:
             description: "A unique identifier for the charge. <br><br>  Must conform to the regular expression <br/> `^[0-9A-Za-z]{1,12}$`"
             type: string
             example: A3948472839A

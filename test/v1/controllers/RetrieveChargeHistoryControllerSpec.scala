@@ -130,7 +130,7 @@ class RetrieveChargeHistoryControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (ChargeIdFormatError, BAD_REQUEST)
+          (TransactionIdFormatError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -158,7 +158,7 @@ class RetrieveChargeHistoryControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (ChargeIdFormatError, BAD_REQUEST),
+          (TransactionIdFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

@@ -51,7 +51,7 @@ class RetrieveChargeHistoryService @Inject()(connector: RetrieveChargeHistoryCon
       "INVALID_IDTYPE" -> DownstreamError,
       "INVALID_IDVALUE" -> NinoFormatError,
       "INVALID_REGIME_TYPE" -> DownstreamError,
-      "INVALID_DOCUMENT_ID" -> ChargeIdFormatError,
+      "FORMAT_TRANSACTION_ID" -> TransactionIdFormatError,
       "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
