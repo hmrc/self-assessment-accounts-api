@@ -19,6 +19,7 @@ package v1.models.audit
 import play.api.libs.json.Json
 import support.UnitSpec
 import v1.fixtures.audit.GenericAuditDetailFixture._
+import v1.fixtures.audit.AuditResponseFixture._
 
 class AuditDetailSpec extends UnitSpec {
 
@@ -26,6 +27,7 @@ class AuditDetailSpec extends UnitSpec {
     "written to JSON (success)" should {
       "produce the expected JsObject" in {
         Json.toJson(genericAuditDetailModelSuccess) shouldBe genericAuditDetailJsonSuccess
+        Json.toJson(AuditDetail(userDetails, nino, correlationId, auditResponseModelWithBody)) shouldBe genericAuditDetailJsonSuccess
       }
     }
 
