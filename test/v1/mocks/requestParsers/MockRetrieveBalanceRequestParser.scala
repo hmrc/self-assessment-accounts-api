@@ -27,8 +27,9 @@ trait MockRetrieveBalanceRequestParser extends MockFactory {
   val mockRetrieveBalanceRequestParser: RetrieveBalanceRequestParser = mock[RetrieveBalanceRequestParser]
 
   object MockRetrieveBalanceRequestParser {
+
     def parse(data: RetrieveBalanceRawRequest): CallHandler[Either[ErrorWrapper, RetrieveBalanceParsedRequest]] = {
-      ((mockRetrieveBalanceRequestParser.parseRequest(_: RetrieveBalanceRawRequest)).expects(data))
+      (mockRetrieveBalanceRequestParser.parseRequest(_: RetrieveBalanceRawRequest)).expects(data)
     }
   }
 

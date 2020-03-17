@@ -27,6 +27,7 @@ trait MockRetrieveAllocationsRequestParser extends MockFactory {
   val mockRetrieveAllocationsRequestParser: RetrieveAllocationsRequestParser = mock[RetrieveAllocationsRequestParser]
 
   object MockRetrieveAllocationsRequestParser {
+
     def parse(data: RetrieveAllocationsRawRequest): CallHandler[Either[ErrorWrapper, RetrieveAllocationsParsedRequest]] = {
       (mockRetrieveAllocationsRequestParser.parseRequest(_: RetrieveAllocationsRawRequest)).expects(data)
     }
