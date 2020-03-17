@@ -16,7 +16,7 @@
 
 package v1.fixtures.retrieveAllocations
 
-import play.api.libs.json.{JsArray, JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
@@ -66,24 +66,47 @@ object RetrieveAllocationsResponseFixture {
     """.stripMargin
   )
 
-  def mtdJsonWithHateoas(nino: String, paymentId: String): JsValue = mtdJson.as[JsObject] ++ Json.obj(
-    "links" -> JsArray(
-      Seq(
-        Json.obj(
-          "href" -> s"/accounts/self-assessment/$nino/payments/$paymentId",
-          "method" -> "GET",
-          "rel" -> "self"
-        ),
-        Json.obj(
-          "href" -> s"/accounts/self-assessment/$nino/payments",
-          "method" -> "GET",
-          "rel" -> "list-payments"
-        )
-      )
-    )
+  val mtdJsonWithHateoas: JsValue =
+    Json.parse(
+      s"""
+        |{
+        |   "amount": 1000.00,
+        |   "method": "buttons",
+        |   "transactionDate": "a date",
+        |   "allocations": [
+        |   {
+        |     "id": "someID",
+        |     "from": "another date",
+        |     "to": "an even later date",
+        |     "type": "some type thing",
+        |     "amount": 600.00,
+        |     "clearedAmount": 100.00,
+        |     "links" : [
+        |       {
+        |         "href": "/accounts/self-assessment/AA123456A/charges/someID",
+        |         "method": "GET",
+        |         "rel": "retrieve-charge-history"
+        |       },
+        |       {
+        |         "href": "/accounts/self-assessment/AA123456A/transactions/someID",
+        |         "method": "GET",
+        |         "rel": "retrieve-transaction-details"
+        |       }
+        |     ]
+        |   }
+        | ],
+        | "links" : [
+        |   {
+        |     "href": "/accounts/self-assessment/AA123456A/payments/aLot-anItem",
+        |     "method": "GET",
+        |     "rel": "self"
+        |   }
+        | ]
+        |}
+      """.stripMargin
   )
 
-  val paymentDetails: RetrieveAllocationsResponse =
+  val paymentDetails: RetrieveAllocationsResponse[AllocationDetail] =
     RetrieveAllocationsResponse(
       Some(1000.00),
       Some("buttons"),

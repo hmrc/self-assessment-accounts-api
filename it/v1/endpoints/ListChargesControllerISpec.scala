@@ -53,9 +53,7 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the list charges endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made" in new Test {
 
         val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get, "type" -> "charge")
@@ -71,7 +69,7 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdResponse(nino = "AA123456A")
+        response.json shouldBe mtdResponse
       }
     }
 

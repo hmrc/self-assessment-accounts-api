@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -28,7 +27,7 @@ import v1.mocks.requestParsers.MockListChargesRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockListChargesService, MockMtdIdLookupService}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType.{RETRIEVE_CHARGE_HISTORY, RETRIEVE_TRANSACTIONS, SELF}
+import v1.models.hateoas.RelType.{RETRIEVE_CHARGE_HISTORY, RETRIEVE_TRANSACTIONS, SELF, RETRIEVE_TRANSACTION_DETAILS}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.{ListChargesParsedRequest, ListChargesRawRequest}
@@ -43,7 +42,6 @@ class ListChargesControllerSpec extends ControllerBaseSpec
   with MockListChargesRequestParser
   with MockListChargesService
   with MockHateoasFactory
-  with MockAppConfig
   with HateoasLinks {
 
   trait Test {
@@ -69,16 +67,63 @@ class ListChargesControllerSpec extends ControllerBaseSpec
   private val rawRequest = ListChargesRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListChargesParsedRequest(Nino(nino), from, to)
 
-  private val chargeHateoasLink1       =
-    Link(href = "/accounts/self-assessment/AA123456A/charges/1234567890AB", method = GET, rel = RETRIEVE_CHARGE_HISTORY)
-  private val chargeHateoasLink2       =
-    Link(href = "/accounts/self-assessment/AA123456A/charges/1234567890AB", method = GET, rel = RETRIEVE_CHARGE_HISTORY)
+  private val chargeHateoasLink1 =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/charges/1234567890AB",
+      method = GET,
+      rel = RETRIEVE_CHARGE_HISTORY
+    )
 
-  private val listChargesHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/charges", method = GET, rel = SELF)
-  private val transactionsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = RETRIEVE_TRANSACTIONS)
+  private val chargeHateoasLink2 =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/charges/1234567890AB",
+      method = GET,
+      rel = RETRIEVE_CHARGE_HISTORY
+    )
+
+  private val transactionDetailHateoasLink1 =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
+      method = GET,
+      rel = RETRIEVE_TRANSACTION_DETAILS
+    )
+
+  private val transactionDetailHateoasLink2 =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
+      method = GET, rel = RETRIEVE_TRANSACTION_DETAILS
+    )
+
+  private val listChargesHateoasLink =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/charges?from=2018-10-01&to=2019-10-01",
+      method = GET,
+      rel = SELF
+    )
+
+  private val listTransactionsHateoasLink =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/transactions?from=2018-10-01&to=2019-10-01",
+      method = GET,
+      rel = RETRIEVE_TRANSACTIONS
+    )
 
   private val hateoasResponse = ListChargesResponse(
-    Seq(HateoasWrapper(fullChargeModel, Seq(chargeHateoasLink1)), HateoasWrapper(fullChargeModel, Seq(chargeHateoasLink2))))
+    Seq(
+      HateoasWrapper(fullChargeModel,
+        Seq(
+          chargeHateoasLink1,
+          transactionDetailHateoasLink1
+        )
+      ),
+      HateoasWrapper(fullChargeModel,
+        Seq(
+          chargeHateoasLink2,
+          transactionDetailHateoasLink2
+        )
+      )
+    )
+  )
 
   "retrieveList" should {
     "return a valid charges response" when {
@@ -93,13 +138,13 @@ class ListChargesControllerSpec extends ControllerBaseSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponseObj))))
 
         MockHateoasFactory
-          .wrapList(mtdResponseObj, ListChargesHateoasData(nino))
-          .returns(HateoasWrapper(hateoasResponse, Seq(listChargesHateoasLink, transactionsHateoasLink)))
+          .wrapList(mtdResponseObj, ListChargesHateoasData(nino, from, to))
+          .returns(HateoasWrapper(hateoasResponse, Seq(listChargesHateoasLink, listTransactionsHateoasLink)))
 
         val result: Future[Result] = controller.listCharges(nino, Some(from), Some(to))(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse(nino = "AA123456A")
+        contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
     }

@@ -16,39 +16,60 @@
 
 package v1.models.response.retrieveAllocations
 
+import cats.Functor
 import config.AppConfig
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads, Writes}
-import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import play.api.libs.json._
+import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 case class RetrieveAllocationsResponse[I](amount: Option[BigDecimal],
-                                       method: Option[String],
-                                       transactionDate: Option[String],
-                                       allocations: Seq[I]) // TODO: This also needs wrapping in HATEOAS
+                                          method: Option[String],
+                                          transactionDate: Option[String],
+                                          allocations: Seq[I])
 
 object RetrieveAllocationsResponse extends HateoasLinks {
-
-  implicit def writes[I: Writes]: OWrites[RetrieveAllocationsResponse[I]] = Json.writes[RetrieveAllocationsResponse[I]]
 
   implicit def reads[I: Reads]: Reads[RetrieveAllocationsResponse[I]] = (
     (JsPath \ "paymentDetails" \\ "paymentAmount").readNullable[BigDecimal] and
       (JsPath \ "paymentDetails" \\ "paymentMethod").readNullable[String] and
       (JsPath \ "paymentDetails" \\ "valueDate").readNullable[String] and
-      (JsPath \ "paymentDetails").readNullable[Seq[I]]
+      (JsPath \ "paymentDetails" \\ "sapClearingDocsDetails").readNullable[Seq[I]]
+        .map(_.map(_.filterNot(item => item == AllocationDetail.emptyAllocation)))
         .map {
           case Some(notEmpty) => notEmpty
           case _ => Seq.empty[I]
         }
-    ) (RetrieveAllocationsResponse.apply _)
+    ) (RetrieveAllocationsResponse.apply(_, _, _, _))
 
-  implicit object RetrieveAllocationsLinksFactory extends HateoasLinksFactory[RetrieveAllocationsResponse, RetrieveAllocationsHateoasData] {
+  implicit def writes[I: Writes]: OWrites[RetrieveAllocationsResponse[I]] =
+    Json.writes[RetrieveAllocationsResponse[I]]
+
+  implicit object LinksFactory extends HateoasListLinksFactory[RetrieveAllocationsResponse, AllocationDetail, RetrieveAllocationsHateoasData] {
+
+    override def itemLinks(appConfig: AppConfig, data: RetrieveAllocationsHateoasData, item: AllocationDetail): Seq[Link] =
+      Seq(
+        retrieveChargeHistory(appConfig, data.nino, item.id.getOrElse(""), isSelf = false),
+        retrieveTransactionDetails(appConfig, data.nino, item.id.getOrElse(""), isSelf = false)
+      )
+
     override def links(appConfig: AppConfig, data: RetrieveAllocationsHateoasData): Seq[Link] = {
       import data._
       Seq(
         retrievePaymentAllocations(appConfig, nino, paymentId, isSelf = true)
       )
     }
+  }
+
+  implicit object ResponseFunctor extends Functor[RetrieveAllocationsResponse] {
+    override def map[A, B](fa: RetrieveAllocationsResponse[A])(f: A => B): RetrieveAllocationsResponse[B] =
+      RetrieveAllocationsResponse(
+        amount = fa.amount,
+        method = fa.method,
+        transactionDate = fa.transactionDate,
+        allocations = fa.allocations.map(f)
+      )
   }
 
 }

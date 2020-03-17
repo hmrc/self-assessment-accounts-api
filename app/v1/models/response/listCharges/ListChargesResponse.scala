@@ -22,7 +22,6 @@ import play.api.libs.json._
 import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-
 case class ListChargesResponse[I](charges: Seq[I])
 
 object ListChargesResponse extends HateoasLinks {
@@ -54,6 +53,7 @@ object ListChargesResponse extends HateoasLinks {
     override def map[A, B](fa: ListChargesResponse[A])(f: A => B): ListChargesResponse[B] =
       ListChargesResponse(fa.charges.map(f))
   }
+
 }
 
 case class ListChargesHateoasData(nino: String, from: String, to: String) extends HateoasData

@@ -30,8 +30,6 @@ case class RetrieveBalanceResponse(overdueAmount: Option[BigDecimal],
 
 object RetrieveBalanceResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[RetrieveBalanceResponse] = Json.writes[RetrieveBalanceResponse]
-
   implicit val reads: Reads[RetrieveBalanceResponse] = (
     (JsPath \ "overdueAmount").readNullable[BigDecimal] and
       (JsPath \ "payableAmount").read[BigDecimal] and
@@ -40,9 +38,14 @@ object RetrieveBalanceResponse extends HateoasLinks {
       (JsPath \ "pendingChargeDueDate").readNullable[String]
     ) (RetrieveBalanceResponse.apply _)
 
+  implicit val writes: OWrites[RetrieveBalanceResponse] =
+    Json.writes[RetrieveBalanceResponse]
+
   implicit object RetrieveBalanceLinksFactory extends HateoasLinksFactory[RetrieveBalanceResponse, RetrieveBalanceHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveBalanceHateoasData): Seq[Link] =
-      Seq(retrieveBalance(appConfig, data.nino, isSelf = true))
+      Seq(
+        retrieveBalance(appConfig, data.nino, isSelf = true)
+      )
   }
 
 }

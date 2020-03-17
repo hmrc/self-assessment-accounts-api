@@ -58,7 +58,7 @@ class RetrieveAllocationsServiceSpec extends UnitSpec {
     "service call successsful" must {
       "return mapped result" in new Test {
 
-        val connectorResponse: RetrieveAllocationsResponse =
+        val connectorResponse: RetrieveAllocationsResponse[AllocationDetail] =
           RetrieveAllocationsResponse(
             amount = Some(100.5),
             method = Some("Beanz"),

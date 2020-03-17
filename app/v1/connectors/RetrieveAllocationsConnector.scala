@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +32,7 @@ class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
 
   def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveAllocationsResponse]] = {
+    ec: ExecutionContext): Future[DesOutcome[RetrieveAllocationsResponse[AllocationDetail]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -44,7 +45,7 @@ class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
       )
 
     get(
-      uri = DesUri[RetrieveAllocationsResponse](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
+      uri = DesUri[RetrieveAllocationsResponse[AllocationDetail]](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
       queryParams = queryParams
     )
   }

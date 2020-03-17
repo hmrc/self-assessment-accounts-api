@@ -19,7 +19,6 @@ package v1.models.response.listTransaction
 import cats.Functor
 import config.AppConfig
 import play.api.libs.json._
-import v1.controllers.requestParsers.validators.validations.PaymentIdValidation
 import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
@@ -37,18 +36,18 @@ object ListTransactionsResponse extends HateoasLinks {
 
     override def itemLinks(appConfig: AppConfig, data: ListTransactionsHateoasData, item: TransactionItem): Seq[Link] = {
       import data.nino
-      val id = item.id.getOrElse("")
-      val isPayment = PaymentIdValidation.validate(id) == Nil
 
-      if (isPayment) {
+      val transactionId = item.transactionId.getOrElse("")
+
+      if (item.paymentId.nonEmpty) {
         Seq(
-          retrievePaymentAllocations(appConfig, nino, id, isSelf = false),
-          retrieveTransactionDetails(appConfig, nino, id, isSelf = false) // TODO: id needs to be replaced by transactionId
+          retrievePaymentAllocations(appConfig, nino, item.paymentId.get, isSelf = false),
+          retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = false)
         )
       } else {
         Seq(
-          retrieveChargeHistory(appConfig, nino, id, isSelf = false),
-          retrieveTransactionDetails(appConfig, nino, id, isSelf = false)
+          retrieveChargeHistory(appConfig, nino, transactionId, isSelf = false),
+          retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = false)
         )
       }
     }

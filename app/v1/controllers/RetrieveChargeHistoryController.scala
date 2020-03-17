@@ -60,11 +60,14 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId)).asRight[ErrorWrapper])
+            hateoasFactory
+              .wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId))
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
+              s"Success response received with correlationId: ${serviceResponse.correlationId}"
+          )
 
           auditSubmission(
             AuditDetail(

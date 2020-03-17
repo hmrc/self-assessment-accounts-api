@@ -79,9 +79,9 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  val paymentDetails: RetrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
+  val paymentDetails: RetrieveAllocationsResponse[AllocationDetail] = RetrieveAllocationsResponseFixture.paymentDetails
 
-  val paymentDetailsWithoutAllocations: RetrieveAllocationsResponse =
+  val paymentDetailsWithoutAllocations: RetrieveAllocationsResponse[AllocationDetail] =
     RetrieveAllocationsResponse(
       Some(1000.00),
       Some("buttons"),
@@ -106,25 +106,25 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
   "RetrieveAllocationsResponse" when {
     "read from valid JSON" should {
       "return the expected RetrieveAllocationResponse object" in {
-        desJson.as[RetrieveAllocationsResponse] shouldBe paymentDetails
+        desJson.as[RetrieveAllocationsResponse[AllocationDetail]] shouldBe paymentDetails
       }
     }
 
     "read from invalid JSON" should {
       "return a JsError" in {
-        invalidDesJson.validate[RetrieveAllocationsResponse] shouldBe a[JsError]
+        invalidDesJson.validate[RetrieveAllocationsResponse[AllocationDetail]] shouldBe a[JsError]
       }
     }
 
     "read from valid JSON without allocations" should {
       "return the expected object" in {
-        desJsonWithoutAllocations.as[RetrieveAllocationsResponse] shouldBe paymentDetailsWithoutAllocations
+        desJsonWithoutAllocations.as[RetrieveAllocationsResponse[AllocationDetail]] shouldBe paymentDetailsWithoutAllocations
       }
     }
 
     "read from valid JSON with empty allocations" should {
       "return the expected object" in {
-        desJsonWithEmptyAllocations.as[RetrieveAllocationsResponse] shouldBe paymentDetailsWithoutAllocations
+        desJsonWithEmptyAllocations.as[RetrieveAllocationsResponse[AllocationDetail]] shouldBe paymentDetailsWithoutAllocations
       }
     }
 

@@ -56,7 +56,7 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveAllocations(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(serviceResponse.responseData, RetrieveAllocationsHateoasData(nino, paymentId)).asRight[ErrorWrapper])
+            hateoasFactory.wrapList(serviceResponse.responseData, RetrieveAllocationsHateoasData(nino, paymentId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

@@ -53,7 +53,7 @@ class ListChargesController @Inject()(val authService: EnrolmentsAuthService,
         serviceResponse <- EitherT(service.list(parsedRequest))
         vendorResponse <- EitherT.fromEither[Future](
           hateoasFactory
-            .wrapList(serviceResponse.responseData, ListChargesHateoasData(nino))
+            .wrapList(serviceResponse.responseData, ListChargesHateoasData(nino, parsedRequest.from, parsedRequest.to))
             .asRight[ErrorWrapper]
         )
       } yield {

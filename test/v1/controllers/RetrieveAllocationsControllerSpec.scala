@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -27,9 +26,12 @@ import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
 import v1.models.errors._
-import v1.models.hateoas.HateoasWrapper
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.hateoas.Method.GET
+import v1.models.hateoas.RelType._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 import v1.models.response.retrieveAllocations.RetrieveAllocationsHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,15 +43,13 @@ class RetrieveAllocationsControllerSpec
     with MockMtdIdLookupService
     with MockRetrieveAllocationsService
     with MockHateoasFactory
-    with MockAppConfig
     with MockRetrieveAllocationsRequestParser
     with HateoasLinks {
 
-
   private val nino = "AA123456A"
-  private val paymentId = "anId-anotherId"
-  private val paymentLot = "anId"
-  private val paymentLotItem = "anotherId"
+  private val paymentId = "aLot-anItem"
+  private val paymentLot = "aLot"
+  private val paymentLotItem = "anItem"
   private val correlationId = "X-123"
 
   private val rawRequest: RetrieveAllocationsRawRequest =
@@ -65,8 +65,49 @@ class RetrieveAllocationsControllerSpec
       paymentLotItem = paymentLotItem
     )
 
+  private val paymentAllocationsLink =
+    Link(
+      href = s"/accounts/self-assessment/$nino/payments/$paymentId",
+      method = GET,
+      rel = SELF
+    )
+
+  private val chargeHateoasLink =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/charges/someID",
+      method = GET,
+      rel = RETRIEVE_CHARGE_HISTORY
+    )
+
+  private val transactionDetailHateoasLink =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/transactions/someID",
+      method = GET,
+      rel = RETRIEVE_TRANSACTION_DETAILS
+    )
+
   private val retrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
-  private val mtdResponse = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas(nino, paymentId)
+  private val mtdResponse = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas
+
+  private val hateoasResponse =
+    retrieveAllocationsResponse.copy(
+      allocations = Seq(
+        HateoasWrapper(
+          AllocationDetail(
+            Some("someID"),
+            Some("another date"),
+            Some("an even later date"),
+            Some("some type thing"),
+            Some(600.00),
+            Some(100.00)
+          ),
+          Seq(
+            chargeHateoasLink,
+            transactionDetailHateoasLink
+          )
+        )
+      )
+    )
 
   trait Test {
     val hc = HeaderCarrier()
@@ -88,8 +129,6 @@ class RetrieveAllocationsControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockedAppConfig.apiGatewayContext returns "accounts/self-assessment" anyNumberOfTimes()
-
         MockRetrieveAllocationsRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
@@ -99,9 +138,8 @@ class RetrieveAllocationsControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))))
 
         MockHateoasFactory
-          .wrap(retrieveAllocationsResponse, RetrieveAllocationsHateoasData(nino, paymentId))
-          .returns(HateoasWrapper(retrieveAllocationsResponse, Seq(retrievePaymentAllocations(mockAppConfig, nino, paymentId, isSelf = true),
-            listPayments(mockAppConfig, nino, isSelf = false))))
+          .wrapList(retrieveAllocationsResponse, RetrieveAllocationsHateoasData(nino, paymentId))
+          .returns(HateoasWrapper(hateoasResponse, Seq(paymentAllocationsLink)))
 
         val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
 

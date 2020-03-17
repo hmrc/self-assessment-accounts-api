@@ -71,7 +71,7 @@ object ListChargesFixture {
        |{
        | "transactions" : [$fullDesChargeResponse]
        |}
-       |""".stripMargin
+      """.stripMargin
   )
 
   val listChargesDesJson: JsValue = Json.parse(
@@ -79,14 +79,15 @@ object ListChargesFixture {
       |{
       |  "transactions": [$fullDesChargeResponse]
       |}
-      |""".stripMargin)
+      """.stripMargin
+  )
 
   val fullDesListChargesMultipleResponse: JsValue = Json.parse(
     s"""
        |{
        | "transactions" : [$fullDesChargeResponse, $fullDesChargeResponse]
        |}
-       |""".stripMargin
+      """.stripMargin
   )
 
   val minimalDesListChargesResponse: JsValue = Json.parse(
@@ -94,7 +95,7 @@ object ListChargesFixture {
       |{
       | "transactions" : []
       |}
-      |""".stripMargin
+    """.stripMargin
   )
 
   val invalidDesListChargesResponse: JsValue = Json.parse(
@@ -102,7 +103,7 @@ object ListChargesFixture {
       |{
       |
       |}
-      |""".stripMargin
+    """.stripMargin
   )
 
   val fullListSingleChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullChargeModel))
@@ -111,49 +112,59 @@ object ListChargesFixture {
 
   val minimalListChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq.empty[Charge])
 
-  def mtdResponse(nino: String = "AA999999A", transactionId: String = "1234567890AB"): JsValue = Json.parse(
+  val mtdResponse: JsValue = Json.parse(
     s"""
        |{
        |  "charges":[
        |    {
        |      "taxYear":"2019-20",
-       |      "transactionId":"$transactionId",
+       |      "transactionId":"1234567890AB",
        |      "transactionDate":"2020-02-01",
        |      "type":"Charge Type",
        |      "totalAmount":11.23,
        |      "outstandingAmount":4.56,
        |      "links": [
        |        {
-       |          "href": "/accounts/self-assessment/$nino/charges/$transactionId",
+       |          "href": "/accounts/self-assessment/AA123456A/charges/1234567890AB",
        |          "method": "GET",
        |          "rel": "retrieve-charge-history"
+       |        },
+       |        {
+       |          "href": "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
+       |          "method": "GET",
+       |          "rel": "retrieve-transaction-details"
        |        }
        |      ]
        |    },
        |    {
        |      "taxYear":"2019-20",
-       |      "transactionId":"$transactionId",
+       |      "transactionId":"1234567890AB",
        |      "transactionDate":"2020-02-01",
        |      "type":"Charge Type",
        |      "totalAmount":11.23,
        |      "outstandingAmount":4.56,
        |      "links": [
        |        {
-       |          "href": "/accounts/self-assessment/$nino/charges/$transactionId",
+       |          "href": "/accounts/self-assessment/AA123456A/charges/1234567890AB",
        |          "method": "GET",
        |          "rel": "retrieve-charge-history"
+       |        },
+       |        {
+       |          "href": "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
+       |          "method": "GET",
+       |          "rel": "retrieve-transaction-details"
        |        }
        |      ]
        |    }
        |  ],
        |  "links": [
        |    {
-       |      "href": "/accounts/self-assessment/$nino/charges",
+       |      "href": "/accounts/self-assessment/AA123456A/charges?from=2018-10-01&to=2019-10-01",
        |      "method": "GET",
        |      "rel": "self"
        |    },
        |    {
-       |      "href": "/accounts/self-assessment/$nino/transactions",
+       |      "href": "/accounts/self-assessment/AA123456A/transactions?from=2018-10-01&to=2019-10-01",
        |      "method": "GET",
        |      "rel": "retrieve-transactions"
        |    }
