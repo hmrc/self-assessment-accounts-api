@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.ListTransactionsValidator
 import v1.models.errors.MtdError
 import v1.models.request.listTransactions.ListTransactionsRawRequest
 
-class MockListTransactionsValidator extends MockFactory {
+trait MockListTransactionsValidator extends MockFactory {
 
   val mockValidator: ListTransactionsValidator = mock[ListTransactionsValidator]
 

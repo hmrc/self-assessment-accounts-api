@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.RetrieveChargeHistoryValidator
 import v1.models.errors.MtdError
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
 
-class MockRetrieveChargeHistoryValidator extends MockFactory {
+trait MockRetrieveChargeHistoryValidator extends MockFactory {
 
   val mockValidator: RetrieveChargeHistoryValidator = mock[RetrieveChargeHistoryValidator]
 

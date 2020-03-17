@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.RetrieveTransactionDetailsValida
 import v1.models.errors.MtdError
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsRawRequest
 
-class MockRetrieveTransactionDetailsValidator extends MockFactory {
+trait MockRetrieveTransactionDetailsValidator extends MockFactory {
 
   val mockValidator: RetrieveTransactionDetailsValidator = mock[RetrieveTransactionDetailsValidator]
 
