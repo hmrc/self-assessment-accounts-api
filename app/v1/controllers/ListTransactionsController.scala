@@ -16,8 +16,8 @@
 
 package v1.controllers
 
-import cats.implicits._
 import cats.data.EitherT
+import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
@@ -51,9 +51,9 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
       endpointName = "listTransactions"
     )
 
-  def listTransactions(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async{
+  def listTransactions(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async {
     implicit request =>
-      val rawRequest: ListTransactionsRawRequest = ListTransactionsRawRequest (nino, from, to)
+      val rawRequest: ListTransactionsRawRequest = ListTransactionsRawRequest(nino, from, to)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))

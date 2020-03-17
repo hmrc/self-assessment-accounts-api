@@ -25,7 +25,6 @@ import v1.models.hateoas.{HateoasData, Link}
 
 case class ListTransactionsResponse[I](transactions: Seq[I])
 
-
 object ListTransactionsResponse extends HateoasLinks {
 
   implicit def reads[I: Reads]: Reads[ListTransactionsResponse[I]] =
@@ -37,8 +36,8 @@ object ListTransactionsResponse extends HateoasLinks {
   implicit object LinksFactory extends HateoasListLinksFactory[ListTransactionsResponse, TransactionItem, ListTransactionsHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: ListTransactionsHateoasData, item: TransactionItem): Seq[Link] = {
-      val id = item.paymentId.getOrElse("")
 
+      val id = item.paymentId.getOrElse("")
       val isPayment = PaymentIdValidation.validate(id) == Nil
 
       if (isPayment) {
@@ -63,5 +62,3 @@ object ListTransactionsResponse extends HateoasLinks {
 }
 
 case class ListTransactionsHateoasData(nino: String) extends HateoasData
-
-
