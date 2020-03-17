@@ -33,8 +33,8 @@ trait MockListTransactionsService extends MockFactory {
   val mockListTransactionsService: ListTransactionsService = mock[ListTransactionsService]
 
   object MockListTransactionsService {
-    def retrieveTransactions(request: ListTransactionsParsedRequest):
 
+    def listTransactions(request: ListTransactionsParsedRequest):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]]] = {
       (mockListTransactionsService
         .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))

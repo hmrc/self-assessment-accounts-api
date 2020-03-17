@@ -24,7 +24,6 @@ import v1.models.request.listTransactions.ListTransactionsRawRequest
 
 class MockListTransactionsValidator extends MockFactory {
 
-
   val mockValidator: ListTransactionsValidator = mock[ListTransactionsValidator]
 
   object MockListTransactionsValidator {
