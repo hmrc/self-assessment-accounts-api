@@ -40,7 +40,7 @@ uses:
     /balance:
       get: !include retrieveBalance.raml
     /transactions:
-      get: !include retrieveTransactions.raml
+      get: !include listTransactions.raml
       /{transactionId}:
         uriParameters:
           transactionId:

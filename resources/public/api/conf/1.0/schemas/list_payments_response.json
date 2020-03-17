@@ -91,7 +91,7 @@
             "type": "string",
             "enum": [
               "self",
-              "retrieve-transactions"
+              "list-transactions"
             ]
           },
           "method": {
