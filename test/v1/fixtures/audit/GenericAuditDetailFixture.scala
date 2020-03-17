@@ -32,13 +32,13 @@ object GenericAuditDetailFixture {
       userType = userType,
       agentReferenceNumber = agentReferenceNumber,
       nino = nino,
-      `X-CorrelationId` = correlationId,
-      auditResponse = auditResponseModelWithBody
+      response = auditResponseModelWithBody,
+      `X-CorrelationId` = correlationId
     )
 
   val genericAuditDetailModelError: GenericAuditDetail =
     genericAuditDetailModelSuccess.copy(
-      auditResponse = auditResponseModelWithErrors
+      response = auditResponseModelWithErrors
     )
 
   val genericAuditDetailJsonSuccess: JsValue = Json.parse(

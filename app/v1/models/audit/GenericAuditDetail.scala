@@ -16,7 +16,7 @@
 
 package v1.models.audit
 
-import play.api.libs.json.{JsValue, Json, OWrites}
+import play.api.libs.json.{Json, OWrites}
 import v1.models.auth.UserDetails
 
 case class GenericAuditDetail(userType: String,
