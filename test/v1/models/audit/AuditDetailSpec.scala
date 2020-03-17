@@ -20,9 +20,9 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v1.fixtures.audit.GenericAuditDetailFixture._
 
-class GenericAuditDetailSpec extends UnitSpec {
+class AuditDetailSpec extends UnitSpec {
 
-  "GenericAuditDetail" when {
+  "AuditDetail" when {
     "written to JSON (success)" should {
       "produce the expected JsObject" in {
         Json.toJson(genericAuditDetailModelSuccess) shouldBe genericAuditDetailJsonSuccess

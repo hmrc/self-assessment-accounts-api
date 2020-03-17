@@ -18,7 +18,7 @@ package v1.fixtures.audit
 
 import play.api.libs.json.{JsValue, Json}
 import v1.fixtures.audit.AuditResponseFixture._
-import v1.models.audit.GenericAuditDetail
+import v1.models.audit.AuditDetail
 
 object GenericAuditDetailFixture {
 
@@ -27,8 +27,8 @@ object GenericAuditDetailFixture {
   val agentReferenceNumber: Option[String] = Some("012345678")
   val correlationId = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
 
-  val genericAuditDetailModelSuccess: GenericAuditDetail =
-    GenericAuditDetail(
+  val genericAuditDetailModelSuccess: AuditDetail =
+    AuditDetail(
       userType = userType,
       agentReferenceNumber = agentReferenceNumber,
       nino = nino,
@@ -36,7 +36,7 @@ object GenericAuditDetailFixture {
       `X-CorrelationId` = correlationId
     )
 
-  val genericAuditDetailModelError: GenericAuditDetail =
+  val genericAuditDetailModelError: AuditDetail =
     genericAuditDetailModelSuccess.copy(
       response = auditResponseModelWithErrors
     )

@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.Success
 import uk.gov.hmrc.play.audit.http.connector.{AuditConnector, AuditResult}
 import uk.gov.hmrc.play.audit.model.ExtendedDataEvent
+import v1.fixtures.audit.GenericAuditDetailFixture._
 import v1.models.audit.AuditEvent
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -44,7 +45,6 @@ class AuditServiceSpec extends ServiceSpec {
     "auditing an event" should {
       val auditType = "auditType"
       val transactionName = "transaction-name"
-      val eventDetails = "EventDetails"
       val expected: Future[AuditResult] = Future.successful(Success)
       "return a successful audit result" in new Test {
 
@@ -52,7 +52,7 @@ class AuditServiceSpec extends ServiceSpec {
           .expects(*, *, *)
           .returns(expected)
 
-        val event = AuditEvent(auditType, transactionName, eventDetails)
+        val event = AuditEvent(auditType, transactionName, genericAuditDetailModelSuccess)
         target.auditEvent(event) shouldBe expected
       }
 
@@ -66,7 +66,7 @@ class AuditServiceSpec extends ServiceSpec {
           )
           .returns(expected)
 
-        val event = AuditEvent(auditType, transactionName, eventDetails)
+        val event = AuditEvent(auditType, transactionName, genericAuditDetailModelSuccess)
 
         target.auditEvent(event)
       }
@@ -81,7 +81,7 @@ class AuditServiceSpec extends ServiceSpec {
           )
           .returns(expected)
 
-        val event = AuditEvent(auditType, transactionName, eventDetails)
+        val event = AuditEvent(auditType, transactionName, genericAuditDetailModelSuccess)
 
         target.auditEvent(event)
       }
@@ -91,12 +91,12 @@ class AuditServiceSpec extends ServiceSpec {
           .expects(
             where {
               (eventArg: ExtendedDataEvent, _: HeaderCarrier, _: ExecutionContext) =>
-                eventArg.detail == Json.toJson(eventDetails) // <- assertion in mock
+                eventArg.detail == Json.toJson(genericAuditDetailJsonSuccess) // <- assertion in mock
             }
           )
           .returns(expected)
 
-        val event = AuditEvent(auditType, transactionName, eventDetails)
+        val event = AuditEvent(auditType, transactionName, genericAuditDetailModelSuccess)
 
         target.auditEvent(event)
       }
@@ -111,7 +111,7 @@ class AuditServiceSpec extends ServiceSpec {
           )
           .returns(expected)
 
-        val event = AuditEvent(auditType, transactionName, eventDetails)
+        val event = AuditEvent(auditType, transactionName, genericAuditDetailModelSuccess)
 
         target.auditEvent(event)
       }
