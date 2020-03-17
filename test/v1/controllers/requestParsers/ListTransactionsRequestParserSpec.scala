@@ -30,7 +30,6 @@ class ListTransactionsRequestParserSpec extends UnitSpec {
 
   trait Test extends MockListTransactionsValidator {
     lazy val parser = new ListTransactionsRequestParser(mockValidator)
-
   }
 
   "parse" should {

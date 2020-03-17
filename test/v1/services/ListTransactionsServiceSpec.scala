@@ -19,13 +19,11 @@ package v1.services
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
+import v1.fixtures.ListTransactionFixture._
 import v1.mocks.connectors.MockListTransactionsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.fixtures.ListTransactionFixture._
-
 import v1.models.response.listTransaction.ListTransactionsResponse
-
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,16 +38,13 @@ class ListTransactionsServiceSpec extends UnitSpec {
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "listTransactions")
 
     val service = new ListTransactionsService(
-
       connector = mockListTransactionsConnector
-
     )
   }
 
   "listTransactions" should {
     "return a successful response" when {
       "received a valid response for the supplied request" in new Test {
-
         MockListTransactionsConnector.listTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleListTransactionModel))))
 
@@ -63,7 +58,6 @@ class ListTransactionsServiceSpec extends UnitSpec {
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ListTransactionsResponse(Seq())))))
 
         await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionsFoundError, None))
-
       }
     }
 
@@ -73,7 +67,6 @@ class ListTransactionsServiceSpec extends UnitSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-
             MockListTransactionsConnector.listTransactions(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
@@ -81,7 +74,6 @@ class ListTransactionsServiceSpec extends UnitSpec {
           }
 
         val input: Seq[(String, MtdError)] = Seq(
-          ("NO_TRANSACTIONS_FOUND", NotFoundError),
           ("INVALID_IDTYPE", DownstreamError),
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_REGIME_TYPE", DownstreamError),

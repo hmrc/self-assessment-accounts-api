@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListTransactionsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockListTransactionsService, MockMtdIdLookupService}
+import v1.mocks.services.{MockEnrolmentsAuthService, MockListTransactionsService, MockMtdIdLookupService, }
 import v1.models.errors._
 import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.hateoas.Method.GET
@@ -32,7 +32,7 @@ import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
 import v1.models.response.listTransaction.ListTransactionsResponse
-import v1.models.response.listTransaction.{ListTransactionsHateoasData}
+import v1.models.response.listTransaction.ListTransactionsHateoasData
 import v1.fixtures.ListTransactionsFixture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,8 +50,8 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
   private val nino = "AA123456A"
   private val chargeId = "X123456790A"
   private val paymentId = "081203010024-000001"
-  private val from          = "2018-10-1"
-  private val to            = "2019-10-1"
+  private val from = "2018-10-1"
+  private val to = "2019-10-1"
   private val correlationId = "X-123"
   private val rawRequest = ListTransactionsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListTransactionsParsedRequest(Nino(nino), from, to)
@@ -140,7 +140,8 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       |     ]
       |
       |}
-    """.stripMargin)
+    """.stripMargin
+  )
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -172,8 +173,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       )
     )
 
-  "retrieveTransactions" should {
-
+  "listTransactions" should {
     "return a valid transactions response" when {
       "a request sent has valid details" in new Test {
 
@@ -200,6 +200,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
+
     "return the correct errors" when {
       "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {

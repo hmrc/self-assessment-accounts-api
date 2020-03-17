@@ -24,7 +24,6 @@ import v1.models.outcomes.ResponseWrapper
 import scala.concurrent.Future
 
 class ListTransactionsConnectorSpec extends ConnectorSpec {
-
   val chargeId = "anId"
 
   val queryParams: Seq[(String, String)] = Seq(
@@ -42,7 +41,7 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "RetrieveTransactionsConnector" when {
+  "ListTransactionsConnector" when {
     "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, fullDesSingleListTransactionResponse))
@@ -51,7 +50,7 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
           .get(
             url = s"$baseUrl/cross-regime/transactions-placeholder/NINO/$nino/ITSA",
             queryParams = queryParams,
-            requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
 
