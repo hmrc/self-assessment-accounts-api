@@ -20,6 +20,7 @@ import play.api.libs.json.{Json, Writes}
 import v1.models.audit.AuditError
 
 case class ErrorWrapper(correlationId: Option[String], error: MtdError, errors: Option[Seq[MtdError]] = None){
+
   private def allErrors: Seq[MtdError] = errors match {
     case Some(seq) => seq
     case None      => Seq(error)

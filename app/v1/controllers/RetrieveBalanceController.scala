@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.RetrieveBalanceRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
@@ -81,7 +81,7 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
 
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
-        val errorResultWithHeaders = errorResult(errorWrapper).withApiHeaders(correlationId)
+        val result = errorResult(errorWrapper).withApiHeaders(correlationId)
 
         auditSubmission(
           AuditDetail(
@@ -89,7 +89,7 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
             agentReferenceNumber = request.userDetails.agentReferenceNumber,
             nino = nino,
             `X-CorrelationId` = correlationId,
-            response = AuditResponse(httpStatus = errorResultWithHeaders.header.status, errors = Left(errorWrapper.auditErrors), body = None)
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 
