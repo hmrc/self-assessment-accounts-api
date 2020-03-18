@@ -25,7 +25,8 @@ import v1.fixtures.ListPaymentsFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListPaymentsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockListPaymentsService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockListPaymentsService}
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.RelType.{RETRIEVE_PAYMENT_ALLOCATIONS, RETRIEVE_TRANSACTIONS, SELF}
@@ -44,7 +45,8 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
   with MockListPaymentsService
   with MockHateoasFactory
   with MockAppConfig
-  with HateoasLinks {
+  with HateoasLinks
+  with MockAuditService {
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -55,12 +57,26 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
       requestParser = mockListPaymentsRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
   }
+
+  def event(auditResponse: AuditResponse): AuditEvent =
+    AuditEvent(
+      auditType = "retrieveSelfAssessmentTransactions",
+      transactionName = "retrieve-self-assessment-transactions",
+      detail = AuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino = nino,
+        response = auditResponse,
+        `X-CorrelationId` = correlationId
+      )
+    )
 
   private val nino          = "AA123456A"
   private val from          = "2018-10-1"
@@ -101,6 +117,9 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -118,6 +137,9 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -152,6 +174,9 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
