@@ -17,7 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1.fixtures.ListTransactionFixture._
+import v1.fixtures.ListTransactionsFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 
@@ -44,7 +44,7 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
   "ListTransactionsConnector" when {
     "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, fullDesSingleListTransactionResponse))
+        val outcome = Right(ResponseWrapper(correlationId, fullDesSingleListTransactionsResponse))
 
         MockedHttpClient
           .get(

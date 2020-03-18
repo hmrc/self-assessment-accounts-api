@@ -48,11 +48,12 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
   with MockAuditService {
 
   private val nino = "AA123456A"
-  private val chargeId = "X123456790A"
+  private val transactionId = "X123456790A"
   private val paymentId = "081203010024-000001"
-  private val from = "2018-10-1"
-  private val to = "2019-10-1"
+  private val from = "2018-10-01"
+  private val to = "2019-10-01"
   private val correlationId = "X-123"
+
   private val rawRequest = ListTransactionsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListTransactionsParsedRequest(Nino(nino), from, to)
 
@@ -63,13 +64,40 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
     )
   )
 
-  private val chargeHistoryHateoasLink = Link(href = s"/accounts/self-assessment/$nino/charges/$chargeId", method = GET, rel = RETRIEVE_CHARGE_HISTORY)
-  private val paymentAllocationHateoasLink =
-    Link(href = s"/accounts/self-assessment/$nino/payments/$paymentId", method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS)
+  private val chargeHistoryHateoasLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/charges/$transactionId",
+      method = GET,
+      rel = RETRIEVE_CHARGE_HISTORY
+    )
 
-  private val transactionsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = SELF)
-  private val listPaymentsHateoasLink = Link(href = s"/accounts/self-assessment/$nino/payments", method = GET, rel = LIST_PAYMENTS)
-  private val listChargesHateoasLink = Link(href = s"/accounts/self-assessment/$nino/charges", method = GET, rel = LIST_CHARGES)
+  private val paymentAllocationHateoasLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/payments/$paymentId",
+      method = GET,
+      rel = RETRIEVE_PAYMENT_ALLOCATIONS
+    )
+
+  private val listTransactionsHateoasLink: Link =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/transactions",
+      method = GET,
+      rel = SELF
+    )
+
+  private val listPaymentsHateoasLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/payments",
+      method = GET,
+      rel = LIST_PAYMENTS
+    )
+
+  private val listChargesHateoasLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/charges",
+      method = GET,
+      rel = LIST_CHARGES
+    )
 
   private val hateoasResponse = ListTransactionsResponse(
     Seq(
@@ -98,14 +126,17 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       |         "lastClearingDate":"2020-01-02",
       |         "lastClearingReason":"Refund",
       |         "lastClearedAmount":2.01,
-      |         "links": [{
-      |           "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
-      |			      "method": "GET",
-      |			      "rel": "retrieve-charge-history"
-      |		      }]
+      |         "links": [
+      |         {
+      |            "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
+      |			       "method": "GET",
+      |			       "rel": "retrieve-charge-history"
+      |		       }
+      |        ]
       |      },
       |      {
       |         "taxYear":"2019-20",
+      |         "transactionId":"X123456790B",
       |         "paymentId":"081203010024-000001",
       |         "transactionDate":"2020-01-01",
       |         "type":"Payment On Account",
@@ -114,11 +145,13 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       |         "lastClearingDate":"2020-01-02",
       |         "lastClearingReason":"Payment Allocation",
       |         "lastClearedAmount":2.01,
-      |          "links": [{
+      |          "links": [
+      |          {
       |             "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
       |			        "method": "GET",
       |			        "rel": "retrieve-payment-allocations"
-      |		        }]
+      |		        }
+      |          ]
       |      }
       |   ],
       |   "links": [
@@ -188,7 +221,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
         MockHateoasFactory
           .wrapList(mtdResponse, ListTransactionsHateoasData(nino))
           .returns(HateoasWrapper(hateoasResponse,
-            Seq(transactionsHateoasLink, listPaymentsHateoasLink, listChargesHateoasLink)))
+            Seq(listTransactionsHateoasLink, listPaymentsHateoasLink, listChargesHateoasLink)))
 
         val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 

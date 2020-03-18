@@ -18,40 +18,40 @@ package v1.models.response.listTransaction
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.fixtures.ListTransactionFixture._
+import v1.fixtures.ListTransactionsFixture._
 
 class ListTransactionsResponseSpec extends UnitSpec {
 
   "ListTransactionsResponse" should {
     "return a successful Json model" when {
       "the json contains all fields with a document id transaction" in {
-        fullDesSingleListTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullSingleListTransactionModel
+        fullDesSingleListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullSingleListTransactionsModel
       }
 
       "the json contains all fields with a multiple transaction" in {
-        fullDesMultipleListTransactionMultipleResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleListTransactionModel
+        fullDesMultipleListTransactionsMultipleResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleListTransactionsModel
       }
 
       "the json contains minimal fields with no transaction" in {
-        minimalDesListTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionModel
+        minimalDesListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionsModel
       }
     }
 
     "return a successful empty Json model" when {
       "a transactionItem is present but empty" in {
-        emptyItemDesListTransactionResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionModel
+        emptyItemDesListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionsModel
       }
     }
 
     "throw an error" when {
       "there are no mandatory fields" in {
-        invalidDesListTransactionResponse.validate[ListTransactionsResponse[TransactionItem]] shouldBe a[JsError]
+        invalidDesListTransactionsResponse.validate[ListTransactionsResponse[TransactionItem]] shouldBe a[JsError]
       }
     }
 
     "successfully write the model to Json" when {
       "using a standard Json Owrites" in {
-        Json.toJson(fullSingleListTransactionModel) shouldBe mtdListTransactionResponse
+        Json.toJson(fullSingleListTransactionsModel) shouldBe mtdListTransactionsResponse
       }
     }
   }

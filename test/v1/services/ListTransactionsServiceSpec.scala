@@ -19,7 +19,7 @@ package v1.services
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.fixtures.ListTransactionFixture._
+import v1.fixtures.ListTransactionsFixture._
 import v1.mocks.connectors.MockListTransactionsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -46,9 +46,9 @@ class ListTransactionsServiceSpec extends UnitSpec {
     "return a successful response" when {
       "received a valid response for the supplied request" in new Test {
         MockListTransactionsConnector.listTransactions(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleListTransactionModel))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleListTransactionsModel))))
 
-        await(service.listTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleListTransactionModel))
+        await(service.listTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleListTransactionsModel))
       }
     }
 

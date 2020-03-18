@@ -18,7 +18,7 @@ package v1.models.response.listTransaction
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.fixtures.ListTransactionFixture._
+import v1.fixtures.ListTransactionsFixture._
 
 class TransactionItemSpec extends UnitSpec {
 

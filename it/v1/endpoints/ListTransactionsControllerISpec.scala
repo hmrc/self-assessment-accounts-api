@@ -22,9 +22,9 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
+import v1.fixtures.ListTransactionsFixture._
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
-import v1.fixtures.ListTransactionFixture._
 
 class ListTransactionsControllerISpec extends IntegrationBaseSpec {
 
@@ -54,6 +54,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       |      },
       |      {
       |         "taxYear":"2020",
+      |         "documentId":"X123456790B",
       |         "paymentLot":"081203010024",
       |         "paymentLotItem" : "000001",
       |         "transactionDate":"2020-01-01",
@@ -94,10 +95,8 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
     def uri: String = s"/$nino/transactions"
   }
 
-  "Calling the retrieve transactions endpoint" should {
-
+  "Calling the list transactions endpoint" should {
     "return a valid response with status OK" when {
-
       "valid request is made" in new Test {
 
         val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
