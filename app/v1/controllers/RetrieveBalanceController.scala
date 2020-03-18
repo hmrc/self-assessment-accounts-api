@@ -85,8 +85,7 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
 
         auditSubmission(
           AuditDetail(
-            userType = request.userDetails.userType,
-            agentReferenceNumber = request.userDetails.agentReferenceNumber,
+            userDetails = request.userDetails,
             nino = nino,
             `X-CorrelationId` = correlationId,
             response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
