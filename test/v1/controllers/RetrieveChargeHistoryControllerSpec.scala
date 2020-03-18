@@ -26,30 +26,13 @@ import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.HateoasWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveChargeHistory.{RetrieveChargeHistoryParsedRequest, RetrieveChargeHistoryRawRequest}
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
-import mocks.MockAppConfig
-import play.api.libs.json.Json
-import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.RetrieveBalanceFixture
-import v1.hateoas.HateoasLinks
-import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockRetrieveBalanceRequestParser
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveBalanceService}
-import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
-import v1.models.errors._
-import v1.models.hateoas.HateoasWrapper
-import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, RetrieveBalanceRawRequest}
-import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
