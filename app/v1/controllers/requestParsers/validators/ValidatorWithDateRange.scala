@@ -16,9 +16,9 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.models.request.RawDataWithDateRange
 import v1.controllers.requestParsers.validators.validations.{DateFormatValidation, DateRangeValidation, MissingParameterValidation, NinoValidation}
 import v1.models.errors._
+import v1.models.request.RawDataWithDateRange
 
 trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
     private val validationSet = List(parameterFormatValidation, parameterRuleValidation)

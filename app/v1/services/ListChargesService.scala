@@ -26,7 +26,7 @@ import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.ListChargesParsedRequest
-import v1.models.response.listCharges.{ListChargesResponse, Charge}
+import v1.models.response.listCharges.{Charge, ListChargesResponse}
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}

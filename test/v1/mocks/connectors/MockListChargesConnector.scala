@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, ListChargesConnector}
 import v1.models.request.listCharges.ListChargesParsedRequest
-import v1.models.response.listCharges.{ListChargesResponse, Charge}
+import v1.models.response.listCharges.{Charge, ListChargesResponse}
 
 import scala.concurrent.{ExecutionContext, Future}
 

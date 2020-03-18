@@ -17,9 +17,9 @@
 package v1.controllers.requestParsers
 
 import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveBalanceValidator
 import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, RetrieveBalanceRawRequest}
-import uk.gov.hmrc.domain.Nino
 
 class RetrieveBalanceRequestParser @Inject()(val validator: RetrieveBalanceValidator)
   extends RequestParser[RetrieveBalanceRawRequest, RetrieveBalanceParsedRequest] {
