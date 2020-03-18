@@ -110,7 +110,7 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
 
     val event = AuditEvent(
       auditType = "retrieveASelfAssessmentBalance",
-      transactionName = "retrieve-a-self-assessment-balance",
+      listPayments = "retrieve-a-self-assessment-balance",
       detail = details
     )
 

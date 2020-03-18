@@ -98,8 +98,8 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
                               ec: ExecutionContext): Future[AuditResult] = {
 
     val event = AuditEvent(
-      auditType = "retrieveSelfAssessmentTransactions",
-      transactionName = "retrieve-self-assessment-transactions",
+      auditType = "listSelfAssessmentPayments",
+      listPayments = "list-self-assessment-payments",
       detail = details
     )
 

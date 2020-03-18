@@ -188,7 +188,7 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
   def event(auditResponse: AuditResponse): AuditEvent =
     AuditEvent(
       auditType = "retrieveSelfAssessmentTransactions",
-      transactionName = "retrieve-self-assessment-transactions",
+      listPayments = "retrieve-self-assessment-transactions",
       detail = AuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

@@ -117,7 +117,7 @@ class RetrieveTransactionsController @Inject()(val authService: EnrolmentsAuthSe
 
     val event = AuditEvent(
       auditType = "retrieveSelfAssessmentTransactions",
-      transactionName = "retrieve-self-assessment-transactions",
+      listPayments = "retrieve-self-assessment-transactions",
       detail = details
     )
 
