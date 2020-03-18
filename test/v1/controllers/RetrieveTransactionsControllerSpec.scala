@@ -24,11 +24,12 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveTransactionsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveTransactionsService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveTransactionsService}
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.RelType._
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactions.{RetrieveTransactionsParsedRequest, RetrieveTransactionsRawRequest}
 import v1.models.response.retrieveTransaction.{RetrieveTransactionsHateoasData, RetrieveTransactionsResponse, TransactionItem}
@@ -43,7 +44,8 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
   with MockRetrieveTransactionsService
   with MockHateoasFactory
   with MockAppConfig
-  with HateoasLinks {
+  with HateoasLinks
+  with MockAuditService {
 
   private val nino = "AA123456A"
   private val chargeId = "X123456790A"
@@ -175,12 +177,26 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       requestParser = mockRetrieveTransactionsRequestParser,
       service = mockRetrieveTransactionsService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
   }
+
+  def event(auditResponse: AuditResponse): AuditEvent =
+    AuditEvent(
+      auditType = "retrieveSelfAssessmentTransactions",
+      transactionName = "retrieve-self-assessment-transactions",
+      detail = AuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino = nino,
+        response = auditResponse,
+        `X-CorrelationId` = correlationId
+      )
+    )
 
   "retrieveTransactions" should {
 
@@ -205,6 +221,9 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdJson
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
     "return the correct errors" when {
@@ -221,6 +240,9 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -256,6 +278,9 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)
           header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
         }
       }
 
