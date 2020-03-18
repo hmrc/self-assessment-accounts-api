@@ -38,7 +38,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService,
                                           val lookupService: MtdIdLookupService,
-                                          val auditService: AuditService,
+                                          auditService: AuditService,
                                           requestParser: RetrieveBalanceRequestParser,
                                           service: RetrieveBalanceService,
                                           hateoasFactory: HateoasFactory,
