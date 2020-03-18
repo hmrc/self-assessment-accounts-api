@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
 import v1.fixtures.RetrieveChargeHistoryFixture._
-import v1.models.errors.{ChargeIdFormatError, NinoFormatError}
+import v1.models.errors.{NinoFormatError, TransactionIdFormatError}
 
 class RetrieveChargeHistoryValidatorSpec extends UnitSpec {
 
@@ -39,13 +39,13 @@ class RetrieveChargeHistoryValidatorSpec extends UnitSpec {
 
     "return ChargeIdFormatError error" when {
       "an invalid charge ID is supplied" in {
-        validator.validate(invalidRetrieveChargeHistoryRawRequestInvalidChargeId) shouldBe List(ChargeIdFormatError)
+        validator.validate(invalidRetrieveChargeHistoryRawRequestInvalidChargeId) shouldBe List(TransactionIdFormatError)
       }
     }
 
     "return NinoFormatError and ChargeIdFormatError error" when {
       "an invalid nino and invalid charge ID are supplied" in {
-        validator.validate(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndChargeId) shouldBe List(NinoFormatError, ChargeIdFormatError)
+        validator.validate(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndChargeId) shouldBe List(NinoFormatError, TransactionIdFormatError)
       }
     }
   }

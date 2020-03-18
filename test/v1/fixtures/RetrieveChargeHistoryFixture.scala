@@ -55,7 +55,7 @@ object RetrieveChargeHistoryFixture {
       |   "history": [
       |      {
       |         "taxYear":"2019-20",
-      |         "id":"X123456790A",
+      |         "transactionId":"X123456790A",
       |         "transactionDate":"2019-06-01",
       |         "type":"Balancing Charge Debit",
       |         "amount":600.01,
@@ -64,7 +64,7 @@ object RetrieveChargeHistoryFixture {
       |      },
       |      {
       |         "taxYear":"2019-20",
-      |         "id":"X123456790A",
+      |         "transactionId":"X123456790A",
       |         "transactionDate":"2019-06-01",
       |         "type":"Balancing Charge Debit",
       |         "amount":600.01,
@@ -113,7 +113,7 @@ object RetrieveChargeHistoryFixture {
   val chargeHistoryResponse: ChargeHistory =
     ChargeHistory(
       taxYear = Some("2019-20"),
-      id = Some("X123456790A"),
+      transactionId = Some("X123456790A"),
       transactionDate = Some("2019-06-01"),
       `type` = Some("Balancing Charge Debit"),
       amount = Some(600.01),
@@ -129,7 +129,7 @@ object RetrieveChargeHistoryFixture {
   val chargeHistoryResponse2: ChargeHistory =
     ChargeHistory(
       taxYear = Some("2019-20"),
-      id = Some("X123456790A"),
+      transactionId = Some("X123456790A"),
       transactionDate = Some("2019-06-01"),
       `type` = Some("Balancing Charge Debit"),
       amount = Some(600.01),

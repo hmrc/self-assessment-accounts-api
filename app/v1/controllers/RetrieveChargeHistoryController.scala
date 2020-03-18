@@ -47,16 +47,16 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
       endpointName = "retrieveChargeHistory"
     )
 
-  def retrieveChargeHistory(nino: String, chargeId: String): Action[AnyContent] =
+  def retrieveChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
-      val rawRequest = RetrieveChargeHistoryRawRequest(nino, chargeId)
+      val rawRequest = RetrieveChargeHistoryRawRequest(nino, transactionId)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, chargeId)).asRight[ErrorWrapper])
+            hateoasFactory.wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId)).asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -76,7 +76,7 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {
-      case BadRequestError | NinoFormatError | ChargeIdFormatError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TransactionIdFormatError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }

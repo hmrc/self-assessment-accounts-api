@@ -21,7 +21,7 @@ import play.api.libs.functional.syntax._
 import v1.models.domain.DesTaxYear
 
 case class ChargeHistory(taxYear: Option[String],
-                         id: Option[String],
+                         transactionId: Option[String],
                          transactionDate: Option[String],
                          `type`: Option[String],
                          amount: Option[BigDecimal],
