@@ -40,8 +40,8 @@ trait HateoasLinks {
     Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges", method = GET, rel = if(isSelf) SELF else LIST_CHARGES)
 
   // L5
-  def retrieveChargeHistory(appConfig: AppConfig, nino: String, chargeId: String, isSelf: Boolean): Link =
-    Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges/$chargeId", method = GET, rel = if(isSelf) SELF else RETRIEVE_CHARGE_HISTORY)
+  def retrieveChargeHistory(appConfig: AppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
+    Link(href = s"/${appConfig.apiGatewayContext}/$nino/charges/$transactionId", method = GET, rel = if(isSelf) SELF else RETRIEVE_CHARGE_HISTORY)
 
   // L6
   def listPayments(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =

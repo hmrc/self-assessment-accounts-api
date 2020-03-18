@@ -30,7 +30,6 @@ object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax 
 object FromDateFormatError extends MtdError("FORMAT_FROM_DATE", "The provided From date is invalid")
 object ToDateFormatError extends MtdError("FORMAT_TO_DATE", "The provided To date is invalid")
 object PaymentIdFormatError extends MtdError("FORMAT_PAYMENT_ID", "The provided payment ID is invalid")
-object ChargeIdFormatError extends MtdError("FORMAT_CHARGE_ID", "The provided charge ID is invalid")
 object TransactionIdFormatError extends MtdError("FORMAT_TRANSACTION_ID", "The provided transaction ID is invalid")
 
 // Rule Errors

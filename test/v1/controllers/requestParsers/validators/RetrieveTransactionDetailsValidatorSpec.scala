@@ -31,7 +31,7 @@ class RetrieveTransactionDetailsValidatorSpec extends UnitSpec {
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied with a chargeId" in {
+      "a valid request is supplied with a transactionId" in {
         validator.validate(RetrieveTransactionDetailsRawRequest(validNino, validTransactionId)) shouldBe Nil
       }
     }

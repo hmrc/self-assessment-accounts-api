@@ -25,6 +25,8 @@ import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.{Charge, ListChargesResponse}
+import v1.models.response.listCharges.ListChargesResponse
+import v1.fixtures.ListChargesFixture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,17 +41,7 @@ class ListChargesServiceSpec extends UnitSpec {
   private val correlationId = "X-123"
 
   private val request = ListChargesParsedRequest(nino, from, to)
-  private val response = ListChargesResponse(
-    Seq(
-      Charge(
-        taxYear = Some("2019-20"),
-        id = Some("1234567890AB"),
-        transactionDate = Some("2020-02-01"),
-        `type`= Some("Charge Type"),
-        totalAmount = Some(11.23),
-        outstandingAmount = Some(4.56))
-    )
-  )
+  private val response = ListChargesResponse(Seq(fullChargeModel))
 
   trait Test extends MockListChargesConnector {
 

@@ -18,6 +18,7 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
+import v1.fixtures.ListChargesFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.ListChargesParsedRequest
@@ -40,22 +41,8 @@ class ListChargesConnectorSpec extends ConnectorSpec {
 
   val response = ListChargesResponse(
     charges = Seq(
-      Charge(
-        taxYear = Some("2019-20"),
-        id= Some("1234567890AB"),
-        transactionDate= Some("2020-02-01"),
-        `type`= Some("Charge Type"),
-        totalAmount = Some(11.23),
-        outstandingAmount = Some(4.56)
-      ),
-      Charge(
-        taxYear = Some("2019-20"),
-        id= Some("1234567890AC"),
-        transactionDate= Some("2020-02-04"),
-        `type`= Some("Charge Type"),
-        totalAmount = Some(17.89),
-        outstandingAmount = Some(12.23)
-      )
+      fullChargeModel,
+      fullChargeModel
     )
   )
 
@@ -79,7 +66,7 @@ class ListChargesConnectorSpec extends ConnectorSpec {
           .get(
             url = s"$baseUrl/cross-regime/transactions-placeholder/NINO/$nino/ITSA",
             queryParams = queryParams,
-            requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
 

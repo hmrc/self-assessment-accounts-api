@@ -48,23 +48,23 @@ class RetrieveChargeHistoryControllerSpec
     with MockAuditService {
 
   private val nino = "AA123456A"
-  private val chargeId = "anId"
+  private val transactionId = "anId"
   private val correlationId = "X-123"
 
   private val rawRequest: RetrieveChargeHistoryRawRequest =
     RetrieveChargeHistoryRawRequest(
       nino = nino,
-      chargeId = chargeId
+      transactionId = transactionId
     )
 
   private val parsedRequest: RetrieveChargeHistoryParsedRequest =
     RetrieveChargeHistoryParsedRequest(
       nino = Nino(nino),
-      chargeId = chargeId
+      transactionId = transactionId
     )
 
   private val retrieveChargeHistoryResponse = RetrieveChargeHistoryFixture.retrieveChargeHistoryResponseMultiple
-  private val mtdResponse = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, chargeId)
+  private val mtdResponse = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
 
   trait Test {
     val hc = HeaderCarrier()
@@ -111,15 +111,15 @@ class RetrieveChargeHistoryControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))))
 
         MockHateoasFactory
-          .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, chargeId))
+          .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, transactionId))
           .returns(HateoasWrapper(retrieveChargeHistoryResponse,
             Seq(
-              retrieveChargeHistory(mockAppConfig, nino, chargeId, isSelf = true),
+              retrieveChargeHistory(mockAppConfig, nino, transactionId, isSelf = true),
               listTransactions(mockAppConfig, nino, isSelf = false)
             )
           ))
 
-        val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
@@ -139,7 +139,7 @@ class RetrieveChargeHistoryControllerSpec
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -170,7 +170,7 @@ class RetrieveChargeHistoryControllerSpec
               .retrieveChargeHistory(parsedRequest)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
