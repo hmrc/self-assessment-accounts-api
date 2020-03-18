@@ -244,6 +244,11 @@ object ListTransactionsFixture {
       |            "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
       |			       "method": "GET",
       |			       "rel": "retrieve-charge-history"
+      |		       },
+      |         {
+      |            "href": "/accounts/self-assessment/AA123456A/transactions/X123456790A",
+      |			       "method": "GET",
+      |			       "rel": "retrieve-transaction-details"
       |		       }
       |        ]
       |      },
@@ -263,28 +268,32 @@ object ListTransactionsFixture {
       |             "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
       |			        "method": "GET",
       |			        "rel": "retrieve-payment-allocations"
+      |		        },
+      |           {
+      |             "href": "/accounts/self-assessment/AA123456A/transactions/X123456790B",
+      |			        "method": "GET",
+      |			        "rel": "retrieve-transaction-details"
       |		        }
       |          ]
       |      }
       |   ],
       |   "links": [
       |      {
-      |        "href": "/accounts/self-assessment/AA123456A/transactions",
+      |        "href": "/accounts/self-assessment/AA123456A/transactions?from=2018-10-01&to=2019-10-01",
       |			   "method": "GET",
       |			   "rel": "self"
       |		   },
       |      {
-      |        "href": "/accounts/self-assessment/AA123456A/payments",
-      |			   "method": "GET",
-      |			   "rel": "list-payments"
-      |		   },
-      |      {
-      |        "href": "/accounts/self-assessment/AA123456A/charges",
+      |        "href": "/accounts/self-assessment/AA123456A/charges?from=2018-10-01&to=2019-10-01",
       |			   "method": "GET",
       |			   "rel": "list-charges"
+      |		   },
+      |      {
+      |        "href": "/accounts/self-assessment/AA123456A/payments?from=2018-10-01&to=2019-10-01",
+      |			   "method": "GET",
+      |			   "rel": "list-payments"
       |		   }
       |     ]
-      |
       |}
     """.stripMargin
   )
