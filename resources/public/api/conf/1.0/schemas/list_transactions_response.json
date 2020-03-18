@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve a self assessment transactions",
-  "description": "Retrieve a self assessment transactions",
+  "title": "List self assessment transactions",
+  "description": "List self assessment transactions",
   "type": "object",
   "properties": {
     "transactions": {
@@ -88,7 +88,8 @@
                   "type": "string",
                   "enum": [
                     "retrieve-charge-history",
-                    "retrieve-payment-allocations"
+                    "retrieve-payment-allocations",
+                    "retrieve-transaction-details"
                   ]
                 },
                 "method": {
@@ -118,7 +119,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/transactions"
+            "example": "/accounts/self-assessment/{nino}/transactions?from{from}&to{to}"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",

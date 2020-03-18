@@ -18,6 +18,6 @@
         <tr>
             <td><p>NOT_FOUND</p></td>
             <td><p>Simulates the scenario where no data can be found.</p></td>
-        </tr>~~~~
+        </tr>
     </tbody>
 </table>
