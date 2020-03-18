@@ -103,7 +103,7 @@ class RetrieveChargeHistoryControllerSpec
   def event(auditResponse: AuditResponse): AuditEvent =
     AuditEvent(
       auditType = "retrieveASelfAssessmentChargesHistory",
-      transactionName = "self-assessment-accounts-api",
+      transactionName = "retrieve-a-self-assessment-charges-history",
       detail = AuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

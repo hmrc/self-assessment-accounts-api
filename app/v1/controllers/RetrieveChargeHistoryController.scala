@@ -110,7 +110,7 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
 
     val event = AuditEvent(
       auditType = "retrieveASelfAssessmentChargesHistory",
-      transactionName = "self-assessment-accounts-api",
+      transactionName = "retrieve-a-self-assessment-charges-history",
       detail = details
     )
 
