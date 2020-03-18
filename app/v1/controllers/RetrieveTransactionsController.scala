@@ -16,19 +16,22 @@
 
 package v1.controllers
 
-import cats.implicits._
 import cats.data.EitherT
+import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.RetrieveTransactionsRequestParser
 import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.request.retrieveTransactions.RetrieveTransactionsRawRequest
 import v1.models.response.retrieveTransaction.RetrieveTransactionsHateoasData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveTransactionsService}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveTransactionsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,6 +41,7 @@ class RetrieveTransactionsController @Inject()(val authService: EnrolmentsAuthSe
                                                requestParser: RetrieveTransactionsRequestParser,
                                                service: RetrieveTransactionsService,
                                                hateoasFactory: HateoasFactory,
+                                               auditService: AuditService,
                                                cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
 
@@ -65,6 +69,14 @@ class RetrieveTransactionsController @Inject()(val authService: EnrolmentsAuthSe
               s"Success response received with correlationId: ${serviceResponse.correlationId}"
           )
 
+          auditSubmission(
+            AuditDetail(
+              userDetails = request.userDetails,
+              nino = nino,
+              `X-CorrelationId` = serviceResponse.correlationId,
+              response = AuditResponse(httpStatus = OK, None, None))
+            )
+
           Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
@@ -72,6 +84,15 @@ class RetrieveTransactionsController @Inject()(val authService: EnrolmentsAuthSe
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
         val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+        auditSubmission(
+          AuditDetail(
+            userDetails = request.userDetails,
+            nino = nino,
+            `X-CorrelationId` = correlationId,
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
 
         result
       }.merge
@@ -90,4 +111,16 @@ class RetrieveTransactionsController @Inject()(val authService: EnrolmentsAuthSe
     }
   }
 
+  private def auditSubmission(details: AuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
+
+    val event = AuditEvent(
+      auditType = "retrieveSelfAssessmentTransactions",
+      transactionName = "retrieve-self-assessment-transactions",
+      detail = details
+    )
+
+    auditService.auditEvent(event)
+  }
 }
