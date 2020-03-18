@@ -16,8 +16,8 @@
 
 package v1.models.response.retrieveChargeHistory
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.domain.DesTaxYear
 
 case class ChargeHistory(taxYear: Option[String],

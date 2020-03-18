@@ -22,10 +22,11 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
+import v1.fixtures.ListTransactionsFixture._
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
-class RetrieveTransactionsControllerISpec extends IntegrationBaseSpec {
+class ListTransactionsControllerISpec extends IntegrationBaseSpec {
 
   private val desJsonNoTransactions = Json.parse(
     """
@@ -53,6 +54,7 @@ class RetrieveTransactionsControllerISpec extends IntegrationBaseSpec {
       |      },
       |      {
       |         "taxYear":"2020",
+      |         "documentId":"X123456790B",
       |         "paymentLot":"081203010024",
       |         "paymentLotItem" : "000001",
       |         "transactionDate":"2020-01-01",
@@ -64,65 +66,6 @@ class RetrieveTransactionsControllerISpec extends IntegrationBaseSpec {
       |         "lastClearedAmount":2.01
       |      }
       |   ]
-      |}
-    """.stripMargin
-  )
-
-  private val mtdJson = Json.parse(
-    """
-      |{
-      |   "transactions":[
-      |      {
-      |         "taxYear":"2019-20",
-      |         "id":"X123456790A",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Balancing Charge Debit",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Refund",
-      |         "lastClearedAmount":2.01,
-      |         "links": [{
-      |           "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
-      |			      "method": "GET",
-      |			      "rel": "retrieve-charge-history"
-      |		      }]
-      |      },
-      |      {
-      |         "taxYear":"2019-20",
-      |         "id":"081203010024-000001",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Payment On Account",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Payment Allocation",
-      |         "lastClearedAmount":2.01,
-      |          "links": [{
-      |             "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
-      |			        "method": "GET",
-      |			        "rel": "retrieve-payment-allocations"
-      |		        }]
-      |      }
-      |   ],
-      |   "links": [
-      |      {
-      |        "href": "/accounts/self-assessment/AA123456A/transactions",
-      |			   "method": "GET",
-      |			   "rel": "self"
-      |		   },
-      |      {
-      |        "href": "/accounts/self-assessment/AA123456A/payments",
-      |			   "method": "GET",
-      |			   "rel": "list-payments"
-      |		   },
-      |      {
-      |        "href": "/accounts/self-assessment/AA123456A/charges",
-      |			   "method": "GET",
-      |			   "rel": "list-charges"
-      |		   }
-      |     ]
-      |
       |}
     """.stripMargin
   )
@@ -152,10 +95,8 @@ class RetrieveTransactionsControllerISpec extends IntegrationBaseSpec {
     def uri: String = s"/$nino/transactions"
   }
 
-  "Calling the retrieve transactions endpoint" should {
-
+  "Calling the list transactions endpoint" should {
     "return a valid response with status OK" when {
-
       "valid request is made" in new Test {
 
         val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)

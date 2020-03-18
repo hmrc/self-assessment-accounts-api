@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators.validations
 
 import java.time.{Duration, LocalDate}
 
-import v1.models.errors.{MtdError, RuleDateRangeInvalidError, RangeToDateBeforeFromDateError, RuleFromDateNotSupportedError}
+import v1.models.errors.{MtdError, RangeToDateBeforeFromDateError, RuleDateRangeInvalidError, RuleFromDateNotSupportedError}
 
 object DateRangeValidation {
 

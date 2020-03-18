@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.{RuleDateRangeInvalidError, RangeToDateBeforeFromDateError, RuleFromDateNotSupportedError}
+import v1.models.errors.{RangeToDateBeforeFromDateError, RuleDateRangeInvalidError, RuleFromDateNotSupportedError}
 
 class DateRangeValidationSpec extends UnitSpec {
 

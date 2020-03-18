@@ -16,95 +16,97 @@
 
 package v1.controllers
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
-import v1.mocks.requestParsers.MockRetrieveTransactionsRequestParser
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveTransactionsService}
-import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
+import v1.mocks.requestParsers.MockListTransactionsRequestParser
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListTransactionsService, MockMtdIdLookupService}
 import v1.models.errors._
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveTransactions.{RetrieveTransactionsParsedRequest, RetrieveTransactionsRawRequest}
-import v1.models.response.retrieveTransaction.{RetrieveTransactionsHateoasData, RetrieveTransactionsResponse, TransactionItem}
+import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
+import v1.models.response.listTransaction.ListTransactionsResponse
+import v1.models.response.listTransaction.ListTransactionsHateoasData
+import v1.fixtures.ListTransactionsFixture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
+class ListTransactionsControllerSpec extends ControllerBaseSpec
   with MockEnrolmentsAuthService
   with MockMtdIdLookupService
-  with MockRetrieveTransactionsRequestParser
-  with MockRetrieveTransactionsService
+  with MockListTransactionsRequestParser
+  with MockListTransactionsService
   with MockHateoasFactory
-  with MockAppConfig
   with HateoasLinks
   with MockAuditService {
 
   private val nino = "AA123456A"
-  private val chargeId = "X123456790A"
+  private val transactionId = "X123456790A"
   private val paymentId = "081203010024-000001"
-  private val from          = "2018-10-1"
-  private val to            = "2019-10-1"
+  private val from = "2018-10-01"
+  private val to = "2019-10-01"
   private val correlationId = "X-123"
-  private val rawRequest = RetrieveTransactionsRawRequest(nino, Some(from), Some(to))
-  private val parsedRequest = RetrieveTransactionsParsedRequest(Nino(nino), from, to)
 
-  private val chargeTransaction =
-    TransactionItem(
-      taxYear = Some("2019-20"),
-      id = Some("X123456790A"),
-      transactionDate = Some("2020-01-01"),
-      `type` = Some("Balancing Charge Debit"),
-      originalAmount = Some(12.34),
-      outstandingAmount = Some(10.33),
-      lastClearingDate = Some("2020-01-02"),
-      lastClearingReason = Some("Refund"),
-      lastClearedAmount = Some(2.01)
-    )
+  private val rawRequest = ListTransactionsRawRequest(nino, Some(from), Some(to))
+  private val parsedRequest = ListTransactionsParsedRequest(Nino(nino), from, to)
 
-  private val paymentTransaction =
-    TransactionItem(
-      taxYear = Some("2019-20"),
-      id = Some("081203010024-000001"),
-      transactionDate = Some("2020-01-01"),
-      `type` = Some("Payment On Account"),
-      originalAmount = Some(12.34),
-      outstandingAmount = Some(10.33),
-      lastClearingDate = Some("2020-01-02"),
-      lastClearingReason = Some("Payment Allocation"),
-      lastClearedAmount = Some(2.01)
-    )
-
-  private val mtdResponse = RetrieveTransactionsResponse(
+  private val mtdResponse = ListTransactionsResponse(
     transactions = Seq(
-      chargeTransaction,
-      paymentTransaction
+      chargeTransactionItemModel,
+      paymentTransactionItemModel
     )
   )
 
-  private val chargeHistoryHateoasLink = Link(href = s"/accounts/self-assessment/$nino/charges/$chargeId", method = GET, rel = RETRIEVE_CHARGE_HISTORY)
-  private val paymentAllocationHateoasLink =
-    Link(href = s"/accounts/self-assessment/$nino/payments/$paymentId", method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS)
+  private val chargeHistoryHateoasLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/charges/$transactionId",
+      method = GET,
+      rel = RETRIEVE_CHARGE_HISTORY
+    )
 
-  private val transactionsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = SELF)
-  private val listPaymentsHateoasLink = Link(href = s"/accounts/self-assessment/$nino/payments", method = GET, rel = LIST_PAYMENTS)
-  private val listChargesHateoasLink = Link(href = s"/accounts/self-assessment/$nino/charges", method = GET, rel = LIST_CHARGES)
+  private val paymentAllocationHateoasLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/payments/$paymentId",
+      method = GET,
+      rel = RETRIEVE_PAYMENT_ALLOCATIONS
+    )
 
-  private val hateoasResponse = RetrieveTransactionsResponse(
+  private val listTransactionsHateoasLink: Link =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/transactions",
+      method = GET,
+      rel = SELF
+    )
+
+  private val listPaymentsHateoasLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/payments",
+      method = GET,
+      rel = LIST_PAYMENTS
+    )
+
+  private val listChargesHateoasLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/charges",
+      method = GET,
+      rel = LIST_CHARGES
+    )
+
+  private val hateoasResponse = ListTransactionsResponse(
     Seq(
       HateoasWrapper(
-        payload = chargeTransaction,
+        payload = chargeTransactionItemModel,
         links = Seq(chargeHistoryHateoasLink)
       ),
       HateoasWrapper(
-        payload = paymentTransaction,
+        payload = paymentTransactionItemModel,
         links = Seq(paymentAllocationHateoasLink)
       )
     )
@@ -116,7 +118,7 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       |   "transactions":[
       |      {
       |         "taxYear":"2019-20",
-      |         "id":"X123456790A",
+      |         "transactionId":"X123456790A",
       |         "transactionDate":"2020-01-01",
       |         "type":"Balancing Charge Debit",
       |         "originalAmount":12.34,
@@ -124,15 +126,18 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       |         "lastClearingDate":"2020-01-02",
       |         "lastClearingReason":"Refund",
       |         "lastClearedAmount":2.01,
-      |         "links": [{
-      |           "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
-      |			      "method": "GET",
-      |			      "rel": "retrieve-charge-history"
-      |		      }]
+      |         "links": [
+      |         {
+      |            "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
+      |			       "method": "GET",
+      |			       "rel": "retrieve-charge-history"
+      |		       }
+      |        ]
       |      },
       |      {
       |         "taxYear":"2019-20",
-      |         "id":"081203010024-000001",
+      |         "transactionId":"X123456790B",
+      |         "paymentId":"081203010024-000001",
       |         "transactionDate":"2020-01-01",
       |         "type":"Payment On Account",
       |         "originalAmount":12.34,
@@ -140,11 +145,13 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       |         "lastClearingDate":"2020-01-02",
       |         "lastClearingReason":"Payment Allocation",
       |         "lastClearedAmount":2.01,
-      |          "links": [{
+      |          "links": [
+      |          {
       |             "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
       |			        "method": "GET",
       |			        "rel": "retrieve-payment-allocations"
-      |		        }]
+      |		        }
+      |          ]
       |      }
       |   ],
       |   "links": [
@@ -166,16 +173,17 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       |     ]
       |
       |}
-    """.stripMargin)
+    """.stripMargin
+  )
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new RetrieveTransactionsController(
+    val controller = new ListTransactionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveTransactionsRequestParser,
-      service = mockRetrieveTransactionsService,
+      requestParser = mockListTransactionsRequestParser,
+      service = mockListTransactionsService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc
@@ -187,8 +195,8 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
 
   def event(auditResponse: AuditResponse): AuditEvent =
     AuditEvent(
-      auditType = "retrieveSelfAssessmentTransactions",
-      transactionName = "retrieve-self-assessment-transactions",
+      auditType = "listSelfAssessmentTransactions",
+      transactionName = "list-self-assessment-transactions",
       detail = AuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
@@ -198,25 +206,24 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       )
     )
 
-  "retrieveTransactions" should {
-
+  "listTransactions" should {
     "return a valid transactions response" when {
       "a request sent has valid details" in new Test {
 
-        MockRetrieveTransactionsRequestParser
+        MockListTransactionsRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
 
-        MockRetrieveTransactionsService
-          .retrieveTransactions(parsedRequest)
+        MockListTransactionsService
+          .listTransactions(parsedRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponse))))
 
         MockHateoasFactory
-          .wrapList(mtdResponse, RetrieveTransactionsHateoasData(nino))
+          .wrapList(mtdResponse, ListTransactionsHateoasData(nino))
           .returns(HateoasWrapper(hateoasResponse,
-            Seq(transactionsHateoasLink, listPaymentsHateoasLink, listChargesHateoasLink)))
+            Seq(listTransactionsHateoasLink, listPaymentsHateoasLink, listChargesHateoasLink)))
 
-        val result: Future[Result] = controller.retrieveTransactions(nino, Some(from), Some(to))(fakeGetRequest)
+        val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdJson
@@ -226,16 +233,17 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
+
     "return the correct errors" when {
       "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockRetrieveTransactionsRequestParser
+            MockListTransactionsRequestParser
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveTransactions(nino, Some(from), Some(to))(fakeGetRequest)
+            val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -265,15 +273,15 @@ class RetrieveTransactionsControllerSpec extends ControllerBaseSpec
       def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
         s"a $mtdError error is returned from the service" in new Test {
 
-          MockRetrieveTransactionsRequestParser
+          MockListTransactionsRequestParser
             .parse(rawRequest)
             .returns(Right(parsedRequest))
 
-          MockRetrieveTransactionsService
-            .retrieveTransactions(parsedRequest)
+          MockListTransactionsService
+            .listTransactions(parsedRequest)
             .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-          val result: Future[Result] = controller.retrieveTransactions(nino, Some(from), Some(to))(fakeGetRequest)
+          val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)

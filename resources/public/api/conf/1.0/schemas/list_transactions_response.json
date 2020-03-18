@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Retrieve a self assessment transactions",
-  "description": "Retrieve a self assessment transactions",
+  "title": "List self assessment transactions",
+  "description": "List self assessment transactions",
   "type": "object",
   "properties": {
     "transactions": {
@@ -16,11 +16,17 @@
             "type": "string",
             "example": "2018-19"
           },
-          "id": {
+          "transactionId": {
             "description": "A unique identifier for this item.",
             "type": "string",
-            "pattern": "^[A-Za-z0-9]{1,12}|[A-Za-z0-9]{1,12}\\-[A-Za-z0-9]{4}$",
+            "pattern": "^[A-Za-z0-9]{1,12}$",
             "example": "X123456790A"
+          },
+          "paymentId": {
+            "description": "A unique identifier for the payment.",
+            "type": "string",
+            "pattern": "^[A-Za-z0-9]{1,12}\\-[A-Za-z0-9]{1,6}$",
+            "example": "081203010024-000001"
           },
           "transactionDate": {
             "description": "The date the item was created. Date in the format YYYY-MM-DD.",
@@ -82,7 +88,8 @@
                   "type": "string",
                   "enum": [
                     "retrieve-charge-history",
-                    "retrieve-payment-allocations"
+                    "retrieve-payment-allocations",
+                    "retrieve-transaction-details"
                   ]
                 },
                 "method": {
@@ -112,7 +119,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/transactions"
+            "example": "/accounts/self-assessment/{nino}/transactions?from={from}&to={to}"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",

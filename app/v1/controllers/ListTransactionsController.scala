@@ -22,45 +22,45 @@ import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
-import v1.controllers.requestParsers.RetrieveTransactionsRequestParser
+import v1.controllers.requestParsers.ListTransactionsRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
 import v1.models.errors._
-import v1.models.request.retrieveTransactions.RetrieveTransactionsRawRequest
-import v1.models.response.retrieveTransaction.RetrieveTransactionsHateoasData
-import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveTransactionsService}
+import v1.models.request.listTransactions.ListTransactionsRawRequest
+import v1.models.response.listTransaction.ListTransactionsHateoasData
+import v1.services.{AuditService, EnrolmentsAuthService, ListTransactionsService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
+import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
 
 @Singleton
-class RetrieveTransactionsController @Inject()(val authService: EnrolmentsAuthService,
-                                               val lookupService: MtdIdLookupService,
-                                               requestParser: RetrieveTransactionsRequestParser,
-                                               service: RetrieveTransactionsService,
-                                               hateoasFactory: HateoasFactory,
-                                               auditService: AuditService,
-                                               cc: ControllerComponents)(implicit ec: ExecutionContext)
+class ListTransactionsController @Inject()(val authService: EnrolmentsAuthService,
+                                           val lookupService: MtdIdLookupService,
+                                           requestParser: ListTransactionsRequestParser,
+                                           service: ListTransactionsService,
+                                           hateoasFactory: HateoasFactory,
+                                           auditService: AuditService,
+                                           cc: ControllerComponents)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
-      controllerName = "RetrieveTransactionsController",
-      endpointName = "retrieveTransactions"
+      controllerName = "ListTransactionsController",
+      endpointName = "listTransactions"
     )
 
-  def retrieveTransactions(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async{
+  def listTransactions(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async {
     implicit request =>
-      val rawRequest: RetrieveTransactionsRawRequest = RetrieveTransactionsRawRequest (nino, from, to)
+      val rawRequest: ListTransactionsRawRequest = ListTransactionsRawRequest(nino, from, to)
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-          serviceResponse <- EitherT(service.retrieveTransactions(parsedRequest))
+          serviceResponse <- EitherT(service.listTransactions(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
-              .wrapList(serviceResponse.responseData, RetrieveTransactionsHateoasData(nino))
+              .wrapList(serviceResponse.responseData, ListTransactionsHateoasData(nino))
               .asRight[ErrorWrapper]
           )
         } yield {
@@ -116,8 +116,8 @@ class RetrieveTransactionsController @Inject()(val authService: EnrolmentsAuthSe
                               ec: ExecutionContext): Future[AuditResult] = {
 
     val event = AuditEvent(
-      auditType = "retrieveSelfAssessmentTransactions",
-      transactionName = "retrieve-self-assessment-transactions",
+      auditType = "listSelfAssessmentTransactions",
+      transactionName = "list-self-assessment-transactions",
       detail = details
     )
 

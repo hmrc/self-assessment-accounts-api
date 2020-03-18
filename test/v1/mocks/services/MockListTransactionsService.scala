@@ -22,21 +22,22 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveTransactions.RetrieveTransactionsParsedRequest
-import v1.models.response.retrieveTransaction.{RetrieveTransactionsResponse, TransactionItem}
-import v1.services.RetrieveTransactionsService
+import v1.models.request.listTransactions.ListTransactionsParsedRequest
+import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
+import v1.services.ListTransactionsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveTransactionsService extends MockFactory {
+trait MockListTransactionsService extends MockFactory {
 
-  val mockRetrieveTransactionsService: RetrieveTransactionsService = mock[RetrieveTransactionsService]
+  val mockListTransactionsService: ListTransactionsService = mock[ListTransactionsService]
 
-  object MockRetrieveTransactionsService {
-    def retrieveTransactions(request: RetrieveTransactionsParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionsResponse[TransactionItem]]]]] = {
-      (mockRetrieveTransactionsService
-        .retrieveTransactions(_: RetrieveTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
+  object MockListTransactionsService {
+
+    def listTransactions(request: ListTransactionsParsedRequest):
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]]] = {
+      (mockListTransactionsService
+        .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(request, *, *, *)
     }
   }

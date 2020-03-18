@@ -21,7 +21,7 @@ import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.ListChargesParsedRequest
-import v1.models.response.listCharges.{ListChargesResponse, Charge}
+import v1.models.response.listCharges.{Charge, ListChargesResponse}
 
 import scala.concurrent.Future
 

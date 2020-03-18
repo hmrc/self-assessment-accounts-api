@@ -45,7 +45,7 @@ object RetrieveBalanceResponse extends HateoasLinks {
       import data._
       Seq(
         retrieveBalance(appConfig, nino, isSelf = true),
-        retrieveTransactions(appConfig, nino, isSelf = false)
+        listTransactions(appConfig, nino, isSelf = false)
       )
     }
   }

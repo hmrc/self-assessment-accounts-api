@@ -17,14 +17,13 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1.fixtures.RetrieveTransactionFixture._
+import v1.fixtures.ListTransactionsFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 
 import scala.concurrent.Future
 
-class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
-
+class ListTransactionsConnectorSpec extends ConnectorSpec {
   val chargeId = "anId"
 
   val queryParams: Seq[(String, String)] = Seq(
@@ -34,7 +33,7 @@ class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveTransactionsConnector = new RetrieveTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: ListTransactionsConnector = new ListTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
     MockedAppConfig.desBaseUrl returns baseUrl
@@ -42,20 +41,20 @@ class RetrieveTransactionsConnectorSpec extends ConnectorSpec {
     MockedAppConfig.desEnvironment returns "des-environment"
   }
 
-  "RetrieveTransactionsConnector" when {
+  "ListTransactionsConnector" when {
     "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, fullDesSingleRetreiveTransactionResponse))
+        val outcome = Right(ResponseWrapper(correlationId, fullDesSingleListTransactionsResponse))
 
         MockedHttpClient
           .get(
             url = s"$baseUrl/cross-regime/transactions-placeholder/NINO/$nino/ITSA",
             queryParams = queryParams,
-            requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveTransactions(requestData)) shouldBe outcome
+        await(connector.listTransactions(requestData)) shouldBe outcome
       }
     }
   }

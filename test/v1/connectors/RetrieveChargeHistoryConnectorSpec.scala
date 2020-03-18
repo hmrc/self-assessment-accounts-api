@@ -18,9 +18,9 @@ package v1.connectors
 
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
+import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
 
 import scala.concurrent.Future
