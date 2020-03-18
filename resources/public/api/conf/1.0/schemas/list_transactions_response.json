@@ -119,7 +119,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/transactions?from{from}&to{to}"
+            "example": "/accounts/self-assessment/{nino}/transactions?from={from}&to={to}"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
