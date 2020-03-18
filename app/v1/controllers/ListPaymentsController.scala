@@ -99,7 +99,7 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
 
     val event = AuditEvent(
       auditType = "listSelfAssessmentPayments",
-      listPayments = "list-self-assessment-payments",
+      transactionName = "list-self-assessment-payments",
       detail = details
     )
 

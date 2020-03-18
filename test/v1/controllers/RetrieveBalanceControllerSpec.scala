@@ -84,7 +84,7 @@ class RetrieveBalanceControllerSpec
   def event(auditResponse: AuditResponse): AuditEvent =
     AuditEvent(
       auditType = "retrieveASelfAssessmentBalance",
-      listPayments = "retrieve-a-self-assessment-balance",
+      transactionName = "retrieve-a-self-assessment-balance",
       detail = AuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

@@ -37,7 +37,7 @@ class AuditService @Inject()(auditConnector: AuditConnector,
   def auditEvent(event: AuditEvent)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 
     val eventTags = AuditExtensions.auditHeaderCarrier(hc).toAuditTags() +
-      ("transactionName" -> event.listPayments)
+      ("transactionName" -> event.transactionName)
 
     val dataEvent = ExtendedDataEvent(
       auditSource = AppName.fromConfiguration(appNameConfiguration),

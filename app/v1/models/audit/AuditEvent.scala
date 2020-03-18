@@ -16,4 +16,4 @@
 
 package v1.models.audit
 
-case class AuditEvent(auditType: String, listPayments: String, detail: AuditDetail)
+case class AuditEvent(auditType: String, transactionName: String, detail: AuditDetail)
