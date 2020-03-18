@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListTransactionsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockListTransactionsService, MockMtdIdLookupService, }
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListTransactionsService, MockMtdIdLookupService}
 import v1.models.errors._
 import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.hateoas.Method.GET
@@ -195,8 +195,8 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
 
   def event(auditResponse: AuditResponse): AuditEvent =
     AuditEvent(
-      auditType = "retrieveSelfAssessmentTransactions",
-      transactionName = "retrieve-self-assessment-transactions",
+      auditType = "listSelfAssessmentTransactions",
+      transactionName = "list-self-assessment-transactions",
       detail = AuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
