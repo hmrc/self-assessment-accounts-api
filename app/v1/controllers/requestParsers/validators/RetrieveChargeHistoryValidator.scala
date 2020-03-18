@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.controllers.requestParsers.validators.validations.{ChargeIdValidation, NinoValidation}
+import v1.controllers.requestParsers.validators.validations.{NinoValidation, TransactionIdValidation}
 import v1.models.errors.MtdError
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
 
@@ -27,7 +27,7 @@ class RetrieveChargeHistoryValidator extends Validator[RetrieveChargeHistoryRawR
   private def parameterFormatValidation: RetrieveChargeHistoryRawRequest => List[List[MtdError]] = (data: RetrieveChargeHistoryRawRequest) => {
     List(
       NinoValidation.validate(data.nino),
-      ChargeIdValidation.validate(data.chargeId)
+      TransactionIdValidation.validate(data.chargeId)
     )
   }
   override def validate(data: RetrieveChargeHistoryRawRequest): List[MtdError] = {

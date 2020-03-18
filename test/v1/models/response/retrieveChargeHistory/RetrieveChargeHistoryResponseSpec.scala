@@ -46,7 +46,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
       |   "history": [
       |      {
       |         "taxYear": "2019-20",
-      |         "id": "X123456790A",
+      |         "transactionId": "X123456790A",
       |         "transactionDate": "2019-06-01",
       |         "type": "Balancing Charge Debit",
       |         "amount": 600.01,
