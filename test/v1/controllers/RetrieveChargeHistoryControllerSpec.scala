@@ -25,7 +25,8 @@ import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.HateoasWrapper
 import v1.models.outcomes.ResponseWrapper
@@ -43,7 +44,8 @@ class RetrieveChargeHistoryControllerSpec
     with MockHateoasFactory
     with MockAppConfig
     with MockRetrieveChargeHistoryRequestParser
-    with HateoasLinks {
+    with HateoasLinks
+    with MockAuditService {
 
   private val nino = "AA123456A"
   private val chargeId = "anId"
@@ -73,12 +75,26 @@ class RetrieveChargeHistoryControllerSpec
       requestParser = mockRetrieveChargeHistoryRequestParser,
       service = mockRetrieveChargeHistoryService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
   }
+
+  def event(auditResponse: AuditResponse): AuditEvent =
+    AuditEvent(
+      auditType = "retrieveASelfAssessmentChargesHistory",
+      transactionName = "retrieve-a-self-assessment-charges-history",
+      detail = AuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino = nino,
+        response = auditResponse,
+        `X-CorrelationId` = correlationId
+      )
+    )
 
   "retrieveChargeHistory" should {
     "return OK" when {
@@ -108,6 +124,9 @@ class RetrieveChargeHistoryControllerSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -125,6 +144,9 @@ class RetrieveChargeHistoryControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -153,6 +175,9 @@ class RetrieveChargeHistoryControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
