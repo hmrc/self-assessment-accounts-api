@@ -30,7 +30,7 @@
         "title": "allocationDetail",
         "type": "object",
         "properties": {
-          "id": {
+          "transactionId": {
             "description": "The unique identifier for the charge.",
             "type": "string",
             "pattern": "^[0-9A-Za-z]{1,16}$",

@@ -54,7 +54,7 @@ object RetrieveAllocationsResponseFixture {
       |   "transactionDate": "a date",
       |   "allocations": [
       |   {
-      |     "id": "someID",
+      |     "transactionId": "someID",
       |     "from": "another date",
       |     "to": "an even later date",
       |     "type": "some type thing",
@@ -75,7 +75,7 @@ object RetrieveAllocationsResponseFixture {
         |   "transactionDate": "a date",
         |   "allocations": [
         |   {
-        |     "id": "someID",
+        |     "transactionId": "someID",
         |     "from": "another date",
         |     "to": "an even later date",
         |     "type": "some type thing",

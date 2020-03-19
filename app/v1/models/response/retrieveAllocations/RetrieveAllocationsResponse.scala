@@ -50,8 +50,8 @@ object RetrieveAllocationsResponse extends HateoasLinks {
 
     override def itemLinks(appConfig: AppConfig, data: RetrieveAllocationsHateoasData, item: AllocationDetail): Seq[Link] =
       Seq(
-        retrieveChargeHistory(appConfig, data.nino, item.id.getOrElse(""), isSelf = false),
-        retrieveTransactionDetails(appConfig, data.nino, item.id.getOrElse(""), isSelf = false)
+        retrieveChargeHistory(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false),
+        retrieveTransactionDetails(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false)
       )
 
     override def links(appConfig: AppConfig, data: RetrieveAllocationsHateoasData): Seq[Link] = {
