@@ -9,11 +9,6 @@
       "href": "/accounts/self-assessment/AA999999A/payments/123456789012-123456",
       "method": "GET",
       "rel": "self"
-    },
-    {
-      "href": "/accounts/self-assessment/AA999999A/payments",
-      "method": "GET",
-      "rel": "list-payments"
     }
   ]
 }
