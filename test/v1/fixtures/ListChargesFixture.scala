@@ -166,7 +166,7 @@ object ListChargesFixture {
        |    {
        |      "href": "/accounts/self-assessment/AA123456A/transactions?from=2018-10-01&to=2019-10-01",
        |      "method": "GET",
-       |      "rel": "retrieve-transactions"
+       |      "rel": "list-transactions"
        |    }
        |  ]
        |}""".stripMargin)
