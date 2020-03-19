@@ -5,14 +5,9 @@
   "pendingChargeDueDate": "2020-07-31",
   "links": [
     {
-      "href": "/individuals/accounts/self-assessment/AA999999A/balance",
+      "href": "/accounts/self-assessment/AA999999A/balance",
       "method": "GET",
       "rel": "self"
-    },
-    {
-      "href": "/individuals/accounts/self-assessment/AA999999A/transactions",
-      "method": "GET",
-      "rel": "retrieve-transactions"
     }
   ]
 }

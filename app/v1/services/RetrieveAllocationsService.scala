@@ -27,6 +27,7 @@ import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,11 +38,11 @@ class RetrieveAllocationsService @Inject()(connector: RetrieveAllocationsConnect
   def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse]]] = {
+    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse[AllocationDetail]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveAllocations(request)).leftMap(mapDesErrors(desErrorMap))
-    } yield desResponseWrapper.map(des => des)
+    } yield desResponseWrapper
 
     result.value
   }

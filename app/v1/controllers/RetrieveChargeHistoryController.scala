@@ -22,19 +22,23 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.RetrieveChargeHistoryRequestParser
 import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveChargeHistoryService}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveChargeHistoryService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthService,
                                                 val lookupService: MtdIdLookupService,
+                                                auditService: AuditService,
                                                 requestParser: RetrieveChargeHistoryRequestParser,
                                                 service: RetrieveChargeHistoryService,
                                                 hateoasFactory: HateoasFactory,
@@ -56,11 +60,22 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId)).asRight[ErrorWrapper])
+            hateoasFactory
+              .wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId))
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
+              s"Success response received with correlationId: ${serviceResponse.correlationId}"
+          )
+
+          auditSubmission(
+            AuditDetail(
+              userDetails = request.userDetails,
+              nino = nino,
+              `X-CorrelationId` = serviceResponse.correlationId,
+              response = AuditResponse(httpStatus = OK, None, None))
+          )
 
           Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
@@ -70,6 +85,16 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
         val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+        auditSubmission(
+          AuditDetail(
+            userDetails = request.userDetails,
+            nino = nino,
+            `X-CorrelationId` = correlationId,
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
+
         result
       }.merge
     }
@@ -80,5 +105,18 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: AuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
+
+    val event = AuditEvent(
+      auditType = "retrieveASelfAssessmentChargesHistory",
+      transactionName = "retrieve-a-self-assessment-charges-history",
+      detail = details
+    )
+
+    auditService.auditEvent(event)
   }
 }

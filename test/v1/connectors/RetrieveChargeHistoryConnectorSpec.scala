@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
   val nino = Nino("AA123456A")
-  val chargeId = "anId"
+  val transactionId = "anId"
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -42,7 +42,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
   "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      val request: RetrieveChargeHistoryParsedRequest = RetrieveChargeHistoryParsedRequest(nino, chargeId)
+      val request: RetrieveChargeHistoryParsedRequest = RetrieveChargeHistoryParsedRequest(nino, transactionId)
 
       "return a valid response" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, RetrieveChargeHistoryFixture.retrieveChargeHistoryResponse))
@@ -50,7 +50,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .get(
             url = s"$baseUrl/cross-regime/charge-history-placeholder/NINO/$nino/ITSA",
-            queryParams = Seq("documentId" -> chargeId),
+            queryParams = Seq("documentId" -> transactionId),
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))

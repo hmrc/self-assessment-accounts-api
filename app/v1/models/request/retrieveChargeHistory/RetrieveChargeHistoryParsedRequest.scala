@@ -18,4 +18,4 @@ package v1.models.request.retrieveChargeHistory
 
 import uk.gov.hmrc.domain.Nino
 
-case class RetrieveChargeHistoryParsedRequest(nino: Nino, chargeId: String)
+case class RetrieveChargeHistoryParsedRequest(nino: Nino, transactionId: String)

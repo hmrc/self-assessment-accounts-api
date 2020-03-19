@@ -76,19 +76,19 @@ object RetrieveChargeHistoryFixture {
     """.stripMargin
   )
 
-  def mtdResponseMultipleWithHateoas(nino: String, chargeId: String): JsObject = mtdResponseWithMultipleHHistory.as[JsObject] ++ Json.parse(
+  def mtdResponseMultipleWithHateoas(nino: String, transactionId: String): JsObject = mtdResponseWithMultipleHHistory.as[JsObject] ++ Json.parse(
     s"""
       |{
       |   "links":[
       |      {
-      |         "href":"/accounts/self-assessment/$nino/charges/$chargeId",
+      |         "href":"/accounts/self-assessment/$nino/charges/$transactionId",
       |         "method":"GET",
       |         "rel":"self"
       |      },
       |      {
-      |         "href":"/accounts/self-assessment/$nino/transactions",
+      |         "href":"/accounts/self-assessment/$nino/transactions/$transactionId",
       |         "method":"GET",
-      |         "rel":"retrieve-transactions"
+      |         "rel":"retrieve-transaction-details"
       |      }
       |   ]
       |}
@@ -96,18 +96,18 @@ object RetrieveChargeHistoryFixture {
   ).as[JsObject]
 
   val validNino = "AA123456A"
-  val validChargeId = "ABC123"
+  val validTransactionId = "ABC123"
   val invalidNino = "A12344A"
-  val invalidChargeId = "123456789012345678901234567890123456" // too long
+  val invalidTransactionId = "123456789012345678901234567890123456" // too long
 
   val validRetrieveChargeHistoryRawRequest: RetrieveChargeHistoryRawRequest =
-    RetrieveChargeHistoryRawRequest(validNino, validChargeId)
+    RetrieveChargeHistoryRawRequest(validNino, validTransactionId)
   val invalidRetrieveChargeHistoryRawRequestInvalidNino: RetrieveChargeHistoryRawRequest =
-    RetrieveChargeHistoryRawRequest(invalidNino, validChargeId)
-  val invalidRetrieveChargeHistoryRawRequestInvalidChargeId: RetrieveChargeHistoryRawRequest =
-    RetrieveChargeHistoryRawRequest(validNino, invalidChargeId)
-  val invalidRetrieveChargeHistoryRawRequestInvalidNinoAndChargeId: RetrieveChargeHistoryRawRequest =
-    RetrieveChargeHistoryRawRequest(invalidNino, invalidChargeId)
+    RetrieveChargeHistoryRawRequest(invalidNino, validTransactionId)
+  val invalidRetrieveChargeHistoryRawRequestInvalidTransactionId: RetrieveChargeHistoryRawRequest =
+    RetrieveChargeHistoryRawRequest(validNino, invalidTransactionId)
+  val invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId: RetrieveChargeHistoryRawRequest =
+    RetrieveChargeHistoryRawRequest(invalidNino, invalidTransactionId)
 
 
   val chargeHistoryResponse: ChargeHistory =

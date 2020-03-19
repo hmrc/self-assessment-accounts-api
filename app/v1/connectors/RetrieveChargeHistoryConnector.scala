@@ -36,9 +36,9 @@ class RetrieveChargeHistoryConnector @Inject()(val http: HttpClient,
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
-    val chargeId = request.chargeId
+    val transactionId = request.transactionId
 
-    val queryParams = Seq("documentId" -> chargeId)
+    val queryParams = Seq("documentId" -> transactionId)
 
     get(
       uri = DesUri[RetrieveChargeHistoryResponse](s"cross-regime/charge-history-placeholder/NINO/$nino/ITSA"),

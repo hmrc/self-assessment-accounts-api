@@ -12,14 +12,14 @@
   ],
   "links": [
     {
-      "href": "/individuals/accounts/self-assessment/AA999999A/charges/X1234567890A",
+      "href": "/accounts/self-assessment/AA999999A/charges/X1234567890A",
       "method": "GET",
       "rel": "self"
     },
     {
-      "href": "/individuals/accounts/self-assessment/AA999999A/transactions",
+      "href": "/accounts/self-assessment/AA999999A/transactions/X1234567890A",
       "method": "GET",
-      "rel": "retrieve-transactions"
+      "rel": "retrieve-transaction-details"
     }
   ]
 }

@@ -59,11 +59,6 @@ object RetrieveBalanceFixture {
           "href" -> s"/accounts/self-assessment/$nino/balance",
           "method" -> "GET",
           "rel" -> "self"
-        ),
-        Json.obj(
-          "href" -> s"/accounts/self-assessment/$nino/transactions",
-          "method" -> "GET",
-          "rel" -> "retrieve-transactions"
         )
       )
     )

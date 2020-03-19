@@ -16,7 +16,7 @@
             "type": "string",
             "example": "2019-20"
           },
-          "id": {
+          "transactionId": {
             "description": "A unique identifier for the charge.",
             "type": "string",
             "pattern": "^[0-9A-Za-z]{1,12}$"
@@ -55,13 +55,14 @@
                 "href": {
                   "description": "The relative url of the endpoint",
                   "type": "string",
-                  "example": "/accounts/self-assessment/{nino}/charges/{chargeId}"
+                  "example": "/accounts/self-assessment/{nino}/charges/{transactionId}"
                 },
                 "rel": {
-                  "description": "A label for the endpoint, which describes how it is related to the current resource.",
+                  "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
                   "type": "string",
                   "enum": [
-                    "retrieve-charge-history"
+                    "retrieve-charge-history",
+                    "retrieve-transaction-details"
                   ]
                 },
                 "method": {
@@ -91,13 +92,14 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/charges"
+            "example": "/accounts/self-assessment/{nino}/charges?from={from}&to={to}"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
             "type": "string",
             "enum": [
-              "self"
+              "self",
+              "list-transactions"
             ]
           },
           "method": {

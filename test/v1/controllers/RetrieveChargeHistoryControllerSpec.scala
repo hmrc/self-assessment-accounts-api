@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -25,9 +24,12 @@ import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
-import v1.models.hateoas.HateoasWrapper
+import v1.models.hateoas.Method.GET
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveChargeHistory.{RetrieveChargeHistoryParsedRequest, RetrieveChargeHistoryRawRequest}
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
@@ -41,28 +43,42 @@ class RetrieveChargeHistoryControllerSpec
     with MockMtdIdLookupService
     with MockRetrieveChargeHistoryService
     with MockHateoasFactory
-    with MockAppConfig
     with MockRetrieveChargeHistoryRequestParser
-    with HateoasLinks {
+    with HateoasLinks
+    with MockAuditService {
 
   private val nino = "AA123456A"
-  private val chargeId = "anId"
+  private val transactionId = "anId"
   private val correlationId = "X-123"
 
   private val rawRequest: RetrieveChargeHistoryRawRequest =
     RetrieveChargeHistoryRawRequest(
       nino = nino,
-      chargeId = chargeId
+      transactionId = transactionId
     )
 
   private val parsedRequest: RetrieveChargeHistoryParsedRequest =
     RetrieveChargeHistoryParsedRequest(
       nino = Nino(nino),
-      chargeId = chargeId
+      transactionId = transactionId
+    )
+
+  val chargeHistoryLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/charges/$transactionId",
+      method = GET,
+      rel = SELF
+    )
+
+  val transactionDetailsLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
+      method = GET,
+      rel = RETRIEVE_TRANSACTION_DETAILS
     )
 
   private val retrieveChargeHistoryResponse = RetrieveChargeHistoryFixture.retrieveChargeHistoryResponseMultiple
-  private val mtdResponse = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, chargeId)
+  private val mtdResponse = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
 
   trait Test {
     val hc = HeaderCarrier()
@@ -73,6 +89,7 @@ class RetrieveChargeHistoryControllerSpec
       requestParser = mockRetrieveChargeHistoryRequestParser,
       service = mockRetrieveChargeHistoryService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -80,11 +97,22 @@ class RetrieveChargeHistoryControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
   }
 
+  def event(auditResponse: AuditResponse): AuditEvent =
+    AuditEvent(
+      auditType = "retrieveASelfAssessmentChargesHistory",
+      transactionName = "retrieve-a-self-assessment-charges-history",
+      detail = AuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino = nino,
+        response = auditResponse,
+        `X-CorrelationId` = correlationId
+      )
+    )
+
   "retrieveChargeHistory" should {
     "return OK" when {
       "happy path" in new Test {
-
-        MockedAppConfig.apiGatewayContext returns "accounts/self-assessment" anyNumberOfTimes()
 
         MockRetrieveChargeHistoryRequestParser
           .parse(rawRequest)
@@ -95,19 +123,22 @@ class RetrieveChargeHistoryControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))))
 
         MockHateoasFactory
-          .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, chargeId))
+          .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, transactionId))
           .returns(HateoasWrapper(retrieveChargeHistoryResponse,
             Seq(
-              retrieveChargeHistory(mockAppConfig, nino, chargeId, isSelf = true),
-              listTransactions(mockAppConfig, nino, isSelf = false)
+              chargeHistoryLink,
+              transactionDetailsLink
             )
           ))
 
-        val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -120,11 +151,14 @@ class RetrieveChargeHistoryControllerSpec
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
 
-            val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -148,11 +182,14 @@ class RetrieveChargeHistoryControllerSpec
               .retrieveChargeHistory(parsedRequest)
               .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
 
-            val result: Future[Result] = controller.retrieveChargeHistory(nino, chargeId)(fakeGetRequest)
+            val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

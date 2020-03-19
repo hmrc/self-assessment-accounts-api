@@ -71,6 +71,13 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       rel = RETRIEVE_CHARGE_HISTORY
     )
 
+  private val transactionDetailsHateoasLink =
+    Link(
+      href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
+      method = GET,
+      rel = RETRIEVE_TRANSACTION_DETAILS
+    )
+
   private val paymentAllocationHateoasLink: Link =
     Link(
       href = s"/accounts/self-assessment/$nino/payments/$paymentId",
@@ -103,11 +110,17 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
     Seq(
       HateoasWrapper(
         payload = chargeTransactionItemModel,
-        links = Seq(chargeHistoryHateoasLink)
+        links = Seq(
+          chargeHistoryHateoasLink,
+          transactionDetailsHateoasLink
+        )
       ),
       HateoasWrapper(
         payload = paymentTransactionItemModel,
-        links = Seq(paymentAllocationHateoasLink)
+        links = Seq(
+          paymentAllocationHateoasLink,
+          transactionDetailsHateoasLink
+        )
       )
     )
   )
@@ -128,10 +141,15 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       |         "lastClearedAmount":2.01,
       |         "links": [
       |         {
-      |            "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
-      |			       "method": "GET",
-      |			       "rel": "retrieve-charge-history"
-      |		       }
+      |           "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
+      |			      "method": "GET",
+      |			      "rel": "retrieve-charge-history"
+      |		      },
+      |         {
+      |           "href": "/accounts/self-assessment/AA123456A/transactions/X123456790A",
+      |			      "method": "GET",
+      |			      "rel": "retrieve-transaction-details"
+      |		      }
       |        ]
       |      },
       |      {
@@ -150,6 +168,11 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       |             "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
       |			        "method": "GET",
       |			        "rel": "retrieve-payment-allocations"
+      |		        },
+      |          {
+      |             "href": "/accounts/self-assessment/AA123456A/transactions/X123456790A",
+      |			        "method": "GET",
+      |			        "rel": "retrieve-transaction-details"
       |		        }
       |          ]
       |      }
@@ -219,7 +242,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponse))))
 
         MockHateoasFactory
-          .wrapList(mtdResponse, ListTransactionsHateoasData(nino))
+          .wrapList(mtdResponse, ListTransactionsHateoasData(nino, from, to))
           .returns(HateoasWrapper(hateoasResponse,
             Seq(listTransactionsHateoasLink, listPaymentsHateoasLink, listChargesHateoasLink)))
 

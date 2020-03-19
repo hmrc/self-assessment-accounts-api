@@ -37,15 +37,15 @@ class RetrieveChargeHistoryValidatorSpec extends UnitSpec {
       }
     }
 
-    "return ChargeIdFormatError error" when {
+    "return TransactionIdFormatError error" when {
       "an invalid charge ID is supplied" in {
-        validator.validate(invalidRetrieveChargeHistoryRawRequestInvalidChargeId) shouldBe List(TransactionIdFormatError)
+        validator.validate(invalidRetrieveChargeHistoryRawRequestInvalidTransactionId) shouldBe List(TransactionIdFormatError)
       }
     }
 
-    "return NinoFormatError and ChargeIdFormatError error" when {
+    "return NinoFormatError and TransactionIdFormatError error" when {
       "an invalid nino and invalid charge ID are supplied" in {
-        validator.validate(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndChargeId) shouldBe List(NinoFormatError, TransactionIdFormatError)
+        validator.validate(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId) shouldBe List(NinoFormatError, TransactionIdFormatError)
       }
     }
   }

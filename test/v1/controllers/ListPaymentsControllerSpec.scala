@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -25,10 +24,11 @@ import v1.fixtures.ListPaymentsFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListPaymentsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockListPaymentsService, MockMtdIdLookupService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockListPaymentsService}
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType.{RETRIEVE_PAYMENT_ALLOCATIONS, RETRIEVE_TRANSACTIONS, SELF}
+import v1.models.hateoas.RelType.{RETRIEVE_PAYMENT_ALLOCATIONS, LIST_TRANSACTIONS, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
@@ -43,8 +43,8 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
   with MockListPaymentsRequestParser
   with MockListPaymentsService
   with MockHateoasFactory
-  with MockAppConfig
-  with HateoasLinks {
+  with HateoasLinks
+  with MockAuditService {
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -55,6 +55,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
       requestParser = mockListPaymentsRequestParser,
       service = mockService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -62,23 +63,60 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
     MockedEnrolmentsAuthService.authoriseUser()
   }
 
+  def event(auditResponse: AuditResponse): AuditEvent =
+    AuditEvent(
+      auditType = "listSelfAssessmentPayments",
+      transactionName = "list-self-assessment-payments",
+      detail = AuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino = nino,
+        response = auditResponse,
+        `X-CorrelationId` = correlationId
+      )
+    )
+
   private val nino          = "AA123456A"
-  private val from          = "2018-10-1"
-  private val to            = "2019-10-1"
+  private val from          = "2018-10-01"
+  private val to            = "2019-10-01"
   private val correlationId = "X-123"
   private val rawRequest = ListPaymentsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListPaymentsParsedRequest(Nino(nino), from, to)
 
-  private val paymentHateoasLink1       =
-    Link(href = "/accounts/self-assessment/AA123456A/payments/123456789012-123456", method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS)
-  private val paymentHateoasLink2       =
-    Link(href = "/accounts/self-assessment/AA123456A/payments/223456789012-123456", method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS)
+  private val paymentHateoasLink1 =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/payments/123456789012-123456",
+      method = GET,
+      rel = RETRIEVE_PAYMENT_ALLOCATIONS
+    )
 
-  private val listPaymentsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/payments", method = GET, rel = SELF)
-  private val transactionsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = RETRIEVE_TRANSACTIONS)
+  private val paymentHateoasLink2 =
+    Link(
+      href = "/accounts/self-assessment/AA123456A/payments/223456789012-123456",
+      method = GET,
+      rel = RETRIEVE_PAYMENT_ALLOCATIONS
+    )
 
-  private val hateoasResponse = ListPaymentsResponse(
-    Seq(HateoasWrapper(payment1, Seq(paymentHateoasLink1)), HateoasWrapper(payment2, Seq(paymentHateoasLink2))))
+  private val listPaymentsHateoasLink =
+    Link(
+      href = s"/accounts/self-assessment/AA123456A/payments?from=$from&to=$to",
+      method = GET,
+      rel = SELF
+    )
+
+  private val transactionsHateoasLink =
+    Link(
+      href = s"/accounts/self-assessment/AA123456A/transactions?from=$from&to=$to",
+      method = GET,
+      rel = LIST_TRANSACTIONS
+    )
+
+  private val hateoasResponse =
+    ListPaymentsResponse(
+      Seq(
+        HateoasWrapper(payment1, Seq(paymentHateoasLink1)),
+        HateoasWrapper(payment2, Seq(paymentHateoasLink2)))
+    )
 
   "retrieveList" should {
     "return a valid payments response" when {
@@ -93,7 +131,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponseObj))))
 
         MockHateoasFactory
-          .wrapList(mtdResponseObj, ListPaymentsHateoasData(nino))
+          .wrapList(mtdResponseObj, ListPaymentsHateoasData(nino, from, to))
           .returns(HateoasWrapper(hateoasResponse, Seq(listPaymentsHateoasLink, transactionsHateoasLink)))
 
         val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
@@ -101,6 +139,9 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -118,6 +159,9 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -152,6 +196,9 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

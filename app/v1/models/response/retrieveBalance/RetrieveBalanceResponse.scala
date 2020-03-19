@@ -22,33 +22,32 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveBalanceResponse (overdueAmount : Option[BigDecimal],
-                                    payableAmount: BigDecimal,
-                                    payableDueDate: Option[String],
-                                    pendingChargeDueAmount: Option[BigDecimal],
-                                    pendingChargeDueDate: Option[String])
+case class RetrieveBalanceResponse(overdueAmount: Option[BigDecimal],
+                                   payableAmount: BigDecimal,
+                                   payableDueDate: Option[String],
+                                   pendingChargeDueAmount: Option[BigDecimal],
+                                   pendingChargeDueDate: Option[String])
 
 object RetrieveBalanceResponse extends HateoasLinks {
 
-  implicit val writes: OWrites[RetrieveBalanceResponse] = Json.writes[RetrieveBalanceResponse]
-
   implicit val reads: Reads[RetrieveBalanceResponse] = (
-    (JsPath \  "overdueAmount").readNullable[BigDecimal] and
+    (JsPath \ "overdueAmount").readNullable[BigDecimal] and
       (JsPath \ "payableAmount").read[BigDecimal] and
       (JsPath \ "payableDueDate").readNullable[String] and
       (JsPath \ "pendingChargeDueAmount").readNullable[BigDecimal] and
       (JsPath \ "pendingChargeDueDate").readNullable[String]
-    )(RetrieveBalanceResponse.apply _)
+    ) (RetrieveBalanceResponse.apply _)
+
+  implicit val writes: OWrites[RetrieveBalanceResponse] =
+    Json.writes[RetrieveBalanceResponse]
 
   implicit object RetrieveBalanceLinksFactory extends HateoasLinksFactory[RetrieveBalanceResponse, RetrieveBalanceHateoasData] {
-    override def links(appConfig: AppConfig, data: RetrieveBalanceHateoasData): Seq[Link] = {
-      import data._
+    override def links(appConfig: AppConfig, data: RetrieveBalanceHateoasData): Seq[Link] =
       Seq(
-        retrieveBalance(appConfig, nino, isSelf = true),
-        listTransactions(appConfig, nino, isSelf = false)
+        retrieveBalance(appConfig, data.nino, isSelf = true)
       )
-    }
   }
+
 }
 
 case class RetrieveBalanceHateoasData(nino: String) extends HateoasData
