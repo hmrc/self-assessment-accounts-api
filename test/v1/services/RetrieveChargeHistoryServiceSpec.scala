@@ -33,7 +33,6 @@ import scala.concurrent.Future
 class RetrieveChargeHistoryServiceSpec extends UnitSpec {
 
   private val nino = Nino("AA123456A")
-  "anId"
   private val correlationId = "X-123"
 
   private val requestData: RetrieveChargeHistoryParsedRequest =

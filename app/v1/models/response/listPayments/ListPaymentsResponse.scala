@@ -29,23 +29,30 @@ object ListPaymentsResponse extends HateoasLinks {
   implicit def reads[I: Reads]: Reads[ListPaymentsResponse[I]] =
     implicitly(JsPath \ "paymentDetails").read[Seq[I]].map(ListPaymentsResponse(_))
 
-  implicit def writes[I: Writes]: OWrites[ListPaymentsResponse[I]] = Json.writes[ListPaymentsResponse[I]]
+  implicit def writes[I: Writes]: OWrites[ListPaymentsResponse[I]] =
+    Json.writes[ListPaymentsResponse[I]]
 
   implicit object LinksFactory extends HateoasListLinksFactory[ListPaymentsResponse, Payment, ListPaymentsHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: ListPaymentsHateoasData, item: Payment): Seq[Link] =
-      Seq(retrievePaymentAllocations(appConfig, data.nino, item.paymentId.getOrElse(""), isSelf = false))
+      Seq(
+        retrievePaymentAllocations(appConfig, data.nino, item.paymentId.getOrElse(""), isSelf = false)
+      )
 
-    override def links(appConfig: AppConfig, data: ListPaymentsHateoasData): Seq[Link] = Seq(
-      listPayments(appConfig, data.nino, isSelf = true),
-      listTransactions(appConfig, data.nino, isSelf = false)
-    )
+    override def links(appConfig: AppConfig, data: ListPaymentsHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        listPayments(appConfig, nino, from, to, isSelf = true),
+        listTransactions(appConfig, nino, from, to, isSelf = false)
+      )
+    }
   }
 
   implicit object ResponseFunctor extends Functor[ListPaymentsResponse] {
     override def map[A, B](fa: ListPaymentsResponse[A])(f: A => B): ListPaymentsResponse[B] =
       ListPaymentsResponse(fa.payments.map(f))
   }
+
 }
 
-case class ListPaymentsHateoasData(nino: String) extends HateoasData
+case class ListPaymentsHateoasData(nino: String, from: String, to: String) extends HateoasData

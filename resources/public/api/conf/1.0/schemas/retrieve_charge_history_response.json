@@ -71,7 +71,7 @@
             "type": "string",
             "enum": [
               "self",
-              "retrieve-transactions"
+              "retrieve-transaction-details"
             ]
           },
           "method": {

@@ -24,6 +24,7 @@ import v1.models.errors.ErrorWrapper
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 import v1.services.RetrieveAllocationsService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +36,7 @@ trait MockRetrieveAllocationsService extends MockFactory {
   object MockRetrieveAllocationsService {
 
     def retrieveAllocations(request: RetrieveAllocationsParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse]]]] = {
+    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse[AllocationDetail]]]]] = {
       (mockRetrieveAllocationsService
         .retrieveAllocations(_: RetrieveAllocationsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
         .expects(request, *, *, *)

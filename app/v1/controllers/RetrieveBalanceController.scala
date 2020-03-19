@@ -60,7 +60,9 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
           parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveBalance(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(serviceResponse.responseData, RetrieveBalanceHateoasData(nino)).asRight[ErrorWrapper])
+            hateoasFactory
+              .wrap(serviceResponse.responseData, RetrieveBalanceHateoasData(nino))
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

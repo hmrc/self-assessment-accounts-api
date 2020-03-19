@@ -39,7 +39,7 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
       "paymentLotItem" -> paymentLotItem
     )
 
-  val retrieveAllocationsResponse: RetrieveAllocationsResponse =
+  val retrieveAllocationsResponse: RetrieveAllocationsResponse[AllocationDetail] =
     RetrieveAllocationsResponse(
       amount = Some(100.00),
       method = Some("aMethod"),

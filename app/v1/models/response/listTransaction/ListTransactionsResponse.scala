@@ -19,7 +19,6 @@ package v1.models.response.listTransaction
 import cats.Functor
 import config.AppConfig
 import play.api.libs.json._
-import v1.controllers.requestParsers.validators.validations.PaymentIdValidation
 import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
@@ -33,25 +32,34 @@ object ListTransactionsResponse extends HateoasLinks {
   implicit def writes[I: Writes]: OWrites[ListTransactionsResponse[I]] =
     Json.writes[ListTransactionsResponse[I]]
 
-  implicit object LinksFactory extends HateoasListLinksFactory[ListTransactionsResponse, TransactionItem, ListTransactionsHateoasData] {
+  implicit object ListTransactionsLinksFactory extends HateoasListLinksFactory[ListTransactionsResponse, TransactionItem, ListTransactionsHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: ListTransactionsHateoasData, item: TransactionItem): Seq[Link] = {
+      import data.nino
 
-      val id = item.paymentId.getOrElse("")
-      val isPayment = PaymentIdValidation.validate(id) == Nil
+      val transactionId = item.transactionId.getOrElse("")
 
-      if (isPayment) {
-        Seq(retrievePaymentAllocations(appConfig, data.nino, id, isSelf = false))
+      if (item.paymentId.nonEmpty) {
+        Seq(
+          retrievePaymentAllocations(appConfig, nino, item.paymentId.get, isSelf = false),
+          retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = false)
+        )
       } else {
-        Seq(retrieveChargeHistory(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false))
+        Seq(
+          retrieveChargeHistory(appConfig, nino, transactionId, isSelf = false),
+          retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = false)
+        )
       }
     }
 
-    override def links(appConfig: AppConfig, data: ListTransactionsHateoasData): Seq[Link] = Seq(
-      listTransactions(appConfig, data.nino, isSelf = true),
-      listPayments(appConfig, data.nino, isSelf = false),
-      listCharges(appConfig, data.nino, isSelf = false)
-    )
+    override def links(appConfig: AppConfig, data: ListTransactionsHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        listTransactions(appConfig, nino, from, to, isSelf = true),
+        listCharges(appConfig, nino, from, to, isSelf = false),
+        listPayments(appConfig, nino, from, to, isSelf = false)
+      )
+    }
   }
 
   implicit object ResponseFunctor extends Functor[ListTransactionsResponse] {
@@ -61,4 +69,4 @@ object ListTransactionsResponse extends HateoasLinks {
 
 }
 
-case class ListTransactionsHateoasData(nino: String) extends HateoasData
+case class ListTransactionsHateoasData(nino: String, from: String, to: String) extends HateoasData

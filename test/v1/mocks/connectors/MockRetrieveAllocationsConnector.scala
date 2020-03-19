@@ -22,6 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.connectors.{DesOutcome, RetrieveAllocationsConnector}
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -31,7 +32,7 @@ trait MockRetrieveAllocationsConnector extends MockFactory {
 
   object MockRetrieveAllocationsConnector {
 
-    def retrieve(requestData: RetrieveAllocationsParsedRequest): CallHandler[Future[DesOutcome[RetrieveAllocationsResponse]]] = {
+    def retrieve(requestData: RetrieveAllocationsParsedRequest): CallHandler[Future[DesOutcome[RetrieveAllocationsResponse[AllocationDetail]]]] = {
       (mockRetrieveAllocationsConnector
         .retrieveAllocations(_: RetrieveAllocationsParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
         .expects(requestData, *, *)

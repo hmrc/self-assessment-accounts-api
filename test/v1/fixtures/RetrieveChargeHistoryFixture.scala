@@ -86,9 +86,9 @@ object RetrieveChargeHistoryFixture {
       |         "rel":"self"
       |      },
       |      {
-      |         "href":"/accounts/self-assessment/$nino/transactions",
+      |         "href":"/accounts/self-assessment/$nino/transactions/$transactionId",
       |         "method":"GET",
-      |         "rel":"retrieve-transactions"
+      |         "rel":"retrieve-transaction-details"
       |      }
       |   ]
       |}
