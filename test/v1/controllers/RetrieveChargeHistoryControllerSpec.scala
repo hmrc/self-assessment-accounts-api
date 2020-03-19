@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -28,7 +27,9 @@ import v1.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
 import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
-import v1.models.hateoas.HateoasWrapper
+import v1.models.hateoas.Method.GET
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveChargeHistory.{RetrieveChargeHistoryParsedRequest, RetrieveChargeHistoryRawRequest}
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
@@ -42,7 +43,6 @@ class RetrieveChargeHistoryControllerSpec
     with MockMtdIdLookupService
     with MockRetrieveChargeHistoryService
     with MockHateoasFactory
-    with MockAppConfig
     with MockRetrieveChargeHistoryRequestParser
     with HateoasLinks
     with MockAuditService {
@@ -61,6 +61,20 @@ class RetrieveChargeHistoryControllerSpec
     RetrieveChargeHistoryParsedRequest(
       nino = Nino(nino),
       transactionId = transactionId
+    )
+
+  val chargeHistoryLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/charges/$transactionId",
+      method = GET,
+      rel = SELF
+    )
+
+  val transactionDetailsLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
+      method = GET,
+      rel = RETRIEVE_TRANSACTION_DETAILS
     )
 
   private val retrieveChargeHistoryResponse = RetrieveChargeHistoryFixture.retrieveChargeHistoryResponseMultiple
@@ -100,8 +114,6 @@ class RetrieveChargeHistoryControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockedAppConfig.apiGatewayContext returns "accounts/self-assessment" anyNumberOfTimes()
-
         MockRetrieveChargeHistoryRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
@@ -114,8 +126,8 @@ class RetrieveChargeHistoryControllerSpec
           .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, transactionId))
           .returns(HateoasWrapper(retrieveChargeHistoryResponse,
             Seq(
-              retrieveChargeHistory(mockAppConfig, nino, transactionId, isSelf = true),
-              listTransactions(mockAppConfig, nino, isSelf = false)
+              chargeHistoryLink,
+              transactionDetailsLink
             )
           ))
 

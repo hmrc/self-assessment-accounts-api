@@ -30,14 +30,14 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino = "AA111111A"
+    val nino = "AA123456A"
     val paymentId = "aLot-anItem"
     val paymentLot = "aLot"
     val paymentLotItem = "anItem"
     val correlationId = "X-123"
 
     val desResponse: JsValue = RetrieveAllocationsResponseFixture.desJson
-    val mtdResponse: JsValue = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas(nino, paymentId)
+    val mtdResponse: JsValue = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas
 
     val queryParams: Map[String, String] = Map("paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem)
 

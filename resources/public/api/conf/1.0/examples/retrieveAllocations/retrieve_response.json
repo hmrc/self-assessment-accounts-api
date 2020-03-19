@@ -9,7 +9,19 @@
       "to": "2019-04-05",
       "type": "ITSA Balancing Charge Debit",
       "amount": 400.00,
-      "clearedAmount": 400.00
+      "clearedAmount": 400.00,
+      "links": [
+        {
+          "href": "/accounts/self-assessment/AA999999A/charges/XA012599973Z11",
+          "method": "GET",
+          "rel": "retrieve-charge-history"
+        },
+        {
+          "href": "/accounts/self-assessment/AA999999A/transactions/XA012599973Z11",
+          "method": "GET",
+          "rel": "retrieve-transaction-details"
+        }
+      ]
     },
     {
       "id": "XA012599973Z12",
@@ -17,7 +29,19 @@
       "to": "2020-04-05",
       "type": "ITSA Payment On Account Charge",
       "amount": 800.00,
-      "clearedAmount": 800.00
+      "clearedAmount": 800.00,
+      "links": [
+        {
+          "href": "/accounts/self-assessment/AA999999A/charges/XA012599973Z12",
+          "method": "GET",
+          "rel": "retrieve-charge-history"
+        },
+        {
+          "href": "/accounts/self-assessment/AA999999A/transactions/XA012599973Z12",
+          "method": "GET",
+          "rel": "retrieve-transaction-details"
+        }
+      ]
     }
   ],
   "links": [
@@ -25,11 +49,6 @@
       "href": "/accounts/self-assessment/AA999999A/payments/X23456789012-A23456",
       "method": "GET",
       "rel": "self"
-    },
-    {
-      "href": "/accounts/self-assessment/AA999999A/payments",
-      "method": "GET",
-      "rel": "list-payments"
     }
   ]
 }

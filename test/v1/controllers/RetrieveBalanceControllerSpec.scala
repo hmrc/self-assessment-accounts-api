@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import mocks.MockAppConfig
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
@@ -26,7 +25,9 @@ import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveBalanceRequestParser
 import v1.models.errors._
-import v1.models.hateoas.HateoasWrapper
+import v1.models.hateoas.Method.GET
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.hateoas.RelType.SELF
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, RetrieveBalanceRawRequest}
 import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
@@ -41,7 +42,6 @@ class RetrieveBalanceControllerSpec
     with MockMtdIdLookupService
     with MockRetrieveBalanceService
     with MockHateoasFactory
-    with MockAppConfig
     with MockRetrieveBalanceRequestParser
     with HateoasLinks
     with MockAuditService {
@@ -59,6 +59,13 @@ class RetrieveBalanceControllerSpec
 
   private val retrieveBalanceResponse = RetrieveBalanceFixture.fullModel
   private val mtdResponse = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
+
+  val balanceLink: Link =
+    Link(
+      href = s"/accounts/self-assessment/$nino/balance",
+      method = GET,
+      rel = SELF
+    )
 
   def event(auditResponse: AuditResponse): AuditEvent =
     AuditEvent(
@@ -94,8 +101,6 @@ class RetrieveBalanceControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockedAppConfig.apiGatewayContext returns "accounts/self-assessment" anyNumberOfTimes()
-
         MockRetrieveBalanceRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
@@ -106,8 +111,7 @@ class RetrieveBalanceControllerSpec
 
         MockHateoasFactory
           .wrap(retrieveBalanceResponse, RetrieveBalanceHateoasData(nino))
-          .returns(HateoasWrapper(retrieveBalanceResponse, Seq(retrieveBalance(mockAppConfig, nino, isSelf = true),
-            listTransactions(mockAppConfig, nino, isSelf = false))))
+          .returns(HateoasWrapper(retrieveBalanceResponse, Seq(balanceLink)))
 
         val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
 

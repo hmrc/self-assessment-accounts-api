@@ -12,12 +12,12 @@
       "lastClearedAmount":2.01,
       "links": [
         {
-          "href": "/individuals/accounts/self-assessment/AA999999A/charges/X1234567890A",
+          "href": "/accounts/self-assessment/AA999999A/charges/X1234567890A",
           "method": "GET",
           "rel": "retrieve-charge-history"
         },
         {
-          "href": "/individuals/accounts/self-assessment/AA999999A/transactions/X1234567890A",
+          "href": "/accounts/self-assessment/AA999999A/transactions/X1234567890A",
           "method": "GET",
           "rel": "retrieve-transaction-details"
         }
@@ -36,12 +36,12 @@
       "lastClearedAmount":2.01,
       "links": [
         {
-          "href": "/individuals/accounts/self-assessment/AA999999A/payments/X23456789012-A23456",
+          "href": "/accounts/self-assessment/AA999999A/payments/X23456789012-A23456",
           "method": "GET",
           "rel": "retrieve-payment-allocations"
         },
         {
-          "href": "/individuals/accounts/self-assessment/AA999999A/transactions/X123456790B",
+          "href": "/accounts/self-assessment/AA999999A/transactions/X123456790B",
           "method": "GET",
           "rel": "retrieve-transaction-details"
         }
@@ -50,17 +50,17 @@
   ],
   "links": [
     {
-      "href": "/individuals/accounts/self-assessment/AA999999A/transactions?from=2018-01-01&to=2019-01-01",
+      "href": "/accounts/self-assessment/AA999999A/transactions?from=2018-01-01&to=2019-01-01",
       "method": "GET",
       "rel": "self"
     },
     {
-      "href": "/individuals/accounts/self-assessment/AA999999A/charges?from=2018-01-01&to=2019-01-01",
+      "href": "/accounts/self-assessment/AA999999A/charges?from=2018-01-01&to=2019-01-01",
       "method": "GET",
       "rel": "list-charges"
     },
     {
-      "href": "/individuals/accounts/self-assessment/AA999999A/payments?from=2018-01-01&to=2019-01-01",
+      "href": "/accounts/self-assessment/AA999999A/payments?from=2018-01-01&to=2019-01-01",
       "method": "GET",
       "rel": "list-payments"
     }

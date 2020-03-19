@@ -24,14 +24,15 @@ import v1.models.hateoas.{HateoasData, Link}
 case class RetrieveTransactionDetailsResponse(transactionItems: Seq[TransactionItem])
 
 object RetrieveTransactionDetailsResponse extends HateoasLinks {
+
   implicit val reads: Reads[RetrieveTransactionDetailsResponse] =
    (JsPath \ "transactionItems").read[Seq[TransactionItem]]
      .map(items => RetrieveTransactionDetailsResponse(items.filterNot(_ == TransactionItem.empty)))
 
-  implicit val writes: OWrites[RetrieveTransactionDetailsResponse] = Json.writes[RetrieveTransactionDetailsResponse]
+  implicit val writes: OWrites[RetrieveTransactionDetailsResponse] =
+    Json.writes[RetrieveTransactionDetailsResponse]
 
-  implicit object RetrieveTransactionDetailsLinksFactory extends
-    HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData] {
+  implicit object RetrieveTransactionDetailsLinksFactory extends HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData]{
     override def links(appConfig: AppConfig, data: RetrieveTransactionDetailsHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -43,6 +44,7 @@ object RetrieveTransactionDetailsResponse extends HateoasLinks {
       )
     }
   }
+
 }
 
 case class RetrieveTransactionDetailsHateoasData(nino: String, transactionId: String, paymentId: Option[String]) extends HateoasData

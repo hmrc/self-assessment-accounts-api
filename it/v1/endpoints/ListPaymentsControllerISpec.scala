@@ -53,9 +53,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
   }
 
   "Calling the list payments endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made" in new Test {
 
         val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)

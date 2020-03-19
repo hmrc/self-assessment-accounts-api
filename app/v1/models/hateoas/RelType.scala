@@ -20,7 +20,7 @@ object RelType {
   val SELF = "self"
 
   val RETRIEVE_BALANCE = "retrieve-balance"
-  val RETRIEVE_TRANSACTIONS = "retrieve-transactions"
+  val LIST_TRANSACTIONS = "list-transactions"
   val RETRIEVE_TRANSACTION_DETAILS = "retrieve-transaction-details"
   val LIST_CHARGES = "list-charges"
   val RETRIEVE_CHARGE_HISTORY = "retrieve-charge-history"
