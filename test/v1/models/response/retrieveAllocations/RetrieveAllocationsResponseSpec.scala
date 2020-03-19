@@ -46,7 +46,8 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |   }
       |  ]
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
   val desJsonWithoutAllocations: JsValue = Json.parse(
     """
@@ -59,7 +60,8 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |   }
       |  ]
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
   val desJsonWithEmptyAllocations: JsValue = Json.parse(
     """
@@ -77,7 +79,8 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |   }
       |  ]
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
   val paymentDetails: RetrieveAllocationsResponse[AllocationDetail] = RetrieveAllocationsResponseFixture.paymentDetails
 
@@ -99,7 +102,7 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       |   "transactionDate": "a date",
       |   "allocations" : []
       |}
-      |""".stripMargin
+    """.stripMargin
   )
 
 
