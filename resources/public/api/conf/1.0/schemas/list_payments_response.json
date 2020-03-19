@@ -48,7 +48,7 @@
                   "example": "/accounts/self-assessment/{nino}/payments/{paymentId}"
                 },
                 "rel": {
-                  "description": "A label for the endpoint, which describes how it is related to the current resource.",
+                  "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
                   "type": "string",
                   "enum": [
                     "retrieve-payment-allocations"
@@ -84,7 +84,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/payments"
+            "example": "/accounts/self-assessment/{nino}/payments?from={from}&to={to}"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
