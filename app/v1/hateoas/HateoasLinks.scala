@@ -36,7 +36,7 @@ trait HateoasLinks {
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/transactions?from=$from&to=$to",
       method = GET,
-      rel = if(isSelf) SELF else RETRIEVE_TRANSACTIONS
+      rel = if(isSelf) SELF else LIST_TRANSACTIONS
     )
 
   // L3

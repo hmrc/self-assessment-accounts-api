@@ -27,7 +27,7 @@ import v1.mocks.requestParsers.MockListChargesRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockListChargesService, MockMtdIdLookupService}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType.{RETRIEVE_CHARGE_HISTORY, RETRIEVE_TRANSACTIONS, SELF, RETRIEVE_TRANSACTION_DETAILS}
+import v1.models.hateoas.RelType.{RETRIEVE_CHARGE_HISTORY, LIST_TRANSACTIONS, SELF, RETRIEVE_TRANSACTION_DETAILS}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.{ListChargesParsedRequest, ListChargesRawRequest}
@@ -105,7 +105,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
     Link(
       href = "/accounts/self-assessment/AA123456A/transactions?from=2018-10-01&to=2019-10-01",
       method = GET,
-      rel = RETRIEVE_TRANSACTIONS
+      rel = LIST_TRANSACTIONS
     )
 
   private val hateoasResponse = ListChargesResponse(

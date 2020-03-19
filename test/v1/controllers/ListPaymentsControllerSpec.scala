@@ -28,7 +28,7 @@ import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdId
 import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType.{RETRIEVE_PAYMENT_ALLOCATIONS, RETRIEVE_TRANSACTIONS, SELF}
+import v1.models.hateoas.RelType.{RETRIEVE_PAYMENT_ALLOCATIONS, LIST_TRANSACTIONS, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
