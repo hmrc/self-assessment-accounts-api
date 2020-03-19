@@ -67,8 +67,8 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
 
   def event(auditResponse: AuditResponse): AuditEvent =
     AuditEvent(
-      auditType = "retrieveSelfAssessmentTransactions",
-      transactionName = "retrieve-self-assessment-transactions",
+      auditType = "listSelfAssessmentPayments",
+      transactionName = "list-self-assessment-payments",
       detail = AuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
