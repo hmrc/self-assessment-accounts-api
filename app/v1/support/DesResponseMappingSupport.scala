@@ -20,9 +20,9 @@ import utils.Logging
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.listPayments.ListPaymentsResponse
 import v1.models.response.listCharges.ListChargesResponse
-import v1.models.response.retrieveTransaction.RetrieveTransactionsResponse
+import v1.models.response.listPayments.ListPaymentsResponse
+import v1.models.response.listTransaction.ListTransactionsResponse
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
 trait DesResponseMappingSupport {
@@ -46,7 +46,7 @@ trait DesResponseMappingSupport {
 
   final def validateListTransactionsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
     desResponseWrapper.responseData match {
-      case listTransactionsResponse: RetrieveTransactionsResponse[_] if listTransactionsResponse.transactions.isEmpty =>
+      case listTransactionsResponse: ListTransactionsResponse[_] if listTransactionsResponse.transactions.isEmpty =>
         Left(ErrorWrapper(Some(desResponseWrapper.correlationId), NoTransactionsFoundError, None))
       case _ => Right(desResponseWrapper)
     }

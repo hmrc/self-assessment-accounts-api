@@ -20,17 +20,16 @@ import config.AppConfig
 import javax.inject.Inject
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.http.HttpClient
-import v1.models.request.retrieveTransactions.RetrieveTransactionsParsedRequest
-import v1.models.response.retrieveTransaction.{RetrieveTransactionsResponse, TransactionItem}
+import v1.models.request.listTransactions.ListTransactionsParsedRequest
+import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class RetrieveTransactionsConnector @Inject()(val http: HttpClient,
-                                              val appConfig: AppConfig) extends BaseDesConnector {
+class ListTransactionsConnector @Inject()(val http: HttpClient,
+                                          val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrieveTransactions(request: RetrieveTransactionsParsedRequest)
-                          (implicit hc: HeaderCarrier,
-                           ec: ExecutionContext): Future[DesOutcome[RetrieveTransactionsResponse[TransactionItem]]] = {
+  def listTransactions(request: ListTransactionsParsedRequest)(implicit hc: HeaderCarrier,
+                                                               ec: ExecutionContext): Future[DesOutcome[ListTransactionsResponse[TransactionItem]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
@@ -38,13 +37,13 @@ class RetrieveTransactionsConnector @Inject()(val http: HttpClient,
     val dateFrom = request.from
     val dateTo = request.to
 
-    val queryParams = Seq(
+    val queryParams: Seq[(String, String)] = Seq(
       "dateFrom" -> dateFrom,
       "dateTo" -> dateTo
     )
 
     get(
-      uri = DesUri[RetrieveTransactionsResponse[TransactionItem]](s"cross-regime/transactions-placeholder/NINO/$nino/ITSA"),
+      uri = DesUri[ListTransactionsResponse[TransactionItem]](s"cross-regime/transactions-placeholder/NINO/$nino/ITSA"),
       queryParams = queryParams
     )
   }

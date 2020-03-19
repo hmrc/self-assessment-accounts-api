@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators.validations
 
 import java.time.{Duration, LocalDate}
 
-import v1.models.errors.{MtdError, RuleDateRangeInvalidError, RangeToDateBeforeFromDateError, RuleFromDateNotSupportedError}
+import v1.models.errors.{MtdError, RangeToDateBeforeFromDateError, RuleDateRangeInvalidError, RuleFromDateNotSupportedError}
 
 object DateRangeValidation {
 
@@ -29,8 +29,7 @@ object DateRangeValidation {
     List(
       checkIfToIsBeforeFrom(fmtFrom, fmtTo),
       checkIfFromIsTooEarly(fmtFrom),
-      checkIfDateRangeIsTooLarge(fmtFrom, fmtTo),
-      checkIfDateRangeIsTooShort(fmtFrom, fmtTo)
+      checkIfDateRangeIsTooLarge(fmtFrom, fmtTo)
     ).flatten
   }
 
@@ -42,6 +41,4 @@ object DateRangeValidation {
     if(Duration.between(start, end.plusDays(1) /* add day to make inclusive */).toDays > maxDateRange)
       List(RuleDateRangeInvalidError) else Nil
   }
-  private def checkIfDateRangeIsTooShort(from: LocalDate, to: LocalDate): List[MtdError] = if(to == from) List(RuleDateRangeInvalidError) else Nil
-
 }

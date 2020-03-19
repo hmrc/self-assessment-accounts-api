@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveTransaction
+package v1.models.response.listTransaction
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveTransactionFixture._
+import v1.fixtures.ListTransactionsFixture._
 
 class TransactionItemSpec extends UnitSpec {
 
@@ -29,11 +29,11 @@ class TransactionItemSpec extends UnitSpec {
       }
 
       "the json contains exclusively document Id" in {
-        fullDesDocIdTransactionItemResponse.as[TransactionItem] shouldBe fullDocIdTransactionItemModel
+        fullDesDocIdTransactionItemResponse.as[TransactionItem] shouldBe chargeTransactionItemModel
       }
 
       "the json contains exclusively payment lot and payment lot item" in {
-        fullDesPaymentLotIdTransactionItemResponse.as[TransactionItem] shouldBe fullTransactionItemModel
+        fullDesPaymentLotIdTransactionItemResponse.as[TransactionItem] shouldBe paymentTransactionItemModel
       }
 
       "the json contains only mandatory fields" in {
@@ -50,7 +50,7 @@ class TransactionItemSpec extends UnitSpec {
 
   "successfully write the model to Json" when {
     "using a standard Json Owrites" in {
-      Json.toJson(fullTransactionItemModel) shouldBe mtdRetrieveTransactionItemResponse
+      Json.toJson(fullTransactionItemModel) shouldBe mtdListTransactionItemResponse
     }
   }
 }

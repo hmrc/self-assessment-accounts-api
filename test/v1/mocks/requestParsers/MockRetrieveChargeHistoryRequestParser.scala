@@ -27,6 +27,7 @@ trait MockRetrieveChargeHistoryRequestParser extends MockFactory {
   val mockRetrieveChargeHistoryRequestParser: RetrieveChargeHistoryRequestParser = mock[RetrieveChargeHistoryRequestParser]
 
   object MockRetrieveChargeHistoryRequestParser {
+
     def parse(data: RetrieveChargeHistoryRawRequest): CallHandler[Either[ErrorWrapper, RetrieveChargeHistoryParsedRequest]] = {
       (mockRetrieveChargeHistoryRequestParser.parseRequest(_: RetrieveChargeHistoryRawRequest)).expects(data)
     }

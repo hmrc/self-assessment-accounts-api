@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators
+package v1.models.request.listTransactions
 
-import v1.models.request.retrieveTransactions.RetrieveTransactionsRawRequest
+import v1.models.request.RawDataWithDateRange
 
-class RetrieveTransactionsValidator extends ValidatorWithDateRange[RetrieveTransactionsRawRequest]
+case class ListTransactionsRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange

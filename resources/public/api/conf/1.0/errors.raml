@@ -3,7 +3,6 @@
 uses:
   types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
 
-
 traits:
   notFound:
     responses:
@@ -82,17 +81,6 @@ traits:
                 description: The format of the supplied NINO field is not valid
                 value:
                   code: FORMAT_NINO
-  formatChargeId:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatChargeId:
-                description: The format of the supplied unique identifier field is not valid
-                value:
-                  code: FORMAT_CHARGE_ID
   formatTransactionId:
     responses:
       400:
@@ -178,7 +166,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleDateRangeInvalid:
-                description: The date range is longer than 732 days or less than a day
+                description: The date range is longer than 732 days
                 value:
                   code: RULE_DATE_RANGE_INVALID
   ruleFromDateNotSupported:

@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.RetrieveAllocationsValidator
 import v1.models.errors.MtdError
 import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
 
-class MockRetrieveAllocationsValidator extends MockFactory {
+trait MockRetrieveAllocationsValidator extends MockFactory {
 
   val mockValidator: RetrieveAllocationsValidator = mock[RetrieveAllocationsValidator]
 
@@ -34,4 +34,5 @@ class MockRetrieveAllocationsValidator extends MockFactory {
         .expects(data)
     }
   }
+
 }

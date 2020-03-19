@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.ListChargesValidator
 import v1.models.errors.MtdError
 import v1.models.request.listCharges.ListChargesRawRequest
 
-class MockListChargesValidator extends MockFactory {
+trait MockListChargesValidator extends MockFactory {
 
   val mockValidator: ListChargesValidator = mock[ListChargesValidator]
 
@@ -34,4 +34,5 @@ class MockListChargesValidator extends MockFactory {
         .expects(data)
     }
   }
+
 }

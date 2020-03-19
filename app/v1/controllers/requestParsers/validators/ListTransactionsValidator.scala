@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package v1.models.request.retrieveTransactions
+package v1.controllers.requestParsers.validators
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.request.listTransactions.ListTransactionsRawRequest
 
-case class RetrieveTransactionsParsedRequest(nino: Nino, from: String, to: String)
+class ListTransactionsValidator extends ValidatorWithDateRange[ListTransactionsRawRequest]
+

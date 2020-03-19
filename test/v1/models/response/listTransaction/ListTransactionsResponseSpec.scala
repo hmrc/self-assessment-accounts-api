@@ -14,44 +14,44 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveTransaction
+package v1.models.response.listTransaction
 
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveTransactionFixture._
+import v1.fixtures.ListTransactionsFixture._
 
-class RetrieveTransactionsResponseSpec extends UnitSpec {
+class ListTransactionsResponseSpec extends UnitSpec {
 
-  "RetrieveTransactionsResponse" should {
+  "ListTransactionsResponse" should {
     "return a successful Json model" when {
       "the json contains all fields with a document id transaction" in {
-        fullDesSingleRetreiveTransactionResponse.as[RetrieveTransactionsResponse[TransactionItem]] shouldBe fullSingleRetreiveTransactionModel
+        fullDesSingleListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullSingleListTransactionsModel
       }
 
       "the json contains all fields with a multiple transaction" in {
-        fullDesMultipleRetreiveTransactionMultipleResponse.as[RetrieveTransactionsResponse[TransactionItem]] shouldBe fullMultipleRetreiveTransactionModel
+        fullDesMultipleListTransactionsMultipleResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleListTransactionsModel
       }
 
       "the json contains minimal fields with no transaction" in {
-        minimalDesRetreiveTransactionResponse.as[RetrieveTransactionsResponse[TransactionItem]] shouldBe minimalRetreiveTransactionModel
+        minimalDesListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionsModel
       }
     }
 
     "return a successful empty Json model" when {
       "a transactionItem is present but empty" in {
-        emptyItemDesRetrieveTransactionResponse.as[RetrieveTransactionsResponse[TransactionItem]] shouldBe minimalRetreiveTransactionModel
+        emptyItemDesListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionsModel
       }
     }
 
     "throw an error" when {
       "there are no mandatory fields" in {
-        invalidDesRetrieveTransactionResponse.validate[RetrieveTransactionsResponse[TransactionItem]] shouldBe a[JsError]
+        invalidDesListTransactionsResponse.validate[ListTransactionsResponse[TransactionItem]] shouldBe a[JsError]
       }
     }
 
     "successfully write the model to Json" when {
       "using a standard Json Owrites" in {
-        Json.toJson(fullSingleRetreiveTransactionModel) shouldBe mtdRetrievetransactionResponse
+        Json.toJson(fullSingleListTransactionsModel) shouldBe mtdListTransactionsResponse
       }
     }
   }

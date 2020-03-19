@@ -22,19 +22,23 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
+import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.Logging
 import v1.controllers.requestParsers.RetrieveTransactionDetailsRequestParser
 import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsRawRequest
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsHateoasData
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse._
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveTransactionDetailsService}
+import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveTransactionDetailsService}
 
 import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveTransactionDetailsController @Inject()(val authService: EnrolmentsAuthService,
                                                      val lookupService: MtdIdLookupService,
+                                                     auditService: AuditService,
                                                      requestParser: RetrieveTransactionDetailsRequestParser,
                                                      service: RetrieveTransactionDetailsService,
                                                      hateoasFactory: HateoasFactory,
@@ -62,13 +66,32 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
-          Ok(Json.toJson(vendorResponse))
+
+        auditSubmission(
+          AuditDetail(
+            userDetails = request.userDetails,
+            nino = nino,
+            `X-CorrelationId` = serviceResponse.correlationId,
+            response = AuditResponse(httpStatus = OK, None, None))
+        )
+
+        Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
             .as(MimeTypes.JSON)
         }
       result.leftMap { errorWrapper =>
         val correlationId = getCorrelationId(errorWrapper)
         val result = errorResult(errorWrapper).withApiHeaders(correlationId)
+
+        auditSubmission(
+          AuditDetail(
+            userDetails = request.userDetails,
+            nino = nino,
+            `X-CorrelationId` = correlationId,
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
+        )
+
         result
       }.merge
     }
@@ -80,5 +103,18 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
       case NoTransactionDetailsFoundError => NotFound(Json.toJson(NoTransactionDetailsFoundError))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
+  }
+
+  private def auditSubmission(details: AuditDetail)
+                             (implicit hc: HeaderCarrier,
+                              ec: ExecutionContext): Future[AuditResult] = {
+
+    val event = AuditEvent(
+      auditType = "retrieveASelfAssessmentTransactionsDetail",
+      transactionName = "retrieve-a-self-assessment-transactions-detail",
+      detail = details
+    )
+
+    auditService.auditEvent(event)
   }
 }

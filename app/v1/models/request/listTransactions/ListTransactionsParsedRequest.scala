@@ -14,16 +14,8 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.request.listTransactions
 
-import v1.models.errors.{ChargeIdFormatError, MtdError}
+import uk.gov.hmrc.domain.Nino
 
-object ChargeIdValidation {
-
-  private val chargeIdRegex =
-    "^[0-9A-Za-z]{1,12}$"
-
-  def validate(chargeId: String): List[MtdError] = {
-    if (chargeId.matches(chargeIdRegex)) NoValidationErrors else List(ChargeIdFormatError)
-  }
-}
+case class ListTransactionsParsedRequest(nino: Nino, from: String, to: String)

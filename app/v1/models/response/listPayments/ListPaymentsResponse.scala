@@ -38,7 +38,7 @@ object ListPaymentsResponse extends HateoasLinks {
 
     override def links(appConfig: AppConfig, data: ListPaymentsHateoasData): Seq[Link] = Seq(
       listPayments(appConfig, data.nino, isSelf = true),
-      retrieveTransactions(appConfig, data.nino, isSelf = false)
+      listTransactions(appConfig, data.nino, isSelf = false)
     )
   }
 

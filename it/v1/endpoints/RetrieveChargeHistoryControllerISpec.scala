@@ -31,13 +31,13 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
     private trait Test {
 
       val nino: String = "AA111111A"
-      val chargeId: String = "anId"
+      val transactionId: String = "anId"
       val correlationId = "X-123"
 
       val desResponse: JsValue = RetrieveChargeHistoryFixture.desResponseWithMultipleHHistory
-      val mtdResponse: JsValue = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, chargeId)
+      val mtdResponse: JsValue = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
 
-      def uri: String = s"/$nino/charges/$chargeId"
+      def uri: String = s"/$nino/charges/$transactionId"
       def desUrl: String = s"/cross-regime/charge-history-placeholder/NINO/$nino/ITSA"
 
       def setupStubs(): StubMapping
@@ -46,7 +46,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
         setupStubs()
         buildRequest(uri)
           .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
-          .withQueryStringParameters(("documentId", chargeId))
+          .withQueryStringParameters(("documentId", transactionId))
       }
 
       def errorBody(code: String): String =

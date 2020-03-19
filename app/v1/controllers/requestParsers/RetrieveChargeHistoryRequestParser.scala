@@ -25,7 +25,7 @@ class RetrieveChargeHistoryRequestParser @Inject()(val validator: RetrieveCharge
   extends RequestParser[RetrieveChargeHistoryRawRequest, RetrieveChargeHistoryParsedRequest] {
 
   override protected def requestFor(data: RetrieveChargeHistoryRawRequest): RetrieveChargeHistoryParsedRequest = {
-    RetrieveChargeHistoryParsedRequest(Nino(data.nino), data.chargeId)
+    RetrieveChargeHistoryParsedRequest(Nino(data.nino), data.transactionId)
   }
 
 }

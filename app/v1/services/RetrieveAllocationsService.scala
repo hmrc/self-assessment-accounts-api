@@ -23,7 +23,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.RetrieveAllocationsConnector
 import v1.controllers.EndpointLogContext
-import v1.models.errors.{DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, PaymentIdFormatError}
+import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse

@@ -32,6 +32,10 @@ class ValidatorWithDateRangeSpec extends UnitSpec {
         val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-01"), Some("2019-02-02"))
         validator.validate(input) shouldBe List()
       }
+      "passed a to date which is the same as the from date" in {
+        val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2019-02-02"))
+        validator.validate(input) shouldBe List()
+      }
     }
     "return a single error" when {
       "passed an invalid nino" in {
@@ -57,10 +61,6 @@ class ValidatorWithDateRangeSpec extends UnitSpec {
       "passed a to date before the from date" in {
         val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2019-02-01"))
         validator.validate(input) shouldBe List(RangeToDateBeforeFromDateError)
-      }
-      "passed a to date which is the same as the from date" in {
-        val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2019-02-02"))
-        validator.validate(input) shouldBe List(RuleDateRangeInvalidError)
       }
       "passed a date range which is too large" in {
         val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2021-02-03"))

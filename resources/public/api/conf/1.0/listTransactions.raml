@@ -14,20 +14,20 @@ is:
   - errors.notFoundTransactions
   - queryParameters.fromCharges
   - queryParameters.toCharges
-displayName: "Retrieve Self Assessment Transactions [test only]"
+displayName: "List Self Assessment Transactions [test only]"
 description: This endpoint allows a developer to retrieve a list of charges and payments for a given date range. The developer must quote a unique identifier (National Insurance number) for the account and provide a search period.
-(annotations.sandboxData): !include scenarios/retrieveTransactions.md
+(annotations.sandboxData): !include scenarios/listTransactions.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 responses:
   200:
     body:
       application/json:
-        type: !include schemas/retrieve_transactions_response.json
+        type: !include schemas/list_transactions_response.json
         examples:
           example-1:
             description: Example response
-            value: !include examples/retrieveTransactions/retrieve_response.json
+            value: !include examples/listTransactions/retrieve_response.json
     headers:
       X-CorrelationId:
         example: c75f40a6-a3df-4429-a697-471eeec46435

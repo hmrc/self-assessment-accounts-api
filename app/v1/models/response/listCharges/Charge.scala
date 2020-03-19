@@ -20,7 +20,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class Charge(taxYear: Option[String],
-                  id: Option[String],
+                  transactionId: Option[String],
                   transactionDate: Option[String],
                   `type`: Option[String],
                   totalAmount: Option[BigDecimal],

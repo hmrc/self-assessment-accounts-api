@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators.validations
 
 import support.UnitSpec
-import v1.models.errors.{RuleDateRangeInvalidError, RangeToDateBeforeFromDateError, RuleFromDateNotSupportedError}
+import v1.models.errors.{RangeToDateBeforeFromDateError, RuleDateRangeInvalidError, RuleFromDateNotSupportedError}
 
 class DateRangeValidationSpec extends UnitSpec {
 
@@ -36,13 +36,13 @@ class DateRangeValidationSpec extends UnitSpec {
       "passed the maximum date range" in {
         DateRangeValidation.validate(from2020, from2022) shouldBe List()
       }
+      "passed a from date which is the same as the to date" in {
+        DateRangeValidation.validate(to2021, to2021) shouldBe List()
+      }
     }
     "return a list containing an error" when {
       "passed a from date which is after the to date" in {
         DateRangeValidation.validate(from2020, to2019) shouldBe List(RangeToDateBeforeFromDateError)
-      }
-      "passed a from date which is the same as the to date" in {
-        DateRangeValidation.validate(to2021, to2021) shouldBe List(RuleDateRangeInvalidError)
       }
       "passed a from date which is before the earliest allowed date" in {
         DateRangeValidation.validate(from2018, to2019) shouldBe List(RuleFromDateNotSupportedError)

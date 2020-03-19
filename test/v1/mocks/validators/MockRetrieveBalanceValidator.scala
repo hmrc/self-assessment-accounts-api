@@ -22,7 +22,7 @@ import v1.controllers.requestParsers.validators.RetrieveBalanceValidator
 import v1.models.errors.MtdError
 import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
 
-class MockRetrieveBalanceValidator extends MockFactory {
+trait MockRetrieveBalanceValidator extends MockFactory {
 
   val mockValidator: RetrieveBalanceValidator = mock[RetrieveBalanceValidator]
 

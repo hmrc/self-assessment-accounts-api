@@ -27,8 +27,10 @@ trait MockListPaymentsRequestParser extends MockFactory {
   val mockListPaymentsRequestParser: ListPaymentsRequestParser = mock[ListPaymentsRequestParser]
 
   object MockListPaymentsRequestParser {
+
     def parse(data: ListPaymentsRawRequest): CallHandler[Either[ErrorWrapper, ListPaymentsParsedRequest]] = {
       (mockListPaymentsRequestParser.parseRequest(_: ListPaymentsRawRequest)).expects(data)
     }
   }
+
 }
