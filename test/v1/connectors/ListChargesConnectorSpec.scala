@@ -22,7 +22,7 @@ import v1.fixtures.ListChargesFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.ListChargesParsedRequest
-import v1.models.response.listCharges.{Charge, ListChargesResponse}
+import v1.models.response.listCharges.ListChargesResponse
 
 import scala.concurrent.Future
 

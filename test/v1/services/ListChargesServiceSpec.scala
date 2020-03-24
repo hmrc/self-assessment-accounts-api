@@ -20,13 +20,12 @@ import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
+import v1.fixtures.ListChargesFixture._
 import v1.mocks.connectors.MockListChargesConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.ListChargesParsedRequest
-import v1.models.response.listCharges.{Charge, ListChargesResponse}
 import v1.models.response.listCharges.ListChargesResponse
-import v1.fixtures.ListChargesFixture._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

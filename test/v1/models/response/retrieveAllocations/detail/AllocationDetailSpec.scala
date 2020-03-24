@@ -45,7 +45,7 @@ class AllocationDetailSpec extends UnitSpec {
   val mtdJson: JsValue = Json.parse(
     """
       |{
-      | "id": "someID",
+      | "transactionId": "someID",
       | "from": "another date",
       | "to": "an even later date",
       | "type": "some type thing",

@@ -24,7 +24,8 @@ import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
+import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.GET
@@ -44,7 +45,8 @@ class RetrieveAllocationsControllerSpec
     with MockRetrieveAllocationsService
     with MockHateoasFactory
     with MockRetrieveAllocationsRequestParser
-    with HateoasLinks {
+    with HateoasLinks
+    with MockAuditService {
 
   private val nino = "AA123456A"
   private val paymentId = "aLot-anItem"
@@ -109,6 +111,19 @@ class RetrieveAllocationsControllerSpec
       )
     )
 
+  def event(auditResponse: AuditResponse): AuditEvent =
+    AuditEvent(
+      auditType = "retrieveASelfAssessmentPaymentsAllocationDetails",
+      transactionName = "retrieve-a-self-assessment-payments-allocation-details",
+      detail = AuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        nino = nino,
+        response = auditResponse,
+        `X-CorrelationId` = correlationId
+      )
+    )
+
   trait Test {
     val hc = HeaderCarrier()
 
@@ -118,6 +133,7 @@ class RetrieveAllocationsControllerSpec
       requestParser = mockRetrieveAllocationsRequestParser,
       service = mockRetrieveAllocationsService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc
     )
 
@@ -147,6 +163,8 @@ class RetrieveAllocationsControllerSpec
         contentAsJson(result) shouldBe mtdResponse
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
+        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
 
@@ -164,6 +182,9 @@ class RetrieveAllocationsControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 
@@ -192,6 +213,9 @@ class RetrieveAllocationsControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
           }
         }
 

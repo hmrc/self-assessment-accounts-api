@@ -19,7 +19,7 @@ package v1.models.response.retrieveAllocations.detail
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class AllocationDetail(id: Option[String],
+case class AllocationDetail(transactionId: Option[String],
                             from: Option[String],
                             to: Option[String],
                             `type`: Option[String],
