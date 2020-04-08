@@ -1,9 +1,9 @@
 The Self Assessment Accounts API allows a developer to:
 
-* Retrieve a Self Assessment Balance
-* List Self Assessment Transactions
-* Retrieve a Self Assessment Transaction's Detail
-* List Self Assessment Charges
-* Retrieve a Self Assessment Charge's History
-* List Self Assessment Payments
-* Retrieve a Self Assessment Payment's Allocation Details
+* Retrieve the overall liability broken down into overdue, payable and pending amounts.
+* Retrieve a list of charges and payments for a given date range.
+* Retrieve more detail about a specific transaction.
+* Retrieve a list of charges made to an account for a given date range.
+* Retrieve the history of changes to an individual charge.
+* Retrieve a list of payments for a given date range.
+* Retrieve the allocation details of a specific payment against one or more liabilities.
