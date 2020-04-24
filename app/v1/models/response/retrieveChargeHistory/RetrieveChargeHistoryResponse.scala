@@ -26,7 +26,7 @@ case class RetrieveChargeHistoryResponse(history: Seq[ChargeHistory])
 object RetrieveChargeHistoryResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveChargeHistoryResponse] =
-    (JsPath \ "history").read[Seq[ChargeHistory]]
+    (JsPath \ "chargeHistoryDetails").read[Seq[ChargeHistory]]
       .map(items => RetrieveChargeHistoryResponse(items.filterNot(_ == ChargeHistory.empty)))
 
   implicit val writes: OWrites[RetrieveChargeHistoryResponse] =
