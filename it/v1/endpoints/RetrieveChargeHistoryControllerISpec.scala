@@ -38,7 +38,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
       val mtdResponse: JsValue = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
 
       def uri: String = s"/$nino/charges/$transactionId"
-      def desUrl: String = s"/cross-regime/charge-history-placeholder/NINO/$nino/ITSA"
+      def desUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
 
       def setupStubs(): StubMapping
 
@@ -46,7 +46,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
         setupStubs()
         buildRequest(uri)
           .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
-          .withQueryStringParameters(("documentId", transactionId))
+          .withQueryStringParameters(("docNumber", transactionId))
       }
 
       def errorBody(code: String): String =
