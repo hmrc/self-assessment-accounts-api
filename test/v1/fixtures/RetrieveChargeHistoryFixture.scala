@@ -25,25 +25,22 @@ object RetrieveChargeHistoryFixture {
   val desResponseWithMultipleHHistory: JsValue = Json.parse(
     """
       |{
-      |   "idType":"MTDBSA",
-      |   "idValue":"XQIT00000000001",
-      |   "regimeType": "ITSA",
-      |   "chargeHistoryDetails": [
+      |   "history": [
       |      {
       |         "taxYear": 2020,
-      |         "documentId": "X123456790A",
-      |         "documentDate": "2019-06-01",
-      |         "documentDescription": "Balancing Charge Debit",
-      |         "totalAmount": 600.01,
+      |         "id": "X123456790A",
+      |         "transactionDate": "2019-06-01",
+      |         "type": "Balancing Charge Debit",
+      |         "amount": 600.01,
       |         "reversalDate": "2019-06-05",
       |         "reversalReason": "Example reason"
       |      },
       |      {
       |         "taxYear": 2020,
-      |         "documentId": "X123456790A",
-      |         "documentDate": "2019-06-01",
-      |         "documentDescription": "Balancing Charge Debit",
-      |         "totalAmount": 600.01,
+      |         "id": "X123456790A",
+      |         "transactionDate": "2019-06-01",
+      |         "type": "Balancing Charge Debit",
+      |         "amount": 600.01,
       |         "reversalDate": "2019-06-07",
       |         "reversalReason": "Example reason 2"
       |      }
