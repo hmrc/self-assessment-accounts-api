@@ -49,8 +49,8 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/cross-regime/charge-history-placeholder/NINO/$nino/ITSA",
-            queryParams = Seq("documentId" -> transactionId),
+            url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+            queryParams = Seq("docNumber" -> transactionId),
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
