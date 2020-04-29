@@ -77,7 +77,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
       }
       "return a 500 status code" when {
-        "des returns multiple errors" in new Test {
+        "des returns errors that map to DownstreamError" in new Test {
 
           val multipleErrors: String =
             """
