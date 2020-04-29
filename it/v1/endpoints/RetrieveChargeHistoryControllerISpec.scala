@@ -74,6 +74,39 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           response.json shouldBe mtdResponse
           response.header("Content-Type") shouldBe Some("application/json")
         }
+
+      }
+      "return a 500 status code" when {
+        "des returns multiple errors" in new Test {
+
+          val multipleErrors: String =
+            """
+              |{
+              |   "failures": [
+              |        {
+              |            "code": "INVALID_IDTYPE",
+              |            "reason": "The provided id type is invalid
+              |        },
+              |        {
+              |            "code": "INVALID_REGIME_TYPE",
+              |            "reason": "The provided regime type is invalid"
+              |        }
+              |    ]
+              |}
+          """.stripMargin
+
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            AuthStub.authorised()
+            MtdIdLookupStub.ninoFound(nino)
+            DesStub.onError(DesStub.GET, desUrl, BAD_REQUEST, multipleErrors)
+          }
+
+          val response: WSResponse = await(request.get)
+          response.status shouldBe INTERNAL_SERVER_ERROR
+          response.json shouldBe Json.toJson(DownstreamError)
+          response.header("Content-Type") shouldBe Some("application/json")
+        }
       }
 
       "return error according to spec" when {
@@ -122,13 +155,20 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
         }
 
         val input = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATIONID",INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "FORMAT_TRANSACTION_ID", BAD_REQUEST, TransactionIdFormatError),
-          (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-          (BAD_REQUEST, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+          (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, TransactionIdFormatError),
+          (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_DATE_RANGE", INTERNAL_SERVER_ERROR, DownstreamError),
+          (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
+          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+          (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+          (UNPROCESSABLE_ENTITY, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
