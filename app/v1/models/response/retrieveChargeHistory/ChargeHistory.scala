@@ -33,11 +33,11 @@ object ChargeHistory {
   val empty: ChargeHistory = ChargeHistory(None, None, None, None, None, None, None)
 
   implicit val reads: Reads[ChargeHistory] = (
-    (JsPath \ "taxYear").readNullable[Int].map(_.map(DesTaxYear.fromDesIntToString)) and
-      (JsPath \ "id").readNullable[String] and
-      (JsPath \ "transactionDate").readNullable[String] and
-      (JsPath \ "type").readNullable[String] and
-      (JsPath \ "amount").readNullable[BigDecimal] and
+    (JsPath \ "taxYear").readNullable[String].map(_.map(DesTaxYear.fromDes)) and
+      (JsPath \ "documentId").readNullable[String] and
+      (JsPath \ "documentDate").readNullable[String] and
+      (JsPath \ "documentDescription").readNullable[String] and
+      (JsPath \ "totalAmount").readNullable[BigDecimal] and
       (JsPath \ "reversalDate").readNullable[String] and
       (JsPath \ "reversalReason").readNullable[String]
   )(ChargeHistory.apply _)

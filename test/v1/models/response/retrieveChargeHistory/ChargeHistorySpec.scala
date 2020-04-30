@@ -25,11 +25,11 @@ class ChargeHistorySpec extends UnitSpec {
   val desResponse: JsValue = Json.parse(
     """
       |{
-      |   "taxYear": 2020,
-      |   "id": "X123456790A",
-      |   "transactionDate": "2019-06-01",
-      |   "type": "Balancing Charge Debit",
-      |   "amount": 600.01,
+      |   "taxYear": "2020",
+      |   "documentId": "X123456790A",
+      |   "documentDate": "2019-06-01",
+      |   "documentDescription": "Balancing Charge Debit",
+      |   "totalAmount": 600.01,
       |   "reversalDate": "2019-06-05",
       |   "reversalReason": "Example reason"
       |}
@@ -53,13 +53,13 @@ class ChargeHistorySpec extends UnitSpec {
   val desResponseInvalid: JsValue = Json.parse(
     """
       |{
-      |   "taxYear": "2020",
-      |   "id":"X123456790A",
-      |   "transactionDate":"2019-06-01",
-      |   "type":"Balancing Charge Debit",
-      |   "amount":600.01,
-      |   "reversalDate":"2019-06-05",
-      |   "reversalReason":"Example reason"
+      |   "taxYear": 2020,
+      |   "documentId": "X123456790A",
+      |   "documentDate": "2019-06-01",
+      |   "documentDescription": "Balancing Charge Debit",
+      |   "totalAmount": 600.01,
+      |   "reversalDate": "2019-06-05",
+      |   "reversalReason": "Example reason"
       |}
     """.stripMargin
   )

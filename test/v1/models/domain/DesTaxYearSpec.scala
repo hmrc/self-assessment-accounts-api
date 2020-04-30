@@ -38,6 +38,12 @@ class DesTaxYearSpec extends UnitSpec {
         DesTaxYear.fromDesIntToString(2019) shouldBe "2018-19"
       }
     }
+
+    "fromDes" should {
+      "produce the correct String" in {
+        DesTaxYear.fromDes("2019") shouldBe "2018-19"
+      }
+    }
   }
 
 }
