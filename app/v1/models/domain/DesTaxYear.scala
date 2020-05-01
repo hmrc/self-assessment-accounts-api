@@ -35,4 +35,7 @@ object DesTaxYear {
 
   def fromDesIntToString(taxYear: Int): String =
     (taxYear - 1) + "-" + taxYear.toString.drop(2)
+
+  def fromDes(taxYear: String): String =
+    DesTaxYear((taxYear.toInt - 1) + "-" + taxYear.drop(2)).toString
 }

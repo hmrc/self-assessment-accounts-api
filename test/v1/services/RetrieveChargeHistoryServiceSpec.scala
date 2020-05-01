@@ -77,10 +77,15 @@ class RetrieveChargeHistoryServiceSpec extends UnitSpec {
         }
 
       val input: Seq[(String, MtdError)] = Seq(
+        ("INVALID_CORRELATIONID", DownstreamError),
         ("INVALID_IDTYPE", DownstreamError),
         ("INVALID_IDVALUE", NinoFormatError),
         ("INVALID_REGIME_TYPE", DownstreamError),
-        ("FORMAT_TRANSACTION_ID", TransactionIdFormatError),
+        ("INVALID_DOC_NUMBER", TransactionIdFormatError),
+        ("INVALID_DATE_FROM", DownstreamError),
+        ("INVALID_DATE_TO", DownstreamError),
+        ("INVALID_DATE_RANGE", DownstreamError),
+        ("REQUEST_NOT_PROCESSED", DownstreamError),
         ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", DownstreamError),
         ("SERVICE_UNAVAILABLE", DownstreamError)
