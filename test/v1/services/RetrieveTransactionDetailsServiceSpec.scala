@@ -75,13 +75,21 @@ class RetrieveTransactionDetailsServiceSpec extends UnitSpec {
         }
 
         val input: Seq[(String, MtdError)] = Seq(
-          ("INVALID_IDTYPE", DownstreamError),
-          ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
-          ("INVALID_REGIME_TYPE", DownstreamError),
-          ("INVALID_SAP_DOCUMENT_NUMBER", TransactionIdFormatError),
-          ("NOT_FOUND", NotFoundError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("INVALID_IDTYPE" , DownstreamError),
+          ("INVALID_IDNUMBER" , NinoFormatError),
+          ("INVALID_REGIME_TYPE" , DownstreamError),
+          ("INVALID_DOC_NUMBER" , TransactionIdFormatError),
+          ("INVALID_ONLY_OPEN_ITEMS" , DownstreamError),
+          ("INVALID_INCLUDE_LOCKS" , DownstreamError),
+          ("INVALID_CALCULATE_ACCRUED_INTEREST" , DownstreamError),
+          ("INVALID_CUSTOMER_PAYMENT_INFORMATION" , DownstreamError),
+          ("INVALID_DATE_FROM" , DownstreamError),
+          ("INVALID_DATE_TO" , DownstreamError),
+          ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT" , DownstreamError),
+          ("REQUEST_NOT_PROCESSED" , DownstreamError),
+          ("NOT_FOUND" , NotFoundError),
+          ("SERVER_ERROR" , DownstreamError),
+          ("SERVICE_UNAVAILABLE" , DownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))
