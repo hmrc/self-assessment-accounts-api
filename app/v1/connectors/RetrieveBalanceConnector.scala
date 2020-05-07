@@ -35,8 +35,17 @@ class RetrieveBalanceConnector @Inject()(val http: HttpClient,
 
     val nino = request.nino.nino
 
+    val queryParams: Seq[(String, String)] = Seq(
+      ("onlyOpenItems", "true"),
+      ("includeLocks", "true"),
+      ("calculateAccruedInterest", "true"),
+      ("removePOA", "true"),
+      ("customerPaymentInformation", "true")
+    )
+
     get(
-      uri = DesUri[RetrieveBalanceResponse](s"cross-regime/balance-placeholder/NINO/$nino/ITSA")
+      uri = DesUri[RetrieveBalanceResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
+      queryParams = queryParams
     )
   }
 }
