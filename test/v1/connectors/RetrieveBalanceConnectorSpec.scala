@@ -43,6 +43,15 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
     val connector: RetrieveBalanceConnector = new RetrieveBalanceConnector(http = mockHttpClient, appConfig = mockAppConfig)
     val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
+    val queryParams: Seq[(String, String)] =
+      Seq(
+        "onlyOpenItems" -> "true",
+        "includeLocks" -> "true",
+        "calculateAccruedInterest" -> "true",
+        "removePOA" -> "true",
+        "customerPaymentInformation" -> "true"
+      )
+
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
     MockedAppConfig.desEnvironment returns "des-environment"
@@ -57,7 +66,8 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/cross-regime/balance-placeholder/NINO/$nino/ITSA",
+            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+            queryParams = queryParams,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
