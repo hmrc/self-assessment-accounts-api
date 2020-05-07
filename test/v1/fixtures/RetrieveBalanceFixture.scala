@@ -31,11 +31,19 @@ object RetrieveBalanceFixture {
   val fullDesResponse: JsValue = Json.parse(
     """
       |{
-      | "overdueAmount": 1000,
-      | "payableAmount": 2000,
-      | "payableDueDate" : "12/9/2020",
-      | "pendingChargeDueAmount" : 1000,
-      | "pendingChargeDueDate" : "12/12/2020"
+      | "idType": "MTDBSA",
+      | "idNumber": "XQIT00000000001",
+      | "regimeType": "ITSA",
+      | "financialDetails": [
+      |    {
+      |       "overDueAmount": 1000,
+      |       "balanceDueWithin30Days": 2000,
+      |       "nextPymntDateChrgsDueIn30Days": "2020-09-12",
+      |       "balanceNotDueIn30Days": 1000,
+      |       "nextPaymntDateBalnceNotDue": "2020-12-12",
+      |       "earliestPymntDateOverDue": "2020-11-12"
+      |    }
+      |  ]
       |}
       |""".stripMargin
   )
@@ -45,9 +53,9 @@ object RetrieveBalanceFixture {
       |{
       | "overdueAmount": 1000,
       | "payableAmount": 2000,
-      | "payableDueDate" : "12/9/2020",
-      | "pendingChargeDueAmount" : 1000,
-      | "pendingChargeDueDate" : "12/12/2020"
+      | "payableDueDate": "2020-09-12",
+      | "pendingChargeDueAmount": 1000,
+      | "pendingChargeDueDate": "2020-12-12"
       |}
       |""".stripMargin
   )
@@ -64,16 +72,24 @@ object RetrieveBalanceFixture {
     )
   )
 
-  val fullModel: RetrieveBalanceResponse = RetrieveBalanceResponse(overdueAmount = Some(BigDecimal(1000)),
+  val fullModel: RetrieveBalanceResponse = RetrieveBalanceResponse(
+    overdueAmount = Some(BigDecimal(1000)),
     payableAmount = BigDecimal(2000),
-    payableDueDate = Some("12/9/2020"),
+    payableDueDate = Some("2020-09-12"),
     pendingChargeDueAmount = Some(BigDecimal(1000)),
-    pendingChargeDueDate = Some("12/12/2020"))
+    pendingChargeDueDate = Some("2020-12-12"))
 
   val minimalDesResponse: JsValue = Json.parse(
     """
       |{
-      |  "payableAmount": 2000
+      | "idType": "MTDBSA",
+      | "idNumber": "XQIT00000000001",
+      | "regimeType": "ITSA",
+      | "financialDetails": [
+      |   {
+      |     "balanceDueWithin30Days": 2000
+      |   }
+      | ]
       |}
       |""".stripMargin
   )
