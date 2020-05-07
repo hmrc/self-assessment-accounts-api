@@ -27,9 +27,9 @@ import v1.mocks.requestParsers.MockRetrieveTransactionDetailsRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveTransactionDetailsService}
 import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.RelType._
+import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
 import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsHateoasData, RetrieveTransactionDetailsResponse, TransactionItem}
@@ -51,28 +51,33 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
   private val transactionId = "11111"
   private val paymentId = "081203010024-000001"
   private val correlationId = "X-123"
+
   private val rawRequest = RetrieveTransactionDetailsRawRequest(nino, transactionId)
   private val parsedRequest = RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId)
 
-  private val paymentTransaction =
-    TransactionItem(
-      transactionItemId = Some("2019-20"),
-      `type` = Some("Payment On Account"),
-      originalAmount = Some(12.34),
-      outstandingAmount = Some(10.33),
-      taxPeriodFrom = None,
-      taxPeriodTo = None,
-      dueDate = None,
-      paymentMethod = None,
-      paymentId = Some(paymentId),
-      subItems = None
-    )
-
+  private val paymentTransaction = TransactionItem(
+    transactionItemId = Some("2019-20"),
+    `type` = Some("Payment On Account"),
+    originalAmount = Some(12.34),
+    outstandingAmount = Some(10.33),
+    taxPeriodFrom = None,
+    taxPeriodTo = None,
+    dueDate = None,
+    paymentMethod = None,
+    paymentId = Some(paymentId),
+    subItems = None
+  )
   private val mtdResponse = RetrieveTransactionDetailsResponse(transactionItems = Seq(paymentTransaction))
 
-  private val paymentAllocationHateoasLink =
-    Link(href = s"/accounts/self-assessment/$nino/payments/$paymentId", method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS)
-  private val transactionsHateoasLink = Link(href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = SELF)
+  private val paymentAllocationHateoasLink = Link(
+    href = s"/accounts/self-assessment/$nino/payments/$paymentId",
+    method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS
+  )
+
+  private val transactionsHateoasLink = Link(
+    href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = SELF
+  )
+
   private val hateoasResponse = RetrieveTransactionDetailsResponse(Seq(paymentTransaction))
 
   private val mtdJson = Json.parse(
@@ -95,7 +100,20 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
       |		"rel": "retrieve-payment-allocations"
       |	}]
       |}
-    """.stripMargin)
+    """.stripMargin
+  )
+
+  def event(auditResponse: AuditResponse): AuditEvent = AuditEvent(
+    auditType = "retrieveASelfAssessmentTransactionsDetail",
+    transactionName = "retrieve-a-self-assessment-transactions-detail",
+    detail = AuditDetail(
+      userType = "Individual",
+      agentReferenceNumber = None,
+      nino = nino,
+      response = auditResponse,
+      `X-CorrelationId` = correlationId
+    )
+  )
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -114,21 +132,7 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
     MockedEnrolmentsAuthService.authoriseUser()
   }
 
-  def event(auditResponse: AuditResponse): AuditEvent =
-    AuditEvent(
-      auditType = "retrieveASelfAssessmentTransactionsDetail",
-      transactionName = "retrieve-a-self-assessment-transactions-detail",
-      detail = AuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        nino = nino,
-        response = auditResponse,
-        `X-CorrelationId` = correlationId
-      )
-    )
-
   "retrieveTransactionDetails" should {
-
     "return a valid transactions response" when {
       "a request sent has valid details" in new Test {
 
@@ -155,6 +159,7 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
         MockedAuditService.verifyAuditEvent(event(auditResponse)).once
       }
     }
+
     "return the correct errors" when {
       "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {

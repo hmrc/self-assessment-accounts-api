@@ -18,9 +18,8 @@ package v1.models.response.retrieveTransactionDetails
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-
 case class TransactionItem(transactionItemId: Option[String],
-                          `type`: Option[String],
+                           `type`: Option[String],
                            taxPeriodFrom: Option[String],
                            taxPeriodTo: Option[String],
                            originalAmount: Option[BigDecimal],
@@ -37,22 +36,41 @@ object TransactionItem {
   implicit val writes: OWrites[TransactionItem] = Json.writes[TransactionItem]
 
   implicit val reads: Reads[TransactionItem] = for {
-    sapDocumentItemId <- (JsPath \ "sapDocumentItemId").readNullable[String]
-    transactionType <- (JsPath \ "type").readNullable[String]
+    sapDocumentItemId <- (JsPath \ "sapDocumentNumberItem").readNullable[String]
+    transactionType <- (JsPath \ "chargeType").readNullable[String]
     taxPeriodFrom <- (JsPath \ "taxPeriodFrom").readNullable[String]
     taxPeriodTo <- (JsPath \ "taxPeriodTo").readNullable[String]
     originalAmount <- (JsPath \ "originalAmount").readNullable[BigDecimal]
     outstandingAmount <- (JsPath \ "outstandingAmount").readNullable[BigDecimal]
-    dueDate <- (JsPath \ "dueDate").readNullable[String]
-    paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
-    paymentLot <- (JsPath \ "paymentLot").readNullable[String]
-    paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
-    subItems <- (JsPath \ "subItems").readNullable[Seq[SubItem]].map(_.map(_.filterNot(item => item == SubItem.empty)))
-  } yield{
-    val id: Option[String] = for {
-      pl <- paymentLot
-      pli <- paymentLotItem
-    } yield s"$pl-$pli"
-    TransactionItem(sapDocumentItemId, transactionType, taxPeriodFrom, taxPeriodTo, originalAmount, outstandingAmount, dueDate, paymentMethod, id, subItems)
+    subItems <- (JsPath \ "items").readNullable[Seq[SubItem]].map(_.map(
+      _.filterNot(item => item == SubItem.empty || item.subItemId.isEmpty)
+    ))
+  } yield {
+
+    val lowestNumberedSubItem: SubItem = subItems
+      .getOrElse(Seq.empty[SubItem])
+      .foldLeft(SubItem.empty)(returnLowestNumberedItem)
+
+    TransactionItem(
+      sapDocumentItemId,
+      transactionType,
+      taxPeriodFrom,
+      taxPeriodTo,
+      originalAmount,
+      outstandingAmount,
+      lowestNumberedSubItem.dueDate,
+      lowestNumberedSubItem.paymentMethod,
+      lowestNumberedSubItem.paymentId,
+      subItems.map(_.filterNot(_ == lowestNumberedSubItem))
+    )
+  }
+
+  val returnLowestNumberedItem: (SubItem, SubItem) => SubItem = (item1: SubItem, item2: SubItem) => {
+    (item1.subItemId, item2.subItemId) match {
+      case (Some(id1), Some(id2)) => if (id1.toInt < id2.toInt) item1 else item2
+      case (Some(_), None) => item1
+      case (None, Some(_)) => item2
+      case _ => SubItem.empty
+    }
   }
 }

@@ -16,219 +16,71 @@
 
 package v1.models.response.retrieveTransactionDetails
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveTransactionDetailsFixture._
+import v1.fixtures.transactionDetails.RetrieveTransactionDetailsResponseFixture
 
-class RetrieveTransactionDetailsResponseSpec extends UnitSpec {
+class RetrieveTransactionDetailsResponseSpec extends UnitSpec with RetrieveTransactionDetailsResponseFixture {
 
-  val desResponseCharge: JsValue = Json.parse(
-    """
-      |{
-      |  "transactionItems": [
-      |    {
-      |      "sapDocumentItemId": "0001",
-      |      "type": "National Insurance Class 2",
-      |      "taxPeriodFrom": "2019-04-06",
-      |      "taxPeriodTo": "2020-04-05",
-      |      "originalAmount": 100.45,
-      |      "outstandingAmount": 10.23,
-      |      "dueDate": "2021-01-31",
-      |      "subItems": [
-      |        {
-      |          "subItemId": "001",
-      |          "amount": 100.11,
-      |          "clearingDate": "2021-01-31",
-      |          "clearingReason": "Incoming payment",
-      |          "paymentAmount": 100.11,
-      |          "paymentMethod": "BACS RECEIPTS",
-      |          "paymentLot": "P0101180112",
-      |          "paymentLotItem": "000001"
-      |        }
-      |      ]
-      |    }
-      |  ]
-      |}
-    """.stripMargin
-  )
-
-  val desResponsePayment: JsValue = Json.parse(
-    """
-      |{
-      |  "transactionItems": [
-      |    {
-      |      "sapDocumentItemId": "0001",
-      |      "type": "Payment on account",
-      |      "originalAmount": -5000.00,
-      |      "outstandingAmount": 0.00,
-      |      "dueDate": "2021-01-31",
-      |      "paymentMethod":"BACS RECEIPTS",
-      |      "paymentLot": "P0101180112",
-      |      "paymentLotItem": "000001",
-      |      "subItems":[
-      |         {
-      |           "subItemId":"001",
-      |           "clearingDate":"2021-01-31",
-      |           "clearingReason":"Payment allocation",
-      |           "paymentAmount": -1100.00
-      |         }
-      |      ]
-      |    }
-      |  ]
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponseCharge: JsValue = Json.parse(
-    """
-      |{
-      |  "transactionItems": [
-      |    {
-      |      "transactionItemId": "0001",
-      |      "type": "National Insurance Class 2",
-      |      "taxPeriodFrom": "2019-04-06",
-      |      "taxPeriodTo": "2020-04-05",
-      |      "originalAmount": 100.45,
-      |      "outstandingAmount": 10.23,
-      |      "dueDate": "2021-01-31",
-      |      "subItems": [
-      |        {
-      |          "subItemId": "001",
-      |          "amount": 100.11,
-      |          "clearingDate": "2021-01-31",
-      |          "clearingReason": "Incoming payment",
-      |          "paymentAmount": 100.11,
-      |          "paymentMethod": "BACS RECEIPTS",
-      |          "paymentId": "P0101180112-000001"
-      |        }
-      |      ]
-      |    }
-      |  ]
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponsePayment: JsValue = Json.parse(
-    """
-      |{
-      |  "transactionItems": [
-      |    {
-      |      "transactionItemId": "0001",
-      |      "type": "Payment on account",
-      |      "originalAmount": -5000.00,
-      |      "outstandingAmount": 0.00,
-      |      "dueDate": "2021-01-31",
-      |      "paymentMethod":"BACS RECEIPTS",
-      |      "paymentId":"P0101180112-000001",
-      |      "subItems":[
-      |         {
-      |           "subItemId":"001",
-      |           "clearingDate":"2021-01-31",
-      |           "clearingReason":"Payment allocation",
-      |           "paymentAmount": -1100.00
-      |         }
-      |      ]
-      |    }
-      |  ]
-      |}
-    """.stripMargin
-  )
-
-  val desResponseEmptyTransactionItems: JsValue = Json.parse(
-    """
-      |{
-      |   "transactionItems": []
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponseEmptyTransactionItems: JsValue = Json.parse(
-    """
-      |{
-      |   "transactionItems": []
-      |}
-    """.stripMargin
-  )
-
-  val desResponseEmptyTransactionItemObject: JsValue = Json.parse(
-    """
-      |{
-      |   "transactionItems": [
-      |     {
-      |     }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
-  val desReponseEmpty: JsValue = Json.parse("""{}""")
-
-  val retrieveTransactionDetailsResponseEmpty: RetrieveTransactionDetailsResponse =
-  RetrieveTransactionDetailsResponse(
-    transactionItems = Seq()
-  )
-
-  "RetrieveTransactionDetailsChargeResponse" when {
-    "read from valid JSON" should {
-      "produce the expected RetrieveTransactionDetailsResponse object for a charge" in {
-        desResponseCharge.as[RetrieveTransactionDetailsResponse] shouldBe retrieveTransactionDetailsResponseCharge
-      }
-    }
-  }
-
-    "RetrieveTransactionDetailsPaymentResponse" when {
-      "read from valid JSON" should {
-        "produce the expected RetrieveTransactionDetailsResponse object for a payment" in {
-          desResponsePayment.as[RetrieveTransactionDetailsResponse] shouldBe retrieveTransactionDetailsResponsePayment
-        }
-      }
-    }
-
-      "read from valid JSON with multiple transaction item" should {
-        "produce the expected RetrieveTransactionDetailsResponse object for a charge" in {
-          desResponseWithMultipleTransactionItemForCharges.as[RetrieveTransactionDetailsResponse] shouldBe retrieveTransactionDetailsResponseChargeMultiple
-        }
-      }
-
-    "read from valid JSON with an empty Transaction Items array" should {
+  "RetrieveTransactionDetailsResponse" when {
+    "read from valid JSON (charge)" should {
       "produce the expected RetrieveTransactionDetailsResponse object" in {
-        desResponseEmptyTransactionItems.as[RetrieveTransactionDetailsResponse] shouldBe retrieveTransactionDetailsResponseEmpty
+        desJsonCharge.as[RetrieveTransactionDetailsResponse] shouldBe responseModelCharge
+      }
+    }
+
+    "read from valid JSON (payment)" should {
+      "produce the expected RetrieveTransactionDetailsResponse object" in {
+        desJsonPayment.as[RetrieveTransactionDetailsResponse] shouldBe responseModelPayment
+      }
+    }
+
+    "read from valid JSON with multiple transaction items" should {
+      "produce the expected RetrieveTransactionDetailsResponse object" in {
+        desJsonMultiple.as[RetrieveTransactionDetailsResponse] shouldBe responseModelMultiple
+      }
+    }
+
+    "read from valid JSON with an empty transactionItems array" should {
+      "produce the expected RetrieveTransactionDetailsResponse object" in {
+        desJsonNoTransactions.as[RetrieveTransactionDetailsResponse] shouldBe responseModelNoTransactions
       }
     }
 
     "read from empty JSON" should {
       "produce a JsError" in {
-        desReponseEmpty.validate[RetrieveTransactionDetailsResponse] shouldBe a[JsError]
+        desJsonEmpty.validate[RetrieveTransactionDetailsResponse] shouldBe a[JsError]
       }
     }
 
     "read from valid JSON with an empty transaction item" should {
       "not read empty transaction details items" in {
-        desResponseEmptyTransactionItemObject.as[RetrieveTransactionDetailsResponse] shouldBe retrieveTransactionDetailsResponseEmpty
+        desJsonEmptyTransaction.as[RetrieveTransactionDetailsResponse] shouldBe responseModelNoTransactions
       }
     }
 
-    "written to JSON" should {
-      "produce the expected JSON for a charge" in {
-        Json.toJson(retrieveTransactionDetailsResponseCharge) shouldBe mtdResponseCharge
+    "written to JSON (charge)" should {
+      "produce the expected JSON" in {
+        Json.toJson(responseModelCharge) shouldBe mtdJsonCharge
       }
     }
 
-    "written to JSON" should {
-      "produce the expected JSON for a payment" in {
-        Json.toJson(retrieveTransactionDetailsResponsePayment) shouldBe mtdResponsePayment
+    "written to JSON (payment)" should {
+      "produce the expected JSON" in {
+        Json.toJson(responseModelPayment) shouldBe mtdJsonPayment
       }
     }
 
     "written to JSON (multiple transaction items)" should {
       "produce the expected JSON for a charge" in {
-        Json.toJson(retrieveTransactionDetailsResponseChargeMultiple) shouldBe mtdResponseWithMultipleTransactionItemForCharges
+        Json.toJson(responseModelMultiple) shouldBe mtdJsonMultiple
       }
     }
 
     "written to JSON (empty transaction items array)" should {
       "produce the expected JSON" in {
-        Json.toJson(retrieveTransactionDetailsResponseEmpty) shouldBe mtdResponseEmptyTransactionItems
+        Json.toJson(responseModelNoTransactions) shouldBe mtdJsonNoTransactions
       }
     }
+  }
 }

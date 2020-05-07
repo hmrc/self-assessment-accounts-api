@@ -26,7 +26,7 @@ case class RetrieveTransactionDetailsResponse(transactionItems: Seq[TransactionI
 object RetrieveTransactionDetailsResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveTransactionDetailsResponse] =
-   (JsPath \ "transactionItems").read[Seq[TransactionItem]]
+   (JsPath \ "financialDetails").read[Seq[TransactionItem]]
      .map(items => RetrieveTransactionDetailsResponse(items.filterNot(_ == TransactionItem.empty)))
 
   implicit val writes: OWrites[RetrieveTransactionDetailsResponse] =
@@ -44,7 +44,6 @@ object RetrieveTransactionDetailsResponse extends HateoasLinks {
       )
     }
   }
-
 }
 
 case class RetrieveTransactionDetailsHateoasData(nino: String, transactionId: String, paymentId: Option[String]) extends HateoasData

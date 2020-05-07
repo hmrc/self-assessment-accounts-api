@@ -16,83 +16,129 @@
 
 package v1.services
 
-import support.UnitSpec
-import uk.gov.hmrc.http.HeaderCarrier
+import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
-import v1.fixtures.RetrieveTransactionDetailsFixture._
 import v1.mocks.connectors.MockRetrieveTransactionDetailsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
+import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
+import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveTransactionDetailsServiceSpec extends UnitSpec {
+class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
 
   private val correlationId = "X-123"
 
   trait Test extends MockRetrieveTransactionDetailsConnector {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "retrieveTransactions")
+    val transactionId = "0001"
+    val nino = "AA123456A"
+
+    val requestData: RetrieveTransactionDetailsParsedRequest = RetrieveTransactionDetailsParsedRequest(
+      nino = Nino(nino),
+      transactionId = transactionId
+    )
+
+    implicit val logContext: EndpointLogContext = EndpointLogContext(
+      controllerName = "controller",
+      endpointName = "retrieveTransactions"
+    )
 
     val service = new RetrieveTransactionDetailsService(
       connector = mockRetrieveTransactionDetailsConnector
     )
   }
 
-  "retrieveTransactionDetails" should {
-    "return a successful response" when {
-      "received a valid response for the supplied request" in new Test {
-        val response = Right(ResponseWrapper(correlationId, retrieveTransactionDetailsResponsePayment))
+  "RetrieveTransactionDetailsService" when {
+    "retrieveTransactionDetails" must {
 
-        MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
-          .returns(Future.successful(response))
+      "return a successful response" when {
+        "received a valid response for the supplied request" in new Test {
 
-        await(service.retrieveTransactionDetails(requestData)) shouldBe response
-      }
-    }
+          val responseModel: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
+            transactionItems = Seq(
+              TransactionItem(
+                transactionItemId = Some("0001"),
+                `type` = Some("Payment on account"),
+                taxPeriodFrom = None,
+                taxPeriodTo = None,
+                originalAmount = Some(-5000),
+                outstandingAmount = Some(0),
+                dueDate = None,
+                paymentMethod = None,
+                paymentId = None,
+                subItems = Some(Seq(
+                  SubItem(
+                    subItemId = Some("001"),
+                    amount = None,
+                    clearingDate = Some("2021-01-31"),
+                    clearingReason = Some("Payment allocation"),
+                    outgoingPaymentMethod = None,
+                    paymentAmount = Some(-1100),
+                    dueDate = None,
+                    paymentMethod = None,
+                    paymentId = None
+                  )
+                ))
+              )
+            )
+          )
 
-    "return NoTransactionDetailsFoundError response" when {
-      "the transactionItems are empty" in new Test {
-        MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, RetrieveTransactionDetailsResponse(Seq())))))
-
-        await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionDetailsFoundError, None))
-      }
-    }
-
-    "return error response" when {
-
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned" in new Test {
+          val response = Right(ResponseWrapper(correlationId, responseModel))
 
           MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(response))
 
-          await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.retrieveTransactionDetails(requestData)) shouldBe response
         }
+      }
+
+      "return NoTransactionDetailsFoundError response" when {
+        "the transactionItems are empty" in new Test {
+
+          val responseModel: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
+            transactionItems = Seq.empty[TransactionItem]
+          )
+
+          MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
+
+          await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionDetailsFoundError, None))
+        }
+      }
+
+      "return error response" when {
+
+        def serviceError(desErrorCode: String, error: MtdError): Unit =
+          s"a $desErrorCode error is returned" in new Test {
+
+            MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+
+            await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          }
 
         val input: Seq[(String, MtdError)] = Seq(
-          ("INVALID_IDTYPE" , DownstreamError),
-          ("INVALID_IDNUMBER" , NinoFormatError),
-          ("INVALID_REGIME_TYPE" , DownstreamError),
-          ("INVALID_DOC_NUMBER" , TransactionIdFormatError),
-          ("INVALID_ONLY_OPEN_ITEMS" , DownstreamError),
-          ("INVALID_INCLUDE_LOCKS" , DownstreamError),
-          ("INVALID_CALCULATE_ACCRUED_INTEREST" , DownstreamError),
-          ("INVALID_CUSTOMER_PAYMENT_INFORMATION" , DownstreamError),
-          ("INVALID_DATE_FROM" , DownstreamError),
-          ("INVALID_DATE_TO" , DownstreamError),
-          ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT" , DownstreamError),
-          ("REQUEST_NOT_PROCESSED" , DownstreamError),
-          ("NOT_FOUND" , NotFoundError),
-          ("SERVER_ERROR" , DownstreamError),
-          ("SERVICE_UNAVAILABLE" , DownstreamError)
+          ("INVALID_IDTYPE", DownstreamError),
+          ("INVALID_IDNUMBER", NinoFormatError),
+          ("INVALID_REGIME_TYPE", DownstreamError),
+          ("INVALID_DOC_NUMBER", TransactionIdFormatError),
+          ("INVALID_ONLY_OPEN_ITEMS", DownstreamError),
+          ("INVALID_INCLUDE_LOCKS", DownstreamError),
+          ("INVALID_CALCULATE_ACCRUED_INTEREST", DownstreamError),
+          ("INVALID_CUSTOMER_PAYMENT_INFORMATION", DownstreamError),
+          ("INVALID_DATE_FROM", DownstreamError),
+          ("INVALID_DATE_TO", DownstreamError),
+          ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", DownstreamError),
+          ("REQUEST_NOT_PROCESSED", DownstreamError),
+          ("NOT_FOUND", NotFoundError),
+          ("SERVER_ERROR", DownstreamError),
+          ("SERVICE_UNAVAILABLE", DownstreamError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))
+      }
     }
   }
 }
