@@ -17,11 +17,9 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
 import v1.fixtures.RetrieveTransactionDetailsFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 
 import scala.concurrent.Future
 
@@ -29,8 +27,27 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveTransactionDetailsConnector = new RetrieveTransactionDetailsConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+    val connector: RetrieveTransactionDetailsConnector =
+      new RetrieveTransactionDetailsConnector(
+        http = mockHttpClient,
+        appConfig = mockAppConfig
+      )
+
+    val desRequestHeaders: Seq[(String, String)] =
+      Seq(
+        "Environment" -> "des-environment",
+        "Authorization" -> s"Bearer des-token"
+      )
+
+    val queryParams: Seq[(String, String)] =
+      Seq(
+        "docNumber" -> transactionId,
+        "onlyOpenItems" -> "false",
+        "includeLocks" -> "true",
+        "calculateAccruedInterest" -> "true",
+        "removePOA" -> "false",
+        "customerPaymentInformation" -> "true",
+      )
 
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
@@ -40,11 +57,13 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
   "RetrieveTransactionDetailsConnector" when {
     "retrieving the transaction details of payments" should {
       "return a valid response" in new Test {
+
         val outcome = Right(ResponseWrapper(correlationId, retrieveTransactionDetailsResponsePayment))
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/cross-regime/transactions-placeholder/NINO/$nino/ITSA/$transactionId",
+            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+            queryParams = queryParams,
             requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
@@ -59,12 +78,13 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/cross-regime/transactions-placeholder/NINO/$nino/ITSA/$transactionId",
+            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+            queryParams = queryParams,
             requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveTransactionDetails(RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId))) shouldBe outcome
+        await(connector.retrieveTransactionDetails(requestData)) shouldBe outcome
       }
     }
   }

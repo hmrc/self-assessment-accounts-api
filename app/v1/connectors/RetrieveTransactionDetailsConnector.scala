@@ -37,8 +37,19 @@ class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
     val nino = request.nino.nino
     val transactionId = request.transactionId
 
+    val queryParams: Seq[(String, String)] =
+      Seq(
+        "docNumber" -> transactionId,
+        "onlyOpenItems" -> "false",
+        "includeLocks" -> "true",
+        "calculateAccruedInterest" -> "true",
+        "removePOA" -> "false",
+        "customerPaymentInformation" -> "true",
+      )
+
     get(
-      uri = DesUri[RetrieveTransactionDetailsResponse](s"cross-regime/transactions-placeholder/NINO/$nino/ITSA/$transactionId")
+      uri = DesUri[RetrieveTransactionDetailsResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
+      queryParams = queryParams
     )
   }
 
