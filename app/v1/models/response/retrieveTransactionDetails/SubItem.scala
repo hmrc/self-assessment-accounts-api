@@ -35,15 +35,15 @@ object SubItem {
   implicit val writes: OWrites[SubItem] = Json.writes[SubItem]
 
   implicit val reads: Reads[SubItem] = for {
-    subItemId <- (JsPath \ "subItemId").readNullable[String]
-    amount <- (JsPath \ "amount").readNullable[BigDecimal]
-    clearingDate <- (JsPath \ "clearingDate").readNullable[String]
-    clearingReason <- (JsPath \ "clearingReason").readNullable[String]
-    outgoingPaymentMethod <- (JsPath \ "outgoingPaymentMethod").readNullable[String]
-    paymentAmount <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
-    paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
-    paymentLot <- (JsPath \ "paymentLot").readNullable[String]
-    paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
+    subItemId <- (JsPath \ "items" \\ "subItemId").readNullable[String]
+    amount <- (JsPath \ "items" \\  "amount").readNullable[BigDecimal]
+    clearingDate <- (JsPath \ "items" \\ "clearingDate").readNullable[String]
+    clearingReason <- (JsPath \ "items" \\  "clearingReason").readNullable[String]
+    outgoingPaymentMethod <- (JsPath \ "items" \\  "outgoingPaymentMethod").readNullable[String]
+    paymentAmount <- (JsPath \ "items" \\  "paymentAmount").readNullable[BigDecimal]
+    paymentMethod <- (JsPath \ "items" \\  "paymentMethod").readNullable[String]
+    paymentLot <- (JsPath \ "items" \\  "paymentLot").readNullable[String]
+    paymentLotItem <- (JsPath \ "items" \\  "paymentLotItem").readNullable[String]
     } yield {
     val id: Option[String] = for {
       pl <- paymentLot

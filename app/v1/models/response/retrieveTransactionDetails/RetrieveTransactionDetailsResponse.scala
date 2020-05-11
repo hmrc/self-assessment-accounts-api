@@ -26,13 +26,13 @@ case class RetrieveTransactionDetailsResponse(transactionItems: Seq[TransactionI
 object RetrieveTransactionDetailsResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveTransactionDetailsResponse] =
-   (JsPath \ "transactionItems").read[Seq[TransactionItem]]
+   (JsPath \ "financialDetails").read[Seq[TransactionItem]]
      .map(items => RetrieveTransactionDetailsResponse(items.filterNot(_ == TransactionItem.empty)))
 
   implicit val writes: OWrites[RetrieveTransactionDetailsResponse] =
     Json.writes[RetrieveTransactionDetailsResponse]
 
-  implicit object RetrieveTransactionDetailsLinksFactory extends HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData]{
+  implicit object RetrieveTransactionDetailsLinksFactory extends HateoasLigitnksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData]{
     override def links(appConfig: AppConfig, data: RetrieveTransactionDetailsHateoasData): Seq[Link] = {
       import data._
       Seq(

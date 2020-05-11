@@ -20,7 +20,7 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 
 case class TransactionItem(transactionItemId: Option[String],
-                          `type`: Option[String],
+                          `chargeType`: Option[String],
                            taxPeriodFrom: Option[String],
                            taxPeriodTo: Option[String],
                            originalAmount: Option[BigDecimal],
@@ -37,22 +37,22 @@ object TransactionItem {
   implicit val writes: OWrites[TransactionItem] = Json.writes[TransactionItem]
 
   implicit val reads: Reads[TransactionItem] = for {
-    sapDocumentItemId <- (JsPath \ "sapDocumentItemId").readNullable[String]
-    transactionType <- (JsPath \ "type").readNullable[String]
+    sapDocumentNumberItem <- (JsPath \ "sapDocumentNumberItem").readNullable[String]
+    transactionType <- (JsPath \ "chargeType").readNullable[String]
     taxPeriodFrom <- (JsPath \ "taxPeriodFrom").readNullable[String]
     taxPeriodTo <- (JsPath \ "taxPeriodTo").readNullable[String]
     originalAmount <- (JsPath \ "originalAmount").readNullable[BigDecimal]
     outstandingAmount <- (JsPath \ "outstandingAmount").readNullable[BigDecimal]
-    dueDate <- (JsPath \ "dueDate").readNullable[String]
-    paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
-    paymentLot <- (JsPath \ "paymentLot").readNullable[String]
-    paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
-    subItems <- (JsPath \ "subItems").readNullable[Seq[SubItem]].map(_.map(_.filterNot(item => item == SubItem.empty)))
+    dueDate <- (JsPath \ "items" \\ "dueDate").readNullable[String]
+    paymentMethod <- (JsPath \ "items" \\ "paymentMethod").readNullable[String]
+    paymentLot <- (JsPath \ "items" \\ "paymentLot").readNullable[String]
+    paymentLotItem <- (JsPath \ "items" \\ "paymentLotItem").readNullable[String]
+    subItems <- (JsPath \ "items" \\ "subItems").readNullable[Seq[SubItem]].map(_.map(_.filterNot(item => item == SubItem.empty)))
   } yield{
     val id: Option[String] = for {
       pl <- paymentLot
       pli <- paymentLotItem
     } yield s"$pl-$pli"
-    TransactionItem(sapDocumentItemId, transactionType, taxPeriodFrom, taxPeriodTo, originalAmount, outstandingAmount, dueDate, paymentMethod, id, subItems)
+    TransactionItem(sapDocumentNumberItem, transactionType, taxPeriodFrom, taxPeriodTo, originalAmount, outstandingAmount, dueDate, paymentMethod, id, subItems)
   }
 }

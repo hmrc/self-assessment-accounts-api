@@ -33,7 +33,7 @@ object RetrieveTransactionDetailsFixture {
       |{
       |  "transactionItems": [
       |    {
-      |      "sapDocumentItemId": "0001",
+      |      "sapDocumentNumberItem": "0001",
       |      "type": "National Insurance Class 2",
       |      "taxPeriodFrom": "2019-04-06",
       |      "taxPeriodTo": "2020-04-05",
@@ -291,7 +291,7 @@ object RetrieveTransactionDetailsFixture {
   val transactionItemResponseCharge: TransactionItem =
     TransactionItem(
       transactionItemId = Some("0001"),
-      `type` = Some("National Insurance Class 2"),
+      `chargeType` = Some("National Insurance Class 2"),
       taxPeriodFrom = Some("2019-04-06"),
       taxPeriodTo = Some("2020-04-05"),
       originalAmount = Some(100.45),
@@ -343,7 +343,7 @@ object RetrieveTransactionDetailsFixture {
   val transactionItemResponseCharge2: TransactionItem =
     TransactionItem(
       transactionItemId = Some("0002"),
-      `type` = Some("National Insurance Class 4"),
+      `chargeType` = Some("National Insurance Class 4"),
       taxPeriodFrom = Some("2019-04-06"),
       taxPeriodTo = Some("2020-04-05"),
       originalAmount = Some(100.23),
@@ -357,7 +357,7 @@ object RetrieveTransactionDetailsFixture {
   val multipleTransactionItemResponseCharge: TransactionItem =
     TransactionItem(
       transactionItemId = Some("0002"),
-      `type` = Some("National Insurance Class 4"),
+      `chargeType` = Some("National Insurance Class 4"),
       taxPeriodFrom = Some("2019-04-06"),
       taxPeriodTo = Some("2020-04-05"),
       originalAmount = Some(100.23),
@@ -393,7 +393,7 @@ object RetrieveTransactionDetailsFixture {
       clearingDate = Some("2021-01-31"),
       clearingReason = Some("Payment allocation"),
       outgoingPaymentMethod = None,
-      paymentAmount = Some(-1100),
+      paymentAmount = Some(-1100.21),
       paymentMethod = None,
       paymentId = None
     )
@@ -401,10 +401,10 @@ object RetrieveTransactionDetailsFixture {
   val transactionItemResponsePayment: TransactionItem =
     TransactionItem(
       transactionItemId = Some("0001"),
-      `type` = Some("Payment on account"),
+      `chargeType` = Some("Payment on account"),
       taxPeriodFrom = None,
       taxPeriodTo = None,
-      originalAmount = Some(-5000),
+      originalAmount = Some(-5000.45),
       outstandingAmount = Some(0),
       dueDate = Some("2021-01-31"),
       paymentMethod = Some("BACS RECEIPTS"),
@@ -432,7 +432,7 @@ object RetrieveTransactionDetailsFixture {
   val transactionItemResponsePayment2: TransactionItem =
     TransactionItem(
       transactionItemId = Some("0002"),
-      `type` = Some("Payment on account"),
+      `chargeType` = Some("Payment on account"),
       taxPeriodFrom = Some("2019-04-06"),
       taxPeriodTo = Some("2020-04-05"),
       originalAmount = Some(100.45),
