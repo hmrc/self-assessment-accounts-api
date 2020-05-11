@@ -37,7 +37,16 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
       val mtdResponse: JsValue = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
 
       def uri: String = s"/$nino/balance"
-      def desUrl: String = s"/cross-regime/balance-placeholder/NINO/$nino/ITSA"
+      def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
+
+      val desQueryParams: Seq[(String, String)] =
+        Seq(
+          "onlyOpenItems" -> "true",
+          "includeLocks" -> "true",
+          "calculateAccruedInterest" -> "true",
+          "removePOA" -> "true",
+          "customerPaymentInformation" -> "true"
+        )
 
       def setupStubs(): StubMapping
 
@@ -45,6 +54,7 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
         setupStubs()
         buildRequest(uri)
           .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+          .withQueryStringParameters(desQueryParams: _*)
       }
 
       def errorBody(code: String): String =
