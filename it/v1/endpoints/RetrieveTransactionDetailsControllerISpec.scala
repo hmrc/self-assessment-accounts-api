@@ -29,28 +29,37 @@ import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with RetrieveTransactionDetailsFixture {
 
   private trait Test {
+
     val nino = "AA123456A"
     val correlationId = "X-123"
     val transactionId = "1111111111"
 
-    def desUrl: String = s"/cross-regime/transactions-placeholder/NINO/$nino/ITSA/$transactionId"
+    val desQueryParams: Seq[(String, String)] =
+      Seq(
+        "docNumber" -> transactionId,
+        "onlyOpenItems" -> "false",
+        "includeLocks" -> "true",
+        "calculateAccruedInterest" -> "true",
+        "removePOA" -> "false",
+        "customerPaymentInformation" -> "true",
+      )
+
+    def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
-
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withQueryStringParameters(desQueryParams: _*)
     }
 
     def uri: String = s"/$nino/transactions/$transactionId"
   }
 
   "Calling the retrieve transaction details endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made for a charge" in new Test {
 
         override def setupStubs(): StubMapping = {
