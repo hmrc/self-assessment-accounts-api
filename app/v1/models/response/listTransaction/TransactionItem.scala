@@ -37,13 +37,13 @@ object TransactionItem {
   implicit val reads: Reads[TransactionItem] =
     for {
       taxYear <- (JsPath \ "taxYear").readNullable[String].map(_.map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear))))
+      transactionId <- (JsPath \ "documentId").readNullable[String]
       paymentLot <- (JsPath \ "paymentLot").readNullable[String]
       paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
-      transactionId <- (JsPath \ "documentId").readNullable[String]
-      transactionDate <- (JsPath \ "transactionDate").readNullable[String]
-      aType <- (JsPath \ "type").readNullable[String]
-      originalAmount <- (JsPath \ "originalAmount").readNullable[BigDecimal]
-      outstandingAmount <- (JsPath \ "outstandingAmount").readNullable[BigDecimal]
+      transactionDate <- (JsPath \ "documentDate").readNullable[String]
+      aType <- (JsPath \ "documentDescription").readNullable[String]
+      originalAmount <- (JsPath \ "totalAmount").readNullable[BigDecimal]
+      outstandingAmount <- (JsPath \ "documentOutstandingAmount").readNullable[BigDecimal]
       lastClearingDate <- (JsPath \ "lastClearingDate").readNullable[String]
       lastClearingReason <- (JsPath \ "lastClearingReason").readNullable[String]
       lastClearedAmount <- (JsPath \ "lastClearedAmount").readNullable[BigDecimal]
