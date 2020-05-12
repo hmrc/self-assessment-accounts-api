@@ -39,11 +39,15 @@ class ListChargesConnector @Inject()(val http: HttpClient,
     val queryParams: Seq[(String, String)] = Seq(
       "dateFrom" -> request.from,
       "dateTo" -> request.to,
-      "type" -> "charge"
+      "onlyOpenItems" -> "false",
+      "includeLocks" -> "true",
+      "calculateAccruedInterest" -> "true",
+      "removePOA" -> "true",
+      "customerPaymentInformation" -> "true"
     )
 
     get(
-      uri = DesUri[ListChargesResponse[Charge]](s"cross-regime/transactions-placeholder/NINO/$nino/ITSA"),
+      uri = DesUri[ListChargesResponse[Charge]](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
       queryParams = queryParams
     )
 
