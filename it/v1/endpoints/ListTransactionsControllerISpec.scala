@@ -31,7 +31,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
   private val desJsonNoTransactions = Json.parse(
     """
       |{
-      |  "transactions" : [
+      |  "financialDetails" : [
       |  ]
       |}
     """.stripMargin
@@ -40,14 +40,14 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
   private val desJson = Json.parse(
     """
       |{
-      |   "transactions":[
+      |   "financialDetails":[
       |      {
       |         "taxYear":"2020",
       |         "documentId":"X123456790A",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Balancing Charge Debit",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
+      |         "documentDate":"2020-01-01",
+      |         "documentDescription":"Balancing Charge Debit",
+      |         "totalAmount":12.34,
+      |         "documentOutstandingAmount":10.33,
       |         "lastClearingDate":"2020-01-02",
       |         "lastClearingReason":"Refund",
       |         "lastClearedAmount":2.01
@@ -57,10 +57,10 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       |         "documentId":"X123456790B",
       |         "paymentLot":"081203010024",
       |         "paymentLotItem" : "000001",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Payment On Account",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
+      |         "documentDate":"2020-01-01",
+      |         "documentDescription":"Payment On Account",
+      |         "totalAmount":12.34,
+      |         "documentOutstandingAmount":10.33,
       |         "lastClearingDate":"2020-01-02",
       |         "lastClearingReason":"Payment Allocation",
       |         "lastClearedAmount":2.01
