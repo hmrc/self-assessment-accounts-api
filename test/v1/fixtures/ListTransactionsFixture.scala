@@ -21,67 +21,62 @@ import uk.gov.hmrc.domain.Nino
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
 import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
-
 object ListTransactionsFixture {
 
   val nino = Nino("AA123456A")
   val dateFrom = "2018-04-05"
   val dateTo = "2019-11-05"
-
   val requestData: ListTransactionsParsedRequest = ListTransactionsParsedRequest(nino, dateFrom, dateTo)
 
   val fullDesDocIdTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2020",
-      |         "documentId":"X123456790A",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Balancing Charge Debit",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Refund",
-      |         "lastClearedAmount":2.01
+      |    "taxYear": "2020",
+      |    "documentId": "X123456790A",
+      |    "documentDate": "2020-01-01",
+      |    "documentDescription": "Balancing Charge Debit",
+      |    "totalAmount": 12.34,
+      |    "documentOutstandingAmount": 10.33,
+      |    "lastClearingDate": "2020-01-02",
+      |    "lastClearingReason": "Example Reason",
+      |    "lastClearedAmount": 2.01
       |}
     """.stripMargin
   )
-
   val fullDesPaymentLotIdTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2020",
-      |         "documentId":"X123456790B",
-      |         "paymentLot":"081203010024",
-      |         "paymentLotItem":"000001",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Payment On Account",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Payment Allocation",
-      |         "lastClearedAmount":2.01
+      |    "taxYear": "2020",
+      |    "documentId": "X123456790B",
+      |    "documentDate": "2020-01-02",
+      |    "documentDescription": "Payment On Account",
+      |    "totalAmount": -2.01,
+      |    "documentOutstandingAmount": 0.00,
+      |    "lastClearingDate": "2020-01-02",
+      |    "lastClearingReason": "Allocation",
+      |    "lastClearedAmount": -2.01,
+      |    "paymentLot": "081203010024",
+      |    "paymentLotItem": "000001"
       |}
     """.stripMargin
   )
-
   val fullDesTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2019",
-      |         "documentId":"X123456790A",
-      |         "paymentLot":"081203010024",
-      |         "paymentLotItem":"000001",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Balancing Charge Debit",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Example reason",
-      |         "lastClearedAmount":2.01
+      |    "taxYear": "2020",
+      |    "documentId": "X123456790B",
+      |    "documentDate": "2020-01-02",
+      |    "documentDescription": "Payment On Account",
+      |    "totalAmount": -2.01,
+      |    "documentOutstandingAmount": 0.00,
+      |    "lastClearingDate": "2020-01-02",
+      |    "lastClearingReason": "Allocation",
+      |    "lastClearedAmount": -2.01,
+      |    "paymentLot": "081203010024",
+      |    "paymentLotItem": "000001"
       |}
     """.stripMargin
   )
-
   val minimalDesTransactionItemResponse: JsValue = Json.parse(
     """
       |{
@@ -89,29 +84,26 @@ object ListTransactionsFixture {
       |}
     """.stripMargin
   )
-
   val invalidDesTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2019",
-      |         "id":"X123456790A",
-      |         "transactionDate":"2020-01-01",
-      |         "type":12.34,
-      |         "originalAmount":"Balancing Charge Debit",
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":2.01,
-      |         "lastClearedAmount":"Example reason"
+      |    "taxYear": "2020",
+      |    "documentId": "X123456790A",
+      |    "documentDate": "2020-01-01",
+      |    "documentDescription": "Balancing Charge Debit",
+      |    "totalAmount": 12.34,
+      |    "documentOutstandingAmount": 10.33,
+      |    "lastClearingDate": "2020-01-02",
+      |    "lastClearingReason": "Example Reason",
+      |    "lastClearedAmount": 2.01
       |}
     """.stripMargin
   )
-
   val mtdListTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2018-19",
-      |         "transactionId": "X123456790A",
-      |         "paymentId":"081203010024-000001",
+      |         "taxYear":"2019-20",
+      |         "id":"X123456790A",
       |         "transactionDate":"2020-01-01",
       |         "type":"Balancing Charge Debit",
       |         "originalAmount":12.34,
@@ -122,7 +114,6 @@ object ListTransactionsFixture {
       |}
     """.stripMargin
   )
-
   val chargeTransactionItemModel: TransactionItem =
     TransactionItem(
       taxYear = Some("2019-20"),
@@ -136,10 +127,9 @@ object ListTransactionsFixture {
       lastClearingReason = Some("Refund"),
       lastClearedAmount = Some(2.01)
     )
-
   val fullTransactionItemModel: TransactionItem =
     TransactionItem(
-      taxYear = Some("2018-19"),
+      taxYear = Some("2019-20"),
       transactionId = Some("X123456790A"),
       paymentId = Some("081203010024-000001"),
       transactionDate = Some("2020-01-01"),
@@ -150,7 +140,6 @@ object ListTransactionsFixture {
       lastClearingReason = Some("Example reason"),
       lastClearedAmount = Some(2.01)
     )
-
   val paymentTransactionItemModel: TransactionItem =
     TransactionItem(
       taxYear = Some("2019-20"),
@@ -164,10 +153,8 @@ object ListTransactionsFixture {
       lastClearingReason = Some("Payment Allocation"),
       lastClearedAmount = Some(2.01)
     )
-
   val minimalTransactionItemModel: TransactionItem =
     TransactionItem(None, None, None, None, None, None, None, None, None, None)
-
   val fullDesSingleListTransactionsResponse: JsValue = Json.parse(
     s"""
        |{
@@ -175,7 +162,6 @@ object ListTransactionsFixture {
        |}
       """.stripMargin
   )
-
   val fullDesMultipleListTransactionsMultipleResponse: JsValue = Json.parse(
     s"""
        |{
@@ -183,7 +169,6 @@ object ListTransactionsFixture {
        |}
       """.stripMargin
   )
-
   val minimalDesListTransactionsResponse: JsValue = Json.parse(
     """
       |{
@@ -191,7 +176,6 @@ object ListTransactionsFixture {
       |}
     """.stripMargin
   )
-
   val emptyItemDesListTransactionsResponse: JsValue = Json.parse(
     s"""
        |{
@@ -199,7 +183,6 @@ object ListTransactionsFixture {
        |}
       """.stripMargin
   )
-
   val invalidDesListTransactionsResponse: JsValue = Json.parse(
     """
       |{
@@ -207,7 +190,6 @@ object ListTransactionsFixture {
       |}
     """.stripMargin
   )
-
   val mtdListTransactionsResponse: JsValue = Json.parse(
     s"""
        |{
@@ -215,16 +197,12 @@ object ListTransactionsFixture {
        |}
       """.stripMargin
   )
-
   val fullSingleListTransactionsModel: ListTransactionsResponse[TransactionItem] =
     ListTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel))
-
   val fullMultipleListTransactionsModel: ListTransactionsResponse[TransactionItem] =
     ListTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel, fullTransactionItemModel))
-
   val minimalListTransactionsModel: ListTransactionsResponse[TransactionItem] =
     ListTransactionsResponse(transactions = Seq.empty[TransactionItem])
-
   val mtdJson: JsValue = Json.parse(
     """
       |{
@@ -242,14 +220,14 @@ object ListTransactionsFixture {
       |         "links": [
       |         {
       |            "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
-      |			       "method": "GET",
-      |			       "rel": "retrieve-charge-history"
-      |		       },
+      |           "method": "GET",
+      |           "rel": "retrieve-charge-history"
+      |          },
       |         {
       |            "href": "/accounts/self-assessment/AA123456A/transactions/X123456790A",
-      |			       "method": "GET",
-      |			       "rel": "retrieve-transaction-details"
-      |		       }
+      |           "method": "GET",
+      |           "rel": "retrieve-transaction-details"
+      |          }
       |        ]
       |      },
       |      {
@@ -266,33 +244,33 @@ object ListTransactionsFixture {
       |          "links": [
       |          {
       |             "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
-      |			        "method": "GET",
-      |			        "rel": "retrieve-payment-allocations"
-      |		        },
+      |            "method": "GET",
+      |            "rel": "retrieve-payment-allocations"
+      |           },
       |           {
       |             "href": "/accounts/self-assessment/AA123456A/transactions/X123456790B",
-      |			        "method": "GET",
-      |			        "rel": "retrieve-transaction-details"
-      |		        }
+      |            "method": "GET",
+      |            "rel": "retrieve-transaction-details"
+      |           }
       |          ]
       |      }
       |   ],
       |   "links": [
       |      {
       |        "href": "/accounts/self-assessment/AA123456A/transactions?from=2018-10-01&to=2019-10-01",
-      |			   "method": "GET",
-      |			   "rel": "self"
-      |		   },
+      |       "method": "GET",
+      |       "rel": "self"
+      |      },
       |      {
       |        "href": "/accounts/self-assessment/AA123456A/charges?from=2018-10-01&to=2019-10-01",
-      |			   "method": "GET",
-      |			   "rel": "list-charges"
-      |		   },
+      |       "method": "GET",
+      |       "rel": "list-charges"
+      |      },
       |      {
       |        "href": "/accounts/self-assessment/AA123456A/payments?from=2018-10-01&to=2019-10-01",
-      |			   "method": "GET",
-      |			   "rel": "list-payments"
-      |		   }
+      |       "method": "GET",
+      |       "rel": "list-payments"
+      |      }
       |     ]
       |}
     """.stripMargin
