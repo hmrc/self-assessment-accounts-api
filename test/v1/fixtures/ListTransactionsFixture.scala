@@ -33,15 +33,15 @@ object ListTransactionsFixture {
   val fullDesDocIdTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2020",
-      |         "documentId":"X123456790A",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Balancing Charge Debit",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Refund",
-      |         "lastClearedAmount":2.01
+      |    "taxYear": "2020",
+      |    "documentId": "X123456790A",
+      |    "documentDate": "2020-01-01",
+      |    "documentDescription": "Balancing Charge Debit",
+      |    "totalAmount": 12.34,
+      |    "documentOutstandingAmount": 10.33,
+      |    "lastClearingDate": "2020-01-02",
+      |    "lastClearingReason": "Refund",
+      |    "lastClearedAmount": 2.01
       |}
     """.stripMargin
   )
@@ -49,17 +49,17 @@ object ListTransactionsFixture {
   val fullDesPaymentLotIdTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2020",
-      |         "documentId":"X123456790B",
-      |         "paymentLot":"081203010024",
-      |         "paymentLotItem":"000001",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Payment On Account",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Payment Allocation",
-      |         "lastClearedAmount":2.01
+      |    "taxYear": "2020",
+      |    "documentId": "X123456790B",
+      |    "documentDate": "2020-01-01",
+      |    "documentDescription": "Payment On Account",
+      |    "totalAmount": 12.34,
+      |    "documentOutstandingAmount": 10.33,
+      |    "lastClearingDate": "2020-01-02",
+      |    "lastClearingReason": "Payment Allocation",
+      |    "lastClearedAmount": 2.01,
+      |    "paymentLot": "081203010024",
+      |    "paymentLotItem": "000001"
       |}
     """.stripMargin
   )
@@ -67,17 +67,17 @@ object ListTransactionsFixture {
   val fullDesTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2019",
-      |         "documentId":"X123456790A",
-      |         "paymentLot":"081203010024",
-      |         "paymentLotItem":"000001",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Balancing Charge Debit",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Example reason",
-      |         "lastClearedAmount":2.01
+      |    "taxYear": "2020",
+      |    "documentId": "X123456790A",
+      |    "documentDate": "2020-01-01",
+      |    "documentDescription": "Balancing Charge Debit",
+      |    "totalAmount": 12.34,
+      |    "documentOutstandingAmount": 10.33,
+      |    "lastClearingDate": "2020-01-02",
+      |    "lastClearingReason": "Example Reason",
+      |    "lastClearedAmount": 2.01,
+      |    "paymentLot": "081203010024",
+      |    "paymentLotItem": "000001"
       |}
     """.stripMargin
   )
@@ -93,15 +93,15 @@ object ListTransactionsFixture {
   val invalidDesTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2019",
+      |         "taxYear":"2020",
       |         "id":"X123456790A",
       |         "transactionDate":"2020-01-01",
-      |         "type":12.34,
-      |         "originalAmount":"Balancing Charge Debit",
+      |         "type":"Balancing Charge Debit",
+      |         "originalAmount":12.34,
       |         "outstandingAmount":10.33,
       |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":2.01,
-      |         "lastClearedAmount":"Example reason"
+      |         "lastClearingReason": 9999.99,
+      |         "lastClearedAmount":"Invalid type STRING"
       |}
     """.stripMargin
   )
@@ -109,15 +109,15 @@ object ListTransactionsFixture {
   val mtdListTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |         "taxYear":"2018-19",
-      |         "transactionId": "X123456790A",
-      |         "paymentId":"081203010024-000001",
+      |         "taxYear":"2019-20",
+      |         "transactionId":"X123456790A",
+      |         "paymentId": "081203010024-000001",
       |         "transactionDate":"2020-01-01",
       |         "type":"Balancing Charge Debit",
       |         "originalAmount":12.34,
       |         "outstandingAmount":10.33,
       |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Example reason",
+      |         "lastClearingReason":"Example Reason",
       |         "lastClearedAmount":2.01
       |}
     """.stripMargin
@@ -139,7 +139,7 @@ object ListTransactionsFixture {
 
   val fullTransactionItemModel: TransactionItem =
     TransactionItem(
-      taxYear = Some("2018-19"),
+      taxYear = Some("2019-20"),
       transactionId = Some("X123456790A"),
       paymentId = Some("081203010024-000001"),
       transactionDate = Some("2020-01-01"),
@@ -147,7 +147,7 @@ object ListTransactionsFixture {
       originalAmount = Some(12.34),
       outstandingAmount = Some(10.33),
       lastClearingDate = Some("2020-01-02"),
-      lastClearingReason = Some("Example reason"),
+      lastClearingReason = Some("Example Reason"),
       lastClearedAmount = Some(2.01)
     )
 
@@ -171,7 +171,7 @@ object ListTransactionsFixture {
   val fullDesSingleListTransactionsResponse: JsValue = Json.parse(
     s"""
        |{
-       |  "transactions" : [$fullDesTransactionItemResponse]
+       |  "financialDetails" : [$fullDesTransactionItemResponse]
        |}
       """.stripMargin
   )
@@ -179,7 +179,7 @@ object ListTransactionsFixture {
   val fullDesMultipleListTransactionsMultipleResponse: JsValue = Json.parse(
     s"""
        |{
-       |  "transactions" : [$fullDesTransactionItemResponse, $fullDesTransactionItemResponse]
+       |  "financialDetails" : [$fullDesTransactionItemResponse, $fullDesTransactionItemResponse]
        |}
       """.stripMargin
   )
@@ -187,7 +187,7 @@ object ListTransactionsFixture {
   val minimalDesListTransactionsResponse: JsValue = Json.parse(
     """
       |{
-      |  "transactions" : []
+      |  "financialDetails" : []
       |}
     """.stripMargin
   )
@@ -195,7 +195,7 @@ object ListTransactionsFixture {
   val emptyItemDesListTransactionsResponse: JsValue = Json.parse(
     s"""
        |{
-       |  "transactions" : [$minimalDesTransactionItemResponse]
+       |  "financialDetails" : [$minimalDesTransactionItemResponse]
        |}
       """.stripMargin
   )
