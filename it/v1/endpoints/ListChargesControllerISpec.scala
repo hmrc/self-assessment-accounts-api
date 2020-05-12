@@ -32,10 +32,11 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     val nino = "AA123456A"
     val correlationId = "X-123"
     val from: Option[String] = Some("2018-10-01")
-    val to : Option[String]  = Some("2019-10-01")
+    val to: Option[String] = Some("2019-10-01")
+
     def uri: String = s"/$nino/charges"
 
-    def desUrl: String = s"/cross-regime/transactions-placeholder/NINO/$nino/ITSA"
+    def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
 
@@ -56,7 +57,15 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     "return a valid response with status OK" when {
       "valid request is made" in new Test {
 
-        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get, "type" -> "charge")
+        val desQueryParams: Map[String, String] = Map(
+          "dateFrom" -> from.get,
+          "dateTo" -> to.get,
+          "onlyOpenItems" -> "false",
+          "includeLocks" -> "true",
+          "calculateAccruedInterest" -> "true",
+          "removePOA" -> "true",
+          "customerPaymentInformation" -> "true"
+        )
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
