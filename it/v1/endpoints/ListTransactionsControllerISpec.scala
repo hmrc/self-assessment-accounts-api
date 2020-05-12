@@ -124,6 +124,41 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       }
     }
 
+    "return a 500 status code" when {
+      "des returns errors that map to DownstreamError" in new Test {
+
+        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
+
+        val multipleErrors: String =
+          """
+            |{
+            |   "failures": [
+            |        {
+            |            "code": "INVALID_IDTYPE",
+            |            "reason": "The provided id type is invalid"
+            |        },
+            |        {
+            |            "code": "INVALID_REGIME_TYPE",
+            |            "reason": "The provided regime type is invalid"
+            |        }
+            |    ]
+            |}
+          """.stripMargin
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onError(DesStub.GET, desUrl, desQueryParams, BAD_REQUEST, multipleErrors)
+        }
+
+        val response: WSResponse = await(request.get)
+        response.status shouldBe INTERNAL_SERVER_ERROR
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe Json.toJson(DownstreamError)
+      }
+    }
+
     "return a 404 NO_TRANSACTIONS_FOUND error" when {
       "a success response with no payments is returned" in new Test {
 
@@ -224,11 +259,18 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
 
       val input = Seq(
         (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+        (BAD_REQUEST, "INVALID_IDNUMBER", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_DOC_NUMBER", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_ONLY_OPEN_ITEMS", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
-        (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+        (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", INTERNAL_SERVER_ERROR, DownstreamError),
+        (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )

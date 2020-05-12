@@ -50,10 +50,17 @@ class ListTransactionsService @Inject()(val connector: ListTransactionsConnector
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDTYPE" -> DownstreamError,
-      "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+      "INVALID_IDNUMBER" -> NinoFormatError,
       "INVALID_REGIME_TYPE" -> DownstreamError,
+      "INVALID_DOC_NUMBER" -> DownstreamError,
+      "INVALID_ONLY_OPEN_ITEMS" -> DownstreamError,
+      "INVALID_INCLUDE_LOCKS" -> DownstreamError,
+      "INVALID_CALCULATE_ACCRUED_INTEREST" -> DownstreamError,
+      "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
       "INVALID_DATE_FROM" -> FromDateFormatError,
       "INVALID_DATE_TO" -> ToDateFormatError,
+      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> DownstreamError,
+      "REQUEST_NOT_PROCESSED" -> DownstreamError,
       "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
