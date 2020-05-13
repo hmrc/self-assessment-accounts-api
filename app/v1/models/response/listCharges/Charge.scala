@@ -32,10 +32,10 @@ object Charge {
   implicit val reads: Reads[Charge] = (
     (JsPath \ "taxYear").readNullable[String] and
       (JsPath \ "documentId").readNullable[String] and
-      (JsPath \ "transactionDate").readNullable[String] and
-      (JsPath \ "type").readNullable[String] and
+      (JsPath \ "documentDate").readNullable[String] and
+      (JsPath \ "documentDescription").readNullable[String] and
       (JsPath \ "totalAmount").readNullable[BigDecimal] and
-      (JsPath \ "outstandingAmount").readNullable[BigDecimal]
+      (JsPath \ "documentOutstandingAmount").readNullable[BigDecimal]
     ) (Charge.apply _)
 
   implicit val writes: OWrites[Charge] = Json.writes[Charge]
