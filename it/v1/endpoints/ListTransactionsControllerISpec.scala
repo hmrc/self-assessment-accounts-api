@@ -127,7 +127,15 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
     "return a 500 status code" when {
       "des returns errors that map to DownstreamError" in new Test {
 
-        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
+        val desQueryParams: Map[String, String] = Map(
+          "dateFrom" -> from.get,
+          "dateTo" -> to.get,
+          "onlyOpenItems" -> "false",
+          "includeLocks" -> "true",
+          "calculateAccruedInterest" -> "true",
+          "removePOA" -> "false",
+          "customerPaymentInformation" -> "false"
+        )
 
         val multipleErrors: String =
           """
