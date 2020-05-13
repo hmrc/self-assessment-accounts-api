@@ -27,7 +27,7 @@ case class ListTransactionsResponse[I](transactions: Seq[I])
 object ListTransactionsResponse extends HateoasLinks {
 
   implicit def reads[I: Reads]: Reads[ListTransactionsResponse[I]] =
-    implicitly(JsPath \ "transactions").read[Seq[I]].map(items => ListTransactionsResponse(items.filterNot(_ == TransactionItem.empty)))
+    implicitly(JsPath \ "financialDetails").read[Seq[I]].map(items => ListTransactionsResponse(items.filterNot(_ == TransactionItem.empty)))
 
   implicit def writes[I: Writes]: OWrites[ListTransactionsResponse[I]] =
     Json.writes[ListTransactionsResponse[I]]
