@@ -26,10 +26,10 @@ object ListChargesFixture {
       |{
       |  "taxYear" : "2019-20",
       |  "documentId" : "1234567890AB",
-      |  "transactionDate" : "2020-02-01",
-      |  "type" : "Charge Type",
+      |  "documentDate" : "2020-02-01",
+      |  "documentDescription" : "Charge Type",
       |  "totalAmount" : 11.23,
-      |  "outstandingAmount" : 4.56
+      |  "documentOutstandingAmount" : 4.56
       |}
       |""".stripMargin
   )
@@ -69,7 +69,7 @@ object ListChargesFixture {
   val fullDesListChargesSingleResponse: JsValue = Json.parse(
     s"""
        |{
-       | "transactions" : [$fullDesChargeResponse]
+       | "financialDetails" : [$fullDesChargeResponse]
        |}
       """.stripMargin
   )
@@ -77,7 +77,7 @@ object ListChargesFixture {
   val listChargesDesJson: JsValue = Json.parse(
     s"""
       |{
-      |  "transactions": [$fullDesChargeResponse]
+      |  "financialDetails": [$fullDesChargeResponse]
       |}
       """.stripMargin
   )
@@ -85,7 +85,7 @@ object ListChargesFixture {
   val fullDesListChargesMultipleResponse: JsValue = Json.parse(
     s"""
        |{
-       | "transactions" : [$fullDesChargeResponse, $fullDesChargeResponse]
+       | "financialDetails" : [$fullDesChargeResponse, $fullDesChargeResponse]
        |}
       """.stripMargin
   )
@@ -93,7 +93,7 @@ object ListChargesFixture {
   val minimalDesListChargesResponse: JsValue = Json.parse(
     """
       |{
-      | "transactions" : []
+      | "financialDetails" : []
       |}
     """.stripMargin
   )
