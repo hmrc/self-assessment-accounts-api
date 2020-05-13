@@ -25,10 +25,10 @@ import v1.models.response.listTransaction.{ListTransactionsResponse, Transaction
 object ListTransactionsFixture {
 
   val nino = Nino("AA123456A")
-  val dateFrom = "2018-04-05"
-  val dateTo = "2019-11-05"
+  val from = "2018-04-05"
+  val to = "2019-11-05"
 
-  val requestData: ListTransactionsParsedRequest = ListTransactionsParsedRequest(nino, dateFrom, dateTo)
+  val requestData: ListTransactionsParsedRequest = ListTransactionsParsedRequest(nino, from, to)
 
   val fullDesDocIdTransactionItemResponse: JsValue = Json.parse(
     """

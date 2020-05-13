@@ -76,7 +76,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
     val from: Option[String] = Some("2018-10-01")
     val to: Option[String] = Some("2019-10-01")
 
-    def desUrl: String = s"/cross-regime/transactions-placeholder/NINO/$nino/ITSA"
+    def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
 
@@ -99,7 +99,15 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
     "return a valid response with status OK" when {
       "valid request is made" in new Test {
 
-        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
+        val desQueryParams: Map[String, String] = Map(
+          "dateFrom" -> from.get,
+          "dateTo" -> to.get,
+          "onlyOpenItems" -> "false",
+          "includeLocks" -> "true",
+          "calculateAccruedInterest" -> "true",
+          "removePOA" -> "false",
+          "customerPaymentInformation" -> "false"
+        )
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -119,7 +127,15 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
     "return a 404 NO_TRANSACTIONS_FOUND error" when {
       "a success response with no payments is returned" in new Test {
 
-        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
+        val desQueryParams: Map[String, String] = Map(
+          "dateFrom" -> from.get,
+          "dateTo" -> to.get,
+          "onlyOpenItems" -> "false",
+          "includeLocks" -> "true",
+          "calculateAccruedInterest" -> "true",
+          "removePOA" -> "false",
+          "customerPaymentInformation" -> "false"
+        )
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -182,7 +198,15 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"des returns an $desCode error and status $desStatus" in new Test {
 
-          val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
+          val desQueryParams: Map[String, String] = Map(
+            "dateFrom" -> from.get,
+            "dateTo" -> to.get,
+            "onlyOpenItems" -> "false",
+            "includeLocks" -> "true",
+            "calculateAccruedInterest" -> "true",
+            "removePOA" -> "false",
+            "customerPaymentInformation" -> "false"
+          )
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
