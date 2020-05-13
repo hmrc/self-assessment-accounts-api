@@ -34,16 +34,21 @@ class ListTransactionsConnector @Inject()(val http: HttpClient,
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
-    val dateFrom = request.from
-    val dateTo = request.to
+    val from = request.from
+    val to = request.to
 
     val queryParams: Seq[(String, String)] = Seq(
-      "dateFrom" -> dateFrom,
-      "dateTo" -> dateTo
+      "dateFrom" -> from,
+      "dateTo" -> to,
+      "onlyOpenItems" -> "false",
+      "includeLocks" -> "true",
+      "calculateAccruedInterest" -> "true",
+      "removePOA" -> "false",
+      "customerPaymentInformation" -> "false"
     )
 
     get(
-      uri = DesUri[ListTransactionsResponse[TransactionItem]](s"cross-regime/transactions-placeholder/NINO/$nino/ITSA"),
+      uri = DesUri[ListTransactionsResponse[TransactionItem]](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
       queryParams = queryParams
     )
   }
