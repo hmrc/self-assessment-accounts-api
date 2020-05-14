@@ -34,15 +34,14 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
     val correlationId = "X-123"
     val transactionId = "1111111111"
 
-    val desQueryParams: Seq[(String, String)] =
-      Seq(
-        "docNumber" -> transactionId,
-        "onlyOpenItems" -> "false",
-        "includeLocks" -> "true",
-        "calculateAccruedInterest" -> "true",
-        "removePOA" -> "false",
-        "customerPaymentInformation" -> "true",
-      )
+    val desQueryParams: Seq[(String, String)] = Seq(
+      "docNumber" -> transactionId,
+      "onlyOpenItems" -> "false",
+      "includeLocks" -> "true",
+      "calculateAccruedInterest" -> "true",
+      "removePOA" -> "false",
+      "customerPaymentInformation" -> "true",
+    )
 
     def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
@@ -66,13 +65,13 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desChargeJson)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonCharge)
         }
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdChargeJson
+        response.json shouldBe mtdJsonCharge
       }
 
       "valid request is made for a payment" in new Test {
@@ -81,13 +80,13 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desPaymentJson)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonPayment)
         }
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdPaymentJson
+        response.json shouldBe mtdJsonPayment
       }
     }
 

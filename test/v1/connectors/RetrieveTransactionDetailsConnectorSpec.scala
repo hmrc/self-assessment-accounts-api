@@ -17,9 +17,11 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1.fixtures.RetrieveTransactionDetailsFixture._
+import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
+import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
+import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
 import scala.concurrent.Future
 
@@ -27,27 +29,32 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveTransactionDetailsConnector =
-      new RetrieveTransactionDetailsConnector(
-        http = mockHttpClient,
-        appConfig = mockAppConfig
-      )
+    val transactionId = "0001"
+    val nino = "AA123456A"
 
-    val desRequestHeaders: Seq[(String, String)] =
-      Seq(
-        "Environment" -> "des-environment",
-        "Authorization" -> s"Bearer des-token"
-      )
+    val requestData: RetrieveTransactionDetailsParsedRequest = RetrieveTransactionDetailsParsedRequest(
+      nino = Nino(nino),
+      transactionId = transactionId
+    )
 
-    val queryParams: Seq[(String, String)] =
-      Seq(
-        "docNumber" -> transactionId,
-        "onlyOpenItems" -> "false",
-        "includeLocks" -> "true",
-        "calculateAccruedInterest" -> "true",
-        "removePOA" -> "false",
-        "customerPaymentInformation" -> "true",
-      )
+    val connector: RetrieveTransactionDetailsConnector = new RetrieveTransactionDetailsConnector(
+      http = mockHttpClient,
+      appConfig = mockAppConfig
+    )
+
+    val desRequestHeaders: Seq[(String, String)] = Seq(
+      "Environment" -> "des-environment",
+      "Authorization" -> s"Bearer des-token"
+    )
+
+    val queryParams: Seq[(String, String)] = Seq(
+      "docNumber" -> transactionId,
+      "onlyOpenItems" -> "false",
+      "includeLocks" -> "true",
+      "calculateAccruedInterest" -> "true",
+      "removePOA" -> "false",
+      "customerPaymentInformation" -> "true",
+    )
 
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
@@ -55,16 +62,45 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
   }
 
   "RetrieveTransactionDetailsConnector" when {
-    "retrieving the transaction details of payments" should {
+    "retrieveTransactionDetails (payment)" should {
       "return a valid response" in new Test {
 
-        val outcome = Right(ResponseWrapper(correlationId, retrieveTransactionDetailsResponsePayment))
+        val responseModel: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
+          transactionItems = Seq(
+            TransactionItem(
+              transactionItemId = Some("0001"),
+              `type` = Some("Payment on account"),
+              taxPeriodFrom = None,
+              taxPeriodTo = None,
+              originalAmount = Some(-5000),
+              outstandingAmount = Some(0),
+              dueDate = None,
+              paymentMethod = None,
+              paymentId = None,
+              subItems = Some(Seq(
+                SubItem(
+                  subItemId = Some("001"),
+                  amount = None,
+                  clearingDate = Some("2021-01-31"),
+                  clearingReason = Some("Payment allocation"),
+                  outgoingPaymentMethod = None,
+                  paymentAmount = Some(-1100),
+                  dueDate = None,
+                  paymentMethod = None,
+                  paymentId = None
+                )
+              ))
+            )
+          )
+        )
+
+        val outcome = Right(ResponseWrapper(correlationId, responseModel))
 
         MockedHttpClient
           .get(
             url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
             queryParams = queryParams,
-            requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
 
@@ -72,15 +108,45 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
       }
     }
 
-    "retrieving the transaction details of charges" should {
+    "retrieveTransactionDetails (charges)" should {
       "return a valid response" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, retrieveTransactionDetailsResponseCharge))
+
+        val responseModel: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
+          transactionItems = Seq(
+            TransactionItem(
+              transactionItemId = Some("0001"),
+              `type` = Some("National Insurance Class 2"),
+              taxPeriodFrom = Some("2019-04-06"),
+              taxPeriodTo = Some("2020-04-05"),
+              originalAmount = Some(100.45),
+              outstandingAmount = Some(10.23),
+              dueDate = None,
+              paymentMethod = Some("BACS RECEIPTS"),
+              paymentId = Some("P0101180112-000001"),
+              subItems = Some(Seq(
+                SubItem(
+                  subItemId = Some("001"),
+                  amount = Some(100.11),
+                  clearingDate = Some("2021-01-31"),
+                  clearingReason = Some("Incoming payment"),
+                  outgoingPaymentMethod = None,
+                  paymentAmount = Some(100.11),
+                  dueDate = None,
+                  paymentMethod = Some("BACS RECEIPTS"),
+                  paymentId = Some("P0101180112-000001")
+                )
+              ))
+            )
+          )
+        )
+
+        val outcome = Right(ResponseWrapper(correlationId, responseModel))
 
         MockedHttpClient
           .get(
             url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
             queryParams = queryParams,
-            requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
           .returns(Future.successful(outcome))
 

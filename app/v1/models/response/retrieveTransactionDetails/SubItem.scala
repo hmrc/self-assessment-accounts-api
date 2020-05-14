@@ -16,8 +16,9 @@
 
 package v1.models.response.retrieveTransactionDetails
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-
+import play.api.Logger
+import play.api.libs.json._
+import utils.JsonUtils
 
 case class SubItem(subItemId: Option[String],
                    amount: Option[BigDecimal],
@@ -25,31 +26,57 @@ case class SubItem(subItemId: Option[String],
                    clearingReason: Option[String],
                    outgoingPaymentMethod: Option[String],
                    paymentAmount: Option[BigDecimal],
+                   dueDate: Option[String],
                    paymentMethod: Option[String],
                    paymentId: Option[String])
 
-object SubItem {
+object SubItem extends JsonUtils {
 
-  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None)
+  val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None)
 
-  implicit val writes: OWrites[SubItem] = Json.writes[SubItem]
+  implicit val writes: OWrites[SubItem] = Json.writes[SubItem].removeField("dueDate")
 
   implicit val reads: Reads[SubItem] = for {
-    subItemId <- (JsPath \ "subItemId").readNullable[String]
+    subItemId <- (JsPath \ "subItem").readNullable[String](Reads.of[String].filter(subItemJsonError)(isIntString))
     amount <- (JsPath \ "amount").readNullable[BigDecimal]
     clearingDate <- (JsPath \ "clearingDate").readNullable[String]
     clearingReason <- (JsPath \ "clearingReason").readNullable[String]
     outgoingPaymentMethod <- (JsPath \ "outgoingPaymentMethod").readNullable[String]
     paymentAmount <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
+    dueDate <- (JsPath \ "dueDate").readNullable[String]
     paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
     paymentLot <- (JsPath \ "paymentLot").readNullable[String]
     paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
-    } yield {
+  } yield {
     val id: Option[String] = for {
       pl <- paymentLot
       pli <- paymentLotItem
     } yield s"$pl-$pli"
-    SubItem(subItemId, amount, clearingDate, clearingReason, outgoingPaymentMethod,paymentAmount,paymentMethod, id)
+    SubItem(
+      subItemId,
+      amount,
+      clearingDate,
+      clearingReason,
+      outgoingPaymentMethod,
+      paymentAmount,
+      dueDate,
+      paymentMethod,
+      id
+    )
   }
-}
 
+  private def isIntString(s: String): Boolean = {
+    try {
+      s.toInt
+      true
+    } catch {
+      case _: Exception =>
+        Logger.warn(s"[SubItem][reads] The returned 'subItem' field <$s> could not be parsed as an integer")
+        false
+    }
+  }
+
+  private def subItemJsonError: JsonValidationError = JsonValidationError(
+    message = "The field 'subItem' should be parsable as an integer"
+  )
+}

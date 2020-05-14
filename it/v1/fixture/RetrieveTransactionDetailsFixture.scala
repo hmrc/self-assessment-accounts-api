@@ -23,26 +23,34 @@ trait RetrieveTransactionDetailsFixture {
   val desJsonNoTransactions: JsValue = Json.parse(
     """
       |{
-      |  "transactionItems" : []
+      |  "financialDetails" : []
       |}
     """.stripMargin
   )
 
-  val desChargeJson: JsValue = Json.parse(
+  val desJsonCharge: JsValue = Json.parse(
     """
       |{
-      |  "transactionItems": [
+      |  "financialDetails": [
       |    {
-      |      "sapDocumentId": "0001",
-      |      "type": "National Insurance Class 2",
+      |      "sapDocumentNumberItem": "0001",
+      |      "chargeType": "National Insurance Class 2",
       |      "taxPeriodFrom": "2019-04-06",
       |      "taxPeriodTo": "2020-04-05",
       |      "originalAmount": 100.45,
       |      "outstandingAmount": 10.23,
-      |      "dueDate": "2021-01-31",
-      |      "transactionItemDetails": [
+      |      "items": [
       |        {
-      |          "detailId": "001",
+      |          "subItem": "001",
+      |          "amount": 100.11,
+      |          "clearingDate": "2021-01-31",
+      |          "clearingReason": "Incoming payment",
+      |          "paymentAmount": 100.11,
+      |          "paymentMethod": "BACS RECEIPTS",
+      |          "dueDate": "2021-01-31"
+      |        },
+      |        {
+      |          "subItem": "002",
       |          "amount": 100.11,
       |          "clearingDate": "2021-01-31",
       |          "clearingReason": "Incoming payment",
@@ -50,152 +58,129 @@ trait RetrieveTransactionDetailsFixture {
       |          "paymentMethod": "BACS RECEIPTS",
       |          "paymentLot": "P0101180112",
       |          "paymentLotItem": "000001"
-      |        },
-      |        {
-      |          "detailId": "002",
-      |          "amount": -10.11,
-      |          "clearingDate": "2021-01-31",
-      |          "clearingReason": "Outgoing payment - Paid",
-      |          "outgoingPaymentMethod": "Payable Order Repayment"
       |        }
       |      ]
-      |    },
+      |    }
+      |  ]
+      |}
+    """.stripMargin
+  )
+
+  val desJsonPayment: JsValue = Json.parse(
+    """
+      |{
+      |  "financialDetails": [
       |    {
-      |      "sapDocumentId": "0002",
+      |      "sapDocumentNumberItem": "0002",
+      |      "chargeType": "National Insurance Class 4",
+      |      "taxPeriodFrom": "2019-04-06",
+      |      "taxPeriodTo": "2020-04-05",
+      |      "originalAmount": 100.23,
+      |      "outstandingAmount": 10.45,
+      |      "items":[
+      |         {
+      |           "subItem":"003",
+      |           "clearingDate":"2021-01-31",
+      |           "clearingReason":"Payment allocation",
+      |           "paymentAmount": -1100.00,
+      |           "dueDate": "2021-01-31",
+      |           "paymentLot": "P0101180112",
+      |           "paymentLotItem": "000004"
+      |         },
+      |        {
+      |           "subItem":"004",
+      |           "clearingDate":"2021-01-31",
+      |           "clearingReason":"Payment allocation",
+      |           "paymentAmount": -1100.00,
+      |           "paymentLot": "P0101180112",
+      |           "paymentLotItem": "000004"
+      |         }
+      |      ]
+      |    }
+      |  ]
+      |}
+    """.stripMargin
+  )
+
+  val mtdJsonCharge: JsValue = Json.parse(
+    """
+      |{
+      |  "transactionItems": [
+      |    {
+      |      "transactionItemId": "0001",
+      |      "type": "National Insurance Class 2",
+      |      "taxPeriodFrom": "2019-04-06",
+      |      "taxPeriodTo": "2020-04-05",
+      |      "originalAmount": 100.45,
+      |      "outstandingAmount": 10.23,
+      |      "dueDate": "2021-01-31",
+      |      "paymentMethod": "BACS RECEIPTS",
+      |      "subItems": [
+      |        {
+      |          "subItemId": "002",
+      |          "amount": 100.11,
+      |          "clearingDate": "2021-01-31",
+      |          "clearingReason": "Incoming payment",
+      |          "paymentAmount": 100.11,
+      |          "paymentMethod": "BACS RECEIPTS",
+      |          "paymentId": "P0101180112-000001"
+      |        }
+      |      ]
+      |    }
+      |  ],
+      |  "links": [
+      |      {
+      |		      "href": "/accounts/self-assessment/AA123456A/transactions/1111111111",
+      |		      "method": "GET",
+      |		      "rel": "self"
+      |	     },
+      |      {
+      |		      "href": "/accounts/self-assessment/AA123456A/charges/1111111111",
+      |	      	"method": "GET",
+      |		      "rel": "retrieve-charge-history"
+      |	     }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  val mtdJsonPayment: JsValue = Json.parse(
+    """
+      |{
+      |  "transactionItems": [
+      |    {
+      |      "transactionItemId": "0002",
       |      "type": "National Insurance Class 4",
       |      "taxPeriodFrom": "2019-04-06",
       |      "taxPeriodTo": "2020-04-05",
       |      "originalAmount": 100.23,
       |      "outstandingAmount": 10.45,
       |      "dueDate": "2021-01-31",
-      |      "transactionItemDetails": [
-      |        {
-      |          "detailId": "001",
-      |          "amount": 89.78,
-      |          "clearingDate": "2021-01-31",
-      |          "clearingReason": "Incoming payment",
-      |          "paymentAmount": 89.78,
-      |          "paymentMethod": "BACS RECEIPTS",
-      |          "paymentLot": "P0101180112",
-      |          "paymentLotItem": "000001"
-      |        }
-      |      ]
-      |    }
-      |  ]
-      |}
-    """.stripMargin
-  )
-
-  val desPaymentJson: JsValue = Json.parse(
-    """
-      |{
-      |  "transactionItems": [
-      |    {
-      |      "sapDocumentItemId": "0001",
-      |      "type": "Payment on account",
-      |      "originalAmount": -5000.00,
-      |      "outstandingAmount": 0.00,
-      |      "dueDate": "2021-01-31",
-      |      "paymentMethod":"BACS RECEIPTS",
-      |      "paymentLot":"P0101180112",
-      |      "paymentLotItem": "000004",
+      |      "paymentId": "P0101180112-000004",
       |      "subItems":[
-      |        {
-      |          "subItemId":"001",
-      |          "clearingDate":"2021-01-31",
-      |          "clearingReason":"Payment allocation",
-      |          "paymentAmount": -1100.00
-      |        },
-      |        {
-      |          "subItemId":"002",
-      |          "clearingDate":"2021-01-31",
-      |          "clearingReason":"Payment allocation",
-      |          "paymentAmount":-3000.00
-      |        },
-      |        {
-      |          "subItemId":"003",
-      |          "amount":-900.00,
-      |          "clearingDate":"2021-01-31",
-      |          "clearingReason":"Outgoing Payment - Paid",
-      |          "paymentMethod": "Payable Order Repayment"
-      |        }
+      |         {
+      |           "subItemId":"004",
+      |           "clearingDate":"2021-01-31",
+      |           "clearingReason":"Payment allocation",
+      |           "paymentAmount": -1100.00,
+      |           "paymentId": "P0101180112-000004"
+      |         }
       |      ]
       |    }
-      |  ]
+      |  ],
+      |   "links": [
+      |      {
+      |		      "href": "/accounts/self-assessment/AA123456A/transactions/1111111111",
+      |		      "method": "GET",
+      |		      "rel": "self"
+      |	     },
+      |      {
+      |		      "href": "/accounts/self-assessment/AA123456A/payments/P0101180112-000004",
+      |		      "method": "GET",
+      |		      "rel": "retrieve-payment-allocations"
+      |	     }
+      |    ]
       |}
-    """.stripMargin
-  )
-
-  val mtdChargeJson: JsValue = Json.parse(
-    s"""
-       |{
-       |	"transactionItems": [{
-       |		"type": "National Insurance Class 2",
-       |		"taxPeriodFrom": "2019-04-06",
-       |		"taxPeriodTo": "2020-04-05",
-       |		"originalAmount": 100.45,
-       |		"outstandingAmount": 10.23,
-       |		"dueDate": "2021-01-31"
-       |	}, {
-       |		"type": "National Insurance Class 4",
-       |		"taxPeriodFrom": "2019-04-06",
-       |		"taxPeriodTo": "2020-04-05",
-       |		"originalAmount": 100.23,
-       |		"outstandingAmount": 10.45,
-       |		"dueDate": "2021-01-31"
-       |	}],
-       |	"links": [{
-       |		"href": "/accounts/self-assessment/AA123456A/transactions/1111111111",
-       |		"method": "GET",
-       |		"rel": "self"
-       |	}, {
-       |		"href": "/accounts/self-assessment/AA123456A/charges/1111111111",
-       |		"method": "GET",
-       |		"rel": "retrieve-charge-history"
-       |	}]
-       |}
-    """.stripMargin
-  )
-
-  val mtdPaymentJson: JsValue = Json.parse(
-    s"""
-       |{
-       |	"transactionItems": [{
-       |		"transactionItemId": "0001",
-       |		"type": "Payment on account",
-       |		"originalAmount": -5000,
-       |		"outstandingAmount": 0,
-       |		"dueDate": "2021-01-31",
-       |		"paymentMethod": "BACS RECEIPTS",
-       |		"paymentId": "P0101180112-000004",
-       |		"subItems": [{
-       |			"subItemId": "001",
-       |			"clearingDate": "2021-01-31",
-       |			"clearingReason": "Payment allocation",
-       |			"paymentAmount": -1100
-       |		}, {
-       |			"subItemId": "002",
-       |			"clearingDate": "2021-01-31",
-       |			"clearingReason": "Payment allocation",
-       |			"paymentAmount": -3000
-       |		}, {
-       |			"subItemId": "003",
-       |			"amount": -900,
-       |			"clearingDate": "2021-01-31",
-       |			"clearingReason": "Outgoing Payment - Paid",
-       |			"paymentMethod": "Payable Order Repayment"
-       |		}]
-       |	}],
-       |	"links": [{
-       |		"href": "/accounts/self-assessment/AA123456A/transactions/1111111111",
-       |		"method": "GET",
-       |		"rel": "self"
-       |	}, {
-       |		"href": "/accounts/self-assessment/AA123456A/payments/P0101180112-000004",
-       |		"method": "GET",
-       |		"rel": "retrieve-payment-allocations"
-       |	}]
-       |}
     """.stripMargin
   )
 }

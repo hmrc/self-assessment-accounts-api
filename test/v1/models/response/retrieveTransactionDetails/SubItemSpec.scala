@@ -16,116 +16,52 @@
 
 package v1.models.response.retrieveTransactionDetails
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
-import v1.fixtures.RetrieveTransactionDetailsFixture
+import v1.fixtures.transactionDetails.SubItemFixture
 
-class SubItemSpec extends UnitSpec {
-
-  val desResponseCharge: JsValue = Json.parse(
-    """
-      |{
-      |  "subItemId": "001",
-      |  "amount": 100.11,
-      |  "clearingDate": "2021-01-31",
-      |  "clearingReason": "Incoming payment",
-      |  "paymentAmount": 100.11,
-      |  "paymentMethod": "BACS RECEIPTS",
-      |  "paymentLot": "P0101180112",
-      |  "paymentLotItem": "000001"
-      |}
-    """.stripMargin
-  )
-
-  val desResponsePayment: JsValue = Json.parse(
-    """
-      |{
-      |  "subItemId":"001",
-      |  "clearingDate":"2021-01-31",
-      |  "clearingReason":"Payment allocation",
-      |  "paymentAmount": -1100.00
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponseCharge: JsValue = Json.parse(
-    """
-      |{
-      |  "subItemId": "001",
-      |  "amount": 100.11,
-      |  "clearingDate": "2021-01-31",
-      |  "clearingReason": "Incoming payment",
-      |  "paymentAmount": 100.11,
-      |  "paymentMethod": "BACS RECEIPTS",
-      |  "paymentId": "P0101180112-000001"
-      |}
-    """.stripMargin
-  )
-
-  val mtdResponsePayment: JsValue = Json.parse(
-    """
-      |{
-      |  "subItemId":"001",
-      |  "clearingDate":"2021-01-31",
-      |  "clearingReason":"Payment allocation",
-      |  "paymentAmount": -1100.00
-      |}
-    """.stripMargin
-  )
-
-  val desResponseInvalid: JsValue = Json.parse(
-    """
-      |{
-      |  "subItemId": "001",
-      |  "amount": "asdasd",
-      |  "clearingDate": "2021-01-31",
-      |  "clearingReason": "Incoming payment",
-      |  "paymentAmount": 100.11,
-      |  "paymentMethod": "BACS RECEIPTS",
-      |  "paymentLot": "P0101180112",
-      |  "paymentLotItem": "000001"
-      |}
-    """.stripMargin
-  )
-
-  val desResponseEmpty: JsValue = Json.parse("""{}""")
+class SubItemSpec extends UnitSpec with SubItemFixture {
 
   "SubItem" when {
-    "read from valid JSON" should {
-      "produce the expected SubItem object for a charge" in {
-        desResponseCharge.as[SubItem] shouldBe RetrieveTransactionDetailsFixture.subItemResponseCharge
+    "read from valid JSON (charge)" should {
+      "produce the expected SubItem object" in {
+        desJsonChargeItem.as[SubItem] shouldBe subItemModelCharge
       }
     }
 
-    "SubItem" when {
-      "read from valid JSON" should {
-        "produce the expected SubItem object for a payment" in {
-          desResponsePayment.as[SubItem] shouldBe RetrieveTransactionDetailsFixture.subItemResponsePayment
-        }
+    "read from valid JSON (payment)" should {
+      "produce the expected SubItem object" in {
+        desJsonPaymentItem.as[SubItem] shouldBe subItemModelPayment
       }
+    }
 
     "read from empty JSON" should {
       "produce an empty SubItem object" in {
-        desResponseEmpty.as[SubItem] shouldBe SubItem.empty
+        desJsonEmpty.as[SubItem] shouldBe SubItem.empty
       }
     }
 
     "read from invalid JSON" should {
-      "produce an empty ChargeHistory object" in {
-        desResponseInvalid.validate[SubItem] shouldBe a[JsError]
+      "produce a JsError" in {
+        desJsonInvalid.validate[SubItem] shouldBe a[JsError]
       }
     }
 
-    "written to JSON" should {
+    "read from JSON with a non numerical id" should {
+      "produce a JsError" in {
+        desJsonInvalidId.validate[SubItem] shouldBe a[JsError]
+      }
+    }
+
+    "written to JSON (charge)" should {
       "produce the expected JSON object for a charge" in {
-        Json.toJson(RetrieveTransactionDetailsFixture.subItemResponseCharge) shouldBe mtdResponseCharge
+        Json.toJson(subItemModelCharge) shouldBe mtdJsonChargeItem
       }
     }
-  }
 
-    "written to JSON" should {
-      "produce the expected JSON object for a payment" in {
-        Json.toJson(RetrieveTransactionDetailsFixture.subItemResponsePayment) shouldBe mtdResponsePayment
+    "written to JSON (payment)" should {
+      "produce the expected JSON object" in {
+        Json.toJson(subItemModelPayment) shouldBe mtdJsonPaymentItem
       }
     }
   }
