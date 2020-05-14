@@ -29,41 +29,49 @@ import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with RetrieveTransactionDetailsFixture {
 
   private trait Test {
+
     val nino = "AA123456A"
     val correlationId = "X-123"
     val transactionId = "1111111111"
 
-    def desUrl: String = s"/cross-regime/transactions-placeholder/NINO/$nino/ITSA/$transactionId"
+    val desQueryParams: Seq[(String, String)] = Seq(
+      "docNumber" -> transactionId,
+      "onlyOpenItems" -> "false",
+      "includeLocks" -> "true",
+      "calculateAccruedInterest" -> "true",
+      "removePOA" -> "false",
+      "customerPaymentInformation" -> "true",
+    )
+
+    def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
-
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withQueryStringParameters(desQueryParams: _*)
     }
 
     def uri: String = s"/$nino/transactions/$transactionId"
   }
 
   "Calling the retrieve transaction details endpoint" should {
-
     "return a valid response with status OK" when {
-
       "valid request is made for a charge" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desChargeJson)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonCharge)
         }
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdChargeJson
+        response.json shouldBe mtdJsonCharge
       }
 
       "valid request is made for a payment" in new Test {
@@ -72,13 +80,13 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desPaymentJson)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonPayment)
         }
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdPaymentJson
+        response.json shouldBe mtdJsonPayment
       }
     }
 
@@ -156,10 +164,18 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
 
       val input = Seq(
         (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+        (BAD_REQUEST, "INVALID_IDNUMBER", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, TransactionIdFormatError),
+        (BAD_REQUEST, "INVALID_ONLY_OPEN_ITEMS", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", INTERNAL_SERVER_ERROR, DownstreamError),
+        (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
         (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
-        (BAD_REQUEST, "INVALID_SAP_DOCUMENT_NUMBER", BAD_REQUEST, TransactionIdFormatError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
