@@ -31,11 +31,11 @@ case class RetrieveBalanceResponse(overdueAmount: Option[BigDecimal],
 object RetrieveBalanceResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveBalanceResponse] = (
-    (JsPath \ "overdueAmount").readNullable[BigDecimal] and
-      (JsPath \ "payableAmount").read[BigDecimal] and
-      (JsPath \ "payableDueDate").readNullable[String] and
-      (JsPath \ "pendingChargeDueAmount").readNullable[BigDecimal] and
-      (JsPath \ "pendingChargeDueDate").readNullable[String]
+    (JsPath \ "financialDetails" \\ "overDueAmount").readNullable[BigDecimal] and
+      (JsPath \ "financialDetails" \\ "balanceDueWithin30Days").read[BigDecimal] and
+      (JsPath \ "financialDetails" \\ "nextPymntDateChrgsDueIn30Days").readNullable[String] and
+      (JsPath \ "financialDetails" \\ "balanceNotDueIn30Days").readNullable[BigDecimal] and
+      (JsPath \ "financialDetails" \\ "nextPaymntDateBalnceNotDue").readNullable[String]
     ) (RetrieveBalanceResponse.apply _)
 
   implicit val writes: OWrites[RetrieveBalanceResponse] =
