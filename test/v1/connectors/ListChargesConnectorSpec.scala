@@ -36,7 +36,11 @@ class ListChargesConnectorSpec extends ConnectorSpec {
   val queryParams: Seq[(String, String)] = Seq(
     "dateFrom" -> from,
     "dateTo" -> to,
-    "type" -> "charge"
+    "onlyOpenItems" -> "false",
+    "includeLocks" -> "true",
+    "calculateAccruedInterest" -> "true",
+    "removePOA" -> "true",
+    "customerPaymentInformation" -> "true"
   )
 
   val response = ListChargesResponse(
@@ -64,7 +68,7 @@ class ListChargesConnectorSpec extends ConnectorSpec {
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/cross-regime/transactions-placeholder/NINO/$nino/ITSA",
+            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
             queryParams = queryParams,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )

@@ -32,10 +32,11 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     val nino = "AA123456A"
     val correlationId = "X-123"
     val from: Option[String] = Some("2018-10-01")
-    val to : Option[String]  = Some("2019-10-01")
+    val to: Option[String] = Some("2019-10-01")
+
     def uri: String = s"/$nino/charges"
 
-    def desUrl: String = s"/cross-regime/transactions-placeholder/NINO/$nino/ITSA"
+    def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
 
@@ -56,7 +57,15 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     "return a valid response with status OK" when {
       "valid request is made" in new Test {
 
-        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get, "type" -> "charge")
+        val desQueryParams: Map[String, String] = Map(
+          "dateFrom" -> from.get,
+          "dateTo" -> to.get,
+          "onlyOpenItems" -> "false",
+          "includeLocks" -> "true",
+          "calculateAccruedInterest" -> "true",
+          "removePOA" -> "true",
+          "customerPaymentInformation" -> "true"
+        )
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -158,22 +167,21 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
+        (BAD_REQUEST, "INVALID_IDNUMBER", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
-        (BAD_REQUEST, "INVALID_DATE_RANGE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_PAYMENT_LOT", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_PAYMENT_LOT_ITEM", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "PARTIALLY_MIGRATED", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+        (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+        (BAD_REQUEST, "INVALID_DOC_NUMBER", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_ONLY_OPEN_ITEMS", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", INTERNAL_SERVER_ERROR, DownstreamError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError)
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
 
       input.foreach(args => (serviceErrorTest _).tupled(args))
