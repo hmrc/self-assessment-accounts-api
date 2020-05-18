@@ -24,17 +24,24 @@ import v1.models.outcomes.ResponseWrapper
 import scala.concurrent.Future
 
 class ListTransactionsConnectorSpec extends ConnectorSpec {
-  val transactionId = "anId"
 
   val queryParams: Seq[(String, String)] = Seq(
-    "dateFrom" -> dateFrom,
-    "dateTo" -> dateTo
+    "dateFrom" -> from,
+    "dateTo" -> to,
+    "onlyOpenItems" -> "false",
+    "includeLocks" -> "true",
+    "calculateAccruedInterest" -> "true",
+    "removePOA" -> "false",
+    "customerPaymentInformation" -> "false"
   )
 
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: ListTransactionsConnector = new ListTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
+    val desRequestHeaders: Seq[(String, String)] = Seq(
+      "Environment" -> "des-environment",
+      "Authorization" -> s"Bearer des-token"
+    )
 
     MockedAppConfig.desBaseUrl returns baseUrl
     MockedAppConfig.desToken returns "des-token"
@@ -44,11 +51,12 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
   "ListTransactionsConnector" when {
     "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
+
         val outcome = Right(ResponseWrapper(correlationId, fullDesSingleListTransactionsResponse))
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/cross-regime/transactions-placeholder/NINO/$nino/ITSA",
+            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
             queryParams = queryParams,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
           )
