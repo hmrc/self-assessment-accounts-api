@@ -56,7 +56,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
               )
             ),
             api = APIDefinition(
-              name = "Self Assessment Accounts API (MTD)",
+              name = "Self Assessment Accounts (MTD)",
               description = "An API for retrieving accounts data for Self Assessment",
               context = "api.gateway.context",
               categories = Seq("INCOME_TAX_MTD"),
