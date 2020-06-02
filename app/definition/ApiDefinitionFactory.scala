@@ -42,7 +42,7 @@ class ApiDefinitionFactory @Inject()(appConfig: AppConfig) {
         )
       ),
       api = APIDefinition(
-        name = "Self Assessment Accounts API (MTD)",
+        name = "Self Assessment Accounts (MTD)",
         description = "An API for retrieving accounts data for Self Assessment",
         context = appConfig.apiGatewayContext,
         categories = Seq("INCOME_TAX_MTD"),
