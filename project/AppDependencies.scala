@@ -25,9 +25,9 @@ object AppDependencies {
     "uk.gov.hmrc"   %% "bootstrap-play-26" % "1.7.0",
     "uk.gov.hmrc"   %% "domain"            % "5.9.0-play-27",
     "uk.gov.hmrc"   %% "play-hmrc-api"     % "4.1.0-play-26",
-    "org.typelevel" %% "cats-core"         % "2.1.0",
-    compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.4.4" cross CrossVersion.full),
-    "com.github.ghik" % "silencer-lib" % "1.4.4" % Provided cross CrossVersion.full,
+    "org.typelevel" %% "cats-core"         % "2.1.1",
+    compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.7.0" cross CrossVersion.full),
+    "com.github.ghik" % "silencer-lib" % "1.7.0" % Provided cross CrossVersion.full,
     "com.chuusai"   %% "shapeless"         % "2.3.3")
 
 
