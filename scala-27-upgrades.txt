@@ -1,3 +1,6 @@
+This file only includes upgrades to libraries and plugins which exist within this specific service.
+For anything not listed here please upgrade manually (THIS INCLUDES NON-HMRC PLUGINS/ LIBRARIES)
+
 sbt.version: 1.3.7 -> 1.3.13
 scalaVersion: 2.12.10 -> 2.12.11
 uk.gov.hmrc.domain: 5.8.0-play-26 -> 5.9.0-play-27
