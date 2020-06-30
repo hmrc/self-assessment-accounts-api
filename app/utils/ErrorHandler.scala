@@ -40,7 +40,7 @@ class ErrorHandler @Inject()(config: Configuration,
 
   import httpAuditEvent.dataEvent
 
-  private val logger = Logger("application")
+  private val logger = Logger(this.getClass)
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
 

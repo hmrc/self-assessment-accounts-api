@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class EnrolmentsAuthService @Inject()(val connector: AuthConnector) {
 
-  private val logger = Logger("application")
+  private val logger = Logger(this.getClass)
 
   private val authFunction: AuthorisedFunctions = new AuthorisedFunctions {
     override def authConnector: AuthConnector = connector

@@ -25,7 +25,7 @@ import scala.util.{Success, Try}
 
 trait HttpParser {
 
-  private val logger = Logger("application")
+  private val logger = Logger(this.getClass)
 
   implicit class KnownJsonResponse(response: HttpResponse) {
 

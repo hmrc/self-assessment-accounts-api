@@ -65,13 +65,15 @@ object SubItem extends JsonUtils {
     )
   }
 
+  private val logger = Logger(this.getClass)
+
   private def isIntString(s: String): Boolean = {
     try {
       s.toInt
       true
     } catch {
       case _: Exception =>
-        Logger("application").warn(s"[SubItem][reads] The returned 'subItem' field <$s> could not be parsed as an integer")
+        logger.warn(s"[SubItem][reads] The returned 'subItem' field <$s> could not be parsed as an integer")
         false
     }
   }
