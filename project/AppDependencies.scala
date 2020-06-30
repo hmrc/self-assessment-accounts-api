@@ -23,7 +23,7 @@ object AppDependencies {
   val compile: Seq[ModuleID] = Seq(
     ws,
     "uk.gov.hmrc"   %% "bootstrap-play-26" % "1.7.0",
-    "uk.gov.hmrc"   %% "domain"            % "5.8.0-play-26",
+    "uk.gov.hmrc"   %% "domain"            % "5.9.0-play-27",
     "uk.gov.hmrc"   %% "play-hmrc-api"     % "4.1.0-play-26",
     "org.typelevel" %% "cats-core"         % "2.1.0",
     compilerPlugin("com.github.ghik" % "silencer-plugin" % "1.4.4" cross CrossVersion.full),
