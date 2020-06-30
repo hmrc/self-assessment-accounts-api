@@ -26,18 +26,17 @@ import uk.gov.hmrc.auth.core.AuthorisationException
 import uk.gov.hmrc.http._
 import uk.gov.hmrc.play.HeaderCarrierConverter
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
+import uk.gov.hmrc.play.bootstrap.backend.http.JsonErrorHandler
 import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
-import uk.gov.hmrc.play.bootstrap.http.JsonErrorHandler
 import v1.models.errors._
 
 import scala.concurrent._
 
 @Singleton
-class ErrorHandler @Inject()(
-                              config: Configuration,
-                              auditConnector: AuditConnector,
-                              httpAuditEvent: HttpAuditEvent
-                            )(implicit ec: ExecutionContext) extends JsonErrorHandler(auditConnector, httpAuditEvent, config) {
+class ErrorHandler @Inject()(config: Configuration,
+                             auditConnector: AuditConnector,
+                             httpAuditEvent: HttpAuditEvent)(implicit ec: ExecutionContext)
+  extends JsonErrorHandler(auditConnector, httpAuditEvent, config) {
 
   import httpAuditEvent.dataEvent
 
