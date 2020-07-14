@@ -77,10 +77,12 @@
                 "href",
                 "rel",
                 "method"
-              ]
+              ],
+              "additionalProperties": false
             }
           }
-        }
+        },
+        "additionalProperties": false
       }
     },
     "links": {
@@ -114,11 +116,13 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
   },
   "required": [
     "charges"
-  ]
+  ],
+  "additionalProperties": false
 }

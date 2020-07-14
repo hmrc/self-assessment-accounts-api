@@ -14,7 +14,7 @@
           "paymentId": {
             "description": "A unique identifier for the payment.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z]{1,12}\\-[0-9A-Za-z]{1,6}$",
+            "pattern": "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$",
             "example": "X234567891BY-AT3579"
           },
           "amount": {
@@ -66,14 +66,13 @@
                 "href",
                 "rel",
                 "method"
-              ]
+              ],
+              "additionalProperties": false
             }
           }
-        }
-      },
-      "required": [
-        "payment"
-      ]
+        },
+        "additionalProperties": false
+      }
     },
     "links": {
       "type": "array",
@@ -106,11 +105,13 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
   },
   "required": [
     "payments"
-  ]
+  ],
+  "additionalProperties": false
 }
