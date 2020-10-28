@@ -34,8 +34,8 @@ trait MockRetrieveAllocationsConnector extends MockFactory {
 
     def retrieve(requestData: RetrieveAllocationsParsedRequest): CallHandler[Future[DesOutcome[RetrieveAllocationsResponse[AllocationDetail]]]] = {
       (mockRetrieveAllocationsConnector
-        .retrieveAllocations(_: RetrieveAllocationsParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .retrieveAllocations(_: RetrieveAllocationsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 

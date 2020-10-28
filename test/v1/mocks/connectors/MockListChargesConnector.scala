@@ -33,8 +33,8 @@ trait MockListChargesConnector extends MockFactory {
 
     def retrieve(requestData: ListChargesParsedRequest): CallHandler[Future[DesOutcome[ListChargesResponse[Charge]]]] = {
       (mockListChargesConnector
-        .listCharges(_: ListChargesParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .listCharges(_: ListChargesParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 

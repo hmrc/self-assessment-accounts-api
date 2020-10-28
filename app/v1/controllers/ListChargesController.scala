@@ -24,7 +24,7 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import utils.Logging
+import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.ListChargesRequestParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
@@ -42,58 +42,68 @@ class ListChargesController @Inject()(val authService: EnrolmentsAuthService,
                                       service: ListChargesService,
                                       hateoasFactory: HateoasFactory,
                                       auditService: AuditService,
-                                      cc: ControllerComponents)(implicit ec: ExecutionContext)
+                                      cc: ControllerComponents,
+                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging{
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListChargesController", endpointName = "listCharges")
 
-  def listCharges(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] = authorisedAction(nino).async {
-    implicit request =>
-    val rawData = ListChargesRawRequest(nino, from, to)
-    val result =
-      for {
-        parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.list(parsedRequest))
-        vendorResponse <- EitherT.fromEither[Future](
-          hateoasFactory
-            .wrapList(serviceResponse.responseData, ListChargesHateoasData(nino, parsedRequest.from, parsedRequest.to))
-            .asRight[ErrorWrapper]
-        )
-      } yield {
+  def listCharges(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] =
+    authorisedAction(nino).async { implicit request =>
+
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(
+        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+          s"with CorrelationId: $correlationId")
+
+      val rawData = ListChargesRawRequest(nino, from, to)
+      val result =
+        for {
+          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          serviceResponse <- EitherT(service.list(parsedRequest))
+          vendorResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrapList(serviceResponse.responseData, ListChargesHateoasData(nino, parsedRequest.from, parsedRequest.to))
+              .asRight[ErrorWrapper]
+          )
+        } yield {
+          logger.info(
+            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+              s"Success response received with correlationId: ${serviceResponse.correlationId}"
+          )
+
+          auditSubmission(
+            AuditDetail(
+              userDetails = request.userDetails,
+              nino = nino,
+              `X-CorrelationId` = serviceResponse.correlationId,
+              response = AuditResponse(httpStatus = OK, None, None))
+          )
+
+          Ok(Json.toJson(vendorResponse))
+            .withApiHeaders(serviceResponse.correlationId)
+            .as(MimeTypes.JSON)
+        }
+      result.leftMap { errorWrapper =>
+        val resCorrelationId = errorWrapper.correlationId
+        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.info(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received with correlationId: ${serviceResponse.correlationId}"
-        )
+            s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
           AuditDetail(
             userDetails = request.userDetails,
             nino = nino,
-            `X-CorrelationId` = serviceResponse.correlationId,
-            response = AuditResponse(httpStatus = OK, None, None))
+            `X-CorrelationId` = resCorrelationId,
+            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+          )
         )
 
-        Ok(Json.toJson(vendorResponse))
-          .withApiHeaders(serviceResponse.correlationId)
-          .as(MimeTypes.JSON)
-      }
-    result.leftMap { errorWrapper =>
-      val correlationId = getCorrelationId(errorWrapper)
-      val result = errorResult(errorWrapper).withApiHeaders(correlationId)
-
-      auditSubmission(
-        AuditDetail(
-          userDetails = request.userDetails,
-          nino = nino,
-          `X-CorrelationId` = correlationId,
-          response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-        )
-      )
-
-      result
-    }.merge
-  }
+        result
+      }.merge
+    }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     (errorWrapper.error: @unchecked) match {

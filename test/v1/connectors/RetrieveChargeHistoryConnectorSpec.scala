@@ -27,8 +27,8 @@ import scala.concurrent.Future
 
 class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
-  val transactionId = "anId"
+  val nino: Nino = Nino("AA123456A")
+  val transactionId: String = "anId"
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -60,4 +60,3 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
     }
   }
 }
-

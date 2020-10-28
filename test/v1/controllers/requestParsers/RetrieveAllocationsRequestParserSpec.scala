@@ -24,8 +24,9 @@ import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, 
 
 class RetrieveAllocationsRequestParserSpec extends UnitSpec {
 
-  val nino = "AA123456B"
-  val paymentId = "anId-anotherId"
+  val nino: String = "AA123456B"
+  val paymentId: String = "anId-anotherId"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val inputData: RetrieveAllocationsRawRequest = RetrieveAllocationsRawRequest(nino, paymentId)
 
@@ -52,7 +53,7 @@ class RetrieveAllocationsRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(None, NinoFormatError, None))
+          Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple validation errors occur" in new Test {
@@ -61,7 +62,7 @@ class RetrieveAllocationsRequestParserSpec extends UnitSpec {
           .returns(List(NinoFormatError, PaymentIdFormatError))
 
         parser.parseRequest(inputData) shouldBe
-          Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, PaymentIdFormatError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, PaymentIdFormatError))))
       }
     }
   }

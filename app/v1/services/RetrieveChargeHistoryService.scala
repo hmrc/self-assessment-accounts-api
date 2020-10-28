@@ -32,12 +32,14 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryService @Inject()(connector: RetrieveChargeHistoryConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveChargeHistoryService @Inject()(connector: RetrieveChargeHistoryConnector)
+  extends DesResponseMappingSupport with Logging {
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
+    logContext: EndpointLogContext,
+    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveChargeHistory(request)).leftMap(mapDesErrors(desErrorMap))

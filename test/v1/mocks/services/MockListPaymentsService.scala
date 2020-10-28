@@ -37,8 +37,8 @@ trait MockListPaymentsService extends MockFactory{
     def listPayments(requestData: ListPaymentsParsedRequest):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]]] = {
       (mockService
-        .list(_: ListPaymentsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .list(_: ListPaymentsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 }

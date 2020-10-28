@@ -16,7 +16,6 @@
 
 package v1.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
@@ -27,15 +26,13 @@ import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveAllocationsServiceSpec extends UnitSpec {
+class RetrieveAllocationsServiceSpec extends ServiceSpec {
 
   private val nino = "AA123456A"
   private val paymentLot = "anId"
   private val paymentLotItem = "anotherId"
-  private val correlationId = "X-123"
 
   private val requestData: RetrieveAllocationsParsedRequest =
     RetrieveAllocationsParsedRequest(
@@ -82,7 +79,7 @@ class RetrieveAllocationsServiceSpec extends UnitSpec {
             MockRetrieveAllocationsConnector.retrieve(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.retrieveAllocations(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.retrieveAllocations(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input: Seq[(String, MtdError)] = Seq(

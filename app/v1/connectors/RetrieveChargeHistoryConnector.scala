@@ -31,7 +31,8 @@ class RetrieveChargeHistoryConnector @Inject()(val http: HttpClient,
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveChargeHistoryResponse]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[RetrieveChargeHistoryResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

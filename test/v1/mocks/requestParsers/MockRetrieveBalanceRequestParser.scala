@@ -29,7 +29,7 @@ trait MockRetrieveBalanceRequestParser extends MockFactory {
   object MockRetrieveBalanceRequestParser {
 
     def parse(data: RetrieveBalanceRawRequest): CallHandler[Either[ErrorWrapper, RetrieveBalanceParsedRequest]] = {
-      (mockRetrieveBalanceRequestParser.parseRequest(_: RetrieveBalanceRawRequest)).expects(data)
+      (mockRetrieveBalanceRequestParser.parseRequest(_: RetrieveBalanceRawRequest)(_: String)).expects(data, *)
     }
   }
 

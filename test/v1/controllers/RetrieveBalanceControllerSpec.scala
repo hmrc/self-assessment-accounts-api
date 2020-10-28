@@ -22,6 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveBalanceFixture
 import v1.hateoas.HateoasLinks
+import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveBalanceRequestParser
 import v1.models.errors._
@@ -33,6 +34,7 @@ import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, Retrieve
 import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveBalanceService}
 import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -44,7 +46,8 @@ class RetrieveBalanceControllerSpec
     with MockHateoasFactory
     with MockRetrieveBalanceRequestParser
     with HateoasLinks
-    with MockAuditService {
+    with MockAuditService
+    with MockIdGenerator {
 
   private val nino = "AA123456A"
   private val correlationId = "X-123"
@@ -81,7 +84,7 @@ class RetrieveBalanceControllerSpec
     )
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new RetrieveBalanceController(
       authService = mockEnrolmentsAuthService,
@@ -90,11 +93,13 @@ class RetrieveBalanceControllerSpec
       service = mockRetrieveBalanceService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   "retrieveBalance" should {
@@ -131,7 +136,7 @@ class RetrieveBalanceControllerSpec
 
             MockRetrieveBalanceRequestParser
               .parse(rawRequest)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
 
@@ -161,7 +166,7 @@ class RetrieveBalanceControllerSpec
 
             MockRetrieveBalanceService
               .retrieveBalance(parsedRequest)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveBalance(nino)(fakeGetRequest)
 
@@ -184,8 +189,3 @@ class RetrieveBalanceControllerSpec
     }
   }
 }
-
-
-
-
-

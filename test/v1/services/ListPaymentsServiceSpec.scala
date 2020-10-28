@@ -16,7 +16,6 @@
 
 package v1.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
@@ -26,17 +25,14 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ListPaymentsServiceSpec extends UnitSpec {
+class ListPaymentsServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
   private val from = "2020-01-01"
   private val to = "2020-01-02"
-
-  private val correlationId = "X-123"
 
   private val request = ListPaymentsParsedRequest(nino, from, to)
   private val response = ListPaymentsResponse(Seq(Payment(Some("123-456"), Some(10.25), Some("beans"), Some("10/01/2020"))))
@@ -63,7 +59,7 @@ class ListPaymentsServiceSpec extends UnitSpec {
         MockListPaymentsConnector.retrieve(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ListPaymentsResponse(Seq())))))
 
-        await(service.list(request)) shouldBe Left(ErrorWrapper(Some(correlationId), NoPaymentsFoundError, None))
+        await(service.list(request)) shouldBe Left(ErrorWrapper(correlationId, NoPaymentsFoundError, None))
       }
     }
 
@@ -74,7 +70,7 @@ class ListPaymentsServiceSpec extends UnitSpec {
           MockListPaymentsConnector.retrieve(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.list(request)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.list(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input: Seq[(String, MtdError)] = Seq(

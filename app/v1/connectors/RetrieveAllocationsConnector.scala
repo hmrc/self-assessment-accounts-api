@@ -32,7 +32,8 @@ class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
 
   def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(
     implicit hc: HeaderCarrier,
-    ec: ExecutionContext): Future[DesOutcome[RetrieveAllocationsResponse[AllocationDetail]]] = {
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[RetrieveAllocationsResponse[AllocationDetail]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

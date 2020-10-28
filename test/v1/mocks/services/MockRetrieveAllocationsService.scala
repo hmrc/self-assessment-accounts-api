@@ -38,8 +38,8 @@ trait MockRetrieveAllocationsService extends MockFactory {
     def retrieveAllocations(request: RetrieveAllocationsParsedRequest):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse[AllocationDetail]]]]] = {
       (mockRetrieveAllocationsService
-        .retrieveAllocations(_: RetrieveAllocationsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(request, *, *, *)
+        .retrieveAllocations(_: RetrieveAllocationsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(request, *, *, *, *)
     }
   }
 

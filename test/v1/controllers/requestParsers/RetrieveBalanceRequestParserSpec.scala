@@ -25,6 +25,7 @@ import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 
 class RetrieveBalanceRequestParserSpec extends UnitSpec {
 
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockRetrieveBalanceValidator {
     lazy val parser = new RetrieveBalanceRequestParser(mockValidator)
@@ -49,7 +50,7 @@ class RetrieveBalanceRequestParserSpec extends UnitSpec {
         .returns(List(NinoFormatError))
 
       parser.parseRequest(invalidRetrieveBalanceRawRequest) shouldBe
-        Left(ErrorWrapper(None, NinoFormatError, None))
+        Left(ErrorWrapper(correlationId, NinoFormatError, None))
     }
   }
 }

@@ -32,15 +32,20 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveTransactionDetailsService @Inject()(val connector: RetrieveTransactionDetailsConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveTransactionDetailsService @Inject()(val connector: RetrieveTransactionDetailsConnector)
+  extends DesResponseMappingSupport with Logging {
 
-  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)
-                                (implicit hc: HeaderCarrier, ec: ExecutionContext,
-                                 logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
+  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    logContext: EndpointLogContext,
+    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
+
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDesErrors(desErrorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTransactionDetailsResponse(desResponseWrapper))
     } yield mtdResponseWrapper
+
     result.value
   }
 

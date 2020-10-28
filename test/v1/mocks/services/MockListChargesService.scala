@@ -37,8 +37,8 @@ trait MockListChargesService extends MockFactory{
     def listCharges(requestData: ListChargesParsedRequest):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]]] = {
       (mockService
-        .list(_: ListChargesParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(requestData, *, *, *)
+        .list(_: ListChargesParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(requestData, *, *, *, *)
     }
   }
 }
