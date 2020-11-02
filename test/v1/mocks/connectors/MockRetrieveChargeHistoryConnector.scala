@@ -33,8 +33,8 @@ trait MockRetrieveChargeHistoryConnector extends MockFactory {
 
     def retrieveChargeHistory(requestData: RetrieveChargeHistoryParsedRequest): CallHandler[Future[DesOutcome[RetrieveChargeHistoryResponse]]] = {
       (mockRetrieveChargeHistoryConnector
-        .retrieveChargeHistory(_: RetrieveChargeHistoryParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .retrieveChargeHistory(_: RetrieveChargeHistoryParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 

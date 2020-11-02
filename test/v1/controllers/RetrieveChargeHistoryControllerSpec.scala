@@ -22,6 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.hateoas.HateoasLinks
+import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
@@ -45,7 +46,8 @@ class RetrieveChargeHistoryControllerSpec
     with MockHateoasFactory
     with MockRetrieveChargeHistoryRequestParser
     with HateoasLinks
-    with MockAuditService {
+    with MockAuditService
+    with MockIdGenerator {
 
   private val nino = "AA123456A"
   private val transactionId = "anId"
@@ -81,7 +83,7 @@ class RetrieveChargeHistoryControllerSpec
   private val mtdResponse = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new RetrieveChargeHistoryController(
       authService = mockEnrolmentsAuthService,
@@ -90,11 +92,13 @@ class RetrieveChargeHistoryControllerSpec
       service = mockRetrieveChargeHistoryService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   def event(auditResponse: AuditResponse): AuditEvent =
@@ -149,7 +153,7 @@ class RetrieveChargeHistoryControllerSpec
 
             MockRetrieveChargeHistoryRequestParser
               .parse(rawRequest)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
@@ -180,7 +184,7 @@ class RetrieveChargeHistoryControllerSpec
 
             MockRetrieveChargeHistoryService
               .retrieveChargeHistory(parsedRequest)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
@@ -205,8 +209,3 @@ class RetrieveChargeHistoryControllerSpec
     }
   }
 }
-
-
-
-
-

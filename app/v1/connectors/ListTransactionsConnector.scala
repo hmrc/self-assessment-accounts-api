@@ -28,8 +28,10 @@ import scala.concurrent.{ExecutionContext, Future}
 class ListTransactionsConnector @Inject()(val http: HttpClient,
                                           val appConfig: AppConfig) extends BaseDesConnector {
 
-  def listTransactions(request: ListTransactionsParsedRequest)(implicit hc: HeaderCarrier,
-                                                               ec: ExecutionContext): Future[DesOutcome[ListTransactionsResponse[TransactionItem]]] = {
+  def listTransactions(request: ListTransactionsParsedRequest)(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[ListTransactionsResponse[TransactionItem]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

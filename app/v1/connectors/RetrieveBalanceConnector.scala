@@ -29,8 +29,11 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveBalanceConnector @Inject()(val http: HttpClient,
                                          val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit hc: HeaderCarrier,
-                                                             ec: ExecutionContext): Future[DesOutcome[RetrieveBalanceResponse]] = {
+  def retrieveBalance(request: RetrieveBalanceParsedRequest)(
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    correlationId: String): Future[DesOutcome[RetrieveBalanceResponse]] = {
+
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino

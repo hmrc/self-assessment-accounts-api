@@ -36,8 +36,8 @@ trait MockRetrieveTransactionDetailsService extends MockFactory {
     def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest):
     CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]]] = {
       (mockRetrieveTransactionDetailsService
-        .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext))
-        .expects(request, *, *, *)
+        .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+        .expects(request, *, *, *, *)
     }
   }
 

@@ -22,13 +22,14 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListPaymentsFixture._
 import v1.hateoas.HateoasLinks
+import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListPaymentsRequestParser
-import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockListPaymentsService}
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListPaymentsService, MockMtdIdLookupService}
 import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType.{RETRIEVE_PAYMENT_ALLOCATIONS, LIST_TRANSACTIONS, SELF}
+import v1.models.hateoas.RelType.{LIST_TRANSACTIONS, RETRIEVE_PAYMENT_ALLOCATIONS, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
@@ -44,7 +45,15 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
   with MockListPaymentsService
   with MockHateoasFactory
   with HateoasLinks
-  with MockAuditService {
+  with MockAuditService
+  with MockIdGenerator {
+
+  private val nino = "AA123456A"
+  private val from = "2018-10-01"
+  private val to = "2019-10-01"
+  private val correlationId = "X-123"
+  private val rawRequest = ListPaymentsRawRequest(nino, Some(from), Some(to))
+  private val parsedRequest = ListPaymentsParsedRequest(Nino(nino), from, to)
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -56,11 +65,13 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
       service = mockService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   def event(auditResponse: AuditResponse): AuditEvent =
@@ -75,13 +86,6 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
         `X-CorrelationId` = correlationId
       )
     )
-
-  private val nino          = "AA123456A"
-  private val from          = "2018-10-01"
-  private val to            = "2019-10-01"
-  private val correlationId = "X-123"
-  private val rawRequest = ListPaymentsRawRequest(nino, Some(from), Some(to))
-  private val parsedRequest = ListPaymentsParsedRequest(Nino(nino), from, to)
 
   private val paymentHateoasLink1 =
     Link(
@@ -152,7 +156,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
 
             MockListPaymentsRequestParser
               .parse(rawRequest)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
 
@@ -189,7 +193,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
 
             MockListPaymentsService
               .listPayments(parsedRequest)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
 

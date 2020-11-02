@@ -28,10 +28,10 @@ import scala.concurrent.Future
 
 class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
+  val nino: Nino = Nino("AA123456A")
 
-  val paymentLot = "anId"
-  val paymentLotItem = "anotherId"
+  val paymentLot: String = "anId"
+  val paymentLotItem: String = "anotherId"
 
   val queryParams: Seq[(String, String)] =
     Seq(

@@ -22,6 +22,7 @@ import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.hateoas.HateoasLinks
+import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveTransactionDetailsRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveTransactionDetailsService}
@@ -45,7 +46,8 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
   with MockHateoasFactory
   with MockAppConfig
   with HateoasLinks
-  with MockAuditService {
+  with MockAuditService
+  with MockIdGenerator {
 
   private val nino = "AA123456A"
   private val transactionId = "11111"
@@ -125,11 +127,13 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
       requestParser = mockRetrieveTransactionDetailsRequestParser,
       service = mockRetrieveTransactionDetailsService,
       hateoasFactory = mockHateoasFactory,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   "retrieveTransactionDetails" should {
@@ -167,7 +171,7 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
 
             MockRetrieveTransactionDetailsRequestParser
               .parse(rawRequest)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.retrieveTransactionDetails(nino, transactionId)(fakeGetRequest)
 
@@ -199,7 +203,7 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
 
           MockRetrieveTransactionDetailsService
             .retrieveTransactionDetails(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
           val result: Future[Result] = controller.retrieveTransactionDetails(nino, transactionId)(fakeGetRequest)
 

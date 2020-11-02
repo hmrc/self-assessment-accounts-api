@@ -29,8 +29,8 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val transactionId = "0001"
-    val nino = "AA123456A"
+    val transactionId: String = "0001"
+    val nino: String = "AA123456A"
 
     val requestData: RetrieveTransactionDetailsParsedRequest = RetrieveTransactionDetailsParsedRequest(
       nino = Nino(nino),

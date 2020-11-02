@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package v1.mocks.requestParsers
+package v1.mocks
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v1.controllers.requestParsers.ListPaymentsRequestParser
-import v1.models.errors.ErrorWrapper
-import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
+import utils.IdGenerator
 
-trait MockListPaymentsRequestParser extends MockFactory {
+trait MockIdGenerator extends MockFactory {
 
-  val mockListPaymentsRequestParser: ListPaymentsRequestParser = mock[ListPaymentsRequestParser]
+  val mockIdGenerator: IdGenerator = mock[IdGenerator]
 
-  object MockListPaymentsRequestParser {
-
-    def parse(data: ListPaymentsRawRequest): CallHandler[Either[ErrorWrapper, ListPaymentsParsedRequest]] = {
-      (mockListPaymentsRequestParser.parseRequest(_: ListPaymentsRawRequest)(_: String)).expects(data, *)
-    }
+  object MockIdGenerator {
+    def generateCorrelationId: CallHandler[String] = (mockIdGenerator.generateCorrelationId _).expects()
   }
-
 }

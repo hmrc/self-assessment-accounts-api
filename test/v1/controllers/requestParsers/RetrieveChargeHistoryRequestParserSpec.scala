@@ -25,6 +25,7 @@ import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedReques
 
 class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
 
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockRetrieveChargeHistoryValidator {
     lazy val parser = new RetrieveChargeHistoryRequestParser(mockValidator)
@@ -49,14 +50,14 @@ class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
         .returns(List(NinoFormatError))
 
       parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidNino) shouldBe
-        Left(ErrorWrapper(None, NinoFormatError, None))
+        Left(ErrorWrapper(correlationId, NinoFormatError, None))
     }
     "an invalid charge id is provided" in new Test{
       MockRetrieveChargeHistoryValidator.validate(invalidRetrieveChargeHistoryRawRequestInvalidTransactionId)
         .returns(List(TransactionIdFormatError))
 
       parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidTransactionId) shouldBe
-        Left(ErrorWrapper(None, TransactionIdFormatError, None))
+        Left(ErrorWrapper(correlationId, TransactionIdFormatError, None))
     }
   }
   "return multiple errors" when {
@@ -65,7 +66,7 @@ class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
         .returns(List(NinoFormatError, TransactionIdFormatError))
 
       parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId) shouldBe
-        Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TransactionIdFormatError))))
+        Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TransactionIdFormatError))))
     }
   }
 }

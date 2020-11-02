@@ -32,12 +32,14 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceService @Inject()(connector: RetrieveBalanceConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveBalanceService @Inject()(connector: RetrieveBalanceConnector)
+  extends DesResponseMappingSupport with Logging {
 
   def retrieveBalance(request: RetrieveBalanceParsedRequest)(
-                     implicit hc: HeaderCarrier,
-                     ec: ExecutionContext,
-                     logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]] = {
+    implicit hc: HeaderCarrier,
+    ec: ExecutionContext,
+    logContext: EndpointLogContext,
+    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveBalance(request)).leftMap(mapDesErrors(desErrorMap))

@@ -33,8 +33,8 @@ trait MockListTransactionsConnector extends MockFactory {
 
     def listTransactions(requestData: ListTransactionsParsedRequest): CallHandler[Future[DesOutcome[ListTransactionsResponse[TransactionItem]]]] = {
       (mockListTransactionsConnector
-        .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 

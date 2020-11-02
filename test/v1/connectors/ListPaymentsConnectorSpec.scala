@@ -27,17 +27,17 @@ import scala.concurrent.Future
 
 class ListPaymentsConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
+  val nino: Nino = Nino("AA123456A")
 
-  val from = "2020-01-01"
-  val to = "2020-01-02"
+  val from: String = "2020-01-01"
+  val to: String = "2020-01-02"
 
   val queryParams: Seq[(String, String)] = Seq(
     "dateFrom" -> from,
     "dateTo" -> to
   )
 
-  val response = ListPaymentsResponse(
+  private val response = ListPaymentsResponse(
     payments = Seq(
       Payment(
         paymentId = Some("123-456"),

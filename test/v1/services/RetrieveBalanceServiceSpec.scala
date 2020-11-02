@@ -16,7 +16,6 @@
 
 package v1.services
 
-import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
@@ -26,13 +25,11 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveBalanceServiceSpec extends UnitSpec {
+class RetrieveBalanceServiceSpec extends ServiceSpec {
 
   private val nino = "AA123456A"
-  private val correlationId = "X-123"
 
   private val requestData: RetrieveBalanceParsedRequest =
     RetrieveBalanceParsedRequest(
@@ -78,7 +75,7 @@ class RetrieveBalanceServiceSpec extends UnitSpec {
           MockRetrieveBalanceConnector.retrieveBalance(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.retrieveBalance(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+          await(service.retrieveBalance(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
       }
 
       val input: Seq[(String, MtdError)] = Seq(

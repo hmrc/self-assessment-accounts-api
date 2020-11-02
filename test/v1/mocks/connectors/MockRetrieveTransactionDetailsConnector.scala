@@ -33,8 +33,8 @@ trait MockRetrieveTransactionDetailsConnector extends MockFactory {
     def retrieveDetails(requestData: RetrieveTransactionDetailsParsedRequest):
     CallHandler[Future[DesOutcome[RetrieveTransactionDetailsResponse]]] = {
       (mockRetrieveTransactionDetailsConnector
-        .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 }

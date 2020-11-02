@@ -22,6 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 import v1.hateoas.HateoasLinks
+import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
@@ -46,7 +47,8 @@ class RetrieveAllocationsControllerSpec
     with MockHateoasFactory
     with MockRetrieveAllocationsRequestParser
     with HateoasLinks
-    with MockAuditService {
+    with MockAuditService
+    with MockIdGenerator {
 
   private val nino = "AA123456A"
   private val paymentId = "aLot-anItem"
@@ -125,7 +127,7 @@ class RetrieveAllocationsControllerSpec
     )
 
   trait Test {
-    val hc = HeaderCarrier()
+    val hc: HeaderCarrier = HeaderCarrier()
 
     val controller = new RetrieveAllocationsController(
       authService = mockEnrolmentsAuthService,
@@ -134,11 +136,13 @@ class RetrieveAllocationsControllerSpec
       service = mockRetrieveAllocationsService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   "retrieveAllocations" should {
@@ -175,7 +179,7 @@ class RetrieveAllocationsControllerSpec
 
             MockRetrieveAllocationsRequestParser
               .parse(rawRequest)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
 
@@ -206,7 +210,7 @@ class RetrieveAllocationsControllerSpec
 
             MockRetrieveAllocationsService
               .retrieveAllocations(parsedRequest)
-              .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
             val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
 

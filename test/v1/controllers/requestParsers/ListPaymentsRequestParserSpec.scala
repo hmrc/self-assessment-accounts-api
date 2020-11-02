@@ -24,9 +24,10 @@ import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRa
 
 class ListPaymentsRequestParserSpec extends UnitSpec {
 
-  val nino = "AA123456B"
-  val from = "2019/02/02"
-  val to = "2019/02/03"
+  val nino: String = "AA123456B"
+  val from: String = "2019/02/02"
+  val to: String = "2019/02/03"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockListPaymentsValidator {
     lazy val parser = new ListPaymentsRequestParser(mockValidator)
@@ -44,12 +45,12 @@ class ListPaymentsRequestParserSpec extends UnitSpec {
       "the validator returns a single error" in new Test {
         private val inputData = ListPaymentsRawRequest("AA123", Some(from), Some(to))
         MockListPaymentsValidator.validate(inputData).returns(List(NinoFormatError))
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, NinoFormatError))
+        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
       }
       "the validator returns multiple errors" in new Test {
         private val inputData = ListPaymentsRawRequest(nino, None, None)
         MockListPaymentsValidator.validate(inputData).returns(List(MissingFromDateError, MissingToDateError))
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(None, BadRequestError, Some(Seq(MissingFromDateError, MissingToDateError))))
+        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(MissingFromDateError, MissingToDateError))))
       }
     }
   }

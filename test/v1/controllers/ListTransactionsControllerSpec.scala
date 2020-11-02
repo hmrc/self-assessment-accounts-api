@@ -34,6 +34,7 @@ import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTr
 import v1.models.response.listTransaction.ListTransactionsResponse
 import v1.models.response.listTransaction.ListTransactionsHateoasData
 import v1.fixtures.ListTransactionsFixture._
+import v1.mocks.MockIdGenerator
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,7 +46,8 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
   with MockListTransactionsService
   with MockHateoasFactory
   with HateoasLinks
-  with MockAuditService {
+  with MockAuditService
+  with MockIdGenerator {
 
   private val nino = "AA123456A"
   private val transactionId = "X123456790A"
@@ -209,11 +211,13 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       service = mockListTransactionsService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
-      cc = cc
+      cc = cc,
+      idGenerator = mockIdGenerator
     )
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
+    MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
   def event(auditResponse: AuditResponse): AuditEvent =
@@ -264,7 +268,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
 
             MockListTransactionsRequestParser
               .parse(rawRequest)
-              .returns(Left(ErrorWrapper(Some(correlationId), error, None)))
+              .returns(Left(ErrorWrapper(correlationId, error, None)))
 
             val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
@@ -302,7 +306,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
 
           MockListTransactionsService
             .listTransactions(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(Some(correlationId), mtdError))))
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
           val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 

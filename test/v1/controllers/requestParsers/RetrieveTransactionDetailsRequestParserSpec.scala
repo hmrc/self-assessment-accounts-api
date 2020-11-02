@@ -32,6 +32,7 @@ class RetrieveTransactionDetailsRequestParserSpec extends UnitSpec {
   private val validTransactionId = "F02LDPDEE"
   private val invalidNino = "notANino"
   private val invalidTransactionId = "notATransactionNino"
+  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   "parsing a retrieve TransactionDetails request" should {
     "return a retrieve TransactionDetails request" when {
@@ -52,7 +53,7 @@ class RetrieveTransactionDetailsRequestParserSpec extends UnitSpec {
         .returns(List(NinoFormatError))
 
       parser.parseRequest(RetrieveTransactionDetailsRawRequest(invalidNino, validTransactionId)) shouldBe
-        Left(ErrorWrapper(None, NinoFormatError, None))
+        Left(ErrorWrapper(correlationId, NinoFormatError, None))
     }
   }
 
@@ -62,7 +63,7 @@ class RetrieveTransactionDetailsRequestParserSpec extends UnitSpec {
         .returns(List(NinoFormatError, TransactionIdFormatError))
 
       parser.parseRequest(RetrieveTransactionDetailsRawRequest(invalidNino, invalidTransactionId)) shouldBe
-        Left(ErrorWrapper(None, BadRequestError, Some(Seq(NinoFormatError, TransactionIdFormatError))))
+        Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TransactionIdFormatError))))
     }
   }
 }

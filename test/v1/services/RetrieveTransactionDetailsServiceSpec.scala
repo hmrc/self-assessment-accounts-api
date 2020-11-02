@@ -28,12 +28,10 @@ import scala.concurrent.Future
 
 class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
 
-  private val correlationId = "X-123"
-
   trait Test extends MockRetrieveTransactionDetailsConnector {
 
-    val transactionId = "0001"
-    val nino = "AA123456A"
+    private val transactionId = "0001"
+    private val nino = "AA123456A"
 
     val requestData: RetrieveTransactionDetailsParsedRequest = RetrieveTransactionDetailsParsedRequest(
       nino = Nino(nino),
@@ -104,7 +102,7 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
           MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
             .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
-          await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionDetailsFoundError, None))
+          await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(correlationId, NoTransactionDetailsFoundError, None))
         }
       }
 
@@ -116,7 +114,7 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
             MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input: Seq[(String, MtdError)] = Seq(

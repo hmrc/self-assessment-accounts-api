@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class RetrieveBalanceConnectorSpec extends ConnectorSpec {
 
-  val nino = Nino("AA123456A")
+  val nino: Nino = Nino("AA123456A")
 
   val retrieveBalanceResponse: RetrieveBalanceResponse =
     RetrieveBalanceResponse(
@@ -77,4 +77,3 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
     }
   }
 }
-

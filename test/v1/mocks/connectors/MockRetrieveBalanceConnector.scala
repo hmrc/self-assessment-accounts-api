@@ -33,8 +33,8 @@ trait MockRetrieveBalanceConnector extends MockFactory {
 
     def retrieveBalance(requestData: RetrieveBalanceParsedRequest): CallHandler[Future[DesOutcome[RetrieveBalanceResponse]]] = {
       (mockRetrieveBalanceConnector
-        .retrieveBalance(_: RetrieveBalanceParsedRequest)(_: HeaderCarrier, _: ExecutionContext))
-        .expects(requestData, *, *)
+        .retrieveBalance(_: RetrieveBalanceParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(requestData, *, *, *)
     }
   }
 }

@@ -16,7 +16,6 @@
 
 package v1.services
 
-import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.fixtures.ListTransactionsFixture._
@@ -25,12 +24,9 @@ import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.response.listTransaction.ListTransactionsResponse
 
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ListTransactionsServiceSpec extends UnitSpec {
-
-  private val correlationId = "X-123"
+class ListTransactionsServiceSpec extends ServiceSpec {
 
   trait Test extends MockListTransactionsConnector {
 
@@ -57,7 +53,7 @@ class ListTransactionsServiceSpec extends UnitSpec {
         MockListTransactionsConnector.listTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ListTransactionsResponse(Seq())))))
 
-        await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), NoTransactionsFoundError, None))
+        await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(correlationId, NoTransactionsFoundError, None))
       }
     }
 
@@ -70,7 +66,7 @@ class ListTransactionsServiceSpec extends UnitSpec {
             MockListTransactionsConnector.listTransactions(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-            await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(Some(correlationId), error))
+            await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
         val input: Seq[(String, MtdError)] = Seq(
