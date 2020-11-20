@@ -52,11 +52,12 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
       endpointName = "listTransactions"
     )
 
+  //noinspection ScalaStyle
   def listTransactions(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
 
       implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
+      logger.warn(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
@@ -71,11 +72,10 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
               .asRight[ErrorWrapper]
           )
         } yield {
-          logger.info(
+          logger.warn(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${serviceResponse.correlationId}"
           )
-
           auditSubmission(
             AuditDetail(
               userDetails = request.userDetails,
@@ -91,7 +91,7 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
         val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.info(
+        logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
 
@@ -103,7 +103,6 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
             response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
-
         result
       }.merge
   }
