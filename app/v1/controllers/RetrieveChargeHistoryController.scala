@@ -56,7 +56,7 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
     authorisedAction(nino).async { implicit request =>
 
       implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.warn(
+      logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
@@ -70,7 +70,7 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
               .wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId))
               .asRight[ErrorWrapper])
         } yield {
-          logger.warn(
+          logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with correlationId: ${serviceResponse.correlationId}"
           )

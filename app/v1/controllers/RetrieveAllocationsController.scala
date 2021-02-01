@@ -56,7 +56,7 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
     authorisedAction(nino).async { implicit request =>
 
       implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.warn(
+      logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
@@ -68,7 +68,7 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrapList(serviceResponse.responseData, RetrieveAllocationsHateoasData(nino, paymentId)).asRight[ErrorWrapper])
         } yield {
-          logger.warn(
+          logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
