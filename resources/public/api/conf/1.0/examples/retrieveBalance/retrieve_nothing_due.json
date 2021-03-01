@@ -1,5 +1,8 @@
 {
   "payableAmount": 0.00,
+  "overdueAmount": 0.00,
+  "pendingChargeDueAmount": 0.00,
+  "totalBalance": 0.00,
   "links": [
     {
       "href": "/accounts/self-assessment/AA999999A/balance",
