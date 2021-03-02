@@ -52,11 +52,12 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
 
       val connectorResponse: RetrieveBalanceResponse =
         RetrieveBalanceResponse(
-          overdueAmount = Some(100.00),
+          overdueAmount = 100.00,
           payableAmount = 100.00,
           payableDueDate = Some("2020-03-01"),
-          pendingChargeDueAmount = Some(100.00),
-          pendingChargeDueDate = Some("2020-06-01")
+          pendingChargeDueAmount = 100.00,
+          pendingChargeDueDate = Some("2020-06-01"),
+          totalBalance = 100.00
         )
 
       MockRetrieveBalanceConnector.retrieveBalance(requestData)

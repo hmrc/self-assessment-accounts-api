@@ -45,7 +45,8 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
           "includeLocks" -> "true",
           "calculateAccruedInterest" -> "true",
           "removePOA" -> "true",
-          "customerPaymentInformation" -> "true"
+          "customerPaymentInformation" -> "true",
+          "includeStatistical" -> "false"
         )
 
       def setupStubs(): StubMapping
