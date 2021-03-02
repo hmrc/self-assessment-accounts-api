@@ -81,13 +81,12 @@
                 "href": {
                   "description": "The relative url of the endpoint",
                   "type": "string",
-                  "example": "/accounts/self-assessment/{nino}/payments/{paymentId}"
+                  "example": "/accounts/self-assessment/AA999999A/payments/081203010024-000001"
                 },
                 "rel": {
                   "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
                   "type": "string",
                   "enum": [
-                    "retrieve-charge-history",
                     "retrieve-payment-allocations",
                     "retrieve-transaction-details"
                   ]
@@ -107,7 +106,14 @@
               ]
             }
           }
-        }
+        },
+        "required": [
+          "taxYear",
+          "transactionId",
+          "transactionDate",
+          "originalAmount",
+          "outstandingAmount"
+        ]
       }
     },
     "links": {
@@ -119,7 +125,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/transactions?from={from}&to={to}"
+            "example": "/accounts/self-assessment/AA999999A/transactions?from=2019-01-01&to=2020-01-06"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
