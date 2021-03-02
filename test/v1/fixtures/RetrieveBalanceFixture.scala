@@ -34,16 +34,15 @@ object RetrieveBalanceFixture {
       | "idType": "MTDBSA",
       | "idNumber": "XQIT00000000001",
       | "regimeType": "ITSA",
-      | "balanceDetails": [
-      |    {
+      | "balanceDetails":
+      | {
       |       "overDueAmount": 1000,
       |       "balanceDueWithin30Days": 2000,
       |       "nextPaymentDateForChargesDueIn30Days": "2020-09-12",
       |       "balanceNotDueIn30Days": 1000,
       |       "nextPaymentDateBalanceNotDue": "2020-12-12",
       |       "totalBalance": 1000
-      |    }
-      |  ]
+      | }
       |}
       |""".stripMargin
   )
@@ -87,14 +86,13 @@ object RetrieveBalanceFixture {
       | "idType": "MTDBSA",
       | "idNumber": "XQIT00000000001",
       | "regimeType": "ITSA",
-      | "balanceDetails": [
+      | "balanceDetails":
       |   {
       |       "overDueAmount": 1000,
       |       "balanceDueWithin30Days": 2000,
       |       "balanceNotDueIn30Days": 1000,
       |       "totalBalance": 1000
       |   }
-      | ]
       |}
       |""".stripMargin
   )
