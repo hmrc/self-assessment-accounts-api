@@ -19,13 +19,11 @@
           "transactionId": {
             "description": "A unique identifier for this item.",
             "type": "string",
-            "pattern": "^[A-Za-z0-9]{1,30}$",
             "example": "X123456790A"
           },
           "paymentId": {
             "description": "A unique identifier for the payment.",
             "type": "string",
-            "pattern": "^[A-Za-z0-9]{1,12}\\-[A-Za-z0-9]{1,6}$",
             "example": "081203010024-000001"
           },
           "transactionDate": {

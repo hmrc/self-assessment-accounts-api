@@ -19,7 +19,6 @@
           "transactionId": {
             "description": "A unique identifier for this charge.",
             "type": "string",
-            "pattern": "^[A-Za-z0-9]{1,12}$",
             "example": "X123456790A"
           },
           "transactionDate": {

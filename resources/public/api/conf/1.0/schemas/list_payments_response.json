@@ -14,7 +14,6 @@
           "paymentId": {
             "description": "A unique identifier for the payment.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z]{1,12}\\-[0-9A-Za-z]{1,6}$",
             "example": "X234567891BY-AT3579"
           },
           "amount": {
@@ -28,7 +27,6 @@
           "method": {
             "description": "The method used to make the payment.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z\\s]{1,30}$",
             "example": "Payment by Card"
           },
           "transactionDate": {

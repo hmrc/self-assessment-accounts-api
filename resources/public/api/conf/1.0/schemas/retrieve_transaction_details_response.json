@@ -14,7 +14,6 @@
           "transactionItemId": {
             "description": "An identifier for this part of the overall transaction.",
             "type": "string",
-            "pattern": "^[0-9]{1,4}$",
             "example": "X234567891BY-AT3579"
           },
           "type": {
@@ -56,13 +55,11 @@
           "paymentMethod": {
             "description": "The method used to make the payment.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z\\s-]{1,30}$",
             "example": "BACS RECEIPTS"
           },
           "paymentId": {
             "description": "The unique identifier for the payment.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$",
             "example": "AB1023456789-000001"
           },
           "subItems": {
@@ -74,8 +71,7 @@
               "properties": {
                 "subItemId": {
                   "description": "The unique identifier for this entry.",
-                  "type": "string",
-                  "pattern": "^[0-9]{1,3}$"
+                  "type": "string"
                 },
                 "amount": {
                   "description": "The amount that this entry changed the transaction by.",
@@ -92,13 +88,11 @@
                 },
                 "clearingReason": {
                   "description": "The reason given for clearing",
-                  "type": "string",
-                  "pattern": "^[0-9A-Za-z\\s-]{1,30}$"
+                  "type": "string"
                 },
                 "outgoingPaymentMethod": {
                   "description": "The method used to make the outgoing payment.",
-                  "type": "string",
-                  "pattern": "^[0-9A-Za-z\\s-]{1,30}$"
+                  "type": "string"
                 },
                 "paymentAmount": {
                   "description": "The amount that this entry changed the transaction by.",
@@ -111,13 +105,11 @@
                 "paymentMethod": {
                   "description": "The method used to make the payment.",
                   "type": "string",
-                  "pattern": "^[0-9A-Za-z\\s]{1,30}$",
                   "example": "BACS RECEIPTS"
                 },
                 "paymentId": {
                   "description": "The unique identifier for the payment.",
                   "type": "string",
-                  "pattern": "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$",
                   "example": "AB1023456789-000001"
                 }
               }
