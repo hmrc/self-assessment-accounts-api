@@ -19,7 +19,7 @@
           "transactionId": {
             "description": "A unique identifier for the charge.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z]{1,12}$"
+            "example": "1234567890AB"
           },
           "transactionDate": {
             "description": "The date the charge was created.",
@@ -28,7 +28,8 @@
           },
           "type": {
             "description": "A description of the type of charge.",
-            "type": "string"
+            "type": "string",
+            "example": "Balancing Charge Debit"
           },
           "totalAmount": {
             "description": "The original amount of the charge.",
@@ -55,13 +56,12 @@
                 "href": {
                   "description": "The relative url of the endpoint",
                   "type": "string",
-                  "example": "/accounts/self-assessment/{nino}/charges/{transactionId}"
+                  "example": "/accounts/self-assessment/AA999999A/transactions/1234567890AB"
                 },
                 "rel": {
                   "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
                   "type": "string",
                   "enum": [
-                    "retrieve-charge-history",
                     "retrieve-transaction-details"
                   ]
                 },
@@ -80,7 +80,14 @@
               ]
             }
           }
-        }
+        },
+        "required": [
+          "taxYear",
+          "transactionId",
+          "transactionDate",
+          "totalAmount",
+          "outstandingAmount"
+        ]
       }
     },
     "links": {
@@ -92,7 +99,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/charges?from={from}&to={to}"
+            "example": "/accounts/self-assessment/AA999999A/charges?from=2018-07-01&to=2019-01-01"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
