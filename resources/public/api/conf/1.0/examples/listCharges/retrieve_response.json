@@ -18,12 +18,12 @@
   ],
   "links":[
     {
-      "href": "/accounts/self-assessment/AA999999A/charges?from=2018-01-01&to=2019-01-01",
+      "href": "/accounts/self-assessment/AA999999A/charges?from=2018-07-011&to=2019-01-01",
       "method": "GET",
       "rel": "self"
     },
     {
-      "href": "/accounts/self-assessment/AA999999A/transactions?from=2018-01-01&to=2019-01-01",
+      "href": "/accounts/self-assessment/AA999999A/transactions?from=2018-07-01&to=2019-01-01",
       "method": "GET",
       "rel": "list-transactions"
     }

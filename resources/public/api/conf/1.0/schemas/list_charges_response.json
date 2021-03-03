@@ -99,7 +99,7 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/AA999999A/charges?from=2018-01-01&to=2019-01-01"
+            "example": "/accounts/self-assessment/AA999999A/charges?from=2018-07-011&to=2019-01-01"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
