@@ -15,7 +15,6 @@
     "method": {
       "description": "The method used to make the payment.",
       "type": "string",
-      "pattern": "^[0-9A-Za-z\\s]{1,30}$",
       "example": "Payment by Card"
     },
     "transactionDate": {
@@ -33,7 +32,6 @@
           "transactionId": {
             "description": "The unique identifier for the charge.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z]{1,16}$",
             "example": "XA012599973Z11"
           },
           "from": {
@@ -49,7 +47,6 @@
           "type": {
             "description": "The type of financial transaction.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z\\s]{1,30}$",
             "example": "ITSA"
           },
           "amount": {
