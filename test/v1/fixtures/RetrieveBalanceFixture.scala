@@ -31,9 +31,11 @@ object RetrieveBalanceFixture {
   val fullDesResponse: JsValue = Json.parse(
     """
       |{
-      | "idType": "MTDBSA",
-      | "idNumber": "XQIT00000000001",
-      | "regimeType": "ITSA",
+      | "taxPayerDetails": {
+      |      "idType": "NINO",
+      |      "idNumber": "TC663795B",
+      |      "regimeType": "ITSA"
+      |   },
       | "balanceDetails":
       | {
       |       "overDueAmount": 1000,
@@ -83,15 +85,16 @@ object RetrieveBalanceFixture {
   val minimalDesResponse: JsValue = Json.parse(
     """
       |{
-      | "idType": "MTDBSA",
-      | "idNumber": "XQIT00000000001",
-      | "regimeType": "ITSA",
-      | "balanceDetails":
-      |   {
-      |       "overDueAmount": 1000,
-      |       "balanceDueWithin30Days": 2000,
-      |       "balanceNotDueIn30Days": 1000,
-      |       "totalBalance": 1000
+      |   "taxPayerDetails": {
+      |      "idType": "NINO",
+      |      "idNumber": "TC663795B",
+      |      "regimeType": "ITSA"
+      |   },
+      |   "balanceDetails": {
+      |      "overDueAmount": 1000,
+      |      "balanceDueWithin30Days": 2000,
+      |      "balanceNotDueIn30Days": 1000,
+      |      "totalBalance": 1000
       |   }
       |}
       |""".stripMargin
