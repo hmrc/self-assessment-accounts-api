@@ -115,7 +115,10 @@
               }
             }
           }
-        }
+        },
+        "required": [
+          "subItems"
+        ]
       }
     },
     "links": {
@@ -127,14 +130,13 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/transactions/{transactionId}"
+            "example": "/accounts/self-assessment/AA123456A/transactions/X92AM39DLE3D"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
             "type": "string",
             "enum": [
               "self",
-              "retrieve-charge-history",
               "retrieve-payment-allocations"
             ]
           },
