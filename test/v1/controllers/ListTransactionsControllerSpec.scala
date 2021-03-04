@@ -66,13 +66,6 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
     )
   )
 
-  private val chargeHistoryHateoasLink: Link =
-    Link(
-      href = s"/accounts/self-assessment/$nino/charges/$transactionId",
-      method = GET,
-      rel = RETRIEVE_CHARGE_HISTORY
-    )
-
   private val transactionDetailsHateoasLink =
     Link(
       href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
@@ -113,7 +106,6 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       HateoasWrapper(
         payload = chargeTransactionItemModel,
         links = Seq(
-          chargeHistoryHateoasLink,
           transactionDetailsHateoasLink
         )
       ),
@@ -142,11 +134,6 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       |         "lastClearingReason":"Refund",
       |         "lastClearedAmount":2.01,
       |         "links": [
-      |         {
-      |           "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
-      |			      "method": "GET",
-      |			      "rel": "retrieve-charge-history"
-      |		      },
       |         {
       |           "href": "/accounts/self-assessment/AA123456A/transactions/X123456790A",
       |			      "method": "GET",
@@ -323,8 +310,8 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
         (NinoFormatError, BAD_REQUEST),
         (FromDateFormatError, BAD_REQUEST),
         (ToDateFormatError, BAD_REQUEST),
+        (RuleDateRangeInvalidError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
-        (NoTransactionsFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR)
       )
 

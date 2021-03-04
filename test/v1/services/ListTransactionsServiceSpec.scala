@@ -48,12 +48,12 @@ class ListTransactionsServiceSpec extends ServiceSpec {
       }
     }
 
-    "return NoTransactionDetailsFoundError response" when {
-      "the transactionItems are empty" in new Test {
+    "return NotFoundError response" when {
+      "there are no transaction items" in new Test {
         MockListTransactionsConnector.listTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ListTransactionsResponse(Seq())))))
 
-        await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(correlationId, NoTransactionsFoundError, None))
+        await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
       }
     }
 
@@ -80,7 +80,10 @@ class ListTransactionsServiceSpec extends ServiceSpec {
           ("INVALID_CUSTOMER_PAYMENT_INFORMATION", DownstreamError),
           ("INVALID_DATE_FROM", FromDateFormatError),
           ("INVALID_DATE_TO", ToDateFormatError),
+          ("INVALID_DATE_RANGE", RuleDateRangeInvalidError),
+          ("INVALID_REQUEST", DownstreamError),
           ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", DownstreamError),
+          ("INVALID_INCLUDE_STATISTICAL", DownstreamError),
           ("REQUEST_NOT_PROCESSED", DownstreamError),
           ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),

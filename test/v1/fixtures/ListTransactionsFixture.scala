@@ -41,7 +41,8 @@ object ListTransactionsFixture {
       |    "documentOutstandingAmount": 10.33,
       |    "lastClearingDate": "2020-01-02",
       |    "lastClearingReason": "Refund",
-      |    "lastClearedAmount": 2.01
+      |    "lastClearedAmount": 2.01,
+      |    "statisticalFlag": false
       |}
     """.stripMargin
   )
@@ -58,6 +59,7 @@ object ListTransactionsFixture {
       |    "lastClearingDate": "2020-01-02",
       |    "lastClearingReason": "Payment Allocation",
       |    "lastClearedAmount": 2.01,
+      |    "statisticalFlag": false,
       |    "paymentLot": "081203010024",
       |    "paymentLotItem": "000001"
       |}
@@ -76,6 +78,7 @@ object ListTransactionsFixture {
       |    "lastClearingDate": "2020-01-02",
       |    "lastClearingReason": "Example Reason",
       |    "lastClearedAmount": 2.01,
+      |    "statisticalFlag": false,
       |    "paymentLot": "081203010024",
       |    "paymentLotItem": "000001"
       |}
@@ -85,7 +88,12 @@ object ListTransactionsFixture {
   val minimalDesTransactionItemResponse: JsValue = Json.parse(
     """
       |{
-      |
+      |   "taxYear": "2020",
+      |   "documentId": "X1234567890A",
+      |   "documentDate": "2020-01-01",
+      |   "totalAmount": 12.34,
+      |   "documentOutstandingAmount": 10.33,
+      |   "statisticalFlag": false
       |}
     """.stripMargin
   )
@@ -125,13 +133,13 @@ object ListTransactionsFixture {
 
   val chargeTransactionItemModel: TransactionItem =
     TransactionItem(
-      taxYear = Some("2019-20"),
-      transactionId = Some("X123456790A"),
+      taxYear = "2019-20",
+      transactionId = "X123456790A",
       paymentId = None,
-      transactionDate = Some("2020-01-01"),
+      transactionDate = "2020-01-01",
       `type` = Some("Balancing Charge Debit"),
-      originalAmount = Some(12.34),
-      outstandingAmount = Some(10.33),
+      originalAmount = 12.34,
+      outstandingAmount = 10.33,
       lastClearingDate = Some("2020-01-02"),
       lastClearingReason = Some("Refund"),
       lastClearedAmount = Some(2.01)
@@ -139,13 +147,13 @@ object ListTransactionsFixture {
 
   val fullTransactionItemModel: TransactionItem =
     TransactionItem(
-      taxYear = Some("2019-20"),
-      transactionId = Some("X123456790A"),
+      taxYear = "2019-20",
+      transactionId = "X123456790A",
       paymentId = Some("081203010024-000001"),
-      transactionDate = Some("2020-01-01"),
+      transactionDate = "2020-01-01",
       `type` = Some("Balancing Charge Debit"),
-      originalAmount = Some(12.34),
-      outstandingAmount = Some(10.33),
+      originalAmount = 12.34,
+      outstandingAmount = 10.33,
       lastClearingDate = Some("2020-01-02"),
       lastClearingReason = Some("Example Reason"),
       lastClearedAmount = Some(2.01)
@@ -153,25 +161,41 @@ object ListTransactionsFixture {
 
   val paymentTransactionItemModel: TransactionItem =
     TransactionItem(
-      taxYear = Some("2019-20"),
-      transactionId = Some("X123456790B"),
+      taxYear = "2019-20",
+      transactionId = "X123456790B",
       paymentId = Some("081203010024-000001"),
-      transactionDate = Some("2020-01-01"),
+      transactionDate = "2020-01-01",
       `type` = Some("Payment On Account"),
-      originalAmount = Some(12.34),
-      outstandingAmount = Some(10.33),
+      originalAmount = 12.34,
+      outstandingAmount = 10.33,
       lastClearingDate = Some("2020-01-02"),
       lastClearingReason = Some("Payment Allocation"),
       lastClearedAmount = Some(2.01)
     )
 
   val minimalTransactionItemModel: TransactionItem =
-    TransactionItem(None, None, None, None, None, None, None, None, None, None)
+    TransactionItem(
+      taxYear = "2019-20",
+      transactionId = "X1234567890A",
+      paymentId = None,
+      transactionDate = "2020-01-01",
+      `type` = None,
+      originalAmount = 12.34,
+      outstandingAmount = 10.33,
+      lastClearingDate = None,
+      lastClearingReason = None,
+      lastClearedAmount = None
+    )
 
   val fullDesSingleListTransactionsResponse: JsValue = Json.parse(
     s"""
        |{
-       |  "financialDetails" : [$fullDesTransactionItemResponse]
+       |   "taxPayerDetails": {
+       |      "idType": "NINO",
+       |      "idNumber": "AA123456A",
+       |      "regimeType": "ITSA"
+       |   },
+       |   "documentDetails" : [$fullDesTransactionItemResponse]
        |}
       """.stripMargin
   )
@@ -179,7 +203,12 @@ object ListTransactionsFixture {
   val fullDesMultipleListTransactionsMultipleResponse: JsValue = Json.parse(
     s"""
        |{
-       |  "financialDetails" : [$fullDesTransactionItemResponse, $fullDesTransactionItemResponse]
+       |   "taxPayerDetails": {
+       |      "idType": "NINO",
+       |      "idNumber": "AA123456A",
+       |      "regimeType": "ITSA"
+       |   },
+       |   "documentDetails" : [$fullDesTransactionItemResponse, $fullDesTransactionItemResponse]
        |}
       """.stripMargin
   )
@@ -187,15 +216,25 @@ object ListTransactionsFixture {
   val minimalDesListTransactionsResponse: JsValue = Json.parse(
     """
       |{
-      |  "financialDetails" : []
+      |   "taxPayerDetails": {
+      |      "idType": "NINO",
+      |      "idNumber": "AA123456A",
+      |      "regimeType": "ITSA"
+      |   },
+      |   "documentDetails" : [ ]
       |}
     """.stripMargin
   )
 
-  val emptyItemDesListTransactionsResponse: JsValue = Json.parse(
+  val minimalItemListTransactionsDesResponse: JsValue = Json.parse(
     s"""
        |{
-       |  "financialDetails" : [$minimalDesTransactionItemResponse]
+       |   "taxPayerDetails": {
+       |      "idType": "NINO",
+       |      "idNumber": "AA123456A",
+       |      "regimeType": "ITSA"
+       |   },
+       |   "documentDetails" : [$minimalDesTransactionItemResponse]
        |}
       """.stripMargin
   )
@@ -223,7 +262,11 @@ object ListTransactionsFixture {
     ListTransactionsResponse[TransactionItem](transactions = Seq(fullTransactionItemModel, fullTransactionItemModel))
 
   val minimalListTransactionsModel: ListTransactionsResponse[TransactionItem] =
-    ListTransactionsResponse(transactions = Seq.empty[TransactionItem])
+    ListTransactionsResponse[TransactionItem](transactions = Seq.empty[TransactionItem])
+
+  val minimalItemListTransactionsModel: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
+    transactions = Seq(minimalTransactionItemModel)
+  )
 
   val mtdJson: JsValue = Json.parse(
     """
@@ -240,11 +283,6 @@ object ListTransactionsFixture {
       |         "lastClearingReason":"Refund",
       |         "lastClearedAmount":2.01,
       |         "links": [
-      |         {
-      |            "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
-      |			       "method": "GET",
-      |			       "rel": "retrieve-charge-history"
-      |		       },
       |         {
       |            "href": "/accounts/self-assessment/AA123456A/transactions/X123456790A",
       |			       "method": "GET",

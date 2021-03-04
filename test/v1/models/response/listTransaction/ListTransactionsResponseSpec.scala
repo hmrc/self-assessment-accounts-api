@@ -32,14 +32,14 @@ class ListTransactionsResponseSpec extends UnitSpec {
         fullDesMultipleListTransactionsMultipleResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleListTransactionsModel
       }
 
-      "the json contains minimal fields with no transaction" in {
+      "the json contains no transaction items" in {
         minimalDesListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionsModel
       }
     }
 
-    "return a successful empty Json model" when {
-      "a transactionItem is present but empty" in {
-        emptyItemDesListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionsModel
+    "return a successful Json model" when {
+      "a transaction item is present but with only mandatory fields" in {
+        minimalItemListTransactionsDesResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalItemListTransactionsModel
       }
     }
 

@@ -32,7 +32,8 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
     "includeLocks" -> "true",
     "calculateAccruedInterest" -> "true",
     "removePOA" -> "false",
-    "customerPaymentInformation" -> "false"
+    "customerPaymentInformation" -> "false",
+    "includeStatistical" -> "false"
   )
 
   class Test extends MockHttpClient with MockAppConfig {
