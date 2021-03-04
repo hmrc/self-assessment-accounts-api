@@ -17,7 +17,7 @@
 package v1.connectors
 
 import config.AppConfig
-import javax.inject.Inject
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
@@ -25,6 +25,7 @@ import v1.models.response.listTransaction.{ListTransactionsResponse, Transaction
 
 import scala.concurrent.{ExecutionContext, Future}
 
+@Singleton
 class ListTransactionsConnector @Inject()(val http: HttpClient,
                                           val appConfig: AppConfig) extends BaseDesConnector {
 
@@ -46,7 +47,8 @@ class ListTransactionsConnector @Inject()(val http: HttpClient,
       "includeLocks" -> "true",
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "false",
-      "customerPaymentInformation" -> "false"
+      "customerPaymentInformation" -> "false",
+      "includeStatistical" -> "false"
     )
 
     get(

@@ -17,13 +17,19 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import v1.fixtures.ListTransactionsFixture._
+import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
+import v1.models.request.listTransactions.ListTransactionsParsedRequest
+import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
 import scala.concurrent.Future
 
 class ListTransactionsConnectorSpec extends ConnectorSpec {
+
+  val nino: String = "AA123456A"
+  val from: String = "2018-05-05"
+  val to: String = "2019-12-05"
 
   val queryParams: Seq[(String, String)] = Seq(
     "dateFrom" -> from,
@@ -32,7 +38,29 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
     "includeLocks" -> "true",
     "calculateAccruedInterest" -> "true",
     "removePOA" -> "false",
-    "customerPaymentInformation" -> "false"
+    "customerPaymentInformation" -> "false",
+    "includeStatistical" -> "false"
+  )
+
+  val requestData: ListTransactionsParsedRequest = ListTransactionsParsedRequest(
+    nino = Nino(nino),
+    from = from,
+    to = to
+  )
+
+  val listTransactionsResponse: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
+    transactions = Seq(TransactionItem(
+      taxYear = "2019-20",
+      transactionId = "X1234567890A",
+      paymentId = Some("081203010024-000001"),
+      transactionDate = "2020-01-01",
+      `type` = Some("Balancing Charge Debit"),
+      originalAmount = 12.34,
+      outstandingAmount = 10.33,
+      lastClearingDate = Some("2020-01-02"),
+      lastClearingReason = Some("Incoming payment"),
+      lastClearedAmount = Some(2.01)
+    ))
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -51,8 +79,7 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
   "ListTransactionsConnector" when {
     "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
-
-        val outcome = Right(ResponseWrapper(correlationId, fullDesSingleListTransactionsResponse))
+        val outcome = Right(ResponseWrapper(correlationId, listTransactionsResponse))
 
         MockedHttpClient
           .get(

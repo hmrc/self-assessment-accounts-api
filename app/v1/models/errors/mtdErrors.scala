@@ -33,30 +33,42 @@ object PaymentIdFormatError extends MtdError("FORMAT_PAYMENT_ID", "The provided 
 object TransactionIdFormatError extends MtdError("FORMAT_TRANSACTION_ID", "The provided transaction ID is invalid")
 
 // Rule Errors
-object RuleTaxYearNotSupportedError
-    extends MtdError("RULE_TAX_YEAR_NOT_SUPPORTED", "Tax year not supported, because it precedes the earliest allowable tax year")
+object RuleTaxYearNotSupportedError extends MtdError(
+  code = "RULE_TAX_YEAR_NOT_SUPPORTED",
+  message = "Tax year not supported, because it precedes the earliest allowable tax year"
+)
 
-object RuleIncorrectOrEmptyBodyError extends MtdError("RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED", "An empty or non-matching body was submitted")
+object RuleIncorrectOrEmptyBodyError extends MtdError(
+  code = "RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED",
+  message = "An empty or non-matching body was submitted"
+)
 
-object RuleTaxYearRangeExceededError
-    extends MtdError("RULE_TAX_YEAR_RANGE_EXCEEDED", "Tax year range exceeded. A tax year range of one year is required.")
+object RuleTaxYearRangeExceededError extends MtdError(
+  code = "RULE_TAX_YEAR_RANGE_EXCEEDED",
+  message = "Tax year range exceeded. A tax year range of one year is required"
+)
 
-object RuleFromDateNotSupportedError extends MtdError("RULE_FROM_DATE_NOT_SUPPORTED", "The specified from date is not supported as too early")
+object RuleFromDateNotSupportedError extends MtdError(
+  code = "RULE_FROM_DATE_NOT_SUPPORTED",
+  message = "The specified from date is not supported as too early"
+)
 
-object RuleDateRangeInvalidError extends MtdError("RULE_DATE_RANGE_INVALID", "The specified date range is invalid")
+object RuleDateRangeInvalidError extends MtdError(
+  code = "RULE_DATE_RANGE_INVALID",
+  message = "The specified date range is invalid"
+)
 
+// Date Errors
 object MissingFromDateError extends MtdError("MISSING_FROM_DATE", "The From date parameter is missing")
 object MissingToDateError extends MtdError("MISSING_TO_DATE", "The To date parameter is missing")
 object RangeToDateBeforeFromDateError extends MtdError("RANGE_TO_DATE_BEFORE_FROM_DATE", "The To date must be after the From date")
 
-//Standard Errors
+// Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
 
 object NoPaymentsFoundError extends MtdError("NO_PAYMENTS_FOUND", "No payments found")
 
 object NoChargesFoundError extends MtdError("NO_CHARGES_FOUND", "No charges found")
-
-object NoTransactionsFoundError extends MtdError("NO_TRANSACTIONS_FOUND", "No transactions found")
 
 object NoTransactionDetailsFoundError extends MtdError("NO_DETAILS_FOUND", "No transaction details found")
 
@@ -68,7 +80,7 @@ object BVRError extends MtdError("BUSINESS_ERROR", "Business validation error")
 
 object ServiceUnavailableError extends MtdError("SERVICE_UNAVAILABLE", "Internal server error")
 
-//Authorisation Errors
+// Authorisation Errors
 object UnauthorisedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The client and/or agent is not authorised")
 object InvalidBearerTokenError extends MtdError("UNAUTHORIZED", "Bearer token is missing or not authorized")
 

@@ -24,34 +24,32 @@ class ListTransactionsResponseSpec extends UnitSpec {
 
   "ListTransactionsResponse" should {
     "return a successful Json model" when {
-      "the json contains all fields with a document id transaction" in {
-        fullDesSingleListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullSingleListTransactionsModel
+      "the json contains all fields with a single transaction item related to payments only" in {
+        fullSingleItemListTransactionsDesResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullSingleItemListTransactionsModel
       }
 
-      "the json contains all fields with a multiple transaction" in {
-        fullDesMultipleListTransactionsMultipleResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleListTransactionsModel
+      "the json contains all fields with transaction items related to payments and charges" in {
+        fullMultipleItemsListTransactionsDesResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleItemsListTransactionsModel
       }
 
-      "the json contains minimal fields with no transaction" in {
-        minimalDesListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionsModel
+      "the json contains no transaction items" in {
+        noTransactionItemListTransactionsDesResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe noTransactionItemListTransactionsModel
       }
-    }
 
-    "return a successful empty Json model" when {
-      "a transactionItem is present but empty" in {
-        emptyItemDesListTransactionsResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalListTransactionsModel
+      "a transaction item is present but with only mandatory fields" in {
+        minimalItemListTransactionsDesResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalItemListTransactionsModel
       }
     }
 
     "throw an error" when {
-      "there are no mandatory fields" in {
-        invalidDesListTransactionsResponse.validate[ListTransactionsResponse[TransactionItem]] shouldBe a[JsError]
+      "the json is empty" in {
+        emptyDesResponse.validate[ListTransactionsResponse[TransactionItem]] shouldBe a[JsError]
       }
     }
 
     "successfully write the model to Json" when {
       "using a standard Json Owrites" in {
-        Json.toJson(fullSingleListTransactionsModel) shouldBe mtdListTransactionsResponse
+        Json.toJson(fullSingleItemListTransactionsModel) shouldBe listTransactionsMtdResponse
       }
     }
   }
