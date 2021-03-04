@@ -115,7 +115,6 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
            RangeToDateBeforeFromDateError | RuleFromDateNotSupportedError |
            RuleDateRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case NoTransactionsFoundError => NotFound(Json.toJson(NoTransactionsFoundError))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }
