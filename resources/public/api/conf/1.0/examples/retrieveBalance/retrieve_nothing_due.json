@@ -1,6 +1,6 @@
 {
-  "payableAmount": 0.00,
   "overdueAmount": 0.00,
+  "payableAmount": 0.00,
   "pendingChargeDueAmount": 0.00,
   "totalBalance": 0.00,
   "links": [
