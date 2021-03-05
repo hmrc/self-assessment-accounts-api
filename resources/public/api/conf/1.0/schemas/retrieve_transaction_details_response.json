@@ -158,5 +158,8 @@
         ]
       }
     }
-  }
+  },
+  "required": [
+    "transactionItems"
+  ]
 }
