@@ -72,7 +72,7 @@
                 "subItemId": {
                   "description": "The unique identifier for this entry.",
                   "type": "string",
-                  "example":"001"
+                  "example": "001"
                 },
                 "amount": {
                   "description": "The amount that this entry changed the transaction by.",
@@ -95,7 +95,7 @@
                 "outgoingPaymentMethod": {
                   "description": "The method used to make the outgoing payment.",
                   "type": "string",
-                  "example":"Payable Order Repayment"
+                  "example": "Payable Order Repayment"
                 },
                 "paymentAmount": {
                   "description": "The amount that this entry changed the transaction by.",
