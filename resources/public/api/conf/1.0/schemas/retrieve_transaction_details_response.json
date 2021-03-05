@@ -71,7 +71,8 @@
               "properties": {
                 "subItemId": {
                   "description": "The unique identifier for this entry.",
-                  "type": "string"
+                  "type": "string",
+                  "example":"001"
                 },
                 "amount": {
                   "description": "The amount that this entry changed the transaction by.",
@@ -88,11 +89,13 @@
                 },
                 "clearingReason": {
                   "description": "The reason given for clearing",
-                  "type": "string"
+                  "type": "string",
+                  "example": "Incoming payment"
                 },
                 "outgoingPaymentMethod": {
                   "description": "The method used to make the outgoing payment.",
-                  "type": "string"
+                  "type": "string",
+                  "example":"Payable Order Repayment"
                 },
                 "paymentAmount": {
                   "description": "The amount that this entry changed the transaction by.",
