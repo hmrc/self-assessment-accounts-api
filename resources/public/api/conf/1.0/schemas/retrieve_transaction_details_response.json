@@ -71,7 +71,8 @@
               "properties": {
                 "subItemId": {
                   "description": "The unique identifier for this entry.",
-                  "type": "string"
+                  "type": "string",
+                  "example": "001"
                 },
                 "amount": {
                   "description": "The amount that this entry changed the transaction by.",
@@ -88,11 +89,13 @@
                 },
                 "clearingReason": {
                   "description": "The reason given for clearing",
-                  "type": "string"
+                  "type": "string",
+                  "example": "Incoming payment"
                 },
                 "outgoingPaymentMethod": {
                   "description": "The method used to make the outgoing payment.",
-                  "type": "string"
+                  "type": "string",
+                  "example": "Payable Order Repayment"
                 },
                 "paymentAmount": {
                   "description": "The amount that this entry changed the transaction by.",
@@ -115,7 +118,10 @@
               }
             }
           }
-        }
+        },
+        "required": [
+          "subItems"
+        ]
       }
     },
     "links": {
@@ -127,14 +133,13 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/transactions/{transactionId}"
+            "example": "/accounts/self-assessment/AA123456A/transactions/X92AM39DLE3D"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
             "type": "string",
             "enum": [
               "self",
-              "retrieve-charge-history",
               "retrieve-payment-allocations"
             ]
           },
@@ -153,5 +158,8 @@
         ]
       }
     }
-  }
+  },
+  "required": [
+    "transactionItems"
+  ]
 }
