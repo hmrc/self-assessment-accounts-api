@@ -22,20 +22,22 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveBalanceResponse(overdueAmount: Option[BigDecimal],
+case class RetrieveBalanceResponse(overdueAmount: BigDecimal,
                                    payableAmount: BigDecimal,
                                    payableDueDate: Option[String],
-                                   pendingChargeDueAmount: Option[BigDecimal],
-                                   pendingChargeDueDate: Option[String])
+                                   pendingChargeDueAmount: BigDecimal,
+                                   pendingChargeDueDate: Option[String],
+                                   totalBalance: BigDecimal)
 
 object RetrieveBalanceResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveBalanceResponse] = (
-    (JsPath \ "financialDetails" \\ "overDueAmount").readNullable[BigDecimal] and
-      (JsPath \ "financialDetails" \\ "balanceDueWithin30Days").read[BigDecimal] and
-      (JsPath \ "financialDetails" \\ "nextPymntDateChrgsDueIn30Days").readNullable[String] and
-      (JsPath \ "financialDetails" \\ "balanceNotDueIn30Days").readNullable[BigDecimal] and
-      (JsPath \ "financialDetails" \\ "nextPaymntDateBalnceNotDue").readNullable[String]
+    (JsPath \ "balanceDetails" \ "overDueAmount").read[BigDecimal] and
+      (JsPath \ "balanceDetails" \ "balanceDueWithin30Days").read[BigDecimal] and
+      (JsPath \ "balanceDetails" \ "nextPaymentDateForChargesDueIn30Days").readNullable[String] and
+      (JsPath \ "balanceDetails" \ "balanceNotDueIn30Days").read[BigDecimal] and
+      (JsPath \ "balanceDetails" \ "nextPaymentDateBalanceNotDue").readNullable[String] and
+      (JsPath \ "balanceDetails" \ "totalBalance").read[BigDecimal]
     ) (RetrieveBalanceResponse.apply _)
 
   implicit val writes: OWrites[RetrieveBalanceResponse] =

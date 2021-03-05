@@ -43,7 +43,8 @@ class RetrieveBalanceConnector @Inject()(val http: HttpClient,
       ("includeLocks", "true"),
       ("calculateAccruedInterest", "true"),
       ("removePOA", "true"),
-      ("customerPaymentInformation", "true")
+      ("customerPaymentInformation", "true"),
+      ("includeStatistical", "false")
     )
 
     get(
