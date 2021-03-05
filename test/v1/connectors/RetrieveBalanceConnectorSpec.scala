@@ -31,11 +31,12 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
 
   val retrieveBalanceResponse: RetrieveBalanceResponse =
     RetrieveBalanceResponse(
-      overdueAmount = Some(1000.00),
+      overdueAmount = 1000.00,
       payableAmount = 1000.00,
       payableDueDate = Some("2018-04-05"),
-      pendingChargeDueAmount = Some(1000.00),
-      pendingChargeDueDate = Some("2019-11-05")
+      pendingChargeDueAmount = 1000.00,
+      pendingChargeDueDate = Some("2019-11-05"),
+      totalBalance = 1000.00
     )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -49,7 +50,8 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
         "includeLocks" -> "true",
         "calculateAccruedInterest" -> "true",
         "removePOA" -> "true",
-        "customerPaymentInformation" -> "true"
+        "customerPaymentInformation" -> "true",
+        "includeStatistical" -> "false"
       )
 
     MockedAppConfig.desBaseUrl returns baseUrl
