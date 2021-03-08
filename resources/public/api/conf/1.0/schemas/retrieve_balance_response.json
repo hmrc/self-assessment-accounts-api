@@ -68,11 +68,13 @@
           "href",
           "rel",
           "method"
-        ]
+        ],
+        "additionalProperties": false
       }
     }
   },
   "required": [
     "payableAmount"
-  ]
+  ],
+  "additionalProperties": false
 }
