@@ -20,6 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.fixtures.ListTransactionsFixture._
 import v1.hateoas.HateoasLinks
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListTransactionsRequestParser
@@ -33,7 +34,6 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
 import v1.models.response.listTransaction.ListTransactionsResponse
 import v1.models.response.listTransaction.ListTransactionsHateoasData
-import v1.fixtures.ListTransactionsFixture._
 import v1.mocks.MockIdGenerator
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -50,28 +50,16 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
   with MockIdGenerator {
 
   private val nino = "AA123456A"
-  private val transactionId = "X123456790A"
+  private val transactionId = "X1234567890A"
   private val paymentId = "081203010024-000001"
-  private val from = "2018-10-01"
-  private val to = "2019-10-01"
+  private val from = "2018-05-05"
+  private val to = "2019-12-05"
   private val correlationId = "X-123"
 
   private val rawRequest = ListTransactionsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListTransactionsParsedRequest(Nino(nino), from, to)
 
-  private val mtdResponse = ListTransactionsResponse(
-    transactions = Seq(
-      chargeTransactionItemModel,
-      paymentTransactionItemModel
-    )
-  )
-
-  private val chargeHistoryHateoasLink: Link =
-    Link(
-      href = s"/accounts/self-assessment/$nino/charges/$transactionId",
-      method = GET,
-      rel = RETRIEVE_CHARGE_HISTORY
-    )
+  private val listTransactionsResponse = fullMultipleItemsListTransactionsModel
 
   private val transactionDetailsHateoasLink =
     Link(
@@ -89,21 +77,21 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
 
   private val listTransactionsHateoasLink: Link =
     Link(
-      href = "/accounts/self-assessment/AA123456A/transactions",
+      href = s"/accounts/self-assessment/$nino/transactions?from=$from&to=$to",
       method = GET,
       rel = SELF
     )
 
   private val listPaymentsHateoasLink: Link =
     Link(
-      href = s"/accounts/self-assessment/$nino/payments",
+      href = s"/accounts/self-assessment/$nino/payments?from=$from&to=$to",
       method = GET,
       rel = LIST_PAYMENTS
     )
 
   private val listChargesHateoasLink: Link =
     Link(
-      href = s"/accounts/self-assessment/$nino/charges",
+      href = s"/accounts/self-assessment/$nino/charges?from=$from&to=$to",
       method = GET,
       rel = LIST_CHARGES
     )
@@ -111,94 +99,14 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
   private val hateoasResponse = ListTransactionsResponse(
     Seq(
       HateoasWrapper(
-        payload = chargeTransactionItemModel,
-        links = Seq(
-          chargeHistoryHateoasLink,
-          transactionDetailsHateoasLink
-        )
+        payload = chargesTransactionItemModel,
+        links = Seq(transactionDetailsHateoasLink)
       ),
       HateoasWrapper(
-        payload = paymentTransactionItemModel,
-        links = Seq(
-          paymentAllocationHateoasLink,
-          transactionDetailsHateoasLink
-        )
+        payload = paymentsTransactionItemModel,
+        links = Seq(paymentAllocationHateoasLink, transactionDetailsHateoasLink)
       )
     )
-  )
-
-  private val mtdJson = Json.parse(
-    """
-      |{
-      |   "transactions":[
-      |      {
-      |         "taxYear":"2019-20",
-      |         "transactionId":"X123456790A",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Balancing Charge Debit",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Refund",
-      |         "lastClearedAmount":2.01,
-      |         "links": [
-      |         {
-      |           "href": "/accounts/self-assessment/AA123456A/charges/X123456790A",
-      |			      "method": "GET",
-      |			      "rel": "retrieve-charge-history"
-      |		      },
-      |         {
-      |           "href": "/accounts/self-assessment/AA123456A/transactions/X123456790A",
-      |			      "method": "GET",
-      |			      "rel": "retrieve-transaction-details"
-      |		      }
-      |        ]
-      |      },
-      |      {
-      |         "taxYear":"2019-20",
-      |         "transactionId":"X123456790B",
-      |         "paymentId":"081203010024-000001",
-      |         "transactionDate":"2020-01-01",
-      |         "type":"Payment On Account",
-      |         "originalAmount":12.34,
-      |         "outstandingAmount":10.33,
-      |         "lastClearingDate":"2020-01-02",
-      |         "lastClearingReason":"Payment Allocation",
-      |         "lastClearedAmount":2.01,
-      |          "links": [
-      |          {
-      |             "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
-      |			        "method": "GET",
-      |			        "rel": "retrieve-payment-allocations"
-      |		        },
-      |          {
-      |             "href": "/accounts/self-assessment/AA123456A/transactions/X123456790A",
-      |			        "method": "GET",
-      |			        "rel": "retrieve-transaction-details"
-      |		        }
-      |          ]
-      |      }
-      |   ],
-      |   "links": [
-      |      {
-      |        "href": "/accounts/self-assessment/AA123456A/transactions",
-      |			   "method": "GET",
-      |			   "rel": "self"
-      |		   },
-      |      {
-      |        "href": "/accounts/self-assessment/AA123456A/payments",
-      |			   "method": "GET",
-      |			   "rel": "list-payments"
-      |		   },
-      |      {
-      |        "href": "/accounts/self-assessment/AA123456A/charges",
-      |			   "method": "GET",
-      |			   "rel": "list-charges"
-      |		   }
-      |     ]
-      |
-      |}
-    """.stripMargin
   )
 
   trait Test {
@@ -243,17 +151,17 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
 
         MockListTransactionsService
           .listTransactions(parsedRequest)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponse))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, listTransactionsResponse))))
 
         MockHateoasFactory
-          .wrapList(mtdResponse, ListTransactionsHateoasData(nino, from, to))
+          .wrapList(listTransactionsResponse, ListTransactionsHateoasData(nino, from, to))
           .returns(HateoasWrapper(hateoasResponse,
-            Seq(listTransactionsHateoasLink, listPaymentsHateoasLink, listChargesHateoasLink)))
+            Seq(listTransactionsHateoasLink, listChargesHateoasLink, listPaymentsHateoasLink)))
 
         val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdJson
+        contentAsJson(result) shouldBe listTransactionsMtdResponseWithHateoas
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, None)
@@ -323,13 +231,12 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
         (NinoFormatError, BAD_REQUEST),
         (FromDateFormatError, BAD_REQUEST),
         (ToDateFormatError, BAD_REQUEST),
+        (RuleDateRangeInvalidError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
-        (NoTransactionsFoundError, NOT_FOUND),
         (DownstreamError, INTERNAL_SERVER_ERROR)
       )
 
       input.foreach(args => (serviceErrors _).tupled(args))
     }
   }
-
 }
