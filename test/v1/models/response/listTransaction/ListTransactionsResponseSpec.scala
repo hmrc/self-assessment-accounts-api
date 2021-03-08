@@ -32,10 +32,6 @@ class ListTransactionsResponseSpec extends UnitSpec {
         fullMultipleItemsListTransactionsDesResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe fullMultipleItemsListTransactionsModel
       }
 
-      "the json contains no transaction items" in {
-        noTransactionItemListTransactionsDesResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe noTransactionItemListTransactionsModel
-      }
-
       "a transaction item is present but with only mandatory fields" in {
         minimalItemListTransactionsDesResponse.as[ListTransactionsResponse[TransactionItem]] shouldBe minimalItemListTransactionsModel
       }
