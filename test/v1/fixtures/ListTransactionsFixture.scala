@@ -108,19 +108,6 @@ object ListTransactionsFixture {
 
   val emptyDesResponse: JsValue = JsObject.empty
 
-  val noTransactionItemListTransactionsDesResponse: JsValue = Json.parse(
-    s"""
-       |{
-       |   "taxPayerDetails": {
-       |      "idType": "NINO",
-       |      "idNumber": "AA123456A",
-       |      "regimeType": "ITSA"
-       |   },
-       |   "documentDetails": [ ]
-       |}
-    """.stripMargin
-  )
-
   val minimalItemListTransactionsDesResponse: JsValue = Json.parse(
     s"""
        |{
@@ -286,10 +273,6 @@ object ListTransactionsFixture {
     lastClearingDate = Some("2020-01-06"),
     lastClearingReason = Some("Outgoing payment paid"),
     lastClearedAmount = Some(2.01)
-  )
-
-  val noTransactionItemListTransactionsModel: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
-    transactions = Seq.empty[TransactionItem]
   )
 
   val minimalItemListTransactionsModel: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
