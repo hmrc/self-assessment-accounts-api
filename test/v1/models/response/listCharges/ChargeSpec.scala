@@ -22,7 +22,7 @@ import v1.fixtures.ListChargesFixture._
 
 class ChargeSpec extends UnitSpec {
 
-  "Charge model" should {
+  "Charge" should {
     "return a successful Json model" when {
       "the json contains all fields" in {
         fullDesChargeResponse.as[Charge] shouldBe fullChargeModel

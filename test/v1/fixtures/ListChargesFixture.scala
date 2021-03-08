@@ -67,7 +67,7 @@ object ListChargesFixture {
   val fullDesListChargesSingleResponse: JsValue = Json.parse(
     s"""
        |{
-       | "financialDetails" : [$fullDesChargeResponse]
+       | "documentDetails" : [$fullDesChargeResponse]
        |}
       """.stripMargin
   )
@@ -75,7 +75,7 @@ object ListChargesFixture {
   val listChargesDesJson: JsValue = Json.parse(
     s"""
       |{
-      |  "financialDetails": [$fullDesChargeResponse]
+      |  "documentDetails": [$fullDesChargeResponse]
       |}
       """.stripMargin
   )
@@ -83,7 +83,7 @@ object ListChargesFixture {
   val fullDesListChargesMultipleResponse: JsValue = Json.parse(
     s"""
        |{
-       | "financialDetails" : [$fullDesChargeResponse, $fullDesChargeResponse]
+       | "documentDetails" : [$fullDesChargeResponse, $fullDesChargeResponse]
        |}
       """.stripMargin
   )
@@ -91,7 +91,7 @@ object ListChargesFixture {
   val minimalDesListChargesResponse: JsValue = Json.parse(
     """
       |{
-      | "financialDetails" : []
+      | "documentDetails" : []
       |}
     """.stripMargin
   )
