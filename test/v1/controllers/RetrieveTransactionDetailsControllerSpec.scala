@@ -33,7 +33,7 @@ import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
-import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsHateoasData, RetrieveTransactionDetailsResponse, TransactionItem}
+import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsHateoasData, RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -67,7 +67,19 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
     dueDate = None,
     paymentMethod = None,
     paymentId = Some(paymentId),
-    subItems = None
+    subItems = Seq(
+      SubItem(
+        subItemId = Some("001"),
+        amount = Some(100.11),
+        clearingDate = Some("2021-01-31"),
+        clearingReason = Some("Incoming payment"),
+        outgoingPaymentMethod = None,
+        paymentAmount = Some(100.11),
+        dueDate = None,
+        paymentMethod = Some("BACS RECEIPTS"),
+        paymentId = Some("P0101180112-000001")
+      )
+    )
   )
   private val mtdResponse = RetrieveTransactionDetailsResponse(transactionItems = Seq(paymentTransaction))
 
@@ -90,7 +102,16 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
       |		"type": "Payment On Account",
       |		"originalAmount": 12.34,
       |		"outstandingAmount": 10.33,
-      |		"paymentId": "081203010024-000001"
+      |		"paymentId": "081203010024-000001",
+      |		"subItems": [{
+      |			"subItemId": "001",
+      |			"amount": 100.11,
+      |			"clearingReason": "Incoming payment",
+      |			"paymentId": "P0101180112-000001",
+      |			"clearingDate": "2021-01-31",
+      |			"paymentMethod": "BACS RECEIPTS",
+      |			"paymentAmount": 100.11
+      |		}]
       |	}],
       |	"links": [{
       |		"href": "/accounts/self-assessment/AA123456A/transactions",

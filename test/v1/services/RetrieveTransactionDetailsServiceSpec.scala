@@ -66,7 +66,7 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
                 dueDate = None,
                 paymentMethod = None,
                 paymentId = None,
-                subItems = Some(Seq(
+                subItems = Seq(
                   SubItem(
                     subItemId = Some("001"),
                     amount = None,
@@ -78,7 +78,7 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
                     paymentMethod = None,
                     paymentId = None
                   )
-                ))
+                )
               )
             )
           )

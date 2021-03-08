@@ -27,11 +27,9 @@ case class TransactionItem(transactionItemId: Option[String],
                            dueDate: Option[String],
                            paymentMethod: Option[String],
                            paymentId: Option[String],
-                           subItems: Option[Seq[SubItem]])
+                           subItems: Seq[SubItem])
 
 object TransactionItem {
-
-  val empty: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None, None)
 
   implicit val writes: OWrites[TransactionItem] = Json.writes[TransactionItem]
 
@@ -42,14 +40,10 @@ object TransactionItem {
     taxPeriodTo <- (JsPath \ "taxPeriodTo").readNullable[String]
     originalAmount <- (JsPath \ "originalAmount").readNullable[BigDecimal]
     outstandingAmount <- (JsPath \ "outstandingAmount").readNullable[BigDecimal]
-    subItems <- (JsPath \ "items").readNullable[Seq[SubItem]].map(_.map(
-      _.filterNot(item => item == SubItem.empty || item.subItemId.isEmpty)
-    ))
+    subItems <- (JsPath \ "items").read[Seq[SubItem]]
   } yield {
 
-    val lowestNumberedSubItem: SubItem = subItems
-      .getOrElse(Seq.empty[SubItem])
-      .foldLeft(SubItem.empty)(returnLowestNumberedItem)
+    lazy val lowestNumberedSubItem: SubItem = subItems.foldLeft(SubItem.empty)(returnLowestNumberedItem)
 
     TransactionItem(
       sapDocumentItemId,
@@ -61,7 +55,7 @@ object TransactionItem {
       lowestNumberedSubItem.dueDate,
       lowestNumberedSubItem.paymentMethod,
       lowestNumberedSubItem.paymentId,
-      subItems.map(_.filterNot(_ == lowestNumberedSubItem))
+      subItems.filterNot(_ == lowestNumberedSubItem)
     )
   }
 

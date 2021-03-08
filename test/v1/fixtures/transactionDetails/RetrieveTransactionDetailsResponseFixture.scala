@@ -168,17 +168,6 @@ trait RetrieveTransactionDetailsResponseFixture {
     """.stripMargin
   )
 
-  val desJsonEmptyTransaction: JsValue = Json.parse(
-    """
-      |{
-      |   "financialDetails": [
-      |     {
-      |     }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
   val responseModelCharge: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
     transactionItems = Seq(
       TransactionItem(
@@ -191,7 +180,7 @@ trait RetrieveTransactionDetailsResponseFixture {
         dueDate = Some("2021-01-31"),
         paymentMethod = Some("BACS RECEIPTS"),
         paymentId = None,
-        subItems = Some(Seq(
+        subItems = Seq(
           SubItem(
             subItemId = Some("002"),
             amount = Some(100.11),
@@ -203,7 +192,7 @@ trait RetrieveTransactionDetailsResponseFixture {
             paymentMethod = Some("BACS RECEIPTS"),
             paymentId = Some("P0101180112-000001")
           )
-        ))
+        )
       )
     )
   )
@@ -220,7 +209,7 @@ trait RetrieveTransactionDetailsResponseFixture {
         dueDate = Some("2021-01-31"),
         paymentMethod = None,
         paymentId = Some("P0101180112-000001"),
-        subItems = Some(Seq(
+        subItems = Seq(
           SubItem(
             subItemId = Some("004"),
             amount = None,
@@ -232,7 +221,7 @@ trait RetrieveTransactionDetailsResponseFixture {
             paymentMethod = None,
             paymentId = Some("P0101180112-000001")
           )
-        ))
+        )
       )
     )
   )

@@ -133,37 +133,6 @@ trait TransactionItemFixture {
     """.stripMargin
   )
 
-  val desJsonNoSubItems: JsValue = Json.parse(
-    """
-      |{
-      |   "sapDocumentNumberItem": "0001",
-      |   "chargeType": "National Insurance Class 2",
-      |   "taxPeriodFrom": "2019-04-06",
-      |   "taxPeriodTo": "2020-04-05",
-      |   "originalAmount": 100.45,
-      |   "outstandingAmount": 10.23,
-      |   "items": []
-      |}
-    """.stripMargin
-  )
-
-  val desJsonEmptySubItem: JsValue = Json.parse(
-    """
-      |{
-      |   "sapDocumentNumberItem": "0001",
-      |   "chargeType": "National Insurance Class 2",
-      |   "taxPeriodFrom": "2019-04-06",
-      |   "taxPeriodTo": "2020-04-05",
-      |   "originalAmount": 100.45,
-      |   "outstandingAmount": 10.23,
-      |   "items": [
-      |     {
-      |     }
-      |   ]
-      |}
-    """.stripMargin
-  )
-
   val desJsonNoItemId: JsValue = Json.parse(
     """
       |{
@@ -197,7 +166,7 @@ trait TransactionItemFixture {
     dueDate = Some("2018-08-13"),
     paymentMethod = Some("BACS RECEIPTS"),
     paymentId = None,
-    subItems = Some(Seq.empty[SubItem])
+    subItems = Seq.empty[SubItem]
   )
 
   val transactionItemModelPayment: TransactionItem = TransactionItem(
@@ -210,11 +179,11 @@ trait TransactionItemFixture {
     dueDate = Some("2018-08-13"),
     paymentMethod = None,
     paymentId = Some("P0101180112-000001"),
-    subItems = Some(Seq.empty[SubItem])
+    subItems = Seq.empty[SubItem]
   )
 
   val transactionItemModelChargeMultiple: TransactionItem = transactionItemModelCharge.copy(
-    subItems = Some(Seq(
+    subItems = Seq(
       SubItem(
         subItemId = Some("002"),
         amount = Some(100.11),
@@ -226,11 +195,11 @@ trait TransactionItemFixture {
         paymentMethod = Some("BACS RECEIPTS"),
         paymentId = Some("P0101180112-000001")
       )
-    ))
+    )
   )
 
   val transactionItemModelPaymentMultiple: TransactionItem = transactionItemModelPayment.copy(
-    subItems = Some(Seq(
+    subItems = Seq(
       SubItem(
         subItemId = Some("003"),
         amount = None,
@@ -242,7 +211,7 @@ trait TransactionItemFixture {
         paymentMethod = None,
         paymentId = Some("P0101180112-000001")
       )
-    ))
+    )
   )
 
   val transactionItemModelNoSubItems: TransactionItem = TransactionItem(
@@ -255,7 +224,15 @@ trait TransactionItemFixture {
     dueDate = None,
     paymentMethod = None,
     paymentId = None,
-    subItems = Some(Seq.empty[SubItem])
+    subItems = Seq(SubItem(None,
+      Some(100.11),
+      Some("2021-01-31"),
+      Some("Incoming payment"),
+      None,
+      Some(100.11),
+      Some("2018-08-13"),
+      Some("BACS RECEIPTS"),
+      None))
   )
 
   val mtdJsonCharge: JsValue = Json.parse(
@@ -347,7 +324,13 @@ trait TransactionItemFixture {
       |   "taxPeriodTo": "2020-04-05",
       |   "originalAmount": 100.45,
       |   "outstandingAmount": 10.23,
-      |   "subItems": []
+      |   "subItems": [{
+      |			"amount": 100.11,
+      |			"clearingReason": "Incoming payment",
+      |			"clearingDate": "2021-01-31",
+      |			"paymentMethod": "BACS RECEIPTS",
+      |			"paymentAmount": 100.11
+      |		}]
       |}
     """.stripMargin
   )

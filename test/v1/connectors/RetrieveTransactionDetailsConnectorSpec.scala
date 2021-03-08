@@ -77,7 +77,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
               dueDate = None,
               paymentMethod = None,
               paymentId = None,
-              subItems = Some(Seq(
+              subItems = Seq(
                 SubItem(
                   subItemId = Some("001"),
                   amount = None,
@@ -89,7 +89,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
                   paymentMethod = None,
                   paymentId = None
                 )
-              ))
+              )
             )
           )
         )
@@ -123,7 +123,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
               dueDate = None,
               paymentMethod = Some("BACS RECEIPTS"),
               paymentId = Some("P0101180112-000001"),
-              subItems = Some(Seq(
+              subItems = Seq(
                 SubItem(
                   subItemId = Some("001"),
                   amount = Some(100.11),
@@ -135,7 +135,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
                   paymentMethod = Some("BACS RECEIPTS"),
                   paymentId = Some("P0101180112-000001")
                 )
-              ))
+              )
             )
           )
         )

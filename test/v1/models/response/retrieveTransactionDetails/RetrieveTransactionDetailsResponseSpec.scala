@@ -53,12 +53,6 @@ class RetrieveTransactionDetailsResponseSpec extends UnitSpec with RetrieveTrans
       }
     }
 
-    "read from valid JSON with an empty transaction item" should {
-      "not read empty transaction details items" in {
-        desJsonEmptyTransaction.as[RetrieveTransactionDetailsResponse] shouldBe responseModelNoTransactions
-      }
-    }
-
     "written to JSON (charge)" should {
       "produce the expected JSON" in {
         Json.toJson(responseModelCharge) shouldBe mtdJsonCharge
