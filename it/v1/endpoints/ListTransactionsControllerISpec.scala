@@ -127,35 +127,6 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       }
     }
 
-    "return a 404 status code (NOT_FOUND)" when {
-      "a success response with no transaction item is returned" in new Test {
-
-        val desQueryParams: Map[String, String] = Map(
-          "dateFrom" -> from.get,
-          "dateTo" -> to.get,
-          "onlyOpenItems" -> "false",
-          "includeLocks" -> "true",
-          "calculateAccruedInterest" -> "true",
-          "removePOA" -> "false",
-          "customerPaymentInformation" -> "false",
-          "includeStatistical" -> "false"
-        )
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, noTransactionItemListTransactionsDesResponse)
-        }
-
-        val response: WSResponse = await(request.get)
-
-        response.status shouldBe NOT_FOUND
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.toJson(NotFoundError)
-      }
-    }
-
     "return error according to spec" when {
 
       def validationErrorTest(requestNino: String, fromDate: Option[String],

@@ -76,17 +76,6 @@ class ListTransactionsServiceSpec extends ServiceSpec {
       }
     }
 
-    "return NotFoundError response" when {
-      "there are no transaction items" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, ListTransactionsResponse[TransactionItem](Seq())))
-
-        MockListTransactionsConnector.listTransactions(requestData)
-          .returns(Future.successful(outcome))
-
-        await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError))
-      }
-    }
-
     "unsuccessful" must {
       "map errors according to spec" when {
 

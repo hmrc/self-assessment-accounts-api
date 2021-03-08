@@ -44,14 +44,6 @@ trait DesResponseMappingSupport {
     }
   }
 
-  final def validateListTransactionsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
-    desResponseWrapper.responseData match {
-      case listTransactionsResponse: ListTransactionsResponse[_] if listTransactionsResponse.transactions.isEmpty =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, NotFoundError, None))
-      case _ => Right(desResponseWrapper)
-    }
-  }
-
   final def validateTransactionDetailsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
     desResponseWrapper.responseData match {
       case retrieveDetailsResponse: RetrieveTransactionDetailsResponse if retrieveDetailsResponse.transactionItems.isEmpty =>
