@@ -27,7 +27,7 @@ object RetrieveTransactionDetailsResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveTransactionDetailsResponse] =
    (JsPath \ "financialDetails").read[Seq[TransactionItem]]
-     .map(items => RetrieveTransactionDetailsResponse(items.filterNot(_ == TransactionItem.empty)))
+     .map(items => RetrieveTransactionDetailsResponse(items))
 
   implicit val writes: OWrites[RetrieveTransactionDetailsResponse] =
     Json.writes[RetrieveTransactionDetailsResponse]
