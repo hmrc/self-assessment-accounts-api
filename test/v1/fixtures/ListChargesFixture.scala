@@ -56,15 +56,13 @@ object ListChargesFixture {
   )
 
   val fullChargeModel: Charge = Charge(
-    taxYear = Some("2019-20"),
-    transactionId = Some("1234567890AB"),
-    transactionDate = Some("2020-02-01"),
+    taxYear = "2019-20",
+    transactionId = "1234567890AB",
+    transactionDate = "2020-02-01",
     `type` = Some("Charge Type"),
-    totalAmount = Some(11.23),
-    outstandingAmount = Some(4.56)
+    totalAmount = 11.23,
+    outstandingAmount = 4.56
   )
-
-  val minimalChargeModel = Charge(None, None, None, None, None, None)
 
   val fullDesListChargesSingleResponse: JsValue = Json.parse(
     s"""
@@ -125,11 +123,6 @@ object ListChargesFixture {
        |      "outstandingAmount":4.56,
        |      "links": [
        |        {
-       |          "href": "/accounts/self-assessment/AA123456A/charges/1234567890AB",
-       |          "method": "GET",
-       |          "rel": "retrieve-charge-history"
-       |        },
-       |        {
        |          "href": "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
        |          "method": "GET",
        |          "rel": "retrieve-transaction-details"
@@ -144,11 +137,6 @@ object ListChargesFixture {
        |      "totalAmount":11.23,
        |      "outstandingAmount":4.56,
        |      "links": [
-       |        {
-       |          "href": "/accounts/self-assessment/AA123456A/charges/1234567890AB",
-       |          "method": "GET",
-       |          "rel": "retrieve-charge-history"
-       |        },
        |        {
        |          "href": "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
        |          "method": "GET",

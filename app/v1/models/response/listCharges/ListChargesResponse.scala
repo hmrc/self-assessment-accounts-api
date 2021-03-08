@@ -36,8 +36,7 @@ object ListChargesResponse extends HateoasLinks {
 
     override def itemLinks(appConfig: AppConfig, data: ListChargesHateoasData, item: Charge): Seq[Link] =
       Seq(
-        retrieveChargeHistory(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false),
-        retrieveTransactionDetails(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false)
+        retrieveTransactionDetails(appConfig, data.nino, item.transactionId, isSelf = false)
       )
 
     override def links(appConfig: AppConfig, data: ListChargesHateoasData): Seq[Link] = {

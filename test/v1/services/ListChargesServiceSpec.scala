@@ -61,7 +61,7 @@ class ListChargesServiceSpec extends ServiceSpec {
         MockListChargesConnector.retrieve(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ListChargesResponse(Seq())))))
 
-        await(service.list(request)) shouldBe Left(ErrorWrapper(correlationId, NoChargesFoundError, None))
+        await(service.list(request)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError, None))
       }
     }
 

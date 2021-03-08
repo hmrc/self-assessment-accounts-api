@@ -43,7 +43,7 @@ class ListChargesController @Inject()(val authService: EnrolmentsAuthService,
                                       hateoasFactory: HateoasFactory,
                                       auditService: AuditService,
                                       cc: ControllerComponents,
-                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                      idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging{
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -112,7 +112,6 @@ class ListChargesController @Inject()(val authService: EnrolmentsAuthService,
            RangeToDateBeforeFromDateError | RuleFromDateNotSupportedError |
            RuleDateRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case NoChargesFoundError => NotFound(Json.toJson(NoChargesFoundError))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }

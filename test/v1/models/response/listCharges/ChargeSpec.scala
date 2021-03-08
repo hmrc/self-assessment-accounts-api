@@ -24,18 +24,14 @@ class ChargeSpec extends UnitSpec {
 
   "Charge model" should {
     "return a successful Json model" when {
-     "the json contains all fields" in {
-       fullDesChargeResponse.as[Charge] shouldBe fullChargeModel
-     }
-
-      "the json contains only mandatory fields" in {
-        minimalDesChargeResponse.as[Charge] shouldBe minimalChargeModel
+      "the json contains all fields" in {
+        fullDesChargeResponse.as[Charge] shouldBe fullChargeModel
       }
-    }
 
-    "throw an error" when {
-      "the json contains a incorrect type" in {
-        invalidDesChargeResponse.validate[Charge] shouldBe a[JsError]
+      "throw an error" when {
+        "the json contains a incorrect type" in {
+          invalidDesChargeResponse.validate[Charge] shouldBe a[JsError]
+        }
       }
     }
   }

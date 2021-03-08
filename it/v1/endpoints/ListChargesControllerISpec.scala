@@ -64,7 +64,8 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
           "includeLocks" -> "true",
           "calculateAccruedInterest" -> "true",
           "removePOA" -> "true",
-          "customerPaymentInformation" -> "true"
+          "customerPaymentInformation" -> "true",
+          "includeStatistical" -> "false"
         )
 
         override def setupStubs(): StubMapping = {
@@ -79,26 +80,6 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdResponse
-      }
-    }
-
-    "return a 404 NO_CHARGES_FOUND error" when {
-      "a success response with no charges is returned" in new Test {
-
-        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, minimalDesListChargesResponse)
-        }
-
-        val response: WSResponse = await(request.get)
-
-        response.status shouldBe NOT_FOUND
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.toJson(NoChargesFoundError)
       }
     }
 

@@ -19,7 +19,7 @@ package v1.connectors
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.play.bootstrap.http.HttpClient
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.{Charge, ListChargesResponse}
 
@@ -45,7 +45,8 @@ class ListChargesConnector @Inject()(val http: HttpClient,
       "includeLocks" -> "true",
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "true",
-      "customerPaymentInformation" -> "true"
+      "customerPaymentInformation" -> "true",
+      "includeStatistical" -> "false"
     )
 
     get(

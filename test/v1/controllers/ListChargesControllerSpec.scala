@@ -87,20 +87,6 @@ class ListChargesControllerSpec extends ControllerBaseSpec
       )
     )
 
-  private val chargeHateoasLink1 =
-    Link(
-      href = "/accounts/self-assessment/AA123456A/charges/1234567890AB",
-      method = GET,
-      rel = RETRIEVE_CHARGE_HISTORY
-    )
-
-  private val chargeHateoasLink2 =
-    Link(
-      href = "/accounts/self-assessment/AA123456A/charges/1234567890AB",
-      method = GET,
-      rel = RETRIEVE_CHARGE_HISTORY
-    )
-
   private val transactionDetailHateoasLink1 =
     Link(
       href = "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
@@ -132,13 +118,11 @@ class ListChargesControllerSpec extends ControllerBaseSpec
     Seq(
       HateoasWrapper(fullChargeModel,
         Seq(
-          chargeHateoasLink1,
           transactionDetailHateoasLink1
         )
       ),
       HateoasWrapper(fullChargeModel,
         Seq(
-          chargeHateoasLink2,
           transactionDetailHateoasLink2
         )
       )
@@ -236,7 +220,6 @@ class ListChargesControllerSpec extends ControllerBaseSpec
           (FromDateFormatError, BAD_REQUEST),
           (ToDateFormatError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (NoChargesFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
