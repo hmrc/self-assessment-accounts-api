@@ -54,6 +54,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "false",
       "customerPaymentInformation" -> "true",
+      "includeStatistical" -> "false"
     )
 
     MockedAppConfig.desBaseUrl returns baseUrl

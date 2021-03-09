@@ -163,7 +163,29 @@ trait RetrieveTransactionDetailsResponseFixture {
   val desJsonNoTransactions: JsValue = Json.parse(
     """
       |{
-      |   "financialDetails": []
+      |   "financialDetails": [
+      |   {
+      |   "items":
+      |       [
+      |            {
+      |             "taxYear": "2020",
+      |             "documentId": "123",
+      |             "totalAmount": 1000
+      |            }
+      |        ]
+      |   }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
+  val desJsonEmptyTransaction: JsValue = Json.parse(
+    """
+      |{
+      |   "financialDetails": [
+      |     {
+      |     }
+      |   ]
       |}
     """.stripMargin
   )

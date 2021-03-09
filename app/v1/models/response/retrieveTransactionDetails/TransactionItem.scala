@@ -31,6 +31,8 @@ case class TransactionItem(transactionItemId: Option[String],
 
 object TransactionItem {
 
+  val empty: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None, Seq.empty[SubItem])
+
   implicit val writes: OWrites[TransactionItem] = Json.writes[TransactionItem]
 
   implicit val reads: Reads[TransactionItem] = for {

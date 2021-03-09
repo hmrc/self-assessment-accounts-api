@@ -128,9 +128,12 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
           ("INVALID_CUSTOMER_PAYMENT_INFORMATION", DownstreamError),
           ("INVALID_DATE_FROM", DownstreamError),
           ("INVALID_DATE_TO", DownstreamError),
+          ("INVALID_DATE_RANGE", DownstreamError),
+          ("INVALID_INCLUDE_STATISTICAL", DownstreamError),
+          ("INVALID_REQUEST", DownstreamError),
           ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", DownstreamError),
           ("REQUEST_NOT_PROCESSED", DownstreamError),
-          ("NOT_FOUND", NotFoundError),
+          ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )
