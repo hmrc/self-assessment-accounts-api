@@ -47,6 +47,7 @@ class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
         "calculateAccruedInterest" -> "true",
         "removePOA" -> "false",
         "customerPaymentInformation" -> "true",
+        "includeStatistical" -> "false"
       )
 
     get(

@@ -27,7 +27,7 @@ object RetrieveTransactionDetailsResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveTransactionDetailsResponse] =
    (JsPath \ "financialDetails").read[Seq[TransactionItem]]
-     .map(items => RetrieveTransactionDetailsResponse(items))
+     .map(items => RetrieveTransactionDetailsResponse(items.filterNot(_ == TransactionItem.empty)))
 
   implicit val writes: OWrites[RetrieveTransactionDetailsResponse] =
     Json.writes[RetrieveTransactionDetailsResponse]
@@ -35,13 +35,12 @@ object RetrieveTransactionDetailsResponse extends HateoasLinks {
   implicit object RetrieveTransactionDetailsLinksFactory extends HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData]{
     override def links(appConfig: AppConfig, data: RetrieveTransactionDetailsHateoasData): Seq[Link] = {
       import data._
-      Seq(
-        retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = true),
         paymentId match {
-          case Some(pid) => retrievePaymentAllocations(appConfig, nino, pid, isSelf = false)
-          case None => retrieveChargeHistory(appConfig, nino, transactionId, isSelf = false)
+          case Some(pid) => Seq(
+            retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = true),
+            retrievePaymentAllocations(appConfig, nino, pid, isSelf = false))
+          case None => Seq(retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = true))
         }
-      )
     }
   }
 }

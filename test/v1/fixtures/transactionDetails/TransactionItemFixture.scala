@@ -133,6 +133,45 @@ trait TransactionItemFixture {
     """.stripMargin
   )
 
+  val desJsonNoSubItems: JsValue = Json.parse(
+    """
+      |{
+      |   "sapDocumentNumberItem": "0001",
+      |   "chargeType": "National Insurance Class 2",
+      |   "taxPeriodFrom": "2019-04-06",
+      |   "taxPeriodTo": "2020-04-05",
+      |   "originalAmount": 100.45,
+      |   "outstandingAmount": 10.23,
+      |   "items": []
+      |}
+    """.stripMargin
+  )
+
+  val desJsonEmptyTransactionItem: JsValue = Json.parse(
+    """
+      |{
+      |   "items": []
+      |}
+    """.stripMargin
+  )
+
+  val desJsonEmptySubItem: JsValue = Json.parse(
+    """
+      |{
+      |   "sapDocumentNumberItem": "0001",
+      |   "chargeType": "National Insurance Class 2",
+      |   "taxPeriodFrom": "2019-04-06",
+      |   "taxPeriodTo": "2020-04-05",
+      |   "originalAmount": 100.45,
+      |   "outstandingAmount": 10.23,
+      |   "items": [
+      |     {
+      |     }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
   val desJsonNoItemId: JsValue = Json.parse(
     """
       |{

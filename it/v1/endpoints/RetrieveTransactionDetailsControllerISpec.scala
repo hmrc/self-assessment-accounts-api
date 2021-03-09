@@ -41,6 +41,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "false",
       "customerPaymentInformation" -> "true",
+      "includeStatistical" -> "false"
     )
 
     def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
@@ -98,6 +99,22 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonNoTransactions)
+        }
+
+        val response: WSResponse = await(request.get)
+
+        response.status shouldBe NOT_FOUND
+        response.header("Content-Type") shouldBe Some("application/json")
+        response.json shouldBe Json.toJson(NoTransactionDetailsFoundError)
+      }
+
+      "a success response with no relevant data is returned" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuditStub.audit()
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonNoRelevantTransactions)
         }
 
         val response: WSResponse = await(request.get)
@@ -173,9 +190,12 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
         (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_DATE_RANGE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_INCLUDE_STATISTICAL", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", INTERNAL_SERVER_ERROR, DownstreamError),
         (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
-        (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
