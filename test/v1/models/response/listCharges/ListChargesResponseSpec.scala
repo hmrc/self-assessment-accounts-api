@@ -16,7 +16,7 @@
 
 package v1.models.response.listCharges
 
-import play.api.libs.json.JsError
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v1.fixtures.ListChargesFixture._
 
@@ -31,9 +31,11 @@ class ListChargesResponseSpec extends UnitSpec {
       "the json contains all fields with a multiple charges" in {
         fullDesListChargesMultipleResponse.as[ListChargesResponse[Charge]] shouldBe fullListMultipleChargeModel
       }
+    }
 
-      "the json contains minimal fields with no charges" in {
-        minimalDesListChargesResponse.as[ListChargesResponse[Charge]] shouldBe minimalListChargeModel
+    "successfully write the model to Json" when {
+      "using a standard Json Owrites" in {
+        Json.toJson(fullListSingleChargeModel) shouldBe listChargesMtdResponse
       }
     }
 

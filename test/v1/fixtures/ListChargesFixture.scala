@@ -24,7 +24,7 @@ object ListChargesFixture {
   val fullDesChargeResponse: JsValue = Json.parse(
     """
       |{
-      |  "taxYear" : "2019-20",
+      |  "taxYear" : "2020",
       |  "documentId" : "1234567890AB",
       |  "documentDate" : "2020-02-01",
       |  "documentDescription" : "Charge Type",
@@ -45,7 +45,7 @@ object ListChargesFixture {
   val invalidDesChargeResponse: JsValue = Json.parse(
     """
       |{
-      |  "taxYear" : "2019-20",
+      |  "taxYear" : "2020",
       |  "documentId" : "1234567890AB",
       |  "transactionDate" : "2019-01-01",
       |  "type" : 100.23,
@@ -88,14 +88,6 @@ object ListChargesFixture {
       """.stripMargin
   )
 
-  val minimalDesListChargesResponse: JsValue = Json.parse(
-    """
-      |{
-      | "documentDetails" : []
-      |}
-    """.stripMargin
-  )
-
   val invalidDesListChargesResponse: JsValue = Json.parse(
     """
       |{
@@ -104,13 +96,32 @@ object ListChargesFixture {
     """.stripMargin
   )
 
+  val fullChargeMtdResponse: JsValue = Json.parse(
+    """
+      |{
+      |   "taxYear": "2019-20",
+      |   "transactionId": "1234567890AB",
+      |   "transactionDate": "2020-02-01",
+      |   "type": "Charge Type",
+      |   "totalAmount": 11.23,
+      |   "outstandingAmount": 4.56
+      |}
+      |""".stripMargin
+  )
+
   val fullListSingleChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullChargeModel))
 
   val fullListMultipleChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullChargeModel, fullChargeModel))
 
-  val minimalListChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq.empty[Charge])
+  val listChargesMtdResponse: JsValue = Json.parse(
+    s"""
+       |{
+       | "charges" : [$fullChargeMtdResponse]
+       |}
+      """.stripMargin
+  )
 
-  val mtdResponse: JsValue = Json.parse(
+  val ListChargesMtdResponseWithHateoas: JsValue = Json.parse(
     s"""
        |{
        |  "charges":[
@@ -160,7 +171,5 @@ object ListChargesFixture {
        |}""".stripMargin)
 
   val mtdResponseObj: ListChargesResponse[Charge] = ListChargesResponse(charges = Seq(fullChargeModel, fullChargeModel))
-
-  val emptyResponseObj: ListChargesResponse[Charge] = ListChargesResponse(Seq.empty[Charge])
 
 }

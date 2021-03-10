@@ -79,7 +79,7 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdResponse
+        response.json shouldBe ListChargesMtdResponseWithHateoas
       }
     }
 

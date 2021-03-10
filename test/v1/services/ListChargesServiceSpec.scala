@@ -56,13 +56,6 @@ class ListChargesServiceSpec extends ServiceSpec {
 
         await(service.list(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
-
-      "return a NoChargesFoundError when the charges list is empty" in new Test {
-        MockListChargesConnector.retrieve(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ListChargesResponse(Seq())))))
-
-        await(service.list(request)) shouldBe Left(ErrorWrapper(correlationId, NotFoundError, None))
-      }
     }
 
     "connector call is unsuccessful" should {
@@ -89,7 +82,10 @@ class ListChargesServiceSpec extends ServiceSpec {
         "INVALID_INCLUDE_LOCKS" -> DownstreamError,
         "INVALID_CALCULATE_ACCRUED_INTEREST" -> DownstreamError,
         "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
+        "INVALID_DATE_RANGE" -> DownstreamError,
+        "INVALID_REQUEST" -> DownstreamError,
         "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> DownstreamError,
+        "INVALID_INCLUDE_STATISTICAL" -> DownstreamError,
         "REQUEST_NOT_PROCESSED" -> DownstreamError
       )
 

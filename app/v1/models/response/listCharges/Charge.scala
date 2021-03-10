@@ -18,19 +18,18 @@ package v1.models.response.listCharges
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.models.domain.DesTaxYear
 
 case class Charge(taxYear: String,
                   transactionId: String,
                   transactionDate: String,
                   `type`: Option[String],
                   totalAmount: BigDecimal,
-                  outstandingAmount: BigDecimal
-                 )
+                  outstandingAmount: BigDecimal)
 
 object Charge {
-
   implicit val reads: Reads[Charge] = (
-    (JsPath \ "taxYear").read[String] and
+    (JsPath \ "taxYear").read[String].map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear))) and
       (JsPath \ "documentId").read[String] and
       (JsPath \ "documentDate").read[String] and
       (JsPath \ "documentDescription").readNullable[String] and

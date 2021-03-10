@@ -148,7 +148,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
         val result: Future[Result] = controller.listCharges(nino, Some(from), Some(to))(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
+        contentAsJson(result) shouldBe ListChargesMtdResponseWithHateoas
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, None)
