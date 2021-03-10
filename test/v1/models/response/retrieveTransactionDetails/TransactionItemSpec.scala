@@ -61,7 +61,7 @@ class TransactionItemSpec extends UnitSpec with TransactionItemFixture {
 
     "read from valid JSON without SubItem IDs" should {
       "produce the expected TransactionItem object" in {
-        desJsonNoItemId.as[TransactionItem] shouldBe transactionItemModelNoSubItems
+        desJsonNoItemId.as[TransactionItem] shouldBe transactionItemModelNoSubItems.copy(subItems = Seq.empty[SubItem])
       }
     }
 

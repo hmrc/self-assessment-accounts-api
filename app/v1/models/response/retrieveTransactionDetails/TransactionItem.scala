@@ -42,7 +42,7 @@ object TransactionItem {
     taxPeriodTo <- (JsPath \ "taxPeriodTo").readNullable[String]
     originalAmount <- (JsPath \ "originalAmount").readNullable[BigDecimal]
     outstandingAmount <- (JsPath \ "outstandingAmount").readNullable[BigDecimal]
-    subItems <- (JsPath \ "items").read[Seq[SubItem]]
+    subItems <- (JsPath \ "items").read[Seq[SubItem]].map(_.filterNot(item => item == SubItem.empty || item.subItemId.isEmpty))
   } yield {
 
     lazy val lowestNumberedSubItem: SubItem = subItems.foldLeft(SubItem.empty)(returnLowestNumberedItem)
