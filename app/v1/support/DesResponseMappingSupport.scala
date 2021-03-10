@@ -35,12 +35,6 @@ trait DesResponseMappingSupport {
     }
   }
 
-  final def validateListChargesSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
-    desResponseWrapper.responseData match {
-      case _ => Right(desResponseWrapper)
-    }
-  }
-
   final def validateTransactionDetailsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
     desResponseWrapper.responseData match {
       case retrieveDetailsResponse: RetrieveTransactionDetailsResponse if retrieveDetailsResponse.transactionItems.isEmpty =>

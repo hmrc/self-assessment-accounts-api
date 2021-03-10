@@ -219,6 +219,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
           (NinoFormatError, BAD_REQUEST),
           (FromDateFormatError, BAD_REQUEST),
           (ToDateFormatError, BAD_REQUEST),
+          (RuleDateRangeInvalidError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

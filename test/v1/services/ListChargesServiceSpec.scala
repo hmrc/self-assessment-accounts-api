@@ -82,7 +82,7 @@ class ListChargesServiceSpec extends ServiceSpec {
         "INVALID_INCLUDE_LOCKS" -> DownstreamError,
         "INVALID_CALCULATE_ACCRUED_INTEREST" -> DownstreamError,
         "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
-        "INVALID_DATE_RANGE" -> DownstreamError,
+        "INVALID_DATE_RANGE" -> RuleDateRangeInvalidError,
         "INVALID_REQUEST" -> DownstreamError,
         "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> DownstreamError,
         "INVALID_INCLUDE_STATISTICAL" -> DownstreamError,
