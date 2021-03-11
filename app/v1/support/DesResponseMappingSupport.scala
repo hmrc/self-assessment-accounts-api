@@ -26,7 +26,6 @@ import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsR
 trait DesResponseMappingSupport {
   self: Logging =>
 
-
   final def validateListPaymentsSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
     desResponseWrapper.responseData match {
       case listPaymentsResponse: ListPaymentsResponse[_] if listPaymentsResponse.payments.isEmpty =>

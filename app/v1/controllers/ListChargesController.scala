@@ -43,7 +43,7 @@ class ListChargesController @Inject()(val authService: EnrolmentsAuthService,
                                       hateoasFactory: HateoasFactory,
                                       auditService: AuditService,
                                       cc: ControllerComponents,
-                                      idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
   extends AuthorisedController(cc) with BaseController with Logging{
 
   implicit val endpointLogContext: EndpointLogContext =

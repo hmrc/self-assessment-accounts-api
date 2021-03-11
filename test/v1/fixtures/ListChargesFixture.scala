@@ -34,14 +34,6 @@ object ListChargesFixture {
       |""".stripMargin
   )
 
-  val minimalDesChargeResponse: JsValue = Json.parse(
-    """
-      |{
-      |
-      |}
-      |""".stripMargin
-  )
-
   val invalidDesChargeResponse: JsValue = Json.parse(
     """
       |{
@@ -62,14 +54,6 @@ object ListChargesFixture {
     `type` = Some("Charge Type"),
     totalAmount = 11.23,
     outstandingAmount = 4.56
-  )
-
-  val fullDesListChargesSingleResponse: JsValue = Json.parse(
-    s"""
-       |{
-       | "documentDetails" : [$fullDesChargeResponse]
-       |}
-      """.stripMargin
   )
 
   val listChargesDesJson: JsValue = Json.parse(
@@ -122,7 +106,7 @@ object ListChargesFixture {
   )
 
   val ListChargesMtdResponseWithHateoas: JsValue = Json.parse(
-    s"""
+    """
        |{
        |  "charges":[
        |    {
