@@ -16,17 +16,43 @@
 
 package v1.services
 
+import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.fixtures.ListTransactionsFixture._
 import v1.mocks.connectors.MockListTransactionsConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.listTransaction.ListTransactionsResponse
+import v1.models.request.listTransactions.ListTransactionsParsedRequest
+import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
 import scala.concurrent.Future
 
 class ListTransactionsServiceSpec extends ServiceSpec {
+
+  val nino: String = "AA123456A"
+  val from: String = "2018-05-05"
+  val to: String = "2019-12-05"
+
+  val requestData: ListTransactionsParsedRequest = ListTransactionsParsedRequest(
+    nino = Nino(nino),
+    from = from,
+    to = to
+  )
+
+  val listTransactionsResponse: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
+    transactions = Seq(TransactionItem(
+      taxYear = "2019-20",
+      transactionId = "X1234567890A",
+      paymentId = Some("081203010024-000001"),
+      transactionDate = "2020-01-01",
+      `type` = Some("Balancing Charge Debit"),
+      originalAmount = 12.34,
+      outstandingAmount = 10.33,
+      lastClearingDate = Some("2020-01-02"),
+      lastClearingReason = Some("Incoming payment"),
+      lastClearedAmount = Some(2.01)
+    ))
+  )
 
   trait Test extends MockListTransactionsConnector {
 
@@ -41,19 +67,12 @@ class ListTransactionsServiceSpec extends ServiceSpec {
   "listTransactions" should {
     "return a successful response" when {
       "received a valid response for the supplied request" in new Test {
+        val outcome = Right(ResponseWrapper(correlationId, listTransactionsResponse))
+
         MockListTransactionsConnector.listTransactions(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, fullSingleListTransactionsModel))))
+          .returns(Future.successful(outcome))
 
-        await(service.listTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, fullSingleListTransactionsModel))
-      }
-    }
-
-    "return NoTransactionDetailsFoundError response" when {
-      "the transactionItems are empty" in new Test {
-        MockListTransactionsConnector.listTransactions(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ListTransactionsResponse(Seq())))))
-
-        await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(correlationId, NoTransactionsFoundError, None))
+        await(service.listTransactions(requestData)) shouldBe outcome
       }
     }
 
@@ -80,7 +99,10 @@ class ListTransactionsServiceSpec extends ServiceSpec {
           ("INVALID_CUSTOMER_PAYMENT_INFORMATION", DownstreamError),
           ("INVALID_DATE_FROM", FromDateFormatError),
           ("INVALID_DATE_TO", ToDateFormatError),
+          ("INVALID_DATE_RANGE", RuleDateRangeInvalidError),
+          ("INVALID_REQUEST", DownstreamError),
           ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", DownstreamError),
+          ("INVALID_INCLUDE_STATISTICAL", DownstreamError),
           ("REQUEST_NOT_PROCESSED", DownstreamError),
           ("NO_DATA_FOUND", NotFoundError),
           ("SERVER_ERROR", DownstreamError),

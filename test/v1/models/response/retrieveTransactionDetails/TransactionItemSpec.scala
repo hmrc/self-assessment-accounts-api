@@ -49,25 +49,25 @@ class TransactionItemSpec extends UnitSpec with TransactionItemFixture {
 
     "read from valid JSON with an empty subItems array" should {
       "produce the expected TransactionItem object" in {
-        desJsonNoSubItems.as[TransactionItem] shouldBe transactionItemModelNoSubItems
+        desJsonNoSubItems.as[TransactionItem] shouldBe transactionItemModelNoSubItems.copy(subItems = Seq.empty[SubItem])
       }
     }
 
     "read from empty JSON" should {
       "produce an empty TransactionItem object" in {
-        desJsonEmpty.as[TransactionItem] shouldBe TransactionItem.empty
+        desJsonEmptyTransactionItem.as[TransactionItem] shouldBe TransactionItem.empty
       }
     }
 
     "read from valid JSON without SubItem IDs" should {
       "produce the expected TransactionItem object" in {
-        desJsonNoItemId.as[TransactionItem] shouldBe transactionItemModelNoSubItems
+        desJsonNoItemId.as[TransactionItem] shouldBe transactionItemModelNoSubItems.copy(subItems = Seq.empty[SubItem])
       }
     }
 
     "read from valid JSON with an empty sub item" should {
       "not read empty sub items" in {
-        desJsonEmptySubItem.as[TransactionItem] shouldBe transactionItemModelNoSubItems
+        desJsonEmptySubItem.as[TransactionItem] shouldBe transactionItemModelNoSubItems.copy(subItems = Seq.empty[SubItem])
       }
     }
 

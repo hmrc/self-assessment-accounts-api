@@ -28,6 +28,25 @@ trait RetrieveTransactionDetailsFixture {
     """.stripMargin
   )
 
+  val desJsonNoRelevantTransactions: JsValue = Json.parse(
+    """
+      |{
+      |   "financialDetails": [
+      |   {
+      |   "items":
+      |       [
+      |            {
+      |             "taxYear": "2020",
+      |             "documentId": "123",
+      |             "totalAmount": 1000
+      |            }
+      |        ]
+      |   }
+      |   ]
+      |}
+    """.stripMargin
+  )
+
   val desJsonCharge: JsValue = Json.parse(
     """
       |{
@@ -133,11 +152,6 @@ trait RetrieveTransactionDetailsFixture {
       |		      "href": "/accounts/self-assessment/AA123456A/transactions/1111111111",
       |		      "method": "GET",
       |		      "rel": "self"
-      |	     },
-      |      {
-      |		      "href": "/accounts/self-assessment/AA123456A/charges/1111111111",
-      |	      	"method": "GET",
-      |		      "rel": "retrieve-charge-history"
       |	     }
       |   ]
       |}

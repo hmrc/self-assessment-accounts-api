@@ -52,11 +52,12 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
 
       val connectorResponse: RetrieveBalanceResponse =
         RetrieveBalanceResponse(
-          overdueAmount = Some(100.00),
+          overdueAmount = 100.00,
           payableAmount = 100.00,
           payableDueDate = Some("2020-03-01"),
-          pendingChargeDueAmount = Some(100.00),
-          pendingChargeDueDate = Some("2020-06-01")
+          pendingChargeDueAmount = 100.00,
+          pendingChargeDueDate = Some("2020-06-01"),
+          totalBalance = 100.00
         )
 
       MockRetrieveBalanceConnector.retrieveBalance(requestData)
@@ -89,6 +90,9 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
         ("INVALID_CUSTOMER_PAYMENT_INFORMATION", DownstreamError),
         ("INVALID_DATE_FROM", DownstreamError),
         ("INVALID_DATE_TO", DownstreamError),
+        ("INVALID_DATE_RANGE", DownstreamError),
+        ("INVALID_REQUEST", DownstreamError),
+        ("INVALID_INCLUDE_STATISTICAL", DownstreamError),
         ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", DownstreamError),
         ("REQUEST_NOT_PROCESSED", DownstreamError),
         ("NO_DATA_FOUND", NotFoundError),

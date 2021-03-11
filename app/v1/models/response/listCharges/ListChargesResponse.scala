@@ -27,7 +27,7 @@ case class ListChargesResponse[I](charges: Seq[I])
 object ListChargesResponse extends HateoasLinks {
 
   implicit def reads[I: Reads]: Reads[ListChargesResponse[I]] =
-    implicitly(JsPath \ "financialDetails").read[Seq[I]].map(ListChargesResponse(_))
+    implicitly(JsPath \ "documentDetails").read[Seq[I]].map(ListChargesResponse(_))
 
   implicit def writes[I: Writes]: OWrites[ListChargesResponse[I]] =
     Json.writes[ListChargesResponse[I]]
@@ -36,8 +36,7 @@ object ListChargesResponse extends HateoasLinks {
 
     override def itemLinks(appConfig: AppConfig, data: ListChargesHateoasData, item: Charge): Seq[Link] =
       Seq(
-        retrieveChargeHistory(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false),
-        retrieveTransactionDetails(appConfig, data.nino, item.transactionId.getOrElse(""), isSelf = false)
+        retrieveTransactionDetails(appConfig, data.nino, item.transactionId, isSelf = false)
       )
 
     override def links(appConfig: AppConfig, data: ListChargesHateoasData): Seq[Link] = {
@@ -53,7 +52,6 @@ object ListChargesResponse extends HateoasLinks {
     override def map[A, B](fa: ListChargesResponse[A])(f: A => B): ListChargesResponse[B] =
       ListChargesResponse(fa.charges.map(f))
   }
-
 }
 
 case class ListChargesHateoasData(nino: String, from: String, to: String) extends HateoasData

@@ -20,9 +20,7 @@ import utils.Logging
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.listCharges.ListChargesResponse
 import v1.models.response.listPayments.ListPaymentsResponse
-import v1.models.response.listTransaction.ListTransactionsResponse
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
 trait DesResponseMappingSupport {
@@ -32,22 +30,6 @@ trait DesResponseMappingSupport {
     desResponseWrapper.responseData match {
       case listPaymentsResponse: ListPaymentsResponse[_] if listPaymentsResponse.payments.isEmpty =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, NoPaymentsFoundError, None))
-      case _ => Right(desResponseWrapper)
-    }
-  }
-
-  final def validateListChargesSuccessResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
-    desResponseWrapper.responseData match {
-      case listChargesResponse: ListChargesResponse[_] if listChargesResponse.charges.isEmpty =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, NoChargesFoundError, None))
-      case _ => Right(desResponseWrapper)
-    }
-  }
-
-  final def validateListTransactionsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
-    desResponseWrapper.responseData match {
-      case listTransactionsResponse: ListTransactionsResponse[_] if listTransactionsResponse.transactions.isEmpty =>
-        Left(ErrorWrapper(desResponseWrapper.correlationId, NoTransactionsFoundError, None))
       case _ => Right(desResponseWrapper)
     }
   }

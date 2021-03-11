@@ -43,8 +43,7 @@ class ListTransactionsService @Inject()(val connector: ListTransactionsConnector
 
     val result = for {
       desResponseWrapper <- EitherT(connector.listTransactions(request)).leftMap(mapDesErrors(desErrorMap))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateListTransactionsResponse(desResponseWrapper))
-    } yield mtdResponseWrapper
+    } yield desResponseWrapper
 
     result.value
   }
@@ -61,7 +60,10 @@ class ListTransactionsService @Inject()(val connector: ListTransactionsConnector
       "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
       "INVALID_DATE_FROM" -> FromDateFormatError,
       "INVALID_DATE_TO" -> ToDateFormatError,
+      "INVALID_DATE_RANGE" -> RuleDateRangeInvalidError,
+      "INVALID_REQUEST" -> DownstreamError,
       "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> DownstreamError,
+      "INVALID_INCLUDE_STATISTICAL" -> DownstreamError,
       "REQUEST_NOT_PROCESSED" -> DownstreamError,
       "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> DownstreamError,

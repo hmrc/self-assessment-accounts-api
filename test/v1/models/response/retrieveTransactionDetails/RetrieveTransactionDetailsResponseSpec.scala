@@ -54,8 +54,8 @@ class RetrieveTransactionDetailsResponseSpec extends UnitSpec with RetrieveTrans
     }
 
     "read from valid JSON with an empty transaction item" should {
-      "not read empty transaction details items" in {
-        desJsonEmptyTransaction.as[RetrieveTransactionDetailsResponse] shouldBe responseModelNoTransactions
+      "produce a JsError" in {
+        desJsonEmptyTransaction.validate[RetrieveTransactionDetailsResponse] shouldBe a[JsError]
       }
     }
 

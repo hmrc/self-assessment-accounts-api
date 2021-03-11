@@ -27,7 +27,7 @@ case class ListTransactionsResponse[I](transactions: Seq[I])
 object ListTransactionsResponse extends HateoasLinks {
 
   implicit def reads[I: Reads]: Reads[ListTransactionsResponse[I]] =
-    implicitly(JsPath \ "financialDetails").read[Seq[I]].map(items => ListTransactionsResponse(items.filterNot(_ == TransactionItem.empty)))
+    implicitly(JsPath \ "documentDetails").read[Seq[I]].map(ListTransactionsResponse(_))
 
   implicit def writes[I: Writes]: OWrites[ListTransactionsResponse[I]] =
     Json.writes[ListTransactionsResponse[I]]
@@ -37,7 +37,7 @@ object ListTransactionsResponse extends HateoasLinks {
     override def itemLinks(appConfig: AppConfig, data: ListTransactionsHateoasData, item: TransactionItem): Seq[Link] = {
       import data.nino
 
-      val transactionId = item.transactionId.getOrElse("")
+      val transactionId = item.transactionId
 
       if (item.paymentId.nonEmpty) {
         Seq(
@@ -46,7 +46,6 @@ object ListTransactionsResponse extends HateoasLinks {
         )
       } else {
         Seq(
-          retrieveChargeHistory(appConfig, nino, transactionId, isSelf = false),
           retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = false)
         )
       }

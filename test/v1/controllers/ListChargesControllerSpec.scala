@@ -27,7 +27,7 @@ import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListChargesRequestParser
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType.{LIST_TRANSACTIONS, RETRIEVE_CHARGE_HISTORY, RETRIEVE_TRANSACTION_DETAILS, SELF}
+import v1.models.hateoas.RelType.{LIST_TRANSACTIONS, RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.{ListChargesParsedRequest, ListChargesRawRequest}
@@ -87,20 +87,6 @@ class ListChargesControllerSpec extends ControllerBaseSpec
       )
     )
 
-  private val chargeHateoasLink1 =
-    Link(
-      href = "/accounts/self-assessment/AA123456A/charges/1234567890AB",
-      method = GET,
-      rel = RETRIEVE_CHARGE_HISTORY
-    )
-
-  private val chargeHateoasLink2 =
-    Link(
-      href = "/accounts/self-assessment/AA123456A/charges/1234567890AB",
-      method = GET,
-      rel = RETRIEVE_CHARGE_HISTORY
-    )
-
   private val transactionDetailHateoasLink1 =
     Link(
       href = "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
@@ -132,13 +118,11 @@ class ListChargesControllerSpec extends ControllerBaseSpec
     Seq(
       HateoasWrapper(fullChargeModel,
         Seq(
-          chargeHateoasLink1,
           transactionDetailHateoasLink1
         )
       ),
       HateoasWrapper(fullChargeModel,
         Seq(
-          chargeHateoasLink2,
           transactionDetailHateoasLink2
         )
       )
@@ -164,7 +148,7 @@ class ListChargesControllerSpec extends ControllerBaseSpec
         val result: Future[Result] = controller.listCharges(nino, Some(from), Some(to))(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
+        contentAsJson(result) shouldBe ListChargesMtdResponseWithHateoas
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
         val auditResponse: AuditResponse = AuditResponse(OK, None, None)
@@ -235,8 +219,8 @@ class ListChargesControllerSpec extends ControllerBaseSpec
           (NinoFormatError, BAD_REQUEST),
           (FromDateFormatError, BAD_REQUEST),
           (ToDateFormatError, BAD_REQUEST),
+          (RuleDateRangeInvalidError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
-          (NoChargesFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

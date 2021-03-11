@@ -31,19 +31,20 @@ object RetrieveBalanceFixture {
   val fullDesResponse: JsValue = Json.parse(
     """
       |{
-      | "idType": "MTDBSA",
-      | "idNumber": "XQIT00000000001",
-      | "regimeType": "ITSA",
-      | "financialDetails": [
-      |    {
+      | "taxPayerDetails": {
+      |      "idType": "NINO",
+      |      "idNumber": "TC663795B",
+      |      "regimeType": "ITSA"
+      |   },
+      | "balanceDetails":
+      | {
       |       "overDueAmount": 1000,
       |       "balanceDueWithin30Days": 2000,
-      |       "nextPymntDateChrgsDueIn30Days": "2020-09-12",
+      |       "nextPaymentDateForChargesDueIn30Days": "2020-09-12",
       |       "balanceNotDueIn30Days": 1000,
-      |       "nextPaymntDateBalnceNotDue": "2020-12-12",
-      |       "earliestPymntDateOverDue": "2020-11-12"
-      |    }
-      |  ]
+      |       "nextPaymentDateBalanceNotDue": "2020-12-12",
+      |       "totalBalance": 1000
+      | }
       |}
       |""".stripMargin
   )
@@ -55,7 +56,8 @@ object RetrieveBalanceFixture {
       | "payableAmount": 2000,
       | "payableDueDate": "2020-09-12",
       | "pendingChargeDueAmount": 1000,
-      | "pendingChargeDueDate": "2020-12-12"
+      | "pendingChargeDueDate": "2020-12-12",
+      | "totalBalance": 1000
       |}
       |""".stripMargin
   )
@@ -73,23 +75,27 @@ object RetrieveBalanceFixture {
   )
 
   val fullModel: RetrieveBalanceResponse = RetrieveBalanceResponse(
-    overdueAmount = Some(BigDecimal(1000)),
+    overdueAmount = BigDecimal(1000),
     payableAmount = BigDecimal(2000),
     payableDueDate = Some("2020-09-12"),
-    pendingChargeDueAmount = Some(BigDecimal(1000)),
-    pendingChargeDueDate = Some("2020-12-12"))
+    pendingChargeDueAmount = BigDecimal(1000),
+    pendingChargeDueDate = Some("2020-12-12"),
+    totalBalance = BigDecimal(1000))
 
   val minimalDesResponse: JsValue = Json.parse(
     """
       |{
-      | "idType": "MTDBSA",
-      | "idNumber": "XQIT00000000001",
-      | "regimeType": "ITSA",
-      | "financialDetails": [
-      |   {
-      |     "balanceDueWithin30Days": 2000
+      |   "taxPayerDetails": {
+      |      "idType": "NINO",
+      |      "idNumber": "TC663795B",
+      |      "regimeType": "ITSA"
+      |   },
+      |   "balanceDetails": {
+      |      "overDueAmount": 1000,
+      |      "balanceDueWithin30Days": 2000,
+      |      "balanceNotDueIn30Days": 1000,
+      |      "totalBalance": 1000
       |   }
-      | ]
       |}
       |""".stripMargin
   )
@@ -97,16 +103,20 @@ object RetrieveBalanceFixture {
   val minMtdResponseJson: JsValue = Json.parse(
     """
       |{
-      |  "payableAmount": 2000
+      |   "overdueAmount": 1000,
+      |   "payableAmount": 2000,
+      |   "pendingChargeDueAmount": 1000,
+      |   "totalBalance": 1000
       |}
       |""".stripMargin
   )
 
-  val minimalResponseModel: RetrieveBalanceResponse = RetrieveBalanceResponse(overdueAmount = None,
+  val minimalResponseModel: RetrieveBalanceResponse = RetrieveBalanceResponse(overdueAmount = BigDecimal(1000),
     payableAmount = BigDecimal(2000),
     payableDueDate = None,
-    pendingChargeDueAmount = None,
-    pendingChargeDueDate = None)
+    pendingChargeDueAmount = BigDecimal(1000),
+    pendingChargeDueDate = None,
+    totalBalance = BigDecimal(1000))
 
   val InvalidDesResponse: JsValue = Json.parse(
     """

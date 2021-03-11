@@ -14,7 +14,6 @@
           "transactionItemId": {
             "description": "An identifier for this part of the overall transaction.",
             "type": "string",
-            "pattern": "^[0-9]{1,4}$",
             "example": "X234567891BY-AT3579"
           },
           "type": {
@@ -56,13 +55,11 @@
           "paymentMethod": {
             "description": "The method used to make the payment.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z\\s-]{1,30}$",
             "example": "BACS RECEIPTS"
           },
           "paymentId": {
             "description": "The unique identifier for the payment.",
             "type": "string",
-            "pattern": "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$",
             "example": "AB1023456789-000001"
           },
           "subItems": {
@@ -75,7 +72,7 @@
                 "subItemId": {
                   "description": "The unique identifier for this entry.",
                   "type": "string",
-                  "pattern": "^[0-9]{1,3}$"
+                  "example": "001"
                 },
                 "amount": {
                   "description": "The amount that this entry changed the transaction by.",
@@ -93,12 +90,12 @@
                 "clearingReason": {
                   "description": "The reason given for clearing",
                   "type": "string",
-                  "pattern": "^[0-9A-Za-z\\s-]{1,30}$"
+                  "example": "Incoming payment"
                 },
                 "outgoingPaymentMethod": {
                   "description": "The method used to make the outgoing payment.",
                   "type": "string",
-                  "pattern": "^[0-9A-Za-z\\s-]{1,30}$"
+                  "example": "Payable Order Repayment"
                 },
                 "paymentAmount": {
                   "description": "The amount that this entry changed the transaction by.",
@@ -111,19 +108,20 @@
                 "paymentMethod": {
                   "description": "The method used to make the payment.",
                   "type": "string",
-                  "pattern": "^[0-9A-Za-z\\s]{1,30}$",
                   "example": "BACS RECEIPTS"
                 },
                 "paymentId": {
                   "description": "The unique identifier for the payment.",
                   "type": "string",
-                  "pattern": "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$",
                   "example": "AB1023456789-000001"
                 }
               }
             }
           }
-        }
+        },
+        "required": [
+          "subItems"
+        ]
       }
     },
     "links": {
@@ -135,14 +133,13 @@
           "href": {
             "description": "The relative url of the endpoint",
             "type": "string",
-            "example": "/accounts/self-assessment/{nino}/transactions/{transactionId}"
+            "example": "/accounts/self-assessment/AA123456A/transactions/X92AM39DLE3D"
           },
           "rel": {
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
             "type": "string",
             "enum": [
               "self",
-              "retrieve-charge-history",
               "retrieve-payment-allocations"
             ]
           },
@@ -161,5 +158,8 @@
         ]
       }
     }
-  }
+  },
+  "required": [
+    "transactionItems"
+  ]
 }

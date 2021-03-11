@@ -43,8 +43,7 @@ class ListChargesService @Inject()(listChargesConnector: ListChargesConnector)
 
     val result = for {
       desResponseWrapper <- EitherT(listChargesConnector.listCharges(request)).leftMap(mapDesErrors(desErrorMap))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateListChargesSuccessResponse(desResponseWrapper))
-    } yield mtdResponseWrapper
+    } yield desResponseWrapper
 
     result.value
   }
@@ -64,7 +63,10 @@ class ListChargesService @Inject()(listChargesConnector: ListChargesConnector)
       "INVALID_INCLUDE_LOCKS" -> DownstreamError,
       "INVALID_CALCULATE_ACCRUED_INTEREST" -> DownstreamError,
       "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
+      "INVALID_DATE_RANGE" -> RuleDateRangeInvalidError,
+      "INVALID_REQUEST" -> DownstreamError,
       "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> DownstreamError,
+      "INVALID_INCLUDE_STATISTICAL" -> DownstreamError,
       "REQUEST_NOT_PROCESSED" -> DownstreamError
     )
 

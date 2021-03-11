@@ -1,21 +1,16 @@
 {
-  "transactions":[
+  "transactions": [
     {
-      "taxYear":"2020",
-      "transactionId":"X123456790A",
-      "transactionDate":"2020-01-01",
-      "type":"Balancing Charge Debit",
-      "originalAmount":12.34,
-      "outstandingAmount":10.33,
-      "lastClearingDate":"2020-01-02",
-      "lastClearingReason":"Incoming payment",
-      "lastClearedAmount":2.01,
+      "taxYear": "2019-20",
+      "transactionId": "X1234567890A",
+      "transactionDate": "2020-01-01",
+      "type": "Balancing Charge Debit",
+      "originalAmount": 12.34,
+      "outstandingAmount": 10.33,
+      "lastClearingDate": "2020-01-02",
+      "lastClearingReason": "Incoming payment",
+      "lastClearedAmount": 2.01,
       "links": [
-        {
-          "href": "/accounts/self-assessment/AA999999A/charges/X1234567890A",
-          "method": "GET",
-          "rel": "retrieve-charge-history"
-        },
         {
           "href": "/accounts/self-assessment/AA999999A/transactions/X1234567890A",
           "method": "GET",
@@ -24,24 +19,24 @@
       ]
     },
     {
-      "taxYear":"2020",
-      "transactionId":"X123456790B",
-      "paymentId":"X23456789012-A23456",
-      "transactionDate":"2020-01-05",
-      "type":"Payment On Account",
-      "originalAmount":12.34,
-      "outstandingAmount":10.33,
-      "lastClearingDate":"2020-01-06",
-      "lastClearingReason":"Outgoing payment paid",
-      "lastClearedAmount":2.01,
+      "taxYear": "2019-20",
+      "transactionId": "X1234567890B",
+      "paymentId": "081203010024-000001",
+      "transactionDate": "2020-01-05",
+      "type": "Payment On Account",
+      "originalAmount": 12.34,
+      "outstandingAmount": 10.33,
+      "lastClearingDate": "2020-01-06",
+      "lastClearingReason": "Outgoing payment paid",
+      "lastClearedAmount": 2.01,
       "links": [
         {
-          "href": "/accounts/self-assessment/AA999999A/payments/X23456789012-A23456",
+          "href": "/accounts/self-assessment/AA999999A/payments/081203010024-000001",
           "method": "GET",
           "rel": "retrieve-payment-allocations"
         },
         {
-          "href": "/accounts/self-assessment/AA999999A/transactions/X123456790B",
+          "href": "/accounts/self-assessment/AA999999A/transactions/X1234567890B",
           "method": "GET",
           "rel": "retrieve-transaction-details"
         }
@@ -50,17 +45,17 @@
   ],
   "links": [
     {
-      "href": "/accounts/self-assessment/AA999999A/transactions?from=2018-01-01&to=2019-01-01",
+      "href": "/accounts/self-assessment/AA999999A/transactions?from=2019-01-01&to=2020-01-06",
       "method": "GET",
       "rel": "self"
     },
     {
-      "href": "/accounts/self-assessment/AA999999A/charges?from=2018-01-01&to=2019-01-01",
+      "href": "/accounts/self-assessment/AA999999A/charges?from=2019-01-01&to=2020-01-06",
       "method": "GET",
       "rel": "list-charges"
     },
     {
-      "href": "/accounts/self-assessment/AA999999A/payments?from=2018-01-01&to=2019-01-01",
+      "href": "/accounts/self-assessment/AA999999A/payments?from=2019-01-01&to=2020-01-06",
       "method": "GET",
       "rel": "list-payments"
     }

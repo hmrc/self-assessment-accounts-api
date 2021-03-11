@@ -22,35 +22,35 @@ import v1.fixtures.ListTransactionsFixture._
 
 class TransactionItemSpec extends UnitSpec {
 
-  "Transaction model" should {
+  "TransactionItem" should {
     "return a successful Json model" when {
       "the json contains all fields" in {
-        fullDesTransactionItemResponse.as[TransactionItem] shouldBe fullTransactionItemModel
+        fullTransactionItemDesResponse.as[TransactionItem] shouldBe fullTransactionItemModel
       }
 
-      "the json contains exclusively document Id" in {
-        fullDesDocIdTransactionItemResponse.as[TransactionItem] shouldBe chargeTransactionItemModel
+      "the json contains fields related to charges (without payment lot and payment lot item fields)" in {
+        fullTransactionItemWithoutPaymentLotDesResponse.as[TransactionItem] shouldBe chargesTransactionItemModel
       }
 
-      "the json contains exclusively payment lot and payment lot item" in {
-        fullDesPaymentLotIdTransactionItemResponse.as[TransactionItem] shouldBe paymentTransactionItemModel
+      "the json contains fields related to payments (with payment lot and payment lot item fields)" in {
+        fullTransactionItemWithPaymentLotDesResponse.as[TransactionItem] shouldBe paymentsTransactionItemModel
       }
 
       "the json contains only mandatory fields" in {
-        minimalDesTransactionItemResponse.as[TransactionItem] shouldBe minimalTransactionItemModel
+        minimalTransactionItemDesResponse.as[TransactionItem] shouldBe minimalTransactionItemModel
       }
     }
 
     "throw an error" when {
-      "the json contains a incorrect type" in {
-        invalidDesTransactionItemResponse.validate[TransactionItem] shouldBe a[JsError]
+      "the json is empty" in {
+        emptyDesResponse.validate[TransactionItem] shouldBe a[JsError]
       }
     }
   }
 
   "successfully write the model to Json" when {
     "using a standard Json Owrites" in {
-      Json.toJson(fullTransactionItemModel) shouldBe mtdListTransactionItemResponse
+      Json.toJson(fullTransactionItemModel) shouldBe fullTransactionItemMtdResponse
     }
   }
 }

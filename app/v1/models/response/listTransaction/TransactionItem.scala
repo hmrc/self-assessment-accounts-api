@@ -19,31 +19,29 @@ package v1.models.response.listTransaction
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.domain.DesTaxYear
 
-case class TransactionItem(taxYear: Option[String],
-                           transactionId: Option[String],
+case class TransactionItem(taxYear: String,
+                           transactionId: String,
                            paymentId: Option[String],
-                           transactionDate: Option[String],
+                           transactionDate: String,
                            `type`: Option[String],
-                           originalAmount: Option[BigDecimal],
-                           outstandingAmount: Option[BigDecimal],
+                           originalAmount: BigDecimal,
+                           outstandingAmount: BigDecimal,
                            lastClearingDate: Option[String],
                            lastClearingReason: Option[String],
                            lastClearedAmount: Option[BigDecimal])
 
 object TransactionItem {
 
-  val empty: TransactionItem = TransactionItem(None, None, None, None, None, None, None, None, None, None)
-
   implicit val reads: Reads[TransactionItem] =
     for {
-      taxYear <- (JsPath \ "taxYear").readNullable[String].map(_.map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear))))
-      transactionId <- (JsPath \ "documentId").readNullable[String]
+      taxYear <- (JsPath \ "taxYear").read[String].map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear)))
+      transactionId <- (JsPath \ "documentId").read[String]
       paymentLot <- (JsPath \ "paymentLot").readNullable[String]
       paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
-      transactionDate <- (JsPath \ "documentDate").readNullable[String]
+      transactionDate <- (JsPath \ "documentDate").read[String]
       aType <- (JsPath \ "documentDescription").readNullable[String]
-      originalAmount <- (JsPath \ "totalAmount").readNullable[BigDecimal]
-      outstandingAmount <- (JsPath \ "documentOutstandingAmount").readNullable[BigDecimal]
+      originalAmount <- (JsPath \ "totalAmount").read[BigDecimal]
+      outstandingAmount <- (JsPath \ "documentOutstandingAmount").read[BigDecimal]
       lastClearingDate <- (JsPath \ "lastClearingDate").readNullable[String]
       lastClearingReason <- (JsPath \ "lastClearingReason").readNullable[String]
       lastClearedAmount <- (JsPath \ "lastClearedAmount").readNullable[BigDecimal]
