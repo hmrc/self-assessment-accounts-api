@@ -40,7 +40,8 @@ class ListChargesConnectorSpec extends ConnectorSpec {
     "includeLocks" -> "true",
     "calculateAccruedInterest" -> "true",
     "removePOA" -> "true",
-    "customerPaymentInformation" -> "true"
+    "customerPaymentInformation" -> "true",
+    "includeStatistical" -> "false"
   )
 
   private val response = ListChargesResponse(

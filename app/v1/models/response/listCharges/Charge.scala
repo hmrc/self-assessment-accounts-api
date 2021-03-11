@@ -18,24 +18,23 @@ package v1.models.response.listCharges
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.models.domain.DesTaxYear
 
-case class Charge(taxYear: Option[String],
-                  transactionId: Option[String],
-                  transactionDate: Option[String],
+case class Charge(taxYear: String,
+                  transactionId: String,
+                  transactionDate: String,
                   `type`: Option[String],
-                  totalAmount: Option[BigDecimal],
-                  outstandingAmount: Option[BigDecimal]
-                 )
+                  totalAmount: BigDecimal,
+                  outstandingAmount: BigDecimal)
 
 object Charge {
-
   implicit val reads: Reads[Charge] = (
-    (JsPath \ "taxYear").readNullable[String] and
-      (JsPath \ "documentId").readNullable[String] and
-      (JsPath \ "documentDate").readNullable[String] and
+    (JsPath \ "taxYear").read[String].map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear))) and
+      (JsPath \ "documentId").read[String] and
+      (JsPath \ "documentDate").read[String] and
       (JsPath \ "documentDescription").readNullable[String] and
-      (JsPath \ "totalAmount").readNullable[BigDecimal] and
-      (JsPath \ "documentOutstandingAmount").readNullable[BigDecimal]
+      (JsPath \ "totalAmount").read[BigDecimal] and
+      (JsPath \ "documentOutstandingAmount").read[BigDecimal]
     ) (Charge.apply _)
 
   implicit val writes: OWrites[Charge] = Json.writes[Charge]

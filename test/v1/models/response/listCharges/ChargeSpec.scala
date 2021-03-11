@@ -16,26 +16,28 @@
 
 package v1.models.response.listCharges
 
-import play.api.libs.json.JsError
+import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v1.fixtures.ListChargesFixture._
 
 class ChargeSpec extends UnitSpec {
 
-  "Charge model" should {
+  "Charge" should {
     "return a successful Json model" when {
-     "the json contains all fields" in {
-       fullDesChargeResponse.as[Charge] shouldBe fullChargeModel
-     }
-
-      "the json contains only mandatory fields" in {
-        minimalDesChargeResponse.as[Charge] shouldBe minimalChargeModel
+      "the json contains all fields" in {
+        fullDesChargeResponse.as[Charge] shouldBe fullChargeModel
       }
-    }
 
-    "throw an error" when {
-      "the json contains a incorrect type" in {
-        invalidDesChargeResponse.validate[Charge] shouldBe a[JsError]
+      "successfully write the model to Json" when {
+        "using a standard Json Owrites" in {
+          Json.toJson(fullChargeModel) shouldBe fullChargeMtdResponse
+        }
+      }
+
+      "throw an error" when {
+        "the json contains a incorrect type" in {
+          invalidDesChargeResponse.validate[Charge] shouldBe a[JsError]
+        }
       }
     }
   }

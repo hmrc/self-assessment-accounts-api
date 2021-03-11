@@ -64,7 +64,8 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
           "includeLocks" -> "true",
           "calculateAccruedInterest" -> "true",
           "removePOA" -> "true",
-          "customerPaymentInformation" -> "true"
+          "customerPaymentInformation" -> "true",
+          "includeStatistical" -> "false"
         )
 
         override def setupStubs(): StubMapping = {
@@ -78,27 +79,7 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe mtdResponse
-      }
-    }
-
-    "return a 404 NO_CHARGES_FOUND error" when {
-      "a success response with no charges is returned" in new Test {
-
-        val desQueryParams: Map[String, String] = Map("dateFrom" -> from.get, "dateTo" -> to.get)
-
-        override def setupStubs(): StubMapping = {
-          AuditStub.audit()
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, minimalDesListChargesResponse)
-        }
-
-        val response: WSResponse = await(request.get)
-
-        response.status shouldBe NOT_FOUND
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.toJson(NoChargesFoundError)
+        response.json shouldBe ListChargesMtdResponseWithHateoas
       }
     }
 
@@ -179,7 +160,10 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleDateRangeInvalidError),
+        (BAD_REQUEST, "INVALID_REQUEST", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_INCLUDE_STATISTICAL", INTERNAL_SERVER_ERROR, DownstreamError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )

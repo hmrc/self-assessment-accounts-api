@@ -112,7 +112,6 @@ class ListChargesController @Inject()(val authService: EnrolmentsAuthService,
            RangeToDateBeforeFromDateError | RuleFromDateNotSupportedError |
            RuleDateRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case NoChargesFoundError => NotFound(Json.toJson(NoChargesFoundError))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }
