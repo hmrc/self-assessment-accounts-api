@@ -15,17 +15,6 @@ traits:
                 description: The supplied income source could not be found
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
-  notFoundPayments:
-    responses:
-      404:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              notFoundPayments:
-                description: No payments found for this NINO and date range
-                value:
-                  code: NO_PAYMENTS_FOUND
   notFoundTransactionDetails:
       responses:
         404:

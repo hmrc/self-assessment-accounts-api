@@ -116,18 +116,6 @@ object ListPaymentsFixture {
       |}
       |""".stripMargin
 
-  val desSuccessResponseNoPayments: String =
-    """
-      |{
-      |   "idType":"NINO",
-      |   "idValue":"AB123456C",
-      |   "regimeType":"ITSA",
-      |   "businessPartner":"1122334455",
-      |   "paymentDetails": [
-      |   ]
-      |}
-      |""".stripMargin
-
   val mtdResponse: JsValue = Json.parse(
     s"""
       |{
@@ -169,5 +157,4 @@ object ListPaymentsFixture {
 
   val mtdResponseObj: ListPaymentsResponse[Payment] = ListPaymentsResponse(payments = Seq(payment1, payment2))
 
-  val emptyResponseObj: ListPaymentsResponse[Payment] = ListPaymentsResponse(Seq.empty[Payment])
 }

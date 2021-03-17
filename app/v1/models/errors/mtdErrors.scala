@@ -66,8 +66,6 @@ object RangeToDateBeforeFromDateError extends MtdError("RANGE_TO_DATE_BEFORE_FRO
 // Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
 
-object NoPaymentsFoundError extends MtdError("NO_PAYMENTS_FOUND", "No payments found")
-
 object NoTransactionDetailsFoundError extends MtdError("NO_DETAILS_FOUND", "No transaction details found")
 
 object DownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
