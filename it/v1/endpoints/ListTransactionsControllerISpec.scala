@@ -64,7 +64,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
           "includeLocks" -> "true",
           "calculateAccruedInterest" -> "true",
           "removePOA" -> "false",
-          "customerPaymentInformation" -> "false",
+          "customerPaymentInformation" -> "true",
           "includeStatistical" -> "false"
         )
 
@@ -93,7 +93,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
           "includeLocks" -> "true",
           "calculateAccruedInterest" -> "true",
           "removePOA" -> "false",
-          "customerPaymentInformation" -> "false",
+          "customerPaymentInformation" -> "true",
           "includeStatistical" -> "false"
         )
 
@@ -182,7 +182,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
             "includeLocks" -> "true",
             "calculateAccruedInterest" -> "true",
             "removePOA" -> "false",
-            "customerPaymentInformation" -> "false",
+            "customerPaymentInformation" -> "true",
             "includeStatistical" -> "false"
           )
 

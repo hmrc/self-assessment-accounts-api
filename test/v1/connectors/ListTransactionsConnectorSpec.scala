@@ -38,7 +38,7 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
     "includeLocks" -> "true",
     "calculateAccruedInterest" -> "true",
     "removePOA" -> "false",
-    "customerPaymentInformation" -> "false",
+    "customerPaymentInformation" -> "true",
     "includeStatistical" -> "false"
   )
 
