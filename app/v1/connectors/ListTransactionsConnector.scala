@@ -47,7 +47,7 @@ class ListTransactionsConnector @Inject()(val http: HttpClient,
       "includeLocks" -> "true",
       "calculateAccruedInterest" -> "true",
       "removePOA" -> "false",
-      "customerPaymentInformation" -> "false",
+      "customerPaymentInformation" -> "true",
       "includeStatistical" -> "false"
     )
 
