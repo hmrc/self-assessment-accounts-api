@@ -55,12 +55,6 @@ class ListPaymentsServiceSpec extends ServiceSpec {
 
         await(service.list(request)) shouldBe Right(ResponseWrapper(correlationId, response))
       }
-      "return a NoPaymentsFoundError when the payments list is empty" in new Test {
-        MockListPaymentsConnector.retrieve(request)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ListPaymentsResponse(Seq())))))
-
-        await(service.list(request)) shouldBe Left(ErrorWrapper(correlationId, NoPaymentsFoundError, None))
-      }
     }
 
     "connector call is unsuccessful" should {

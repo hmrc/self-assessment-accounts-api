@@ -21,7 +21,7 @@ import utils.Logging
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.response.listPayments.ListPaymentsResponse
+import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, TransactionItem}
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 
@@ -44,16 +44,20 @@ class DesResponseMappingSupportSpec extends UnitSpec {
     case "DS" => DownstreamError
   }
 
-  "validateListPaymentsSuccessResponse" when {
-    "passed a ListPaymentsResponse with an empty payments list" should {
-      "return a NoPaymentsFoundError error" in {
-        mapping.validateListPaymentsSuccessResponse(ResponseWrapper(correlationId, ListPaymentsResponse(payments = Seq()))) shouldBe
-          Left(ErrorWrapper(correlationId, NoPaymentsFoundError))
+  "validateTransactionDetailsResponse" when {
+    "passed a RetrieveTransactionDetailsResponse with an empty transactionItems array" should {
+      "return a NoTransactionDetailsFoundError error" in {
+        val responseModel: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
+          transactionItems = Seq.empty[TransactionItem]
+        )
+
+        mapping.validateTransactionDetailsResponse(ResponseWrapper(correlationId, responseModel)) shouldBe
+          Left(ErrorWrapper(correlationId, NoTransactionDetailsFoundError))
       }
     }
     "passed anything else " should {
       "pass it through" in {
-        mapping.validateListPaymentsSuccessResponse(ResponseWrapper(correlationId, NotFoundError)) shouldBe
+        mapping.validateTransactionDetailsResponse(ResponseWrapper(correlationId, NotFoundError)) shouldBe
           Right(ResponseWrapper(correlationId, NotFoundError))
       }
     }

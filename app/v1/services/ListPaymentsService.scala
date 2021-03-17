@@ -43,8 +43,7 @@ class ListPaymentsService @Inject()(listPaymentsConnector: ListPaymentsConnector
 
     val result = for {
       desResponseWrapper <- EitherT(listPaymentsConnector.listPayments(request)).leftMap(mapDesErrors(desErrorMap))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateListPaymentsSuccessResponse(desResponseWrapper))
-    } yield mtdResponseWrapper
+    } yield desResponseWrapper
 
     result.value
   }
