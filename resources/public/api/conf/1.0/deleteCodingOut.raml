@@ -9,7 +9,7 @@ is:
   - errors.notFound
 displayName: "Delete Coding Out underpayments and debt amounts [test only]"
 description: This endpoint allows the developer to delete custom coding out amounts for a given tax year and NINO.
-(annotations.sandboxData): !include ../../scenarios/defaultAndNotFound.md
+(annotations.sandboxData): !include scenarios/coding_out_delete_scenarios.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
 responses:

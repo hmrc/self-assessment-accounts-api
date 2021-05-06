@@ -67,10 +67,14 @@ uses:
             example: "X234567891BY-AT3456"
         get: !include retrieveAllocations.raml
     /{taxYear}:
-      (annotations.group):
-        name: Coding Out
-        description: Resources relating to coding out
-          uriParameters:
-              taxYear:
-          /collection/tax-code:
-            delete: !include codingOut/delete.raml
+      uriParameters:
+        taxYear:
+          description: "A unique identifier for the tax year. <br><br>Must conform to the regular expression: `^2[0-9]{3}-[0-9]{2}$`"
+          type: string
+          example: 2021-22
+      /collection:
+        (annotations.group):
+          name: Collection
+          description: ""
+        /tax-code:
+          delete: !include deleteCodingOut.raml
