@@ -29,7 +29,6 @@ class AuthISpec extends IntegrationBaseSpec {
     val nino = "AA123456A"
     val paymentLot = "123456789012"
     val paymentLotItem = "123456"
-    val correlationId = "X-123"
 
     def setupStubs(): StubMapping
 

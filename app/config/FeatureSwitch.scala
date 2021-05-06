@@ -39,6 +39,13 @@ case class FeatureSwitch(value: Option[Configuration]) {
     }
   }
 
+  def isCodingOutEnabled: Boolean = {
+    value match {
+      case Some(config) => config.getOptional[Boolean]("coding-out.enabled").getOrElse(false)
+      case None         => false
+    }
+  }
+
   def isVersionEnabled(version: String): Boolean = {
     val versionNoIfPresent: Option[String] =
       version match {
