@@ -66,3 +66,11 @@ uses:
             type: string
             example: "X234567891BY-AT3456"
         get: !include retrieveAllocations.raml
+    /{taxYear}:
+      (annotations.group):
+        name: Coding Out
+        description: Resources relating to coding out
+          uriParameters:
+              taxYear:
+          /collection/tax-code:
+            delete: !include codingOut/delete.raml
