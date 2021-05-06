@@ -17,7 +17,7 @@
 package routing
 
 import com.google.inject.ImplementedBy
-import config.{AppConfig, FeatureSwitch}
+import config.{ AppConfig, FeatureSwitch }
 import definition.Versions.VERSION_1
 
 import javax.inject.Inject
@@ -37,17 +37,21 @@ trait VersionRoutingMap {
 }
 
 // Add routes corresponding to available versions...
-case class VersionRoutingMapImpl @Inject()(defaultRouter: Router, v1Router: v1.Routes, v1WithCodingOutRouter: v1.Routes, appConfig: AppConfig)
-    extends VersionRoutingMap with Logging {
+case class VersionRoutingMapImpl @Inject()(defaultRouter: Router,
+                                           v1Routes: v1.Routes,
+                                           v1WithCodingOutRoutes: v1WithCodingOut.Routes,
+                                           appConfig: AppConfig)
+    extends VersionRoutingMap
+    with Logging {
 
-  private val featureSwitch: FeatureSwitch = FeatureSwitch(appConfig.featureSwitch)
-  private val isCodingOutEnabled = featureSwitch.isCodingOutEnabled
+  private lazy val featureSwitch: FeatureSwitch = FeatureSwitch(appConfig.featureSwitch)
+  private lazy val isCodingOutEnabled           = featureSwitch.isCodingOutEnabled
 
-  if(isCodingOutEnabled) logger.info("Coding Out feature switch is enabled") else logger.info("Coding Out feature switch is disabled")
+  if (isCodingOutEnabled) logger.info("Coding Out feature switch is enabled") else logger.info("Coding Out feature switch is disabled")
 
   val map: Map[String, Router] = Map(
     VERSION_1 -> {
-      if (isCodingOutEnabled) v1WithCodingOutRouter else v1Router
+      if (isCodingOutEnabled) v1WithCodingOutRoutes else v1Routes
     }
   )
 }
