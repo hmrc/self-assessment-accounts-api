@@ -1,0 +1,36 @@
+is:
+  - headers.acceptJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.formatTaxYear
+  - errors.ruleTaxYearNotSupported
+  - errors.ruleTaxYearRangeInvalid
+  - errors.ruleTaxYearNotEnded
+  - errors.formatValue
+  - errors.incorrectOrEmptyBody
+  - errors.clientOrAgentNotAuthorised
+displayName: "Create or Amend Coding Out Underpayments [test only]"
+description: This endpoint allows the developer to overwrite coding out underpayment and debt amounts held by HMRC for a previous tax year and given NINO, and amend previously submitted overwrite amounts. This endpoint can only be used after the tax year has ended.
+(annotations.sandboxData): !include scenarios/createOrAmendCodingOutUnderpayments.md
+(annotations.scope): "write:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
+body:
+  application/json:
+    type: !include schemas/create_or_amend_coding_out_underpayments_request.json
+    examples:
+      example-1:
+        description:
+        value: !include examples/createOrAmendCodingOutUnderpayments/create_or_amend_coding_out_underpayments_request.json
+responses:
+  200:
+    body:
+      application/json:
+        type: !include schemas/create_or_amend_coding_out_underpayments_response.json
+        examples:
+          example-1:
+            description:
+            value: !include examples/createOrAmendCodingOutUnderpayments/create_or_amend_coding_out_underpayments_response.json
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.
