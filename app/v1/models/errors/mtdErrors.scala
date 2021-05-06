@@ -28,6 +28,7 @@ object MtdError {
 object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
 object FromDateFormatError extends MtdError("FORMAT_FROM_DATE", "The provided From date is invalid")
+object ValueFormatError extends MtdError("FORMAT_VALUE", "One or more values have been added with the incorrect format.")
 object ToDateFormatError extends MtdError("FORMAT_TO_DATE", "The provided To date is invalid")
 object PaymentIdFormatError extends MtdError("FORMAT_PAYMENT_ID", "The provided payment ID is invalid")
 object TransactionIdFormatError extends MtdError("FORMAT_TRANSACTION_ID", "The provided transaction ID is invalid")
@@ -46,6 +47,16 @@ object RuleIncorrectOrEmptyBodyError extends MtdError(
 object RuleTaxYearRangeExceededError extends MtdError(
   code = "RULE_TAX_YEAR_RANGE_EXCEEDED",
   message = "Tax year range exceeded. A tax year range of one year is required"
+)
+
+object RuleTaxYearRangeInvalid extends MtdError(
+  code = "RULE_TAX_YEAR_RANGE_INVALID",
+  message = "A taxYear range of one year is required"
+)
+
+object RuleTaxYearNotEnded extends MtdError(
+  code = "RULE_TAX_YEAR_NOT_ENDED",
+  message = "The submission has been made before the taxYear it relates to has ended."
 )
 
 object RuleFromDateNotSupportedError extends MtdError(
