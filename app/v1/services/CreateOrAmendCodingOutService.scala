@@ -21,17 +21,17 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.CreateOrAmendCodingOutUnderpaymentsConnector
+import v1.connectors.CreateOrAmendCodingOutConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.createOrAmendCodingOut/CreateOrAmendCodingOutRequestBody
+import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRequestBody
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutUnderpaymentsService @Inject()(connector: CreateOrAmendCodingOutUnderpaymentsConnector) extends DesResponseMappingSupport with Logging {
+class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends DesResponseMappingSupport with Logging {
 
   def amend(request: CreateOrAmendCodingOutRequestBody)(
     implicit hc: HeaderCarrier,

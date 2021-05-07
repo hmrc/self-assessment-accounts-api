@@ -19,12 +19,12 @@ package v1.connectors
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.models.request.createOrAmendCodingOut/CreateOrAmendCodingOutRequestBody
+import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRequestBody
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutUnderpaymentsConnector @Inject() (val http: HttpClient,
+class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient,
                                                val appConfig: AppConfig) extends BaseDesConnector {
 
   def amend(request: CreateOrAmendCodingOutRequestBody)(
