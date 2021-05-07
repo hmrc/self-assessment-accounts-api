@@ -23,7 +23,7 @@ traits:
               type: types.errorResponse
               examples:
                 notFoundTransactionDetails:
-                  description: No transaction details found for the supplied transaction ID
+                  description: No transaction details found for the supplied transaction ID.
                   value:
                     code: NO_DETAILS_FOUND
   clientOrAgentNotAuthorised:
@@ -45,7 +45,7 @@ traits:
             type: types.errorResponse
             examples:
               formatNino:
-                description: The format of the supplied NINO field is not valid
+                description: The format of the supplied NINO field is not valid.
                 value:
                   code: FORMAT_NINO
   formatTransactionId:
@@ -56,7 +56,7 @@ traits:
             type: types.errorResponse
             examples:
               formatTransactionId:
-                description: The format of the supplied transaction identifier field is not valid
+                description: The format of the supplied transaction identifier field is not valid.
                 value:
                   code: FORMAT_TRANSACTION_ID
   formatTaxYear:
@@ -67,7 +67,7 @@ traits:
             type: types.errorResponse
             examples:
               formatTaxYear:
-                description: The format of the supplied tax year field is not valid
+                description: The format of the supplied tax year field is not valid.
                 value:
                   code: FORMAT_TAX_YEAR
   formatFromDate:
@@ -78,7 +78,7 @@ traits:
             type: types.errorResponse
             examples:
               formatFromDate:
-                description: The From date is not a valid ISO format date
+                description: The From date is not a valid ISO format date.
                 value:
                   code: FORMAT_FROM_DATE
   formatToDate:
@@ -89,7 +89,7 @@ traits:
             type: types.errorResponse
             examples:
               formatToDate:
-                description: The To date is not a valid ISO format date
+                description: The To date is not a valid ISO format date.
                 value:
                   code: FORMAT_TO_DATE
   missingFromDate:
@@ -100,7 +100,7 @@ traits:
             type: types.errorResponse
             examples:
               missingFromDate:
-                description: The From date parameter is missing
+                description: The From date parameter is missing.
                 value:
                   code: MISSING_FROM_DATE
   missingToDate:
@@ -111,7 +111,7 @@ traits:
             type: types.errorResponse
             examples:
               missingToDate:
-                description: The To date parameter is missing
+                description: The To date parameter is missing.
                 value:
                   code: MISSING_TO_DATE
   rangeToDateBeforeFromDate:
@@ -122,7 +122,7 @@ traits:
             type: types.errorResponse
             examples:
               rangeToDateBeforeFromDate:
-                description: The To date is before the From date
+                description: The To date is before the From date.
                 value:
                   code: RANGE_TO_DATE_BEFORE_FROM_DATE
   ruleDateRangeInvalid:
@@ -133,7 +133,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleDateRangeInvalid:
-                description: The date range is longer than 732 days
+                description: The date range is longer than 732 days.
                 value:
                   code: RULE_DATE_RANGE_INVALID
   ruleFromDateNotSupported:
@@ -144,7 +144,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleFromDateNotSupported:
-                description: The from date specified is before 2018-04-06
+                description: The from date specified is before 2018-04-06.
                 value:
                   code: RULE_FROM_DATE_NOT_SUPPORTED
   ruleDateTooLong:
@@ -155,7 +155,7 @@ traits:
               type: types.errorResponse
               examples:
                 ruleDateTooLong:
-                  description: The date range is longer than 732 days
+                  description: The date range is longer than 732 days.
                   value:
                     code: RANGE_DATE_TOO_LONG
   incorrectOrEmptyBody:
@@ -166,7 +166,7 @@ traits:
             type: types.errorResponse
             examples:
               incorrectOrEmptyBody:
-                description: An empty or non-matching body was submitted
+                description: An empty or non-matching body was submitted.
                 value:
                   code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
   ruleTaxYearNotSupported:
@@ -191,17 +191,6 @@ traits:
                 description: Tax year range exceeded. A tax year range of one year is required.
                 value:
                   code: RULE_TAX_YEAR_RANGE_EXCEEDED
-  ruleTaxYearRangeInvalid:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleTaxYearRangeInvalid:
-                description: A taxYear range of one year is required.
-                value:
-                  code: RULE_TAX_YEAR_RANGE_INVALID
   ruleTaxYearNotEnded:
       responses:
         400:
@@ -210,7 +199,7 @@ traits:
               type: types.errorResponse
               examples:
                 ruleTaxYearNotEnded:
-                  description: A brought forward loss is entered before the end of the tax year in which it was generated.
+                  description: The submission has been made before the taxYear it relates to has ended.
                   value:
                     code: RULE_TAX_YEAR_NOT_ENDED
   ruleNoChangeTypeOfClaim:
@@ -254,7 +243,7 @@ traits:
             type: types.errorResponse
             examples:
               ruleSelfEmploymentId:
-                description: A self-employment ID can only be supplied for a self-employment business type
+                description: A self-employment ID can only be supplied for a self-employment business type.
                 value:
                   code: RULE_SELF_EMPLOYMENT_ID
   formatValue:
@@ -276,7 +265,7 @@ traits:
             type: types.errorResponse
             examples:
               formatPaymentId:
-                description: The format of the supplied payment identifier field is not valid
+                description: The format of the supplied payment identifier field is not valid.
                 value:
                   code: FORMAT_PAYMENT_ID
   formatLossId:
