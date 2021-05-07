@@ -30,7 +30,6 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
     val nino = "AA123456A"
-    val correlationId = "X-123"
     val from: Option[String] = Some("2018-10-01")
     val to: Option[String] = Some("2019-10-01")
 

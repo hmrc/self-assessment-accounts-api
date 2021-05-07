@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package v1.routing
+package routing
 
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.{ ActorMaterializer, Materializer }
 import com.typesafe.config.ConfigFactory
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler1
@@ -25,22 +25,21 @@ import org.scalatest.Inside
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.{HttpConfiguration, HttpErrorHandler, HttpFilters}
+import play.api.http.{ HttpConfiguration, HttpErrorHandler, HttpFilters }
 import play.api.libs.json.Json
-import play.api.mvc.{EssentialAction, _}
+import play.api.mvc.{ EssentialAction, _ }
 import play.api.routing.Router
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
-import routing.{VersionRoutingMap, VersionRoutingRequestHandler}
 import support.UnitSpec
-import v1.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
+import v1.models.errors.{ InvalidAcceptHeaderError, UnsupportedVersionError }
 
 class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockAppConfig with GuiceOneAppPerSuite {
   test =>
 
   implicit private val actorSystem: ActorSystem = ActorSystem("test")
   implicit private val mat: Materializer        = ActorMaterializer()
-  val action: DefaultActionBuilder = app.injector.instanceOf[DefaultActionBuilder]
+  val action: DefaultActionBuilder              = app.injector.instanceOf[DefaultActionBuilder]
 
   private val defaultRouter = mock[Router]
   private val v1Router      = mock[Router]
@@ -61,6 +60,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString("""
                                                                            |version-1.enabled = true
                                                                            |version-2.enabled = true
+                                                                           |coding-out.enabled = false
                                                                          """.stripMargin))))
 
     val requestHandler: VersionRoutingRequestHandler =
@@ -147,7 +147,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
         private val request = buildRequest("path")
         inside(requestHandler.routeRequest(request)) {
-          case Some(a:EssentialAction) =>
+          case Some(a: EssentialAction) =>
             val result = a.apply(request)
 
             status(result) shouldBe NOT_FOUND
@@ -213,5 +213,4 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
       }
     }
   }
-
 }
