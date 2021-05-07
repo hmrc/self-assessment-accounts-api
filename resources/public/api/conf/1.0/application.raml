@@ -32,6 +32,9 @@ uses:
 
 '/accounts/self-assessment':
   /{nino}:
+    (annotations.group):
+      name: Payments and Liabilities
+      description: These endpoints allow a developer to retrieve accounting information to be shown back to the customer. This includes listing payments the customer has made, how these payments have been allocated and details of any upcoming or outstanding liabilities. The data returned only relates to payments and liabilities arising for tax years since the customer joined the new service. There may also be outstanding liabilities and payment information a customer needs to view for the years prior to signing up to Making Tax Digital for Income Tax Self Assessment that can be viewed using their existing Personal Tax Account.
     uriParameters:
       nino:
         description: National Insurance number, in the format AA999999A.

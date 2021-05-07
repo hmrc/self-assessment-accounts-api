@@ -1,5 +1,6 @@
 is:
   - headers.acceptJson
+  - headers.contentTypeJson
   - headers.testScenarioHeader
   - errors.formatNino
   - errors.formatTaxYear
@@ -9,8 +10,8 @@ is:
   - errors.formatValue
   - errors.incorrectOrEmptyBody
   - errors.clientOrAgentNotAuthorised
-displayName: "Create or Amend Coding Out Underpayments [test only]"
-description: This endpoint allows the developer to overwrite coding out underpayment and debt amounts held by HMRC for a previous tax year and given NINO, and amend previously submitted overwrite amounts. This endpoint can only be used after the tax year has ended.
+displayName: "Create or Amend Coding Out underpayment and debt amounts [test only]"
+description: This endpoint allows the developer to overwrite coding out underpayment and debt amounts held by HMRC for a previous tax year and given NINO, and amend previously submitted overwrite amounts. <strong>This endpoint can only be used after the tax year has ended.</strong>
 (annotations.sandboxData): !include scenarios/createOrAmendCodingOutUnderpayments.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]

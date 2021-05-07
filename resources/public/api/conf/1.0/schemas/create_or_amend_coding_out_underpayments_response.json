@@ -19,7 +19,7 @@
             "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
             "type": "string",
             "enum": [
-              "create-and-amend-coding-out-underpayments",
+              "create-or-amend-coding-out-underpayments",
               "self",
               "delete-coding-out-underpayments"
             ]
