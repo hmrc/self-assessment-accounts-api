@@ -16,4 +16,6 @@
 
 package v1.models.request.deleteCodingOut
 
-case class DeleteCodingOutRawRequest(nino: String, taxYear: String)
+import v1.models.request.RawData
+
+case class DeleteCodingOutRawRequest(nino: String, taxYear: String) extends RawData
