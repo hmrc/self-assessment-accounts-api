@@ -12,7 +12,7 @@ traits:
             type: types.errorResponse
             examples:
               notFound:
-                description: Coding out amounts could not be found for the supplied nino and taxYear.
+                description: The supplied income source could not be found.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   notFoundTransactionDetails:
@@ -433,3 +433,14 @@ traits:
                           description: A taxYear range of one year is required.
                           value:
                             code: RULE_TAX_YEAR_RANGE_INVALID
+  formatSource:
+        responses:
+          400:
+            body:
+              application/json:
+                type: types.errorResponse
+                examples:
+                  formatSource:
+                    description: The format of the supplied source is not valid.
+                    value:
+                      code: FORMAT_SOURCE

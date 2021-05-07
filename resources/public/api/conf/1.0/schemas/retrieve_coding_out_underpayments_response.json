@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Coding Out underpayment and debt amounts",
+  "description": "Retrieve Coding Out underpayment and debt amounts",
+  "type": "object",
+  "properties": {
+    "sources": {
+      "description": "Specifies the source of data.",
+      "type": "string",
+      "example": "hmrcHeld"
+    },
+    "selfAssessmentUnderPayments": {
+      "description": "Array containing details of coding out Self Assessment underpayments.",
+      "type": "Array"
+    },
+    "amount": {
+      "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "type": "number",
+      "multipleOf": 0.01,
+      "minimum": 0.00,
+      "maximum": 99999999999.99,
+      "example": "5000.99"
+    },
+    "relatedTaxYear": {
+      "description": "The tax year related to the underpayment.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "submittedOn": {
+      "description": "The date the coding out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ssZ.",
+      "type": "string",
+      "example": "2020-07-06T09:37:17Z"
+    },
+    "payeUnderpayments": {
+      "description": "Array containing details of coding out PAYE underpayments.",
+      "type": "Array"
+    },
+    "amount": {
+      "description": "The total coding out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "type": "number",
+      "multipleOf": 0.01,
+      "minimum": 0.00,
+      "maximum": 99999999999.99,
+      "example": "5000.99"
+    },
+    "relatedTaxYear": {
+      "description": "The tax year related to the underpayment.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "submittedOn": {
+      "description": "The date the coding out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ssZ.",
+      "type": "string",
+      "example": "2020-07-06T09:37:17Z"
+    },
+    "debts": {
+      "description": "Array containing details of coding out debts.",
+      "type": "Array"
+    },
+    "amount": {
+      "description": "The amount of the debt. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "type": "number",
+      "multipleOf": 0.01,
+      "minimum": 0.00,
+      "maximum": 99999999999.99,
+      "example": "5000.99"
+    },
+    "relatedTaxYear": {
+      "description": "The tax year related to the debt.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "submittedOn": {
+      "description": "The date the coding out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ssZ.",
+      "type": "string",
+      "example": "2020-07-06T09:37:17Z"
+    },
+    "inYearAdjustments": {
+      "description": "Object containing details of in-year adjusted coding out underpayments and debts.",
+      "type": "Object"
+    },
+    "amount": {
+      "description": "The amount of the in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+      "type": "number",
+      "multipleOf": 0.01,
+      "minimum": 0.00,
+      "maximum": 99999999999.99,
+      "example": "5000.99"
+    },
+    "relatedTaxYear": {
+      "description": "The tax year related to the in-year adjustment.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "submittedOn": {
+      "description": "The date the coding out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ssZ.",
+      "type": "string",
+      "example": "2020-07-06T09:37:17Z"
+    }
+  }
+}

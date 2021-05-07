@@ -1,0 +1,48 @@
+{
+  "source": "LATEST",
+  "taxCodeComponents": {
+    "selfAssessmentUnderPayments": [
+      {
+        "amount": 87.78,
+        "relatedTaxYear": "2020-21",
+        "submittedOn": "2021-03-31T16:18:41Z"
+      }
+    ],
+    "payeUnderpayments": [
+      {
+        "amount": 12.45,
+        "relatedTaxYear": 2019-20,
+        "submittedOn": '2020-03-31T16:18:41Z'
+      }
+    ],
+    "debts": [
+      {
+        "amount": 10.01,
+        "relatedTaxYear": "2018-19",
+        "submittedOn": "2019-03-31T16:18:41Z"
+      }
+    ],
+    "inYearAdjustments": {
+      "amount": 99.99,
+      "relatedTaxYear": 2020-21,
+      "submittedOn": '2021-03-31T16:18:41Z'
+    },
+    "links": [
+      {
+        "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
+        "method": "PUT",
+        "rel": "create-or-amend-coding-out-underpayments"
+      },
+      {
+        "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
+        "method": "GET",
+        "rel": "self"
+      },
+      {
+        "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
+        "method": "DELETE",
+        "rel": "delete-coding-out-underpayments"
+      }
+    ]
+  }
+}
