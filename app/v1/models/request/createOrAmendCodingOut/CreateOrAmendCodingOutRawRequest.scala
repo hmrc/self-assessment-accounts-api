@@ -19,4 +19,4 @@ package v1.models.request.createOrAmendCodingOut
 import play.api.mvc.AnyContentAsJson
 import v1.models.request.RawData
 
-case class CreateOrAmendCodingOutRawData(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
+case class CreateOrAmendCodingOutRawRequest(nino: String, taxYear: String, body: AnyContentAsJson) extends RawData
