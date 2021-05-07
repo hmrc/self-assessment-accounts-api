@@ -12,10 +12,4 @@
             <td><p>Simulates a success response.</p></td>
         </tr>
     </tbody>
-    <tbody>
-        <tr>
-            <td><p>NOT_FOUND</p></td>
-            <td><p>Simulates the scenario where the given property could not be found.</p></td>
-        </tr>
-    </tbody>
 </table>
