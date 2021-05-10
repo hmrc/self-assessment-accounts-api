@@ -14,9 +14,9 @@
       ]
     },
     "selfAssessmentUnderPayments": {
-      "type": "Array",
+      "type": "array",
       "description": "Array containing details of coding out Self Assessment underpayments.",
-      "properties": {
+      "items": {
         "amount": {
           "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
@@ -38,9 +38,9 @@
       }
     },
     "payeUnderpayments": {
-      "type": "Array",
+      "type": "array",
       "description": "Array containing details of coding out PAYE underpayments.",
-      "properties": {
+      "items": {
         "amount": {
           "description": "The total coding out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
@@ -62,9 +62,9 @@
       }
     },
     "debts": {
-      "type": "Array",
+      "type": "array",
       "description": "Array containing details of coding out debts.",
-      "properties": {
+      "items": {
         "amount": {
           "description": "The amount of the debt. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
@@ -86,9 +86,9 @@
       }
     },
     "inYearAdjustments": {
-      "type": "Object",
+      "type": "object",
       "description": "Object containing details of in-year adjusted coding out underpayments and debts.",
-      "properties": {
+      "items": {
         "amount": {
           "description": "The amount of the in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
           "type": "number",
