@@ -28,3 +28,9 @@ traits:
         description: 'To date to return charges.<br><br> Date in the format: YYYY-MM-DD'
         example: "2019-06-12"
         required: true
+  source:
+    queryParameters:
+      to:
+        description: 'Specifies the source of data to be returned. If source is not provided, the latest values will be returned.'
+        example: "hmrcHeld"
+        required: true

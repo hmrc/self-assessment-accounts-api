@@ -9,8 +9,7 @@
       "type": "string",
       "enum": [
         "hmrcHeld",
-        "user",
-        "latest"
+        "user"
       ]
     },
     "selfAssessmentUnderPayments": {
