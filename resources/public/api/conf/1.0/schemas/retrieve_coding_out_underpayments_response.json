@@ -5,14 +5,12 @@
   "type": "object",
   "properties": {
     "sources": {
-      "description": "Specifies the source of data.",
-      "type": "string",
-      "example": "hmrcHeld"
+      "enum": [
+        "hmrcHeld",
+        "user",
+        "latest"
+      ]
     },
-    "taxCodeComponents": {
-      "type": "object",
-      "description": "",
-      "properties": {
         "selfAssessmentUnderPayments": {
           "type": "Array",
           "description": "Array containing details of coding out Self Assessment underpayments.",

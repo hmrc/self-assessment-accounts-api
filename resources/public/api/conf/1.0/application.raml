@@ -80,6 +80,6 @@ uses:
           name: Coding Out Underpayments and Debts
           description: "Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts."
         /tax-code:
-          delete: !include deleteCodingOutUndrpayments.raml
-          put: !include createOrAmendCodingOutUnderpayments.raml
           get: !include retrieveCodingOutUnderpayments.raml
+          put: !include createOrAmendCodingOutUnderpayments.raml
+          delete: !include deleteCodingOutUndrpayments.raml
