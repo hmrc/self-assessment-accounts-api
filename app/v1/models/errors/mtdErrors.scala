@@ -36,7 +36,7 @@ object TransactionIdFormatError extends MtdError("FORMAT_TRANSACTION_ID", "The p
 // Rule Errors
 object RuleTaxYearNotSupportedError extends MtdError(
   code = "RULE_TAX_YEAR_NOT_SUPPORTED",
-  message = "Tax year not supported, because it precedes the earliest allowable tax year"
+  message = "The specified taxYear is not supported. The taxYear specified is before the minimum tax year value"
 )
 
 object RuleIncorrectOrEmptyBodyError extends MtdError(

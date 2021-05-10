@@ -16,54 +16,65 @@
 
 package v1.controllers.requestParsers.validators
 
+import config.AppConfig
+import mocks.MockAppConfig
 import support.UnitSpec
-import v1.models.errors.{NinoFormatError, RuleFromDateNotSupportedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import v1.models.errors._
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
 
 class DeleteCodingOutValidatorSpec extends UnitSpec {
 
-  private val validTaxYear = "2020-21"
+  private val validTaxYear = "2021-22"
   private val validNino = "AA123456B"
 
-  val validator = new DeleteCodingOutValidator
+  class Test extends MockAppConfig {
+
+    implicit val appConfig: AppConfig = mockAppConfig
+
+    val validator = new DeleteCodingOutValidator()
+
+    MockedAppConfig.minimumPermittedTaxYear
+      .returns(2022)
+      .anyNumberOfTimes()
+  }
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in {
+      "a valid request is supplied" in new Test {
         validator.validate(DeleteCodingOutRawRequest(validNino, validTaxYear)) shouldBe Nil
       }
     }
 
-    "return NinoFormatError" when {
-      "invalid nino is supplied" in {
+    "return NinoFormatError error" when {
+      "invalid nino is supplied" in new Test  {
         validator.validate(DeleteCodingOutRawRequest("badNino", validTaxYear)) shouldBe
           List(NinoFormatError)
       }
     }
 
-    "return TaxYearFormatError" when {
-      "invalid taxYear is supplied" in {
+    "return TaxYearFormatError error" when {
+      "invalid taxYear is supplied" in new Test  {
         validator.validate(DeleteCodingOutRawRequest(validNino, "badTaxYear")) shouldBe
           List(TaxYearFormatError)
       }
     }
 
-    "return RuleTaxYearNotSupportedError" when {
-      "a taxYear supplied is not supported" in {
-        validator.validate(DeleteCodingOutRawRequest(validNino, "2016-17")) shouldBe
+    "return RuleTaxYearNotSupportedError error" when {
+      "a taxYear supplied is not supported" in new Test  {
+        validator.validate(DeleteCodingOutRawRequest(validNino, "2020-21")) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
 
-    "return RuleTaxYearRangeInvalid" when {
-      "a taxYear supplied is longer then one year" in {
+    "return RuleTaxYearRangeInvalid error" when {
+      "an invalid tax year range is supplied" in new Test  {
         validator.validate(DeleteCodingOutRawRequest(validNino, "2020-22")) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors" in {
+      "request supplied has multiple errors" in new Test  {
         validator.validate(DeleteCodingOutRawRequest("badNino", "badTaxYear")) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }

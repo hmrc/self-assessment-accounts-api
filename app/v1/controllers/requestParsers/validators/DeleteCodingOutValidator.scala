@@ -16,11 +16,13 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.controllers.requestParsers.validators.validations.{MtdTaxYearValidation, NinoValidation, TaxYearValidation}
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import config.AppConfig
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.errors.MtdError
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
+import javax.inject.Inject
 
-class DeleteCodingOutValidator extends Validator[DeleteCodingOutRawRequest] {
+class DeleteCodingOutValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteCodingOutRawRequest] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -33,7 +35,7 @@ class DeleteCodingOutValidator extends Validator[DeleteCodingOutRawRequest] {
 
   private def parameterRuleValidation: DeleteCodingOutRawRequest => List[List[MtdError]] = { data =>
     List(
-      MtdTaxYearValidation.validate(data.taxYear, RuleTaxYearNotSupportedError)
+      TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 

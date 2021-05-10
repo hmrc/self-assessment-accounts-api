@@ -28,7 +28,7 @@ class DeleteCodingOutRequestParserSpec extends UnitSpec {
   val nino = "AA123456B"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val inputData = DeleteCodingOutRawRequest(nino, taxYear)
+  val deleteCodingOutRawData = DeleteCodingOutRawRequest(nino, taxYear)
 
   trait Test extends MockDeleteCodingOutValidator {
     lazy val parser = new DeleteCodingOutParser(mockValidator)
@@ -37,30 +37,30 @@ class DeleteCodingOutRequestParserSpec extends UnitSpec {
   "parse" should {
     "return request object" when {
       "valid request data is supplied" in new Test{
-        MockValidator.validate(inputData).returns(Nil)
+        MockValidator.validate(deleteCodingOutRawData).returns(Nil)
 
 
-        parser.parseRequest(inputData) shouldBe
+        parser.parseRequest(deleteCodingOutRawData) shouldBe
           Right(DeleteCodingOutParsedRequest(Nino(nino), taxYear))
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test{
-        MockValidator.validate(inputData)
+        MockValidator.validate(deleteCodingOutRawData)
           .returns(List(NinoFormatError))
 
 
-        parser.parseRequest(inputData) shouldBe
+        parser.parseRequest(deleteCodingOutRawData) shouldBe
           Left(ErrorWrapper(correlationId,NinoFormatError, None))
       }
 
       "multiple validation errors occur" in new Test{
-        MockValidator.validate(inputData)
+        MockValidator.validate(deleteCodingOutRawData)
           .returns(List(NinoFormatError, TaxYearFormatError))
 
 
-        parser.parseRequest(inputData) shouldBe
+        parser.parseRequest(deleteCodingOutRawData) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
 

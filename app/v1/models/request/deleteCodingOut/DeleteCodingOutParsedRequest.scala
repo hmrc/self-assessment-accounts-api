@@ -17,6 +17,5 @@
 package v1.models.request.deleteCodingOut
 
 import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
 
 case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: String)

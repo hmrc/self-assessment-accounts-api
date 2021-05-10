@@ -16,35 +16,41 @@
 
 package v1.controllers.requestParsers.validators.validations
 
+import config.AppConfig
+import mocks.MockAppConfig
 import support.UnitSpec
 import v1.models.errors.RuleTaxYearNotSupportedError
 import v1.models.utils.JsonErrorValidators
 
-class MtdTaxYearValidationSpec extends UnitSpec with JsonErrorValidators {
+class TaxYearNotSupportedValidationSpec extends UnitSpec with JsonErrorValidators {
+
+  class Test extends MockAppConfig {
+
+    implicit val appConfig: AppConfig = mockAppConfig
+
+    MockedAppConfig.minimumPermittedTaxYear
+      .returns(2022)
+  }
 
   "validate" should {
     "return no errors" when {
-      "a tax year greater than 2017 is supplied" in {
-
-        val validTaxYear = "2018-19"
-        val validationResult = MtdTaxYearValidation.validate(validTaxYear, RuleTaxYearNotSupportedError)
-        validationResult.isEmpty shouldBe true
-
-      }
-
-      "the minimum allowed tax year is supplied" in {
-        val validTaxYear = "2017-18"
-        val validationResult = MtdTaxYearValidation.validate(validTaxYear, RuleTaxYearNotSupportedError)
+      "a tax year after 2021-22 is supplied" in new Test {
+        private val validTaxYear = "2022-23"
+        private val validationResult = TaxYearNotSupportedValidation.validate(validTaxYear)
         validationResult.isEmpty shouldBe true
       }
 
+      "the minimum allowed tax year is supplied" in new Test {
+        private val validTaxYear = "2021-22"
+        private val validationResult = TaxYearNotSupportedValidation.validate(validTaxYear)
+        validationResult.isEmpty shouldBe true
+      }
     }
 
     "return the given error" when {
-      "a tax year below 2017 is supplied" in {
-
-        val invalidTaxYear = "2015-16"
-        val validationResult = MtdTaxYearValidation.validate(invalidTaxYear, RuleTaxYearNotSupportedError)
+      "a tax year before 2021-22 is supplied" in new Test {
+        private val invalidTaxYear = "2020-21"
+        private val validationResult = TaxYearNotSupportedValidation.validate(invalidTaxYear)
         validationResult.isEmpty shouldBe false
         validationResult.length shouldBe 1
         validationResult.head shouldBe RuleTaxYearNotSupportedError
