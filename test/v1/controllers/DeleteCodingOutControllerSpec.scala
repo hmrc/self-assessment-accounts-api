@@ -22,7 +22,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
 

@@ -23,7 +23,7 @@ import play.api.http.Status
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, TaxYearFormatError}
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{AuthStub, DesStub, MtdIdLookupStub}
 
 class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
 
@@ -59,7 +59,6 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
       "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
-          AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
           DesStub.onSuccess(DesStub.DELETE, desUri, Status.NO_CONTENT, JsObject.empty)
@@ -81,7 +80,6 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
             override val taxYear: String = requestId
 
             override def setupStubs(): StubMapping = {
-              AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
             }
@@ -108,7 +106,6 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
           s"des returns an $desCode error and status $desStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
-              AuditStub.audit()
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
               DesStub.onError(DesStub.DELETE, desUri, desStatus, errorBody(desCode))
