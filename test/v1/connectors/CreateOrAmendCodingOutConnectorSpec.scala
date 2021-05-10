@@ -61,7 +61,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
         MockedHttpClient
           .put(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            body = CreateOrAmendCodingOutRequestBody,
+            body = createOrAmendCodingOutRequestBody,
             requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token", "CorrelationId" -> s"$correlationId"
           )
           .returns(Future.successful(outcome))
