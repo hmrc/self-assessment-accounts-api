@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
-import v1.models.errors.{NinoFormatError, TaxYearFormatError}
+import v1.models.errors.{NinoFormatError, RuleFromDateNotSupportedError, RuleTaxYearNotSupportedError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
 
 class DeleteCodingOutValidatorSpec extends UnitSpec {
@@ -48,13 +48,25 @@ class DeleteCodingOutValidatorSpec extends UnitSpec {
       }
     }
 
+    "return RuleTaxYearNotSupportedError" when {
+      "a taxYear supplied is not supported" in {
+        validator.validate(DeleteCodingOutRawRequest(validNino, "2016-17")) shouldBe
+          List(RuleTaxYearNotSupportedError)
+      }
+    }
+
+    "return RuleTaxYearRangeInvalid" when {
+      "a taxYear supplied is longer then one year" in {
+        validator.validate(DeleteCodingOutRawRequest(validNino, "2020-22")) shouldBe
+          List(RuleTaxYearRangeInvalidError)
+      }
+    }
+
     "return multiple errors" when {
       "request supplied has multiple errors" in {
         validator.validate(DeleteCodingOutRawRequest("badNino", "badTaxYear")) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
     }
-
   }
-
 }
