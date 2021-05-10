@@ -24,11 +24,11 @@ import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCo
 
 class DeleteCodingOutRequestParserSpec extends UnitSpec {
 
-  val taxYear = "2020-21"
-  val nino = "AA123456B"
+  val taxYear: String = "2020-21"
+  val nino: String = "AA123456B"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val deleteCodingOutRawData = DeleteCodingOutRawRequest(nino, taxYear)
+  val deleteCodingOutRawData: DeleteCodingOutRawRequest = DeleteCodingOutRawRequest(nino, taxYear)
 
   trait Test extends MockDeleteCodingOutValidator {
     lazy val parser = new DeleteCodingOutParser(mockValidator)
@@ -63,8 +63,6 @@ class DeleteCodingOutRequestParserSpec extends UnitSpec {
         parser.parseRequest(deleteCodingOutRawData) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError))))
       }
-
     }
   }
-
 }
