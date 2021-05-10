@@ -38,9 +38,7 @@ trait AppConfig {
   def minimumPermittedTaxYear: Int
 
   def apiStatus(version: String): String
-
   def featureSwitch: Option[Configuration]
-
   def endpointsEnabled(version: String): Boolean
 
   def confidenceLevelConfig: ConfidenceLevelConfig
@@ -63,9 +61,7 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
 
   def apiStatus(version: String): String = config.getString(s"api.$version.status")
-
   def featureSwitch: Option[Configuration] = configuration.getOptional[Configuration](s"feature-switch")
-
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")

@@ -113,6 +113,18 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
         await(connector.put(body, DesUri[Result](url))) shouldBe outcome
       }
     }
+
+    "delete" must {
+      "delete with the required des headers and return the result" in new DesTest {
+        MockedHttpClient
+          .delete(
+            url = absoluteUrl,
+            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token", "CorrelationId" -> s"$correlationId"
+          ).returns(Future.successful(outcome))
+
+        await(connector.delete(DesUri[Result](url))) shouldBe outcome
+      }
+    }
   }
 
   "for IFS" when {
@@ -164,6 +176,18 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
           ).returns(Future.successful(outcome))
 
         await(connector.put(body, IfsUri[Result](url))) shouldBe outcome
+      }
+    }
+
+    "delete" must {
+      "delete with the required ifs headers and return the result" in new IfsTest {
+        MockedHttpClient
+          .delete(
+            url = absoluteUrl,
+            requiredHeaders = "Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token", "CorrelationId" -> s"$correlationId"
+          ).returns(Future.successful(outcome))
+
+        await(connector.delete(IfsUri[Result](url))) shouldBe outcome
       }
     }
   }

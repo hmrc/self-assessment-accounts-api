@@ -28,7 +28,7 @@ object MtdError {
 object NinoFormatError extends MtdError("FORMAT_NINO", "The format of the supplied nino value is invalid")
 object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The format of the supplied taxYear value is invalid")
 object FromDateFormatError extends MtdError("FORMAT_FROM_DATE", "The provided From date is invalid")
-object ValueFormatError extends MtdError("FORMAT_VALUE", "One or more values have been added with the incorrect format.")
+object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be between 0.00 and 99999999999.99")
 object ToDateFormatError extends MtdError("FORMAT_TO_DATE", "The provided To date is invalid")
 object PaymentIdFormatError extends MtdError("FORMAT_PAYMENT_ID", "The provided payment ID is invalid")
 object TransactionIdFormatError extends MtdError("FORMAT_TRANSACTION_ID", "The provided transaction ID is invalid")
@@ -49,9 +49,9 @@ object RuleTaxYearRangeInvalidError extends MtdError(
   message = "A taxYear range of one year is required"
 )
 
-object RuleTaxYearNotEnded extends MtdError(
+object RuleTaxYearNotEndedError extends MtdError(
   code = "RULE_TAX_YEAR_NOT_ENDED",
-  message = "The submission has been made before the taxYear it relates to has ended."
+  message = "Tax year not ended"
 )
 
 object RuleFromDateNotSupportedError extends MtdError(
@@ -71,6 +71,11 @@ object RangeToDateBeforeFromDateError extends MtdError("RANGE_TO_DATE_BEFORE_FRO
 
 // Standard Errors
 object NotFoundError extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Matching resource not found")
+
+object CodingOutNotFoundError extends MtdError(
+  code = "MATCHING_RESOURCE_NOT_FOUND",
+  message = "Coding out amounts could not be found for the supplied nino and taxYear"
+)
 
 object NoTransactionDetailsFoundError extends MtdError("NO_DETAILS_FOUND", "No transaction details found")
 
