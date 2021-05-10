@@ -7,7 +7,11 @@
     "source": {
       "description": "Specifies the source of data.",
       "type": "string",
-      "example": "hmrcHeld"
+      "enum": [
+        "hmrcHeld",
+        "user",
+        "latest"
+      ]
     },
     "selfAssessmentUnderPayments": {
       "type": "Array",
