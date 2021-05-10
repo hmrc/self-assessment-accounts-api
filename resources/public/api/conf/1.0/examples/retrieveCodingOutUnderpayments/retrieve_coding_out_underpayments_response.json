@@ -11,7 +11,7 @@
     "payeUnderpayments": [
       {
         "amount": 12.45,
-        "relatedTaxYear": 2019-20,
+        "relatedTaxYear": "2019-20",
         "submittedOn": '2020-03-31T16:18:41Z'
       }
     ],
@@ -24,7 +24,7 @@
     ],
     "inYearAdjustments": {
       "amount": 99.99,
-      "relatedTaxYear": 2020-21,
+      "relatedTaxYear": "2020-21",
       "submittedOn": '2021-03-31T16:18:41Z'
     },
     "links": [
