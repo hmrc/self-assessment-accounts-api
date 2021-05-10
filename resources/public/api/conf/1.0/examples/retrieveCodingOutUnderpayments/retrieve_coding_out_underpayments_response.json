@@ -1,6 +1,5 @@
 {
   "source": "LATEST",
-  "taxCodeComponents": {
     "selfAssessmentUnderPayments": [
       {
         "amount": 87.78,
@@ -45,4 +44,3 @@
       }
     ]
   }
-}
