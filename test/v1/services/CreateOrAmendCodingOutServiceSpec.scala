@@ -16,10 +16,11 @@
 
 package v1.services
 
-import uk.gov.hmrc.domain.Nino
 import v1.controllers.EndpointLogContext
+import v1.mocks.connectors.MockCreateOrAmendCodingOutConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
+import v1.models.request.createOrAmendCodingOut._
 
 import scala.concurrent.Future
 
@@ -36,9 +37,9 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
   )
 
   val request: CreateOrAmendCodingOutParsedRequest = CreateOrAmendCodingOutParsedRequest(
-    nino = Nino(nino),
+    nino = nino,
     taxYear = taxYear,
-    body = CreateOrAmendCodingOutRequestBody
+    body = createOrAmendCodingOutRequestBody
   )
 
   trait Test extends MockCreateOrAmendCodingOutConnector{
@@ -54,7 +55,7 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockCreateOrAmendCodingOutConnector.amend(request)
+        MockCreateOrAmendCodingOutConnector.amendCodingOut(request)
           .returns(Future.successful(outcome))
 
         await(service.amend(request)) shouldBe outcome
@@ -65,7 +66,7 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockCreateOrAmendCodingOutConnector.amend(request)
+            MockCreateOrAmendCodingOutConnector.amendCodingOut(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.amend(request)) shouldBe Left(ErrorWrapper(correlationId, error))

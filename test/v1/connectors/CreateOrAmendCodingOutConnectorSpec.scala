@@ -17,9 +17,9 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
+import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRequestBody}
 
 import scala.concurrent.Future
 
@@ -36,9 +36,9 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
   )
 
   val request: CreateOrAmendCodingOutParsedRequest = CreateOrAmendCodingOutParsedRequest(
-    nino = Nino(nino),
-    taxYear = taxYear
-    body = CreateOrAmendCodingOutRequestBody
+    nino = nino,
+    taxYear = taxYear,
+    body = createOrAmendCodingOutRequestBody
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -54,7 +54,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
   }
 
   "CreateOrAmendCodingOutConnector" when {
-    ".amend" should {
+    ".amendCodingOut" should {
       "return a success upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
@@ -62,10 +62,11 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
             body = CreateOrAmendCodingOutRequestBody,
-            requiredHeaders = requiredDesHeaders :_*
-          ).returns(Future.successful(outcome))
+            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token", "CorrelationId" -> s"$correlationId"
+          )
+          .returns(Future.successful(outcome))
 
-        await(connector.amend(request)) shouldBe outcome
+        await(connector.amendCodingOut(request)) shouldBe outcome
       }
     }
   }

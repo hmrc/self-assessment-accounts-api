@@ -47,6 +47,18 @@ trait BaseDesConnector {
     doPost(desHeaderCarrier(hc, correlationId))
   }
 
+  def put[Body: Writes, Resp](body: Body, uri: DesUri[Resp])(implicit ec: ExecutionContext,
+                                                             hc: HeaderCarrier,
+                                                             httpReads: HttpReads[DesOutcome[Resp]],
+                                                             correlationId: String): Future[DesOutcome[Resp]]= {
+
+    def doPut(implicit hc: HeaderCarrier): Future[DesOutcome[Resp]] = {
+      http.PUT(s"${appConfig.desBaseUrl}/${uri.value}", body)
+    }
+
+    doPut(desHeaderCarrier(hc, correlationId))
+  }
+
   def get[Resp](uri: DesUri[Resp])(implicit ec: ExecutionContext,
                                    hc: HeaderCarrier,
                                    httpReads: HttpReads[DesOutcome[Resp]],
@@ -69,5 +81,7 @@ trait BaseDesConnector {
 
     doGet(desHeaderCarrier(hc, correlationId))
   }
+
+
 
 }

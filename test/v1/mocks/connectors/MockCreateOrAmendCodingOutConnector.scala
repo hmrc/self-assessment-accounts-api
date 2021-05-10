@@ -14,32 +14,27 @@
  * limitations under the License.
  */
 
-package v1.connectors
+package v1.mocks.connectors
 
-import config.AppConfig
-import javax.inject.{Inject, Singleton}
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import v1.connectors.{CreateOrAmendCodingOutConnector, DesOutcome}
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-@Singleton
-class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient,
-                                               val appConfig: AppConfig) extends BaseDesConnector {
+trait MockCreateOrAmendCodingOutConnector extends MockFactory {
 
-  import v1.connectors.httpparsers.StandardDesHttpParser._
+  val mockCreateOrAmendCodingOutConnector: CreateOrAmendCodingOutConnector = mock[CreateOrAmendCodingOutConnector]
 
-  def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+  object MockCreateOrAmendCodingOutConnector {
 
-    val nino = request.nino
-    val taxYear = request.taxYear
-
-    put(
-      request.body, DesUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear")
-    )
+    def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+      (mockCreateOrAmendCodingOutConnector
+        .amendCodingOut(_: CreateOrAmendCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
+    }
   }
+
 }

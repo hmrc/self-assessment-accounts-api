@@ -25,7 +25,7 @@ import v1.connectors.CreateOrAmendCodingOutConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRequestBody
+import v1.models.request.createOrAmendCodingOut._
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,13 +33,14 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends DesResponseMappingSupport with Logging {
 
-  def amend(request: CreateOrAmendCodingOutRequestBody)(
+  def amend(request: CreateOrAmendCodingOutParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    logContext: EndpointLogContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+    logContext: EndpointLogContext,
+    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amend(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.amendCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
