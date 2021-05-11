@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v1.connectors.DownstreamUri.DesUri
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
@@ -27,12 +28,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListPaymentsConnector @Inject()(val http: HttpClient,
-                                      val appConfig: AppConfig) extends BaseDesConnector {
+                                      val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def listPayments(request: ListPaymentsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[ListPaymentsResponse[Payment]]] = {
+    correlationId: String): Future[DownstreamOutcome[ListPaymentsResponse[Payment]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

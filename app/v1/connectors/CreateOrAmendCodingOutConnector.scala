@@ -20,31 +20,27 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1.connectors.DownstreamUri.DesUri
-import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
-import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
+import v1.connectors.DownstreamUri.IfsUri
+import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryConnector @Inject()(val http: HttpClient,
+class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient,
                                                val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(
+  import v1.connectors.httpparsers.StandardDesHttpParser._
+
+  def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+    val nino = request.nino
+    val taxYear = request.taxYear
 
-    val nino = request.nino.nino
-    val transactionId = request.transactionId
-
-    val queryParams = Seq("docNumber" -> transactionId)
-
-    get(
-      uri = DesUri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"),
-      queryParams = queryParams
+    put(
+      request.body, IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear")
     )
   }
 }

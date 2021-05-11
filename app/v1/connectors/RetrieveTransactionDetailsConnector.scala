@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v1.connectors.DownstreamUri.DesUri
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
@@ -27,12 +28,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
-                                                    val appConfig: AppConfig) extends BaseDesConnector {
+                                                    val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[RetrieveTransactionDetailsResponse]] = {
+    correlationId: String): Future[DownstreamOutcome[RetrieveTransactionDetailsResponse]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

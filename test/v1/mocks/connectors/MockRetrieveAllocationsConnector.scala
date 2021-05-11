@@ -19,7 +19,7 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, RetrieveAllocationsConnector}
+import v1.connectors.{DownstreamOutcome, RetrieveAllocationsConnector}
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
@@ -32,7 +32,7 @@ trait MockRetrieveAllocationsConnector extends MockFactory {
 
   object MockRetrieveAllocationsConnector {
 
-    def retrieve(requestData: RetrieveAllocationsParsedRequest): CallHandler[Future[DesOutcome[RetrieveAllocationsResponse[AllocationDetail]]]] = {
+    def retrieve(requestData: RetrieveAllocationsParsedRequest): CallHandler[Future[DownstreamOutcome[RetrieveAllocationsResponse[AllocationDetail]]]] = {
       (mockRetrieveAllocationsConnector
         .retrieveAllocations(_: RetrieveAllocationsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

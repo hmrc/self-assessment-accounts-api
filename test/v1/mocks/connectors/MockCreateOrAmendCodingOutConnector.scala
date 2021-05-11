@@ -19,22 +19,22 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DownstreamOutcome, RetrieveBalanceConnector}
-import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
-import v1.models.response.retrieveBalance.RetrieveBalanceResponse
+import v1.connectors.{CreateOrAmendCodingOutConnector, DownstreamOutcome}
+import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveBalanceConnector extends MockFactory {
+trait MockCreateOrAmendCodingOutConnector extends MockFactory {
 
-  val mockRetrieveBalanceConnector: RetrieveBalanceConnector = mock[RetrieveBalanceConnector]
+  val mockCreateOrAmendCodingOutConnector: CreateOrAmendCodingOutConnector = mock[CreateOrAmendCodingOutConnector]
 
-  object MockRetrieveBalanceConnector {
+  object MockCreateOrAmendCodingOutConnector {
 
-    def retrieveBalance(requestData: RetrieveBalanceParsedRequest): CallHandler[Future[DownstreamOutcome[RetrieveBalanceResponse]]] = {
-      (mockRetrieveBalanceConnector
-        .retrieveBalance(_: RetrieveBalanceParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
-        .expects(requestData, *, *, *)
+    def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+      (mockCreateOrAmendCodingOutConnector
+        .amendCodingOut(_: CreateOrAmendCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+        .expects(request, *, *, *)
     }
   }
+
 }
