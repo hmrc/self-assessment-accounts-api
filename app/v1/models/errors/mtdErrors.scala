@@ -25,8 +25,8 @@ object MtdError {
 }
 
 // Format Errors
-object NinoFormatError extends MtdError("FORMAT_NINO", "The provided NINO is invalid")
-object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The provided tax year is invalid")
+object NinoFormatError extends MtdError("FORMAT_NINO", "The format of the supplied nino value is invalid")
+object TaxYearFormatError extends MtdError("FORMAT_TAX_YEAR", "The format of the supplied taxYear value is invalid")
 object FromDateFormatError extends MtdError("FORMAT_FROM_DATE", "The provided From date is invalid")
 object ValueFormatError extends MtdError("FORMAT_VALUE", "One or more values have been added with the incorrect format.")
 object ToDateFormatError extends MtdError("FORMAT_TO_DATE", "The provided To date is invalid")

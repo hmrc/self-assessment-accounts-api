@@ -31,7 +31,7 @@ class ErrorWrapperSpec extends UnitSpec {
       """
         |{
         |   "code": "FORMAT_NINO",
-        |   "message": "The provided NINO is invalid"
+        |   "message": "The format of the supplied nino value is invalid"
         |}
       """.stripMargin
     )
@@ -48,7 +48,7 @@ class ErrorWrapperSpec extends UnitSpec {
       """
         |{
         |   "code": "FORMAT_NINO",
-        |   "message": "The provided NINO is invalid"
+        |   "message": "The format of the supplied nino value is invalid"
         |}
       """.stripMargin
     )
@@ -76,11 +76,11 @@ class ErrorWrapperSpec extends UnitSpec {
         |   "errors": [
         |       {
         |         "code": "FORMAT_NINO",
-        |         "message": "The provided NINO is invalid"
+        |         "message": "The format of the supplied nino value is invalid"
         |       },
         |       {
         |         "code": "FORMAT_TAX_YEAR",
-        |         "message": "The provided tax year is invalid"
+        |         "message": "The format of the supplied taxYear value is invalid"
         |       }
         |   ]
         |}
