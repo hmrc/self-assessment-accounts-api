@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v1.connectors.DownstreamUri.DesUri
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.{Charge, ListChargesResponse}
 
@@ -27,12 +28,12 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListChargesConnector @Inject()(val http: HttpClient,
-                                     val appConfig: AppConfig) extends BaseDesConnector {
+                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def listCharges(request: ListChargesParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[ListChargesResponse[Charge]]] = {
+    correlationId: String): Future[DownstreamOutcome[ListChargesResponse[Charge]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 

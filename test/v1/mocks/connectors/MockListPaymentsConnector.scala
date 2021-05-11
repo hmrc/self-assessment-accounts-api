@@ -19,7 +19,7 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, ListPaymentsConnector}
+import v1.connectors.{DownstreamOutcome, ListPaymentsConnector}
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
@@ -31,7 +31,7 @@ trait MockListPaymentsConnector extends MockFactory {
 
   object MockListPaymentsConnector {
 
-    def retrieve(requestData: ListPaymentsParsedRequest): CallHandler[Future[DesOutcome[ListPaymentsResponse[Payment]]]] = {
+    def retrieve(requestData: ListPaymentsParsedRequest): CallHandler[Future[DownstreamOutcome[ListPaymentsResponse[Payment]]]] = {
       (mockListPaymentsConnector
         .listPayments(_: ListPaymentsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

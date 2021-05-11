@@ -48,9 +48,9 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.ifsBaseUrl returns baseUrl
+    MockedAppConfig.ifsToken returns "ifs-token"
+    MockedAppConfig.ifsEnvironment returns "ifs-environment"
   }
 
   "CreateOrAmendCodingOutConnector" when {
@@ -62,7 +62,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
           .put(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
             body = createOrAmendCodingOutRequestBody,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token", "CorrelationId" -> s"$correlationId"
+            requiredHeaders = "Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token", "CorrelationId" -> s"$correlationId"
           )
           .returns(Future.successful(outcome))
 

@@ -19,7 +19,7 @@ package v1.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{DesOutcome, ListTransactionsConnector}
+import v1.connectors.{DownstreamOutcome, ListTransactionsConnector}
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
 import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
@@ -31,7 +31,7 @@ trait MockListTransactionsConnector extends MockFactory {
 
   object MockListTransactionsConnector {
 
-    def listTransactions(requestData: ListTransactionsParsedRequest): CallHandler[Future[DesOutcome[ListTransactionsResponse[TransactionItem]]]] = {
+    def listTransactions(requestData: ListTransactionsParsedRequest): CallHandler[Future[DownstreamOutcome[ListTransactionsResponse[TransactionItem]]]] = {
       (mockListTransactionsConnector
         .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

@@ -20,26 +20,27 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
+import v1.connectors.DownstreamUri.IfsUri
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient,
-                                               val appConfig: AppConfig) extends BaseDesConnector {
+                                               val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   import v1.connectors.httpparsers.StandardDesHttpParser._
 
   def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[Unit]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     val nino = request.nino
     val taxYear = request.taxYear
 
     put(
-      request.body, DesUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear")
+      request.body, IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear")
     )
   }
 }
