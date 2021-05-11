@@ -33,6 +33,8 @@ trait AppConfig {
 
   def apiGatewayContext: String
 
+  def minimumPermittedTaxYear: Int
+
   def apiStatus(version: String): String
 
   def featureSwitch: Option[Configuration]
@@ -50,6 +52,7 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   val desEnv: String = config.getString("microservice.services.des.env")
   val desToken: String = config.getString("microservice.services.des.token")
   val apiGatewayContext: String = config.getString("api.gateway.context")
+  val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
 
   def apiStatus(version: String): String = config.getString(s"api.$version.status")
 
@@ -58,11 +61,6 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
-}
-
-trait FixedConfig {
-  // Minimum tax year for MTD
-  val minimumTaxYear = 2018
 }
 
 case class ConfidenceLevelConfig(definitionEnabled: Boolean, authValidationEnabled: Boolean)

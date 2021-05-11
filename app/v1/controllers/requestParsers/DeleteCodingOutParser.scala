@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package v1.models.request.deleteCodingOut
+package v1.controllers.requestParsers
 
 import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.DeleteCodingOutValidator
+import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
 
-case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: String)
+import javax.inject.Inject
+
+class DeleteCodingOutParser @Inject()(val validator: DeleteCodingOutValidator) extends RequestParser[DeleteCodingOutRawRequest, DeleteCodingOutParsedRequest]{
+
+  override protected def requestFor(data: DeleteCodingOutRawRequest):DeleteCodingOutParsedRequest =
+
+    DeleteCodingOutParsedRequest(Nino(data.nino), data.taxYear)
+
+}
