@@ -86,6 +86,18 @@ trait BaseDownstreamConnector {
     doPut(getBackendHeaders(uri, hc, correlationId))
   }
 
+  def delete[Resp](uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
+                                             hc: HeaderCarrier,
+                                             httpReads: HttpReads[DownstreamOutcome[Resp]],
+                                             correlationId: String): Future[DownstreamOutcome[Resp]] = {
+
+    def doDelete(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
+      http.DELETE(getBackendUri(uri))
+    }
+
+    doDelete(getBackendHeaders(uri, hc, correlationId))
+  }
+
   private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String = uri match {
     case DesUri(value) => s"${appConfig.desBaseUrl}/$value"
     case IfsUri(value) => s"${appConfig.ifsBaseUrl}/$value"

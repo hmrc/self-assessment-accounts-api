@@ -19,39 +19,25 @@ package v1.connectors
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.connectors.DownstreamUri.DesUri
-import v1.models.request.listCharges.ListChargesParsedRequest
-import v1.models.response.listCharges.{Charge, ListChargesResponse}
+import v1.connectors.DownstreamUri.IfsUri
+import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListChargesConnector @Inject()(val http: HttpClient,
-                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
+class DeleteCodingOutConnector @Inject()(val http: HttpClient,
+                                         val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listCharges(request: ListChargesParsedRequest)(
+  def deleteCodingOut(request: DeleteCodingOutParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[ListChargesResponse[Charge]]] = {
+    correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
+    val taxYear = request.taxYear
 
-    val queryParams: Seq[(String, String)] = Seq(
-      "dateFrom" -> request.from,
-      "dateTo" -> request.to,
-      "onlyOpenItems" -> "false",
-      "includeLocks" -> "true",
-      "calculateAccruedInterest" -> "true",
-      "removePOA" -> "true",
-      "customerPaymentInformation" -> "true",
-      "includeStatistical" -> "false"
-    )
-
-    get(
-      uri = DesUri[ListChargesResponse[Charge]](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
-      queryParams = queryParams
-    )
+    delete(IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"))
   }
 }

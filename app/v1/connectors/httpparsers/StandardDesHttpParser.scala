@@ -55,6 +55,7 @@ object StandardDesHttpParser extends HttpParser {
           s"Error response received from DES with status: ${response.status} and body\n" +
           s"${response.body} and correlationId: $correlationId when calling $url")
     }
+
     response.status match {
       case successCode.status =>
         logger.info(

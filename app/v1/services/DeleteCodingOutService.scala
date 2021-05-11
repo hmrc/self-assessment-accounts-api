@@ -21,38 +21,38 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
-import v1.connectors.CreateOrAmendCodingOutConnector
+import v1.connectors.DeleteCodingOutConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.createOrAmendCodingOut._
+import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 import v1.support.DesResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends DesResponseMappingSupport with Logging {
+class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector)
+  extends DesResponseMappingSupport with Logging {
 
-  def amend(request: CreateOrAmendCodingOutParsedRequest)(
+  def deleteCodingOut(request: DeleteCodingOutParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext,
     correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.amendCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.deleteCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap =
+  private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_PAYLOAD" -> DownstreamError,
-      "BEFORE_TAXYEAR_END" -> RuleTaxYearNotEndedError,
+      "NO_DATA_FOUND" -> CodingOutNotFoundError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )

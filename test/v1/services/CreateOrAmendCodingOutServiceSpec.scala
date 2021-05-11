@@ -77,7 +77,7 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", DownstreamError),
           ("INVALID_PAYLOAD", DownstreamError),
-          ("BEFORE_TAXYEAR_END", RuleTaxYearNotEnded),
+          ("BEFORE_TAXYEAR_END", RuleTaxYearNotEndedError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

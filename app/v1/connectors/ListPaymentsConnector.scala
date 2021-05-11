@@ -18,8 +18,7 @@ package v1.connectors
 
 import config.AppConfig
 import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.http.HttpClient
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.DesUri
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
@@ -48,7 +47,5 @@ class ListPaymentsConnector @Inject()(val http: HttpClient,
       uri = DesUri[ListPaymentsResponse[Payment]](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
       queryParams = queryParams
     )
-
   }
-
 }
