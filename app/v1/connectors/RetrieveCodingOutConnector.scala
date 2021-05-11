@@ -19,18 +19,19 @@ package v1.connectors
 import config.AppConfig
 import javax.inject.Inject
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.connectors.DownstreamUri.IfsUri
 
 import scala.concurrent.{ExecutionContext, Future}
 
 class RetrieveCodingOutConnector @Inject()(val http: HttpClient,
                                            val appConfig: AppConfig) extends BaseDesConnector {
 
-  def retrieveChargeHistory(request: RetrieveCodingOutParsedRequest)(
+  import v1.connectors.httpparsers.StandardDesHttpParser._
+
+  def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
-    correlationId: String): Future[DesOutcome[RetrieveCodingOutResponse]] = {
-
-    import v1.connectors.httpparsers.StandardDesHttpParser._
+    correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
 
     val nino = request.nino.nino
     val taxYear = request.taxYear
@@ -39,7 +40,7 @@ class RetrieveCodingOutConnector @Inject()(val http: HttpClient,
     val queryParams = Seq("view" -> view)
 
     get(
-      uri = DesUri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"),
+      uri = IfsUri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"),
       queryParams = queryParams
     )
   }
