@@ -21,11 +21,13 @@ import play.api.mvc.Result
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.requestParsers.MockDeleteCodingOutParser
+import v1.mocks.services.{MockDeleteCodingOutService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeleteCodingOutControllerSpec
@@ -33,7 +35,7 @@ class DeleteCodingOutControllerSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockDeleteCodingOutService
-    with MockDeleteCodingOutRequestParser
+    with MockDeleteCodingOutParser
     with MockIdGenerator {
 
   private val nino = "AA123456A"
@@ -64,7 +66,7 @@ class DeleteCodingOutControllerSpec
     "return NoContent" when {
       "the request received is valid" in new Test {
 
-        MockDeleteCodingOutRequestParser
+        MockDeleteCodingOutParser
           .parse(rawData)
           .returns(Right(requestData))
 
@@ -84,7 +86,7 @@ class DeleteCodingOutControllerSpec
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
           s"a ${error.code} error is returned from the parser" in new Test {
 
-            MockDeleteCodingOutRequestParser
+            MockDeleteCodingOutParser
               .parse(rawData)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
@@ -112,7 +114,7 @@ class DeleteCodingOutControllerSpec
         def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
           s"a $mtdError error is returned from the service" in new Test {
 
-            MockDeleteCodingOutRequestParser
+            MockDeleteCodingOutParser
               .parse(rawData)
               .returns(Right(requestData))
 
@@ -132,7 +134,7 @@ class DeleteCodingOutControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
+          (CodingOutNotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 

@@ -22,7 +22,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.http.Status
 import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
-import v1.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import v1.models.errors._
 import v1.stubs.{AuthStub, DesStub, MtdIdLookupStub}
 
 class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
@@ -121,7 +121,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
           (Status.BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", Status.BAD_REQUEST, NinoFormatError),
           (Status.BAD_REQUEST, "INVALID_TAX_YEAR", Status.BAD_REQUEST, TaxYearFormatError),
           (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, DownstreamError),
-          (Status.NOT_FOUND, "NO_DATA_FOUND", Status.NOT_FOUND, NotFoundError),
+          (Status.NOT_FOUND, "NO_DATA_FOUND", Status.NOT_FOUND, CodingOutNotFoundError),
           (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, DownstreamError),
           (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, DownstreamError)
         )

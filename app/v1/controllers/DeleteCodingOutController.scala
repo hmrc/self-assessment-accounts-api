@@ -21,16 +21,17 @@ import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
-import v1.models.errors.{BadRequestError, DownstreamError, ErrorWrapper, NinoFormatError, NotFoundError, RuleTaxYearNotSupportedError, TaxYearFormatError}
+import v1.controllers.requestParsers.DeleteCodingOutParser
+import v1.models.errors._
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{DeleteCodingOutService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService,
                                           val lookupService: MtdIdLookupService,
-                                          parser: DeleteCodingOutRequestParser,
+                                          parser: DeleteCodingOutParser,
                                           service: DeleteCodingOutService,
                                           cc: ControllerComponents,
                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
@@ -48,7 +49,7 @@ class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService
       val result =
         for {
           parsedRequest <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.delete(parsedRequest))
+          serviceResponse <- EitherT(service.deleteCodingOut(parsedRequest))
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -77,7 +78,7 @@ class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService
            RuleTaxYearNotSupportedError |
            RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case CodingOutNotFoundError => NotFound(Json.toJson(errorWrapper))
     }
   }
 }
