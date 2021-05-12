@@ -12,15 +12,15 @@
             <td><p>Simulates a successful response with latest view.</p></td>
         </tr>
         <tr>
-            <td><p>LATEST<br>using <strong>view=latest</strong> parameter</p></td>
+            <td><p>N/A - DEFAULT<br>using <strong>view=latest</strong> parameter</p></td>
             <td><p>Simulates a successful response with latest view.</p></td>
         </tr>
         <tr>
-            <td><p>HMRC_HELD<br>using <strong>view=hmrcHeld</strong> parameter</p></td>
+            <td><p>N/A - DEFAULT<br>using <strong>view=hmrcHeld</strong> parameter</p></td>
             <td><p>Simulates a successful response with hmrcHeld submitted values.</p></td>
         </tr>
         <tr>
-            <td><p>USER<br>using <strong>view=user</strong> parameter</p></td>
+            <td><p>N/A - DEFAULT<br>using <strong>view=user</strong> parameter</p></td>
             <td><p>Simulates a successful response with user submitted values.</p></td>
         </tr>
         <tr>
