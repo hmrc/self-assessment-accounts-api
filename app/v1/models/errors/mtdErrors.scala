@@ -48,11 +48,6 @@ object RuleIncorrectOrEmptyBodyError extends MtdError(
   message = "An empty or non-matching body was submitted"
 )
 
-object RuleTaxYearRangeExceededError extends MtdError(
-  code = "RULE_TAX_YEAR_RANGE_EXCEEDED",
-  message = "Tax year range exceeded. A tax year range of one year is required"
-)
-
 object RuleTaxYearRangeInvalidError extends MtdError(
   code = "RULE_TAX_YEAR_RANGE_INVALID",
   message = "A taxYear range of one year is required"
