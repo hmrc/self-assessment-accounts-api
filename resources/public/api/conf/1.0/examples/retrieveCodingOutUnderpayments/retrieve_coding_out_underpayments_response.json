@@ -1,6 +1,5 @@
 {
   "source": "hmrcHeld",
-  "taxCodeComponents": {
     "selfAssessmentUnderPayments": [
       {
         "amount": 87.78,
@@ -31,7 +30,7 @@
       {
         "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
         "method": "PUT",
-        "rel": "create-and-amend-coding-out-underpayments"
+        "rel": "create-or-amend-coding-out-underpayments"
       },
       {
         "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
