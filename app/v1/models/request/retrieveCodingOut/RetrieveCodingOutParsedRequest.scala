@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.deleteCodingOut
+package v1.models.request.retrieveCodingOut
 
 import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
 
-case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: String)
+case class RetrieveCodingOutParsedRequest(nino: Nino, taxYear: String, source: String)

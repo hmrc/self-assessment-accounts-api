@@ -14,9 +14,26 @@
  * limitations under the License.
  */
 
-package v1.models.request.deleteCodingOut
+package v1.models.domain
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
+import play.api.libs.json
+import utils.enums.Enums
 
-case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: String)
+sealed trait DownstreamSource {
+  def toMtdSource: MtdSource
+}
+
+object DownstreamSource {
+
+  case object `HMRC HELD` extends DownstreamSource {
+    override def toMtdSource: MtdSource = MtdSource.`hmrcHeld`
+  }
+
+  case object `CUSTOMER` extends DownstreamSource {
+    override def toMtdSource: MtdSource = MtdSource.`user`
+  }
+
+
+  implicit val format: json.Format[DownstreamSource] = Enums.format[DownstreamSource]
+}
+

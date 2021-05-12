@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-package v1.models.request.deleteCodingOut
+package v1.models.response.retrieveCodingOut
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
+import play.api.libs.json.{Json, OWrites, Reads}
 
-case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: String)
+case class ResponseItem(amount: BigDecimal, relatedTaxYear: String, submittedOn: String)
+
+object ResponseItem {
+
+  implicit val reads: Reads[ResponseItem] = Json.reads[ResponseItem]
+
+  implicit val writes: OWrites[ResponseItem] = Json.writes[ResponseItem]
+}

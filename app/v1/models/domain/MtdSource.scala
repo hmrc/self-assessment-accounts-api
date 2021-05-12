@@ -14,9 +14,19 @@
  * limitations under the License.
  */
 
-package v1.models.request.deleteCodingOut
+package v1.models.domain
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
+import play.api.libs.json.Format
+import utils.enums.Enums
 
-case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: String)
+
+sealed trait MtdSource
+
+object MtdSource {
+
+  case object `hmrcHeld` extends MtdSource
+
+  case object `user` extends MtdSource
+
+  implicit val format: Format[MtdSource] = Enums.format[MtdSource]
+}

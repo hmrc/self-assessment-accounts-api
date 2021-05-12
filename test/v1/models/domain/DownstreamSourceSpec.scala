@@ -14,9 +14,23 @@
  * limitations under the License.
  */
 
-package v1.models.request.deleteCodingOut
+package v1.models.domain
 
-import uk.gov.hmrc.domain.Nino
-import v1.models.domain.DesTaxYear
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
+import v1.models.domain.DownstreamSource._
 
-case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: String)
+class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {
+
+  testRoundTrip[DownstreamSource](
+    ("HMRC HELD", `HMRC HELD`),
+    ("CUSTOMER", `CUSTOMER`)
+  )
+
+  "toMtdSource" should {
+    "return the correct identifier value" in {
+      DownstreamSource.`HMRC HELD`.toMtdSource shouldBe MtdSource.`hmrcHeld`
+      DownstreamSource.`CUSTOMER`.toMtdSource shouldBe MtdSource.`user`
+    }
+  }
+}
