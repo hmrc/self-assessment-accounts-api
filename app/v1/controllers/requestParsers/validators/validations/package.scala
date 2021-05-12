@@ -26,5 +26,6 @@ package object validations {
   val earliestDate: LocalDate = LocalDate.parse("2018-04-06", dateFormat)
 
   val NoValidationErrors = List()
+  val minimumTaxYear = 2022
 
 }

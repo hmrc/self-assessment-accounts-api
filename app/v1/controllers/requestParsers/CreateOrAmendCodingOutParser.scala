@@ -19,10 +19,11 @@ package v1.controllers.requestParsers
 import javax.inject.Inject
 import uk.gov.hmrc.domain.Nino
 import v1.controllers.requestParsers.validators.CreateOrAmendCodingOutValidator
+import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody}
 
 class CreateOrAmendCodingOutParser @Inject()(val validator: CreateOrAmendCodingOutValidator)
   extends RequestParser[CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutParsedRequest]{
 
   override protected def requestFor(data: CreateOrAmendCodingOutRawRequest): CreateOrAmendCodingOutParsedRequest =
-    CreateOrAmendCodingOutParsedRequest(Nino(data.nino), DesTaxYear(data.taxYear), data.to.get, data.body.json.as[CodingOut])
+    CreateOrAmendCodingOutParsedRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateOrAmendCodingOutRequestBody])
 }

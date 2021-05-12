@@ -18,10 +18,14 @@ package v1.models.errors
 
 import play.api.libs.json.{Json, Writes}
 
-case class MtdError(code: String, message: String)
+case class MtdError(code: String, message: String, paths: Option[Seq[String]] = None)
 
 object MtdError {
   implicit val writes: Writes[MtdError] = Json.writes[MtdError]
+}
+
+object MtdErrorWithCustomMessage {
+  def unapply(arg: MtdError): Option[String] = Some(arg.code)
 }
 
 // Format Errors
@@ -32,7 +36,6 @@ object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be betw
 object ToDateFormatError extends MtdError("FORMAT_TO_DATE", "The provided To date is invalid")
 object PaymentIdFormatError extends MtdError("FORMAT_PAYMENT_ID", "The provided payment ID is invalid")
 object TransactionIdFormatError extends MtdError("FORMAT_TRANSACTION_ID", "The provided transaction ID is invalid")
-object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be between 0.00 and 99999999999.99")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError extends MtdError(
@@ -43,6 +46,11 @@ object RuleTaxYearNotSupportedError extends MtdError(
 object RuleIncorrectOrEmptyBodyError extends MtdError(
   code = "RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED",
   message = "An empty or non-matching body was submitted"
+)
+
+object RuleTaxYearRangeExceededError extends MtdError(
+  code = "RULE_TAX_YEAR_RANGE_EXCEEDED",
+  message = "Tax year range exceeded. A tax year range of one year is required"
 )
 
 object RuleTaxYearRangeInvalidError extends MtdError(

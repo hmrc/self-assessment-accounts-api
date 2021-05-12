@@ -20,6 +20,7 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.validators.CreateOrAmendCodingOutValidator
 import v1.models.errors.MtdError
+import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
 
 trait MockCreateOrAmendCodingOutValidator extends MockFactory {
 
@@ -27,9 +28,9 @@ trait MockCreateOrAmendCodingOutValidator extends MockFactory {
 
   object MockCreateOrAmendCodingOutValidator {
 
-    def validate(data: CreateOrAmendCodingOutValidator): CallHandler1[CreateOrAmendCodingOutValidator, List[MtdError]] = {
+    def validate(data: CreateOrAmendCodingOutRawRequest): CallHandler1[CreateOrAmendCodingOutRawRequest, List[MtdError]] = {
       (mockValidator
-        .validate(_: CreateOrAmendCodingOutValidator))
+        .validate(_: CreateOrAmendCodingOutRawRequest))
         .expects(data)
     }
   }

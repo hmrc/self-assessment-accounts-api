@@ -16,43 +16,65 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.controllers.requestParsers.validators.validations.{NinoValidation, NumberValidation, TaxYearValidation}
-import v1.models.errors.MtdError
-import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsRawRequest
+import v1.controllers.requestParsers.validators.validations._
+import v1.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
+import v1.models.errors.{MtdError, ValueFormatError}
+import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody}
+import config.AppConfig
+import javax.inject.Inject
 
-class CreateOrAmendCodingOutValidator extends Validator[CreateOrAmendCodingOutRawRequest]{
+class CreateOrAmendCodingOutValidator @Inject()(implicit appConfig: AppConfig) extends Validator[CreateOrAmendCodingOutRawRequest]{
 
-  private val validationSet = List(parameterFormatValidation, bodyFormatValidation)
+  private val validationSet = List(parameterValidation, parameterRuleValidation, bodyFormatValidation, bodyFieldValidation)
 
-  private def parameterFormatValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+  private def parameterValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
+  private def parameterRuleValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+    List(
+      TaxYearNotSupportedValidation.validate(data.taxYear),
+      TaxYearNotEndedValidation.validate(data.taxYear)
+    )
+  }
+
   private def bodyFormatValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     List(
+      JsonFormatValidation.validate[CreateOrAmendCodingOutRequestBody](data.body.json, ValueFormatError)
+    )
+  }
+
+  private def bodyFieldValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+    val body = data.body.json.as[CreateOrAmendCodingOutRequestBody]
+
+    List(flattenErrors(bodyValidations(body)))
+  }
+
+  private def bodyValidations(body: CreateOrAmendCodingOutRequestBody): List[List[MtdError]] = {
+    List(
       NumberValidation.validateOptional(
-        field = data.body.payeUnderpayments,
-        path = "/payeUnderpayments"
+        field = body.payeUnderpayments,
+        path = s"/payeUnderpayments"
       ),
       NumberValidation.validateOptional(
-        field = data.body.selfAssessmentUnderPayments,
-        path = "/selfAssessmentUnderPayments"
+        field = body.selfAssessmentUnderPayments,
+        path = s"/selfAssessmentUnderPayments"
       ),
       NumberValidation.validateOptional(
-        field = data.body.debts,
-        path = "/debts"
+        field = body.debts,
+        path = s"/debts"
       ),
       NumberValidation.validateOptional(
-        field = data.body.inYearAdjustments,
-        path = "/inYearAdjustments"
+        field = body.inYearAdjustments,
+        path = s"/inYearAdjustments"
       )
     )
   }
 
-  override def validate(data: RetrieveTransactionDetailsRawRequest): List[MtdError] = {
+  override def validate(data: CreateOrAmendCodingOutRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
 }

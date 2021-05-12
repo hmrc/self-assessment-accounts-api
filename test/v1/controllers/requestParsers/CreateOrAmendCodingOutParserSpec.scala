@@ -19,8 +19,10 @@ package v1.controllers.requestParsers
 import play.api.libs.json.Json
 import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
+import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockCreateOrAmendCodingOutValidator
 import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody}
 
 class CreateOrAmendCodingOutParserSpec extends UnitSpec{
 
@@ -39,7 +41,7 @@ class CreateOrAmendCodingOutParserSpec extends UnitSpec{
       |""".stripMargin)
 
   val request = CreateOrAmendCodingOutRawRequest(nino, taxYear, AnyContentAsJson(validJson))
-  val validBody = CreateOrAmendCodingOutRequestBody(Some(2000.99), Some(2000.99), Some(2000.99), Some(2000.99))
+  val validBody = CreateOrAmendCodingOutRequestBody(Some(2000.99), Some(2000.99), Some(2000.99), Some(5000.99))
 
   trait Test extends MockCreateOrAmendCodingOutValidator {
     lazy val parser = new CreateOrAmendCodingOutParser(mockValidator)
@@ -49,7 +51,7 @@ class CreateOrAmendCodingOutParserSpec extends UnitSpec{
     "return a parsed request" when {
       "no validation errors occur" in new Test {
         MockCreateOrAmendCodingOutValidator.validate(request).returns(Nil)
-        parser.parseRequest(request) shouldBe Right(CreateOrAmendCodingOutParsedRequest(nino, taxYear, validBody))
+        parser.parseRequest(request) shouldBe Right(CreateOrAmendCodingOutParsedRequest(Nino(nino), taxYear, validBody))
       }
     }
 

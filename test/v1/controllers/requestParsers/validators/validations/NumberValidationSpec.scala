@@ -40,15 +40,15 @@ class NumberValidationSpec extends UnitSpec {
 
     "return ValueFormatError" when {
       "a negative number is supplied" in {
-        NumberValidation.validateOptional(negativeNumber, path) shouldBe List(ValueFormatError)
+        NumberValidation.validateOptional(negativeNumber, path) shouldBe List(ValueFormatError.copy(paths = Some(Seq(path))))
       }
 
       "a number with too many decimals is supplied" in {
-        NumberValidation.validateOptional(incorrectDecimalsNumber, path) shouldBe List(ValueFormatError)
+        NumberValidation.validateOptional(incorrectDecimalsNumber, path) shouldBe List(ValueFormatError.copy(paths = Some(Seq(path))))
       }
 
       "a number that is too large is supplied" in {
-        NumberValidation.validateOptional(tooBigNumber, path) shouldBe List(ValueFormatError)
+        NumberValidation.validateOptional(tooBigNumber, path) shouldBe List(ValueFormatError.copy(paths = Some(Seq(path))))
       }
     }
 

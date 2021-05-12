@@ -29,7 +29,7 @@ object NumberValidation {
     if (field >= 0 && field < 100000000000.00 && field.scale <= 2) {
       Nil
     } else {
-      List(ValueFormatError)
+      List(ValueFormatError.copy(paths = Some(Seq(path))))
     }
   }
 }

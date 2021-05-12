@@ -14,8 +14,21 @@
  * limitations under the License.
  */
 
-package v1.models.request.createOrAmendCodingOut
+package v1.controllers.requestParsers.validators.validations
 
-import uk.gov.hmrc.domain.Nino
+import java.time.Year
 
-case class CreateOrAmendCodingOutParsedRequest(nino: Nino, taxYear: String, body: CreateOrAmendCodingOutRequestBody)
+import v1.models.domain.DesTaxYear
+import v1.models.errors.{MtdError, RuleTaxYearNotEndedError}
+
+object TaxYearNotEndedValidation {
+
+  def validate(taxYear: String): List[MtdError] = {
+
+    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
+
+    if(desTaxYear <= Year.now.getValue) NoValidationErrors else List(RuleTaxYearNotEndedError)
+
+  }
+
+}

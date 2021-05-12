@@ -17,6 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
+import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRequestBody}
@@ -36,7 +37,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
   )
 
   val request: CreateOrAmendCodingOutParsedRequest = CreateOrAmendCodingOutParsedRequest(
-    nino = nino,
+    nino = Nino(nino),
     taxYear = taxYear,
     body = createOrAmendCodingOutRequestBody
   )
