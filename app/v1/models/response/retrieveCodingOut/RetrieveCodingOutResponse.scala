@@ -18,9 +18,9 @@ package v1.models.response.retrieveCodingOut
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
-import v1.models.domain.{DownstreamSource, MtdSource}
+import v1.models.domain.DownstreamSource
 
-case class RetrieveCodingOutResponse(source: MtdSource,
+case class RetrieveCodingOutResponse(source: String,
                                      selfAssessmentUnderPayments: Option[Seq[ResponseItem]],
                                      payeUnderpayments: Option[Seq[ResponseItem]],
                                      debts: Option[Seq[ResponseItem]],

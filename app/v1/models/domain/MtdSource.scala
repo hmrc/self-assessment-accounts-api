@@ -21,21 +21,21 @@ import utils.enums.Enums
 
 
 sealed trait MtdSource {
-  def toDownstreamSource: DownstreamSource
+  def toDownstreamSource: String
 }
 
 object MtdSource {
 
   case object hmrcHeld extends MtdSource {
-    override def toDownstreamSource: DownstreamSource = DownstreamSource.`HMRC HELD`
+    override def toDownstreamSource: String = "HMRC-HELD"
   }
 
   case object user extends MtdSource {
-    override def toDownstreamSource: DownstreamSource = DownstreamSource.`CUSTOMER`
+    override def toDownstreamSource: String = "CUSTOMER"
   }
 
   case object latest extends MtdSource {
-    override def toDownstreamSource: DownstreamSource = DownstreamSource.`LATEST`
+    override def toDownstreamSource: String = "LATEST"
   }
 
   implicit val format: Format[MtdSource] = Enums.format[MtdSource]

@@ -20,21 +20,25 @@ import play.api.libs.json
 import utils.enums.Enums
 
 sealed trait DownstreamSource {
-  def toMtdSource: MtdSource
+  def toMtdSource: String
 }
 
 object DownstreamSource {
 
   case object `HMRC HELD` extends DownstreamSource {
-    override def toMtdSource: MtdSource = MtdSource.hmrcHeld
+    override def toMtdSource: String = "hmrcHeld"
+  }
+
+  case object `HMRC-HELD` extends DownstreamSource {
+    override def toMtdSource: String = "Invalid Source Response"
   }
 
   case object `CUSTOMER` extends DownstreamSource {
-    override def toMtdSource: MtdSource = MtdSource.user
+    override def toMtdSource: String = "user"
   }
 
   case object `LATEST` extends DownstreamSource {
-    override def toMtdSource: MtdSource = MtdSource.latest
+    override def toMtdSource: String = "Invalid Source Response"
   }
 
 

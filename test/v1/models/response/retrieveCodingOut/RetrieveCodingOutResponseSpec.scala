@@ -18,7 +18,6 @@ package v1.models.response.retrieveCodingOut
 
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
-import v1.models.domain.MtdSource
 
 class RetrieveCodingOutResponseSpec extends UnitSpec {
 
@@ -130,7 +129,7 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
 
   val responseModel: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
-      MtdSource.hmrcHeld,
+        "hmrcHeld",
         Some(Seq(ResponseItem(87.78, "2020-21", "2021-07-06T09:37:17Z"))),
         Some(Seq(ResponseItem(12.45, "2021-22", "2021-07-06T09:37:17Z"))),
         Some(Seq(ResponseItem(10.01, "2021-22", "2021-07-06T09:37:17Z"))),

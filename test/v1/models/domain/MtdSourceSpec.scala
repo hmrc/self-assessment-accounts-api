@@ -30,9 +30,9 @@ class MtdSourceSpec extends UnitSpec with EnumJsonSpecSupport {
 
   "toMtdSource" should {
     "return the correct identifier value" in {
-      MtdSource.hmrcHeld.toDownstreamSource shouldBe DownstreamSource.`HMRC HELD`
-      MtdSource.user.toDownstreamSource shouldBe DownstreamSource.`CUSTOMER`
-      MtdSource.latest.toDownstreamSource shouldBe DownstreamSource.`LATEST`
+      MtdSource.hmrcHeld.toDownstreamSource shouldBe "HMRC-HELD"
+      MtdSource.user.toDownstreamSource shouldBe "CUSTOMER"
+      MtdSource.latest.toDownstreamSource shouldBe "LATEST"
     }
   }
 }
