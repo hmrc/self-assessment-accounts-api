@@ -98,7 +98,6 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
     """
       |{
       |    "source": "hmrcHeld",
-      |    "taxCodeComponents": {
       |        "selfAssessmentUnderPayments": [
       |            {
       |                "amount": 87.78,
@@ -125,21 +124,17 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |            "relatedTaxYear": "2021-22",
       |            "submittedOn": "2021-07-06T09:37:17Z"
       |        }
-      |      }
       |    }
     """.stripMargin
   )
 
-
   val responseModel: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
-      MtdSource.`hmrcHeld`,
-      TaxCodeComponents(
+      MtdSource.hmrcHeld,
         Some(Seq(ResponseItem(87.78, "2020-21", "2021-07-06T09:37:17Z"))),
         Some(Seq(ResponseItem(12.45, "2021-22", "2021-07-06T09:37:17Z"))),
         Some(Seq(ResponseItem(10.01, "2021-22", "2021-07-06T09:37:17Z"))),
         Some(ResponseItem(99.99, "2021-22", "2021-07-06T09:37:17Z"))
-      )
     )
 
   "RetrieveCodingOutResponse" when {

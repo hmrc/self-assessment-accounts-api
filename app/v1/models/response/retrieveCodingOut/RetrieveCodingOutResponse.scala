@@ -21,13 +21,19 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import v1.models.domain.{DownstreamSource, MtdSource}
 
 case class RetrieveCodingOutResponse(source: MtdSource,
-                                     taxCodeComponents: TaxCodeComponents)
+                                     selfAssessmentUnderPayments: Option[Seq[ResponseItem]],
+                                     payeUnderpayments: Option[Seq[ResponseItem]],
+                                     debts: Option[Seq[ResponseItem]],
+                                     inYearAdjustments: Option[ResponseItem])
 
 object RetrieveCodingOutResponse {
 
   implicit val reads: Reads[RetrieveCodingOutResponse] = (
-    (JsPath \ "source" ).read[DownstreamSource].map(_.toMtdSource) and
-      (JsPath \ "taxCodeComponents").read[TaxCodeComponents]
+      (JsPath \ "source" ).read[DownstreamSource].map(_.toMtdSource) and
+      (JsPath \ "taxCodeComponents" \ "selfAssessmentUnderPayments").readNullable[Seq[ResponseItem]] and
+      (JsPath \ "taxCodeComponents" \ "payeUnderpayments").readNullable[Seq[ResponseItem]] and
+      (JsPath \ "taxCodeComponents" \ "debts").readNullable[Seq[ResponseItem]] and
+      (JsPath \ "taxCodeComponents" \ "inYearAdjustments").readNullable[ResponseItem]
   )(RetrieveCodingOutResponse.apply _)
 
 

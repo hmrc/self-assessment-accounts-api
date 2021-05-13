@@ -16,27 +16,23 @@
 
 package v1.models.domain
 
-import play.api.libs.json.Format
-import utils.enums.Enums
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
+import v1.models.domain.MtdSource.{hmrcHeld, latest, user}
 
+class MtdSourceSpec extends UnitSpec with EnumJsonSpecSupport {
 
-sealed trait MtdSource {
-  def toDownstreamSource: DownstreamSource
-}
+  testRoundTrip[MtdSource](
+    ("hmrcHeld", hmrcHeld),
+    ("user", user),
+    ("latest", latest)
+  )
 
-object MtdSource {
-
-  case object hmrcHeld extends MtdSource {
-    override def toDownstreamSource: DownstreamSource = DownstreamSource.`HMRC HELD`
+  "toMtdSource" should {
+    "return the correct identifier value" in {
+      MtdSource.hmrcHeld.toDownstreamSource shouldBe DownstreamSource.`HMRC HELD`
+      MtdSource.user.toDownstreamSource shouldBe DownstreamSource.`CUSTOMER`
+      MtdSource.latest.toDownstreamSource shouldBe DownstreamSource.`LATEST`
+    }
   }
-
-  case object user extends MtdSource {
-    override def toDownstreamSource: DownstreamSource = DownstreamSource.`CUSTOMER`
-  }
-
-  case object latest extends MtdSource {
-    override def toDownstreamSource: DownstreamSource = DownstreamSource.`LATEST`
-  }
-
-  implicit val format: Format[MtdSource] = Enums.format[MtdSource]
 }

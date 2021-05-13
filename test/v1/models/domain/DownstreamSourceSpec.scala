@@ -24,13 +24,15 @@ class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testRoundTrip[DownstreamSource](
     ("HMRC HELD", `HMRC HELD`),
-    ("CUSTOMER", `CUSTOMER`)
+    ("CUSTOMER", `CUSTOMER`),
+    ("LATEST", `LATEST`)
   )
 
   "toMtdSource" should {
     "return the correct identifier value" in {
-      DownstreamSource.`HMRC HELD`.toMtdSource shouldBe MtdSource.`hmrcHeld`
-      DownstreamSource.`CUSTOMER`.toMtdSource shouldBe MtdSource.`user`
+      DownstreamSource.`HMRC HELD`.toMtdSource shouldBe MtdSource.hmrcHeld
+      DownstreamSource.`CUSTOMER`.toMtdSource shouldBe MtdSource.user
+      DownstreamSource.`LATEST`.toMtdSource shouldBe MtdSource.latest
     }
   }
 }

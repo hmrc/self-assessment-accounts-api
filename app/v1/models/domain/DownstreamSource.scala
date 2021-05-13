@@ -26,11 +26,15 @@ sealed trait DownstreamSource {
 object DownstreamSource {
 
   case object `HMRC HELD` extends DownstreamSource {
-    override def toMtdSource: MtdSource = MtdSource.`hmrcHeld`
+    override def toMtdSource: MtdSource = MtdSource.hmrcHeld
   }
 
   case object `CUSTOMER` extends DownstreamSource {
-    override def toMtdSource: MtdSource = MtdSource.`user`
+    override def toMtdSource: MtdSource = MtdSource.user
+  }
+
+  case object `LATEST` extends DownstreamSource {
+    override def toMtdSource: MtdSource = MtdSource.latest
   }
 
 

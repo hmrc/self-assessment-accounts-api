@@ -16,13 +16,11 @@
 
 package v1.models.response.retrieveCodingOut
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 
 case class ResponseItem(amount: BigDecimal, relatedTaxYear: String, submittedOn: String)
 
 object ResponseItem {
 
-  implicit val reads: Reads[ResponseItem] = Json.reads[ResponseItem]
-
-  implicit val writes: OWrites[ResponseItem] = Json.writes[ResponseItem]
+  implicit val formats: OFormat[ResponseItem] = Json.format[ResponseItem]
 }
