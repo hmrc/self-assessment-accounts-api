@@ -8,3 +8,6 @@ GET        /:nino/transactions                             v1.controllers.ListTr
 GET        /:nino/transactions/:transactionId              v1.controllers.RetrieveTransactionDetailsController.retrieveTransactionDetails(nino: String, transactionId: String)
 
 # Coding Out Endpoints
+
+
+DELETE     /:nino/:taxYear/collection/tax-code             v1.controllers.DeleteCodingOutController.handleRequest(nino: String, taxYear: String)
