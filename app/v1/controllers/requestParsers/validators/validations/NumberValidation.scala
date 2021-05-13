@@ -14,8 +14,22 @@
  * limitations under the License.
  */
 
-package v1.models.request.createOrAmendCodingOut
+package v1.controllers.requestParsers.validators.validations
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.errors.{MtdError, ValueFormatError}
 
-case class CreateOrAmendCodingOutParsedRequest(nino: Nino, taxYear: String, body: CreateOrAmendCodingOutRequestBody)
+object NumberValidation {
+  def validateOptional(field: Option[BigDecimal], path: String): List[MtdError] = {
+    field match {
+      case None => NoValidationErrors
+      case Some(value) => validate(value, path)
+    }
+  }
+  private def validate(field: BigDecimal, path: String): List[MtdError] = {
+    if (field >= 0 && field < 100000000000.00 && field.scale <= 2) {
+      Nil
+    } else {
+      List(ValueFormatError.copy(paths = Some(Seq(path))))
+    }
+  }
+}
