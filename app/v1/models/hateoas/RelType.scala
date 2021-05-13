@@ -26,4 +26,6 @@ object RelType {
   val RETRIEVE_CHARGE_HISTORY = "retrieve-charge-history"
   val LIST_PAYMENTS = "list-payments"
   val RETRIEVE_PAYMENT_ALLOCATIONS = "retrieve-payment-allocations"
+  val CREATE_OR_AMEND_CODING_OUT = "create-or-amend-coding-out-underpayments"
+  val DELETE_CODING_OUT = "delete-coding-out-underpayments"
 }
