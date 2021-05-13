@@ -21,13 +21,13 @@ import cats.implicits._
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
-import v1.controllers.requestParsers.CreateOrAmendCodingOutRequestParser
+import v1.controllers.requestParsers.CreateOrAmendCodingOutParser
 import v1.hateoas.HateoasFactory
 import v1.models.errors._
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
+import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutResponse.LinksFactory
 import v1.services.{CreateOrAmendCodingOutService, EnrolmentsAuthService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -35,7 +35,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
-                                                 parser: CreateOrAmendCodingOutRequestParser,
+                                                 parser: CreateOrAmendCodingOutParser,
                                                  service: CreateOrAmendCodingOutService,
                                                  hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
