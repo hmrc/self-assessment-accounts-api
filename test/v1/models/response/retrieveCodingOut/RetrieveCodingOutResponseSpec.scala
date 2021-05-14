@@ -130,10 +130,10 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
   val responseModel: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
         "hmrcHeld",
-        Some(Seq(ResponseItem(87.78, "2020-21", "2021-07-06T09:37:17Z"))),
-        Some(Seq(ResponseItem(12.45, "2021-22", "2021-07-06T09:37:17Z"))),
-        Some(Seq(ResponseItem(10.01, "2021-22", "2021-07-06T09:37:17Z"))),
-        Some(ResponseItem(99.99, "2021-22", "2021-07-06T09:37:17Z"))
+        Some(Seq(TaxCodeComponent(87.78, "2020-21", "2021-07-06T09:37:17Z"))),
+        Some(Seq(TaxCodeComponent(12.45, "2021-22", "2021-07-06T09:37:17Z"))),
+        Some(Seq(TaxCodeComponent(10.01, "2021-22", "2021-07-06T09:37:17Z"))),
+        Some(TaxCodeComponent(99.99, "2021-22", "2021-07-06T09:37:17Z"))
     )
 
   "RetrieveCodingOutResponse" when {

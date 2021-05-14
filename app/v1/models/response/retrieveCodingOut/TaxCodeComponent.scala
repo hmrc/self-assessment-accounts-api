@@ -18,9 +18,9 @@ package v1.models.response.retrieveCodingOut
 
 import play.api.libs.json.{Json, OFormat}
 
-case class ResponseItem(amount: BigDecimal, relatedTaxYear: String, submittedOn: String)
+case class TaxCodeComponent(amount: BigDecimal, relatedTaxYear: String, submittedOn: String)
 
-object ResponseItem {
+object TaxCodeComponent {
 
-  implicit val formats: OFormat[ResponseItem] = Json.format[ResponseItem]
+  implicit val formats: OFormat[TaxCodeComponent] = Json.format[TaxCodeComponent]
 }

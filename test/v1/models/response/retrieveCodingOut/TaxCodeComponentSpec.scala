@@ -19,7 +19,7 @@ package v1.models.response.retrieveCodingOut
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
-class ResponseItemSpec extends UnitSpec {
+class TaxCodeComponentSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
@@ -51,25 +51,23 @@ class ResponseItemSpec extends UnitSpec {
     """.stripMargin
   )
 
-
-  val responseItemModel: ResponseItem =
-    ResponseItem(
+  val responseItemModel: TaxCodeComponent =
+    TaxCodeComponent(
       87.78,
       "2021-22",
       "2021-07-06T09:37:17Z"
     )
 
-
   "ResponseItem" when {
     "read from valid JSON" should {
       "produce the expected ResponseItem object" in {
-        desResponse.as[ResponseItem] shouldBe responseItemModel
+        desResponse.as[TaxCodeComponent] shouldBe responseItemModel
       }
     }
 
     "read from invalid JSON" should {
       "produce an empty ResponseItem object" in {
-        invalidDesResponse.validate[ResponseItem] shouldBe a[JsError]
+        invalidDesResponse.validate[TaxCodeComponent] shouldBe a[JsError]
       }
     }
 

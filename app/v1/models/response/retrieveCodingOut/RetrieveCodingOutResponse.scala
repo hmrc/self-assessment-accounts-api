@@ -21,22 +21,20 @@ import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import v1.models.domain.DownstreamSource
 
 case class RetrieveCodingOutResponse(source: String,
-                                     selfAssessmentUnderPayments: Option[Seq[ResponseItem]],
-                                     payeUnderpayments: Option[Seq[ResponseItem]],
-                                     debts: Option[Seq[ResponseItem]],
-                                     inYearAdjustments: Option[ResponseItem])
+                                     selfAssessmentUnderPayments: Option[Seq[TaxCodeComponent]],
+                                     payeUnderpayments: Option[Seq[TaxCodeComponent]],
+                                     debts: Option[Seq[TaxCodeComponent]],
+                                     inYearAdjustments: Option[TaxCodeComponent])
 
 object RetrieveCodingOutResponse {
 
   implicit val reads: Reads[RetrieveCodingOutResponse] = (
       (JsPath \ "source" ).read[DownstreamSource].map(_.toMtdSource) and
-      (JsPath \ "taxCodeComponents" \ "selfAssessmentUnderPayments").readNullable[Seq[ResponseItem]] and
-      (JsPath \ "taxCodeComponents" \ "payeUnderpayments").readNullable[Seq[ResponseItem]] and
-      (JsPath \ "taxCodeComponents" \ "debts").readNullable[Seq[ResponseItem]] and
-      (JsPath \ "taxCodeComponents" \ "inYearAdjustments").readNullable[ResponseItem]
+      (JsPath \ "taxCodeComponents" \ "selfAssessmentUnderPayments").readNullable[Seq[TaxCodeComponent]] and
+      (JsPath \ "taxCodeComponents" \ "payeUnderpayments").readNullable[Seq[TaxCodeComponent]] and
+      (JsPath \ "taxCodeComponents" \ "debts").readNullable[Seq[TaxCodeComponent]] and
+      (JsPath \ "taxCodeComponents" \ "inYearAdjustments").readNullable[TaxCodeComponent]
   )(RetrieveCodingOutResponse.apply _)
-
-
 
   implicit val writes: Writes[RetrieveCodingOutResponse] = Json.writes[RetrieveCodingOutResponse]
 }

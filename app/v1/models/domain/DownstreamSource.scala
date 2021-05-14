@@ -29,18 +29,9 @@ object DownstreamSource {
     override def toMtdSource: String = "hmrcHeld"
   }
 
-  case object `HMRC-HELD` extends DownstreamSource {
-    override def toMtdSource: String = "Invalid Source Response"
-  }
-
   case object `CUSTOMER` extends DownstreamSource {
     override def toMtdSource: String = "user"
   }
-
-  case object `LATEST` extends DownstreamSource {
-    override def toMtdSource: String = "Invalid Source Response"
-  }
-
 
   implicit val format: json.Format[DownstreamSource] = Enums.format[DownstreamSource]
 }
