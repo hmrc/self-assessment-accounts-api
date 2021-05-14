@@ -20,7 +20,7 @@ import v1.models.errors.{MtdError, SourceFormatError}
 
 object SourceValidation {
 
-  val sources = Seq("user", "hmrcHeld")
+  val sources = Seq("user", "hmrcHeld", "latest")
 
   def validate(source: String): List[MtdError] = {
     source match {

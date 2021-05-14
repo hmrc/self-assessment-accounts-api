@@ -37,6 +37,13 @@ class SourceValidationSpec extends UnitSpec {
         validationResult.isEmpty shouldBe true
 
       }
+      "latest is supplied" in {
+
+        val validSource = "latest"
+        val validationResult = SourceValidation.validate(validSource)
+        validationResult.isEmpty shouldBe true
+
+      }
     }
 
     "return an error" when {
