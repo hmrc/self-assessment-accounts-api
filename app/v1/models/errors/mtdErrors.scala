@@ -36,6 +36,7 @@ object ValueFormatError extends MtdError("FORMAT_VALUE", "The value must be betw
 object ToDateFormatError extends MtdError("FORMAT_TO_DATE", "The provided To date is invalid")
 object PaymentIdFormatError extends MtdError("FORMAT_PAYMENT_ID", "The provided payment ID is invalid")
 object TransactionIdFormatError extends MtdError("FORMAT_TRANSACTION_ID", "The provided transaction ID is invalid")
+object SourceFormatError extends MtdError("FORMAT_SOURCE", "The format of the supplied source is not valid")
 
 // Rule Errors
 object RuleTaxYearNotSupportedError extends MtdError(
