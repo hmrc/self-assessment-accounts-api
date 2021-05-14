@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.controllers.requestParsers
 
-import config.AppConfig
-import v1.models.domain.DesTaxYear
-import v1.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import javax.inject.Inject
+import uk.gov.hmrc.domain.Nino
+import v1.controllers.requestParsers.validators.RetrieveCodingOutValidator
+import v1.models.request.retrieveCodingOut._
 
-object TaxYearNotSupportedValidation {
-  // @param taxYear In format YYYY-YY
-  def validate(taxYear: String)(implicit appConfig: AppConfig): List[MtdError] = {
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
+class RetrieveCodingOutRequestParser @Inject()(val validator: RetrieveCodingOutValidator)
+  extends RequestParser[RetrieveCodingOutRawRequest, RetrieveCodingOutParsedRequest] {
 
-    if (desTaxYear < appConfig.minimumPermittedTaxYear) List(RuleTaxYearNotSupportedError) else NoValidationErrors
-  }
+  override protected def requestFor(data: RetrieveCodingOutRawRequest): RetrieveCodingOutParsedRequest =
+    RetrieveCodingOutParsedRequest(Nino(data.nino), data.taxYear, data.source)
 }
