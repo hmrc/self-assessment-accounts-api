@@ -19,7 +19,6 @@ package v1.controllers.requestParsers.validators
 import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
-import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import v1.models.errors.{NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
@@ -67,29 +66,29 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in new Test {
-        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, AnyContentAsJson(validJson))) shouldBe Nil
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, validJson)) shouldBe Nil
       }
 
       "a valid request is supplied missing optional fields" in new Test {
-        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, AnyContentAsJson(validEmptyJson))) shouldBe Nil
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, validEmptyJson)) shouldBe Nil
       }
     }
 
     "return NinoFormatError" when {
       "an invalid nino is supplied" in new Test {
-        validator.validate(CreateOrAmendCodingOutRawRequest(invalidNino, validTaxYear, AnyContentAsJson(validJson))) shouldBe List(NinoFormatError)
+        validator.validate(CreateOrAmendCodingOutRawRequest(invalidNino, validTaxYear, validJson)) shouldBe List(NinoFormatError)
       }
     }
 
     "return a TaxYearFormatError" when {
       "an invalid tax year is supplied" in new Test {
-        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, invalidTaxYear, AnyContentAsJson(validJson))) shouldBe List(TaxYearFormatError)
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, invalidTaxYear, validJson)) shouldBe List(TaxYearFormatError)
       }
     }
 
     "return a RuleTaxYearRangeInvalidError" when {
       "the tax year range is invalid" in new Test{
-        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, invalidTaxYearRange, AnyContentAsJson(validJson))) shouldBe List(
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, invalidTaxYearRange, validJson)) shouldBe List(
           RuleTaxYearRangeInvalidError
         )
       }
@@ -97,7 +96,7 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
 
     "return NinoFormatError and TaxYearFormatError" when {
       "an invalid tax year and an invalid nino is supplied" in new Test {
-        validator.validate(CreateOrAmendCodingOutRawRequest(invalidNino, invalidTaxYear, AnyContentAsJson(validJson))) shouldBe List(
+        validator.validate(CreateOrAmendCodingOutRawRequest(invalidNino, invalidTaxYear, validJson)) shouldBe List(
           NinoFormatError,
           TaxYearFormatError
         )
@@ -106,7 +105,7 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
 
     "return ValueFormatError" when {
       "a request with invalid fields is supplied" in new Test {
-        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, AnyContentAsJson(invalidJson))) shouldBe List(ValueFormatError.copy(paths =
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, invalidJson)) shouldBe List(ValueFormatError.copy(paths =
           Some(Seq(
             "/payeUnderpayments",
             "/selfAssessmentUnderPayments",

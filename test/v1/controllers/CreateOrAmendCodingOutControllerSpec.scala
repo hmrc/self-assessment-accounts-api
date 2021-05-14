@@ -31,6 +31,7 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody}
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateOrAmendCodingOutControllerSpec
@@ -65,9 +66,9 @@ class CreateOrAmendCodingOutControllerSpec
   }
 
   private val testHateoasLinks = Seq(
-    Link(href = s"/individuals/reliefs/foreign/$nino/$taxYear", method = GET, rel = "self"),
-    Link(href = s"/individuals/reliefs/foreign/$nino/$taxYear", method = PUT, rel = "amend-reliefs-foreign"),
-    Link(href = s"/individuals/reliefs/foreign/$nino/$taxYear", method = DELETE, rel = "delete-reliefs-foreign")
+    Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = GET, rel = "self"),
+    Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = PUT, rel = "create-or-amend-coding-out-underpayments"),
+    Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = DELETE, rel = "delete-coding-out-underpayments")
   )
 
   private val requestJson = Json.parse(
@@ -181,7 +182,7 @@ class CreateOrAmendCodingOutControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, INTERNAL_SERVER_ERROR),
+          (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST)
         )
 

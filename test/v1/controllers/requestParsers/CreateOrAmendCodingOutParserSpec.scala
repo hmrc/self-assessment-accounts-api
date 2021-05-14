@@ -17,7 +17,6 @@
 package v1.controllers.requestParsers
 
 import play.api.libs.json.Json
-import play.api.mvc.AnyContentAsJson
 import support.UnitSpec
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.validators.MockCreateOrAmendCodingOutValidator
@@ -40,7 +39,7 @@ class CreateOrAmendCodingOutParserSpec extends UnitSpec{
       |}
       |""".stripMargin)
 
-  val request = CreateOrAmendCodingOutRawRequest(nino, taxYear, AnyContentAsJson(validJson))
+  val request = CreateOrAmendCodingOutRawRequest(nino, taxYear, validJson)
   val validBody = CreateOrAmendCodingOutRequestBody(Some(2000.99), Some(2000.99), Some(2000.99), Some(5000.99))
 
   trait Test extends MockCreateOrAmendCodingOutValidator {

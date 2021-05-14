@@ -25,5 +25,5 @@ class CreateOrAmendCodingOutParser @Inject()(val validator: CreateOrAmendCodingO
   extends RequestParser[CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutParsedRequest]{
 
   override protected def requestFor(data: CreateOrAmendCodingOutRawRequest): CreateOrAmendCodingOutParsedRequest =
-    CreateOrAmendCodingOutParsedRequest(Nino(data.nino), data.taxYear, data.body.json.as[CreateOrAmendCodingOutRequestBody])
+    CreateOrAmendCodingOutParsedRequest(Nino(data.nino), data.taxYear, data.body.as[CreateOrAmendCodingOutRequestBody])
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 HM Revenue & Customs
+ * Copyright 2021 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -9,7 +9,7 @@
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIED OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
@@ -30,7 +30,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-    val taxYear: String = "2021-22"
+    val taxYear: String = "2020-21"
 
     val requestBodyJson: JsValue = Json.parse(
       s"""|{
@@ -47,17 +47,17 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
          |{
          |  "links": [
          |    {
-         |      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
          |      "method": "PUT",
          |      "rel": "create-or-amend-coding-out-underpayments"
          |    },
          |    {
-         |      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
          |      "method": "self",
          |      "rel": "GET"
          |    },
          |    {
-         |      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
          |      "method": "delete-coding-out-underpayments",
          |      "rel": "DELETE"
          |    }
@@ -67,7 +67,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/$nino/$taxYear/collection/tax-code"
 
-    def desUri: String = s"/collection/tax-code/$nino/$taxYear"
+    def desUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 
     def setupStubs(): StubMapping
 
@@ -135,7 +135,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           response.json shouldBe Json.toJson(TaxYearFormatError)
         }
         "an unsupported taxYear is provided" in new Test {
-          override val taxYear: String = "2017-18"
+          override val taxYear: String = "2016-17"
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -143,18 +143,6 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request().put(requestBodyJson))
-          response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(TaxYearFormatError)
-        }
-        "the most recent unsupported taxYear is provided" in new Test {
-          override val taxYear: String = ???
-
-          override def setupStubs(): StubMapping = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-          }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(RuleTaxYearNotSupportedError)
@@ -202,7 +190,11 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(???)
+          response.json shouldBe Json.toJson(ValueFormatError.copy(
+            paths = Some(List(
+              "/payeUnderpayments"
+            ))
+          ))
         }
         "an invalid selfAssessmentUnderPayments is submited" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
@@ -223,7 +215,11 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(???)
+          response.json shouldBe Json.toJson(ValueFormatError.copy(
+            paths = Some(List(
+              "/selfAssessmentUnderPayments"
+            ))
+          ))
         }
         "an invalid debts is submited" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
@@ -244,7 +240,11 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(???)
+          response.json shouldBe Json.toJson(ValueFormatError.copy(
+            paths = Some(List(
+              "/debts"
+            ))
+          ))
         }
         "an invalid inYearAdjustments is submited" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
@@ -265,7 +265,11 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(???)
+          response.json shouldBe Json.toJson(ValueFormatError.copy(
+            paths = Some(List(
+              "/inYearAdjustments"
+            ))
+          ))
         }
         "all values submited are invalid" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
@@ -286,7 +290,14 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(???)
+          response.json shouldBe Json.toJson(ValueFormatError.copy(
+            paths = Some(List(
+              "/payeUnderpayments",
+              "/selfAssessmentUnderPayments",
+              "/debts",
+              "/inYearAdjustments"
+            ))
+          ))
         }
         "an empty body is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse("")

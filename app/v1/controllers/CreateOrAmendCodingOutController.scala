@@ -65,8 +65,6 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
               s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          val response = Json.toJson(vendorResponse)
-
           Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
         }
@@ -89,9 +87,10 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
            TaxYearFormatError |
            RuleTaxYearNotSupportedError |
            RuleTaxYearRangeInvalidError |
+           RuleTaxYearNotEndedError |
            MtdErrorWithCustomMessage(ValueFormatError.code) |
            RuleIncorrectOrEmptyBodyError =>
-        BadRequest(Json.toJson(errorWrapper: ErrorWrapper))
+        BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
     }
   }
