@@ -19,8 +19,11 @@ package v1.services
 import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
-import v1.models.errors.{CodingOutNotFoundError, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, SourceFormatError, TaxYearFormatError}
+import v1.mocks.connectors.MockRetrieveCodingOutConnector
+import v1.models.errors.{CodingOutNotFoundError, DesErrorCode, DesErrors, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, SourceFormatError, TaxYearFormatError}
 import v1.models.outcomes.ResponseWrapper
+import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
+import v1.models.response.retrieveCodingOut.{RetrieveCodingOutResponse, TaxCodeComponent}
 
 import scala.concurrent.Future
 
@@ -28,11 +31,27 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
+  private val taxCodeComponent: TaxCodeComponent =
+    TaxCodeComponent(
+      amount = 1000,
+      relatedTaxYear = "2020",
+      submittedOn = "2020-07-06T09:37:17Z"
+    )
+
+  private val retrieveCodingOutResponse: RetrieveCodingOutResponse =
+    RetrieveCodingOutResponse(
+      source = "LATEST",
+      selfAssessmentUnderPayments = Some(Seq(taxCodeComponent)),
+      payeUnderpayments = Some(Seq(taxCodeComponent)),
+      debts = Some(Seq(taxCodeComponent)),
+      inYearAdjustments = Some(taxCodeComponent)
+    )
+
   private val requestData: RetrieveCodingOutParsedRequest =
     RetrieveCodingOutParsedRequest(
       nino = nino,
       taxYear = "2019-20",
-      source = "LATEST"
+      source = Some("LATEST")
     )
 
   trait Test extends MockRetrieveCodingOutConnector {
@@ -49,9 +68,9 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
     "service call successful" must {}
     "return mapped result" in new Test {
 
-      val connectorResponse: RetrieveCodingOutResponse = RetrieveCodintOutFixture.retrieveChargeHistoryResponse
+      val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse
 
-      MockRetrieveChargeHistoryConnector.retrieveChargeHistory(requestData)
+      MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
       await(service.retrieveChargeHistory(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))

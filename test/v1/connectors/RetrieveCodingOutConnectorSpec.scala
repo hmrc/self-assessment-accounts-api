@@ -20,6 +20,8 @@ import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
+import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
+import v1.models.response.retrieveCodingOut.{RetrieveCodingOutResponse, TaxCodeComponent}
 
 import scala.concurrent.Future
 
@@ -28,6 +30,23 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
   val nino: Nino = Nino("AA123456A")
   val taxYear: String = "2019-20"
   val source: String = "LATEST"
+
+
+  private val taxCodeComponent: TaxCodeComponent =
+    TaxCodeComponent(
+      amount = 1000,
+      relatedTaxYear = "2020",
+      submittedOn = "2020-07-06T09:37:17Z"
+    )
+
+  private val retrieveCodingOutResponse: RetrieveCodingOutResponse =
+    RetrieveCodingOutResponse(
+      source = "LATEST",
+      selfAssessmentUnderPayments = Some(Seq(taxCodeComponent)),
+      payeUnderpayments = Some(Seq(taxCodeComponent)),
+      debts = Some(Seq(taxCodeComponent)),
+      inYearAdjustments = Some(taxCodeComponent)
+    )
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -41,14 +60,14 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
   "RetrieveCodingOutConnector" when {
     "retrieveCodingOut" must {
-      val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(nino, taxYear, source)
+      val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(nino, taxYear, Some(source))
 
       "return a valid response" in new Test {
-        val outcome = Right(ResponseWrapper(correlationId, RetrieveChargeHistoryFixture.retrieveCodingOutParsedResponse))
+        val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
 
         MockedHttpClient
           .get(
-            url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+            url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
             queryParams = Seq("view" -> source),
             requiredHeaders = "Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token", "CorrelationId" -> s"$correlationId"
           )
