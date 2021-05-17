@@ -39,4 +39,5 @@ object MtdSource {
   }
 
   implicit val format: Format[MtdSource] = Enums.format[MtdSource]
+  val parser: PartialFunction[String, MtdSource] = Enums.parser[MtdSource]
 }
