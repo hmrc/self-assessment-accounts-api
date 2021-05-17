@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.IfsUri
+import v1.models.domain.{DownstreamSource, MtdSource}
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 
@@ -42,14 +43,16 @@ class RetrieveCodingOutConnector @Inject()(val http: HttpClient,
 
     val baseUrl = s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 
-    val queryParams = Map("view" -> source).collect {
-      case (key, Some(value)) => key -> value
+    if(source.isEmpty) {
+      get(uri = IfsUri[RetrieveCodingOutResponse](baseUrl))
+    } else {
+      val queryParams = Seq("view" -> source).collect {
+        case (key, Some(value)) => key -> MtdSource.parser(value).toDownstreamSource
+      }
+      get(
+        uri = IfsUri[RetrieveCodingOutResponse](baseUrl),
+        queryParams = queryParams
+      )
     }
-
-    get(
-      uri = IfsUri[RetrieveCodingOutResponse](baseUrl),
-      queryParams = queryParams.toSeq
-    )
-
   }
 }

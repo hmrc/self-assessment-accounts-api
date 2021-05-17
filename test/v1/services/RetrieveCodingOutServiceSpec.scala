@@ -20,7 +20,7 @@ import uk.gov.hmrc.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockRetrieveCodingOutConnector
-import v1.models.errors.{CodingOutNotFoundError, DesErrorCode, DesErrors, DownstreamError, ErrorWrapper, MtdError, NinoFormatError, RuleTaxYearNotSupportedError, SourceFormatError, TaxYearFormatError}
+import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.{RetrieveCodingOutResponse, TaxCodeComponent}
@@ -34,13 +34,13 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
   private val taxCodeComponent: TaxCodeComponent =
     TaxCodeComponent(
       amount = 1000,
-      relatedTaxYear = "2020",
+      relatedTaxYear = "2019-20",
       submittedOn = "2020-07-06T09:37:17Z"
     )
 
   private val retrieveCodingOutResponse: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
-      source = "LATEST",
+      source = "hmrcHeld",
       selfAssessmentUnderPayments = Some(Seq(taxCodeComponent)),
       payeUnderpayments = Some(Seq(taxCodeComponent)),
       debts = Some(Seq(taxCodeComponent)),
@@ -51,7 +51,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
     RetrieveCodingOutParsedRequest(
       nino = nino,
       taxYear = "2019-20",
-      source = Some("LATEST")
+      source = Some("hmrcHeld")
     )
 
   trait Test extends MockRetrieveCodingOutConnector {
@@ -65,42 +65,43 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
   }
 
   "RetrieveCodingOutService" when {
-    "service call successful" must {}
-    "return mapped result" in new Test {
+    "service call successful" must {
+      "return mapped result" in new Test {
 
-      val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse
+        val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse
 
-      MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
-        .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
+        MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
-      await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
+        await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
+      }
     }
-  }
 
-  "unsuccessful" must {
-    "map errors according to spec" when {
+    "unsuccessful" must {
+      "map errors according to spec" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(desErrorCode: String, error: MtdError): Unit =
+          s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
-        }
+            await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
+          }
 
-      val input: Seq[(String, MtdError)] = Seq(
-        "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-        "INVALID_TAX_YEAR" -> TaxYearFormatError,
-        "INVALID_VIEW" -> SourceFormatError,
-        "INVALID_CORRELATIONID" -> DownstreamError,
-        "NO_DATA_FOUND" -> CodingOutNotFoundError,
-        "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-        "SERVICE_ERROR" -> DownstreamError,
-        "SERVICE_UNAVAILABLE" -> DownstreamError
-      )
+        val input: Seq[(String, MtdError)] = Seq(
+          "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
+          "INVALID_TAX_YEAR" -> TaxYearFormatError,
+          "INVALID_VIEW" -> SourceFormatError,
+          "INVALID_CORRELATIONID" -> DownstreamError,
+          "NO_DATA_FOUND" -> CodingOutNotFoundError,
+          "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
+          "SERVER_ERROR" -> DownstreamError,
+          "SERVICE_UNAVAILABLE" -> DownstreamError
+        )
 
-      input.foreach(args => (serviceError _).tupled(args))
+        input.foreach(args => (serviceError _).tupled(args))
+      }
     }
   }
 }

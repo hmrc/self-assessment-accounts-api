@@ -19,6 +19,7 @@ package v1.connectors
 import mocks.MockAppConfig
 import uk.gov.hmrc.domain.Nino
 import v1.mocks.MockHttpClient
+import v1.models.domain.MtdSource
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.{RetrieveCodingOutResponse, TaxCodeComponent}
@@ -29,7 +30,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
   val nino: Nino = Nino("AA123456A")
   val taxYear: String = "2019-20"
-  val source: String = "LATEST"
+  val source: String = "hmrcHeld"
 
 
   private val taxCodeComponent: TaxCodeComponent =
@@ -41,7 +42,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
   private val retrieveCodingOutResponse: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
-      source = "LATEST",
+      source = "hmrcHeld",
       selfAssessmentUnderPayments = Some(Seq(taxCodeComponent)),
       payeUnderpayments = Some(Seq(taxCodeComponent)),
       debts = Some(Seq(taxCodeComponent)),
@@ -60,15 +61,28 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
   "RetrieveCodingOutConnector" when {
     "retrieveCodingOut" must {
-      val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(nino, taxYear, Some(source))
-
       "return a valid response" in new Test {
+        val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(nino, taxYear, Some(source))
         val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
 
         MockedHttpClient
           .get(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            queryParams = Seq("view" -> source),
+            queryParams = Seq("view" -> MtdSource.parser(source).toDownstreamSource),
+            requiredHeaders = "Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token", "CorrelationId" -> s"$correlationId"
+          )
+          .returns(Future.successful(outcome))
+
+        await(connector.retrieveCodingOut(request)) shouldBe outcome
+      }
+
+      "return a valid response when there's no source parameter" in new Test {
+        val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(nino, taxYear, None)
+        val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
+
+        MockedHttpClient
+          .get(
+            url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
             requiredHeaders = "Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token", "CorrelationId" -> s"$correlationId"
           )
           .returns(Future.successful(outcome))

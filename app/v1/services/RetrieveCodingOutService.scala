@@ -42,7 +42,7 @@ class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
-    } yield desResponseWrapper.map(des => des)
+    } yield desResponseWrapper
 
     result.value
   }
@@ -55,7 +55,7 @@ class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)
       "INVALID_CORRELATIONID" -> DownstreamError,
       "NO_DATA_FOUND" -> CodingOutNotFoundError,
       "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "SERVICE_ERROR" -> DownstreamError,
+      "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )
 }
