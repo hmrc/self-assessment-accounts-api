@@ -34,7 +34,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)
   extends DesResponseMappingSupport with Logging {
 
-  def retrieveChargeHistory(request: RetrieveCodingOutParsedRequest)(
+  def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(
     implicit hc: HeaderCarrier,
     ec: ExecutionContext,
     logContext: EndpointLogContext,

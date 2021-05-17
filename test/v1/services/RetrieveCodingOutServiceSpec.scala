@@ -73,7 +73,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
       MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
-      await(service.retrieveChargeHistory(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
+      await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
     }
   }
 
@@ -86,7 +86,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
           MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
-          await(service.retrieveChargeHistory(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
+          await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input: Seq[(String, MtdError)] = Seq(
