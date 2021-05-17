@@ -36,7 +36,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
   private val taxCodeComponent: TaxCodeComponent =
     TaxCodeComponent(
       amount = 1000,
-      relatedTaxYear = "2020",
+      relatedTaxYear = "2019-20",
       submittedOn = "2020-07-06T09:37:17Z"
     )
 
@@ -52,7 +52,6 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: RetrieveCodingOutConnector = new RetrieveCodingOutConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "ifs-environment", "Authorization" -> s"Bearer ifs-token")
 
     MockedAppConfig.ifsBaseUrl returns baseUrl
     MockedAppConfig.ifsToken returns "ifs-token"
