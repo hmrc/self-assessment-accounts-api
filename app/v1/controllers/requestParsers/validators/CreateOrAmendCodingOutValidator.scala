@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
 import v1.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError, ValueFormatError}
+import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody}
 import config.AppConfig
 import javax.inject.Inject

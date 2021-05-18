@@ -183,7 +183,8 @@ class CreateOrAmendCodingOutControllerSpec
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotEndedError, BAD_REQUEST)
+          (RuleTaxYearNotEndedError, BAD_REQUEST),
+          (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
         input.foreach(args => (serviceErrors _).tupled(args))
