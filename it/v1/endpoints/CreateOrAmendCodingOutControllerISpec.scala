@@ -48,18 +48,18 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
          |  "links": [
          |    {
          |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+         |      "method": "GET",
+         |      "rel": "self"
+         |    },
+         |    {
+         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
          |      "method": "PUT",
          |      "rel": "create-or-amend-coding-out-underpayments"
          |    },
          |    {
          |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-         |      "method": "self",
-         |      "rel": "GET"
-         |    },
-         |    {
-         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-         |      "method": "delete-coding-out-underpayments",
-         |      "rel": "DELETE"
+         |      "method": "DELETE",
+         |      "rel": "delete-coding-out-underpayments"
          |    }
          |  ]
          |}
@@ -171,7 +171,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(RuleTaxYearNotEndedError)
         }
-        "an invalid payeUnderpayments is submited" in new Test {
+        "an invalid payeUnderpayments is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
@@ -196,7 +196,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             ))
           ))
         }
-        "an invalid selfAssessmentUnderPayments is submited" in new Test {
+        "an invalid selfAssessmentUnderPayments is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
@@ -221,7 +221,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             ))
           ))
         }
-        "an invalid debts is submited" in new Test {
+        "an invalid debts is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
@@ -246,7 +246,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             ))
           ))
         }
-        "an invalid inYearAdjustments is submited" in new Test {
+        "an invalid inYearAdjustments is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
@@ -271,7 +271,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             ))
           ))
         }
-        "all values submited are invalid" in new Test {
+        "all values submitted are invalid" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
