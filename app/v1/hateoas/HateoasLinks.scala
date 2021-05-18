@@ -23,6 +23,8 @@ import v1.models.hateoas.RelType._
 
 trait HateoasLinks {
 
+  // Payments and Liabilities links
+
   // L1
   def retrieveBalance(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
     Link(
@@ -79,13 +81,14 @@ trait HateoasLinks {
       rel = if(isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS
     )
 
-  // Coding out
+  // Coding Out Underpayments and Debts links
+
   // L1
-  def createAndAmendCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
+  def createOrAmendCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/$taxYear/collection/tax-code",
       method = PUT,
-      rel = CREATE_OR_AMEND_CODING_OUT
+      rel = CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS
     )
 
   // L2
@@ -96,11 +99,11 @@ trait HateoasLinks {
       rel = SELF
     )
 
-  // L2
+  // L3
   def deleteCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/$taxYear/collection/tax-code",
       method = DELETE,
-      rel = DELETE_CODING_OUT
+      rel = DELETE_CODING_OUT_UNDERPAYMENTS
     )
 }

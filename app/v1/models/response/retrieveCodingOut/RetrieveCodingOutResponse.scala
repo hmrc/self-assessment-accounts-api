@@ -16,9 +16,12 @@
 
 package v1.models.response.retrieveCodingOut
 
+import config.AppConfig
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, Reads, Writes}
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
 import v1.models.domain.DownstreamSource
+import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveCodingOutResponse(source: String,
                                      selfAssessmentUnderPayments: Option[Seq[TaxCodeComponent]],
@@ -26,7 +29,7 @@ case class RetrieveCodingOutResponse(source: String,
                                      debts: Option[Seq[TaxCodeComponent]],
                                      inYearAdjustments: Option[TaxCodeComponent])
 
-object RetrieveCodingOutResponse {
+object RetrieveCodingOutResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveCodingOutResponse] = (
       (JsPath \ "source" ).read[DownstreamSource].map(_.toMtdSource) and
@@ -36,5 +39,18 @@ object RetrieveCodingOutResponse {
       (JsPath \ "taxCodeComponents" \ "inYearAdjustments").readNullable[TaxCodeComponent]
   )(RetrieveCodingOutResponse.apply _)
 
-  implicit val writes: Writes[RetrieveCodingOutResponse] = Json.writes[RetrieveCodingOutResponse]
+  implicit val writes: OWrites[RetrieveCodingOutResponse] = Json.writes[RetrieveCodingOutResponse]
+
+  implicit object RetrieveCodingOutLinksFactory extends HateoasLinksFactory[RetrieveCodingOutResponse, RetrieveCodingOutHateoasData] {
+    override def links(appConfig: AppConfig, data: RetrieveCodingOutHateoasData): Seq[Link] = {
+      import data._
+      Seq(
+        createOrAmendCodingOut(appConfig, nino, taxYear),
+        retrieveCodingOut(appConfig, nino, taxYear),
+        deleteCodingOut(appConfig, nino, taxYear)
+      )
+    }
+  }
 }
+
+case class RetrieveCodingOutHateoasData(nino: String, taxYear: String) extends HateoasData
