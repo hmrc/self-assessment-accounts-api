@@ -78,4 +78,29 @@ trait HateoasLinks {
       method = GET,
       rel = if(isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS
     )
+
+  // Coding out
+  // L1
+  def createAndAmendCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = s"/${appConfig.apiGatewayContext}/$nino/$taxYear/collection/tax-code",
+      method = PUT,
+      rel = CREATE_OR_AMEND_CODING_OUT
+    )
+
+  // L2
+  def retrieveCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = s"/${appConfig.apiGatewayContext}/$nino/$taxYear/collection/tax-code",
+      method = GET,
+      rel = SELF
+    )
+
+  // L2
+  def deleteCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
+    Link(
+      href = s"/${appConfig.apiGatewayContext}/$nino/$taxYear/collection/tax-code",
+      method = DELETE,
+      rel = DELETE_CODING_OUT
+    )
 }

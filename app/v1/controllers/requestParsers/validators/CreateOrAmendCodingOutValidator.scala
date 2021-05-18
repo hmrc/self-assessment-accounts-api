@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import v1.controllers.requestParsers.validators.validations._
 import v1.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
-import v1.models.errors.{MtdError, ValueFormatError}
+import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody}
 import config.AppConfig
 import javax.inject.Inject
@@ -41,14 +41,14 @@ class CreateOrAmendCodingOutValidator @Inject()(implicit appConfig: AppConfig) e
     )
   }
 
-  private def bodyFormatValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+  private def bodyFormatValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[CreateOrAmendCodingOutRequestBody](data.body.json, ValueFormatError)
+      JsonFormatValidation.validate[CreateOrAmendCodingOutRequestBody](data.body, RuleIncorrectOrEmptyBodyError)
     )
   }
 
   private def bodyFieldValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
-    val body = data.body.json.as[CreateOrAmendCodingOutRequestBody]
+    val body = data.body.as[CreateOrAmendCodingOutRequestBody]
 
     List(flattenErrors(bodyValidations(body)))
   }
