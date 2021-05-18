@@ -20,7 +20,7 @@ import config.AppConfig
 import mocks.MockAppConfig
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.models.errors.{NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
+import v1.models.errors.{NinoFormatError, RuleIncorrectOrEmptyBodyError, RuleTaxYearRangeInvalidError, TaxYearFormatError, ValueFormatError}
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
 
 class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
@@ -41,9 +41,13 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
       |}
       |""".stripMargin)
 
-  private val validEmptyJson = Json.parse(
+  private val validPartiallyEmptyJson = Json.parse(
     """
-      |{}
+      |{
+      |   "payeUnderpayments": 2000.99,
+      |   "selfAssessmentUnderPayments": 2000.99,
+      |   "debts": 2000.99
+      |}
       |""".stripMargin)
 
   private val invalidJson = Json.parse(
@@ -54,6 +58,11 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
       |   "debts": 199999999999.99,
       |   "inYearAdjustments": -5000.99
       |}
+      |""".stripMargin)
+
+  private val emptyJson = Json.parse(
+    """
+      |{}
       |""".stripMargin)
 
   class Test extends MockAppConfig {
@@ -70,7 +79,7 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
       }
 
       "a valid request is supplied missing optional fields" in new Test {
-        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, validEmptyJson)) shouldBe Nil
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, validPartiallyEmptyJson)) shouldBe Nil
       }
     }
 
@@ -83,6 +92,12 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
     "return a TaxYearFormatError" when {
       "an invalid tax year is supplied" in new Test {
         validator.validate(CreateOrAmendCodingOutRawRequest(validNino, invalidTaxYear, validJson)) shouldBe List(TaxYearFormatError)
+      }
+    }
+
+    "return a RuleIncorrectOrEmptyBodyError" when {
+      "an empty body is supplied" in new Test {
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, emptyJson)) shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
     }
 

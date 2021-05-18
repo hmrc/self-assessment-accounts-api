@@ -300,7 +300,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           ))
         }
         "an empty body is submitted" in new Test {
-          override val requestBodyJson: JsValue = Json.parse("")
+          override val requestBodyJson: JsValue = Json.parse("{}")
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
