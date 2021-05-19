@@ -48,13 +48,13 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
          |  "links": [
          |    {
          |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-         |      "method": "GET",
-         |      "rel": "self"
+         |      "method": "PUT",
+         |      "rel": "create-or-amend-coding-out-underpayments"
          |    },
          |    {
          |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-         |      "method": "PUT",
-         |      "rel": "create-or-amend-coding-out-underpayments"
+         |      "method": "GET",
+         |      "rel": "self"
          |    },
          |    {
          |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",

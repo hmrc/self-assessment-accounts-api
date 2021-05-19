@@ -26,8 +26,8 @@ object CreateOrAmendCodingOutResponse extends HateoasLinks {
     override def links(appConfig: AppConfig, data: CreateOrAmendCodingOutHateoasData): Seq[Link] = {
       import data._
       Seq(
+        createOrAmendCodingOut(appConfig, nino, taxYear),
         retrieveCodingOut(appConfig, nino, taxYear),
-        createAndAmendCodingOut(appConfig, nino, taxYear),
         deleteCodingOut(appConfig, nino, taxYear)
       )
     }

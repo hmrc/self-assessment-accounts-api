@@ -66,8 +66,8 @@ class CreateOrAmendCodingOutControllerSpec
   }
 
   private val testHateoasLinks = Seq(
-    Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = GET, rel = "self"),
     Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = PUT, rel = "create-or-amend-coding-out-underpayments"),
+    Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = GET, rel = "self"),
     Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = DELETE, rel = "delete-coding-out-underpayments")
   )
 
