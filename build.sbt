@@ -17,26 +17,25 @@
 import sbt._
 import uk.gov.hmrc.DefaultBuildSettings.{addTestReportOption, defaultSettings}
 import uk.gov.hmrc.sbtdistributables.SbtDistributablesPlugin.publishingSettings
-import uk.gov.hmrc.versioning.SbtGitVersioning
 import uk.gov.hmrc.versioning.SbtGitVersioning.autoImport.majorVersion
-import uk.gov.hmrc.{SbtArtifactory, SbtAutoBuildPlugin}
+import uk.gov.hmrc.SbtAutoBuildPlugin
 
 val appName = "self-assessment-accounts-api"
 
 lazy val ItTest = config("it") extend Test
 
 lazy val microservice = Project(appName, file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning, SbtDistributablesPlugin, SbtArtifactory)
+  .enablePlugins(play.sbt.PlayScala, SbtAutoBuildPlugin,SbtDistributablesPlugin)
   .disablePlugins(JUnitXmlReportPlugin) //Required to prevent https://github.com/scalatest/scalatest/issues/1427
   .settings(
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test(),
     dependencyOverrides ++= AppDependencies.overrides,
     retrieveManaged := true,
-    evictionWarningOptions in update := EvictionWarningOptions.default.withWarnScalaVersionEviction(warnScalaVersionEviction = false),
-    scalaVersion := "2.12.10"
+    update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
+    scalaVersion := "2.12.12"
   )
   .settings(
-    unmanagedResourceDirectories in Compile += baseDirectory.value / "resources"
+    Compile / unmanagedResourceDirectories += baseDirectory.value / "resources"
   )
   .settings(majorVersion := 0)
   .settings(publishingSettings: _*)
@@ -45,13 +44,13 @@ lazy val microservice = Project(appName, file("."))
   .configs(ItTest)
   .settings(
     inConfig(ItTest)(Defaults.itSettings ++ headerSettings(ItTest) ++ automateHeaderSettings(ItTest)),
-    fork in ItTest := true,
-    unmanagedSourceDirectories in ItTest := Seq((baseDirectory in ItTest).value / "it"),
-    unmanagedClasspath in ItTest += baseDirectory.value / "resources",
-    unmanagedClasspath in Runtime += baseDirectory.value / "resources",
-    javaOptions in ItTest += "-Dlogger.resource=logback-test.xml",
-    parallelExecution in ItTest := false,
-    addTestReportOption(ItTest, "int-test-reports")
+    ItTest / fork := true,
+    ItTest / unmanagedSourceDirectories := Seq((ItTest / baseDirectory).value / "it"),
+    ItTest / unmanagedClasspath += baseDirectory.value / "resources",
+    Runtime / unmanagedClasspath += baseDirectory.value / "resources",
+    ItTest / javaOptions += "-Dlogger.resource=logback-test.xml",
+    ItTest / parallelExecution := false,
+    addTestReportOption(ItTest, directory = "int-test-reports")
   )
   .settings(
     resolvers += Resolver.jcenterRepo
@@ -66,9 +65,6 @@ lazy val microservice = Project(appName, file("."))
   )
 
 dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play")
-dependencyUpdatesFilter -= moduleFilter(name = "simple-reactivemongo")
-dependencyUpdatesFilter -= moduleFilter(name = "reactivemongo-test")
-dependencyUpdatesFilter -= moduleFilter(name = "domain")
 dependencyUpdatesFilter -= moduleFilter(name = "scala-library")
 dependencyUpdatesFilter -= moduleFilter(name = "flexmark-all")
 dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-play")
