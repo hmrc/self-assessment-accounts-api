@@ -16,7 +16,7 @@
 
 package v1.controllers.requestParsers
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.DeleteCodingOutValidator
 import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
 
