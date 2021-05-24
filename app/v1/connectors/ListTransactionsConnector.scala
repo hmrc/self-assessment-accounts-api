@@ -36,7 +36,7 @@ class ListTransactionsConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino.nino
+    val nino = request.nino
     val from = request.from
     val to = request.to
 

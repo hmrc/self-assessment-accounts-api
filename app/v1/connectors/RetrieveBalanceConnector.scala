@@ -36,7 +36,7 @@ class RetrieveBalanceConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino.nino
+    val nino = request.nino
 
     val queryParams: Seq[(String, String)] = Seq(
       ("onlyOpenItems", "true"),

@@ -35,7 +35,7 @@ class DeleteCodingOutConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino.nino
+    val nino = request.nino
     val taxYear = request.taxYear
 
     delete(IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"))

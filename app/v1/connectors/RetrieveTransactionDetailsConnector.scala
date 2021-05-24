@@ -36,7 +36,7 @@ class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino.nino
+    val nino = request.nino
     val transactionId = request.transactionId
 
     val queryParams: Seq[(String, String)] =

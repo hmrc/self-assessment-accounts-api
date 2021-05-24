@@ -17,94 +17,115 @@
 package v1.connectors
 
 import config.AppConfig
-import play.api.Logger
 import play.api.libs.json.Writes
-import uk.gov.hmrc.http.logging.Authorization
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
 import v1.connectors.DownstreamUri.{DesUri, IfsUri}
+import utils.Logging
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait BaseDownstreamConnector {
+trait BaseDownstreamConnector extends Logging {
   val http: HttpClient
   val appConfig: AppConfig
 
-  val logger: Logger = Logger(this.getClass)
+  val CORRELATION_ID = "CorrelationId"
 
-  private[connectors] def desHeaderCarrier(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.desToken}")))
-      .withExtraHeaders("Environment" -> appConfig.desEnv, "CorrelationId" -> correlationId)
+  private[connectors] def desHeaderCarrier(additionalHeaders: Seq[String] = Seq.empty)(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier = {
 
-  private[connectors] def ifsHeaderCarrier(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
-    hc.copy(authorization = Some(Authorization(s"Bearer ${appConfig.ifsToken}")))
-      .withExtraHeaders("Environment" -> appConfig.ifsEnv, "CorrelationId" -> correlationId)
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${appConfig.desToken}",
+          "Environment" -> appConfig.desEnv,
+          "CorrelationId" -> correlationId
+        ) ++
+        // Other headers (i.e Gov-Test-Scenario, Content-Type)
+        hc.headers(additionalHeaders ++ appConfig.desEnvironmentHeaders.getOrElse(Seq.empty))
+    )
 
-  def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
-                                                                     hc: HeaderCarrier,
-                                                                     httpReads: HttpReads[DownstreamOutcome[Resp]],
-                                                                     correlationId: String): Future[DownstreamOutcome[Resp]] = {
+    def ifsHeaderCarrier(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier = {
 
-    def doPost(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
-      http.POST(getBackendUri(uri), body)
+      HeaderCarrier(
+        extraHeaders = hc.extraHeaders ++
+
+          Seq(
+            "Authorization" -> s"Bearer ${appConfig.ifsToken}",
+            "Environment" -> appConfig.ifsEnv,
+            "CorrelationId" -> correlationId
+          ) ++
+          hc.headers(additionalHeaders ++ appConfig.desEnvironmentHeaders.getOrElse(Seq.empty))
+      )
     }
 
-    doPost(getBackendHeaders(uri, hc, correlationId))
-  }
+    def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
+                                                                       hc: HeaderCarrier,
+                                                                       httpReads: HttpReads[DownstreamOutcome[Resp]],
+                                                                       correlationId: String): Future[DownstreamOutcome[Resp]] = {
 
-  def get[Resp](uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
-                                          hc: HeaderCarrier,
-                                          httpReads: HttpReads[DownstreamOutcome[Resp]],
-                                          correlationId: String): Future[DownstreamOutcome[Resp]] = {
+      def doPost(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
+        http.POST(s"${appConfig.desBaseUrl}/${uri.value}", body)
+      }
 
-    def doGet(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] =
-      http.GET(getBackendUri(uri))
-
-    doGet(getBackendHeaders(uri, hc, correlationId))
-  }
-
-  def get[Resp](uri: DownstreamUri[Resp], queryParams: Seq[(String, String)])(implicit ec: ExecutionContext,
-                                                                              hc: HeaderCarrier,
-                                                                              httpReads: HttpReads[DownstreamOutcome[Resp]],
-                                                                              correlationId: String): Future[DownstreamOutcome[Resp]] = {
-
-    def doGet(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
-      http.GET(getBackendUri(uri), queryParams)
+      doPost(desHeaderCarrier(Seq("Content-Type")))
     }
 
-    doGet(getBackendHeaders(uri, hc, correlationId))
-  }
+    def get[Resp](uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
+                                            hc: HeaderCarrier,
+                                            httpReads: HttpReads[DownstreamOutcome[Resp]],
+                                            correlationId: String): Future[DownstreamOutcome[Resp]] = {
 
-  def put[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
-                                                             hc: HeaderCarrier,
-                                                             httpReads: HttpReads[DownstreamOutcome[Resp]],
-                                                             correlationId: String): Future[DownstreamOutcome[Resp]]= {
+      def doGet(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] =
+        http.GET(s"${appConfig.desBaseUrl}/${uri.value}")
 
-    def doPut(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
-      http.PUT(getBackendUri(uri), body)
+      doGet(desHeaderCarrier())
     }
 
-    doPut(getBackendHeaders(uri, hc, correlationId))
-  }
+    def get[Resp](uri: DownstreamUri[Resp], queryParams: Seq[(String, String)])(implicit ec: ExecutionContext,
+                                                                                hc: HeaderCarrier,
+                                                                                httpReads: HttpReads[DownstreamOutcome[Resp]],
+                                                                                correlationId: String): Future[DownstreamOutcome[Resp]] = {
 
-  def delete[Resp](uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
-                                             hc: HeaderCarrier,
-                                             httpReads: HttpReads[DownstreamOutcome[Resp]],
-                                             correlationId: String): Future[DownstreamOutcome[Resp]] = {
+      def doGet(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
+        http.GET(s"${appConfig.desBaseUrl}/${uri.value}")
+      }
 
-    def doDelete(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
-      http.DELETE(getBackendUri(uri))
+      doGet(desHeaderCarrier())
     }
 
-    doDelete(getBackendHeaders(uri, hc, correlationId))
-  }
+    def put[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
+                                                                      hc: HeaderCarrier,
+                                                                      httpReads: HttpReads[DownstreamOutcome[Resp]],
+                                                                      correlationId: String): Future[DownstreamOutcome[Resp]] = {
 
-  private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String = uri match {
-    case DesUri(value) => s"${appConfig.desBaseUrl}/$value"
-    case IfsUri(value) => s"${appConfig.ifsBaseUrl}/$value"
-  }
+      def doPut(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
+        http.PUT(url = s"${appConfig.desBaseUrl}/${uri.value}", body)
+      }
 
-  private def getBackendHeaders[Resp](uri: DownstreamUri[Resp], hc: HeaderCarrier, correlationId: String): HeaderCarrier = uri match {
-    case DesUri(_) => desHeaderCarrier(hc, correlationId)
-    case IfsUri(_) => ifsHeaderCarrier(hc, correlationId)
+      doPut(desHeaderCarrier(Seq("Content-Type")))
+    }
+
+    def delete[Resp](uri: DownstreamUri[Resp])(implicit ec: ExecutionContext,
+                                               hc: HeaderCarrier,
+                                               httpReads: HttpReads[DownstreamOutcome[Resp]],
+                                               correlationId: String): Future[DownstreamOutcome[Resp]] = {
+
+      def doDelete(implicit hc: HeaderCarrier): Future[DownstreamOutcome[Resp]] = {
+        http.DELETE(s"${appConfig.desBaseUrl}/${uri.value}")
+      }
+
+      doDelete(desHeaderCarrier())
+    }
+
+    private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String = uri match {
+      case DesUri(value) => s"${appConfig.desBaseUrl}/$value"
+      case IfsUri(value) => s"${appConfig.ifsBaseUrl}/$value"
+    }
+
+    private def getBackendHeaders[Resp](uri: DownstreamUri[Resp], hc: HeaderCarrier, correlationId: String): HeaderCarrier = uri match {
+      case DesUri(_) => desHeaderCarrier(Seq(correlationId))
+      case IfsUri(_) => ifsHeaderCarrier(hc, correlationId)
+    }
+
   }
 }

@@ -20,9 +20,11 @@ import config.{AppConfig, FeatureSwitch}
 import definition.Versions
 import javax.inject.{Inject, Singleton}
 import play.api.http.{DefaultHttpRequestHandler, HttpConfiguration, HttpErrorHandler, HttpFilters}
+
 import play.api.libs.json.Json
 import play.api.mvc.{DefaultActionBuilder, Handler, RequestHeader, Results}
 import play.api.routing.Router
+import play.core.DefaultWebCommands
 import v1.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
 
 @Singleton
@@ -32,9 +34,16 @@ class VersionRoutingRequestHandler @Inject()(versionRoutingMap: VersionRoutingMa
                                              config: AppConfig,
                                              filters: HttpFilters,
                                              action: DefaultActionBuilder)
-    extends DefaultHttpRequestHandler(versionRoutingMap.defaultRouter, errorHandler, httpConfiguration, filters) {
+  extends DefaultHttpRequestHandler(
+    webCommands = new DefaultWebCommands,
+    optDevContext = None,
+    router = versionRoutingMap.defaultRouter,
+    errorHandler = errorHandler,
+    configuration = httpConfiguration,
+    filters = filters.filters
+  ) {
 
-  private val featureSwitch = FeatureSwitch(config.featureSwitch)
+  private val featureSwitch            = FeatureSwitch(config.featureSwitch)
 
   private val unsupportedVersionAction = action(Results.NotFound(Json.toJson(UnsupportedVersionError)))
 
@@ -48,8 +57,8 @@ class VersionRoutingRequestHandler @Inject()(versionRoutingMap: VersionRoutingMa
       case Some(version) =>
         versionRoutingMap.versionRouter(version) match {
           case Some(versionRouter) if featureSwitch.isVersionEnabled(version) => routeWith(versionRouter)(request)
-          case Some(_) => Some(unsupportedVersionAction)
-          case None => Some(unsupportedVersionAction)
+          case Some(_)                                                        => Some(unsupportedVersionAction)
+          case None                                                           => Some(unsupportedVersionAction)
         }
       case None => Some(invalidAcceptHeaderError)
     }

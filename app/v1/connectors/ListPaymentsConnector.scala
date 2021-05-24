@@ -34,9 +34,7 @@ class ListPaymentsConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[ListPaymentsResponse[Payment]]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
-    val nino = request.nino.nino
+    val nino = request.nino
 
     val queryParams: Seq[(String, String)] = Seq(
       "dateFrom" -> request.from,
