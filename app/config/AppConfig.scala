@@ -23,11 +23,12 @@ import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
 
-  def mtdIdBaseUrl: String
-
   def desBaseUrl: String
   def desEnv: String
   def desToken: String
+  def desEnvironmentHeaders: Option[Seq[String]]
+
+  def mtdIdBaseUrl: String
 
   def ifsBaseUrl: String
   def ifsEnv: String
@@ -52,6 +53,7 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
   val desBaseUrl: String = config.baseUrl("des")
   val desEnv: String = config.getString("microservice.services.des.env")
   val desToken: String = config.getString("microservice.services.des.token")
+  val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
 
   val ifsBaseUrl: String = config.baseUrl("ifs")
   val ifsEnv: String = config.getString("microservice.services.ifs.env")
@@ -68,6 +70,7 @@ class AppConfigImpl @Inject()(config: ServicesConfig, configuration: Configurati
 }
 
 case class ConfidenceLevelConfig(definitionEnabled: Boolean, authValidationEnabled: Boolean)
+
 object ConfidenceLevelConfig {
   implicit val configLoader: ConfigLoader[ConfidenceLevelConfig] = (rootConfig: Config, path: String) => {
     val config = rootConfig.getConfig(path)
