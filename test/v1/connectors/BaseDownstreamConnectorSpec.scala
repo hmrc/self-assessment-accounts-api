@@ -176,12 +176,11 @@ class BaseDownstreamConnectorSpec extends ConnectorSpec {
   }
 
   def ifsTestHttpMethods(config: HeaderCarrier.Config,
-                      requiredHeaders: Seq[(String, String)],
-                      excludedHeaders: Seq[(String, String)],
-                      ifsEnvironmentHeaders: Option[Seq[String]]): Unit = {
+                         requiredHeaders: Seq[(String, String)],
+                         excludedHeaders: Seq[(String, String)],
+                         ifsEnvironmentHeaders: Option[Seq[String]]): Unit = {
 
     "complete the request successfully with the required headers" when {
-
       "POST" in new IfsTest(ifsEnvironmentHeaders) {
         implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredHeadersPost: Seq[(String, String)] = requiredHeaders ++ Seq("Content-Type" -> "application/json")

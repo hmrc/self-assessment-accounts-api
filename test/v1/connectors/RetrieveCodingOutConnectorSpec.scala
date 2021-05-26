@@ -31,7 +31,6 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
   val taxYear: String = "2019-20"
   val source: String = "hmrcHeld"
 
-
   private val taxCodeComponent: TaxCodeComponent =
     TaxCodeComponent(
       amount = 1000,

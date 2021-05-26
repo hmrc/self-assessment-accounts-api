@@ -58,6 +58,7 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
         val result: MtdIdLookupOutcome = await(connector.getMtdId(nino))
         result shouldBe Left(DownstreamError)
       }
+
       "getMtdId" should {
         "return an MtdId" when {
           "the http client returns a mtd id" in new Test {
