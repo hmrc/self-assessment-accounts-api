@@ -36,7 +36,7 @@ class ListTransactionsConnector @Inject()(val http: HttpClient,
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
-    val nino = request.nino
+    val nino = request.nino.nino
     val from = request.from
     val to = request.to
 
@@ -52,8 +52,8 @@ class ListTransactionsConnector @Inject()(val http: HttpClient,
     )
 
     get(
-      uri = DesUri[ListTransactionsResponse[TransactionItem]](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
-      queryParams = queryParams
+      DesUri[ListTransactionsResponse[TransactionItem]](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
+      queryParams
     )
   }
 }

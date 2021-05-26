@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveAllocations
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsError,JsValue, Json}
 import support.UnitSpec
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
@@ -28,21 +28,9 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
   val invalidDesJson: JsValue = Json.parse(
     """
       |{
-      | "paymentDetools": [
+      | "paymentDetails": [
       |   {
-      |   "paymentAmount": 1000.00,
-      |   "paymentMethod": "buttons",
-      |   "valueDate": "a date",
-      |   "sapClearingDocsDetails": [
-      |   {
-      |     "sapDocNumber": "someID",
-      |     "taxPeriodStartDate": "another date",
-      |     "taxPeriodEndDate": "an even later date",
-      |     "chargeType": "some type thing",
-      |     "amount": 600.00,
-      |     "clearedAmount": 100.00
-      |     }
-      |    ]
+      |   "paymentAmount": "amount"
       |   }
       |  ]
       |}

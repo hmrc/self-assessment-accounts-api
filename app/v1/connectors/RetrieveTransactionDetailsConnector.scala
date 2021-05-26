@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.httpparsers.StandardDesHttpParser._
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
@@ -34,9 +35,7 @@ class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[RetrieveTransactionDetailsResponse]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
-    val nino = request.nino
+    val nino = request.nino.nino
     val transactionId = request.transactionId
 
     val queryParams: Seq[(String, String)] =
@@ -51,8 +50,8 @@ class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
       )
 
     get(
-      uri = DesUri[RetrieveTransactionDetailsResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
-      queryParams = queryParams
+      DesUri[RetrieveTransactionDetailsResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
+      queryParams
     )
   }
 }

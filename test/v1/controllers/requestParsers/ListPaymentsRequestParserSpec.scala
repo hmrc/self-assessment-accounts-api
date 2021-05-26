@@ -20,7 +20,7 @@ import support.UnitSpec
 import v1.models.domain.Nino
 import v1.mocks.validators.MockListPaymentsValidator
 import v1.models.errors._
-import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
+import v1.models.request.listPayments._
 
 class ListPaymentsRequestParserSpec extends UnitSpec {
 

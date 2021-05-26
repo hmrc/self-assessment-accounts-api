@@ -17,7 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
@@ -66,28 +66,27 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: ListTransactionsConnector = new ListTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq(
-      "Environment" -> "des-environment",
-      "Authorization" -> s"Bearer des-token"
-    )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "ListTransactionsConnector" when {
     "retrieving a list of transaction items" should {
       "return a valid response" in new Test {
+
         val outcome = Right(ResponseWrapper(correlationId, listTransactionsResponse))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-            queryParams = queryParams,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
-          )
-          .returns(Future.successful(outcome))
+        MockHttpClient
+          .parameterGet(
+            s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+            queryParams,
+            dummyDesHeaderCarrierConfig,
+            requiredDesHeaders,
+            Seq("AnotherHeader" -> "HeaderValue")
+          ).returns(Future.successful(outcome))
 
         await(connector.listTransactions(requestData)) shouldBe outcome
       }

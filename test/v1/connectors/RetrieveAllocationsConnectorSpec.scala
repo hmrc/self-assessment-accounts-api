@@ -17,7 +17,8 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
@@ -28,7 +29,7 @@ import scala.concurrent.Future
 
 class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: String = "AA123456A"
 
   val paymentLot: String = "anId"
   val paymentLotItem: String = "anotherId"
@@ -50,27 +51,29 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: RetrieveAllocationsConnector = new RetrieveAllocationsConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "RetrieveAllocationsConnector" when {
     "retrieving allocations" must {
-      val request: RetrieveAllocationsParsedRequest = RetrieveAllocationsParsedRequest(nino, paymentLot, paymentLotItem)
+      val request: RetrieveAllocationsParsedRequest = RetrieveAllocationsParsedRequest(Nino(nino), paymentLot, paymentLotItem)
 
       "return a valid response" in new Test {
+
         val outcome = Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
-            queryParams = queryParams,
-            requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
-          )
-          .returns(Future.successful(outcome))
+        MockHttpClient
+          .parameterGet(
+            s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+            queryParams,
+            dummyDesHeaderCarrierConfig,
+            requiredDesHeaders,
+            Seq("AnotherHeader" -> "HeaderValue")
+          ).returns(Future.successful(outcome))
 
         await(connector.retrieveAllocations(request)) shouldBe outcome
       }

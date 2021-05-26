@@ -42,7 +42,6 @@ class ErrorHandler @Inject()(config: Configuration, auditConnector: AuditConnect
   import httpAuditEvent.dataEvent
 
   override def onClientError(request: RequestHeader, statusCode: Int, message: String): Future[Result] = {
-
     implicit val headerCarrier: HeaderCarrier = HeaderCarrierConverter.fromRequestAndSession(request, request.session)
 
     logger.warn(

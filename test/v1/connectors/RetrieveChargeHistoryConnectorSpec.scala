@@ -17,7 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
@@ -27,33 +27,35 @@ import scala.concurrent.Future
 
 class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: String = "AA123456A"
   val transactionId: String = "anId"
 
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: RetrieveChargeHistoryConnector = new RetrieveChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      val request: RetrieveChargeHistoryParsedRequest = RetrieveChargeHistoryParsedRequest(nino, transactionId)
+      val request: RetrieveChargeHistoryParsedRequest = RetrieveChargeHistoryParsedRequest(Nino(nino), transactionId)
 
       "return a valid response" in new Test {
+
         val outcome = Right(ResponseWrapper(correlationId, RetrieveChargeHistoryFixture.retrieveChargeHistoryResponse))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-            queryParams = Seq("docNumber" -> transactionId),
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
-          )
-          .returns(Future.successful(outcome))
+        MockHttpClient
+          .parameterGet(
+            s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+            Seq("docNumber" -> transactionId),
+            dummyDesHeaderCarrierConfig,
+            requiredDesHeaders,
+            Seq("AnotherHeader" -> "HeaderValue")
+          ).returns(Future.successful(outcome))
 
         await(connector.retrieveChargeHistory(request)) shouldBe outcome
       }

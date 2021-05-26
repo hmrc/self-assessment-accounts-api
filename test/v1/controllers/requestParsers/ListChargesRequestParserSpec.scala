@@ -20,7 +20,7 @@ import support.UnitSpec
 import v1.models.domain.Nino
 import v1.mocks.validators.MockListChargesValidator
 import v1.models.errors._
-import v1.models.request.listCharges.{ListChargesParsedRequest, ListChargesRawRequest}
+import v1.models.request.listCharges._
 
 class ListChargesRequestParserSpec extends UnitSpec {
 

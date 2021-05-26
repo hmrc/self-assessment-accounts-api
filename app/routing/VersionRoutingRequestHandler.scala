@@ -18,7 +18,6 @@ package routing
 
 import config.{AppConfig, FeatureSwitch}
 import definition.Versions
-import javax.inject.{Inject, Singleton}
 import play.api.http.{DefaultHttpRequestHandler, HttpConfiguration, HttpErrorHandler, HttpFilters}
 
 import play.api.libs.json.Json
@@ -26,6 +25,8 @@ import play.api.mvc.{DefaultActionBuilder, Handler, RequestHeader, Results}
 import play.api.routing.Router
 import play.core.DefaultWebCommands
 import v1.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class VersionRoutingRequestHandler @Inject()(versionRoutingMap: VersionRoutingMap,
@@ -51,9 +52,9 @@ class VersionRoutingRequestHandler @Inject()(versionRoutingMap: VersionRoutingMa
 
   override def routeRequest(request: RequestHeader): Option[Handler] = {
 
-    def documentHandler = routeWith(versionRoutingMap.defaultRouter)(request)
+    def documentHandler: Option[Handler] = routeWith(versionRoutingMap.defaultRouter)(request)
 
-    def apiHandler = Versions.getFromRequest(request) match {
+    def apiHandler: Option[Handler] = Versions.getFromRequest(request) match {
       case Some(version) =>
         versionRoutingMap.versionRouter(version) match {
           case Some(versionRouter) if featureSwitch.isVersionEnabled(version) => routeWith(versionRouter)(request)
@@ -66,7 +67,7 @@ class VersionRoutingRequestHandler @Inject()(versionRoutingMap: VersionRoutingMa
     documentHandler orElse apiHandler
   }
 
-  private def routeWith(router: Router)(request: RequestHeader) =
+  private def routeWith(router: Router)(request: RequestHeader): Option[Handler] =
     router
       .handlerFor(request)
       .orElse {

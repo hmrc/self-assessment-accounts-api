@@ -57,6 +57,7 @@ lazy val microservice = Project(appName, file("."))
   .settings(PlayKeys.playDefaultPort := 9792)
   .settings(SilencerSettings())
 
+dependencyUpdatesFilter -= moduleFilter(name = "bootstrap-backend-play-28")
 dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play")
 dependencyUpdatesFilter -= moduleFilter(name = "scala-library")
 dependencyUpdatesFilter -= moduleFilter(name = "flexmark-all")

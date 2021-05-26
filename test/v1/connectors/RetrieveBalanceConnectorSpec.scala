@@ -17,7 +17,8 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
@@ -27,7 +28,7 @@ import scala.concurrent.Future
 
 class RetrieveBalanceConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: String = "AA123456A"
 
   val retrieveBalanceResponse: RetrieveBalanceResponse =
     RetrieveBalanceResponse(
@@ -42,7 +43,6 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: RetrieveBalanceConnector = new RetrieveBalanceConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
     val queryParams: Seq[(String, String)] =
       Seq(
@@ -54,25 +54,28 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
         "includeStatistical" -> "false"
       )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "RetrieveBalanceConnector" when {
     "getting balance" must {
-      val request: RetrieveBalanceParsedRequest = RetrieveBalanceParsedRequest(nino)
+      val request: RetrieveBalanceParsedRequest = RetrieveBalanceParsedRequest(Nino(nino))
 
       "return a valid response" in new Test {
+
         val outcome = Right(ResponseWrapper(correlationId, retrieveBalanceResponse))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-            queryParams = queryParams,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
-          )
-          .returns(Future.successful(outcome))
+        MockHttpClient
+          .parameterGet(
+            s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+            queryParams,
+            dummyDesHeaderCarrierConfig,
+            requiredDesHeaders,
+            Seq("AnotherHeader" -> "HeaderValue")
+          ).returns(Future.successful(outcome))
 
         await(connector.retrieveBalance(request)) shouldBe outcome
       }

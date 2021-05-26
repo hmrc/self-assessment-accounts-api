@@ -17,7 +17,8 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
@@ -42,11 +43,6 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    val desRequestHeaders: Seq[(String, String)] = Seq(
-      "Environment" -> "des-environment",
-      "Authorization" -> s"Bearer des-token"
-    )
-
     val queryParams: Seq[(String, String)] = Seq(
       "docNumber" -> transactionId,
       "onlyOpenItems" -> "false",
@@ -57,14 +53,17 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
       "includeStatistical" -> "false"
     )
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "RetrieveTransactionDetailsConnector" when {
     "retrieveTransactionDetails (payment)" should {
       "return a valid response" in new Test {
+
+        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders)
 
         val responseModel: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
           transactionItems = Seq(
@@ -97,13 +96,14 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, responseModel))
 
-        MockedHttpClient
-          .get(
+        MockHttpClient
+          .parameterGet(
             url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-            queryParams = queryParams,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
-          )
-          .returns(Future.successful(outcome))
+            queryParams,
+            dummyIfsHeaderCarrierConfig,
+            requiredDesHeaders,
+            Seq("AnotherHeader" -> "HeaderValue")
+          ).returns(Future.successful(outcome))
 
         await(connector.retrieveTransactionDetails(requestData)) shouldBe outcome
       }
@@ -143,11 +143,13 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
 
         val outcome = Right(ResponseWrapper(correlationId, responseModel))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-            queryParams = queryParams,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
+        MockHttpClient
+          .parameterGet(
+            s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+            queryParams,
+            dummyDesHeaderCarrierConfig,
+            requiredDesHeaders,
+            Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))
 

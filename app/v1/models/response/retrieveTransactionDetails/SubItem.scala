@@ -16,11 +16,10 @@
 
 package v1.models.response.retrieveTransactionDetails
 
-import play.api.Logger
 import play.api.libs.json._
-import utils.JsonUtils
+import utils.{JsonUtils, Logging}
 
-case class SubItem(subItemId: Option[String],
+case class SubItem (subItemId: Option[String],
                    amount: Option[BigDecimal],
                    clearingDate: Option[String],
                    clearingReason: Option[String],
@@ -30,7 +29,7 @@ case class SubItem(subItemId: Option[String],
                    paymentMethod: Option[String],
                    paymentId: Option[String])
 
-object SubItem extends JsonUtils {
+object SubItem extends JsonUtils with Logging {
 
   val empty: SubItem = SubItem(None, None, None, None, None, None, None, None, None)
 
@@ -71,7 +70,7 @@ object SubItem extends JsonUtils {
       true
     } catch {
       case _: Exception =>
-        Logger.warn(s"[SubItem][reads] The returned 'subItem' field <$s> could not be parsed as an integer")
+        logger.warn(s"[SubItem][reads] The returned 'subItem' field <$s> could not be parsed as an integer")
         false
     }
   }

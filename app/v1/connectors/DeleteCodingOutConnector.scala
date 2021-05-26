@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.IfsUri
+import v1.connectors.httpparsers.StandardDesHttpParser._
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,11 +34,10 @@ class DeleteCodingOutConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
-    val nino = request.nino
+    val nino = request.nino.nino
     val taxYear = request.taxYear
 
-    delete(IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"))
+    delete(
+      IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"))
   }
 }

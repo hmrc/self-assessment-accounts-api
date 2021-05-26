@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.httpparsers.StandardDesHttpParser._
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 
@@ -34,9 +35,7 @@ class RetrieveBalanceConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[RetrieveBalanceResponse]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
-    val nino = request.nino
+    val nino = request.nino.nino
 
     val queryParams: Seq[(String, String)] = Seq(
       ("onlyOpenItems", "true"),
@@ -48,8 +47,8 @@ class RetrieveBalanceConnector @Inject()(val http: HttpClient,
     )
 
     get(
-      uri = DesUri[RetrieveBalanceResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
-      queryParams = queryParams
+      DesUri[RetrieveBalanceResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
+      queryParams
     )
   }
 }

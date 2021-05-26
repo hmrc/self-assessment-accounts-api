@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveCodingOut
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 
 case class RetrieveCodingOutParsedRequest(nino: Nino, taxYear: String, source: Option[String])

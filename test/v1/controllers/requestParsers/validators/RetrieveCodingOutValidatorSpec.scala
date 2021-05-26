@@ -34,7 +34,7 @@ class RetrieveCodingOutValidatorSpec extends UnitSpec {
 
     val validator = new RetrieveCodingOutValidator()
 
-    MockedAppConfig.minimumPermittedTaxYear
+    MockAppConfig.minimumPermittedTaxYear
       .returns(2022)
       .anyNumberOfTimes()
   }

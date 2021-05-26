@@ -18,7 +18,7 @@ package v1.controllers
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListTransactionsFixture._
 import v1.hateoas.HateoasLinks
@@ -31,7 +31,7 @@ import v1.models.hateoas.Method.GET
 import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
+import v1.models.request.listTransactions._
 import v1.models.response.listTransaction.ListTransactionsResponse
 import v1.models.response.listTransaction.ListTransactionsHateoasData
 import v1.mocks.MockIdGenerator

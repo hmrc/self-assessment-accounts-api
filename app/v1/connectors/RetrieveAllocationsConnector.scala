@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.httpparsers.StandardDesHttpParser._
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
@@ -35,9 +36,7 @@ class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[RetrieveAllocationsResponse[AllocationDetail]]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
-    val nino = request.nino
+    val nino = request.nino.nino
 
     val queryParams: Seq[(String, String)] =
       Seq(
@@ -46,8 +45,8 @@ class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
       )
 
     get(
-      uri = DesUri[RetrieveAllocationsResponse[AllocationDetail]](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
-      queryParams = queryParams
+      DesUri[RetrieveAllocationsResponse[AllocationDetail]](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
+      queryParams
     )
   }
 }

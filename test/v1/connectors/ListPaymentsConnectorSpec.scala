@@ -17,7 +17,8 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import uk.gov.hmrc.http.HeaderCarrier
+import v1.models.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.ListPaymentsParsedRequest
@@ -27,7 +28,7 @@ import scala.concurrent.Future
 
 class ListPaymentsConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino: String = "AA123456A"
 
   val from: String = "2020-01-01"
   val to: String = "2020-01-02"
@@ -57,26 +58,30 @@ class ListPaymentsConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: ListPaymentsConnector = new ListPaymentsConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "ListPaymentsConnector" when {
+
+    val request: ListPaymentsParsedRequest = ListPaymentsParsedRequest(Nino(nino), from, to)
+
     "retrieving a list of payments" should {
       "return a valid response" in new Test {
-        val request: ListPaymentsParsedRequest = ListPaymentsParsedRequest(nino, from, to)
+
         val outcome = Right(ResponseWrapper(correlationId, response))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
-            queryParams = queryParams,
-            requiredHeaders ="Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
-          )
-          .returns(Future.successful(outcome))
+        MockHttpClient
+          .parameterGet(
+            s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+            queryParams,
+            dummyDesHeaderCarrierConfig,
+            requiredDesHeaders,
+            Seq("AnotherHeader" -> "HeaderValue")
+          ).returns(Future.successful(outcome))
 
         await(connector.listPayments(request)) shouldBe outcome
       }
