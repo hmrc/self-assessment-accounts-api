@@ -20,6 +20,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.IfsUri
+import v1.connectors.httpparsers.StandardDesHttpParser._
 import v1.models.domain.MtdSource
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
@@ -35,7 +36,6 @@ class RetrieveCodingOutConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
     val taxYear = request.taxYear
@@ -44,14 +44,14 @@ class RetrieveCodingOutConnector @Inject()(val http: HttpClient,
     val baseUrl = s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 
     if(source.isEmpty) {
-      get(uri = IfsUri[RetrieveCodingOutResponse](baseUrl))
+      get(IfsUri[RetrieveCodingOutResponse](baseUrl))
     } else {
       val queryParams = Seq("view" -> source).collect {
         case (key, Some(value)) => key -> MtdSource.parser(value).toDownstreamSource
       }
       get(
-        uri = IfsUri[RetrieveCodingOutResponse](baseUrl),
-        queryParams = queryParams
+        IfsUri[RetrieveCodingOutResponse](baseUrl),
+        queryParams
       )
     }
   }

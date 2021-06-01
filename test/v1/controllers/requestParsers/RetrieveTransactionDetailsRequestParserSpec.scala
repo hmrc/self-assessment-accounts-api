@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.mocks.validators.MockRetrieveTransactionDetailsValidator
 import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
-import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
+import v1.models.request.retrieveTransactionDetails._
 
 class RetrieveTransactionDetailsRequestParserSpec extends UnitSpec {
 

@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveChargeHistory
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 
 case class RetrieveChargeHistoryParsedRequest(nino: Nino, transactionId: String)

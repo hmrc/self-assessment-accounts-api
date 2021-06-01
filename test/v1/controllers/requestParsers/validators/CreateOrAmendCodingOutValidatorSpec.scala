@@ -68,7 +68,7 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec{
   class Test extends MockAppConfig {
     implicit val appConfig: AppConfig = mockAppConfig
     val validator = new CreateOrAmendCodingOutValidator()
-    MockedAppConfig.minimumPermittedTaxYear returns 2020
+    MockAppConfig.minimumPermittedTaxYear returns 2020
     val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
   }
 

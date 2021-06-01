@@ -52,8 +52,8 @@ class ListTransactionsConnector @Inject()(val http: HttpClient,
     )
 
     get(
-      uri = DesUri[ListTransactionsResponse[TransactionItem]](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
-      queryParams = queryParams
+      DesUri[ListTransactionsResponse[TransactionItem]](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"),
+      queryParams
     )
   }
 }

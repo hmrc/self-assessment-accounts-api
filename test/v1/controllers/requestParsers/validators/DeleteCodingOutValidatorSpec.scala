@@ -33,7 +33,7 @@ class DeleteCodingOutValidatorSpec extends UnitSpec {
 
     val validator = new DeleteCodingOutValidator()
 
-    MockedAppConfig.minimumPermittedTaxYear
+    MockAppConfig.minimumPermittedTaxYear
       .returns(2022)
       .anyNumberOfTimes()
   }

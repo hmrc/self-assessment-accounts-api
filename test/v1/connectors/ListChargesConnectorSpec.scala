@@ -17,7 +17,7 @@
 package v1.connectors
 
 import mocks.MockAppConfig
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.fixtures.ListChargesFixture._
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
@@ -28,7 +28,7 @@ import scala.concurrent.Future
 
 class ListChargesConnectorSpec extends ConnectorSpec {
 
-  val nino: Nino = Nino("AA123456A")
+  val nino = "AA123456A"
 
   val from: String = "2020-01-01"
   val to: String = "2020-01-02"
@@ -54,26 +54,30 @@ class ListChargesConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
 
     val connector: ListChargesConnector = new ListChargesConnector(http = mockHttpClient, appConfig = mockAppConfig)
-    val desRequestHeaders: Seq[(String, String)] = Seq("Environment" -> "des-environment", "Authorization" -> s"Bearer des-token")
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "ListChargesConnector" when {
+
+    val request: ListChargesParsedRequest = ListChargesParsedRequest(Nino(nino), from, to)
+
     "retrieving a list of charges" should {
       "return a valid response" in new Test {
-        val request: ListChargesParsedRequest = ListChargesParsedRequest(nino, from, to)
+
         val outcome = Right(ResponseWrapper(correlationId, response))
 
-        MockedHttpClient
-          .get(
-            url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-            queryParams = queryParams,
-            requiredHeaders = "Environment" -> "des-environment", "Authorization" -> s"Bearer des-token"
-          )
-          .returns(Future.successful(outcome))
+        MockHttpClient
+          .parameterGet(
+            s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+            queryParams,
+            dummyDesHeaderCarrierConfig,
+            requiredDesHeaders,
+            Seq("AnotherHeader" -> "HeaderValue")
+          ).returns(Future.successful(outcome))
 
         await(connector.listCharges(request)) shouldBe outcome
       }

@@ -35,7 +35,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       def test(isCodingOutEnabled: Boolean, routes: Any): Unit = {
         s"coding out feature switch is $isCodingOutEnabled" should {
           s"route to ${routes.toString}" in {
-            MockedAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
+            MockAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
               |coding-out.enabled = $isCodingOutEnabled
               |""".stripMargin))))
             val versionRoutingMap: VersionRoutingMapImpl = VersionRoutingMapImpl(defaultRouter, v1Routes, v1WithCodingOutRoutes, mockAppConfig)

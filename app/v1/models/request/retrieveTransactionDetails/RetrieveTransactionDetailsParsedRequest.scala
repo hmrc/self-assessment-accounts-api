@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveTransactionDetails
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 
 case class RetrieveTransactionDetailsParsedRequest(nino: Nino, transactionId: String)

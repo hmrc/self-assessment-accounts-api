@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.fixtures.RetrieveBalanceFixture._
 import v1.mocks.validators.MockRetrieveBalanceValidator
 import v1.models.errors.{ErrorWrapper, NinoFormatError}

@@ -16,6 +16,6 @@
 
 package v1.models.request.listCharges
 
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 
 case class ListChargesParsedRequest(nino: Nino, from: String, to: String)

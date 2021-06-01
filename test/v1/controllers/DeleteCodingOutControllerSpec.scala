@@ -18,14 +18,14 @@ package v1.controllers
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockDeleteCodingOutParser
 import v1.mocks.services.{MockDeleteCodingOutService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
+import v1.models.request.deleteCodingOut._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

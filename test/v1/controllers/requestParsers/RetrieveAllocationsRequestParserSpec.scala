@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.mocks.validators.MockRetrieveAllocationsValidator
 import v1.models.errors._
-import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
+import v1.models.request.retrieveAllocations._
 
 class RetrieveAllocationsRequestParserSpec extends UnitSpec {
 

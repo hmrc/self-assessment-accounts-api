@@ -17,9 +17,11 @@
 package v1.connectors
 
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.connectors.DownstreamUri.DesUri
+import v1.connectors.httpparsers.StandardDesHttpParser._
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
@@ -34,8 +36,6 @@ class ListPaymentsConnector @Inject()(val http: HttpClient,
     ec: ExecutionContext,
     correlationId: String): Future[DownstreamOutcome[ListPaymentsResponse[Payment]]] = {
 
-    import v1.connectors.httpparsers.StandardDesHttpParser._
-
     val nino = request.nino.nino
 
     val queryParams: Seq[(String, String)] = Seq(
@@ -44,8 +44,8 @@ class ListPaymentsConnector @Inject()(val http: HttpClient,
     )
 
     get(
-      uri = DesUri[ListPaymentsResponse[Payment]](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
-      queryParams = queryParams
+      DesUri[ListPaymentsResponse[Payment]](s"cross-regime/payment-allocation/NINO/$nino/ITSA"),
+      queryParams
     )
   }
 }

@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import v1.mocks.validators.MockListTransactionsValidator
 import v1.models.errors._
-import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
+import v1.models.request.listTransactions._
 
 class ListTransactionsRequestParserSpec extends UnitSpec {
 

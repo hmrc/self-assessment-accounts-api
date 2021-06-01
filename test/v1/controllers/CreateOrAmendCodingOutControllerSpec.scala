@@ -18,7 +18,7 @@ package v1.controllers
 
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
@@ -28,7 +28,7 @@ import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody}
+import v1.models.request.createOrAmendCodingOut._
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -18,7 +18,7 @@ package v1.controllers
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.domain.Nino
+import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListPaymentsFixture._
 import v1.hateoas.HateoasLinks
@@ -32,7 +32,7 @@ import v1.models.hateoas.Method.GET
 import v1.models.hateoas.RelType.{LIST_TRANSACTIONS, RETRIEVE_PAYMENT_ALLOCATIONS, SELF}
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
+import v1.models.request.listPayments._
 import v1.models.response.listPayments.{ListPaymentsHateoasData, ListPaymentsResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global

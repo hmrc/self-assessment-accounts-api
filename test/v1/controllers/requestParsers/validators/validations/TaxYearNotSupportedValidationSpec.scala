@@ -28,7 +28,7 @@ class TaxYearNotSupportedValidationSpec extends UnitSpec with JsonErrorValidator
 
     implicit val appConfig: AppConfig = mockAppConfig
 
-    MockedAppConfig.minimumPermittedTaxYear
+    MockAppConfig.minimumPermittedTaxYear
       .returns(2022)
   }
 
