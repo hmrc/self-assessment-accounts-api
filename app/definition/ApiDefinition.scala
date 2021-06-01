@@ -20,12 +20,6 @@ import play.api.libs.json.{Format, Json, OFormat}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import utils.enums.Enums
 
-case class Access(`type`: String, whitelistedApplicationIds: Seq[String])
-
-object Access {
-  implicit val formatAccess: OFormat[Access] = Json.format[Access]
-}
-
 case class Parameter(name: String, required: Boolean = false)
 
 object Parameter {
