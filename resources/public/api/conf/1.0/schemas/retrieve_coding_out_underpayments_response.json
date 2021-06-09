@@ -24,8 +24,9 @@
           "properties": {
             "id": {
               "description": "The ID for the Self Assessment underpayment.",
-              "type": "string",
-              "example": "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+              "type": "number",
+              "minimum": 1.00,
+              "maximum": 99999999999.99
             },
             "amount": {
               "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -70,8 +71,9 @@
           "properties": {
             "id": {
               "description": "The ID for the Self Assessment underpayment.",
-              "type": "string",
-              "example": "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+              "type": "number",
+              "minimum": 1.00,
+              "maximum": 99999999999.99
             },
             "amount": {
               "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -116,8 +118,9 @@
           "properties": {
             "id": {
               "description": "The ID for the Self Assessment underpayment.",
-              "type": "string",
-              "example": "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+              "type": "number",
+              "minimum": 1.00,
+              "maximum": 99999999999.99
             },
             "amount": {
               "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -159,8 +162,9 @@
         "properties": {
           "id": {
             "description": "The ID for the Self Assessment underpayment.",
-            "type": "string",
-            "example": "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+            "type": "number",
+            "minimum": 1.00,
+            "maximum": 99999999999.99
           },
           "amount": {
             "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -208,8 +212,9 @@
           "properties": {
             "id": {
               "description": "The ID for the Self Assessment underpayment.",
-              "type": "string",
-              "example": "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+              "type": "number",
+              "minimum": 1.00,
+              "maximum": 99999999999.99
             },
             "amount": {
               "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -241,8 +246,9 @@
           "properties": {
             "id": {
               "description": "The ID for the Self Assessment underpayment.",
-              "type": "string",
-              "example": "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+              "type": "number",
+              "minimum": 1.00,
+              "maximum": 99999999999.99
             },
             "amount": {
               "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -274,8 +280,9 @@
           "properties": {
             "id": {
               "description": "The ID for the Self Assessment underpayment.",
-              "type": "string",
-              "example": "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+              "type": "number",
+              "minimum": 1.00,
+              "maximum": 99999999999.99
             },
             "amount": {
               "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -304,8 +311,9 @@
         "properties": {
           "id": {
             "description": "The ID for the Self Assessment underpayment.",
-            "type": "string",
-            "example": "497f6eca-6276-4993-bfeb-53cbbbba6f08"
+            "type": "number",
+            "minimum": 1.00,
+            "maximum": 99999999999.99
           },
           "amount": {
             "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
