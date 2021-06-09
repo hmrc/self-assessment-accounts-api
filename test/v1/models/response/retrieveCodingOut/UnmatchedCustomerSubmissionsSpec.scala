@@ -19,14 +19,14 @@ package v1.models.response.retrieveCodingOut
 import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 
-class TaxCodeComponentSpec extends UnitSpec {
+class UnmatchedCustomerSubmissionsSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
       |{
-      |  "amount": 87.78,
-      |  "relatedTaxYear": "2021-22",
-      |  "submittedOn": "2021-07-06T09:37:17Z"
+      |    "amount": 0,
+      |    "submittedOn": "2019-08-24T14:15:22Z",
+      |    "componentIdentifier": 12345678910
       |}
       |""".stripMargin
   )
@@ -34,9 +34,9 @@ class TaxCodeComponentSpec extends UnitSpec {
   val invalidDesResponse: JsValue = Json.parse(
     """
       |{
-      |  "amount": 87.78,
-      |  "relatedTaxYear": 2021,
-      |  "submittedOn": "2021-07-06T09:37:17Z"
+      |    "amounts": 0,
+      |    "submit": "2019-08-24T14:15:22Z",
+      |    "componentIdentifier": 12345678910
       |}
       |""".stripMargin
   )
@@ -44,36 +44,36 @@ class TaxCodeComponentSpec extends UnitSpec {
   val mtdResponse: JsValue = Json.parse(
     """
       |{
-      |  "amount": 87.78,
-      |  "relatedTaxYear": "2021-22",
-      |  "submittedOn": "2021-07-06T09:37:17Z"
+      |    "amount": 0,
+      |    "submittedOn": "2019-08-24T14:15:22Z",
+      |    "id": 12345678910
       |}
     """.stripMargin
   )
 
-  val responseItemModel: TaxCodeComponent =
-    TaxCodeComponent(
-      87.78,
-      "2021-22",
-      "2021-07-06T09:37:17Z"
+  val responseModel: UnmatchedCustomerSubmissions =
+    UnmatchedCustomerSubmissions(
+      BigInt(12345678910L),
+      0,
+      "2019-08-24T14:15:22Z"
     )
 
-  "ResponseItem" when {
+  "UnmatchedCustomerSubmissions" when {
     "read from valid JSON" should {
-      "produce the expected ResponseItem object" in {
-        desResponse.as[TaxCodeComponent] shouldBe responseItemModel
+      "produce the expected UnmatchedCustomerSubmissions object" in {
+        desResponse.as[UnmatchedCustomerSubmissions] shouldBe responseModel
       }
     }
 
     "read from invalid JSON" should {
-      "produce an empty ResponseItem object" in {
-        invalidDesResponse.validate[TaxCodeComponent] shouldBe a[JsError]
+      "produce an empty UnmatchedCustomerSubmissions object" in {
+        invalidDesResponse.validate[UnmatchedCustomerSubmissions] shouldBe a[JsError]
       }
     }
 
     "written to JSON" should {
       "produce the expected JSON object" in {
-        Json.toJson(responseItemModel) shouldBe mtdResponse
+        Json.toJson(responseModel) shouldBe mtdResponse
       }
     }
   }

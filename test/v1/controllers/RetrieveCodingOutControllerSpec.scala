@@ -31,7 +31,7 @@ import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
-import v1.models.response.retrieveCodingOut.{RetrieveCodingOutHateoasData, RetrieveCodingOutResponse, TaxCodeComponent}
+import v1.models.response.retrieveCodingOut.{RetrieveCodingOutHateoasData, RetrieveCodingOutResponse, TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -47,7 +47,7 @@ class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
   private val nino = "AA123456A"
   private val taxYear = "2021-22"
   private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  private val source = "user"
+  private val source = "HTML-HELD"
 
   private val rawData = RetrieveCodingOutRawRequest(
     nino = nino,
@@ -79,13 +79,52 @@ class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
     rel = DELETE_CODING_OUT_UNDERPAYMENTS
   )
 
-  private val retrieveCodingOutResponse = RetrieveCodingOutResponse(
-    source = "user",
-    selfAssessmentUnderPayments = Some(Seq(TaxCodeComponent(87.78, "2021-22", "2021-07-06T09:37:17Z"))),
-    payeUnderpayments = Some(Seq(TaxCodeComponent(12.45, "2021-22", "2021-07-06T09:37:17Z"))),
-    debts = Some(Seq(TaxCodeComponent(10.01, "2021-22", "2021-07-06T09:37:17Z"))),
-    inYearAdjustments = Some(TaxCodeComponent(99.99, "2021-22", "2021-07-06T09:37:17Z"))
-  )
+  val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
+    UnmatchedCustomerSubmissions(
+      BigInt(12345678910L),
+      0,
+      "2019-08-24T14:15:22Z"
+    )
+
+  val taxCodeComponentsHmrcHeld: TaxCodeComponents =
+    TaxCodeComponents(
+      BigInt(12345678910L),
+      0,
+      Some("2019-20"),
+      "2019-08-24T14:15:22Z",
+      "HMRC-HELD"
+    )
+
+  val taxCodeComponentsCustomer: TaxCodeComponents =
+    TaxCodeComponents(
+      BigInt(12345678910L),
+      0,
+      Some("2019-20"),
+      "2019-08-24T14:15:22Z",
+      "CUSTOMER"
+    )
+
+  val taxCodeComponentObject: TaxCodeComponentsObject =
+    TaxCodeComponentsObject(
+      Some(Seq(taxCodeComponentsHmrcHeld)),
+      Some(Seq(taxCodeComponentsHmrcHeld)),
+      Some(Seq(taxCodeComponentsCustomer)),
+      Some(taxCodeComponentsCustomer)
+    )
+
+  val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
+    UnmatchedCustomerSubmissionsObject(
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(unmatchedCustomerSubmissions)
+    )
+
+  val retrieveCodingOutResponse: RetrieveCodingOutResponse =
+    RetrieveCodingOutResponse(
+      Some(taxCodeComponentObject),
+      Some(unmatchedCustomerSubmissionsObject)
+    )
 
   private val mtdResponse = mtdResponseWithHateoas(nino, taxYear, source)
 

@@ -17,29 +17,16 @@
 package v1.models.response.retrieveCodingOut
 
 import config.AppConfig
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OFormat}
 import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v1.models.domain.DownstreamSource
 import v1.models.hateoas.{HateoasData, Link}
 
-case class RetrieveCodingOutResponse(source: String,
-                                     selfAssessmentUnderPayments: Option[Seq[TaxCodeComponent]],
-                                     payeUnderpayments: Option[Seq[TaxCodeComponent]],
-                                     debts: Option[Seq[TaxCodeComponent]],
-                                     inYearAdjustments: Option[TaxCodeComponent])
+case class RetrieveCodingOutResponse(taxCodeComponents: Option[TaxCodeComponentsObject],
+                                     unmatchedCustomerSubmissions: Option[UnmatchedCustomerSubmissionsObject])
 
 object RetrieveCodingOutResponse extends HateoasLinks {
 
-  implicit val reads: Reads[RetrieveCodingOutResponse] = (
-      (JsPath \ "source" ).read[DownstreamSource].map(_.toMtdSource) and
-      (JsPath \ "taxCodeComponents" \ "selfAssessmentUnderPayments").readNullable[Seq[TaxCodeComponent]] and
-      (JsPath \ "taxCodeComponents" \ "payeUnderpayments").readNullable[Seq[TaxCodeComponent]] and
-      (JsPath \ "taxCodeComponents" \ "debts").readNullable[Seq[TaxCodeComponent]] and
-      (JsPath \ "taxCodeComponents" \ "inYearAdjustments").readNullable[TaxCodeComponent]
-  )(RetrieveCodingOutResponse.apply _)
-
-  implicit val writes: OWrites[RetrieveCodingOutResponse] = Json.writes[RetrieveCodingOutResponse]
+  implicit val format: OFormat[RetrieveCodingOutResponse] = Json.format[RetrieveCodingOutResponse]
 
   implicit object RetrieveCodingOutLinksFactory extends HateoasLinksFactory[RetrieveCodingOutResponse, RetrieveCodingOutHateoasData] {
     override def links(appConfig: AppConfig, data: RetrieveCodingOutHateoasData): Seq[Link] = {

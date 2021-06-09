@@ -24,116 +24,261 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
   val desResponse: JsValue = Json.parse(
     """
       |{
-      |      "source": "HMRC HELD",
-      |      "taxCodeComponents": {
-      |        "selfAssessmentUnderPayments": [
-      |          {
-      |            "amount": 87.78,
-      |            "relatedTaxYear": "2020-21",
-      |            "submittedOn": "2021-07-06T09:37:17Z"
-      |          }
-      |        ],
-      |        "payeUnderpayments": [
-      |          {
-      |            "amount": 12.45,
-      |            "relatedTaxYear": "2021-22",
-      |            "submittedOn": "2021-07-06T09:37:17Z"
-      |          }
-      |        ],
-      |        "debts": [
-      |          {
-      |            "amount": 10.01,
-      |            "relatedTaxYear": "2021-22",
-      |            "submittedOn": "2021-07-06T09:37:17Z"
-      |          }
-      |        ],
-      |        "inYearAdjustments": {
-      |          "amount": 99.99,
-      |          "relatedTaxYear": "2021-22",
-      |          "submittedOn": "2021-07-06T09:37:17Z"
-      |        }
+      |  "taxCodeComponents": {
+      |    "selfAssessmentUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "HMRC HELD",
+      |        "componentIdentifier": 12345678910
       |      }
+      |    ],
+      |    "payeUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "HMRC HELD",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "debt": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "CUSTOMER",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "inYearAdjustment": {
+      |      "amount": 0,
+      |      "relatedTaxYear": "2019-20",
+      |      "submittedOn": "2019-08-24T14:15:22Z",
+      |      "source": "CUSTOMER",
+      |      "componentIdentifier": 12345678910
       |    }
+      |  },
+      |  "unmatchedCustomerSubmissions": {
+      |    "selfAssessmentUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "payeUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "debt": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "inYearAdjustment": {
+      |      "amount": 0,
+      |      "submittedOn": "2019-08-24T14:15:22Z",
+      |      "componentIdentifier": 12345678910
+      |    }
+      |  }
+      |}
       |""".stripMargin
   )
 
   val invalidDesResponse: JsValue = Json.parse(
     """
       |{
-      |      "source": "HMRC HELD",
-      |      "taxCodeComponents": {
-      |        "selfAssessmentUnderPayments": [
-      |          {
-      |            "amount": 87.78,
-      |            "relatedTaxYear": 2020,
-      |            "submittedOn": "2021-07-06T09:37:17Z"
-      |          }
-      |        ],
-      |        "payeUnderpayments": [
-      |          {
-      |            "amount": 12.45,
-      |            "relatedTaxYear": "2021-22",
-      |            "submittedOn": "2021-07-06T09:37:17Z"
-      |          }
-      |        ],
-      |        "debts": [
-      |          {
-      |            "amount": 10.01,
-      |            "relatedTaxYear": "2021-22",
-      |            "submittedOn": "2021-07-06T09:37:17Z"
-      |          }
-      |        ],
-      |        "inYearAdjustments": {
-      |          "amount": 99.99,
-      |          "relatedTaxYear": "2021-22",
-      |          "submittedOn": "2021-07-06T09:37:17Z"
-      |        }
+      |  "taxCode": {
+      |    "selfAssessmentUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "HMRC-HELD",
+      |        "componentIdentifier": 12345678910
       |      }
+      |    ],
+      |    "payeUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "HMRCHELD",
+      |        "componentIdentifier": "12345678910"
+      |      }
+      |    ],
+      |    "debt": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "CUSTOMER",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "inYearAdjustments": {
+      |      "amount": 0,
+      |      "relatedTaxYear": "2019-20",
+      |      "submittedOn": "2019-08-24T14:15:22Z",
+      |      "source": "CUSTOMER",
+      |      "componentIdentifier": 12345678910
       |    }
+      |  },
+      |  "unmatchedCustomer": {
+      |    "selfAssessmentUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "payeUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "debt": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "componentIdentifier": 12345678910
+      |      }
+      |    ],
+      |    "inYearAdjustments": {
+      |      "amount": 0,
+      |      "submittedOn": "2019-08-24T14:15:22Z",
+      |      "componentIdentifier": 12345678910
+      |    }
+      |  }
+      |}
       |""".stripMargin
   )
 
   val mtdResponse: JsValue = Json.parse(
     """
       |{
-      |    "source": "hmrcHeld",
-      |        "selfAssessmentUnderPayments": [
-      |            {
-      |                "amount": 87.78,
-      |                "relatedTaxYear": "2020-21",
-      |                "submittedOn": "2021-07-06T09:37:17Z"
-      |            }
-      |        ],
-      |        "payeUnderpayments": [
-      |            {
-      |                "amount": 12.45,
-      |                "relatedTaxYear": "2021-22",
-      |                "submittedOn": "2021-07-06T09:37:17Z"
-      |            }
-      |        ],
-      |        "debts": [
-      |            {
-      |                "amount": 10.01,
-      |                "relatedTaxYear": "2021-22",
-      |                "submittedOn": "2021-07-06T09:37:17Z"
-      |            }
-      |        ],
-      |        "inYearAdjustments": {
-      |            "amount": 99.99,
-      |            "relatedTaxYear": "2021-22",
-      |            "submittedOn": "2021-07-06T09:37:17Z"
-      |        }
+      |  "taxCodeComponents": {
+      |    "selfAssessmentUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "HMRC-HELD",
+      |        "id": 12345678910
+      |      }
+      |    ],
+      |    "payeUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "HMRC-HELD",
+      |        "id": 12345678910
+      |      }
+      |    ],
+      |    "debt": [
+      |      {
+      |        "amount": 0,
+      |        "relatedTaxYear": "2019-20",
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "source": "CUSTOMER",
+      |        "id": 12345678910
+      |      }
+      |    ],
+      |    "inYearAdjustments": {
+      |      "amount": 0,
+      |      "relatedTaxYear": "2019-20",
+      |      "submittedOn": "2019-08-24T14:15:22Z",
+      |      "source": "CUSTOMER",
+      |      "id": 12345678910
       |    }
+      |  },
+      |  "unmatchedCustomerSubmissions": {
+      |    "selfAssessmentUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "id": 12345678910
+      |      }
+      |    ],
+      |    "payeUnderpayment": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "id": 12345678910
+      |      }
+      |    ],
+      |    "debt": [
+      |      {
+      |        "amount": 0,
+      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "id": 12345678910
+      |      }
+      |    ],
+      |    "inYearAdjustments": {
+      |      "amount": 0,
+      |      "submittedOn": "2019-08-24T14:15:22Z",
+      |      "id": 12345678910
+      |    }
+      |  }
+      |}
     """.stripMargin
   )
 
+  val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
+    UnmatchedCustomerSubmissions(
+      BigInt(12345678910L),
+      0,
+      "2019-08-24T14:15:22Z"
+    )
+
+  val taxCodeComponentsHmrcHeld: TaxCodeComponents =
+    TaxCodeComponents(
+      BigInt(12345678910L),
+      0,
+      Some("2019-20"),
+      "2019-08-24T14:15:22Z",
+      "HMRC-HELD"
+    )
+
+  val taxCodeComponentsCustomer: TaxCodeComponents =
+    TaxCodeComponents(
+      BigInt(12345678910L),
+      0,
+      Some("2019-20"),
+      "2019-08-24T14:15:22Z",
+      "CUSTOMER"
+    )
+
+  val taxCodeComponentObject: TaxCodeComponentsObject =
+    TaxCodeComponentsObject(
+      Some(Seq(taxCodeComponentsHmrcHeld)),
+      Some(Seq(taxCodeComponentsHmrcHeld)),
+      Some(Seq(taxCodeComponentsCustomer)),
+      Some(taxCodeComponentsCustomer)
+    )
+
+  val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
+    UnmatchedCustomerSubmissionsObject(
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(unmatchedCustomerSubmissions)
+    )
+
   val responseModel: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
-        "hmrcHeld",
-        Some(Seq(TaxCodeComponent(87.78, "2020-21", "2021-07-06T09:37:17Z"))),
-        Some(Seq(TaxCodeComponent(12.45, "2021-22", "2021-07-06T09:37:17Z"))),
-        Some(Seq(TaxCodeComponent(10.01, "2021-22", "2021-07-06T09:37:17Z"))),
-        Some(TaxCodeComponent(99.99, "2021-22", "2021-07-06T09:37:17Z"))
+      Some(taxCodeComponentObject),
+      Some(unmatchedCustomerSubmissionsObject)
     )
 
   "RetrieveCodingOutResponse" when {
