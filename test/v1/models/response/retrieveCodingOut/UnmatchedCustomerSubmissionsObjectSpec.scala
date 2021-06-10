@@ -78,7 +78,7 @@ class UnmatchedCustomerSubmissionsObjectSpec extends UnitSpec {
       |        "submittedOn": "2019-08-24T14:15:22Z"
       |      }
       |    ],
-      |    "inYearAdjustments": {
+      |    "inYearAdjustment": {
       |        "id": 12345678910,
       |        "amount": 0,
       |        "submittedOn": "2019-08-24T14:15:22Z"
@@ -89,9 +89,9 @@ class UnmatchedCustomerSubmissionsObjectSpec extends UnitSpec {
 
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
-      BigInt(12345678910L),
       0,
-      "2019-08-24T14:15:22Z"
+      "2019-08-24T14:15:22Z",
+      BigInt(12345678910L)
     )
 
   val responseModel: UnmatchedCustomerSubmissionsObject =

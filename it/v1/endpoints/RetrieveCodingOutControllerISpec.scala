@@ -34,40 +34,76 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
     val taxYear: String = "2021-22"
 
     def mtdSource: String = "hmrcHeld"
+
     def desSource: String = "HMRC HELD"
 
     val desResponse: JsValue = Json.parse(
       s"""
          |{
-         |   "source": "$desSource",
-         |   "taxCodeComponents": {
-         |      "selfAssessmentUnderPayments": [
-         |         {
-         |            "amount": 87.78,
-         |            "relatedTaxYear": "$taxYear",
-         |            "submittedOn": "2021-07-06T09:37:17Z"
-         |         }
-         |      ],
-         |      "payeUnderpayments": [
-         |         {
-         |            "amount": 12.45,
-         |            "relatedTaxYear": "$taxYear",
-         |            "submittedOn": "2021-07-06T09:37:17Z"
-         |         }
-         |      ],
-         |      "debts": [
-         |         {
-         |            "amount": 10.01,
-         |            "relatedTaxYear": "$taxYear",
-         |            "submittedOn": "2021-07-06T09:37:17Z"
-         |         }
-         |      ],
-         |      "inYearAdjustments": {
-         |         "amount": 99.99,
-         |         "relatedTaxYear": "$taxYear",
-         |         "submittedOn": "2021-07-06T09:37:17Z"
-         |      }
-         |   }
+         |        "taxCodeComponents": {
+         |            "selfAssessmentUnderpayment": [
+         |                {
+         |                    "amount": 0,
+         |                    "relatedTaxYear": "$taxYear",
+         |                    "submittedOn": "2019-08-24T14:15:22Z",
+         |                    "source": "$mtdSource",
+         |                    "componentIdentifier": 12345678910
+         |                }
+         |            ],
+         |            "payeUnderpayment": [
+         |                {
+         |                    "amount": 0,
+         |                    "relatedTaxYear": "$taxYear",
+         |                    "submittedOn": "2019-08-24T14:15:22Z",
+         |                    "source": "$mtdSource",
+         |                    "componentIdentifier": 12345678910
+         |                }
+         |            ],
+         |            "debt": [
+         |                {
+         |                    "amount": 0,
+         |                    "relatedTaxYear": "$taxYear",
+         |                    "submittedOn": "2019-08-24T14:15:22Z",
+         |                    "source": "CUSTOMER",
+         |                    "componentIdentifier": 12345678910
+         |                }
+         |            ],
+         |            "inYearAdjustment": {
+         |                "amount": 0,
+         |                "relatedTaxYear": "$taxYear",
+         |                "submittedOn": "2019-08-24T14:15:22Z",
+         |                "source": "CUSTOMER",
+         |                "componentIdentifier": 12345678910
+         |            }
+         |        },
+         |        "unmatchedCustomerSubmissions": {
+         |            "selfAssessmentUnderpayment": [
+         |                {
+         |                    "amount": 0,
+         |                    "submittedOn": "2019-08-24T14:15:22Z",
+         |                    "componentIdentifier": 12345678910
+         |                }
+         |            ],
+         |            "payeUnderpayment": [
+         |                {
+         |                    "amount": 0,
+         |                    "submittedOn": "2019-08-24T14:15:22Z",
+         |                    "componentIdentifier": 12345678910
+         |                }
+         |            ],
+         |            "debt": [
+         |                {
+         |                    "amount": 0,
+         |                    "submittedOn": "2019-08-24T14:15:22Z",
+         |                    "componentIdentifier": 12345678910
+         |                }
+         |            ],
+         |            "inYearAdjustment": {
+         |                "amount": 0,
+         |                "submittedOn": "2019-08-24T14:15:22Z",
+         |                "componentIdentifier": 12345678910
+         |            }
+         |        }
          |}
        """.stripMargin
     )
@@ -75,6 +111,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
     val mtdResponse: JsValue = mtdResponseWithHateoas(nino, taxYear, mtdSource)
 
     def uri: String = s"/$nino/$taxYear/collection/tax-code"
+
     def desUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 
     def setupStubs(): StubMapping
@@ -83,6 +120,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       def queryParams: Seq[(String, String)] = Seq("source" -> source).collect {
         case (k, Some(v)) => (k, v)
       }
+
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
@@ -140,6 +178,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       "any valid request is made to retrieve user submitted data" in new Test {
 
         override def mtdSource: String = "user"
+
         override def desSource: String = "CUSTOMER"
 
         override def setupStubs(): StubMapping = {

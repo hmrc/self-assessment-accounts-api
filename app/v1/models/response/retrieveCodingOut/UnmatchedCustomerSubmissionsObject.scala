@@ -22,7 +22,7 @@ import play.api.libs.functional.syntax._
 case class UnmatchedCustomerSubmissionsObject(selfAssessmentUnderpayment: Option[Seq[UnmatchedCustomerSubmissions]],
                                               payeUnderpayment: Option[Seq[UnmatchedCustomerSubmissions]],
                                               debt: Option[Seq[UnmatchedCustomerSubmissions]],
-                                              inYearAdjustments: Option[UnmatchedCustomerSubmissions])
+                                              inYearAdjustment: Option[UnmatchedCustomerSubmissions])
 
 object UnmatchedCustomerSubmissionsObject {
   implicit val reads: Reads[UnmatchedCustomerSubmissionsObject] = (

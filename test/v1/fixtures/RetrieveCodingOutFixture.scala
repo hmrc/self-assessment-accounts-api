@@ -23,33 +23,70 @@ object RetrieveCodingOutFixture {
   def mtdResponseWithHateoas(nino: String, taxYear: String, source: String): JsObject = Json.parse(
     s"""
        |{
-       |   "source": "$source",
-       |   "selfAssessmentUnderPayments": [
+       |  "taxCodeComponents": {
+       |    "selfAssessmentUnderpayment": [
        |      {
-       |         "amount": 87.78,
-       |         "relatedTaxYear": "$taxYear",
-       |         "submittedOn": "2021-07-06T09:37:17Z"
+       |        "amount": 0,
+       |        "relatedTaxYear": "$taxYear",
+       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "source": "$source",
+       |        "id": 12345678910
        |      }
-       |   ],
-       |   "payeUnderpayments": [
+       |    ],
+       |    "payeUnderpayment": [
        |      {
-       |         "amount": 12.45,
-       |         "relatedTaxYear": "$taxYear",
-       |         "submittedOn": "2021-07-06T09:37:17Z"
+       |        "amount": 0,
+       |        "relatedTaxYear": "$taxYear",
+       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "source": "$source",
+       |        "id": 12345678910
        |      }
-       |   ],
-       |   "debts": [
+       |    ],
+       |    "debt": [
        |      {
-       |         "amount": 10.01,
-       |         "relatedTaxYear": "$taxYear",
-       |         "submittedOn": "2021-07-06T09:37:17Z"
+       |        "amount": 0,
+       |        "relatedTaxYear": "$taxYear",
+       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "source": "CUSTOMER",
+       |        "id": 12345678910
        |      }
-       |   ],
-       |   "inYearAdjustments": {
-       |      "amount": 99.99,
+       |    ],
+       |    "inYearAdjustment": {
+       |      "amount": 0,
        |      "relatedTaxYear": "$taxYear",
-       |      "submittedOn": "2021-07-06T09:37:17Z"
-       |   },
+       |      "submittedOn": "2019-08-24T14:15:22Z",
+       |      "source": "CUSTOMER",
+       |      "id": 12345678910
+       |    }
+       |  },
+       |  "unmatchedCustomerSubmissions": {
+       |    "selfAssessmentUnderpayment": [
+       |      {
+       |        "amount": 0,
+       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "id": 12345678910
+       |      }
+       |    ],
+       |    "payeUnderpayment": [
+       |      {
+       |        "amount": 0,
+       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "id": 12345678910
+       |      }
+       |    ],
+       |    "debt": [
+       |      {
+       |        "amount": 0,
+       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "id": 12345678910
+       |      }
+       |    ],
+       |    "inYearAdjustment": {
+       |      "amount": 0,
+       |      "submittedOn": "2019-08-24T14:15:22Z",
+       |      "id": 12345678910
+       |    }
+       |  },
        |   "links": [
        |      {
        |         "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",

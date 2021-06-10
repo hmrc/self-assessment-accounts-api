@@ -53,9 +53,9 @@ class UnmatchedCustomerSubmissionsSpec extends UnitSpec {
 
   val responseModel: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
-      BigInt(12345678910L),
       0,
-      "2019-08-24T14:15:22Z"
+      "2019-08-24T14:15:22Z",
+      BigInt(12345678910L)
     )
 
   "UnmatchedCustomerSubmissions" when {

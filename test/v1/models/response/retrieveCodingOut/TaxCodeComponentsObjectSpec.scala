@@ -92,7 +92,7 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |        "id": 12345678910
       |      }
       |    ],
-      |    "inYearAdjustments": {
+      |    "inYearAdjustment": {
       |      "amount": 0,
       |      "relatedTaxYear": "2019-20",
       |      "submittedOn": "2019-08-24T14:15:22Z",
@@ -105,20 +105,20 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
 
   val taxCodeComponentsHmrcHeld: TaxCodeComponents =
     TaxCodeComponents(
-      BigInt(12345678910L),
       0,
       Some("2019-20"),
       "2019-08-24T14:15:22Z",
-      "HMRC-HELD"
+      "HMRC-HELD",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentsCustomer: TaxCodeComponents =
     TaxCodeComponents(
-      BigInt(12345678910L),
       0,
       Some("2019-20"),
       "2019-08-24T14:15:22Z",
-      "CUSTOMER"
+      "CUSTOMER",
+      BigInt(12345678910L)
     )
 
   val responseModel: TaxCodeComponentsObject =

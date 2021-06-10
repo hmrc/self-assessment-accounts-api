@@ -92,76 +92,6 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |""".stripMargin
   )
 
-  val invalidDesResponse: JsValue = Json.parse(
-    """
-      |{
-      |  "taxCode": {
-      |    "selfAssessmentUnderpayment": [
-      |      {
-      |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "HMRC-HELD",
-      |        "componentIdentifier": 12345678910
-      |      }
-      |    ],
-      |    "payeUnderpayment": [
-      |      {
-      |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "HMRCHELD",
-      |        "componentIdentifier": "12345678910"
-      |      }
-      |    ],
-      |    "debt": [
-      |      {
-      |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "CUSTOMER",
-      |        "componentIdentifier": 12345678910
-      |      }
-      |    ],
-      |    "inYearAdjustments": {
-      |      "amount": 0,
-      |      "relatedTaxYear": "2019-20",
-      |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "source": "CUSTOMER",
-      |      "componentIdentifier": 12345678910
-      |    }
-      |  },
-      |  "unmatchedCustomer": {
-      |    "selfAssessmentUnderpayment": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
-      |      }
-      |    ],
-      |    "payeUnderpayment": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
-      |      }
-      |    ],
-      |    "debt": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
-      |      }
-      |    ],
-      |    "inYearAdjustments": {
-      |      "amount": 0,
-      |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "componentIdentifier": 12345678910
-      |    }
-      |  }
-      |}
-      |""".stripMargin
-  )
 
   val mtdResponse: JsValue = Json.parse(
     """
@@ -194,7 +124,7 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |        "id": 12345678910
       |      }
       |    ],
-      |    "inYearAdjustments": {
+      |    "inYearAdjustment": {
       |      "amount": 0,
       |      "relatedTaxYear": "2019-20",
       |      "submittedOn": "2019-08-24T14:15:22Z",
@@ -224,7 +154,7 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |        "id": 12345678910
       |      }
       |    ],
-      |    "inYearAdjustments": {
+      |    "inYearAdjustment": {
       |      "amount": 0,
       |      "submittedOn": "2019-08-24T14:15:22Z",
       |      "id": 12345678910
@@ -236,27 +166,27 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
 
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
-      BigInt(12345678910L),
       0,
-      "2019-08-24T14:15:22Z"
+      "2019-08-24T14:15:22Z",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentsHmrcHeld: TaxCodeComponents =
     TaxCodeComponents(
-      BigInt(12345678910L),
       0,
       Some("2019-20"),
       "2019-08-24T14:15:22Z",
-      "HMRC-HELD"
+      "HMRC-HELD",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentsCustomer: TaxCodeComponents =
     TaxCodeComponents(
-      BigInt(12345678910L),
       0,
       Some("2019-20"),
       "2019-08-24T14:15:22Z",
-      "CUSTOMER"
+      "CUSTOMER",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentObject: TaxCodeComponentsObject =
@@ -285,12 +215,6 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
     "read from valid JSON" should {
       "produce the expected RetrieveCodingOutResponse object" in {
         desResponse.as[RetrieveCodingOutResponse] shouldBe responseModel
-      }
-    }
-
-    "read from invalid JSON" should {
-      "produce an empty RetrieveCodingOutResponse object" in {
-        invalidDesResponse.validate[RetrieveCodingOutResponse] shouldBe a[JsError]
       }
     }
 

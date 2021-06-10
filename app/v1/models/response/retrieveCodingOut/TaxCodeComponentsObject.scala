@@ -22,7 +22,7 @@ import play.api.libs.functional.syntax._
 case class TaxCodeComponentsObject(selfAssessmentUnderpayment: Option[Seq[TaxCodeComponents]],
                                    payeUnderpayment: Option[Seq[TaxCodeComponents]],
                                    debt: Option[Seq[TaxCodeComponents]],
-                                   inYearAdjustments: Option[TaxCodeComponents])
+                                   inYearAdjustment: Option[TaxCodeComponents])
 
 object TaxCodeComponentsObject {
   implicit val reads: Reads[TaxCodeComponentsObject] = (

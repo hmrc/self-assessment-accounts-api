@@ -45,9 +45,9 @@ class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
   with MockIdGenerator {
 
   private val nino = "AA123456A"
-  private val taxYear = "2021-22"
+  private val taxYear = "2019-20"
   private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  private val source = "HTML-HELD"
+  private val source = "HMRC-HELD"
 
   private val rawData = RetrieveCodingOutRawRequest(
     nino = nino,
@@ -81,27 +81,27 @@ class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
 
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
-      BigInt(12345678910L),
       0,
-      "2019-08-24T14:15:22Z"
+      "2019-08-24T14:15:22Z",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentsHmrcHeld: TaxCodeComponents =
     TaxCodeComponents(
-      BigInt(12345678910L),
       0,
       Some("2019-20"),
       "2019-08-24T14:15:22Z",
-      "HMRC-HELD"
+      "HMRC-HELD",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentsCustomer: TaxCodeComponents =
     TaxCodeComponents(
-      BigInt(12345678910L),
       0,
       Some("2019-20"),
       "2019-08-24T14:15:22Z",
-      "CUSTOMER"
+      "CUSTOMER",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentObject: TaxCodeComponentsObject =

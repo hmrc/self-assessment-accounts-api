@@ -34,27 +34,27 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
-      BigInt(12345678910L),
       0,
-      "2019-08-24T14:15:22Z"
+      "2019-08-24T14:15:22Z",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentsHmrcHeld: TaxCodeComponents =
     TaxCodeComponents(
-      BigInt(12345678910L),
       0,
       Some("2019-20"),
       "2019-08-24T14:15:22Z",
-      "HMRC-HELD"
+      "HMRC-HELD",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentsCustomer: TaxCodeComponents =
     TaxCodeComponents(
-      BigInt(12345678910L),
       0,
       Some("2019-20"),
       "2019-08-24T14:15:22Z",
-      "CUSTOMER"
+      "CUSTOMER",
+      BigInt(12345678910L)
     )
 
   val taxCodeComponentObject: TaxCodeComponentsObject =
