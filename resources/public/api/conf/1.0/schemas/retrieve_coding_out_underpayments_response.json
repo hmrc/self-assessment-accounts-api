@@ -4,14 +4,6 @@
   "description": "Retrieve Coding Out underpayment and debt amounts",
   "type": "object",
   "properties": {
-    "source": {
-      "description": "Specifies the source of data.",
-      "type": "string",
-      "enum": [
-        "hmrcHeld",
-        "user"
-      ]
-    },
     "taxCodeComponents": {
       "type": "object",
       "description": "Object containing the tax code components",
