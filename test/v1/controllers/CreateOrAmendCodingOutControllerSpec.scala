@@ -73,31 +73,56 @@ class CreateOrAmendCodingOutControllerSpec
 
   private val requestJson = Json.parse(
     s"""|{
-        |  "payeUnderpayments": 987.93,
-        |  "selfAssessmentUnderPayments": 179.00,
-        |  "debts": 724.02,
-        |  "inYearAdjustments": 342.87
+        |  "taxCodeComponents": {
+        |    "payeUnderpayment": [
+        |      {
+        |        "amount": 123.45,
+        |        "id": 12345
+        |      }
+        |    ],
+        |    "selfAssessmentUnderpayment": [
+        |      {
+        |        "amount": 123.45,
+        |        "id": 12345
+        |      }
+        |    ],
+        |    "debt": [
+        |      {
+        |        "amount": 123.45,
+        |        "id": 12345
+        |      }
+        |    ],
+        |    "inYearAdjustment": {
+        |      "amount": 123.45,
+        |      "id": 12345
+        |    }
+        |  }
         |}
         |""".stripMargin
   )
 
-  private val requestBody = CreateOrAmendCodingOutRequestBody(Some(987.93), Some(179.00), Some(724.02), Some(342.87))
+  private val requestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
+    payeUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    selfAssessmentUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    debt = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
+  ))
 
   val responseBody: JsValue = Json.parse(
     s"""|{
         |  "links": [
         |    {
-        |      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+        |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
         |      "method": "PUT",
         |      "rel": "create-or-amend-coding-out-underpayments"
         |    },
         |    {
-        |      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+        |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
         |      "method": "self",
         |      "rel": "GET"
         |    },
         |    {
-        |      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+        |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
         |      "method": "delete-coding-out-underpayments",
         |      "rel": "DELETE"
         |    }
@@ -154,6 +179,7 @@ class CreateOrAmendCodingOutControllerSpec
           (RuleTaxYearRangeInvalidError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
           (ValueFormatError, BAD_REQUEST),
+          (IdFormatError, BAD_REQUEST),
           (RuleIncorrectOrEmptyBodyError, BAD_REQUEST)
         )
 

@@ -16,20 +16,15 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import v1.models.errors.{MtdError, ValueFormatError}
+import v1.models.errors.{IdFormatError, MtdError}
 
-object NumberValidation {
-  def validateOptional(field: Option[BigDecimal], path: String): List[MtdError] = {
-    field match {
-      case None => NoValidationErrors
-      case Some(value) => validate(value, path)
-    }
-  }
-  private def validate(field: BigDecimal, path: String): List[MtdError] = {
-    if (field >= 0 && field < 100000000000.00 && field.scale <= 2) {
+object IdValidation {
+
+  def validate(field: BigDecimal, path: String): List[MtdError] = {
+    if (field >= 0 && field < 100000000000.00 && field.scale <= 0) {
       NoValidationErrors
     } else {
-      List(ValueFormatError.copy(paths = Some(Seq(path))))
+      List(IdFormatError.copy(paths = Some(Seq(path))))
     }
   }
 }

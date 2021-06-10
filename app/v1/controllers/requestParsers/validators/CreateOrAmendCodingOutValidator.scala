@@ -16,16 +16,16 @@
 
 package v1.controllers.requestParsers.validators
 
-import v1.controllers.requestParsers.validators.validations._
-import v1.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
-import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
-import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody}
 import config.AppConfig
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponent}
+
 import javax.inject.Inject
 
-class CreateOrAmendCodingOutValidator @Inject()(implicit appConfig: AppConfig) extends Validator[CreateOrAmendCodingOutRawRequest]{
+class CreateOrAmendCodingOutValidator @Inject()(implicit appConfig: AppConfig) extends Validator[CreateOrAmendCodingOutRawRequest] {
 
-  private val validationSet = List(parameterValidation, parameterRuleValidation, bodyFormatValidation, bodyFieldValidation)
+  private val validationSet = List(parameterValidation, parameterRuleValidation, bodyFormatValidation, bodyFieldsEmptyValidation, bodyFieldValidation)
 
   private def parameterValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     List(
@@ -43,8 +43,18 @@ class CreateOrAmendCodingOutValidator @Inject()(implicit appConfig: AppConfig) e
 
   private def bodyFormatValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = { data =>
     List(
-      JsonFormatValidation.validate[CreateOrAmendCodingOutRequestBody](data.body, RuleIncorrectOrEmptyBodyError)
+      JsonFormatValidation.validate[CreateOrAmendCodingOutRequestBody](data.body)
     )
+  }
+
+  private def bodyFieldsEmptyValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+    val body = data.body.as[CreateOrAmendCodingOutRequestBody]
+
+    if(body.emptyFields.nonEmpty) {
+      List(List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(body.emptyFields))))
+    } else {
+      NoValidationErrors
+    }
   }
 
   private def bodyFieldValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
@@ -54,24 +64,80 @@ class CreateOrAmendCodingOutValidator @Inject()(implicit appConfig: AppConfig) e
   }
 
   private def bodyValidations(body: CreateOrAmendCodingOutRequestBody): List[List[MtdError]] = {
+    val payeUnderpaymentErrors: List[List[MtdError]] = body.taxCodeComponents.payeUnderpayment
+      .map(_.zipWithIndex.map {
+        case (component, i) => getPayeUnderpaymentErrors(component, i)
+      })
+      .getOrElse(NoValidationErrors)
+      .toList
+    val selfAssessmentUnderpaymentErrors: List[List[MtdError]] = body.taxCodeComponents.selfAssessmentUnderpayment
+      .map(_.zipWithIndex.map {
+        case (component, i) => getSelfAssessmentUnderpaymentErrors(component, i)
+      })
+      .getOrElse(NoValidationErrors)
+      .toList
+    val debtErrors: List[List[MtdError]] = body.taxCodeComponents.debt
+      .map(_.zipWithIndex.map {
+        case (component, i) => getDebtErrors(component, i)
+      })
+      .getOrElse(NoValidationErrors)
+      .toList
+    val inYearAdjustmentErrors: List[List[MtdError]] = List(
+      body.taxCodeComponents.inYearAdjustment.map(getInYearAdjustmentErrors).getOrElse(NoValidationErrors))
+
+    payeUnderpaymentErrors ++ selfAssessmentUnderpaymentErrors ++ debtErrors ++ inYearAdjustmentErrors
+  }
+
+  private def getPayeUnderpaymentErrors(taxCodeComponent: TaxCodeComponent, i: Int): List[MtdError] = {
     List(
       NumberValidation.validateOptional(
-        field = body.payeUnderpayments,
-        path = s"/payeUnderpayments"
+        field = Some(taxCodeComponent.amount),
+        path = s"/taxCodeComponents/payeUnderpayment/$i/amount"
       ),
-      NumberValidation.validateOptional(
-        field = body.selfAssessmentUnderPayments,
-        path = s"/selfAssessmentUnderPayments"
-      ),
-      NumberValidation.validateOptional(
-        field = body.debts,
-        path = s"/debts"
-      ),
-      NumberValidation.validateOptional(
-        field = body.inYearAdjustments,
-        path = s"/inYearAdjustments"
+      IdValidation.validate(
+        field = taxCodeComponent.id,
+        path = s"/taxCodeComponents/payeUnderpayment/$i/id"
       )
-    )
+    ).flatten
+  }
+
+  private def getSelfAssessmentUnderpaymentErrors(taxCodeComponent: TaxCodeComponent, i: Int): List[MtdError] = {
+    List(
+      NumberValidation.validateOptional(
+        field = Some(taxCodeComponent.amount),
+        path = s"/taxCodeComponents/selfAssessmentUnderpayment/$i/amount"
+      ),
+      IdValidation.validate(
+        field = taxCodeComponent.id,
+        path = s"/taxCodeComponents/selfAssessmentUnderpayment/$i/id"
+      )
+    ).flatten
+  }
+
+  private def getDebtErrors(taxCodeComponent: TaxCodeComponent, i: Int): List[MtdError] = {
+    List(
+      NumberValidation.validateOptional(
+        field = Some(taxCodeComponent.amount),
+        path = s"/taxCodeComponents/debt/$i/amount"
+      ),
+      IdValidation.validate(
+        field = taxCodeComponent.id,
+        path = s"/taxCodeComponents/debt/$i/id"
+      )
+    ).flatten
+  }
+
+  private def getInYearAdjustmentErrors(taxCodeComponent: TaxCodeComponent): List[MtdError] = {
+    List(
+      NumberValidation.validateOptional(
+        field = Some(taxCodeComponent.amount),
+        path = s"/taxCodeComponents/inYearAdjustment/amount"
+      ),
+      IdValidation.validate(
+        field = taxCodeComponent.id,
+        path = s"/taxCodeComponents/inYearAdjustment/id"
+      )
+    ).flatten
   }
 
   override def validate(data: CreateOrAmendCodingOutRawRequest): List[MtdError] = {

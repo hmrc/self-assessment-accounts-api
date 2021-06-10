@@ -18,35 +18,61 @@ package v1.controllers.requestParsers
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v1.models.domain.Nino
 import v1.mocks.validators.MockCreateOrAmendCodingOutValidator
+import v1.models.domain.Nino
 import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v1.models.request.createOrAmendCodingOut._
 
-class CreateOrAmendCodingOutParserSpec extends UnitSpec{
+class CreateOrAmendCodingOutParserSpec extends UnitSpec {
 
-  val nino = "AA123456A"
-  val taxYear = "2021-22"
+  val nino                           = "AA123456A"
+  val taxYear                        = "2021-22"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  private val validJson = Json.parse(
-    """
+  private val validJson = Json.parse("""
       |{
-      |   "payeUnderpayments": 2000.99,
-      |   "selfAssessmentUnderPayments": 2000.99,
-      |   "debts": 2000.99,
-      |   "inYearAdjustments": 5000.99
+      |  "taxCodeComponents": {
+      |    "payeUnderpayment": [
+      |      {
+      |        "amount": 123.45,
+      |        "id": 12345
+      |      }
+      |    ],
+      |    "selfAssessmentUnderpayment": [
+      |      {
+      |        "amount": 123.45,
+      |        "id": 12345
+      |      }
+      |    ],
+      |    "debt": [
+      |      {
+      |        "amount": 123.45,
+      |        "id": 12345
+      |      }
+      |    ],
+      |    "inYearAdjustment": {
+      |      "amount": 123.45,
+      |      "id": 12345
+      |    }
+      |  }
       |}
       |""".stripMargin)
 
   val request: CreateOrAmendCodingOutRawRequest = CreateOrAmendCodingOutRawRequest(nino, taxYear, validJson)
-  val validBody: CreateOrAmendCodingOutRequestBody  = CreateOrAmendCodingOutRequestBody(Some(2000.99), Some(2000.99), Some(2000.99), Some(5000.99))
+
+  val validBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(
+    TaxCodeComponents(
+      Some(Seq(TaxCodeComponent(12345, 123.45))),
+      Some(Seq(TaxCodeComponent(12345, 123.45))),
+      Some(Seq(TaxCodeComponent(12345, 123.45))),
+      Some(TaxCodeComponent(12345, 123.45))
+    ))
 
   trait Test extends MockCreateOrAmendCodingOutValidator {
     lazy val parser = new CreateOrAmendCodingOutParser(mockValidator)
   }
 
-  "parse" should{
+  "parse" should {
     "return a parsed request" when {
       "no validation errors occur" in new Test {
         MockCreateOrAmendCodingOutValidator.validate(request).returns(Nil)

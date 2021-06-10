@@ -16,23 +16,23 @@
 
 package v1.models.request.createOrAmendCodingOut
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{ Json, OFormat }
 
-case class CreateOrAmendCodingOutRequestBody(payeUnderpayments: Option[BigDecimal],
-                                             selfAssessmentUnderPayments: Option[BigDecimal],
-                                             debts: Option[BigDecimal],
-                                             inYearAdjustments: Option[BigDecimal])
+case class CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComponents) {
 
+  def getEmptyFieldName(seqO: Option[Seq[TaxCodeComponent]], fieldName: String): Seq[String] =
+    seqO.map(seq => if (seq.isEmpty) Seq(s"/taxCodeComponents/$fieldName") else Seq.empty).getOrElse(Seq.empty)
 
-object CreateOrAmendCodingOutRequestBody{
-  implicit val reads: Reads[CreateOrAmendCodingOutRequestBody] = Json.reads[CreateOrAmendCodingOutRequestBody]
+  def emptyFields: Seq[String] =
+    if (taxCodeComponents.isEmpty) {
+      List("/taxCodeComponents")
+    } else {
+      getEmptyFieldName(seqO = taxCodeComponents.payeUnderpayment, fieldName = "payeUnderpayment") ++
+        getEmptyFieldName(seqO = taxCodeComponents.selfAssessmentUnderpayment, fieldName = "selfAssessmentUnderpayment") ++
+        getEmptyFieldName(seqO = taxCodeComponents.debt, fieldName = "debt")
+    }
+}
 
-  implicit val writes: OWrites[CreateOrAmendCodingOutRequestBody] = (
-    (JsPath \ "taxCodeComponents" \ "payeUnderpayments").writeNullable[BigDecimal] and
-      (JsPath \ "taxCodeComponents" \ "selfAssessmentUnderPayments").writeNullable[BigDecimal] and
-      (JsPath \ "taxCodeComponents" \ "debts").writeNullable[BigDecimal] and
-      (JsPath \ "taxCodeComponents" \ "inYearAdjustments").writeNullable[BigDecimal]
-  ) (unlift(CreateOrAmendCodingOutRequestBody.unapply))
-
+object CreateOrAmendCodingOutRequestBody {
+  implicit val format: OFormat[CreateOrAmendCodingOutRequestBody] = Json.format[CreateOrAmendCodingOutRequestBody]
 }
