@@ -48,6 +48,7 @@
                 ]
               }
             },
+            "additionalProperties": false,
             "required": [
               "amount",
               "relatedTaxYear",
@@ -95,6 +96,7 @@
                 ]
               }
             },
+            "additionalProperties": false,
             "required": [
               "amount",
               "relatedTaxYear",
@@ -142,6 +144,7 @@
                 ]
               }
             },
+            "additionalProperties": false,
             "required": [
               "amount",
               "relatedTaxYear",
@@ -186,6 +189,7 @@
               ]
             }
           },
+          "additionalProperties": false,
           "required": [
             "amount",
             "relatedTaxYear",
@@ -225,6 +229,7 @@
                 "example": "2020-07-06T09:37:17Z"
               }
             },
+            "additionalProperties": false,
             "required": [
               "amount",
               "relatedTaxYear",
@@ -259,6 +264,7 @@
                 "example": "2020-07-06T09:37:17Z"
               }
             },
+            "additionalProperties": false,
             "required": [
               "amount",
               "relatedTaxYear",
@@ -293,6 +299,7 @@
                 "example": "2020-07-06T09:37:17Z"
               }
             },
+            "additionalProperties": false,
             "required": [
               "amount",
               "relatedTaxYear",
@@ -324,13 +331,15 @@
               "example": "2020-07-06T09:37:17Z"
             }
           },
+          "additionalProperties": false,
           "required": [
             "amount",
             "relatedTaxYear",
             "submittedOn"
           ]
         }
-      }
+      },
+
     },
     "links": {
       "type": "array",
