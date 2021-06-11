@@ -196,7 +196,8 @@
             "submittedOn"
           ]
         }
-      }
+      },
+      "additionalProperties": false
     },
     "unmatchedCustomerSubmissions": {
       "type": "object",
@@ -338,7 +339,8 @@
             "submittedOn"
           ]
         }
-      }
+      },
+      "additionalProperties": false
     },
     "links": {
       "type": "array",
