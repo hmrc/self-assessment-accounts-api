@@ -46,7 +46,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |                    "amount": 0,
          |                    "relatedTaxYear": "$taxYear",
          |                    "submittedOn": "2019-08-24T14:15:22Z",
-         |                    "source": "$mtdSource",
+         |                    "source": "$desSource",
          |                    "componentIdentifier": 12345678910
          |                }
          |            ],
@@ -55,7 +55,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |                    "amount": 0,
          |                    "relatedTaxYear": "$taxYear",
          |                    "submittedOn": "2019-08-24T14:15:22Z",
-         |                    "source": "$mtdSource",
+         |                    "source": "$desSource",
          |                    "componentIdentifier": 12345678910
          |                }
          |            ],
@@ -108,7 +108,9 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
        """.stripMargin
     )
 
-    val mtdResponse: JsValue = mtdResponseWithHateoas(nino, taxYear, mtdSource)
+    val mtdResponse: JsValue = mtdResponseWithHateoas(nino, taxYear, "HMRC-HELD")
+
+    val mtdResponseCustomer: JsValue = mtdResponseWithHateoas(nino, taxYear, "CUSTOMER")
 
     def uri: String = s"/$nino/$taxYear/collection/tax-code"
 
@@ -189,7 +191,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request(Some(mtdSource)).get())
         response.status shouldBe OK
-        response.json shouldBe mtdResponse
+        response.json shouldBe mtdResponseCustomer
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
       }
