@@ -16,15 +16,14 @@
 
 package v1.models.response.retrieveCodingOut
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
-class RetrieveCodingOutResponseSpec extends UnitSpec {
+class TaxCodeComponentsObjectSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
       |{
-      |  "taxCodeComponents": {
       |    "selfAssessmentUnderpayment": [
       |      {
       |        "amount": 0,
@@ -59,44 +58,13 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |      "source": "CUSTOMER",
       |      "componentIdentifier": 12345678910
       |    }
-      |  },
-      |  "unmatchedCustomerSubmissions": {
-      |    "selfAssessmentUnderpayment": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
-      |      }
-      |    ],
-      |    "payeUnderpayment": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
-      |      }
-      |    ],
-      |    "debt": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
-      |      }
-      |    ],
-      |    "inYearAdjustment": {
-      |      "amount": 0,
-      |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "componentIdentifier": 12345678910
-      |    }
-      |  }
       |}
       |""".stripMargin
   )
 
-
   val mtdResponse: JsValue = Json.parse(
     """
       |{
-      |  "taxCodeComponents": {
       |    "selfAssessmentUnderpayment": [
       |      {
       |        "amount": 0,
@@ -131,45 +99,9 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |      "source": "CUSTOMER",
       |      "id": 12345678910
       |    }
-      |  },
-      |  "unmatchedCustomerSubmissions": {
-      |    "selfAssessmentUnderpayment": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "id": 12345678910
-      |      }
-      |    ],
-      |    "payeUnderpayment": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "id": 12345678910
-      |      }
-      |    ],
-      |    "debt": [
-      |      {
-      |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "id": 12345678910
-      |      }
-      |    ],
-      |    "inYearAdjustment": {
-      |      "amount": 0,
-      |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "id": 12345678910
-      |    }
-      |  }
       |}
     """.stripMargin
   )
-
-  val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
-    UnmatchedCustomerSubmissions(
-      0,
-      "2019-08-24T14:15:22Z",
-      BigInt(12345678910L)
-    )
 
   val taxCodeComponentsHmrcHeld: TaxCodeComponents =
     TaxCodeComponents(
@@ -189,7 +121,7 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       BigInt(12345678910L)
     )
 
-  val taxCodeComponentObject: TaxCodeComponentsObject =
+  val responseModel: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
       Some(Seq(taxCodeComponentsHmrcHeld)),
       Some(Seq(taxCodeComponentsHmrcHeld)),
@@ -197,24 +129,10 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       Some(taxCodeComponentsCustomer)
     )
 
-  val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
-    UnmatchedCustomerSubmissionsObject(
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(unmatchedCustomerSubmissions)
-    )
-
-  val responseModel: RetrieveCodingOutResponse =
-    RetrieveCodingOutResponse(
-      Some(taxCodeComponentObject),
-      Some(unmatchedCustomerSubmissionsObject)
-    )
-
-  "RetrieveCodingOutResponse" when {
+  "TaxCodeComponentsObject" when {
     "read from valid JSON" should {
-      "produce the expected RetrieveCodingOutResponse object" in {
-        desResponse.as[RetrieveCodingOutResponse] shouldBe responseModel
+      "produce the expected TaxCodeComponentsObject object" in {
+        desResponse.as[TaxCodeComponentsObject] shouldBe responseModel
       }
     }
 

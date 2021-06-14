@@ -21,7 +21,7 @@ import v1.models.domain.{MtdSource, Nino}
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
-import v1.models.response.retrieveCodingOut.{RetrieveCodingOutResponse, TaxCodeComponent}
+import v1.models.response.retrieveCodingOut.{RetrieveCodingOutResponse, TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
 
 import scala.concurrent.Future
 
@@ -31,20 +31,52 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
   val taxYear: String = "2019-20"
   val source: String = "hmrcHeld"
 
-  private val taxCodeComponent: TaxCodeComponent =
-    TaxCodeComponent(
-      amount = 1000,
-      relatedTaxYear = "2019-20",
-      submittedOn = "2020-07-06T09:37:17Z"
+
+  val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
+    UnmatchedCustomerSubmissions(
+      0,
+      "2019-08-24T14:15:22Z",
+      BigInt(12345678910L)
     )
 
-  private val retrieveCodingOutResponse: RetrieveCodingOutResponse =
+  val taxCodeComponentsHmrcHeld: TaxCodeComponents =
+    TaxCodeComponents(
+      0,
+      Some("2019-20"),
+      "2019-08-24T14:15:22Z",
+      "HMRC-HELD",
+      BigInt(12345678910L)
+    )
+
+  val taxCodeComponentsCustomer: TaxCodeComponents =
+    TaxCodeComponents(
+      0,
+      Some("2019-20"),
+      "2019-08-24T14:15:22Z",
+      "CUSTOMER",
+      BigInt(12345678910L)
+    )
+
+  val taxCodeComponentObject: TaxCodeComponentsObject =
+    TaxCodeComponentsObject(
+      Some(Seq(taxCodeComponentsHmrcHeld)),
+      Some(Seq(taxCodeComponentsHmrcHeld)),
+      Some(Seq(taxCodeComponentsCustomer)),
+      Some(taxCodeComponentsCustomer)
+    )
+
+  val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
+    UnmatchedCustomerSubmissionsObject(
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(unmatchedCustomerSubmissions)
+    )
+
+  val retrieveCodingOutResponse: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
-      source = "hmrcHeld",
-      selfAssessmentUnderPayments = Some(Seq(taxCodeComponent)),
-      payeUnderpayments = Some(Seq(taxCodeComponent)),
-      debts = Some(Seq(taxCodeComponent)),
-      inYearAdjustments = Some(taxCodeComponent)
+      Some(taxCodeComponentObject),
+      Some(unmatchedCustomerSubmissionsObject)
     )
 
   class Test extends MockHttpClient with MockAppConfig {
