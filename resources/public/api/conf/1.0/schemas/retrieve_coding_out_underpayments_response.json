@@ -51,7 +51,6 @@
             "additionalProperties": false,
             "required": [
               "amount",
-              "relatedTaxYear",
               "submittedOn"
             ]
           }
@@ -99,7 +98,6 @@
             "additionalProperties": false,
             "required": [
               "amount",
-              "relatedTaxYear",
               "submittedOn"
             ]
           }
@@ -147,7 +145,6 @@
             "additionalProperties": false,
             "required": [
               "amount",
-              "relatedTaxYear",
               "submittedOn"
             ]
           }
@@ -192,7 +189,6 @@
           "additionalProperties": false,
           "required": [
             "amount",
-            "relatedTaxYear",
             "submittedOn"
           ]
         }
@@ -233,7 +229,6 @@
             "additionalProperties": false,
             "required": [
               "amount",
-              "relatedTaxYear",
               "submittedOn"
             ]
           }
@@ -268,7 +263,6 @@
             "additionalProperties": false,
             "required": [
               "amount",
-              "relatedTaxYear",
               "submittedOn"
             ]
           }
@@ -303,7 +297,6 @@
             "additionalProperties": false,
             "required": [
               "amount",
-              "relatedTaxYear",
               "submittedOn"
             ]
           }
@@ -335,7 +328,6 @@
           "additionalProperties": false,
           "required": [
             "amount",
-            "relatedTaxYear",
             "submittedOn"
           ]
         }
@@ -381,7 +373,6 @@
     }
   },
   "required": [
-    "source",
     "links"
   ]
 }
