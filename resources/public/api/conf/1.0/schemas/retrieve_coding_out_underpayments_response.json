@@ -50,7 +50,9 @@
             },
             "additionalProperties": false,
             "required": [
+              "id",
               "amount",
+              "source",
               "submittedOn"
             ]
           }
@@ -97,7 +99,9 @@
             },
             "additionalProperties": false,
             "required": [
+              "id",
               "amount",
+              "source",
               "submittedOn"
             ]
           }
@@ -144,7 +148,9 @@
             },
             "additionalProperties": false,
             "required": [
+              "id",
               "amount",
+              "source",
               "submittedOn"
             ]
           }
@@ -188,7 +194,9 @@
           },
           "additionalProperties": false,
           "required": [
+            "id",
             "amount",
+            "source",
             "submittedOn"
           ]
         }
@@ -228,6 +236,7 @@
             },
             "additionalProperties": false,
             "required": [
+              "id",
               "amount",
               "submittedOn"
             ]
@@ -262,6 +271,7 @@
             },
             "additionalProperties": false,
             "required": [
+              "id",
               "amount",
               "submittedOn"
             ]
@@ -296,6 +306,7 @@
             },
             "additionalProperties": false,
             "required": [
+              "id",
               "amount",
               "submittedOn"
             ]
@@ -327,6 +338,7 @@
           },
           "additionalProperties": false,
           "required": [
+            "id",
             "amount",
             "submittedOn"
           ]
