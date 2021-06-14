@@ -8,7 +8,7 @@
       "type": "object",
       "description": "Object holding underpayment arrays.",
       "properties": {
-        "selfAssessmentUnderPayment": {
+        "selfAssessmentUnderpayment": {
           "type": "array",
           "description": "Array containing details of coded out Self Assessment underpayments.",
           "minItems": 1,
@@ -207,7 +207,7 @@
       "type": "object",
       "description": "Object holding underpayment arrays for unmatched customer submissions.",
       "properties": {
-        "selfAssessmentUnderPayment": {
+        "selfAssessmentUnderpayment": {
           "type": "array",
           "description": "Array containing details of coded out Self Assessment underpayments.",
           "minItems": 1,
