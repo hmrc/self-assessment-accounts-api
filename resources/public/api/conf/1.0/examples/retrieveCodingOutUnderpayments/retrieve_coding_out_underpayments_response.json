@@ -1,30 +1,67 @@
 {
-  "source": "hmrcHeld",
-  "selfAssessmentUnderPayments": [
-    {
-      "amount": 87.78,
-      "relatedTaxYear": "2021-22",
-      "submittedOn": "2021-07-06T09:37:17Z"
+  "taxCodeComponents": {
+    "selfAssessmentUnderpayment": [
+      {
+        "amount": 0,
+        "relatedTaxYear": "2019-20",
+        "submittedOn": "2019-08-24T14:15:22Z",
+        "source": "CUSTOMER",
+        "id": 49809809809
+      }
+    ],
+    "payeUnderpayment": [
+      {
+        "amount": 100,
+        "relatedTaxYear": "2019-20",
+        "submittedOn": "2019-08-24T14:15:22Z",
+        "source": "CUSTOMER",
+        "id": 49809809809
+      }
+    ],
+    "debt": [
+      {
+        "amount": 200,
+        "relatedTaxYear": "2019-20",
+        "submittedOn": "2019-08-24T14:15:22Z",
+        "source": "CUSTOMER",
+        "id": 49809809809
+      }
+    ],
+    "inYearAdjustment": {
+      "amount": 0,
+      "relatedTaxYear": "2019-20",
+      "submittedOn": "2019-08-24T14:15:22Z",
+      "source": "CUSTOMER",
+      "id": 49809809809
     }
-  ],
-  "payeUnderpayments": [
-    {
-      "amount": 12.45,
-      "relatedTaxYear": "2021-22",
-      "submittedOn": "2021-07-06T09:37:17Z"
+  },
+  "unmatchedCustomerSubmissions": {
+    "selfAssessmentUnderpayment": [
+      {
+        "amount": 3000,
+        "submittedOn": "2019-08-24T14:15:22Z",
+        "id": 49809809809
+      }
+    ],
+    "payeUnderpayment": [
+      {
+        "amount": 0,
+        "submittedOn": "2019-08-24T14:15:22Z",
+        "id": 49809809809
+      }
+    ],
+    "debt": [
+      {
+        "amount": 0,
+        "submittedOn": "2019-08-24T14:15:22Z",
+        "id": 49809809809
+      }
+    ],
+    "inYearAdjustment": {
+      "amount": 100,
+      "submittedOn": "2019-08-24T14:15:22Z",
+      "id": 49809809809
     }
-  ],
-  "debts": [
-    {
-      "amount": 10.01,
-      "relatedTaxYear": "2021-22",
-      "submittedOn": "2021-07-06T09:37:17Z"
-    }
-  ],
-  "inYearAdjustments": {
-    "amount": 99.99,
-    "relatedTaxYear": "2021-22",
-    "submittedOn": "2021-07-06T09:37:17Z"
   },
   "links": [
     {
