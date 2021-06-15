@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.request.createOrAmendCodingOut
 
-import v1.models.errors.{MtdError, ValueFormatError}
+import play.api.libs.json.Json
+import support.UnitSpec
 
-object NumberValidation {
-  def validateOptional(field: Option[BigDecimal], path: String): List[MtdError] = {
-    field match {
-      case None => NoValidationErrors
-      case Some(value) => validate(value, path)
+class TaxCodeComponentsSpec extends UnitSpec {
+
+  private val mtdJson = taxCodeComponentsMtdJson
+
+  private val desJson = taxCodeComponentsDesJson
+
+  private val requestBody = taxCodeComponents
+
+  "TaxCodeComponents" when {
+    "read from a valid Json" should {
+      "produce the expected body" in {
+        mtdJson.as[TaxCodeComponents] shouldBe requestBody
+      }
     }
-  }
-  private def validate(field: BigDecimal, path: String): List[MtdError] = {
-    if (field >= 0 && field < 100000000000.00 && field.scale <= 2) {
-      NoValidationErrors
-    } else {
-      List(ValueFormatError.copy(paths = Some(Seq(path))))
+
+    "written to Json" should {
+      "write to a valid json" in {
+        Json.toJson(requestBody) shouldBe desJson
+      }
     }
   }
 }

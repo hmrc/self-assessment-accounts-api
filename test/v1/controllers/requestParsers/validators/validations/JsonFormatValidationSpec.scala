@@ -35,7 +35,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
         val validJson = Json.parse("""{ "fieldOne" : "Something", "fieldTwo" : "SomethingElse" }""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataObject](validJson, RuleIncorrectOrEmptyBodyError)
+        val validationResult = JsonFormatValidation.validate[TestDataObject](validJson)
         validationResult shouldBe empty
       }
     }
@@ -46,7 +46,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
         // fieldTwo is missing
         val json = Json.parse("""{ "fieldOne" : "Something" }""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataObject](json, RuleIncorrectOrEmptyBodyError)
+        val validationResult = JsonFormatValidation.validate[TestDataObject](json)
         validationResult shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/fieldTwo"))))
       }
 
@@ -55,7 +55,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
         // both fields are missing
         val json = Json.parse("""{ "arrayField" : [{}]}""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json, RuleIncorrectOrEmptyBodyError)
+        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
         validationResult shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/arrayField/0/fieldTwo", "/arrayField/0/fieldOne"))))
       }
 
@@ -64,7 +64,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
         // both fields are missing
         val json = Json.parse("""{ "arrayField" : [{}, {}]}""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json, RuleIncorrectOrEmptyBodyError)
+        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
         validationResult shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths =
           Some(Seq(
             "/arrayField/0/fieldTwo",
@@ -79,7 +79,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
         val json = Json.parse("""{}""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataObject](json, RuleIncorrectOrEmptyBodyError)
+        val validationResult = JsonFormatValidation.validate[TestDataObject](json)
         validationResult shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
@@ -87,7 +87,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
         val json = Json.parse("""{"aField": "aValue"}""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json, RuleIncorrectOrEmptyBodyError)
+        val validationResult = JsonFormatValidation.validate[TestDataWrapper](json)
         validationResult shouldBe List(RuleIncorrectOrEmptyBodyError)
       }
 
@@ -95,7 +95,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
         val json = Json.parse("""{"field": "value"}""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataObject](json, RuleIncorrectOrEmptyBodyError)
+        val validationResult = JsonFormatValidation.validate[TestDataObject](json)
         validationResult shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/fieldTwo", "/fieldOne"))))
       }
 
@@ -103,7 +103,7 @@ class JsonFormatValidationSpec extends UnitSpec with JsonErrorValidators {
 
         val json = Json.parse("""{"fieldOne": true, "fieldTwo": "value"}""")
 
-        val validationResult = JsonFormatValidation.validate[TestDataObject](json, RuleIncorrectOrEmptyBodyError)
+        val validationResult = JsonFormatValidation.validate[TestDataObject](json)
         validationResult shouldBe List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(Seq("/fieldOne"))))
       }
     }

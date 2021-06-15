@@ -52,7 +52,7 @@ class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutC
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
       "INVALID_CORRELATIONID" -> DownstreamError,
       "INVALID_PAYLOAD" -> DownstreamError,
-      "BEFORE_TAXYEAR_END" -> RuleTaxYearNotEndedError,
+      "INVALID_REQUEST_TAX_YEAR" -> RuleTaxYearNotEndedError,
       "SERVER_ERROR" -> DownstreamError,
       "SERVICE_UNAVAILABLE" -> DownstreamError
     )

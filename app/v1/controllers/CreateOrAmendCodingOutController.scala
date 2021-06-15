@@ -90,6 +90,7 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
            RuleTaxYearRangeInvalidError |
            RuleTaxYearNotEndedError |
            MtdErrorWithCustomMessage(ValueFormatError.code) |
+           MtdErrorWithCustomMessage(IdFormatError.code) |
            MtdErrorWithCustomMessage(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

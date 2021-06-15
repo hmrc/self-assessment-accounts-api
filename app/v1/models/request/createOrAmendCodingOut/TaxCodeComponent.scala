@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.models.request.createOrAmendCodingOut
 
-import v1.models.errors.{MtdError, ValueFormatError}
+import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
-object NumberValidation {
-  def validateOptional(field: Option[BigDecimal], path: String): List[MtdError] = {
-    field match {
-      case None => NoValidationErrors
-      case Some(value) => validate(value, path)
-    }
-  }
-  private def validate(field: BigDecimal, path: String): List[MtdError] = {
-    if (field >= 0 && field < 100000000000.00 && field.scale <= 2) {
-      NoValidationErrors
-    } else {
-      List(ValueFormatError.copy(paths = Some(Seq(path))))
-    }
-  }
+case class TaxCodeComponent (id: BigDecimal, amount: BigDecimal)
+
+object TaxCodeComponent {
+  implicit val reads: Reads[TaxCodeComponent] = Json.reads[TaxCodeComponent]
+
+  implicit val writes: OWrites[TaxCodeComponent] = (
+    (JsPath \ "componentIdentifier").write[BigDecimal] and
+      (JsPath \ "amount").write[BigDecimal]
+    ) (unlift(TaxCodeComponent.unapply))
 }

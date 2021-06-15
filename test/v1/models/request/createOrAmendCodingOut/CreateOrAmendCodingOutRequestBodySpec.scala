@@ -21,36 +21,11 @@ import support.UnitSpec
 
 class CreateOrAmendCodingOutRequestBodySpec extends UnitSpec {
 
-  private val mtdJson = Json.parse(
-    """
-      |{
-      |   "payeUnderpayments": 2000.99,
-      |   "selfAssessmentUnderPayments": 2000.99,
-      |   "debts": 2000.99,
-      |   "inYearAdjustments": 5000.99
-      |}
-      |""".stripMargin)
+  private val mtdJson = createOrAmendCodingOutMtdJson
 
-  private val desJson = Json.parse(
-    """
-      |{
-      |   "taxCodeComponents":
-      |     {
-      |        "payeUnderpayments": 2000.99,
-      |        "selfAssessmentUnderPayments": 2000.99,
-      |        "debts": 2000.99,
-      |        "inYearAdjustments": 5000.99
-      |     }
-      |}
-      |""".stripMargin)
+  private val desJson = createOrAmendCodingOutDesJson
 
-  private val requestBody = CreateOrAmendCodingOutRequestBody(
-    Some(2000.99),
-    Some(2000.99),
-    Some(2000.99),
-    Some(5000.99)
-  )
-
+  private val requestBody = createOrAmendCodingOutRequestBody
 
   "CreateOrAmendCodingOutRequestBody" when {
     "read from a valid Json" should {
@@ -62,6 +37,68 @@ class CreateOrAmendCodingOutRequestBodySpec extends UnitSpec {
     "written to Json" should {
       "write to a valid json" in {
         Json.toJson(requestBody) shouldBe desJson
+      }
+    }
+
+    "getEmptyFieldName" should {
+      "return an empty Seq" when {
+        "None is provided" in {
+          requestBody.getEmptyFieldName(None, "fieldOne") shouldBe Seq()
+        }
+        "a non-empty Seq is provided" in {
+          requestBody.getEmptyFieldName(Some(Seq(TaxCodeComponent(1, 1))), "fieldOne") shouldBe Seq()
+        }
+      }
+
+      "return a field" when {
+        "an empty Seq is provided" in {
+          requestBody.getEmptyFieldName(Some(Seq()), "fieldOne") shouldBe Seq("/taxCodeComponents/fieldOne")
+        }
+      }
+    }
+
+    "emptyFields" should {
+      "return a field name" when {
+        "taxCodeComponents is empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(None, None, None, None)).emptyFields shouldBe Seq("/taxCodeComponents")
+        }
+        "taxCodeComponents.payeUnderpayment is empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(Some(Seq()), None, None, None)).emptyFields shouldBe Seq(
+            "/taxCodeComponents/payeUnderpayment")
+        }
+        "taxCodeComponents.selfAssessmentUnderpayment is empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(None, Some(Seq()), None, None)).emptyFields shouldBe Seq(
+            "/taxCodeComponents/selfAssessmentUnderpayment")
+        }
+        "taxCodeComponents.debt is empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(None, None, Some(Seq()), None)).emptyFields shouldBe Seq("/taxCodeComponents/debt")
+        }
+        "multiple fields are provided and at least one is empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(Some(Seq(TaxCodeComponent(1, 1))), Some(Seq()), Some(Seq()), None)).emptyFields shouldBe Seq(
+            "/taxCodeComponents/selfAssessmentUnderpayment",
+            "/taxCodeComponents/debt")
+        }
+      }
+
+      "return an empty Seq" when {
+        "only inYearAdjustment is provided" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(None, None, None, Some(TaxCodeComponent(1, 1)))).emptyFields shouldBe Seq()
+        }
+        "payeUnderpayment is provided and non-empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(Some(Seq(TaxCodeComponent(1, 1))), None, None, None)).emptyFields shouldBe Seq()
+        }
+        "selfAssessmentUnderpayment is provided and non-empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(None, Some(Seq(TaxCodeComponent(1, 1))), None, None)).emptyFields shouldBe Seq()
+        }
+        "debt is provided and non-empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(None, None, Some(Seq(TaxCodeComponent(1, 1))), None)).emptyFields shouldBe Seq()
+        }
+        "multiple fields are provided and all are non-empty" in {
+          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(Some(Seq(TaxCodeComponent(1, 1))),
+                                                              Some(Seq(TaxCodeComponent(1, 1))),
+                                                              Some(Seq(TaxCodeComponent(1, 1))),
+                                                              None)).emptyFields shouldBe Seq()
+        }
       }
     }
   }

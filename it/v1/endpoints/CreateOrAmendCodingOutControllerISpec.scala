@@ -19,31 +19,50 @@ package v1.endpoints
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, JsValue, Json}
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.json.{ JsObject, JsValue, Json }
+import play.api.libs.ws.{ WSRequest, WSResponse }
 import support.IntegrationBaseSpec
 import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import v1.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
 
 class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String    = "AA123456A"
     val taxYear: String = "2020-21"
 
     val requestBodyJson: JsValue = Json.parse(
       s"""|{
-          |  "payeUnderpayments": 987.93,
-          |  "selfAssessmentUnderPayments": 179.00,
-          |  "debts": 724.02,
-          |  "inYearAdjustments": 342.87
+          |  "taxCodeComponents": {
+          |    "payeUnderpayment": [
+          |      {
+          |        "amount": 123.45,
+          |        "id": 12345
+          |      }
+          |    ],
+          |    "selfAssessmentUnderpayment": [
+          |      {
+          |        "amount": 123.45,
+          |        "id": 12345
+          |      }
+          |    ],
+          |    "debt": [
+          |      {
+          |        "amount": 123.45,
+          |        "id": 12345
+          |      }
+          |    ],
+          |    "inYearAdjustment": {
+          |      "amount": 123.45,
+          |      "id": 12345
+          |    }
+          |  }
           |}
           |""".stripMargin
     )
 
-    val responseBody: JsValue = Json.parse(
-      s"""
+    val responseBody: JsValue = Json.parse(s"""
          |{
          |  "links": [
          |    {
@@ -175,10 +194,30 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
-               |  "payeUnderpayments": 987.956783,
-               |  "selfAssessmentUnderPayments": 179.00,
-               |  "debts": 724.02,
-               |  "inYearAdjustments": 342.87
+               |  "taxCodeComponents": {
+               |    "payeUnderpayment": [
+               |      {
+               |        "amount": 123498394893843.4,
+               |        "id": 12345.35
+               |      }
+               |    ],
+               |    "selfAssessmentUnderpayment": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "debt": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "inYearAdjustment": {
+               |      "amount": 123.45,
+               |      "id": 12345
+               |    }
+               |  }
                |}
                |""".stripMargin
           )
@@ -190,20 +229,53 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(ValueFormatError.copy(
-            paths = Some(List(
-              "/payeUnderpayments"
-            ))
-          ))
+          response.json shouldBe Json.toJson(
+            ErrorWrapper(
+              correlationId = "",
+              error = BadRequestError,
+              errors = Some(Seq(
+                ValueFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/payeUnderpayment/0/amount"
+                  ))
+                ),
+                IdFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/payeUnderpayment/0/id"
+                  ))
+                )
+              ))
+            )
+          )
         }
         "an invalid selfAssessmentUnderPayments is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
-               |  "payeUnderpayments": 987.93,
-               |  "selfAssessmentUnderPayments": 179.0056789876,
-               |  "debts": 724.02,
-               |  "inYearAdjustments": 342.87
+               |  "taxCodeComponents": {
+               |    "payeUnderpayment": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "selfAssessmentUnderpayment": [
+               |      {
+               |        "amount": 123498394893843.4,
+               |        "id": 12345.35
+               |      }
+               |    ],
+               |    "debt": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "inYearAdjustment": {
+               |      "amount": 123.45,
+               |      "id": 12345
+               |    }
+               |  }
                |}
                |""".stripMargin
           )
@@ -215,20 +287,52 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(ValueFormatError.copy(
-            paths = Some(List(
-              "/selfAssessmentUnderPayments"
+          response.json shouldBe Json.toJson(
+            ErrorWrapper(
+              correlationId = "",
+              error = BadRequestError,
+              errors = Some(Seq(
+                ValueFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/selfAssessmentUnderpayment/0/amount"
+                  ))
+                ),
+                IdFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/selfAssessmentUnderpayment/0/id"
+                  ))
+                )
+              ))
             ))
-          ))
         }
         "an invalid debts is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
-               |  "payeUnderpayments": 987.93,
-               |  "selfAssessmentUnderPayments": 179.00,
-               |  "debts": 724.04567898762,
-               |  "inYearAdjustments": 342.87
+               |  "taxCodeComponents": {
+               |    "payeUnderpayment": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "selfAssessmentUnderpayment": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "debt": [
+               |      {
+               |        "amount": 123498394893843.4,
+               |        "id": 12345.35
+               |      }
+               |    ],
+               |    "inYearAdjustment": {
+               |      "amount": 123.45,
+               |      "id": 12345
+               |    }
+               |  }
                |}
                |""".stripMargin
           )
@@ -240,20 +344,52 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(ValueFormatError.copy(
-            paths = Some(List(
-              "/debts"
+          response.json shouldBe Json.toJson(
+            ErrorWrapper(
+              correlationId = "",
+              error = BadRequestError,
+              errors = Some(Seq(
+                ValueFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/debt/0/amount"
+                  ))
+                ),
+                IdFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/debt/0/id"
+                  ))
+                )
+              ))
             ))
-          ))
         }
         "an invalid inYearAdjustments is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
-               |  "payeUnderpayments": 987.93,
-               |  "selfAssessmentUnderPayments": 179.00,
-               |  "debts": 724.02,
-               |  "inYearAdjustments": 342.8456788767
+               |  "taxCodeComponents": {
+               |    "payeUnderpayment": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "selfAssessmentUnderpayment": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "debt": [
+               |      {
+               |        "amount": 123.45,
+               |        "id": 12345
+               |      }
+               |    ],
+               |    "inYearAdjustment": {
+               |      "amount": 123498394893843.4,
+               |      "id": 12345.35
+               |    }
+               |  }
                |}
                |""".stripMargin
           )
@@ -265,20 +401,52 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(ValueFormatError.copy(
-            paths = Some(List(
-              "/inYearAdjustments"
+          response.json shouldBe Json.toJson(
+            ErrorWrapper(
+              correlationId = "",
+              error = BadRequestError,
+              errors = Some(Seq(
+                ValueFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/inYearAdjustment/amount"
+                  ))
+                ),
+                IdFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/inYearAdjustment/id"
+                  ))
+                )
+              ))
             ))
-          ))
         }
         "all values submitted are invalid" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
             s"""
                |{
-               |  "payeUnderpayments": 987.945673,
-               |  "selfAssessmentUnderPayments": 179.045670,
-               |  "debts": 724.045672,
-               |  "inYearAdjustments": 342.8456788767
+               |  "taxCodeComponents": {
+               |    "payeUnderpayment": [
+               |      {
+               |        "amount": 123.455,
+               |        "id": -12345
+               |      }
+               |    ],
+               |    "selfAssessmentUnderpayment": [
+               |      {
+               |        "amount": 123498394893843.4,
+               |        "id": 12345.35
+               |      }
+               |    ],
+               |    "debt": [
+               |      {
+               |        "amount": -123.45,
+               |        "id": 123453456789098765434567897654567890987654
+               |      }
+               |    ],
+               |    "inYearAdjustment": {
+               |      "amount": 11111111111111111111111111111123.45,
+               |      "id": -12345
+               |    }
+               |  }
                |}
                |""".stripMargin
           )
@@ -290,14 +458,29 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
-          response.json shouldBe Json.toJson(ValueFormatError.copy(
-            paths = Some(List(
-              "/payeUnderpayments",
-              "/selfAssessmentUnderPayments",
-              "/debts",
-              "/inYearAdjustments"
+          response.json shouldBe Json.toJson(
+            ErrorWrapper(
+              correlationId = "",
+              error = BadRequestError,
+              errors = Some(Seq(
+                ValueFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/payeUnderpayment/0/amount",
+                    "/taxCodeComponents/selfAssessmentUnderpayment/0/amount",
+                    "/taxCodeComponents/debt/0/amount",
+                    "/taxCodeComponents/inYearAdjustment/amount"
+                  ))
+                ),
+                IdFormatError.copy(
+                  paths = Some(List(
+                    "/taxCodeComponents/payeUnderpayment/0/id",
+                    "/taxCodeComponents/selfAssessmentUnderpayment/0/id",
+                    "/taxCodeComponents/debt/0/id",
+                    "/taxCodeComponents/inYearAdjustment/id"
+                  ))
+                )
+              ))
             ))
-          ))
         }
         "an empty body is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse("{}")
@@ -335,9 +518,10 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
-          (UNPROCESSABLE_ENTITY, "BEFORE_TAXYEAR_END", BAD_REQUEST, RuleTaxYearNotEndedError),
+          (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError))
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError)
+        )
 
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }

@@ -21,7 +21,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRequestBody}
+import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponent, TaxCodeComponents}
 
 import scala.concurrent.Future
 
@@ -30,12 +30,12 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
   val nino: String = "AA111111A"
   val taxYear: String = "2021-22"
 
-  val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(
-    payeUnderpayments = Some(1000.99),
-    selfAssessmentUnderPayments = Some(1000.99),
-    debts = Some(1000.99),
-    inYearAdjustments = Some(1000.99)
-  )
+  val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
+    payeUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    selfAssessmentUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    debt = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
+  ))
 
   val request: CreateOrAmendCodingOutParsedRequest = CreateOrAmendCodingOutParsedRequest(
     nino = Nino(nino),

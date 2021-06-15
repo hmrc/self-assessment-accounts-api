@@ -30,12 +30,12 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
   private val nino = "AA112233A"
   private val taxYear = "2021-22"
 
-  val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(
-    payeUnderpayments = Some(1000.99),
-    selfAssessmentUnderPayments = Some(1000.99),
-    debts = Some(1000.99),
-    inYearAdjustments = Some(1000.99)
-  )
+  val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
+    payeUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    selfAssessmentUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    debt = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
+  ))
 
   val request: CreateOrAmendCodingOutParsedRequest = CreateOrAmendCodingOutParsedRequest(
     nino = Nino(nino),
@@ -78,7 +78,7 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
           ("INVALID_TAX_YEAR", TaxYearFormatError),
           ("INVALID_CORRELATIONID", DownstreamError),
           ("INVALID_PAYLOAD", DownstreamError),
-          ("BEFORE_TAXYEAR_END", RuleTaxYearNotEndedError),
+          ("INVALID_REQUEST_TAX_YEAR", RuleTaxYearNotEndedError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )

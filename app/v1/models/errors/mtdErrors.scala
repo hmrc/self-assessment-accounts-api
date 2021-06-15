@@ -67,6 +67,11 @@ object TransactionIdFormatError extends MtdError(
   message = "The provided transaction ID is invalid"
 )
 
+object IdFormatError extends MtdError(
+  code = "FORMAT_ID",
+  message = "The format of the ID is invalid"
+)
+
 object SourceFormatError extends MtdError(
   code = "FORMAT_SOURCE",
   message = "The format of the supplied source is not valid"
