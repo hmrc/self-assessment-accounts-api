@@ -4,37 +4,136 @@
   "description": "Create or Amend Coding Out underpayment and debt amounts",
   "type": "object",
   "properties": {
-    "payeUnderpayments": {
-      "description": "The total coding out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99.",
-      "type": "number",
-      "multipleOf": 0.01,
-      "minimum": 0.00,
-      "maximum": 99999999999.99,
-      "example": "1000.25"
-    },
-    "selfAssessmentUnderPayments": {
-      "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99.",
-      "type": "number",
-      "multipleOf": 0.01,
-      "minimum": 0.00,
-      "maximum": 99999999999.99,
-      "example": "1000.25"
-    },
-    "debts": {
-      "description": "The total coding out amount attributed to HMRC classified debts (i.e. Self Assessment, Class 2 National Insurance debts, tax credit overpayments). The value must be between 0 and 99999999999.99.",
-      "type": "number",
-      "multipleOf": 0.01,
-      "minimum": 0.00,
-      "maximum": 99999999999.99,
-      "example": "1000.25"
-    },
-    "inYearAdjustments": {
-      "description": "The total coding out amount attributed to in-year tax code adjustments to collect underpayments or debts. The value must be between 0 and 99999999999.99.",
-      "type": "number",
-      "multipleOf": 0.01,
-      "minimum": 0.00,
-      "maximum": 99999999999.99,
-      "example": "1000.25"
+    "taxCodeComponents": {
+      "type": "object",
+      "description": "Object holding underpayment arrays.",
+      "properties": {
+        "payeUnderpayment": {
+          "type": "array",
+          "description": "Array containing details of coded out PAYE underpayments.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The identifier for the PAYE underpayments.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 0,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1000.25"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "amount"
+            ]
+          },
+          "additionalItems": false
+        },
+        "selfAssessmentUnderpayment": {
+          "type": "array",
+          "description": "Array containing details of coded out Self Assessment underpayments.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The identifier for the Self Assessment underpayments.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 0,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1000.25"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "amount"
+            ]
+          },
+          "additionalItems": false
+        },
+        "debt": {
+          "type": "array",
+          "description": "Array containing details of coded out debts.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The identifier for the HMRC classified debts.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 0,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total coded out amount attributed to HMRC classified debts. The value must be between 0 and 99999999999.99.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "1000.25"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "amount"
+            ]
+          },
+          "additionalItems": false
+        },
+        "inYearAdjustment": {
+          "type": "object",
+          "description": "Details of coded out in-year adjustments.",
+          "properties": {
+            "id": {
+              "description": "The identifier for the total coded out amount attributed to in-year tax code adjustments to collect underpayments or debts.",
+              "type": "number",
+              "multipleOf": 1,
+              "minimum": 0,
+              "maximum": 999999999999999,
+              "example": "1234567890"
+            },
+            "amount": {
+              "description": "The total coded out amount attributed to in-year tax code adjustments to collect underpayments or debts. The value must be between 0 and 99999999999.99.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0.00,
+              "maximum": 99999999999.99,
+              "example": "1000.25"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "amount"
+          ]
+        }
+      },
+      "additionalProperties": false
     }
-  }
+  },
+  "required": [
+    "taxCodeComponents"
+  ],
+  "additionalProperties": false
 }

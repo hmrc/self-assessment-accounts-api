@@ -257,6 +257,17 @@ traits:
                 description: One or more values have been added with the incorrect format.
                 value:
                   code: FORMAT_VALUE
+  formatId:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatId:
+                description: The format of the supplied ID is invalid.
+                value:
+                  code: FORMAT_ID
   formatPaymentId:
     responses:
       400:
