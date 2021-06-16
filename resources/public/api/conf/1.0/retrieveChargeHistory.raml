@@ -5,7 +5,7 @@ is:
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
 displayName: "Retrieve a Self Assessment Charge's History [test only]"
-description: This endpoint allows a developer to retrieve the history of changes to an individual charge. The user must quote a unique identifier (National Insurance Number) for the account and also the charge identifier.
+description: This endpoint allows a developer to retrieve the history of changes to an individual charge. A unique identifier (National Insurance Number) for the account must be used and a charge identifier provided.
 (annotations.sandboxData): !include scenarios/retrieveChargeHistory.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]

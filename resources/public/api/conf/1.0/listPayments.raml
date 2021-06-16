@@ -14,7 +14,7 @@ is:
   - queryParameters.fromPayments
   - queryParameters.toPayments
 displayName: "List Self Assessment Payments [test only]"
-description: This endpoint allows a developer to retrieve a list of payments for a given date range. The developer must use a unique identifier for the account (National Insurance Number) and provide a date range.
+description: This endpoint allows a developer to retrieve a list of payments for a given date range. A unique identifier (National Insurance Number) for the account must be used and a valid date range provided.
 (annotations.sandboxData): !include scenarios/listPayments.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
