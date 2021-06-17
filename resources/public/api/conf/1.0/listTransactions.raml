@@ -14,7 +14,7 @@ is:
   - queryParameters.fromCharges
   - queryParameters.toCharges
 displayName: "List Self Assessment Transactions [test only]"
-description: This endpoint allows a developer to retrieve a list of charges and payments for a given date range. The developer must quote a unique identifier (National Insurance number) for the account and provide a search period.
+description: This endpoint allows a developer to retrieve a list of charges and payments for a given date range. A unique identifier (National Insurance Number) for the account must be used and a search period provided.
 (annotations.sandboxData): !include scenarios/listTransactions.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
