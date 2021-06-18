@@ -2,80 +2,80 @@
   "taxCodeComponents": {
     "selfAssessmentUnderpayment": [
       {
-        "amount": 0,
-        "relatedTaxYear": "2019-20",
-        "submittedOn": "2019-08-24T14:15:22Z",
+        "amount": 89.78,
+        "relatedTaxYear": "2021-22",
+        "submittedOn": "2021-08-24T14:15:22Z",
         "source": "CUSTOMER",
-        "id": 49809809809
+        "id": 1234567891
       }
     ],
     "payeUnderpayment": [
       {
-        "amount": 100,
-        "relatedTaxYear": "2019-20",
-        "submittedOn": "2019-08-24T14:15:22Z",
+        "amount": 14.45,
+        "relatedTaxYear": "2021-22",
+        "submittedOn": "2021-08-24T14:15:22Z",
         "source": "CUSTOMER",
-        "id": 49809809809
+        "id": 1234567891
       }
     ],
     "debt": [
       {
-        "amount": 200,
-        "relatedTaxYear": "2019-20",
-        "submittedOn": "2019-08-24T14:15:22Z",
+        "amount": 12.01,
+        "relatedTaxYear": "2021-22",
+        "submittedOn": "2021-08-24T14:15:22Z",
         "source": "CUSTOMER",
-        "id": 49809809809
+        "id": 1234567891
       }
     ],
     "inYearAdjustment": {
-      "amount": 0,
-      "relatedTaxYear": "2019-20",
-      "submittedOn": "2019-08-24T14:15:22Z",
+      "amount": 75.99,
+      "relatedTaxYear": "2021-22",
+      "submittedOn": "2021-08-24T14:15:22Z",
       "source": "CUSTOMER",
-      "id": 49809809809
+      "id": 1234567891
     }
   },
   "unmatchedCustomerSubmissions": {
     "selfAssessmentUnderpayment": [
       {
-        "amount": 3000,
-        "submittedOn": "2019-08-24T14:15:22Z",
-        "id": 49809809809
+        "amount": 12.32,
+        "submittedOn": "2021-08-24T14:15:22Z",
+        "id": 1234567891
       }
     ],
     "payeUnderpayment": [
       {
-        "amount": 0,
-        "submittedOn": "2019-08-24T14:15:22Z",
-        "id": 49809809809
+        "amount": 71.99,
+        "submittedOn": "2021-08-24T14:15:22Z",
+        "id": 1234567891
       }
     ],
     "debt": [
       {
-        "amount": 0,
-        "submittedOn": "2019-08-24T14:15:22Z",
-        "id": 49809809809
+        "amount": 54.79,
+        "submittedOn": "2021-08-24T14:15:22Z",
+        "id": 1234567891
       }
     ],
     "inYearAdjustment": {
-      "amount": 100,
-      "submittedOn": "2019-08-24T14:15:22Z",
-      "id": 49809809809
+      "amount": 56.74,
+      "submittedOn": "2021-08-24T14:15:22Z",
+      "id": 1234567891
     }
   },
   "links": [
     {
-      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+      "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
       "method": "PUT",
       "rel": "create-or-amend-coding-out-underpayments"
     },
     {
-      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+      "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
       "method": "GET",
       "rel": "self"
     },
     {
-      "href": "/accounts/self-assessment/{nino}/{taxYear}/collection/tax-code",
+      "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
       "method": "DELETE",
       "rel": "delete-coding-out-underpayments"
     }

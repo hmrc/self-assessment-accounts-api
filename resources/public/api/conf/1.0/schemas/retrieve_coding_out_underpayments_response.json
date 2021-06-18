@@ -18,8 +18,10 @@
               "id": {
                 "description": "The ID for the Self Assessment underpayment.",
                 "type": "number",
-                "minimum": 1.00,
-                "maximum": 99999999999
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 99999999999,
+                "example": "1234567890"
               },
               "amount": {
                 "description": "The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -67,8 +69,10 @@
               "id": {
                 "description": "The ID for the PAYE underpayment.",
                 "type": "number",
-                "minimum": 1.00,
-                "maximum": 99999999999
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 99999999999,
+                "example": "1234567890"
               },
               "amount": {
                 "description": "The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -116,8 +120,10 @@
               "id": {
                 "description": "The ID for the coded out debts.",
                 "type": "number",
-                "minimum": 1.00,
-                "maximum": 99999999999
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 99999999999,
+                "example": "1234567890"
               },
               "amount": {
                 "description": "The total amount of debt coded out. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -162,8 +168,10 @@
             "id": {
               "description": "The ID for the HMRC classified debts.",
               "type": "number",
-              "minimum": 1.00,
-              "maximum": 99999999999
+              "multipleOf": 1,
+              "minimum": 1,
+              "maximum": 99999999999,
+              "example": "1234567890"
             },
             "amount": {
               "description": "The total amount of PAYE coded out in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -174,7 +182,7 @@
               "example": "5000.99"
             },
             "relatedTaxYear": {
-              "description": "The tax year related to the underpayment.",
+              "description": "The tax year related to the in-year adjustment.",
               "type": "string",
               "example": "2021-22"
             },
@@ -217,11 +225,13 @@
               "id": {
                 "description": "The ID for the Self Assessment underpayment.",
                 "type": "number",
-                "minimum": 1.00,
-                "maximum": 99999999999
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 99999999999,
+                "example": "1234567890"
               },
               "amount": {
-                "description": "The total coding out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "description": "The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
                 "type": "number",
                 "multipleOf": 0.01,
                 "minimum": 0.00,
@@ -229,7 +239,7 @@
                 "example": "5000.99"
               },
               "submittedOn": {
-                "description": "The date the coding out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ssZ.",
+                "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ssZ.",
                 "type": "string",
                 "example": "2020-07-06T09:37:17Z"
               }
@@ -244,7 +254,7 @@
         },
         "payeUnderpayment": {
           "type": "array",
-          "description": "Array containing details of coding out PAYE underpayments.",
+          "description": "Array containing details of coded out PAYE underpayments.",
           "minItems": 1,
           "items": {
             "type": "object",
@@ -252,8 +262,10 @@
               "id": {
                 "description": "The ID for the PAYE underpayment.",
                 "type": "number",
-                "minimum": 1.00,
-                "maximum": 99999999999
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 99999999999,
+                "example": "1234567890"
               },
               "amount": {
                 "description": "The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -287,8 +299,10 @@
               "id": {
                 "description": "The ID for the coded out debts.",
                 "type": "number",
-                "minimum": 1.00,
-                "maximum": 99999999999
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 99999999999,
+                "example": "1234567890"
               },
               "amount": {
                 "description": "The total amount of debt coded out. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -319,8 +333,10 @@
             "id": {
               "description": "The ID for the HMRC classified debts.",
               "type": "number",
-              "minimum": 1.00,
-              "maximum": 99999999999
+              "multipleOf": 1,
+              "minimum": 1,
+              "maximum": 99999999999,
+              "example": "1234567890"
             },
             "amount": {
               "description": "The total amount of PAYE coded out in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
