@@ -5,7 +5,7 @@
         "amount": 89.78,
         "relatedTaxYear": "2021-22",
         "submittedOn": "2021-08-24T14:15:22Z",
-        "source": "CUSTOMER",
+        "source": "user",
         "id": 1234567891
       }
     ],
@@ -14,7 +14,7 @@
         "amount": 14.45,
         "relatedTaxYear": "2021-22",
         "submittedOn": "2021-08-24T14:15:22Z",
-        "source": "CUSTOMER",
+        "source": "user",
         "id": 1234567891
       }
     ],
@@ -23,7 +23,7 @@
         "amount": 12.01,
         "relatedTaxYear": "2021-22",
         "submittedOn": "2021-08-24T14:15:22Z",
-        "source": "CUSTOMER",
+        "source": "user",
         "id": 1234567891
       }
     ],
@@ -31,7 +31,7 @@
       "amount": 75.99,
       "relatedTaxYear": "2021-22",
       "submittedOn": "2021-08-24T14:15:22Z",
-      "source": "CUSTOMER",
+      "source": "user",
       "id": 1234567891
     }
   },
