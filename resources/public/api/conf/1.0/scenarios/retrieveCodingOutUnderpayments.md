@@ -9,18 +9,18 @@
     <tbody>
         <tr>
             <td><p>N/A - DEFAULT</p></td>
-            <td><p>Simulates a successful response with latest view.</p></td>
+            <td><p>Simulates a successful response with latest values.</p></td>
         </tr>
         <tr>
-            <td><p>N/A - DEFAULT<br>using <strong>view=latest</strong> parameter</p></td>
-            <td><p>Simulates a successful response with latest view.</p></td>
+            <td><p>N/A - DEFAULT<br>using <strong>?source=latest</strong></p></td>
+            <td><p>Simulates a successful response with latest values.</p></td>
         </tr>
         <tr>
-            <td><p>N/A - DEFAULT<br>using <strong>view=hmrcHeld</strong> parameter</p></td>
-            <td><p>Simulates a successful response with hmrcHeld submitted values.</p></td>
+            <td><p>N/A - DEFAULT<br>using <strong>?source=hmrcHeld</strong></p></td>
+            <td><p>Simulates a successful response with HMRC-held values.</p></td>
         </tr>
         <tr>
-            <td><p>N/A - DEFAULT<br>using <strong>view=user</strong> parameter</p></td>
+            <td><p>N/A - DEFAULT<br>using <strong>?source=user</strong></p></td>
             <td><p>Simulates a successful response with user submitted values.</p></td>
         </tr>
         <tr>
