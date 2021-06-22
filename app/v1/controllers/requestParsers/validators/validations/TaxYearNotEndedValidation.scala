@@ -16,19 +16,30 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import java.time.Year
-
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import utils.CurrentDateTime
 import v1.models.domain.DesTaxYear
 import v1.models.errors.{MtdError, RuleTaxYearNotEndedError}
 
 object TaxYearNotEndedValidation {
 
-  def validate(taxYear: String): List[MtdError] = {
+  // @param taxYear In format YYYY-YY
+  def validate(taxYear: String)(implicit dateTimeProvider: CurrentDateTime): List[MtdError] = {
 
     val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
+    val currentDate: DateTime = dateTimeProvider.getDateTime
 
-    if(desTaxYear <= Year.now.getValue) NoValidationErrors else List(RuleTaxYearNotEndedError)
-
+    if (desTaxYear >= getCurrentTaxYear(currentDate)) List(RuleTaxYearNotEndedError) else NoValidationErrors
   }
 
+  private def getCurrentTaxYear(date: DateTime): Int = {
+
+    lazy val taxYearStartDate: DateTime = DateTime.parse(
+      date.getYear + "-04-06",
+      DateTimeFormat.forPattern("yyyy-MM-dd")
+    )
+
+    if (date.isBefore(taxYearStartDate)) date.getYear else date.getYear + 1
+  }
 }

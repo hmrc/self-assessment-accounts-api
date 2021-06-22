@@ -29,8 +29,8 @@ class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {
 
   "toMtdSource" should {
     "return the correct identifier value" in {
-      DownstreamSource.`HMRC HELD`.toMtdSource shouldBe "HMRC-HELD"
-      DownstreamSource.`CUSTOMER`.toMtdSource shouldBe "CUSTOMER"
+      DownstreamSource.`HMRC HELD`.toMtdSource shouldBe "hmrcHeld"
+      DownstreamSource.`CUSTOMER`.toMtdSource shouldBe "user"
     }
   }
 }

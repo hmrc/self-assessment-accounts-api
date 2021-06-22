@@ -17,13 +17,15 @@
 package v1.endpoints
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import org.joda.time.{DateTime, DateTimeZone}
+import org.joda.time.format.DateTimeFormat
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{ JsObject, JsValue, Json }
-import play.api.libs.ws.{ WSRequest, WSResponse }
+import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.ws.{WSRequest, WSResponse}
 import support.IntegrationBaseSpec
 import v1.models.errors._
-import v1.stubs.{ AuditStub, AuthStub, DesStub, MtdIdLookupStub }
+import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
@@ -33,36 +35,38 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
     val taxYear: String = "2020-21"
 
     val requestBodyJson: JsValue = Json.parse(
-      s"""|{
-          |  "taxCodeComponents": {
-          |    "payeUnderpayment": [
-          |      {
-          |        "amount": 123.45,
-          |        "id": 12345
-          |      }
-          |    ],
-          |    "selfAssessmentUnderpayment": [
-          |      {
-          |        "amount": 123.45,
-          |        "id": 12345
-          |      }
-          |    ],
-          |    "debt": [
-          |      {
-          |        "amount": 123.45,
-          |        "id": 12345
-          |      }
-          |    ],
-          |    "inYearAdjustment": {
-          |      "amount": 123.45,
-          |      "id": 12345
-          |    }
-          |  }
-          |}
-          |""".stripMargin
+      """
+        |{
+        |  "taxCodeComponents": {
+        |    "payeUnderpayment": [
+        |      {
+        |        "amount": 123.45,
+        |        "id": 12345
+        |      }
+        |    ],
+        |    "selfAssessmentUnderpayment": [
+        |      {
+        |        "amount": 123.45,
+        |        "id": 12345
+        |      }
+        |    ],
+        |    "debt": [
+        |      {
+        |        "amount": 123.45,
+        |        "id": 12345
+        |      }
+        |    ],
+        |    "inYearAdjustment": {
+        |      "amount": 123.45,
+        |      "id": 12345
+        |    }
+        |  }
+        |}
+      """.stripMargin
     )
 
-    val responseBody: JsValue = Json.parse(s"""
+    val responseBody: JsValue = Json.parse(
+      s"""
          |{
          |  "links": [
          |    {
@@ -82,7 +86,8 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
          |    }
          |  ]
          |}
-         |""".stripMargin)
+       """.stripMargin
+    )
 
     def uri: String = s"/$nino/$taxYear/collection/tax-code"
 
@@ -98,14 +103,14 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
     def errorBody(code: String): String =
       s"""
-         |      {
-         |        "code": "$code",
-         |        "reason": "des message"
-         |      }
+         |{
+         |   "code": "$code",
+         |   "reason": "des message"
+         |}
         """.stripMargin
   }
 
-  "Calling the amend endpoint" should {
+  "Calling the 'create or amend coding out' endpoint" should {
 
     "return a 200 status code" when {
 
@@ -179,7 +184,20 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           response.json shouldBe Json.toJson(RuleTaxYearRangeInvalidError)
         }
         "a taxYear which has not ended is provided" in new Test {
-          override val taxYear: String = "2021-22"
+          def getCurrentTaxYear: String = {
+            val currentDate = DateTime.now(DateTimeZone.UTC)
+
+            val taxYearStartDate: DateTime = DateTime.parse(
+              currentDate.getYear + "-04-06",
+              DateTimeFormat.forPattern("yyyy-MM-dd")
+            )
+
+            def fromDesIntToString(taxYear: Int): String =
+              (taxYear - 1) + "-" + taxYear.toString.drop(2)
+
+            if (currentDate.isBefore(taxYearStartDate)) fromDesIntToString(currentDate.getYear) else fromDesIntToString(currentDate.getYear + 1)
+          }
+          override val taxYear: String = getCurrentTaxYear
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -190,36 +208,36 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(RuleTaxYearNotEndedError)
         }
-        "an invalid payeUnderpayments is submitted" in new Test {
+        "an invalid payeUnderpayment is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
-            s"""
-               |{
-               |  "taxCodeComponents": {
-               |    "payeUnderpayment": [
-               |      {
-               |        "amount": 123498394893843.4,
-               |        "id": 12345.35
-               |      }
-               |    ],
-               |    "selfAssessmentUnderpayment": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "debt": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "inYearAdjustment": {
-               |      "amount": 123.45,
-               |      "id": 12345
-               |    }
-               |  }
-               |}
-               |""".stripMargin
+            """
+              |{
+              |  "taxCodeComponents": {
+              |    "payeUnderpayment": [
+              |      {
+              |        "amount": 123498394893843.4,
+              |        "id": 12345.35
+              |      }
+              |    ],
+              |    "selfAssessmentUnderpayment": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "debt": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "inYearAdjustment": {
+              |      "amount": 123.45,
+              |      "id": 12345
+              |    }
+              |  }
+              |}
+            """.stripMargin
           )
 
           override def setupStubs(): StubMapping = {
@@ -248,36 +266,36 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             )
           )
         }
-        "an invalid selfAssessmentUnderPayments is submitted" in new Test {
+        "an invalid selfAssessmentUnderpayment is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
-            s"""
-               |{
-               |  "taxCodeComponents": {
-               |    "payeUnderpayment": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "selfAssessmentUnderpayment": [
-               |      {
-               |        "amount": 123498394893843.4,
-               |        "id": 12345.35
-               |      }
-               |    ],
-               |    "debt": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "inYearAdjustment": {
-               |      "amount": 123.45,
-               |      "id": 12345
-               |    }
-               |  }
-               |}
-               |""".stripMargin
+            """
+              |{
+              |  "taxCodeComponents": {
+              |    "payeUnderpayment": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "selfAssessmentUnderpayment": [
+              |      {
+              |        "amount": 123498394893843.4,
+              |        "id": 12345.35
+              |      }
+              |    ],
+              |    "debt": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "inYearAdjustment": {
+              |      "amount": 123.45,
+              |      "id": 12345
+              |    }
+              |  }
+              |}
+            """.stripMargin
           )
 
           override def setupStubs(): StubMapping = {
@@ -305,36 +323,36 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
               ))
             ))
         }
-        "an invalid debts is submitted" in new Test {
+        "an invalid debt is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
-            s"""
-               |{
-               |  "taxCodeComponents": {
-               |    "payeUnderpayment": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "selfAssessmentUnderpayment": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "debt": [
-               |      {
-               |        "amount": 123498394893843.4,
-               |        "id": 12345.35
-               |      }
-               |    ],
-               |    "inYearAdjustment": {
-               |      "amount": 123.45,
-               |      "id": 12345
-               |    }
-               |  }
-               |}
-               |""".stripMargin
+            """
+              |{
+              |  "taxCodeComponents": {
+              |    "payeUnderpayment": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "selfAssessmentUnderpayment": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "debt": [
+              |      {
+              |        "amount": 123498394893843.4,
+              |        "id": 12345.35
+              |      }
+              |    ],
+              |    "inYearAdjustment": {
+              |      "amount": 123.45,
+              |      "id": 12345
+              |    }
+              |  }
+              |}
+            """.stripMargin
           )
 
           override def setupStubs(): StubMapping = {
@@ -362,36 +380,36 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
               ))
             ))
         }
-        "an invalid inYearAdjustments is submitted" in new Test {
+        "an invalid inYearAdjustment is submitted" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
-            s"""
-               |{
-               |  "taxCodeComponents": {
-               |    "payeUnderpayment": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "selfAssessmentUnderpayment": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "debt": [
-               |      {
-               |        "amount": 123.45,
-               |        "id": 12345
-               |      }
-               |    ],
-               |    "inYearAdjustment": {
-               |      "amount": 123498394893843.4,
-               |      "id": 12345.35
-               |    }
-               |  }
-               |}
-               |""".stripMargin
+            """
+              |{
+              |  "taxCodeComponents": {
+              |    "payeUnderpayment": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "selfAssessmentUnderpayment": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "debt": [
+              |      {
+              |        "amount": 123.45,
+              |        "id": 12345
+              |      }
+              |    ],
+              |    "inYearAdjustment": {
+              |      "amount": 123498394893843.4,
+              |      "id": 12345.35
+              |    }
+              |  }
+              |}
+            """.stripMargin
           )
 
           override def setupStubs(): StubMapping = {
@@ -421,34 +439,34 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
         }
         "all values submitted are invalid" in new Test {
           override val requestBodyJson: JsValue = Json.parse(
-            s"""
-               |{
-               |  "taxCodeComponents": {
-               |    "payeUnderpayment": [
-               |      {
-               |        "amount": 123.455,
-               |        "id": -12345
-               |      }
-               |    ],
-               |    "selfAssessmentUnderpayment": [
-               |      {
-               |        "amount": 123498394893843.4,
-               |        "id": 12345.35
-               |      }
-               |    ],
-               |    "debt": [
-               |      {
-               |        "amount": -123.45,
-               |        "id": 123453456789098765434567897654567890987654
-               |      }
-               |    ],
-               |    "inYearAdjustment": {
-               |      "amount": 11111111111111111111111111111123.45,
-               |      "id": -12345
-               |    }
-               |  }
-               |}
-               |""".stripMargin
+            """
+              |{
+              |  "taxCodeComponents": {
+              |    "payeUnderpayment": [
+              |      {
+              |        "amount": 123.455,
+              |        "id": -12345
+              |      }
+              |    ],
+              |    "selfAssessmentUnderpayment": [
+              |      {
+              |        "amount": 123498394893843.4,
+              |        "id": 12345.35
+              |      }
+              |    ],
+              |    "debt": [
+              |      {
+              |        "amount": -123.45,
+              |        "id": 123453456789098765434567897654567890987654
+              |      }
+              |    ],
+              |    "inYearAdjustment": {
+              |      "amount": 11111111111111111111111111111123.45,
+              |      "id": -12345
+              |    }
+              |  }
+              |}
+            """.stripMargin
           )
 
           override def setupStubs(): StubMapping = {

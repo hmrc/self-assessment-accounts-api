@@ -33,84 +33,86 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
     val nino: String = "AA123456A"
     val taxYear: String = "2021-22"
 
-    def mtdSource: String = "hmrcHeld"
+    def desParamSource: String = "HMRC-HELD"
 
-    def desSource: String = "HMRC HELD"
+    def mtdParamSource: String = "hmrcHeld"
+
+    def desBodySource: String = "HMRC HELD"
+
+    def mtdBodySource: String = "hmrcHeld"
 
     val desResponse: JsValue = Json.parse(
       s"""
          |{
-         |        "taxCodeComponents": {
-         |            "selfAssessmentUnderpayment": [
-         |                {
-         |                    "amount": 0,
-         |                    "relatedTaxYear": "$taxYear",
-         |                    "submittedOn": "2019-08-24T14:15:22Z",
-         |                    "source": "$desSource",
-         |                    "componentIdentifier": 12345678910
-         |                }
-         |            ],
-         |            "payeUnderpayment": [
-         |                {
-         |                    "amount": 0,
-         |                    "relatedTaxYear": "$taxYear",
-         |                    "submittedOn": "2019-08-24T14:15:22Z",
-         |                    "source": "$desSource",
-         |                    "componentIdentifier": 12345678910
-         |                }
-         |            ],
-         |            "debt": [
-         |                {
-         |                    "amount": 0,
-         |                    "relatedTaxYear": "$taxYear",
-         |                    "submittedOn": "2019-08-24T14:15:22Z",
-         |                    "source": "CUSTOMER",
-         |                    "componentIdentifier": 12345678910
-         |                }
-         |            ],
-         |            "inYearAdjustment": {
-         |                "amount": 0,
-         |                "relatedTaxYear": "$taxYear",
-         |                "submittedOn": "2019-08-24T14:15:22Z",
-         |                "source": "CUSTOMER",
-         |                "componentIdentifier": 12345678910
-         |            }
-         |        },
-         |        "unmatchedCustomerSubmissions": {
-         |            "selfAssessmentUnderpayment": [
-         |                {
-         |                    "amount": 0,
-         |                    "submittedOn": "2019-08-24T14:15:22Z",
-         |                    "componentIdentifier": 12345678910
-         |                }
-         |            ],
-         |            "payeUnderpayment": [
-         |                {
-         |                    "amount": 0,
-         |                    "submittedOn": "2019-08-24T14:15:22Z",
-         |                    "componentIdentifier": 12345678910
-         |                }
-         |            ],
-         |            "debt": [
-         |                {
-         |                    "amount": 0,
-         |                    "submittedOn": "2019-08-24T14:15:22Z",
-         |                    "componentIdentifier": 12345678910
-         |                }
-         |            ],
-         |            "inYearAdjustment": {
-         |                "amount": 0,
-         |                "submittedOn": "2019-08-24T14:15:22Z",
-         |                "componentIdentifier": 12345678910
-         |            }
-         |        }
+         |   "taxCodeComponents": {
+         |       "selfAssessmentUnderpayment": [
+         |           {
+         |               "amount": 0,
+         |               "relatedTaxYear": "$taxYear",
+         |               "submittedOn": "2021-08-24T14:15:22Z",
+         |               "source": "$desBodySource",
+         |               "componentIdentifier": 12345678910
+         |           }
+         |       ],
+         |       "payeUnderpayment": [
+         |           {
+         |               "amount": 0,
+         |               "relatedTaxYear": "$taxYear",
+         |               "submittedOn": "2021-08-24T14:15:22Z",
+         |               "source": "$desBodySource",
+         |               "componentIdentifier": 12345678910
+         |           }
+         |       ],
+         |       "debt": [
+         |           {
+         |               "amount": 0,
+         |               "relatedTaxYear": "$taxYear",
+         |               "submittedOn": "2021-08-24T14:15:22Z",
+         |               "source": "$desBodySource",
+         |               "componentIdentifier": 12345678910
+         |           }
+         |       ],
+         |       "inYearAdjustment": {
+         |           "amount": 0,
+         |           "relatedTaxYear": "$taxYear",
+         |           "submittedOn": "2021-08-24T14:15:22Z",
+         |           "source": "$desBodySource",
+         |           "componentIdentifier": 12345678910
+         |       }
+         |   },
+         |   "unmatchedCustomerSubmissions": {
+         |       "selfAssessmentUnderpayment": [
+         |           {
+         |               "amount": 0,
+         |               "submittedOn": "2021-08-24T14:15:22Z",
+         |               "componentIdentifier": 12345678910
+         |           }
+         |       ],
+         |       "payeUnderpayment": [
+         |           {
+         |               "amount": 0,
+         |               "submittedOn": "2021-08-24T14:15:22Z",
+         |               "componentIdentifier": 12345678910
+         |           }
+         |       ],
+         |       "debt": [
+         |           {
+         |               "amount": 0,
+         |               "submittedOn": "2021-08-24T14:15:22Z",
+         |               "componentIdentifier": 12345678910
+         |           }
+         |       ],
+         |       "inYearAdjustment": {
+         |           "amount": 0,
+         |           "submittedOn": "2021-08-24T14:15:22Z",
+         |           "componentIdentifier": 12345678910
+         |       }
+         |   }
          |}
        """.stripMargin
     )
 
-    val mtdResponse: JsValue = mtdResponseWithHateoas(nino, taxYear, "HMRC-HELD")
-
-    val mtdResponseCustomer: JsValue = mtdResponseWithHateoas(nino, taxYear, "CUSTOMER")
+    val mtdResponse: JsValue = mtdResponseWithHateoas(nino, taxYear, mtdBodySource)
 
     def uri: String = s"/$nino/$taxYear/collection/tax-code"
 
@@ -149,13 +151,17 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
       "any valid request is made to retrieve the latest view" in new Test {
 
+        override def desParamSource: String = "LATEST"
+
+        override def mtdParamSource: String = "latest"
+
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> "LATEST"), OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
         }
 
-        val response: WSResponse = await(request(Some("latest")).get())
+        val response: WSResponse = await(request(Some(mtdParamSource)).get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
@@ -167,10 +173,10 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> "HMRC-HELD"), OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
         }
 
-        val response: WSResponse = await(request(Some(mtdSource)).get())
+        val response: WSResponse = await(request(Some(mtdParamSource)).get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
@@ -179,19 +185,23 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
       "any valid request is made to retrieve user submitted data" in new Test {
 
-        override def mtdSource: String = "user"
+        override def desParamSource: String = "CUSTOMER"
 
-        override def desSource: String = "CUSTOMER"
+        override def mtdParamSource: String = "user"
+
+        override def desBodySource: String = "CUSTOMER"
+
+        override def mtdBodySource: String = "user"
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> desSource), OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
         }
 
-        val response: WSResponse = await(request(Some(mtdSource)).get())
+        val response: WSResponse = await(request(Some(mtdParamSource)).get())
         response.status shouldBe OK
-        response.json shouldBe mtdResponseCustomer
+        response.json shouldBe mtdResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
       }

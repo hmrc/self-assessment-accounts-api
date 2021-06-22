@@ -16,8 +16,7 @@
 
 package v1.models.response.retrieveCodingOut
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, OFormat}
 
 case class UnmatchedCustomerSubmissionsObject(selfAssessmentUnderpayment: Option[Seq[UnmatchedCustomerSubmissions]],
                                               payeUnderpayment: Option[Seq[UnmatchedCustomerSubmissions]],
@@ -25,14 +24,5 @@ case class UnmatchedCustomerSubmissionsObject(selfAssessmentUnderpayment: Option
                                               inYearAdjustment: Option[UnmatchedCustomerSubmissions])
 
 object UnmatchedCustomerSubmissionsObject {
-  implicit val reads: Reads[UnmatchedCustomerSubmissionsObject] = (
-    (JsPath \ "selfAssessmentUnderpayment").readNullable[Seq[UnmatchedCustomerSubmissions]] and
-      (JsPath \ "payeUnderpayment").readNullable[Seq[UnmatchedCustomerSubmissions]] and
-      (JsPath \ "debt").readNullable[Seq[UnmatchedCustomerSubmissions]] and
-      (JsPath \ "inYearAdjustment").readNullable[UnmatchedCustomerSubmissions]
-    )(UnmatchedCustomerSubmissionsObject.apply _)
-
-  implicit val writes: OWrites[UnmatchedCustomerSubmissionsObject] = Json.writes[UnmatchedCustomerSubmissionsObject]
+  implicit val format: OFormat[UnmatchedCustomerSubmissionsObject] = Json.format[UnmatchedCustomerSubmissionsObject]
 }
-
-

@@ -14,17 +14,12 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package utils
 
-import v1.models.errors.{IdFormatError, MtdError}
+import javax.inject.Singleton
+import org.joda.time.{DateTime, DateTimeZone}
 
-object IdValidation {
-
-  def validate(field: BigDecimal, path: String): List[MtdError] = {
-    if (field > 0 && field < 1000000000000000.00 && field.scale <= 0) {
-      NoValidationErrors
-    } else {
-      List(IdFormatError.copy(paths = Some(Seq(path))))
-    }
-  }
+@Singleton
+class CurrentDateTime {
+  def getDateTime: DateTime = DateTime.now(DateTimeZone.UTC)
 }

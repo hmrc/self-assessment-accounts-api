@@ -22,8 +22,10 @@ import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponent}
 
 import javax.inject.Inject
+import utils.CurrentDateTime
 
-class CreateOrAmendCodingOutValidator @Inject()(implicit appConfig: AppConfig) extends Validator[CreateOrAmendCodingOutRawRequest] {
+class CreateOrAmendCodingOutValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+  extends Validator[CreateOrAmendCodingOutRawRequest] {
 
   private val validationSet = List(parameterValidation, parameterRuleValidation, bodyFormatValidation, bodyFieldsEmptyValidation, bodyFieldValidation)
 
@@ -131,11 +133,11 @@ class CreateOrAmendCodingOutValidator @Inject()(implicit appConfig: AppConfig) e
     List(
       NumberValidation.validateOptional(
         field = Some(taxCodeComponent.amount),
-        path = s"/taxCodeComponents/inYearAdjustment/amount"
+        path = "/taxCodeComponents/inYearAdjustment/amount"
       ),
       IdValidation.validate(
         field = taxCodeComponent.id,
-        path = s"/taxCodeComponents/inYearAdjustment/id"
+        path = "/taxCodeComponents/inYearAdjustment/id"
       )
     ).flatten
   }

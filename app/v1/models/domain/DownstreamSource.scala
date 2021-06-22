@@ -26,13 +26,12 @@ sealed trait DownstreamSource {
 object DownstreamSource {
 
   case object `HMRC HELD` extends DownstreamSource {
-    override def toMtdSource: String = "HMRC-HELD"
+    override def toMtdSource: String = "hmrcHeld"
   }
 
   case object `CUSTOMER` extends DownstreamSource {
-    override def toMtdSource: String = "CUSTOMER"
+    override def toMtdSource: String = "user"
   }
 
   implicit val format: json.Format[DownstreamSource] = Enums.format[DownstreamSource]
 }
-

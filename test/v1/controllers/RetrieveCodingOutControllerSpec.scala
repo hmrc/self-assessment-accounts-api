@@ -31,7 +31,7 @@ import v1.models.hateoas.Method.{DELETE, GET, PUT}
 import v1.models.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
-import v1.models.response.retrieveCodingOut.{RetrieveCodingOutHateoasData, RetrieveCodingOutResponse, TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
+import v1.models.response.retrieveCodingOut._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,9 +45,9 @@ class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
   with MockIdGenerator {
 
   private val nino = "AA123456A"
-  private val taxYear = "2019-20"
+  private val taxYear = "2021-22"
   private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  private val source = "HMRC-HELD"
+  private val source = "hmrcHeld"
 
   private val rawData = RetrieveCodingOutRawRequest(
     nino = nino,
@@ -82,34 +82,25 @@ class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
       0,
-      "2019-08-24T14:15:22Z",
+      "2021-08-24T14:15:22Z",
       BigInt(12345678910L)
     )
 
-  val taxCodeComponentsHmrcHeld: TaxCodeComponents =
+  val taxCodeComponents: TaxCodeComponents =
     TaxCodeComponents(
       0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "HMRC-HELD",
-      BigInt(12345678910L)
-    )
-
-  val taxCodeComponentsCustomer: TaxCodeComponents =
-    TaxCodeComponents(
-      0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "CUSTOMER",
+      Some("2021-22"),
+      "2021-08-24T14:15:22Z",
+      "hmrcHeld",
       BigInt(12345678910L)
     )
 
   val taxCodeComponentObject: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
-      Some(Seq(taxCodeComponentsHmrcHeld)),
-      Some(Seq(taxCodeComponentsHmrcHeld)),
-      Some(Seq(taxCodeComponentsCustomer)),
-      Some(taxCodeComponentsCustomer)
+      Some(Seq(taxCodeComponents)),
+      Some(Seq(taxCodeComponents)),
+      Some(Seq(taxCodeComponents)),
+      Some(taxCodeComponents)
     )
 
   val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =

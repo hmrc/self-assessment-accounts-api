@@ -23,7 +23,7 @@ import v1.mocks.connectors.MockRetrieveCodingOutConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
-import v1.models.response.retrieveCodingOut.{RetrieveCodingOutResponse, TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
+import v1.models.response.retrieveCodingOut._
 
 import scala.concurrent.Future
 
@@ -31,38 +31,28 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
-
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
       0,
-      "2019-08-24T14:15:22Z",
+      "2021-08-24T14:15:22Z",
       BigInt(12345678910L)
     )
 
-  val taxCodeComponentsHmrcHeld: TaxCodeComponents =
+  val taxCodeComponents: TaxCodeComponents =
     TaxCodeComponents(
       0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "HMRC-HELD",
-      BigInt(12345678910L)
-    )
-
-  val taxCodeComponentsCustomer: TaxCodeComponents =
-    TaxCodeComponents(
-      0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "CUSTOMER",
+      Some("2021-22"),
+      "2021-08-24T14:15:22Z",
+      "hmrcHeld",
       BigInt(12345678910L)
     )
 
   val taxCodeComponentObject: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
-      Some(Seq(taxCodeComponentsHmrcHeld)),
-      Some(Seq(taxCodeComponentsHmrcHeld)),
-      Some(Seq(taxCodeComponentsCustomer)),
-      Some(taxCodeComponentsCustomer)
+      Some(Seq(taxCodeComponents)),
+      Some(Seq(taxCodeComponents)),
+      Some(Seq(taxCodeComponents)),
+      Some(taxCodeComponents)
     )
 
   val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
@@ -79,10 +69,10 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
       Some(unmatchedCustomerSubmissionsObject)
     )
 
-  private val requestData: RetrieveCodingOutParsedRequest =
+  val requestData: RetrieveCodingOutParsedRequest =
     RetrieveCodingOutParsedRequest(
       nino = nino,
-      taxYear = "2019-20",
+      taxYear = "2021-22",
       source = Some("hmrcHeld")
     )
 

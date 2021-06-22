@@ -28,7 +28,7 @@ object RetrieveCodingOutFixture {
        |      {
        |        "amount": 0,
        |        "relatedTaxYear": "$taxYear",
-       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
        |        "source": "$source",
        |        "id": 12345678910
        |      }
@@ -37,7 +37,7 @@ object RetrieveCodingOutFixture {
        |      {
        |        "amount": 0,
        |        "relatedTaxYear": "$taxYear",
-       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
        |        "source": "$source",
        |        "id": 12345678910
        |      }
@@ -46,16 +46,16 @@ object RetrieveCodingOutFixture {
        |      {
        |        "amount": 0,
        |        "relatedTaxYear": "$taxYear",
-       |        "submittedOn": "2019-08-24T14:15:22Z",
-       |        "source": "CUSTOMER",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
+       |        "source": "$source",
        |        "id": 12345678910
        |      }
        |    ],
        |    "inYearAdjustment": {
        |      "amount": 0,
        |      "relatedTaxYear": "$taxYear",
-       |      "submittedOn": "2019-08-24T14:15:22Z",
-       |      "source": "CUSTOMER",
+       |      "submittedOn": "2021-08-24T14:15:22Z",
+       |      "source": "$source",
        |      "id": 12345678910
        |    }
        |  },
@@ -63,27 +63,27 @@ object RetrieveCodingOutFixture {
        |    "selfAssessmentUnderpayment": [
        |      {
        |        "amount": 0,
-       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
        |        "id": 12345678910
        |      }
        |    ],
        |    "payeUnderpayment": [
        |      {
        |        "amount": 0,
-       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
        |        "id": 12345678910
        |      }
        |    ],
        |    "debt": [
        |      {
        |        "amount": 0,
-       |        "submittedOn": "2019-08-24T14:15:22Z",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
        |        "id": 12345678910
        |      }
        |    ],
        |    "inYearAdjustment": {
        |      "amount": 0,
-       |      "submittedOn": "2019-08-24T14:15:22Z",
+       |      "submittedOn": "2021-08-24T14:15:22Z",
        |      "id": 12345678910
        |    }
        |  },
