@@ -22,9 +22,9 @@ import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponent}
 
 import javax.inject.Inject
-import utils.CurrentDateTime
+import utils.CurrentDate
 
-class CreateOrAmendCodingOutValidator @Inject()(implicit currentDateTime: CurrentDateTime, appConfig: AppConfig)
+class CreateOrAmendCodingOutValidator @Inject()(implicit currentDate: CurrentDate, appConfig: AppConfig)
   extends Validator[CreateOrAmendCodingOutRawRequest] {
 
   private val validationSet = List(parameterValidation, parameterRuleValidation, bodyFormatValidation, bodyFieldsEmptyValidation, bodyFieldValidation)

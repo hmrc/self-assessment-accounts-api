@@ -16,14 +16,15 @@
 
 package v1.controllers.requestParsers.validators
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import config.AppConfig
 import mocks.MockAppConfig
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import play.api.libs.json.{JsObject, JsPath, Json}
 import support.UnitSpec
-import utils.CurrentDateTime
-import v1.mocks.MockCurrentDateTime
+import utils.CurrentDate
+import v1.mocks.MockCurrentDate
 import v1.models.errors._
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
 
@@ -108,15 +109,15 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
     path.prune(json).get
   }
 
-  class Test extends MockCurrentDateTime with MockAppConfig {
+  class Test extends MockCurrentDate with MockAppConfig {
 
-    implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter       = DateTimeFormat.forPattern("yyyy-MM-dd")
-    implicit val appConfig: AppConfig              = mockAppConfig
-    val validator                                  = new CreateOrAmendCodingOutValidator()
+    implicit val dateProvider: CurrentDate     = mockCurrentDate
+    val dateTimeFormatter: DateTimeFormatter   = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    implicit val appConfig: AppConfig          = mockAppConfig
+    val validator                              = new CreateOrAmendCodingOutValidator()
 
-    MockCurrentDateTime.getCurrentDate
-      .returns(DateTime.parse("2022-07-11", dateTimeFormatter))
+    MockCurrentDate.getCurrentDate
+      .returns(LocalDate.parse("2022-07-11", dateTimeFormatter))
       .anyNumberOfTimes()
 
     MockAppConfig.minimumPermittedTaxYear returns 2022

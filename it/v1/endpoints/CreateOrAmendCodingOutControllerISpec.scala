@@ -16,9 +16,10 @@
 
 package v1.endpoints
 
+import java.time.{LocalDate, ZoneOffset}
+import java.time.format.DateTimeFormatter
+
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import org.joda.time.{DateTime, DateTimeZone}
-import org.joda.time.format.DateTimeFormat
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
@@ -185,11 +186,11 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
         }
         "a taxYear which has not ended is provided" in new Test {
           def getCurrentTaxYear: String = {
-            val currentDate = DateTime.now(DateTimeZone.UTC)
+            val currentDate = LocalDate.now(ZoneOffset.UTC)
 
-            val taxYearStartDate: DateTime = DateTime.parse(
+            val taxYearStartDate: LocalDate = LocalDate.parse(
               currentDate.getYear + "-04-06",
-              DateTimeFormat.forPattern("yyyy-MM-dd")
+              DateTimeFormatter.ofPattern("yyyy-MM-dd")
             )
 
             def fromDesIntToString(taxYear: Int): String =

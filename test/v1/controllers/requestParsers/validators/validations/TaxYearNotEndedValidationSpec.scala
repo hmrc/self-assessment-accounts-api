@@ -16,30 +16,31 @@
 
 package v1.controllers.requestParsers.validators.validations
 
-import org.joda.time.DateTime
-import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import org.scalamock.handlers.CallHandler
 import support.UnitSpec
-import utils.CurrentDateTime
-import v1.mocks.MockCurrentDateTime
+import utils.CurrentDate
+import v1.mocks.MockCurrentDate
 import v1.models.errors.RuleTaxYearNotEndedError
 
 class TaxYearNotEndedValidationSpec extends UnitSpec {
 
-  class Test extends MockCurrentDateTime {
-    implicit val dateTimeProvider: CurrentDateTime = mockCurrentDateTime
-    val dateTimeFormatter: DateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+  class Test extends MockCurrentDate {
+    implicit val dateProvider: CurrentDate = mockCurrentDate
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
-    def setupTimeProvider(date: String): CallHandler[DateTime] =
-      MockCurrentDateTime.getCurrentDate
-        .returns(DateTime.parse(date, dateTimeFormatter))
+    def setupDateProvider(date: String): CallHandler[LocalDate] =
+      MockCurrentDate.getCurrentDate
+        .returns(LocalDate.parse(date, dateTimeFormatter))
   }
 
   "validate" should {
     "return no errors" when {
       "the supplied tax year has ended" in new Test {
 
-        setupTimeProvider("2022-04-06")
+        setupDateProvider("2022-04-06")
 
         private val validTaxYear = "2021-22"
         private val validationResult = TaxYearNotEndedValidation.validate(validTaxYear)
@@ -51,7 +52,7 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
     "return RuleTaxYearNotEndedError error" when {
       "the supplied tax year has not yet ended" in new Test {
 
-        setupTimeProvider("2022-04-04")
+        setupDateProvider("2022-04-04")
 
         private val invalidTaxYear = "2021-22"
         private val validationResult = TaxYearNotEndedValidation.validate(invalidTaxYear)
