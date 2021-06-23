@@ -16,8 +16,7 @@
 
 package v1.models.response.retrieveCodingOut
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import play.api.libs.functional.syntax._
+import play.api.libs.json.{Json, OFormat}
 
 case class TaxCodeComponentsObject(selfAssessmentUnderpayment: Option[Seq[TaxCodeComponents]],
                                    payeUnderpayment: Option[Seq[TaxCodeComponents]],
@@ -25,12 +24,5 @@ case class TaxCodeComponentsObject(selfAssessmentUnderpayment: Option[Seq[TaxCod
                                    inYearAdjustment: Option[TaxCodeComponents])
 
 object TaxCodeComponentsObject {
-  implicit val reads: Reads[TaxCodeComponentsObject] = (
-      (JsPath \ "selfAssessmentUnderpayment").readNullable[Seq[TaxCodeComponents]] and
-      (JsPath \ "payeUnderpayment").readNullable[Seq[TaxCodeComponents]] and
-      (JsPath \ "debt").readNullable[Seq[TaxCodeComponents]] and
-      (JsPath \ "inYearAdjustment").readNullable[TaxCodeComponents]
-    )(TaxCodeComponentsObject.apply _)
-
-  implicit val writes: OWrites[TaxCodeComponentsObject] = Json.writes[TaxCodeComponentsObject]
+  implicit val format: OFormat[TaxCodeComponentsObject] = Json.format[TaxCodeComponentsObject]
 }

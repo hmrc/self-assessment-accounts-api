@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveCodingOut
 
-import play.api.libs.json.{JsError, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 
 class RetrieveCodingOutResponseSpec extends UnitSpec {
@@ -28,8 +28,8 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |    "selfAssessmentUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
       |        "componentIdentifier": 12345678910
       |      }
@@ -37,8 +37,8 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |    "payeUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
       |        "componentIdentifier": 12345678910
       |      }
@@ -46,17 +46,17 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |    "debt": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "CUSTOMER",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
+      |        "source": "HMRC HELD",
       |        "componentIdentifier": 12345678910
       |      }
       |    ],
       |    "inYearAdjustment": {
       |      "amount": 0,
-      |      "relatedTaxYear": "2019-20",
-      |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "source": "CUSTOMER",
+      |      "relatedTaxYear": "2021-22",
+      |      "submittedOn": "2021-08-24T14:15:22Z",
+      |      "source": "HMRC HELD",
       |      "componentIdentifier": 12345678910
       |    }
       |  },
@@ -64,34 +64,33 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |    "selfAssessmentUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "componentIdentifier": 12345678910
       |      }
       |    ],
       |    "payeUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "componentIdentifier": 12345678910
       |      }
       |    ],
       |    "debt": [
       |      {
       |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "componentIdentifier": 12345678910
       |      }
       |    ],
       |    "inYearAdjustment": {
       |      "amount": 0,
-      |      "submittedOn": "2019-08-24T14:15:22Z",
+      |      "submittedOn": "2021-08-24T14:15:22Z",
       |      "componentIdentifier": 12345678910
       |    }
       |  }
       |}
-      |""".stripMargin
+    """.stripMargin
   )
-
 
   val mtdResponse: JsValue = Json.parse(
     """
@@ -100,35 +99,35 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |    "selfAssessmentUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "HMRC-HELD",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
+      |        "source": "hmrcHeld",
       |        "id": 12345678910
       |      }
       |    ],
       |    "payeUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "HMRC-HELD",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
+      |        "source": "hmrcHeld",
       |        "id": 12345678910
       |      }
       |    ],
       |    "debt": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "CUSTOMER",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
+      |        "source": "hmrcHeld",
       |        "id": 12345678910
       |      }
       |    ],
       |    "inYearAdjustment": {
       |      "amount": 0,
-      |      "relatedTaxYear": "2019-20",
-      |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "source": "CUSTOMER",
+      |      "relatedTaxYear": "2021-22",
+      |      "submittedOn": "2021-08-24T14:15:22Z",
+      |      "source": "hmrcHeld",
       |      "id": 12345678910
       |    }
       |  },
@@ -136,27 +135,27 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |    "selfAssessmentUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "id": 12345678910
       |      }
       |    ],
       |    "payeUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "id": 12345678910
       |      }
       |    ],
       |    "debt": [
       |      {
       |        "amount": 0,
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "id": 12345678910
       |      }
       |    ],
       |    "inYearAdjustment": {
       |      "amount": 0,
-      |      "submittedOn": "2019-08-24T14:15:22Z",
+      |      "submittedOn": "2021-08-24T14:15:22Z",
       |      "id": 12345678910
       |    }
       |  }
@@ -167,34 +166,25 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
       0,
-      "2019-08-24T14:15:22Z",
+      "2021-08-24T14:15:22Z",
       BigInt(12345678910L)
     )
 
-  val taxCodeComponentsHmrcHeld: TaxCodeComponents =
+  val taxCodeComponents: TaxCodeComponents =
     TaxCodeComponents(
       0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "HMRC-HELD",
-      BigInt(12345678910L)
-    )
-
-  val taxCodeComponentsCustomer: TaxCodeComponents =
-    TaxCodeComponents(
-      0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "CUSTOMER",
+      Some("2021-22"),
+      "2021-08-24T14:15:22Z",
+      "hmrcHeld",
       BigInt(12345678910L)
     )
 
   val taxCodeComponentObject: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
-      Some(Seq(taxCodeComponentsHmrcHeld)),
-      Some(Seq(taxCodeComponentsHmrcHeld)),
-      Some(Seq(taxCodeComponentsCustomer)),
-      Some(taxCodeComponentsCustomer)
+      Some(Seq(taxCodeComponents)),
+      Some(Seq(taxCodeComponents)),
+      Some(Seq(taxCodeComponents)),
+      Some(taxCodeComponents)
     )
 
   val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =

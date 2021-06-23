@@ -14,17 +14,19 @@
  * limitations under the License.
  */
 
-package v1.controllers.requestParsers.validators.validations
+package v1.mocks
 
-import v1.models.errors.{IdFormatError, MtdError}
+import java.time.LocalDate
 
-object IdValidation {
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
+import utils.CurrentDate
 
-  def validate(field: BigDecimal, path: String): List[MtdError] = {
-    if (field > 0 && field < 1000000000000000.00 && field.scale <= 0) {
-      NoValidationErrors
-    } else {
-      List(IdFormatError.copy(paths = Some(Seq(path))))
-    }
+trait MockCurrentDate extends MockFactory {
+
+  val mockCurrentDate: CurrentDate = mock[CurrentDate]
+
+  object MockCurrentDate {
+    def getCurrentDate: CallHandler[LocalDate] = (mockCurrentDate.getCurrentDate _).expects()
   }
 }

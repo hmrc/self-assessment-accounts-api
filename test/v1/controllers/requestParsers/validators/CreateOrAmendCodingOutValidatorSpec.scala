@@ -16,22 +16,28 @@
 
 package v1.controllers.requestParsers.validators
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
 import config.AppConfig
 import mocks.MockAppConfig
-import play.api.libs.json.{ JsObject, JsPath, JsValue, Json }
+import play.api.libs.json.{JsObject, JsPath, Json}
 import support.UnitSpec
+import utils.CurrentDate
+import v1.mocks.MockCurrentDate
 import v1.models.errors._
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
 
 class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
 
   private val validNino           = "AA111111A"
-  private val validTaxYear        = "2019-20"
+  private val validTaxYear        = "2021-22"
   private val invalidNino         = "not a nino"
   private val invalidTaxYear      = "not a tax year"
   private val invalidTaxYearRange = "2021-25"
 
-  private val validJson = Json.parse("""
+  private val validJson = Json.parse(
+    """
       |{
       |  "taxCodeComponents": {
       |    "payeUnderpayment": [
@@ -58,9 +64,11 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
       |    }
       |  }
       |}
-      |""".stripMargin).as[JsObject]
+    """.stripMargin
+  ).as[JsObject]
 
-  private val invalidJson = Json.parse("""
+  private val invalidJson = Json.parse(
+    """
       |{
       |  "taxCodeComponents": {
       |    "payeUnderpayment": [
@@ -87,22 +95,32 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
       |    }
       |  }
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
-  private val emptyJson = Json.parse("""
+  private val emptyJson = Json.parse(
+    """
       |{}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
   private def removeFieldFromJson(json: JsObject, field: String): JsObject = {
     val path = JsPath \ "taxCodeComponents" \ field
     path.prune(json).get
   }
 
-  class Test extends MockAppConfig {
-    implicit val appConfig: AppConfig = mockAppConfig
-    val validator                     = new CreateOrAmendCodingOutValidator()
-    MockAppConfig.minimumPermittedTaxYear returns 2020
-    val emptyRequestBodyJson: JsValue = Json.parse("""{}""")
+  class Test extends MockCurrentDate with MockAppConfig {
+
+    implicit val dateProvider: CurrentDate     = mockCurrentDate
+    val dateTimeFormatter: DateTimeFormatter   = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    implicit val appConfig: AppConfig          = mockAppConfig
+    val validator                              = new CreateOrAmendCodingOutValidator()
+
+    MockCurrentDate.getCurrentDate
+      .returns(LocalDate.parse("2022-07-11", dateTimeFormatter))
+      .anyNumberOfTimes()
+
+    MockAppConfig.minimumPermittedTaxYear returns 2022
   }
 
   "running a validation" should {
@@ -128,7 +146,7 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
       }
     }
 
-    "return NinoFormatError" when {
+    "return a NinoFormatError" when {
       "an invalid nino is supplied" in new Test {
         validator.validate(CreateOrAmendCodingOutRawRequest(invalidNino, validTaxYear, validJson)) shouldBe List(NinoFormatError)
       }
@@ -181,6 +199,18 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
       }
     }
 
+    "return a RuleTaxYearNotSupportedError" when {
+      "the tax year supplied is not supported" in new Test  {
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, "2020-21", validJson)) shouldBe List(RuleTaxYearNotSupportedError)
+      }
+    }
+
+    "return a RuleTaxYearNotEndedError" when {
+      "the tax year supplied has not ended" in new Test  {
+        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, "2022-23", validJson)) shouldBe List(RuleTaxYearNotEndedError)
+      }
+    }
+
     "return NinoFormatError and TaxYearFormatError" when {
       "an invalid tax year and an invalid nino is supplied" in new Test {
         validator.validate(CreateOrAmendCodingOutRawRequest(invalidNino, invalidTaxYear, validJson)) shouldBe List(
@@ -209,5 +239,4 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
       }
     }
   }
-
 }

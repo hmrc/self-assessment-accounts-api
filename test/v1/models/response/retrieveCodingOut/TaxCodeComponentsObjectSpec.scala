@@ -27,8 +27,8 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |    "selfAssessmentUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
       |        "componentIdentifier": 12345678910
       |      }
@@ -36,8 +36,8 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |    "payeUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
       |        "componentIdentifier": 12345678910
       |      }
@@ -45,21 +45,21 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |    "debt": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "CUSTOMER",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
+      |        "source": "HMRC HELD",
       |        "componentIdentifier": 12345678910
       |      }
       |    ],
       |    "inYearAdjustment": {
       |      "amount": 0,
-      |      "relatedTaxYear": "2019-20",
-      |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "source": "CUSTOMER",
+      |      "relatedTaxYear": "2021-22",
+      |      "submittedOn": "2021-08-24T14:15:22Z",
+      |      "source": "HMRC HELD",
       |      "componentIdentifier": 12345678910
       |    }
       |}
-      |""".stripMargin
+    """.stripMargin
   )
 
   val mtdResponse: JsValue = Json.parse(
@@ -68,65 +68,56 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |    "selfAssessmentUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "HMRC-HELD",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
+      |        "source": "hmrcHeld",
       |        "id": 12345678910
       |      }
       |    ],
       |    "payeUnderpayment": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "HMRC-HELD",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
+      |        "source": "hmrcHeld",
       |        "id": 12345678910
       |      }
       |    ],
       |    "debt": [
       |      {
       |        "amount": 0,
-      |        "relatedTaxYear": "2019-20",
-      |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "source": "CUSTOMER",
+      |        "relatedTaxYear": "2021-22",
+      |        "submittedOn": "2021-08-24T14:15:22Z",
+      |        "source": "hmrcHeld",
       |        "id": 12345678910
       |      }
       |    ],
       |    "inYearAdjustment": {
       |      "amount": 0,
-      |      "relatedTaxYear": "2019-20",
-      |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "source": "CUSTOMER",
+      |      "relatedTaxYear": "2021-22",
+      |      "submittedOn": "2021-08-24T14:15:22Z",
+      |      "source": "hmrcHeld",
       |      "id": 12345678910
       |    }
       |}
     """.stripMargin
   )
 
-  val taxCodeComponentsHmrcHeld: TaxCodeComponents =
+  val taxCodeComponents: TaxCodeComponents =
     TaxCodeComponents(
       0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "HMRC-HELD",
-      BigInt(12345678910L)
-    )
-
-  val taxCodeComponentsCustomer: TaxCodeComponents =
-    TaxCodeComponents(
-      0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "CUSTOMER",
+      Some("2021-22"),
+      "2021-08-24T14:15:22Z",
+      "hmrcHeld",
       BigInt(12345678910L)
     )
 
   val responseModel: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
-      Some(Seq(taxCodeComponentsHmrcHeld)),
-      Some(Seq(taxCodeComponentsHmrcHeld)),
-      Some(Seq(taxCodeComponentsCustomer)),
-      Some(taxCodeComponentsCustomer)
+      Some(Seq(taxCodeComponents)),
+      Some(Seq(taxCodeComponents)),
+      Some(Seq(taxCodeComponents)),
+      Some(taxCodeComponents)
     )
 
   "TaxCodeComponentsObject" when {

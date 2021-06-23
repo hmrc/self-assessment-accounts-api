@@ -25,21 +25,21 @@ class TaxCodeComponentsSpec extends UnitSpec {
     """
       |{
       |    "amount": 0,
-      |    "relatedTaxYear": "2019-20",
-      |    "submittedOn": "2019-08-24T14:15:22Z",
+      |    "relatedTaxYear": "2021-22",
+      |    "submittedOn": "2021-08-24T14:15:22Z",
       |    "source": "HMRC HELD",
       |    "componentIdentifier": 12345678910
       |}
-      |""".stripMargin
+    """.stripMargin
   )
 
   val mtdResponse: JsValue = Json.parse(
     """
       |{
       |    "amount": 0,
-      |    "relatedTaxYear": "2019-20",
-      |    "submittedOn": "2019-08-24T14:15:22Z",
-      |    "source": "HMRC-HELD",
+      |    "relatedTaxYear": "2021-22",
+      |    "submittedOn": "2021-08-24T14:15:22Z",
+      |    "source": "hmrcHeld",
       |    "id": 12345678910
       |}
     """.stripMargin
@@ -48,9 +48,9 @@ class TaxCodeComponentsSpec extends UnitSpec {
   val responseModel: TaxCodeComponents =
     TaxCodeComponents(
       0,
-      Some("2019-20"),
-      "2019-08-24T14:15:22Z",
-      "HMRC-HELD",
+      Some("2021-22"),
+      "2021-08-24T14:15:22Z",
+      "hmrcHeld",
       BigInt(12345678910L)
     )
 
@@ -67,5 +67,4 @@ class TaxCodeComponentsSpec extends UnitSpec {
       }
     }
   }
-
 }
