@@ -18,29 +18,33 @@ package v1.fixtures.audit
 
 import play.api.libs.json.{JsValue, Json}
 import v1.fixtures.audit.AuditResponseFixture._
-import v1.models.audit.AuditDetail
+import v1.models.audit.GenericAuditDetail
 import v1.models.auth.UserDetails
 
 object GenericAuditDetailFixture {
 
   val nino: String = "ZG903729C"
+  val taxYear: String = "2019-20"
   val userType: String = "Agent"
   val agentReferenceNumber: Option[String] = Some("012345678")
+  val userDetails: UserDetails = UserDetails("", "Agent", agentReferenceNumber)
+  val pathParams: Map[String, String] = Map("nino" -> nino, "taxYear" -> taxYear)
+  val requestBody: Option[JsValue] = None
   val correlationId = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
-  val userDetails = UserDetails("", "Agent", agentReferenceNumber)
 
-  val genericAuditDetailModelSuccess: AuditDetail =
-    AuditDetail(
+  val genericAuditDetailModelSuccess: GenericAuditDetail =
+    GenericAuditDetail(
       userType = userType,
       agentReferenceNumber = agentReferenceNumber,
-      nino = nino,
-      response = auditResponseModelWithBody,
+      params = Map("nino" -> nino, "taxYear" -> taxYear),
+      requestBody = requestBody,
+      auditResponse = auditResponseModelWithBody,
       `X-CorrelationId` = correlationId
     )
 
-  val genericAuditDetailModelError: AuditDetail =
+  val genericAuditDetailModelError: GenericAuditDetail =
     genericAuditDetailModelSuccess.copy(
-      response = auditResponseModelWithErrors
+      auditResponse = auditResponseModelWithErrors
     )
 
   val genericAuditDetailJsonSuccess: JsValue = Json.parse(
@@ -49,10 +53,12 @@ object GenericAuditDetailFixture {
        |   "userType" : "$userType",
        |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
        |   "nino" : "$nino",
-       |   "response":{
-       |     "httpStatus": ${auditResponseModelWithBody.httpStatus}
+       |   "taxYear" : "$taxYear",
+       |   "response" : {
+       |     "httpStatus" : ${auditResponseModelWithBody.httpStatus},
+       |     "body" : ${auditResponseModelWithBody.body.get}
        |   },
-       |   "X-CorrelationId": "$correlationId"
+       |   "X-CorrelationId"  : "$correlationId"
        |}
     """.stripMargin
   )
@@ -62,9 +68,10 @@ object GenericAuditDetailFixture {
        |{
        |   "userType" : "$userType",
        |   "agentReferenceNumber" : "${agentReferenceNumber.get}",
-       |   "nino": "$nino",
-       |   "response": $auditResponseJsonWithErrors,
-       |   "X-CorrelationId": "$correlationId"
+       |   "nino" : "$nino",
+       |   "taxYear" : "$taxYear",
+       |   "response" : $auditResponseJsonWithErrors,
+       |   "X-CorrelationId"  : "$correlationId"
        |}
      """.stripMargin
   )

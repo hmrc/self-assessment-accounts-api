@@ -22,7 +22,8 @@ import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockDeleteCodingOutParser
-import v1.mocks.services.{MockDeleteCodingOutService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockDeleteCodingOutService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCodingOut._
@@ -36,7 +37,8 @@ class DeleteCodingOutControllerSpec
     with MockMtdIdLookupService
     with MockDeleteCodingOutService
     with MockDeleteCodingOutParser
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAuditService {
 
   private val nino = "AA123456A"
   private val taxYear = "2019-20"
@@ -50,6 +52,7 @@ class DeleteCodingOutControllerSpec
       lookupService = mockMtdIdLookupService,
       parser = mockRequestDataParser,
       service = mockDeleteCodingOutService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -58,6 +61,20 @@ class DeleteCodingOutControllerSpec
     MockedEnrolmentsAuthService.authoriseUser()
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
+
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "DeleteCodingOutUnderpayments",
+      transactionName = "delete-coding-out-underpayments",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        requestBody = None,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
 
   private val rawData = DeleteCodingOutRawRequest(nino, taxYear)
   private val requestData = DeleteCodingOutParsedRequest(Nino(nino), taxYear)
@@ -79,6 +96,9 @@ class DeleteCodingOutControllerSpec
         status(result) shouldBe NO_CONTENT
         header("X-CorrelationId", result) shouldBe Some(correlationId)
 
+        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, None, None)
+        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+
       }
     }
     "return the error as per spec" when {
@@ -95,6 +115,9 @@ class DeleteCodingOutControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
 
           }
         }
@@ -127,6 +150,9 @@ class DeleteCodingOutControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
 
           }
         }

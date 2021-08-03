@@ -16,22 +16,62 @@
 
 package v1.models.audit
 
-import play.api.libs.json.Json
+import play.api.http.Status.{BAD_REQUEST, OK}
+import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v1.fixtures.audit.AuditResponseFixture._
 
 class AuditResponseSpec extends UnitSpec {
+
+  val auditErrors: Seq[AuditError] = Seq(AuditError(errorCode = "FORMAT_NINO"), AuditError(errorCode = "FORMAT_TAX_YEAR"))
+  val body: JsValue = Json.parse("""{ "aField" : "aValue" }""")
+
+  val auditResponseModel: AuditResponse =
+    AuditResponse(
+      httpStatus = OK,
+      response = Right(Some(body))
+    )
+
+  val auditResponseModelError: AuditResponse =
+    AuditResponse(
+      httpStatus = BAD_REQUEST,
+      response = Left(auditErrors)
+    )
+
+  val auditResponseJson: JsValue = Json.parse(
+    s"""
+       |{
+       |  "httpStatus": $OK,
+       |  "body" : $body
+       |}
+    """.stripMargin
+  )
+
+  val auditResponseJsonErrors: JsValue = Json.parse(
+    s"""
+       |{
+       |  "httpStatus": $BAD_REQUEST,
+       |  "errors" : [
+       |    {
+       |      "errorCode" : "FORMAT_NINO"
+       |    },
+       |    {
+       |      "errorCode" : "FORMAT_TAX_YEAR"
+       |    }
+       |  ]
+       |}
+    """.stripMargin
+  )
 
   "AuditResponse" when {
     "written to JSON with a body" should {
       "produce the expected JsObject" in {
-        Json.toJson(auditResponseModelWithBody) shouldBe successAuditResponse
+        Json.toJson(auditResponseModel) shouldBe auditResponseJson
       }
     }
 
     "written to JSON with Audit Errors" should {
       "produce the expected JsObject" in {
-        Json.toJson(auditResponseModelWithErrors) shouldBe auditResponseJsonWithErrors
+        Json.toJson(auditResponseModelError) shouldBe auditResponseJsonErrors
       }
     }
   }

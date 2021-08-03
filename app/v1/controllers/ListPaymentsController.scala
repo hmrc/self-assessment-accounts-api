@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.ListPaymentsRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
+import v1.models.audit.{GenericAuditDetail, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.request.listPayments.ListPaymentsRawRequest
 import v1.models.response.listPayments.ListPaymentsHateoasData
@@ -73,11 +73,12 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
               s"Success response received with correlationId: ${serviceResponse.correlationId}"
           )
           auditSubmission(
-            AuditDetail(
+            GenericAuditDetail(
               userDetails = request.userDetails,
-              nino = nino,
+              params = Map("nino" -> nino),
+              requestBody = None,
               `X-CorrelationId` = serviceResponse.correlationId,
-              response = AuditResponse(httpStatus = OK, None, None))
+              auditResponse = AuditResponse(httpStatus = OK, None, None))
           )
 
           Ok(Json.toJson(vendorResponse))
@@ -92,11 +93,12 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          AuditDetail(
+          GenericAuditDetail(
             userDetails = request.userDetails,
-            nino = nino,
+            params= Map("nino" -> nino),
+            requestBody = None,
             `X-CorrelationId` = resCorrelationId,
-            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 
@@ -104,7 +106,7 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
       }.merge
     }
 
-  private def auditSubmission(details: AuditDetail)
+  private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext): Future[AuditResult] = {
 

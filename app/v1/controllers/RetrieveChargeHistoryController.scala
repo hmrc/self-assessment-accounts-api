@@ -27,7 +27,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveChargeHistoryRequestParser
 import v1.hateoas.HateoasFactory
-import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
+import v1.models.audit.{GenericAuditDetail, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
@@ -76,11 +76,12 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
           )
 
           auditSubmission(
-            AuditDetail(
+            GenericAuditDetail(
               userDetails = request.userDetails,
-              nino = nino,
+              params = Map("nino" -> nino),
+              requestBody = None,
               `X-CorrelationId` = serviceResponse.correlationId,
-              response = AuditResponse(httpStatus = OK, None, None))
+              auditResponse = AuditResponse(httpStatus = OK, None, None))
           )
 
           Ok(Json.toJson(vendorResponse))
@@ -96,11 +97,12 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          AuditDetail(
+          GenericAuditDetail(
             userDetails = request.userDetails,
-            nino = nino,
+            params = Map("nino" -> nino),
+            requestBody = None,
             `X-CorrelationId` = resCorrelationId,
-            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
 
@@ -116,7 +118,7 @@ class RetrieveChargeHistoryController @Inject()(val authService: EnrolmentsAuthS
     }
   }
 
-  private def auditSubmission(details: AuditDetail)
+  private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext): Future[AuditResult] = {
 
