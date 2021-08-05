@@ -33,7 +33,7 @@ import v1.services.{AuditService, EnrolmentsAuthService, ListTransactionsService
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import v1.models.audit.{AuditDetail, AuditEvent, AuditResponse}
+import v1.models.audit.{GenericAuditDetail, AuditEvent, AuditResponse}
 
 @Singleton
 class ListTransactionsController @Inject()(val authService: EnrolmentsAuthService,
@@ -77,12 +77,13 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
               s"Success response received with correlationId: ${serviceResponse.correlationId}"
           )
           auditSubmission(
-            AuditDetail(
+            GenericAuditDetail(
               userDetails = request.userDetails,
-              nino = nino,
+              params = Map("nino" -> nino),
+              requestBody = None,
               `X-CorrelationId` = serviceResponse.correlationId,
-              response = AuditResponse(httpStatus = OK, None, None))
-            )
+              auditResponse = AuditResponse(httpStatus = OK, None, None))
+          )
 
           Ok(Json.toJson(vendorResponse))
             .withApiHeaders(serviceResponse.correlationId)
@@ -96,11 +97,12 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
             s"Error response received with CorrelationId: $resCorrelationId")
 
         auditSubmission(
-          AuditDetail(
+          GenericAuditDetail(
             userDetails = request.userDetails,
-            nino = nino,
+            params = Map("nino" -> nino),
+            requestBody = None,
             `X-CorrelationId` = resCorrelationId,
-            response = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
         result
@@ -119,7 +121,7 @@ class ListTransactionsController @Inject()(val authService: EnrolmentsAuthServic
     }
   }
 
-  private def auditSubmission(details: AuditDetail)
+  private def auditSubmission(details: GenericAuditDetail)
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext): Future[AuditResult] = {
 

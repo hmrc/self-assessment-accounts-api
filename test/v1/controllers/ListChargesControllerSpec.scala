@@ -33,7 +33,7 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges._
 import v1.models.response.listCharges.{ListChargesHateoasData, ListChargesResponse}
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListChargesService, MockMtdIdLookupService}
-import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
+import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -74,15 +74,16 @@ class ListChargesControllerSpec extends ControllerBaseSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
-  def event(auditResponse: AuditResponse): AuditEvent =
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "listSelfAssessmentCharges",
       transactionName = "list-self-assessment-charges",
-      detail = AuditDetail(
+      detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        nino = nino,
-        response = auditResponse,
+        params = Map("nino" -> nino),
+        requestBody = None,
+        auditResponse = auditResponse,
         `X-CorrelationId` = correlationId
       )
     )

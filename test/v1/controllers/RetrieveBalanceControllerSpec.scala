@@ -33,7 +33,7 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, RetrieveBalanceRawRequest}
 import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveBalanceService}
-import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
+import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -70,15 +70,16 @@ class RetrieveBalanceControllerSpec
       rel = SELF
     )
 
-  def event(auditResponse: AuditResponse): AuditEvent =
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "retrieveASelfAssessmentBalance",
       transactionName = "retrieve-a-self-assessment-balance",
-      detail = AuditDetail(
+      detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        nino = nino,
-        response = auditResponse,
+        params = Map("nino" -> nino),
+        requestBody = None,
+        auditResponse = auditResponse,
         `X-CorrelationId` = correlationId
       )
     )

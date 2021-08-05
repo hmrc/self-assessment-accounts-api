@@ -26,7 +26,7 @@ import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListPaymentsRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListPaymentsService, MockMtdIdLookupService}
-import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
+import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.RelType.{LIST_TRANSACTIONS, RETRIEVE_PAYMENT_ALLOCATIONS, SELF}
@@ -74,15 +74,16 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
-  def event(auditResponse: AuditResponse): AuditEvent =
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "listSelfAssessmentPayments",
       transactionName = "list-self-assessment-payments",
-      detail = AuditDetail(
+      detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        nino = nino,
-        response = auditResponse,
+        params = Map("nino" -> nino),
+        requestBody = None,
+        auditResponse = auditResponse,
         `X-CorrelationId` = correlationId
       )
     )

@@ -26,7 +26,7 @@ import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveChargeHistoryService}
-import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
+import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.Method.GET
 import v1.models.hateoas.{HateoasWrapper, Link}
@@ -101,15 +101,16 @@ class RetrieveChargeHistoryControllerSpec
     MockIdGenerator.generateCorrelationId.returns(correlationId)
   }
 
-  def event(auditResponse: AuditResponse): AuditEvent =
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "retrieveASelfAssessmentChargesHistory",
       transactionName = "retrieve-a-self-assessment-charges-history",
-      detail = AuditDetail(
+      detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        nino = nino,
-        response = auditResponse,
+        params = Map("nino" -> nino),
+        requestBody = None,
+        auditResponse = auditResponse,
         `X-CorrelationId` = correlationId
       )
     )

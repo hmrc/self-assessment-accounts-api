@@ -23,7 +23,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockCreateOrAmendCodingOutRequestParser
-import v1.mocks.services.{MockCreateOrAmendCodingOutService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.mocks.services.{MockCreateOrAmendCodingOutService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.{DELETE, GET, PUT}
@@ -41,7 +42,8 @@ class CreateOrAmendCodingOutControllerSpec
     with MockCreateOrAmendCodingOutService
     with MockCreateOrAmendCodingOutRequestParser
     with MockHateoasFactory
-    with MockIdGenerator {
+    with MockIdGenerator
+    with MockAuditService {
 
   private val nino = "AA123456A"
   private val taxYear = "2019-20"
@@ -56,6 +58,7 @@ class CreateOrAmendCodingOutControllerSpec
       parser = mockCreateOrAmendCodingOutRequestParser,
       service = mockCreateOrAmendCodingOutService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -118,17 +121,31 @@ class CreateOrAmendCodingOutControllerSpec
         |    },
         |    {
         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-        |      "method": "self",
-        |      "rel": "GET"
+        |      "method": "GET",
+        |      "rel": "self"
         |    },
         |    {
         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-        |      "method": "delete-coding-out-underpayments",
-        |      "rel": "DELETE"
+        |      "method": "DELETE",
+        |      "rel": "delete-coding-out-underpayments"
         |    }
         |  ]
         |}
         |""".stripMargin)
+
+  def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+    AuditEvent(
+      auditType = "CreateAmendCodingOutUnderpayments",
+      transactionName = "create-amend-coding-out-underpayments",
+      detail = GenericAuditDetail(
+        userType = "Individual",
+        agentReferenceNumber = None,
+        params = Map("nino" -> nino, "taxYear" -> taxYear),
+        requestBody = requestBody,
+        `X-CorrelationId` = correlationId,
+        auditResponse = auditResponse
+      )
+    )
 
   private val rawData = CreateOrAmendCodingOutRawRequest(nino, taxYear, requestJson)
   private val requestData = CreateOrAmendCodingOutParsedRequest(Nino(nino), taxYear, requestBody)
@@ -152,6 +169,9 @@ class CreateOrAmendCodingOutControllerSpec
         val result: Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
         status(result) shouldBe OK
         header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        val auditResponse: AuditResponse = AuditResponse(OK, None, Some(responseBody))
+        MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestJson))).once
       }
     }
     "return the error as per spec" when {
@@ -168,6 +188,9 @@ class CreateOrAmendCodingOutControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestJson))).once
           }
         }
 
@@ -203,6 +226,9 @@ class CreateOrAmendCodingOutControllerSpec
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(mtdError)
             header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
+            MockedAuditService.verifyAuditEvent(event(auditResponse, Some(requestJson))).once
           }
         }
 

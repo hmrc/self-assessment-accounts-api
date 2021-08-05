@@ -26,7 +26,7 @@ import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
-import v1.models.audit.{AuditDetail, AuditError, AuditEvent, AuditResponse}
+import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.hateoas.Method.GET
@@ -113,15 +113,16 @@ class RetrieveAllocationsControllerSpec
       )
     )
 
-  def event(auditResponse: AuditResponse): AuditEvent =
+  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
     AuditEvent(
       auditType = "retrieveASelfAssessmentPaymentsAllocationDetails",
       transactionName = "retrieve-a-self-assessment-payments-allocation-details",
-      detail = AuditDetail(
+      detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,
-        nino = nino,
-        response = auditResponse,
+        params = Map("nino" -> nino),
+        requestBody = None,
+        auditResponse = auditResponse,
         `X-CorrelationId` = correlationId
       )
     )

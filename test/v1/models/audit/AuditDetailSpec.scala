@@ -27,7 +27,7 @@ class AuditDetailSpec extends UnitSpec {
     "written to JSON (success)" should {
       "produce the expected JsObject" in {
         Json.toJson(genericAuditDetailModelSuccess) shouldBe genericAuditDetailJsonSuccess
-        Json.toJson(AuditDetail(userDetails, nino, correlationId, auditResponseModelWithBody)) shouldBe genericAuditDetailJsonSuccess
+        Json.toJson(GenericAuditDetail(userDetails, pathParams, requestBody, correlationId, auditResponseModelWithBody)) shouldBe genericAuditDetailJsonSuccess
       }
     }
 
