@@ -87,7 +87,7 @@
             "example": "2.06"
           },
           "interestFromDate": {
-            "description": "The date the interest charges started.. Date in the format YYYY-MM-DD.",
+            "description": "The date the interest charges started. Date in the format YYYY-MM-DD.",
             "type": "string",
             "example": "2020-04-01"
           },
