@@ -33,7 +33,13 @@ object ListTransactionsFixture {
       |   "lastClearingDate": "2020-01-02",
       |   "lastClearingReason": "Incoming payment",
       |   "lastClearedAmount": 2.01,
-      |   "statisticalFlag": false
+      |   "statisticalFlag": false,
+      |   "accruingInterestAmount": 8.31,
+      |   "interestRate": 2.06,
+      |   "interestFromDate": "2020-01-11",
+      |   "interestEndDate": "2020-04-06",
+      |   "latePaymentInterestAmount": 5.01,
+      |   "interestOutstandingAmount": 6.01
       |}
     """.stripMargin
   )
@@ -52,7 +58,13 @@ object ListTransactionsFixture {
       |   "lastClearedAmount": 2.01,
       |   "statisticalFlag": false,
       |   "paymentLot": "081203010024",
-      |   "paymentLotItem": "000001"
+      |   "paymentLotItem": "000001",
+      |   "accruingInterestAmount": 8.31,
+      |   "interestRate": 2.06,
+      |   "interestFromDate": "2020-01-11",
+      |   "interestEndDate": "2020-04-06",
+      |   "latePaymentInterestAmount": 5.01,
+      |   "interestOutstandingAmount": 6.01
       |}
     """.stripMargin
   )
@@ -84,7 +96,13 @@ object ListTransactionsFixture {
       |   "lastClearedAmount": 2.01,
       |   "statisticalFlag": false,
       |   "paymentLot": "081203010024",
-      |   "paymentLotItem": "000001"
+      |   "paymentLotItem": "000001",
+      |   "accruingInterestAmount": 8.31,
+      |   "interestRate": 2.06,
+      |   "interestFromDate": "2020-01-11",
+      |   "interestEndDate": "2020-04-06",
+      |   "latePaymentInterestAmount": 5.01,
+      |   "interestOutstandingAmount": 6.01
       |}
     """.stripMargin
   )
@@ -101,7 +119,13 @@ object ListTransactionsFixture {
       |   "outstandingAmount": 10.33,
       |   "lastClearingDate": "2020-01-06",
       |   "lastClearingReason": "Outgoing payment paid",
-      |   "lastClearedAmount": 2.01
+      |   "lastClearedAmount": 2.01,
+      |   "accruingInterestAmount": 8.31,
+      |   "interestRate": 2.06,
+      |   "interestFromDate": "2020-01-11",
+      |   "interestEndDate": "2020-04-06",
+      |   "latePaymentInterestAmount": 5.01,
+      |   "interestOutstandingAmount": 6.01
       |}
     """.stripMargin
   )
@@ -169,6 +193,12 @@ object ListTransactionsFixture {
       |         "lastClearingDate": "2020-01-02",
       |         "lastClearingReason": "Incoming payment",
       |         "lastClearedAmount": 2.01,
+      |         "accruingInterestAmount": 8.31,
+      |         "interestRate": 2.06,
+      |         "interestFromDate": "2020-01-11",
+      |         "interestEndDate": "2020-04-06",
+      |         "latePaymentInterestAmount": 5.01,
+      |         "interestOutstandingAmount": 6.01,
       |         "links": [
       |            {
       |               "href": "/accounts/self-assessment/AA123456A/transactions/X1234567890A",
@@ -188,6 +218,12 @@ object ListTransactionsFixture {
       |         "lastClearingDate": "2020-01-06",
       |         "lastClearingReason": "Outgoing payment paid",
       |         "lastClearedAmount": 2.01,
+      |         "accruingInterestAmount": 8.31,
+      |         "interestRate": 2.06,
+      |         "interestFromDate": "2020-01-11",
+      |         "interestEndDate": "2020-04-06",
+      |         "latePaymentInterestAmount": 5.01,
+      |         "interestOutstandingAmount": 6.01,
       |         "links": [
       |            {
       |               "href": "/accounts/self-assessment/AA123456A/payments/081203010024-000001",
@@ -233,7 +269,13 @@ object ListTransactionsFixture {
     outstandingAmount = 10.33,
     lastClearingDate = Some("2020-01-02"),
     lastClearingReason = Some("Incoming payment"),
-    lastClearedAmount = Some(2.01)
+    lastClearedAmount = Some(2.01),
+    accruingInterestAmount = Some(8.31),
+    interestRate = Some(2.06),
+    interestFromDate = Some("2020-01-11"),
+    interestEndDate = Some("2020-04-06"),
+    latePaymentInterestAmount = Some(5.01),
+    interestOutstandingAmount = Some(6.01)
   )
 
   val paymentsTransactionItemModel: TransactionItem = TransactionItem(
@@ -246,7 +288,13 @@ object ListTransactionsFixture {
     outstandingAmount = 10.33,
     lastClearingDate = Some("2020-01-06"),
     lastClearingReason = Some("Outgoing payment paid"),
-    lastClearedAmount = Some(2.01)
+    lastClearedAmount = Some(2.01),
+    accruingInterestAmount = Some(8.31),
+    interestRate = Some(2.06),
+    interestFromDate = Some("2020-01-11"),
+    interestEndDate = Some("2020-04-06"),
+    latePaymentInterestAmount = Some(5.01),
+    interestOutstandingAmount = Some(6.01)
   )
 
   val minimalTransactionItemModel: TransactionItem = TransactionItem(
@@ -259,7 +307,13 @@ object ListTransactionsFixture {
     outstandingAmount = 10.33,
     lastClearingDate = None,
     lastClearingReason = None,
-    lastClearedAmount = None
+    lastClearedAmount = None,
+    accruingInterestAmount = None,
+    interestRate = None,
+    interestFromDate = None,
+    interestEndDate = None,
+    latePaymentInterestAmount = None,
+    interestOutstandingAmount = None
   )
 
   val fullTransactionItemModel: TransactionItem = TransactionItem(
@@ -272,7 +326,13 @@ object ListTransactionsFixture {
     outstandingAmount = 10.33,
     lastClearingDate = Some("2020-01-06"),
     lastClearingReason = Some("Outgoing payment paid"),
-    lastClearedAmount = Some(2.01)
+    lastClearedAmount = Some(2.01),
+    accruingInterestAmount = Some(8.31),
+    interestRate = Some(2.06),
+    interestFromDate = Some("2020-01-11"),
+    interestEndDate = Some("2020-04-06"),
+    latePaymentInterestAmount = Some(5.01),
+    interestOutstandingAmount = Some(6.01)
   )
 
   val minimalItemListTransactionsModel: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
