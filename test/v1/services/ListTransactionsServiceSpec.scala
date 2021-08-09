@@ -50,7 +50,13 @@ class ListTransactionsServiceSpec extends ServiceSpec {
       outstandingAmount = 10.33,
       lastClearingDate = Some("2020-01-02"),
       lastClearingReason = Some("Incoming payment"),
-      lastClearedAmount = Some(2.01)
+      lastClearedAmount = Some(2.01),
+      accruingInterestAmount = Some(8.31),
+      interestRate = Some(2.06),
+      interestFromDate = Some("2020-01-11"),
+      interestEndDate = Some("2020-04-06"),
+      latePaymentInterestAmount = Some(5.01),
+      interestOutstandingAmount = Some(6.01)
     ))
   )
 

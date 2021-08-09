@@ -28,7 +28,13 @@ case class TransactionItem(taxYear: String,
                            outstandingAmount: BigDecimal,
                            lastClearingDate: Option[String],
                            lastClearingReason: Option[String],
-                           lastClearedAmount: Option[BigDecimal])
+                           lastClearedAmount: Option[BigDecimal],
+                           accruingInterestAmount: Option[BigDecimal],
+                           interestRate: Option[BigDecimal],
+                           interestFromDate: Option[String],
+                           interestEndDate: Option[String],
+                           latePaymentInterestAmount: Option[BigDecimal],
+                           interestOutstandingAmount: Option[BigDecimal])
 
 object TransactionItem {
 
@@ -45,12 +51,19 @@ object TransactionItem {
       lastClearingDate <- (JsPath \ "lastClearingDate").readNullable[String]
       lastClearingReason <- (JsPath \ "lastClearingReason").readNullable[String]
       lastClearedAmount <- (JsPath \ "lastClearedAmount").readNullable[BigDecimal]
+      accruingInterestAmount <- (JsPath \ "accruingInterestAmount").readNullable[BigDecimal]
+      interestRate <- (JsPath \ "interestRate").readNullable[BigDecimal]
+      interestFromDate <- (JsPath \ "interestFromDate").readNullable[String]
+      interestEndDate <- (JsPath \ "interestEndDate").readNullable[String]
+      latePaymentInterestAmount <- (JsPath \ "latePaymentInterestAmount").readNullable[BigDecimal]
+      interestOutstandingAmount <- (JsPath \ "interestOutstandingAmount").readNullable[BigDecimal]
     } yield {
 
       val paymentId = paymentLot.map(a => s"${a}-${paymentLotItem.get}")
 
       TransactionItem(taxYear, transactionId, paymentId, transactionDate, aType, originalAmount, outstandingAmount,
-        lastClearingDate, lastClearingReason, lastClearedAmount)
+        lastClearingDate, lastClearingReason, lastClearedAmount, accruingInterestAmount, interestRate, interestFromDate,
+        interestEndDate, latePaymentInterestAmount, interestOutstandingAmount)
     }
 
   implicit val writes: OWrites[TransactionItem] = Json.writes[TransactionItem]
