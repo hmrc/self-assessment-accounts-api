@@ -16,10 +16,12 @@
 
 package v1.support
 
-import utils.Logging
+import utils.{CurrentDate, Logging}
 import v1.controllers.EndpointLogContext
+import v1.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
+import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
 trait DesResponseMappingSupport {
@@ -31,6 +33,26 @@ trait DesResponseMappingSupport {
         Left(ErrorWrapper(desResponseWrapper.correlationId, NoTransactionDetailsFoundError, None))
       case _ => Right(desResponseWrapper)
     }
+  }
+
+  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[T], taxYear: String)(implicit currentDate: CurrentDate): Either[ErrorWrapper, ResponseWrapper[T]] = {
+    desResponseWrapper.responseData match {
+      case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse if TaxYearNotEndedValidation.validate(taxYear).isEmpty && checkIfIdExists(retrieveCodingOutDetailsResponse) =>
+        Left(ErrorWrapper(desResponseWrapper.correlationId, DownstreamError))
+      case _ => Right(desResponseWrapper)
+    }
+  }
+
+  def checkIfIdExists(response: RetrieveCodingOutResponse): Boolean = {
+
+    response.taxCodeComponents.flatMap(_.debt.map(_.map(_.id.isEmpty))).head.head ||
+    response.taxCodeComponents.flatMap(_.inYearAdjustment.map(_.id.isEmpty)).head ||
+    response.taxCodeComponents.flatMap(_.payeUnderpayment.map(_.map(_.id.isEmpty))).head.head||
+    response.taxCodeComponents.flatMap(_.selfAssessmentUnderpayment.map(_.map(_.id.isEmpty))).head.head||
+    response.unmatchedCustomerSubmissions.flatMap(_.debt.map(_.map(_.id.isEmpty))).head.head ||
+    response.unmatchedCustomerSubmissions.flatMap(_.inYearAdjustment.map(_.id.isEmpty)).head ||
+    response.unmatchedCustomerSubmissions.flatMap(_.payeUnderpayment.map(_.map(_.id.isEmpty))).head.head ||
+    response.unmatchedCustomerSubmissions.flatMap(_.selfAssessmentUnderpayment.map(_.map(_.id.isEmpty))).head.head
   }
 
   final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DesError])(
