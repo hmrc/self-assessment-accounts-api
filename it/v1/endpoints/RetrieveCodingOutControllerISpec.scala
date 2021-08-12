@@ -275,6 +275,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
       "any valid request is made that returns a body with the id present while the taxYear has ended" in new Test {
 
+        override val taxYear: String = "2020-21"
+
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
@@ -282,7 +284,6 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         }
 
         val response: WSResponse = await(request(None).get())
-        println(response)
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("X-CorrelationId").nonEmpty shouldBe true

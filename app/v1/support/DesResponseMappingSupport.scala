@@ -35,15 +35,17 @@ trait DesResponseMappingSupport {
     }
   }
 
-  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[T], taxYear: String)(implicit currentDate: CurrentDate): Either[ErrorWrapper, ResponseWrapper[T]] = {
+  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[T], taxYear: String)
+                                        (implicit currentDate: CurrentDate): Either[ErrorWrapper, ResponseWrapper[T]] = {
     desResponseWrapper.responseData match {
-      case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse if TaxYearNotEndedValidation.validate(taxYear).isEmpty && checkIfIdExists(retrieveCodingOutDetailsResponse) =>
+      case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse if TaxYearNotEndedValidation.validate(taxYear).isEmpty
+        && checkIfIdDoesntExists(retrieveCodingOutDetailsResponse) =>
         Left(ErrorWrapper(desResponseWrapper.correlationId, DownstreamError))
       case _ => Right(desResponseWrapper)
     }
   }
 
-  def checkIfIdExists(response: RetrieveCodingOutResponse): Boolean = {
+  def checkIfIdDoesntExists(response: RetrieveCodingOutResponse): Boolean = {
 
     response.taxCodeComponents.flatMap(_.debt.map(_.map(_.id.isEmpty))).head.head ||
     response.taxCodeComponents.flatMap(_.inYearAdjustment.map(_.id.isEmpty)).head ||
