@@ -34,7 +34,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-    val taxYear: String = "2021-22"
+    lazy val taxYear: String = "2021-22"
 
     def desParamSource: String = "HMRC-HELD"
 
@@ -275,7 +275,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
       "any valid request is made that returns a body with the id present while the taxYear has ended" in new Test {
 
-        override val taxYear: String = "2020-21"
+        override lazy val taxYear: String = "2020-21"
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -290,6 +290,21 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         response.header("Content-Type") shouldBe Some("application/json")
       }
       "any valid request is made that returns a body with the id present while the taxYear hasn't ended" in new Test {
+
+        def getCurrentTaxYear: String = {
+          val currentDate = LocalDate.now(ZoneOffset.UTC)
+
+          val taxYearStartDate: LocalDate = LocalDate.parse(
+            currentDate.getYear + "-04-06",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")
+          )
+
+          def fromDesIntToString(taxYear: Int): String =
+            (taxYear - 1) + "-" + taxYear.toString.drop(2)
+
+          if (currentDate.isBefore(taxYearStartDate)) fromDesIntToString(currentDate.getYear) else fromDesIntToString(currentDate.getYear + 1)
+        }
+        override lazy val taxYear: String = getCurrentTaxYear
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -306,6 +321,21 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       }
 
       "any valid request is made that returns a body without the id present while the taxYear hasn't ended" in new Test {
+
+        def getCurrentTaxYear: String = {
+          val currentDate = LocalDate.now(ZoneOffset.UTC)
+
+          val taxYearStartDate: LocalDate = LocalDate.parse(
+            currentDate.getYear + "-04-06",
+            DateTimeFormatter.ofPattern("yyyy-MM-dd")
+          )
+
+          def fromDesIntToString(taxYear: Int): String =
+            (taxYear - 1) + "-" + taxYear.toString.drop(2)
+
+          if (currentDate.isBefore(taxYearStartDate)) fromDesIntToString(currentDate.getYear) else fromDesIntToString(currentDate.getYear + 1)
+        }
+        override lazy val taxYear: String = getCurrentTaxYear
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -330,7 +360,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
             override val nino: String = requestNino
-            override val taxYear: String = requestTaxYear
+            override lazy val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
               AuthStub.authorised()
@@ -397,7 +427,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       "service error" when {
         "any valid request is made that returns a body without the id present while the taxYear has ended" in new Test {
 
-          override val taxYear: String = "2020-21"
+          override lazy val taxYear: String = "2020-21"
 
           override def setupStubs(): StubMapping = {
             AuthStub.authorised()
