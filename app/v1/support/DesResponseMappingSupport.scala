@@ -35,8 +35,8 @@ trait DesResponseMappingSupport {
     }
   }
 
-  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[T], taxYear: String)
-                                        (implicit currentDate: CurrentDate): Either[ErrorWrapper, ResponseWrapper[T]] = {
+  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[RetrieveCodingOutResponse], taxYear: String)
+                                        (implicit currentDate: CurrentDate): Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]] = {
     desResponseWrapper.responseData match {
       case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse if TaxYearNotEndedValidation.validate(taxYear).isEmpty
         && checkIfIdDoesntExists(retrieveCodingOutDetailsResponse) =>
