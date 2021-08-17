@@ -109,7 +109,7 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       Some("2021-22"),
       "2021-08-24T14:15:22Z",
       "hmrcHeld",
-      BigInt(12345678910L)
+      Some(BigInt(12345678910L))
     )
 
   val responseModel: TaxCodeComponentsObject =

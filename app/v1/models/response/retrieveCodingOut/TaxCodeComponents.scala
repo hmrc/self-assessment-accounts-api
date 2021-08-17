@@ -24,7 +24,7 @@ case class TaxCodeComponents(amount: BigDecimal,
                              relatedTaxYear: Option[String],
                              submittedOn: String,
                              source: String,
-                             id: BigInt)
+                             id: Option[BigInt])
 
 object TaxCodeComponents {
 
@@ -33,7 +33,7 @@ object TaxCodeComponents {
       (JsPath \ "relatedTaxYear").readNullable[String] and
       (JsPath \ "submittedOn").read[String] and
       (JsPath \ "source").read[DownstreamSource].map(_.toMtdSource) and
-      (JsPath \ "componentIdentifier").read[BigInt]
+      (JsPath \ "componentIdentifier").readNullable[BigInt]
     )(TaxCodeComponents.apply _)
 
   implicit val writes: OWrites[TaxCodeComponents] = Json.writes[TaxCodeComponents]

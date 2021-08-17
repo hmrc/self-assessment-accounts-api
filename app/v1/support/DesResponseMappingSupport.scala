@@ -16,10 +16,12 @@
 
 package v1.support
 
-import utils.Logging
+import utils.{CurrentDate, Logging}
 import v1.controllers.EndpointLogContext
+import v1.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
+import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
 trait DesResponseMappingSupport {
@@ -31,6 +33,49 @@ trait DesResponseMappingSupport {
         Left(ErrorWrapper(desResponseWrapper.correlationId, NoTransactionDetailsFoundError, None))
       case _ => Right(desResponseWrapper)
     }
+  }
+
+  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[RetrieveCodingOutResponse], taxYear: String)
+                                        (implicit currentDate: CurrentDate): Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]] = {
+    implicit val endpointLogContext: EndpointLogContext =
+      EndpointLogContext(
+        controllerName = "RetrieveCodingOutController",
+        endpointName = "retrieveCodingOut"
+      )
+
+    desResponseWrapper.responseData match {
+      case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse if TaxYearNotEndedValidation.validate(taxYear).isEmpty
+        && idsMissing(retrieveCodingOutDetailsResponse) =>
+        logger.warn(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
+            s"Error response received with CorrelationId")
+        Left(ErrorWrapper(desResponseWrapper.correlationId, DownstreamError))
+      case _ => Right(desResponseWrapper)
+    }
+  }
+
+  def idsMissing(response: RetrieveCodingOutResponse): Boolean = {
+    import response._
+
+    lazy val taxCodeComponentsIdsMissing = taxCodeComponents.fold(false)(taxCodeComponents => {
+      import taxCodeComponents._
+
+      debt.fold(false)(debt => debt.exists(_.id.isEmpty)) ||
+        inYearAdjustment.fold(false)(inYearAdjustment => inYearAdjustment.id.isEmpty) ||
+        payeUnderpayment.fold(false)(payeUnderpayment => payeUnderpayment.exists(_.id.isEmpty)) ||
+        selfAssessmentUnderpayment.fold(false)(selfAssessmentUnderpayment => selfAssessmentUnderpayment.exists(_.id.isEmpty))
+    })
+
+    lazy val unmatchedCustomerSubmissionsIdsMissing = unmatchedCustomerSubmissions.fold(false)(unmatchedCustomerSubmissions => {
+      import unmatchedCustomerSubmissions._
+
+      debt.fold(false)(debt => debt.exists(_.id.isEmpty)) ||
+        inYearAdjustment.fold(false)(inYearAdjustment => inYearAdjustment.id.isEmpty) ||
+        payeUnderpayment.fold(false)(payeUnderpayment => payeUnderpayment.exists(_.id.isEmpty)) ||
+        selfAssessmentUnderpayment.fold(false)(selfAssessmentUnderpayment => selfAssessmentUnderpayment.exists(_.id.isEmpty))
+    })
+
+    taxCodeComponentsIdsMissing || unmatchedCustomerSubmissionsIdsMissing
   }
 
   final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DesError])(

@@ -16,7 +16,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "description": "The ID for the Self Assessment underpayment.",
+                "description": "The ID for the Self Assessment underpayment.  It will only be returned after the tax year has ended.",
                 "type": "number",
                 "multipleOf": 1,
                 "minimum": 1,
@@ -52,7 +52,6 @@
             },
             "additionalProperties": false,
             "required": [
-              "id",
               "amount",
               "source",
               "submittedOn"
@@ -67,7 +66,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "description": "The ID for the PAYE underpayment.",
+                "description": "The ID for the PAYE underpayment.  It will only be returned after the tax year has ended.",
                 "type": "number",
                 "multipleOf": 1,
                 "minimum": 1,
@@ -103,7 +102,6 @@
             },
             "additionalProperties": false,
             "required": [
-              "id",
               "amount",
               "source",
               "submittedOn"
@@ -118,7 +116,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "description": "The ID for the coded out debts.",
+                "description": "The ID for the coded out debts. It will only be returned after the tax year has ended.",
                 "type": "number",
                 "multipleOf": 1,
                 "minimum": 1,
@@ -154,7 +152,6 @@
             },
             "additionalProperties": false,
             "required": [
-              "id",
               "amount",
               "source",
               "submittedOn"
@@ -166,7 +163,7 @@
           "description": "Details of coded out in-year adjustments",
           "properties": {
             "id": {
-              "description": "The ID for the HMRC classified debts.",
+              "description": "The ID for the HMRC classified debts. It will only be returned after the tax year has ended.",
               "type": "number",
               "multipleOf": 1,
               "minimum": 1,
@@ -202,7 +199,6 @@
           },
           "additionalProperties": false,
           "required": [
-            "id",
             "amount",
             "source",
             "submittedOn"
@@ -223,7 +219,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "description": "The ID for the Self Assessment underpayment.",
+                "description": "The ID for the Self Assessment underpayment. It will only be returned after the tax year has ended.",
                 "type": "number",
                 "multipleOf": 1,
                 "minimum": 1,
@@ -246,7 +242,6 @@
             },
             "additionalProperties": false,
             "required": [
-              "id",
               "amount",
               "submittedOn"
             ]
@@ -260,7 +255,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "description": "The ID for the PAYE underpayment.",
+                "description": "The ID for the PAYE underpayment. It will only be returned after the tax year has ended.",
                 "type": "number",
                 "multipleOf": 1,
                 "minimum": 1,
@@ -283,7 +278,6 @@
             },
             "additionalProperties": false,
             "required": [
-              "id",
               "amount",
               "submittedOn"
             ]
@@ -297,7 +291,7 @@
             "type": "object",
             "properties": {
               "id": {
-                "description": "The ID for the coded out debts.",
+                "description": "The ID for the coded out debts. It will only be returned after the tax year has ended.",
                 "type": "number",
                 "multipleOf": 1,
                 "minimum": 1,
@@ -320,7 +314,6 @@
             },
             "additionalProperties": false,
             "required": [
-              "id",
               "amount",
               "submittedOn"
             ]
@@ -331,7 +324,7 @@
           "description": "Details of coded out in-year adjustments",
           "properties": {
             "id": {
-              "description": "The ID for the HMRC classified debts.",
+              "description": "The ID for the HMRC classified debts. It will only be returned after the tax year has ended.",
               "type": "number",
               "multipleOf": 1,
               "minimum": 1,
@@ -354,7 +347,6 @@
           },
           "additionalProperties": false,
           "required": [
-            "id",
             "amount",
             "submittedOn"
           ]

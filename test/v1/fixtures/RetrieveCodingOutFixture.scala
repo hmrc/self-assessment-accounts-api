@@ -107,4 +107,84 @@ object RetrieveCodingOutFixture {
        |}
      """.stripMargin
   ).as[JsObject]
+
+  def mtdResponseWithHateoasNoId(nino: String, taxYear: String, source: String): JsObject = Json.parse(
+    s"""
+       |{
+       |  "taxCodeComponents": {
+       |    "selfAssessmentUnderpayment": [
+       |      {
+       |        "amount": 0,
+       |        "relatedTaxYear": "$taxYear",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
+       |        "source": "$source"
+       |      }
+       |    ],
+       |    "payeUnderpayment": [
+       |      {
+       |        "amount": 0,
+       |        "relatedTaxYear": "$taxYear",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
+       |        "source": "$source"
+       |      }
+       |    ],
+       |    "debt": [
+       |      {
+       |        "amount": 0,
+       |        "relatedTaxYear": "$taxYear",
+       |        "submittedOn": "2021-08-24T14:15:22Z",
+       |        "source": "$source"
+       |      }
+       |    ],
+       |    "inYearAdjustment": {
+       |      "amount": 0,
+       |      "relatedTaxYear": "$taxYear",
+       |      "submittedOn": "2021-08-24T14:15:22Z",
+       |      "source": "$source"
+       |    }
+       |  },
+       |  "unmatchedCustomerSubmissions": {
+       |    "selfAssessmentUnderpayment": [
+       |      {
+       |        "amount": 0,
+       |        "submittedOn": "2021-08-24T14:15:22Z"
+       |      }
+       |    ],
+       |    "payeUnderpayment": [
+       |      {
+       |        "amount": 0,
+       |        "submittedOn": "2021-08-24T14:15:22Z"
+       |      }
+       |    ],
+       |    "debt": [
+       |      {
+       |        "amount": 0,
+       |        "submittedOn": "2021-08-24T14:15:22Z"
+       |      }
+       |    ],
+       |    "inYearAdjustment": {
+       |      "amount": 0,
+       |      "submittedOn": "2021-08-24T14:15:22Z"
+       |    }
+       |  },
+       |   "links": [
+       |      {
+       |         "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+       |         "method": "PUT",
+       |         "rel": "create-or-amend-coding-out-underpayments"
+       |      },
+       |      {
+       |         "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+       |         "method": "GET",
+       |         "rel": "self"
+       |      },
+       |      {
+       |         "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+       |         "method": "DELETE",
+       |         "rel": "delete-coding-out-underpayments"
+       |      }
+       |   ]
+       |}
+     """.stripMargin
+  ).as[JsObject]
 }

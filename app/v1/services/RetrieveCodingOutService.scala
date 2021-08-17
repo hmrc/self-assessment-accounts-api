@@ -19,7 +19,7 @@ package v1.services
 import cats.data.EitherT
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import utils.{CurrentDate, Logging}
 import v1.connectors.RetrieveCodingOutConnector
 import v1.controllers.EndpointLogContext
 import v1.models.errors._
@@ -31,7 +31,7 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)
+class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)(implicit currentDate: CurrentDate)
   extends DesResponseMappingSupport with Logging {
 
   def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(
@@ -42,7 +42,8 @@ class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
-    } yield desResponseWrapper
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateCodingOutResponse(desResponseWrapper, request.taxYear))
+    } yield mtdResponseWrapper
 
     result.value
   }

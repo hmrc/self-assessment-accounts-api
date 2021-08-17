@@ -16,9 +16,14 @@
 
 package v1.services
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import org.scalamock.handlers.CallHandler
 import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import utils.CurrentDate
 import v1.controllers.EndpointLogContext
+import v1.mocks.MockCurrentDate
 import v1.mocks.connectors.MockRetrieveCodingOutConnector
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
@@ -31,42 +36,42 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
-  val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
+  def unmatchedCustomerSubmissions(objectId: Option[BigInt]): UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
       0,
       "2021-08-24T14:15:22Z",
-      BigInt(12345678910L)
+      objectId
     )
 
-  val taxCodeComponents: TaxCodeComponents =
+  def taxCodeComponents(objectId: Option[BigInt]): TaxCodeComponents =
     TaxCodeComponents(
       0,
       Some("2021-22"),
       "2021-08-24T14:15:22Z",
       "hmrcHeld",
-      BigInt(12345678910L)
+      objectId
     )
 
-  val taxCodeComponentObject: TaxCodeComponentsObject =
+  def taxCodeComponentObject(objectId: Option[BigInt]): TaxCodeComponentsObject =
     TaxCodeComponentsObject(
-      Some(Seq(taxCodeComponents)),
-      Some(Seq(taxCodeComponents)),
-      Some(Seq(taxCodeComponents)),
-      Some(taxCodeComponents)
+      Some(Seq(taxCodeComponents(objectId))),
+      Some(Seq(taxCodeComponents(objectId))),
+      Some(Seq(taxCodeComponents(objectId))),
+      Some(taxCodeComponents(objectId))
     )
 
-  val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
+  def unmatchedCustomerSubmissionsObject(objectId: Option[BigInt]): UnmatchedCustomerSubmissionsObject =
     UnmatchedCustomerSubmissionsObject(
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(unmatchedCustomerSubmissions)
+      Some(Seq(unmatchedCustomerSubmissions(objectId))),
+      Some(Seq(unmatchedCustomerSubmissions(objectId))),
+      Some(Seq(unmatchedCustomerSubmissions(objectId))),
+      Some(unmatchedCustomerSubmissions(objectId))
     )
 
-  val retrieveCodingOutResponse: RetrieveCodingOutResponse =
+  def retrieveCodingOutResponse(objectId: Option[BigInt]): RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
-      Some(taxCodeComponentObject),
-      Some(unmatchedCustomerSubmissionsObject)
+      Some(taxCodeComponentObject(objectId)),
+      Some(unmatchedCustomerSubmissionsObject(objectId))
     )
 
   val requestData: RetrieveCodingOutParsedRequest =
@@ -76,7 +81,16 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
       source = Some("hmrcHeld")
     )
 
-  trait Test extends MockRetrieveCodingOutConnector {
+  trait Test extends MockRetrieveCodingOutConnector with MockCurrentDate {
+
+    implicit val dateProvider: CurrentDate     = mockCurrentDate
+    val dateTimeFormatter: DateTimeFormatter   = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+    def setupDateProvider(date: String): CallHandler[LocalDate] =
+      MockCurrentDate.getCurrentDate
+        .returns(LocalDate.parse(date, dateTimeFormatter))
+        .anyNumberOfTimes()
+
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveCodingOutParsedRequest", "retrieveCodingOut")
@@ -89,13 +103,51 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
   "RetrieveCodingOutService" when {
     "service call successful" must {
       "return mapped result" in new Test {
+        setupDateProvider("2022-04-06")
 
-        val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse
+        val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse(Some(BigInt(12345678910L)))
 
         MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
         await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
+      }
+
+    }
+
+    "validateCodingOutResponse" must {
+      "return a success if the tax year hasn't ended and there are ids present" in new Test {
+        setupDateProvider("2021-04-06")
+
+        val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse(Some(BigInt(12345678910L)))
+
+        MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
+
+        await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
+
+      }
+      "return a success if the tax year hasn't ended and there aren't ids present" in new Test {
+        setupDateProvider("2021-04-06")
+
+        val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse(None)
+
+        MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
+
+        await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
+
+      }
+      "return a failure if the tax year has ended and there no ideas present in the body" in new Test {
+        setupDateProvider("2022-04-06")
+
+        val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse(None)
+
+        MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
+
+        await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, DownstreamError))
+
       }
     }
 

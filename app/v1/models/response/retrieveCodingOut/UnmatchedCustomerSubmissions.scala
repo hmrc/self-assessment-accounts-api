@@ -21,13 +21,13 @@ import play.api.libs.functional.syntax._
 
 case class UnmatchedCustomerSubmissions(amount: BigDecimal,
                                         submittedOn: String,
-                                        id: BigInt)
+                                        id: Option[BigInt])
 
 object UnmatchedCustomerSubmissions {
   implicit val reads: Reads[UnmatchedCustomerSubmissions] = (
     (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "submittedOn").read[String] and
-      (JsPath \ "componentIdentifier").read[BigInt]
+      (JsPath \ "componentIdentifier").readNullable[BigInt]
     ) (UnmatchedCustomerSubmissions.apply _)
 
   implicit val writes: OWrites[UnmatchedCustomerSubmissions] = Json.writes[UnmatchedCustomerSubmissions]

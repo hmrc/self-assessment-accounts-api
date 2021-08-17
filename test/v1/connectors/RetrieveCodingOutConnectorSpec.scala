@@ -35,7 +35,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
     UnmatchedCustomerSubmissions(
       0,
       "2021-08-24T14:15:22Z",
-      BigInt(12345678910L)
+      Some(BigInt(12345678910L))
     )
 
   val taxCodeComponents: TaxCodeComponents =
@@ -44,7 +44,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
       Some("2021-22"),
       "2021-08-24T14:15:22Z",
       "hmrcHeld",
-      BigInt(12345678910L)
+      Some(BigInt(12345678910L))
     )
 
   val taxCodeComponentObject: TaxCodeComponentsObject =
