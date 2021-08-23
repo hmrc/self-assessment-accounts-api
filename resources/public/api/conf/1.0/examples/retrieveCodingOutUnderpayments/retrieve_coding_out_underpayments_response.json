@@ -4,7 +4,7 @@
       {
         "amount": 89.78,
         "relatedTaxYear": "2021-22",
-        "submittedOn": "2021-08-24T14:15:22Z",
+        "submittedOn": "2021-07-06T09:37:17.000Z",
         "source": "user",
         "id": 1234567891
       }
@@ -13,7 +13,7 @@
       {
         "amount": 14.45,
         "relatedTaxYear": "2021-22",
-        "submittedOn": "2021-08-24T14:15:22Z",
+        "submittedOn": "2021-07-06T09:37:17.000Z",
         "source": "user",
         "id": 1234567891
       }
@@ -22,7 +22,7 @@
       {
         "amount": 12.01,
         "relatedTaxYear": "2021-22",
-        "submittedOn": "2021-08-24T14:15:22Z",
+        "submittedOn": "2021-07-06T09:37:17.000Z",
         "source": "user",
         "id": 1234567891
       }
@@ -30,7 +30,7 @@
     "inYearAdjustment": {
       "amount": 75.99,
       "relatedTaxYear": "2021-22",
-      "submittedOn": "2021-08-24T14:15:22Z",
+      "submittedOn": "2021-07-06T09:37:17.000Z",
       "source": "user",
       "id": 1234567891
     }
@@ -39,27 +39,27 @@
     "selfAssessmentUnderpayment": [
       {
         "amount": 12.32,
-        "submittedOn": "2021-08-24T14:15:22Z",
+        "submittedOn": "2021-07-06T09:37:17.000Z",
         "id": 1234567891
       }
     ],
     "payeUnderpayment": [
       {
         "amount": 71.99,
-        "submittedOn": "2021-08-24T14:15:22Z",
+        "submittedOn": "2021-07-06T09:37:17.000Z",
         "id": 1234567891
       }
     ],
     "debt": [
       {
         "amount": 54.79,
-        "submittedOn": "2021-08-24T14:15:22Z",
+        "submittedOn": "2021-07-06T09:37:17.000Z",
         "id": 1234567891
       }
     ],
     "inYearAdjustment": {
       "amount": 56.74,
-      "submittedOn": "2021-08-24T14:15:22Z",
+      "submittedOn": "2021-07-06T09:37:17.000Z",
       "id": 1234567891
     }
   },
