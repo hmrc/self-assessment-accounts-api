@@ -135,8 +135,8 @@ class CreateOrAmendCodingOutControllerSpec
 
   def event(auditResponse: AuditResponse, requestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
     AuditEvent(
-      auditType = "CreateAmendCodingOutUnderpayments",
-      transactionName = "create-amend-coding-out-underpayments",
+      auditType = "CreateAmendCodingOutUnderpayment",
+      transactionName = "create-amend-coding-out-underpayment",
       detail = GenericAuditDetail(
         userType = "Individual",
         agentReferenceNumber = None,

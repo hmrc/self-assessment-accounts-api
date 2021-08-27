@@ -125,8 +125,8 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
                              (implicit hc: HeaderCarrier,
                               ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent(
-      auditType = "CreateAmendCodingOutUnderpayments",
-      transactionName = "create-amend-coding-out-underpayments",
+      auditType = "CreateAmendCodingOutUnderpayment",
+      transactionName = "create-amend-coding-out-underpayment",
       detail = details)
     auditService.auditEvent(event)
   }
