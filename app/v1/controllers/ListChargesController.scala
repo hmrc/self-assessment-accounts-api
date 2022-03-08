@@ -108,7 +108,7 @@ class ListChargesController @Inject()(val authService: EnrolmentsAuthService,
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError |
            FromDateFormatError | MissingFromDateError |
            ToDateFormatError | MissingToDateError |
@@ -116,6 +116,7 @@ class ListChargesController @Inject()(val authService: EnrolmentsAuthService,
            RuleDateRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _ => unhandledError(errorWrapper)
     }
   }
 

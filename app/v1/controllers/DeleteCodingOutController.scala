@@ -94,7 +94,7 @@ class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+    errorWrapper.error match {
       case NinoFormatError |
            BadRequestError |
            TaxYearFormatError |
@@ -102,6 +102,7 @@ class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService
            RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case CodingOutNotFoundError => NotFound(Json.toJson(errorWrapper))
+      case _ => unhandledError(errorWrapper)
     }
   }
 

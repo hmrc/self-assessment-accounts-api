@@ -92,11 +92,12 @@ class RetrieveCodingOutController @Inject()(val authService: EnrolmentsAuthServi
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
-    (errorWrapper.error: @unchecked) match {
+    errorWrapper.error match {
       case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError |
            RuleTaxYearRangeInvalidError | SourceFormatError => BadRequest(Json.toJson(errorWrapper))
       case CodingOutNotFoundError => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case _ => unhandledError(errorWrapper)
     }
   }
 }
