@@ -30,11 +30,11 @@ class ListPaymentsConnectorSpec extends ConnectorSpec {
   val nino: String = "AA123456A"
 
   val from: String = "2020-01-01"
-  val to: String = "2020-01-02"
+  val to: String   = "2020-01-02"
 
   val queryParams: Seq[(String, String)] = Seq(
     "dateFrom" -> from,
-    "dateTo" -> to
+    "dateTo"   -> to
   )
 
   private val response = ListPaymentsResponse(
@@ -80,7 +80,8 @@ class ListPaymentsConnectorSpec extends ConnectorSpec {
             dummyDesHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.listPayments(request)) shouldBe outcome
       }

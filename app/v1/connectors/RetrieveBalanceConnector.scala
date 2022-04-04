@@ -27,13 +27,12 @@ import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceConnector @Inject()(val http: HttpClient,
-                                         val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveBalanceConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveBalance(request: RetrieveBalanceParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveBalanceResponse]] = {
+  def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveBalanceResponse]] = {
 
     val nino = request.nino.nino
 
@@ -51,4 +50,5 @@ class RetrieveBalanceConnector @Inject()(val http: HttpClient,
       queryParams
     )
   }
+
 }

@@ -39,24 +39,25 @@ import v1.mocks.MockIdGenerator
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ListTransactionsControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockListTransactionsRequestParser
-  with MockListTransactionsService
-  with MockHateoasFactory
-  with HateoasLinks
-  with MockAuditService
-  with MockIdGenerator {
+class ListTransactionsControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockListTransactionsRequestParser
+    with MockListTransactionsService
+    with MockHateoasFactory
+    with HateoasLinks
+    with MockAuditService
+    with MockIdGenerator {
 
-  private val nino = "AA123456A"
+  private val nino          = "AA123456A"
   private val transactionId = "X1234567890A"
-  private val paymentId = "081203010024-000001"
-  private val from = "2018-05-05"
-  private val to = "2019-12-05"
+  private val paymentId     = "081203010024-000001"
+  private val from          = "2018-05-05"
+  private val to            = "2019-12-05"
   private val correlationId = "X-123"
 
-  private val rawRequest = ListTransactionsRawRequest(nino, Some(from), Some(to))
+  private val rawRequest    = ListTransactionsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListTransactionsParsedRequest(Nino(nino), from, to)
 
   private val listTransactionsResponse = fullMultipleItemsListTransactionsModel
@@ -156,8 +157,7 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
 
         MockHateoasFactory
           .wrapList(listTransactionsResponse, ListTransactionsHateoasData(nino, from, to))
-          .returns(HateoasWrapper(hateoasResponse,
-            Seq(listTransactionsHateoasLink, listChargesHateoasLink, listPaymentsHateoasLink)))
+          .returns(HateoasWrapper(hateoasResponse, Seq(listTransactionsHateoasLink, listChargesHateoasLink, listPaymentsHateoasLink)))
 
         val result: Future[Result] = controller.listTransactions(nino, Some(from), Some(to))(fakeGetRequest)
 
@@ -240,4 +240,5 @@ class ListTransactionsControllerSpec extends ControllerBaseSpec
       input.foreach(args => (serviceErrors _).tupled(args))
     }
   }
+
 }

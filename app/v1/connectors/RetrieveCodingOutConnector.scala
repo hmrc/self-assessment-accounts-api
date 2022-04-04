@@ -28,26 +28,24 @@ import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutConnector @Inject()(val http: HttpClient,
-                                           val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
+  def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
 
-
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
-    val source = request.source
+    val source  = request.source
 
     val baseUrl = s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 
-    if(source.isEmpty) {
+    if (source.isEmpty) {
       get(IfsUri[RetrieveCodingOutResponse](baseUrl))
     } else {
-      val queryParams = Seq("view" -> source).collect {
-        case (key, Some(value)) => key -> MtdSource.parser(value).toDownstreamSource
+      val queryParams = Seq("view" -> source).collect { case (key, Some(value)) =>
+        key -> MtdSource.parser(value).toDownstreamSource
       }
       get(
         IfsUri[RetrieveCodingOutResponse](baseUrl),
@@ -55,4 +53,5 @@ class RetrieveCodingOutConnector @Inject()(val http: HttpClient,
       )
     }
   }
+
 }

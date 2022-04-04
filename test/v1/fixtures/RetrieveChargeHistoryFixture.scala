@@ -79,8 +79,9 @@ object RetrieveChargeHistoryFixture {
     """.stripMargin
   )
 
-  def mtdResponseMultipleWithHateoas(nino: String, transactionId: String): JsObject = mtdResponseWithMultipleHHistory.as[JsObject] ++ Json.parse(
-    s"""
+  def mtdResponseMultipleWithHateoas(nino: String, transactionId: String): JsObject = mtdResponseWithMultipleHHistory.as[JsObject] ++ Json
+    .parse(
+      s"""
       |{
       |   "links":[
       |      {
@@ -96,22 +97,25 @@ object RetrieveChargeHistoryFixture {
       |   ]
       |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
 
-  val validNino = "AA123456A"
-  val validTransactionId = "ABC123"
-  val invalidNino = "A12344A"
+  val validNino            = "AA123456A"
+  val validTransactionId   = "ABC123"
+  val invalidNino          = "A12344A"
   val invalidTransactionId = "123456789012345678901234567890123456" // too long
 
   val validRetrieveChargeHistoryRawRequest: RetrieveChargeHistoryRawRequest =
     RetrieveChargeHistoryRawRequest(validNino, validTransactionId)
+
   val invalidRetrieveChargeHistoryRawRequestInvalidNino: RetrieveChargeHistoryRawRequest =
     RetrieveChargeHistoryRawRequest(invalidNino, validTransactionId)
+
   val invalidRetrieveChargeHistoryRawRequestInvalidTransactionId: RetrieveChargeHistoryRawRequest =
     RetrieveChargeHistoryRawRequest(validNino, invalidTransactionId)
+
   val invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId: RetrieveChargeHistoryRawRequest =
     RetrieveChargeHistoryRawRequest(invalidNino, invalidTransactionId)
-
 
   val chargeHistoryResponse: ChargeHistory =
     ChargeHistory(
@@ -147,4 +151,5 @@ object RetrieveChargeHistoryFixture {
         chargeHistoryResponse2
       )
     )
+
 }

@@ -31,6 +31,7 @@ trait MockListChargesRequestParser extends MockFactory {
     def parse(data: ListChargesRawRequest): CallHandler[Either[ErrorWrapper, ListChargesParsedRequest]] = {
       (mockListChargesRequestParser.parseRequest(_: ListChargesRawRequest)(_: String)).expects(data, *)
     }
+
   }
 
 }

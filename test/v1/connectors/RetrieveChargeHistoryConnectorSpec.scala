@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA123456A"
+  val nino: String          = "AA123456A"
   val transactionId: String = "anId"
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -55,10 +55,12 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
             dummyDesHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveChargeHistory(request)) shouldBe outcome
       }
     }
   }
+
 }

@@ -22,10 +22,10 @@ import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 
 object RetrieveBalanceFixture {
 
-  val validNino = "AA123456A"
+  val validNino   = "AA123456A"
   val invalidNino = "A12344A"
 
-  val validRetrieveBalanceRawRequest: RetrieveBalanceRawRequest = RetrieveBalanceRawRequest(validNino)
+  val validRetrieveBalanceRawRequest: RetrieveBalanceRawRequest   = RetrieveBalanceRawRequest(validNino)
   val invalidRetrieveBalanceRawRequest: RetrieveBalanceRawRequest = RetrieveBalanceRawRequest(invalidNino)
 
   val fullDesResponse: JsValue = Json.parse(
@@ -66,9 +66,9 @@ object RetrieveBalanceFixture {
     "links" -> JsArray(
       Seq(
         Json.obj(
-          "href" -> s"/accounts/self-assessment/$nino/balance",
+          "href"   -> s"/accounts/self-assessment/$nino/balance",
           "method" -> "GET",
-          "rel" -> "self"
+          "rel"    -> "self"
         )
       )
     )
@@ -80,7 +80,8 @@ object RetrieveBalanceFixture {
     payableDueDate = Some("2020-09-12"),
     pendingChargeDueAmount = BigDecimal(1000),
     pendingChargeDueDate = Some("2020-12-12"),
-    totalBalance = BigDecimal(1000))
+    totalBalance = BigDecimal(1000)
+  )
 
   val minimalDesResponse: JsValue = Json.parse(
     """
@@ -111,12 +112,14 @@ object RetrieveBalanceFixture {
       |""".stripMargin
   )
 
-  val minimalResponseModel: RetrieveBalanceResponse = RetrieveBalanceResponse(overdueAmount = BigDecimal(1000),
+  val minimalResponseModel: RetrieveBalanceResponse = RetrieveBalanceResponse(
+    overdueAmount = BigDecimal(1000),
     payableAmount = BigDecimal(2000),
     payableDueDate = None,
     pendingChargeDueAmount = BigDecimal(1000),
     pendingChargeDueDate = None,
-    totalBalance = BigDecimal(1000))
+    totalBalance = BigDecimal(1000)
+  )
 
   val InvalidDesResponse: JsValue = Json.parse(
     """
@@ -125,4 +128,5 @@ object RetrieveBalanceFixture {
       |}
       |""".stripMargin
   )
+
 }

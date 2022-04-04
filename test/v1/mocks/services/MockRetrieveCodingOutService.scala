@@ -34,10 +34,13 @@ trait MockRetrieveCodingOutService extends MockFactory {
 
   object MockRetrieveCodingOutService {
 
-    def retrieveCodingOut(request: RetrieveCodingOutParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]]] = {
+    def retrieveCodingOut(
+        request: RetrieveCodingOutParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]]] = {
       (mockRetrieveCodingOutService
         .retrieveCodingOut(_: RetrieveCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(request, *, *, *, *)
     }
+
   }
+
 }

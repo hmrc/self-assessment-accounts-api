@@ -34,12 +34,20 @@ trait MockRetrieveChargeHistoryService extends MockFactory {
 
   object MockRetrieveChargeHistoryService {
 
-    def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
-      (mockRetrieveChargeHistoryService
-        .retrieveChargeHistory(_: RetrieveChargeHistoryParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+    def retrieveChargeHistory(
+        request: RetrieveChargeHistoryParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
+      (
+        mockRetrieveChargeHistoryService
+          .retrieveChargeHistory(_: RetrieveChargeHistoryParsedRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: EndpointLogContext,
+            _: String
+          )
+        )
         .expects(request, *, *, *, *)
     }
+
   }
 
 }

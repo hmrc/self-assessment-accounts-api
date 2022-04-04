@@ -36,22 +36,23 @@ import v1.services.{AuditService, EnrolmentsAuthService, ListPaymentsService, Mt
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
-                                       val lookupService: MtdIdLookupService,
-                                       requestParser: ListPaymentsRequestParser,
-                                       service: ListPaymentsService,
-                                       hateoasFactory: HateoasFactory,
-                                       auditService: AuditService,
-                                       cc: ControllerComponents,
-                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+class ListPaymentsController @Inject() (val authService: EnrolmentsAuthService,
+                                        val lookupService: MtdIdLookupService,
+                                        requestParser: ListPaymentsRequestParser,
+                                        service: ListPaymentsService,
+                                        hateoasFactory: HateoasFactory,
+                                        auditService: AuditService,
+                                        cc: ControllerComponents,
+                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListPaymentsController", endpointName = "listPayments")
 
   def listPayments(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -60,7 +61,7 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
       val rawData = ListPaymentsRawRequest(nino, from, to)
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.list(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
@@ -78,7 +79,8 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
               params = Map("nino" -> nino),
               requestBody = None,
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, None, None))
+              auditResponse = AuditResponse(httpStatus = OK, None, None)
+            )
           )
 
           Ok(Json.toJson(vendorResponse))
@@ -87,7 +89,7 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
         }
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -95,7 +97,7 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
-            params= Map("nino" -> nino),
+            params = Map("nino" -> nino),
             requestBody = None,
             `X-CorrelationId` = resCorrelationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
@@ -106,9 +108,7 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
       }.merge
     }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 
     val event = AuditEvent(
       auditType = "listSelfAssessmentPayments",
@@ -119,17 +119,15 @@ class ListPaymentsController @Inject()(val authService: EnrolmentsAuthService,
     auditService.auditEvent(event)
   }
 
-
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError |
-           FromDateFormatError | MissingFromDateError |
-           ToDateFormatError | MissingToDateError |
-           RangeToDateBeforeFromDateError | RuleFromDateNotSupportedError |
-           RuleDateRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | FromDateFormatError | MissingFromDateError | ToDateFormatError | MissingToDateError |
+          RangeToDateBeforeFromDateError | RuleFromDateNotSupportedError | RuleDateRangeInvalidError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case _               => unhandledError(errorWrapper)
     }
   }
+
 }

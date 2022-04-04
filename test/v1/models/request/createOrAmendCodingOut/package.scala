@@ -30,24 +30,21 @@ package object createOrAmendCodingOut {
 
   val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = taxCodeComponents)
 
-  val taxCodeComponentMtdJson: JsValue = Json.parse(
-    """
+  val taxCodeComponentMtdJson: JsValue = Json.parse("""
       |{
       |  "amount": 123.45,
       |  "id": 12345
       |}
       |""".stripMargin)
 
-  val taxCodeComponentDesJson: JsValue = Json.parse(
-    """
+  val taxCodeComponentDesJson: JsValue = Json.parse("""
       |{
       |  "componentIdentifier": 12345,
       |  "amount": 123.45
       |}
       |""".stripMargin)
 
-  val taxCodeComponentsMtdJson: JsValue = Json.parse(
-    s"""
+  val taxCodeComponentsMtdJson: JsValue = Json.parse(s"""
       |{
       |  "payeUnderpayment": [
       |    $taxCodeComponentMtdJson
@@ -62,8 +59,7 @@ package object createOrAmendCodingOut {
       |}
       |""".stripMargin)
 
-  val taxCodeComponentsDesJson: JsValue = Json.parse(
-    s"""
+  val taxCodeComponentsDesJson: JsValue = Json.parse(s"""
       |{
       |  "payeUnderpayment": [
       |    $taxCodeComponentDesJson
@@ -78,17 +74,16 @@ package object createOrAmendCodingOut {
       |}
       |""".stripMargin)
 
-  val createOrAmendCodingOutMtdJson: JsValue = Json.parse(
-    s"""
+  val createOrAmendCodingOutMtdJson: JsValue = Json.parse(s"""
       |{
       |  "taxCodeComponents": $taxCodeComponentsMtdJson
       |}
       |""".stripMargin)
 
-  val createOrAmendCodingOutDesJson: JsValue = Json.parse(
-    s"""
+  val createOrAmendCodingOutDesJson: JsValue = Json.parse(s"""
       |{
       |  "taxCodeComponents": $taxCodeComponentsDesJson
       |}
       |""".stripMargin)
+
 }

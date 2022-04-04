@@ -83,4 +83,5 @@ class RetrieveTransactionDetailsResponseSpec extends UnitSpec with RetrieveTrans
       }
     }
   }
+
 }

@@ -30,11 +30,19 @@ trait MockRetrieveTransactionDetailsConnector extends MockFactory {
 
   object MockRetrieveTransactionDetailsConnector {
 
-    def retrieveDetails(requestData: RetrieveTransactionDetailsParsedRequest):
-    CallHandler[Future[DownstreamOutcome[RetrieveTransactionDetailsResponse]]] = {
-      (mockRetrieveTransactionDetailsConnector
-        .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
+    def retrieveDetails(
+        requestData: RetrieveTransactionDetailsParsedRequest): CallHandler[Future[DownstreamOutcome[RetrieveTransactionDetailsResponse]]] = {
+      (
+        mockRetrieveTransactionDetailsConnector
+          .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

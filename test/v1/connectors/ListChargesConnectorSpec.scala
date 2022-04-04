@@ -31,17 +31,17 @@ class ListChargesConnectorSpec extends ConnectorSpec {
   val nino = "AA123456A"
 
   val from: String = "2020-01-01"
-  val to: String = "2020-01-02"
+  val to: String   = "2020-01-02"
 
   val queryParams: Seq[(String, String)] = Seq(
-    "dateFrom" -> from,
-    "dateTo" -> to,
-    "onlyOpenItems" -> "false",
-    "includeLocks" -> "true",
-    "calculateAccruedInterest" -> "true",
-    "removePOA" -> "true",
+    "dateFrom"                   -> from,
+    "dateTo"                     -> to,
+    "onlyOpenItems"              -> "false",
+    "includeLocks"               -> "true",
+    "calculateAccruedInterest"   -> "true",
+    "removePOA"                  -> "true",
     "customerPaymentInformation" -> "true",
-    "includeStatistical" -> "false"
+    "includeStatistical"         -> "false"
   )
 
   private val response = ListChargesResponse(
@@ -77,10 +77,12 @@ class ListChargesConnectorSpec extends ConnectorSpec {
             dummyDesHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.listCharges(request)) shouldBe outcome
       }
     }
   }
+
 }

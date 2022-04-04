@@ -25,7 +25,7 @@ import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetails
 
 class DesResponseMappingSupportSpec extends UnitSpec {
 
-  implicit val logContext: EndpointLogContext = EndpointLogContext("ctrl", "ep")
+  implicit val logContext: EndpointLogContext         = EndpointLogContext("ctrl", "ep")
   val mapping: DesResponseMappingSupport with Logging = new DesResponseMappingSupport with Logging {}
 
   val correlationId: String = "someCorrelationId"
@@ -38,10 +38,10 @@ class DesResponseMappingSupportSpec extends UnitSpec {
 
   object ErrorBvr extends MtdError("msg", "bvr")
 
-  val errorCodeMap : PartialFunction[String, MtdError] = {
+  val errorCodeMap: PartialFunction[String, MtdError] = {
     case "ERR1" => Error1
     case "ERR2" => Error2
-    case "DS" => DownstreamError
+    case "DS"   => DownstreamError
   }
 
   "validateTransactionDetailsResponse" when {
@@ -74,7 +74,7 @@ class DesResponseMappingSupportSpec extends UnitSpec {
 
       "the error code is not in the map provided" must {
         "default to DownstreamError and wrap" in {
-          mapping.mapDesErrors (errorCodeMap)(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("UNKNOWN")))) shouldBe
+          mapping.mapDesErrors(errorCodeMap)(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("UNKNOWN")))) shouldBe
             ErrorWrapper(correlationId, DownstreamError)
         }
       }

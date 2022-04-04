@@ -30,7 +30,9 @@ class RetrieveChargeHistoryValidator extends Validator[RetrieveChargeHistoryRawR
       TransactionIdValidation.validate(data.transactionId)
     )
   }
+
   override def validate(data: RetrieveChargeHistoryRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
+
 }

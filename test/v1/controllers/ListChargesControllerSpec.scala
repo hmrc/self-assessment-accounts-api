@@ -38,21 +38,22 @@ import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditRespons
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ListChargesControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockListChargesRequestParser
-  with MockListChargesService
-  with MockHateoasFactory
-  with MockAuditService
-  with HateoasLinks
-  with MockIdGenerator {
+class ListChargesControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockListChargesRequestParser
+    with MockListChargesService
+    with MockHateoasFactory
+    with MockAuditService
+    with HateoasLinks
+    with MockIdGenerator {
 
-  private val nino = "AA123456A"
-  private val from = "2018-10-1"
-  private val to = "2019-10-1"
+  private val nino          = "AA123456A"
+  private val from          = "2018-10-1"
+  private val to            = "2019-10-1"
   private val correlationId = "X-123"
-  private val rawRequest = ListChargesRawRequest(nino, Some(from), Some(to))
+  private val rawRequest    = ListChargesRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListChargesParsedRequest(Nino(nino), from, to)
 
   trait Test {
@@ -98,7 +99,8 @@ class ListChargesControllerSpec extends ControllerBaseSpec
   private val transactionDetailHateoasLink2 =
     Link(
       href = "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
-      method = GET, rel = RETRIEVE_TRANSACTION_DETAILS
+      method = GET,
+      rel = RETRIEVE_TRANSACTION_DETAILS
     )
 
   private val listChargesHateoasLink =
@@ -117,16 +119,16 @@ class ListChargesControllerSpec extends ControllerBaseSpec
 
   private val hateoasResponse = ListChargesResponse(
     Seq(
-      HateoasWrapper(fullChargeModel,
+      HateoasWrapper(
+        fullChargeModel,
         Seq(
           transactionDetailHateoasLink1
-        )
-      ),
-      HateoasWrapper(fullChargeModel,
+        )),
+      HateoasWrapper(
+        fullChargeModel,
         Seq(
           transactionDetailHateoasLink2
-        )
-      )
+        ))
     )
   )
 
@@ -229,4 +231,5 @@ class ListChargesControllerSpec extends ControllerBaseSpec
       }
     }
   }
+
 }

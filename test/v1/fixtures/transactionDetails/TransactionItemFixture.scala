@@ -263,15 +263,8 @@ trait TransactionItemFixture {
     dueDate = None,
     paymentMethod = None,
     paymentId = None,
-    subItems = Seq(SubItem(None,
-      Some(100.11),
-      Some("2021-01-31"),
-      Some("Incoming payment"),
-      None,
-      Some(100.11),
-      Some("2018-08-13"),
-      Some("BACS RECEIPTS"),
-      None))
+    subItems = Seq(
+      SubItem(None, Some(100.11), Some("2021-01-31"), Some("Incoming payment"), None, Some(100.11), Some("2018-08-13"), Some("BACS RECEIPTS"), None))
   )
 
   val mtdJsonCharge: JsValue = Json.parse(
@@ -373,4 +366,5 @@ trait TransactionItemFixture {
       |}
     """.stripMargin
   )
+
 }

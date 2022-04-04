@@ -24,10 +24,7 @@ import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v1.models.hateoas.{HateoasData, Link}
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
-case class RetrieveAllocationsResponse[I](amount: Option[BigDecimal],
-                                          method: Option[String],
-                                          transactionDate: Option[String],
-                                          allocations: Seq[I])
+case class RetrieveAllocationsResponse[I](amount: Option[BigDecimal], method: Option[String], transactionDate: Option[String], allocations: Seq[I])
 
 object RetrieveAllocationsResponse extends HateoasLinks {
 
@@ -35,13 +32,14 @@ object RetrieveAllocationsResponse extends HateoasLinks {
     (JsPath \ "paymentDetails" \\ "paymentAmount").readNullable[BigDecimal] and
       (JsPath \ "paymentDetails" \\ "paymentMethod").readNullable[String] and
       (JsPath \ "paymentDetails" \\ "valueDate").readNullable[String] and
-      (JsPath \ "paymentDetails" \\ "sapClearingDocsDetails").readNullable[Seq[I]]
+      (JsPath \ "paymentDetails" \\ "sapClearingDocsDetails")
+        .readNullable[Seq[I]]
         .map(_.map(_.filterNot(item => item == AllocationDetail.emptyAllocation)))
         .map {
           case Some(notEmpty) => notEmpty
-          case _ => Seq.empty[I]
+          case _              => Seq.empty[I]
         }
-    ) (RetrieveAllocationsResponse.apply(_, _, _, _))
+  )(RetrieveAllocationsResponse.apply(_, _, _, _))
 
   implicit def writes[I: Writes]: OWrites[RetrieveAllocationsResponse[I]] =
     Json.writes[RetrieveAllocationsResponse[I]]
@@ -60,9 +58,11 @@ object RetrieveAllocationsResponse extends HateoasLinks {
         retrievePaymentAllocations(appConfig, nino, paymentId, isSelf = true)
       )
     }
+
   }
 
   implicit object ResponseFunctor extends Functor[RetrieveAllocationsResponse] {
+
     override def map[A, B](fa: RetrieveAllocationsResponse[A])(f: A => B): RetrieveAllocationsResponse[B] =
       RetrieveAllocationsResponse(
         amount = fa.amount,
@@ -70,6 +70,7 @@ object RetrieveAllocationsResponse extends HateoasLinks {
         transactionDate = fa.transactionDate,
         allocations = fa.allocations.map(f)
       )
+
   }
 
 }

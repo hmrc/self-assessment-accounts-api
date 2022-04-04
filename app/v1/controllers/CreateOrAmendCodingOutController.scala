@@ -36,22 +36,23 @@ import v1.services.{AuditService, CreateOrAmendCodingOutService, EnrolmentsAuthS
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuthService,
-                                                 val lookupService: MtdIdLookupService,
-                                                 parser: CreateOrAmendCodingOutParser,
-                                                 service: CreateOrAmendCodingOutService,
-                                                 hateoasFactory: HateoasFactory,
-                                                 auditService: AuditService,
-                                                 cc: ControllerComponents,
-                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAuthService,
+                                                  val lookupService: MtdIdLookupService,
+                                                  parser: CreateOrAmendCodingOutParser,
+                                                  service: CreateOrAmendCodingOutService,
+                                                  hateoasFactory: HateoasFactory,
+                                                  auditService: AuditService,
+                                                  cc: ControllerComponents,
+                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "CreateOrAmendCodingOutController", endpointName = "CreateOrAmendCodingOut")
 
   def createOrAmendCodingOut(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(message = s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
         s"with correlationId : $correlationId")
@@ -59,7 +60,7 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
       val rawData = CreateOrAmendCodingOutRawRequest(nino, taxYear, request.body)
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](parser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
           serviceResponse <- EitherT(service.amend(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrap(serviceResponse.responseData, CreateOrAmendCodingOutHateoasData(nino, taxYear)).asRight[ErrorWrapper]
@@ -85,7 +86,7 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
 
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -107,28 +108,18 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case NinoFormatError |
-           BadRequestError |
-           TaxYearFormatError |
-           RuleTaxYearNotSupportedError |
-           RuleTaxYearRangeInvalidError |
-           RuleTaxYearNotEndedError |
-           MtdErrorWithCustomMessage(ValueFormatError.code) |
-           MtdErrorWithCustomMessage(IdFormatError.code) |
-           MtdErrorWithCustomMessage(RuleIncorrectOrEmptyBodyError.code) =>
+      case NinoFormatError | BadRequestError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
+          RuleTaxYearNotEndedError | MtdErrorWithCustomMessage(ValueFormatError.code) | MtdErrorWithCustomMessage(IdFormatError.code) |
+          MtdErrorWithCustomMessage(RuleIncorrectOrEmptyBodyError.code) =>
         BadRequest(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case _               => unhandledError(errorWrapper)
     }
   }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent(
-      auditType = "CreateAmendCodingOutUnderpayment",
-      transactionName = "create-amend-coding-out-underpayment",
-      detail = details)
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent(auditType = "CreateAmendCodingOutUnderpayment", transactionName = "create-amend-coding-out-underpayment", detail = details)
     auditService.auditEvent(event)
   }
+
 }

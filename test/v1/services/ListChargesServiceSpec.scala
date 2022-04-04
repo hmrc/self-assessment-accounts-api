@@ -33,25 +33,27 @@ class ListChargesServiceSpec extends ServiceSpec {
   private val nino = Nino("AA123456A")
 
   private val from = "2020-01-01"
-  private val to = "2020-01-02"
+  private val to   = "2020-01-02"
 
-  private val request = ListChargesParsedRequest(nino, from, to)
+  private val request  = ListChargesParsedRequest(nino, from, to)
   private val response = ListChargesResponse(Seq(fullChargeModel))
 
   trait Test extends MockListChargesConnector {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new ListChargesService(
       listChargesConnector = mockListChargesConnector
     )
+
   }
 
   "service" when {
     "connector call is successful" should {
       "return a Right(ResponseWrapper) when the charges list is not empty" in new Test {
-        MockListChargesConnector.retrieve(request)
+        MockListChargesConnector
+          .retrieve(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         await(service.list(request)) shouldBe Right(ResponseWrapper(correlationId, response))
@@ -62,31 +64,32 @@ class ListChargesServiceSpec extends ServiceSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"map connector error code [$desErrorCode] to MTD error code [${error.code}]" in new Test {
 
-          MockListChargesConnector.retrieve(request)
+          MockListChargesConnector
+            .retrieve(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.list(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
       val input: Seq[(String, MtdError)] = Seq(
-        "INVALID_IDTYPE" -> DownstreamError,
-        "INVALID_IDNUMBER" -> NinoFormatError,
-        "INVALID_REGIME_TYPE" -> DownstreamError,
-        "INVALID_DATE_FROM" -> FromDateFormatError,
-        "INVALID_DATE_TO" -> ToDateFormatError,
-        "NO_DATA_FOUND" -> NotFoundError,
-        "SERVER_ERROR" -> DownstreamError,
-        "SERVICE_UNAVAILABLE" -> DownstreamError,
-        "INVALID_DOC_NUMBER" -> DownstreamError,
-        "INVALID_ONLY_OPEN_ITEMS" -> DownstreamError,
-        "INVALID_INCLUDE_LOCKS" -> DownstreamError,
-        "INVALID_CALCULATE_ACCRUED_INTEREST" -> DownstreamError,
+        "INVALID_IDTYPE"                       -> DownstreamError,
+        "INVALID_IDNUMBER"                     -> NinoFormatError,
+        "INVALID_REGIME_TYPE"                  -> DownstreamError,
+        "INVALID_DATE_FROM"                    -> FromDateFormatError,
+        "INVALID_DATE_TO"                      -> ToDateFormatError,
+        "NO_DATA_FOUND"                        -> NotFoundError,
+        "SERVER_ERROR"                         -> DownstreamError,
+        "SERVICE_UNAVAILABLE"                  -> DownstreamError,
+        "INVALID_DOC_NUMBER"                   -> DownstreamError,
+        "INVALID_ONLY_OPEN_ITEMS"              -> DownstreamError,
+        "INVALID_INCLUDE_LOCKS"                -> DownstreamError,
+        "INVALID_CALCULATE_ACCRUED_INTEREST"   -> DownstreamError,
         "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
-        "INVALID_DATE_RANGE" -> RuleDateRangeInvalidError,
-        "INVALID_REQUEST" -> DownstreamError,
-        "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> DownstreamError,
-        "INVALID_INCLUDE_STATISTICAL" -> DownstreamError,
-        "REQUEST_NOT_PROCESSED" -> DownstreamError
+        "INVALID_DATE_RANGE"                   -> RuleDateRangeInvalidError,
+        "INVALID_REQUEST"                      -> DownstreamError,
+        "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> DownstreamError,
+        "INVALID_INCLUDE_STATISTICAL"          -> DownstreamError,
+        "REQUEST_NOT_PROCESSED"                -> DownstreamError
       )
 
       input.foreach(args => (serviceError _).tupled(args))

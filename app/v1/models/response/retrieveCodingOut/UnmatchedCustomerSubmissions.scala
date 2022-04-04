@@ -19,16 +19,15 @@ package v1.models.response.retrieveCodingOut
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import play.api.libs.functional.syntax._
 
-case class UnmatchedCustomerSubmissions(amount: BigDecimal,
-                                        submittedOn: String,
-                                        id: Option[BigInt])
+case class UnmatchedCustomerSubmissions(amount: BigDecimal, submittedOn: String, id: Option[BigInt])
 
 object UnmatchedCustomerSubmissions {
+
   implicit val reads: Reads[UnmatchedCustomerSubmissions] = (
     (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "submittedOn").read[String] and
       (JsPath \ "componentIdentifier").readNullable[BigInt]
-    ) (UnmatchedCustomerSubmissions.apply _)
+  )(UnmatchedCustomerSubmissions.apply _)
 
   implicit val writes: OWrites[UnmatchedCustomerSubmissions] = Json.writes[UnmatchedCustomerSubmissions]
 }

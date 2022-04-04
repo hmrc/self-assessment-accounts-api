@@ -50,4 +50,5 @@ class RetrieveBalanceResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

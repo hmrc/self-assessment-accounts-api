@@ -31,7 +31,7 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
   trait Test extends MockRetrieveTransactionDetailsConnector {
 
     private val transactionId = "0001"
-    private val nino = "AA123456A"
+    private val nino          = "AA123456A"
 
     val requestData: RetrieveTransactionDetailsParsedRequest = RetrieveTransactionDetailsParsedRequest(
       nino = Nino(nino),
@@ -46,6 +46,7 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
     val service = new RetrieveTransactionDetailsService(
       connector = mockRetrieveTransactionDetailsConnector
     )
+
   }
 
   "RetrieveTransactionDetailsService" when {
@@ -85,7 +86,8 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
 
           val response = Right(ResponseWrapper(correlationId, responseModel))
 
-          MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
+          MockRetrieveTransactionDetailsConnector
+            .retrieveDetails(requestData)
             .returns(Future.successful(response))
 
           await(service.retrieveTransactionDetails(requestData)) shouldBe response
@@ -99,7 +101,8 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
             transactionItems = Seq.empty[TransactionItem]
           )
 
-          MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
+          MockRetrieveTransactionDetailsConnector
+            .retrieveDetails(requestData)
             .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
           await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(correlationId, NoTransactionDetailsFoundError, None))
@@ -111,7 +114,8 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned" in new Test {
 
-            MockRetrieveTransactionDetailsConnector.retrieveDetails(requestData)
+            MockRetrieveTransactionDetailsConnector
+              .retrieveDetails(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -142,4 +146,5 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

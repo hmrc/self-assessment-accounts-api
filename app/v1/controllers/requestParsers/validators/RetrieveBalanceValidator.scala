@@ -29,7 +29,9 @@ class RetrieveBalanceValidator extends Validator[RetrieveBalanceRawRequest] {
       NinoValidation.validate(data.nino)
     )
   }
+
   override def validate(data: RetrieveBalanceRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
+
 }

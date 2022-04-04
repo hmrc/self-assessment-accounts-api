@@ -29,20 +29,22 @@ object StandardDesHttpParser extends HttpParser {
 
   // Return Right[DesResponse[Unit]] as success response has no body - no need to assign it a value
   implicit def readsEmpty(implicit successCode: SuccessCode = SuccessCode(NO_CONTENT)): HttpReads[DownstreamOutcome[Unit]] =
-    (_: String, url: String, response: HttpResponse) => doRead(url, response) { correlationId =>
-      Right(ResponseWrapper(correlationId, ()))
-    }
+    (_: String, url: String, response: HttpResponse) =>
+      doRead(url, response) { correlationId =>
+        Right(ResponseWrapper(correlationId, ()))
+      }
 
   implicit def reads[A: Reads](implicit successCode: SuccessCode = SuccessCode(OK)): HttpReads[DownstreamOutcome[A]] =
-    (_: String, url: String, response: HttpResponse) => doRead(url, response) { correlationId =>
-      response.validateJson[A] match {
-        case Some(ref) => Right(ResponseWrapper(correlationId, ref))
-        case None => Left(ResponseWrapper(correlationId, OutboundError(DownstreamError)))
+    (_: String, url: String, response: HttpResponse) =>
+      doRead(url, response) { correlationId =>
+        response.validateJson[A] match {
+          case Some(ref) => Right(ResponseWrapper(correlationId, ref))
+          case None      => Left(ResponseWrapper(correlationId, OutboundError(DownstreamError)))
+        }
       }
-    }
 
-  private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DownstreamOutcome[A])(
-    implicit successCode: SuccessCode): DownstreamOutcome[A] = {
+  private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DownstreamOutcome[A])(implicit
+      successCode: SuccessCode): DownstreamOutcome[A] = {
 
     val correlationId = retrieveCorrelationId(response)
 
@@ -59,9 +61,9 @@ object StandardDesHttpParser extends HttpParser {
           "[StandardDesHttpParser][read] - " +
             s"Success response received from DES with correlationId: $correlationId when calling $url")
         successOutcomeFactory(correlationId)
-      case BAD_REQUEST | NOT_FOUND | FORBIDDEN
-           | CONFLICT | UNPROCESSABLE_ENTITY => Left(ResponseWrapper(correlationId, parseErrors(response)))
-      case _                                 => Left(ResponseWrapper(correlationId, OutboundError(DownstreamError)))
+      case BAD_REQUEST | NOT_FOUND | FORBIDDEN | CONFLICT | UNPROCESSABLE_ENTITY => Left(ResponseWrapper(correlationId, parseErrors(response)))
+      case _ => Left(ResponseWrapper(correlationId, OutboundError(DownstreamError)))
     }
   }
+
 }

@@ -36,6 +36,7 @@ trait MockListChargesConnector extends MockFactory {
         .listCharges(_: ListChargesParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
 
 }

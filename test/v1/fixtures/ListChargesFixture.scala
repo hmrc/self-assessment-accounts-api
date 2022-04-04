@@ -105,8 +105,7 @@ object ListChargesFixture {
       """.stripMargin
   )
 
-  val ListChargesMtdResponseWithHateoas: JsValue = Json.parse(
-    """
+  val ListChargesMtdResponseWithHateoas: JsValue = Json.parse("""
        |{
        |  "charges":[
        |    {

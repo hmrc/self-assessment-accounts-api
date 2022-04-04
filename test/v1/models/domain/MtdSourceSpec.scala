@@ -35,4 +35,5 @@ class MtdSourceSpec extends UnitSpec with EnumJsonSpecSupport {
       MtdSource.latest.toDownstreamSource shouldBe "LATEST"
     }
   }
+
 }

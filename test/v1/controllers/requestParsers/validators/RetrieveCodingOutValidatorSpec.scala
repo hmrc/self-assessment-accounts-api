@@ -24,9 +24,9 @@ import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
 
 class RetrieveCodingOutValidatorSpec extends UnitSpec {
 
-  private val validNino = "AA111111A"
+  private val validNino    = "AA111111A"
   private val validTaxYear = "2021-22"
-  private val validSource = Some("hmrcHeld")
+  private val validSource  = Some("hmrcHeld")
 
   class Test extends MockAppConfig {
 
@@ -37,56 +37,58 @@ class RetrieveCodingOutValidatorSpec extends UnitSpec {
     MockAppConfig.minimumPermittedTaxYear
       .returns(2022)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
     "return no errors" when {
-      "a valid request is supplied" in new Test{
+      "a valid request is supplied" in new Test {
         validator.validate(RetrieveCodingOutRawRequest(validNino, validTaxYear, validSource)) shouldBe Nil
       }
     }
 
     "return NinoFormatError error" when {
-      "an invalid nino is supplied" in new Test{
+      "an invalid nino is supplied" in new Test {
         validator.validate(RetrieveCodingOutRawRequest("badNino", validTaxYear, validSource)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
-      "invalid taxYear is supplied" in new Test  {
+      "invalid taxYear is supplied" in new Test {
         validator.validate(RetrieveCodingOutRawRequest(validNino, "badTaxYear", validSource)) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return SourceFormatError error" when {
-      "invalid source is supplied" in new Test  {
+      "invalid source is supplied" in new Test {
         validator.validate(RetrieveCodingOutRawRequest(validNino, validTaxYear, Some("badSource"))) shouldBe
           List(SourceFormatError)
       }
     }
 
     "return RuleTaxYearNotSupportedError error" when {
-      "a taxYear supplied is not supported" in new Test  {
+      "a taxYear supplied is not supported" in new Test {
         validator.validate(RetrieveCodingOutRawRequest(validNino, "2020-21", validSource)) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return RuleTaxYearRangeInvalid error" when {
-      "an invalid tax year range is supplied" in new Test  {
+      "an invalid tax year range is supplied" in new Test {
         validator.validate(RetrieveCodingOutRawRequest(validNino, "2020-22", validSource)) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors" in new Test  {
+      "request supplied has multiple errors" in new Test {
         validator.validate(RetrieveCodingOutRawRequest("badNino", "badTaxYear", Some("badSource"))) shouldBe
           List(NinoFormatError, TaxYearFormatError, SourceFormatError)
       }
     }
 
   }
+
 }

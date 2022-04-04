@@ -22,15 +22,18 @@ import v1.controllers.requestParsers.validators.DeleteCodingOutValidator
 import v1.models.errors.MtdError
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
 
-trait MockDeleteCodingOutValidator extends MockFactory{
+trait MockDeleteCodingOutValidator extends MockFactory {
 
   val mockValidator: DeleteCodingOutValidator = mock[DeleteCodingOutValidator]
 
   object MockValidator {
+
     def validate(data: DeleteCodingOutRawRequest): CallHandler1[DeleteCodingOutRawRequest, List[MtdError]] = {
-      (mockValidator.validate(_: DeleteCodingOutRawRequest))
+      (mockValidator
+        .validate(_: DeleteCodingOutRawRequest))
         .expects(data)
     }
+
   }
 
 }

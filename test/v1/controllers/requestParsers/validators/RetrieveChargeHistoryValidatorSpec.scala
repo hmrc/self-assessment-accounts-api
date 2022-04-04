@@ -49,4 +49,5 @@ class RetrieveChargeHistoryValidatorSpec extends UnitSpec {
       }
     }
   }
+
 }

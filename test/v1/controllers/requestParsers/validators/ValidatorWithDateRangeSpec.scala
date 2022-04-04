@@ -23,7 +23,7 @@ import v1.models.request.RawDataWithDateRange
 class ValidatorWithDateRangeSpec extends UnitSpec {
 
   case class TestRawDataWithDateRange(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange
-  class TestValidatorWithDateRange extends ValidatorWithDateRange[TestRawDataWithDateRange]
+  class TestValidatorWithDateRange                                                            extends ValidatorWithDateRange[TestRawDataWithDateRange]
   val validator = new TestValidatorWithDateRange
 
   "validation" should {
@@ -82,4 +82,5 @@ class ValidatorWithDateRangeSpec extends UnitSpec {
       }
     }
   }
+
 }

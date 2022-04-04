@@ -133,4 +133,5 @@ class TransactionItemSpec extends UnitSpec with TransactionItemFixture {
       }
     }
   }
+
 }

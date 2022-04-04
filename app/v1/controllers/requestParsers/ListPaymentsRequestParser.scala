@@ -21,9 +21,10 @@ import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.ListPaymentsValidator
 import v1.models.request.listPayments.{ListPaymentsParsedRequest, ListPaymentsRawRequest}
 
-class ListPaymentsRequestParser @Inject()(val validator: ListPaymentsValidator)
-  extends RequestParser[ListPaymentsRawRequest, ListPaymentsParsedRequest] {
+class ListPaymentsRequestParser @Inject() (val validator: ListPaymentsValidator)
+    extends RequestParser[ListPaymentsRawRequest, ListPaymentsParsedRequest] {
 
   override protected def requestFor(data: ListPaymentsRawRequest): ListPaymentsParsedRequest =
     ListPaymentsParsedRequest(Nino(data.nino), data.from.get, data.to.get)
+
 }

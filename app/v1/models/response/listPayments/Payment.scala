@@ -21,15 +21,16 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 case class Payment(paymentId: Option[String], amount: Option[BigDecimal], method: Option[String], transactionDate: Option[String])
 
 object Payment {
+
   implicit val reads: Reads[Payment] = for {
-    paymentLot <- (JsPath \ "paymentLot").readNullable[String]
-    paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
-    amount <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
-    method <- (JsPath \ "paymentMethod").readNullable[String]
+    paymentLot      <- (JsPath \ "paymentLot").readNullable[String]
+    paymentLotItem  <- (JsPath \ "paymentLotItem").readNullable[String]
+    amount          <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
+    method          <- (JsPath \ "paymentMethod").readNullable[String]
     transactionDate <- (JsPath \ "valueDate").readNullable[String]
   } yield {
     val id: Option[String] = for {
-      pl <- paymentLot
+      pl  <- paymentLot
       pli <- paymentLotItem
     } yield s"$pl-$pli"
     Payment(id, amount, method, transactionDate)

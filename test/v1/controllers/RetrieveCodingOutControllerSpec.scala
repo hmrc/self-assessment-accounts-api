@@ -36,18 +36,19 @@ import v1.models.response.retrieveCodingOut._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockRetrieveCodingOutService
-  with MockHateoasFactory
-  with MockRetrieveCodingOutRequestParser
-  with MockIdGenerator {
+class RetrieveCodingOutControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockRetrieveCodingOutService
+    with MockHateoasFactory
+    with MockRetrieveCodingOutRequestParser
+    with MockIdGenerator {
 
-  private val nino = "AA123456A"
-  private val taxYear = "2021-22"
+  private val nino          = "AA123456A"
+  private val taxYear       = "2021-22"
   private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  private val source = "hmrcHeld"
+  private val source        = "hmrcHeld"
 
   private val rawData = RetrieveCodingOutRawRequest(
     nino = nino,
@@ -151,13 +152,14 @@ class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
 
         MockHateoasFactory
           .wrap(retrieveCodingOutResponse, RetrieveCodingOutHateoasData(nino, taxYear))
-          .returns(HateoasWrapper(retrieveCodingOutResponse,
-            Seq(
-              createOrAmendCodingOutLink,
-              retrieveCodingOutLink,
-              deleteCodingOutLink
-            )
-          ))
+          .returns(
+            HateoasWrapper(
+              retrieveCodingOutResponse,
+              Seq(
+                createOrAmendCodingOutLink,
+                retrieveCodingOutLink,
+                deleteCodingOutLink
+              )))
 
         val result: Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)
 
@@ -229,4 +231,5 @@ class RetrieveCodingOutControllerSpec extends ControllerBaseSpec
       }
     }
   }
+
 }

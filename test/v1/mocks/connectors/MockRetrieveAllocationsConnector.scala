@@ -32,11 +32,13 @@ trait MockRetrieveAllocationsConnector extends MockFactory {
 
   object MockRetrieveAllocationsConnector {
 
-    def retrieve(requestData: RetrieveAllocationsParsedRequest): CallHandler[Future[DownstreamOutcome[RetrieveAllocationsResponse[AllocationDetail]]]] = {
+    def retrieve(
+        requestData: RetrieveAllocationsParsedRequest): CallHandler[Future[DownstreamOutcome[RetrieveAllocationsResponse[AllocationDetail]]]] = {
       (mockRetrieveAllocationsConnector
         .retrieveAllocations(_: RetrieveAllocationsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
 
 }

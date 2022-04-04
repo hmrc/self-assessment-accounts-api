@@ -21,8 +21,7 @@ import support.UnitSpec
 
 class AllocationDetailSpec extends UnitSpec {
 
-  val desJson: JsValue = Json.parse(
-    """
+  val desJson: JsValue = Json.parse("""
       | {
       |   "sapDocNumber": "someID",
       |   "taxPeriodStartDate": "another date",
@@ -33,8 +32,7 @@ class AllocationDetailSpec extends UnitSpec {
       |   }
       |""".stripMargin)
 
-  val desJsonWithMissing: JsValue = Json.parse(
-    """
+  val desJsonWithMissing: JsValue = Json.parse("""
       | {
       |   "taxPeriodStartDate": "another date",
       |   "chargeType": "some type thing",
@@ -66,22 +64,10 @@ class AllocationDetailSpec extends UnitSpec {
   )
 
   val allocationDetail: AllocationDetail =
-    AllocationDetail(
-      Some("someID"),
-      Some("another date"),
-      Some("an even later date"),
-      Some("some type thing"),
-      Some(600.00),
-      Some(100.00))
+    AllocationDetail(Some("someID"), Some("another date"), Some("an even later date"), Some("some type thing"), Some(600.00), Some(100.00))
 
   val allocationDetailWithMissing: AllocationDetail =
-    AllocationDetail(
-      None,
-      Some("another date"),
-      None,
-      Some("some type thing"),
-      None,
-      Some(100.00))
+    AllocationDetail(None, Some("another date"), None, Some("some type thing"), None, Some(100.00))
 
   "AllocationDetail" when {
     "read from valid JSON" should {
@@ -109,4 +95,5 @@ class AllocationDetailSpec extends UnitSpec {
 
     }
   }
+
 }

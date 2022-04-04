@@ -33,12 +33,21 @@ trait MockRetrieveTransactionDetailsService extends MockFactory {
   val mockRetrieveTransactionDetailsService: RetrieveTransactionDetailsService = mock[RetrieveTransactionDetailsService]
 
   object MockRetrieveTransactionDetailsService {
-    def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]]] = {
-      (mockRetrieveTransactionDetailsService
-        .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
+
+    def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]]] = {
+      (
+        mockRetrieveTransactionDetailsService
+          .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: EndpointLogContext,
+            _: String
+          )
+        )
         .expects(request, *, *, *, *)
     }
+
   }
 
 }

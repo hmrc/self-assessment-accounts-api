@@ -32,14 +32,13 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsService @Inject()(listPaymentsConnector: ListPaymentsConnector)
-  extends DesResponseMappingSupport with Logging {
+class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector) extends DesResponseMappingSupport with Logging {
 
-  def list(request: ListPaymentsParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]] = {
+  def list(request: ListPaymentsParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(listPaymentsConnector.listPayments(request)).leftMap(mapDesErrors(desErrorMap))
@@ -50,21 +49,21 @@ class ListPaymentsService @Inject()(listPaymentsConnector: ListPaymentsConnector
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDTYPE" -> DownstreamError,
-      "INVALID_IDVALUE" -> NinoFormatError,
-      "INVALID_REGIME_TYPE" -> DownstreamError,
-      "INVALID_PAYMENT_LOT" -> DownstreamError,
+      "INVALID_IDTYPE"           -> DownstreamError,
+      "INVALID_IDVALUE"          -> NinoFormatError,
+      "INVALID_REGIME_TYPE"      -> DownstreamError,
+      "INVALID_PAYMENT_LOT"      -> DownstreamError,
       "INVALID_PAYMENT_LOT_ITEM" -> DownstreamError,
-      "INVALID_CLEARING_DOC" -> DownstreamError,
-      "INVALID_DATE_FROM" -> FromDateFormatError,
-      "INVALID_DATE_TO" -> ToDateFormatError,
-      "INVALID_DATE_RANGE" -> DownstreamError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "REQUEST_NOT_PROCESSED" -> DownstreamError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "PARTIALLY_MIGRATED" -> DownstreamError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_CLEARING_DOC"     -> DownstreamError,
+      "INVALID_DATE_FROM"        -> FromDateFormatError,
+      "INVALID_DATE_TO"          -> ToDateFormatError,
+      "INVALID_DATE_RANGE"       -> DownstreamError,
+      "INVALID_CORRELATIONID"    -> DownstreamError,
+      "REQUEST_NOT_PROCESSED"    -> DownstreamError,
+      "NO_DATA_FOUND"            -> NotFoundError,
+      "PARTIALLY_MIGRATED"       -> DownstreamError,
+      "SERVER_ERROR"             -> DownstreamError,
+      "SERVICE_UNAVAILABLE"      -> DownstreamError
     )
 
 }

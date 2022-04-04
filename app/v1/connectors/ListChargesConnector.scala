@@ -28,25 +28,24 @@ import v1.models.response.listCharges.{Charge, ListChargesResponse}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListChargesConnector @Inject()(val http: HttpClient,
-                                     val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListChargesConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listCharges(request: ListChargesParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[ListChargesResponse[Charge]]] = {
+  def listCharges(request: ListChargesParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[ListChargesResponse[Charge]]] = {
 
     val nino = request.nino.nino
 
     val queryParams: Seq[(String, String)] = Seq(
-      "dateFrom" -> request.from,
-      "dateTo" -> request.to,
-      "onlyOpenItems" -> "false",
-      "includeLocks" -> "true",
-      "calculateAccruedInterest" -> "true",
-      "removePOA" -> "true",
+      "dateFrom"                   -> request.from,
+      "dateTo"                     -> request.to,
+      "onlyOpenItems"              -> "false",
+      "includeLocks"               -> "true",
+      "calculateAccruedInterest"   -> "true",
+      "removePOA"                  -> "true",
       "customerPaymentInformation" -> "true",
-      "includeStatistical" -> "false"
+      "includeStatistical"         -> "false"
     )
 
     get(
@@ -54,4 +53,5 @@ class ListChargesConnector @Inject()(val http: HttpClient,
       queryParams
     )
   }
+
 }

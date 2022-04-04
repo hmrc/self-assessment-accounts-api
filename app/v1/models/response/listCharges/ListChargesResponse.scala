@@ -46,12 +46,16 @@ object ListChargesResponse extends HateoasLinks {
         listTransactions(appConfig, nino, from, to, isSelf = false)
       )
     }
+
   }
 
   implicit object ResponseFunctor extends Functor[ListChargesResponse] {
+
     override def map[A, B](fa: ListChargesResponse[A])(f: A => B): ListChargesResponse[B] =
       ListChargesResponse(fa.charges.map(f))
+
   }
+
 }
 
 case class ListChargesHateoasData(nino: String, from: String, to: String) extends HateoasData

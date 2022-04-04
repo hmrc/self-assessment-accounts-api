@@ -27,8 +27,11 @@ trait MockRetrieveCodingOutRequestParser extends MockFactory {
   val mockRetrieveCodingOutRequestParser: RetrieveCodingOutRequestParser = mock[RetrieveCodingOutRequestParser]
 
   object MockRetrieveCodingOutRequestParser {
+
     def parse(data: RetrieveCodingOutRawRequest): CallHandler[Either[ErrorWrapper, RetrieveCodingOutParsedRequest]] = {
       (mockRetrieveCodingOutRequestParser.parseRequest(_: RetrieveCodingOutRawRequest)(_: String)).expects(data, *)
     }
+
   }
+
 }

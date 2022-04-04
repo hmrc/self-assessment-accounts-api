@@ -35,7 +35,8 @@ class RetrieveBalanceRequestParserSpec extends UnitSpec {
     "return a retrieve Balance request" when {
       "valid data is provided" in new Test {
 
-        MockRetrieveBalanceValidator.validate(validRetrieveBalanceRawRequest)
+        MockRetrieveBalanceValidator
+          .validate(validRetrieveBalanceRawRequest)
           .returns(Nil)
 
         parser.parseRequest(validRetrieveBalanceRawRequest) shouldBe
@@ -45,12 +46,14 @@ class RetrieveBalanceRequestParserSpec extends UnitSpec {
   }
 
   "return an error" when {
-    "invalid data is provided" in new Test{
-      MockRetrieveBalanceValidator.validate(invalidRetrieveBalanceRawRequest)
+    "invalid data is provided" in new Test {
+      MockRetrieveBalanceValidator
+        .validate(invalidRetrieveBalanceRawRequest)
         .returns(List(NinoFormatError))
 
       parser.parseRequest(invalidRetrieveBalanceRawRequest) shouldBe
         Left(ErrorWrapper(correlationId, NinoFormatError, None))
     }
   }
+
 }

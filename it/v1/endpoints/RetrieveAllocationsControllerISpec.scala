@@ -30,18 +30,18 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino = "AA123456A"
-    val paymentId = "aLot-anItem"
-    val paymentLot = "aLot"
+    val nino           = "AA123456A"
+    val paymentId      = "aLot-anItem"
+    val paymentLot     = "aLot"
     val paymentLotItem = "anItem"
-    val correlationId = "X-123"
+    val correlationId  = "X-123"
 
     val desResponse: JsValue = RetrieveAllocationsResponseFixture.desJson
     val mtdResponse: JsValue = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas
 
     val queryParams: Map[String, String] = Map("paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem)
 
-    def uri: String = s"/$nino/payments/$paymentId"
+    def uri: String    = s"/$nino/payments/$paymentId"
     def desUrl: String = s"/cross-regime/payment-allocation/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
@@ -59,6 +59,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
          |        "reason": "des message"
          |      }
     """.stripMargin
+
   }
 
   "Calling the 'retrieve a payment's allocation detail' endpoint" should {
@@ -69,7 +70,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, queryParams,  OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUrl, queryParams, OK, desResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -79,73 +80,73 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
       }
     }
 
-      "return error according to spec" when {
+    "return error according to spec" when {
 
-        def validationErrorTest(requestNino: String, requestPaymentId: String,
-                                expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error" in new Test {
+      def validationErrorTest(requestNino: String, requestPaymentId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
-            override val paymentId: String = requestPaymentId
+          override val nino: String      = requestNino
+          override val paymentId: String = requestPaymentId
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-            }
-
-            val response: WSResponse = await(request.get)
-            response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
-            response.header("Content-Type") shouldBe Some("application/json")
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            AuthStub.authorised()
+            MtdIdLookupStub.ninoFound(nino)
           }
+
+          val response: WSResponse = await(request.get)
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
+          response.header("Content-Type") shouldBe Some("application/json")
         }
-
-        val input = Seq(
-          ("AA1123A", "f2fb30e5-4ab6", BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "this id is invalid", BAD_REQUEST, PaymentIdFormatError)
-        )
-
-        input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+      val input = Seq(
+        ("AA1123A", "f2fb30e5-4ab6", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "this id is invalid", BAD_REQUEST, PaymentIdFormatError)
+      )
 
-            override def setupStubs(): StubMapping = {
-              AuditStub.audit()
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DesStub.onError(DesStub.GET, desUrl, queryParams, desStatus, errorBody(desCode))
-            }
-
-            val response: WSResponse = await(request.get)
-            response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
-            response.header("Content-Type") shouldBe Some("application/json")
-          }
-        }
-
-        val input = Seq(
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
-          (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_PAYMENT_LOT", BAD_REQUEST, PaymentIdFormatError),
-          (BAD_REQUEST, "INVALID_PAYMENT_LOT_ITEM", BAD_REQUEST, PaymentIdFormatError),
-          (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-          (BAD_REQUEST, "PARTIALLY_MIGRATED", INTERNAL_SERVER_ERROR, DownstreamError),
-          (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (BAD_REQUEST, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
-        )
-
-        input.foreach(args => (serviceErrorTest _).tupled(args))
-      }
+      input.foreach(args => (validationErrorTest _).tupled(args))
     }
+
+    "des service error" when {
+      def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"des returns an $desCode error and status $desStatus" in new Test {
+
+          override def setupStubs(): StubMapping = {
+            AuditStub.audit()
+            AuthStub.authorised()
+            MtdIdLookupStub.ninoFound(nino)
+            DesStub.onError(DesStub.GET, desUrl, queryParams, desStatus, errorBody(desCode))
+          }
+
+          val response: WSResponse = await(request.get)
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
+          response.header("Content-Type") shouldBe Some("application/json")
+        }
+      }
+
+      val input = Seq(
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
+        (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_PAYMENT_LOT", BAD_REQUEST, PaymentIdFormatError),
+        (BAD_REQUEST, "INVALID_PAYMENT_LOT_ITEM", BAD_REQUEST, PaymentIdFormatError),
+        (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+        (BAD_REQUEST, "PARTIALLY_MIGRATED", INTERNAL_SERVER_ERROR, DownstreamError),
+        (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+      )
+
+      input.foreach(args => (serviceErrorTest _).tupled(args))
+    }
+  }
+
 }

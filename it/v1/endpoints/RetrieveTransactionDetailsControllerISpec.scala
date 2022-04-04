@@ -30,18 +30,18 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
 
   private trait Test {
 
-    val nino = "AA123456A"
+    val nino          = "AA123456A"
     val correlationId = "X-123"
     val transactionId = "1111111111"
 
     val desQueryParams: Seq[(String, String)] = Seq(
-      "docNumber" -> transactionId,
-      "onlyOpenItems" -> "false",
-      "includeLocks" -> "true",
-      "calculateAccruedInterest" -> "true",
-      "removePOA" -> "false",
+      "docNumber"                  -> transactionId,
+      "onlyOpenItems"              -> "false",
+      "includeLocks"               -> "true",
+      "calculateAccruedInterest"   -> "true",
+      "removePOA"                  -> "false",
       "customerPaymentInformation" -> "true",
-      "includeStatistical" -> "false"
+      "includeStatistical"         -> "false"
     )
 
     def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
@@ -130,7 +130,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
       def validationErrorTest(requestNino: String, requestTransactionId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
+          override val nino: String          = requestNino
           override val transactionId: String = requestTransactionId
 
           override def setupStubs(): StubMapping = {
@@ -204,4 +204,5 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
     }
 
   }
+
 }

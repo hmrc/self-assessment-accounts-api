@@ -25,4 +25,5 @@ object TransactionIdValidation {
   def validate(transactionId: String): List[MtdError] = {
     if (transactionId.matches(transactionIdRegex)) NoValidationErrors else List(TransactionIdFormatError)
   }
+
 }

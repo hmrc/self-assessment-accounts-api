@@ -41,4 +41,5 @@ class ChargeSpec extends UnitSpec {
       }
     }
   }
+
 }

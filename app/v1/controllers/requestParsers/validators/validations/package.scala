@@ -22,8 +22,8 @@ import java.time.format.DateTimeFormatter
 package object validations {
 
   val dateFormat: DateTimeFormatter = DateTimeFormatter ofPattern "yyyy-MM-dd"
-  val maxDateRange = 732
-  val earliestDate: LocalDate = LocalDate.parse("2018-04-06", dateFormat)
+  val maxDateRange                  = 732
+  val earliestDate: LocalDate       = LocalDate.parse("2018-04-06", dateFormat)
 
   val NoValidationErrors = List()
 

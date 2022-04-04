@@ -24,13 +24,16 @@ class RetrieveTransactionDetailsValidator extends Validator[RetrieveTransactionD
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveTransactionDetailsRawRequest => List[List[MtdError]] = (data: RetrieveTransactionDetailsRawRequest) => {
-    List(
-      NinoValidation.validate(data.nino),
-      TransactionIdValidation.validate(data.transactionId)
-    )
-  }
+  private def parameterFormatValidation: RetrieveTransactionDetailsRawRequest => List[List[MtdError]] =
+    (data: RetrieveTransactionDetailsRawRequest) => {
+      List(
+        NinoValidation.validate(data.nino),
+        TransactionIdValidation.validate(data.transactionId)
+      )
+    }
+
   override def validate(data: RetrieveTransactionDetailsRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
+
 }

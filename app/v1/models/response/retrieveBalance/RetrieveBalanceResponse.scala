@@ -38,19 +38,20 @@ object RetrieveBalanceResponse extends HateoasLinks {
       (JsPath \ "balanceDetails" \ "balanceNotDueIn30Days").read[BigDecimal] and
       (JsPath \ "balanceDetails" \ "nextPaymentDateBalanceNotDue").readNullable[String] and
       (JsPath \ "balanceDetails" \ "totalBalance").read[BigDecimal]
-    ) (RetrieveBalanceResponse.apply _)
+  )(RetrieveBalanceResponse.apply _)
 
   implicit val writes: OWrites[RetrieveBalanceResponse] =
     Json.writes[RetrieveBalanceResponse]
 
   implicit object RetrieveBalanceLinksFactory extends HateoasLinksFactory[RetrieveBalanceResponse, RetrieveBalanceHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveBalanceHateoasData): Seq[Link] =
       Seq(
         retrieveBalance(appConfig, data.nino, isSelf = true)
       )
+
   }
 
 }
 
 case class RetrieveBalanceHateoasData(nino: String) extends HateoasData
-

@@ -24,9 +24,9 @@ class RetrieveTransactionDetailsValidatorSpec extends UnitSpec {
 
   val validator = new RetrieveTransactionDetailsValidator()
 
-  private val validNino = "AA111111A"
-  private val invalidNino = "thisIsNotANino"
-  private val validTransactionId = "AA23GG4F34FG"
+  private val validNino            = "AA111111A"
+  private val invalidNino          = "thisIsNotANino"
+  private val validTransactionId   = "AA23GG4F34FG"
   private val invalidTransactionId = "thisStringIsTooLongToBeATransactionID"
 
   "running a validation" should {
@@ -50,8 +50,11 @@ class RetrieveTransactionDetailsValidatorSpec extends UnitSpec {
 
     "return NinoFormatError and TransactionIdFormatError error" when {
       "an invalid nino and invalid transaction ID are supplied" in {
-        validator.validate(RetrieveTransactionDetailsRawRequest(invalidNino, invalidTransactionId)) shouldBe List(NinoFormatError, TransactionIdFormatError)
+        validator.validate(RetrieveTransactionDetailsRawRequest(invalidNino, invalidTransactionId)) shouldBe List(
+          NinoFormatError,
+          TransactionIdFormatError)
       }
     }
   }
+
 }

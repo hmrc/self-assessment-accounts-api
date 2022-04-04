@@ -30,8 +30,8 @@ import scala.concurrent.Future
 
 class RetrieveAllocationsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA123456A"
-  private val paymentLot = "anId"
+  private val nino           = "AA123456A"
+  private val paymentLot     = "anId"
   private val paymentLotItem = "anotherId"
 
   private val requestData: RetrieveAllocationsParsedRequest =
@@ -43,12 +43,13 @@ class RetrieveAllocationsServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveAllocationsConnector {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new RetrieveAllocationsService(
       connector = mockRetrieveAllocationsConnector
     )
+
   }
 
   "service" when {
@@ -63,7 +64,8 @@ class RetrieveAllocationsServiceSpec extends ServiceSpec {
             allocations = Seq.empty[AllocationDetail]
           )
 
-        MockRetrieveAllocationsConnector.retrieve(requestData)
+        MockRetrieveAllocationsConnector
+          .retrieve(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
         await(service.retrieveAllocations(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
@@ -76,7 +78,8 @@ class RetrieveAllocationsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockRetrieveAllocationsConnector.retrieve(requestData)
+            MockRetrieveAllocationsConnector
+              .retrieve(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.retrieveAllocations(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -103,4 +106,5 @@ class RetrieveAllocationsServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

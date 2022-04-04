@@ -45,4 +45,5 @@ class ListChargesResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -25,7 +25,7 @@ import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
 class DeleteCodingOutValidatorSpec extends UnitSpec {
 
   private val validTaxYear = "2021-22"
-  private val validNino = "AA123456B"
+  private val validNino    = "AA123456B"
 
   class Test extends MockAppConfig {
 
@@ -36,6 +36,7 @@ class DeleteCodingOutValidatorSpec extends UnitSpec {
     MockAppConfig.minimumPermittedTaxYear
       .returns(2022)
       .anyNumberOfTimes()
+
   }
 
   "running a validation" should {
@@ -46,38 +47,39 @@ class DeleteCodingOutValidatorSpec extends UnitSpec {
     }
 
     "return NinoFormatError error" when {
-      "invalid nino is supplied" in new Test  {
+      "invalid nino is supplied" in new Test {
         validator.validate(DeleteCodingOutRawRequest("badNino", validTaxYear)) shouldBe
           List(NinoFormatError)
       }
     }
 
     "return TaxYearFormatError error" when {
-      "invalid taxYear is supplied" in new Test  {
+      "invalid taxYear is supplied" in new Test {
         validator.validate(DeleteCodingOutRawRequest(validNino, "badTaxYear")) shouldBe
           List(TaxYearFormatError)
       }
     }
 
     "return RuleTaxYearNotSupportedError error" when {
-      "a taxYear supplied is not supported" in new Test  {
+      "a taxYear supplied is not supported" in new Test {
         validator.validate(DeleteCodingOutRawRequest(validNino, "2020-21")) shouldBe
           List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return RuleTaxYearRangeInvalid error" when {
-      "an invalid tax year range is supplied" in new Test  {
+      "an invalid tax year range is supplied" in new Test {
         validator.validate(DeleteCodingOutRawRequest(validNino, "2020-22")) shouldBe
           List(RuleTaxYearRangeInvalidError)
       }
     }
 
     "return multiple errors" when {
-      "request supplied has multiple errors" in new Test  {
+      "request supplied has multiple errors" in new Test {
         validator.validate(DeleteCodingOutRawRequest("badNino", "badTaxYear")) shouldBe
           List(NinoFormatError, TaxYearFormatError)
       }
     }
   }
+
 }

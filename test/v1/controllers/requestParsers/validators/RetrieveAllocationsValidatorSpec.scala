@@ -22,9 +22,8 @@ import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
 
 class RetrieveAllocationsValidatorSpec extends UnitSpec {
 
-  private val validNino = "AA123456A"
+  private val validNino      = "AA123456A"
   private val validPaymentId = "AF234F-12DFA"
-
 
   val validator = new RetrieveAllocationsValidator()
 
@@ -56,4 +55,5 @@ class RetrieveAllocationsValidatorSpec extends UnitSpec {
       }
     }
   }
+
 }

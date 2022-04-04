@@ -29,17 +29,17 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA123456A"
   val from: String = "2018-05-05"
-  val to: String = "2019-12-05"
+  val to: String   = "2019-12-05"
 
   val queryParams: Seq[(String, String)] = Seq(
-    "dateFrom" -> from,
-    "dateTo" -> to,
-    "onlyOpenItems" -> "false",
-    "includeLocks" -> "true",
-    "calculateAccruedInterest" -> "true",
-    "removePOA" -> "false",
+    "dateFrom"                   -> from,
+    "dateTo"                     -> to,
+    "onlyOpenItems"              -> "false",
+    "includeLocks"               -> "true",
+    "calculateAccruedInterest"   -> "true",
+    "removePOA"                  -> "false",
     "customerPaymentInformation" -> "true",
-    "includeStatistical" -> "false"
+    "includeStatistical"         -> "false"
   )
 
   val requestData: ListTransactionsParsedRequest = ListTransactionsParsedRequest(
@@ -49,24 +49,25 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
   )
 
   val listTransactionsResponse: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
-    transactions = Seq(TransactionItem(
-      taxYear = "2019-20",
-      transactionId = "X1234567890A",
-      paymentId = Some("081203010024-000001"),
-      transactionDate = "2020-01-01",
-      `type` = Some("Balancing Charge Debit"),
-      originalAmount = 12.34,
-      outstandingAmount = 10.33,
-      lastClearingDate = Some("2020-01-02"),
-      lastClearingReason = Some("Incoming payment"),
-      lastClearedAmount = Some(2.01),
-      accruingInterestAmount = Some(8.31),
-      interestRate = Some(2.06),
-      interestFromDate = Some("2020-01-11"),
-      interestEndDate = Some("2020-04-06"),
-      latePaymentInterestAmount = Some(5.01),
-      interestOutstandingAmount = Some(6.01)
-    ))
+    transactions = Seq(
+      TransactionItem(
+        taxYear = "2019-20",
+        transactionId = "X1234567890A",
+        paymentId = Some("081203010024-000001"),
+        transactionDate = "2020-01-01",
+        `type` = Some("Balancing Charge Debit"),
+        originalAmount = 12.34,
+        outstandingAmount = 10.33,
+        lastClearingDate = Some("2020-01-02"),
+        lastClearingReason = Some("Incoming payment"),
+        lastClearedAmount = Some(2.01),
+        accruingInterestAmount = Some(8.31),
+        interestRate = Some(2.06),
+        interestFromDate = Some("2020-01-11"),
+        interestEndDate = Some("2020-04-06"),
+        latePaymentInterestAmount = Some(5.01),
+        interestOutstandingAmount = Some(6.01)
+      ))
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -92,10 +93,12 @@ class ListTransactionsConnectorSpec extends ConnectorSpec {
             dummyDesHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.listTransactions(requestData)) shouldBe outcome
       }
     }
   }
+
 }

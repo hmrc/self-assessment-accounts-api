@@ -33,14 +33,16 @@ import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveCodingOut
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutController @Inject()(val authService: EnrolmentsAuthService,
-                                            val lookupService: MtdIdLookupService,
-                                            requestParser: RetrieveCodingOutRequestParser,
-                                            service: RetrieveCodingOutService,
-                                            hateoasFactory: HateoasFactory,
-                                            cc: ControllerComponents,
-                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthService,
+                                             val lookupService: MtdIdLookupService,
+                                             requestParser: RetrieveCodingOutRequestParser,
+                                             service: RetrieveCodingOutService,
+                                             hateoasFactory: HateoasFactory,
+                                             cc: ControllerComponents,
+                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -50,7 +52,6 @@ class RetrieveCodingOutController @Inject()(val authService: EnrolmentsAuthServi
 
   def retrieveCodingOut(nino: String, taxYear: String, source: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -64,7 +65,7 @@ class RetrieveCodingOutController @Inject()(val authService: EnrolmentsAuthServi
 
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.retrieveCodingOut(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
@@ -82,7 +83,7 @@ class RetrieveCodingOutController @Inject()(val authService: EnrolmentsAuthServi
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -93,11 +94,12 @@ class RetrieveCodingOutController @Inject()(val authService: EnrolmentsAuthServi
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError |
-           RuleTaxYearRangeInvalidError | SourceFormatError => BadRequest(Json.toJson(errorWrapper))
+      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | SourceFormatError =>
+        BadRequest(Json.toJson(errorWrapper))
       case CodingOutNotFoundError => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case DownstreamError        => InternalServerError(Json.toJson(errorWrapper))
+      case _                      => unhandledError(errorWrapper)
     }
   }
+
 }

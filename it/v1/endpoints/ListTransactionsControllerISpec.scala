@@ -29,10 +29,10 @@ import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class ListTransactionsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino: String = "AA123456A"
+    val nino: String          = "AA123456A"
     val correlationId: String = "X-123"
-    val from: Option[String] = Some("2018-05-05")
-    val to: Option[String] = Some("2019-12-05")
+    val from: Option[String]  = Some("2018-05-05")
+    val to: Option[String]    = Some("2019-12-05")
 
     def uri: String = s"/$nino/transactions"
 
@@ -43,14 +43,15 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
     def request: WSRequest = {
 
       val queryParams = Seq("from" -> from, "to" -> to)
-        .collect {
-          case (k, Some(v)) => (k, v)
+        .collect { case (k, Some(v)) =>
+          (k, v)
         }
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the list transactions endpoint" should {
@@ -58,14 +59,14 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       "valid request is made" in new Test {
 
         val desQueryParams: Map[String, String] = Map(
-          "dateFrom" -> from.get,
-          "dateTo" -> to.get,
-          "onlyOpenItems" -> "false",
-          "includeLocks" -> "true",
-          "calculateAccruedInterest" -> "true",
-          "removePOA" -> "false",
+          "dateFrom"                   -> from.get,
+          "dateTo"                     -> to.get,
+          "onlyOpenItems"              -> "false",
+          "includeLocks"               -> "true",
+          "calculateAccruedInterest"   -> "true",
+          "removePOA"                  -> "false",
           "customerPaymentInformation" -> "true",
-          "includeStatistical" -> "false"
+          "includeStatistical"         -> "false"
         )
 
         override def setupStubs(): StubMapping = {
@@ -87,14 +88,14 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       "des returns errors that map to DownstreamError" in new Test {
 
         val desQueryParams: Map[String, String] = Map(
-          "dateFrom" -> from.get,
-          "dateTo" -> to.get,
-          "onlyOpenItems" -> "false",
-          "includeLocks" -> "true",
-          "calculateAccruedInterest" -> "true",
-          "removePOA" -> "false",
+          "dateFrom"                   -> from.get,
+          "dateTo"                     -> to.get,
+          "onlyOpenItems"              -> "false",
+          "includeLocks"               -> "true",
+          "calculateAccruedInterest"   -> "true",
+          "removePOA"                  -> "false",
           "customerPaymentInformation" -> "true",
-          "includeStatistical" -> "false"
+          "includeStatistical"         -> "false"
         )
 
         val multipleErrors: String =
@@ -129,13 +130,16 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, fromDate: Option[String],
-                              toDate: Option[String], expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String,
+                              fromDate: Option[String],
+                              toDate: Option[String],
+                              expectedStatus: Int,
+                              expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
+          override val nino: String         = requestNino
           override val from: Option[String] = fromDate
-          override val to: Option[String] = toDate
+          override val to: Option[String]   = toDate
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -176,14 +180,14 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
         s"des returns an $desCode error and status $desStatus" in new Test {
 
           val desQueryParams: Map[String, String] = Map(
-            "dateFrom" -> from.get,
-            "dateTo" -> to.get,
-            "onlyOpenItems" -> "false",
-            "includeLocks" -> "true",
-            "calculateAccruedInterest" -> "true",
-            "removePOA" -> "false",
+            "dateFrom"                   -> from.get,
+            "dateTo"                     -> to.get,
+            "onlyOpenItems"              -> "false",
+            "includeLocks"               -> "true",
+            "calculateAccruedInterest"   -> "true",
+            "removePOA"                  -> "false",
             "customerPaymentInformation" -> "true",
-            "includeStatistical" -> "false"
+            "includeStatistical"         -> "false"
           )
 
           override def setupStubs(): StubMapping = {
@@ -224,4 +228,5 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

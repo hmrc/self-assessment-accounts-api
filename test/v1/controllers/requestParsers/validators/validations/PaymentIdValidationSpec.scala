@@ -26,7 +26,7 @@ class PaymentIdValidationSpec extends UnitSpec with JsonErrorValidators {
     "return no errors" when {
       "when a valid paymentId is supplied" in {
 
-        val validPaymentId = "AA123456A-A2F3F"
+        val validPaymentId   = "AA123456A-A2F3F"
         val validationResult = PaymentIdValidation.validate(validPaymentId)
 
         validationResult.isEmpty shouldBe true
@@ -45,4 +45,5 @@ class PaymentIdValidationSpec extends UnitSpec with JsonErrorValidators {
       }
     }
   }
+
 }

@@ -27,26 +27,25 @@ import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsR
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
-                                                    val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveTransactionDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveTransactionDetailsResponse]] = {
+  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveTransactionDetailsResponse]] = {
 
-    val nino = request.nino.nino
+    val nino          = request.nino.nino
     val transactionId = request.transactionId
 
     val queryParams: Seq[(String, String)] =
       Seq(
-        "docNumber" -> transactionId,
-        "onlyOpenItems" -> "false",
-        "includeLocks" -> "true",
-        "calculateAccruedInterest" -> "true",
-        "removePOA" -> "false",
+        "docNumber"                  -> transactionId,
+        "onlyOpenItems"              -> "false",
+        "includeLocks"               -> "true",
+        "calculateAccruedInterest"   -> "true",
+        "removePOA"                  -> "false",
         "customerPaymentInformation" -> "true",
-        "includeStatistical" -> "false"
+        "includeStatistical"         -> "false"
       )
 
     get(
@@ -54,4 +53,5 @@ class RetrieveTransactionDetailsConnector @Inject()(val http: HttpClient,
       queryParams
     )
   }
+
 }

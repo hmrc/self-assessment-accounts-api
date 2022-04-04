@@ -22,7 +22,7 @@ object MissingParameterValidation {
 
   def validate[T](input: Option[T], error: MtdError): List[MtdError] = input match {
     case Some(_) => NoValidationErrors
-    case None => List(error)
+    case None    => List(error)
   }
 
 }

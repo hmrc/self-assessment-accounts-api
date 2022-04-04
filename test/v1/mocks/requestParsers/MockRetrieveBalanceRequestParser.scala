@@ -31,6 +31,7 @@ trait MockRetrieveBalanceRequestParser extends MockFactory {
     def parse(data: RetrieveBalanceRawRequest): CallHandler[Either[ErrorWrapper, RetrieveBalanceParsedRequest]] = {
       (mockRetrieveBalanceRequestParser.parseRequest(_: RetrieveBalanceRawRequest)(_: String)).expects(data, *)
     }
+
   }
 
 }

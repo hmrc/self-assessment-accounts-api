@@ -33,7 +33,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
 
   private val confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200
 
-
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
@@ -41,9 +40,11 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockAppConfig.apiStatus returns "1.0"
         MockAppConfig.endpointsEnabled returns true
 
-        MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = true) anyNumberOfTimes()
+        MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+          definitionEnabled = true,
+          authValidationEnabled = true) anyNumberOfTimes ()
 
-        private val readScope = "read:self-assessment"
+        private val readScope  = "read:self-assessment"
         private val writeScope = "write:self-assessment"
 
         apiDefinitionFactory.definition shouldBe
@@ -85,14 +86,13 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     Seq(
       (true, ConfidenceLevel.L200),
       (false, ConfidenceLevel.L50)
-    ).foreach {
-      case (definitionEnabled, cl) =>
-        s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
-          s"return $cl" in new Test {
-            MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
-            apiDefinitionFactory.confidenceLevel shouldBe cl
-          }
+    ).foreach { case (definitionEnabled, cl) =>
+      s"confidence-level-check.definition.enabled is $definitionEnabled in config" should {
+        s"return $cl" in new Test {
+          MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(definitionEnabled = definitionEnabled, authValidationEnabled = true)
+          apiDefinitionFactory.confidenceLevel shouldBe cl
         }
+      }
     }
   }
 

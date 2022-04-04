@@ -27,9 +27,9 @@ import scala.concurrent.Future
 
 class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA123456A"
+  val nino: String    = "AA123456A"
   val taxYear: String = "2021-22"
-  val source: String = "hmrcHeld"
+  val source: String  = "hmrcHeld"
 
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
     UnmatchedCustomerSubmissions(
@@ -83,7 +83,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
     "retrieveCodingOut" must {
       "return a valid response" in new Test {
         val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(Nino(nino), taxYear, Some(source))
-        val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
+        val outcome                                 = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
 
         MockHttpClient
           .parameterGet(
@@ -92,14 +92,15 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveCodingOut(request)) shouldBe outcome
       }
 
       "return a valid response when there's no source parameter" in new Test {
         val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(Nino(nino), taxYear, None)
-        val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
+        val outcome                                 = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
 
         MockHttpClient
           .get(
@@ -107,10 +108,12 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeaders,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveCodingOut(request)) shouldBe outcome
       }
     }
   }
+
 }

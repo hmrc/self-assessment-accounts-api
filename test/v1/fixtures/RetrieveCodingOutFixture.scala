@@ -20,8 +20,9 @@ import play.api.libs.json.{JsObject, Json}
 
 object RetrieveCodingOutFixture {
 
-  def mtdResponseWithHateoas(nino: String, taxYear: String, source: String): JsObject = Json.parse(
-    s"""
+  def mtdResponseWithHateoas(nino: String, taxYear: String, source: String): JsObject = Json
+    .parse(
+      s"""
        |{
        |  "taxCodeComponents": {
        |    "selfAssessmentUnderpayment": [
@@ -106,10 +107,12 @@ object RetrieveCodingOutFixture {
        |   ]
        |}
      """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
 
-  def mtdResponseWithHateoasNoId(nino: String, taxYear: String, source: String): JsObject = Json.parse(
-    s"""
+  def mtdResponseWithHateoasNoId(nino: String, taxYear: String, source: String): JsObject = Json
+    .parse(
+      s"""
        |{
        |  "taxCodeComponents": {
        |    "selfAssessmentUnderpayment": [
@@ -186,5 +189,7 @@ object RetrieveCodingOutFixture {
        |   ]
        |}
      """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
+
 }

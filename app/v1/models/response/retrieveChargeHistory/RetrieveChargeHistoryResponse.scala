@@ -26,13 +26,15 @@ case class RetrieveChargeHistoryResponse(history: Seq[ChargeHistory])
 object RetrieveChargeHistoryResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveChargeHistoryResponse] =
-    (JsPath \ "chargeHistoryDetails").read[Seq[ChargeHistory]]
+    (JsPath \ "chargeHistoryDetails")
+      .read[Seq[ChargeHistory]]
       .map(items => RetrieveChargeHistoryResponse(items.filterNot(_ == ChargeHistory.empty)))
 
   implicit val writes: OWrites[RetrieveChargeHistoryResponse] =
     Json.writes[RetrieveChargeHistoryResponse]
 
   implicit object RetrieveChargeHistoryLinksFactory extends HateoasLinksFactory[RetrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveChargeHistoryHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -40,6 +42,7 @@ object RetrieveChargeHistoryResponse extends HateoasLinks {
         retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = false)
       )
     }
+
   }
 
 }

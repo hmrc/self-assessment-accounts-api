@@ -32,14 +32,15 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveTransactionDetailsService @Inject()(val connector: RetrieveTransactionDetailsConnector)
-  extends DesResponseMappingSupport with Logging {
+class RetrieveTransactionDetailsService @Inject() (val connector: RetrieveTransactionDetailsConnector)
+    extends DesResponseMappingSupport
+    with Logging {
 
-  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
+  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDesErrors(desErrorMap))
@@ -51,23 +52,24 @@ class RetrieveTransactionDetailsService @Inject()(val connector: RetrieveTransac
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDTYPE" -> DownstreamError,
-      "INVALID_IDNUMBER" -> NinoFormatError,
-      "INVALID_REGIME_TYPE" -> DownstreamError,
-      "INVALID_DOC_NUMBER" -> TransactionIdFormatError,
-      "INVALID_ONLY_OPEN_ITEMS" -> DownstreamError,
-      "INVALID_INCLUDE_LOCKS" -> DownstreamError,
-      "INVALID_CALCULATE_ACCRUED_INTEREST" -> DownstreamError,
+      "INVALID_IDTYPE"                       -> DownstreamError,
+      "INVALID_IDNUMBER"                     -> NinoFormatError,
+      "INVALID_REGIME_TYPE"                  -> DownstreamError,
+      "INVALID_DOC_NUMBER"                   -> TransactionIdFormatError,
+      "INVALID_ONLY_OPEN_ITEMS"              -> DownstreamError,
+      "INVALID_INCLUDE_LOCKS"                -> DownstreamError,
+      "INVALID_CALCULATE_ACCRUED_INTEREST"   -> DownstreamError,
       "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
-      "INVALID_DATE_FROM" -> DownstreamError,
-      "INVALID_DATE_TO" -> DownstreamError,
-      "INVALID_DATE_RANGE" -> DownstreamError,
-      "INVALID_REQUEST" -> DownstreamError,
-      "INVALID_INCLUDE_STATISTICAL" -> DownstreamError,
-      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> DownstreamError,
-      "REQUEST_NOT_PROCESSED" -> DownstreamError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_DATE_FROM"                    -> DownstreamError,
+      "INVALID_DATE_TO"                      -> DownstreamError,
+      "INVALID_DATE_RANGE"                   -> DownstreamError,
+      "INVALID_REQUEST"                      -> DownstreamError,
+      "INVALID_INCLUDE_STATISTICAL"          -> DownstreamError,
+      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> DownstreamError,
+      "REQUEST_NOT_PROCESSED"                -> DownstreamError,
+      "NO_DATA_FOUND"                        -> NotFoundError,
+      "SERVER_ERROR"                         -> DownstreamError,
+      "SERVICE_UNAVAILABLE"                  -> DownstreamError
     )
+
 }

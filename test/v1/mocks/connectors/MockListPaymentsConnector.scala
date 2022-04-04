@@ -36,6 +36,7 @@ trait MockListPaymentsConnector extends MockFactory {
         .listPayments(_: ListPaymentsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
 
 }

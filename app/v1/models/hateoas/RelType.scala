@@ -19,14 +19,14 @@ package v1.models.hateoas
 object RelType {
   val SELF = "self"
 
-  val RETRIEVE_BALANCE = "retrieve-balance"
-  val LIST_TRANSACTIONS = "list-transactions"
+  val RETRIEVE_BALANCE             = "retrieve-balance"
+  val LIST_TRANSACTIONS            = "list-transactions"
   val RETRIEVE_TRANSACTION_DETAILS = "retrieve-transaction-details"
-  val LIST_CHARGES = "list-charges"
-  val RETRIEVE_CHARGE_HISTORY = "retrieve-charge-history"
-  val LIST_PAYMENTS = "list-payments"
+  val LIST_CHARGES                 = "list-charges"
+  val RETRIEVE_CHARGE_HISTORY      = "retrieve-charge-history"
+  val LIST_PAYMENTS                = "list-payments"
   val RETRIEVE_PAYMENT_ALLOCATIONS = "retrieve-payment-allocations"
 
   val CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS = "create-or-amend-coding-out-underpayments"
-  val DELETE_CODING_OUT_UNDERPAYMENTS = "delete-coding-out-underpayments"
+  val DELETE_CODING_OUT_UNDERPAYMENTS          = "delete-coding-out-underpayments"
 }

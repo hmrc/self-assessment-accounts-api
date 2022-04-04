@@ -34,12 +34,13 @@ trait MockRetrieveBalanceService extends MockFactory {
 
   object MockRetrieveBalanceService {
 
-    def retrieveBalance(request: RetrieveBalanceParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]]] = {
+    def retrieveBalance(
+        request: RetrieveBalanceParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]]] = {
       (mockRetrieveBalanceService
         .retrieveBalance(_: RetrieveBalanceParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(request, *, *, *, *)
     }
+
   }
 
 }

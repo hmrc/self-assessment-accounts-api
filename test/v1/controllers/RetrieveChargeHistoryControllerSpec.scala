@@ -39,7 +39,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveChargeHistoryControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockRetrieveChargeHistoryService
@@ -49,7 +49,7 @@ class RetrieveChargeHistoryControllerSpec
     with MockAuditService
     with MockIdGenerator {
 
-  private val nino = "AA123456A"
+  private val nino          = "AA123456A"
   private val transactionId = "anId"
   private val correlationId = "X-123"
 
@@ -80,7 +80,7 @@ class RetrieveChargeHistoryControllerSpec
     )
 
   private val retrieveChargeHistoryResponse = RetrieveChargeHistoryFixture.retrieveChargeHistoryResponseMultiple
-  private val mtdResponse = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
+  private val mtdResponse                   = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
@@ -129,12 +129,13 @@ class RetrieveChargeHistoryControllerSpec
 
         MockHateoasFactory
           .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, transactionId))
-          .returns(HateoasWrapper(retrieveChargeHistoryResponse,
-            Seq(
-              chargeHistoryLink,
-              transactionDetailsLink
-            )
-          ))
+          .returns(
+            HateoasWrapper(
+              retrieveChargeHistoryResponse,
+              Seq(
+                chargeHistoryLink,
+                transactionDetailsLink
+              )))
 
         val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
@@ -209,4 +210,5 @@ class RetrieveChargeHistoryControllerSpec
       }
     }
   }
+
 }

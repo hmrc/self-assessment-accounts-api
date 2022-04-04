@@ -34,12 +34,13 @@ trait MockListTransactionsService extends MockFactory {
 
   object MockListTransactionsService {
 
-    def listTransactions(request: ListTransactionsParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]]] = {
+    def listTransactions(request: ListTransactionsParsedRequest)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]]] = {
       (mockListTransactionsService
         .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(request, *, *, *, *)
     }
+
   }
 
 }

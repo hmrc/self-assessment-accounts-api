@@ -24,9 +24,9 @@ import v1.models.request.listCharges._
 
 class ListChargesRequestParserSpec extends UnitSpec {
 
-  val nino: String = "AA123456B"
-  val from: String = "2019/02/02"
-  val to: String = "2019/02/03"
+  val nino: String                   = "AA123456B"
+  val from: String                   = "2019/02/02"
+  val to: String                     = "2019/02/03"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   trait Test extends MockListChargesValidator {
@@ -50,7 +50,8 @@ class ListChargesRequestParserSpec extends UnitSpec {
       "the validator returns multiple errors" in new Test {
         private val inputData = ListChargesRawRequest(nino, None, None)
         MockListChargesValidator.validate(inputData).returns(List(MissingFromDateError, MissingToDateError))
-        parser.parseRequest(inputData) shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(MissingFromDateError, MissingToDateError))))
+        parser.parseRequest(inputData) shouldBe Left(
+          ErrorWrapper(correlationId, BadRequestError, Some(Seq(MissingFromDateError, MissingToDateError))))
       }
     }
   }

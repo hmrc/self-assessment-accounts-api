@@ -45,12 +45,12 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
 
     val queryParams: Seq[(String, String)] =
       Seq(
-        "onlyOpenItems" -> "true",
-        "includeLocks" -> "true",
-        "calculateAccruedInterest" -> "true",
-        "removePOA" -> "true",
+        "onlyOpenItems"              -> "true",
+        "includeLocks"               -> "true",
+        "calculateAccruedInterest"   -> "true",
+        "removePOA"                  -> "true",
         "customerPaymentInformation" -> "true",
-        "includeStatistical" -> "false"
+        "includeStatistical"         -> "false"
       )
 
     MockAppConfig.desBaseUrl returns baseUrl
@@ -74,10 +74,12 @@ class RetrieveBalanceConnectorSpec extends ConnectorSpec {
             dummyDesHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveBalance(request)) shouldBe outcome
       }
     }
   }
+
 }

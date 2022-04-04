@@ -26,29 +26,28 @@ import v1.models.response.listTransaction.{ListTransactionsResponse, Transaction
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListTransactionsConnector @Inject()(val http: HttpClient,
-                                          val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListTransactionsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listTransactions(request: ListTransactionsParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[ListTransactionsResponse[TransactionItem]]] = {
+  def listTransactions(request: ListTransactionsParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[ListTransactionsResponse[TransactionItem]]] = {
 
     import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
     val from = request.from
-    val to = request.to
+    val to   = request.to
 
     val queryParams: Seq[(String, String)] = Seq(
-      "dateFrom" -> from,
-      "dateTo" -> to,
-      "onlyOpenItems" -> "false",
-      "includeLocks" -> "true",
-      "calculateAccruedInterest" -> "true",
-      "removePOA" -> "false",
+      "dateFrom"                   -> from,
+      "dateTo"                     -> to,
+      "onlyOpenItems"              -> "false",
+      "includeLocks"               -> "true",
+      "calculateAccruedInterest"   -> "true",
+      "removePOA"                  -> "false",
       "customerPaymentInformation" -> "true",
-      "includeStatistical" -> "false"
+      "includeStatistical"         -> "false"
     )
 
     get(
@@ -56,4 +55,5 @@ class ListTransactionsConnector @Inject()(val http: HttpClient,
       queryParams
     )
   }
+
 }

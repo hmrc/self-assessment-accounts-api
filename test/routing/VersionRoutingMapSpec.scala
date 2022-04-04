@@ -48,4 +48,5 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       Seq((true, v1WithCodingOutRoutes), (false, v1Routes)).foreach(args => (test _).tupled(args))
     }
   }
+
 }

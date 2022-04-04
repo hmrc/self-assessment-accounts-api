@@ -249,9 +249,8 @@ trait RetrieveTransactionDetailsResponseFixture {
   )
 
   val responseModelMultiple: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
-    transactionItems =
-      responseModelCharge.transactionItems ++
-        responseModelPayment.transactionItems
+    transactionItems = responseModelCharge.transactionItems ++
+      responseModelPayment.transactionItems
   )
 
   val responseModelNoTransactions: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
@@ -372,4 +371,5 @@ trait RetrieveTransactionDetailsResponseFixture {
       |}
     """.stripMargin
   )
+
 }

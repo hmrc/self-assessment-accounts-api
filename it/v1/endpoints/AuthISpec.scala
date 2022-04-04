@@ -26,8 +26,8 @@ import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class AuthISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456A"
-    val paymentLot = "123456789012"
+    val nino           = "AA123456A"
+    val paymentLot     = "123456789012"
     val paymentLotItem = "123456"
 
     def setupStubs(): StubMapping
@@ -37,6 +37,7 @@ class AuthISpec extends IntegrationBaseSpec {
       buildRequest(s"/$nino/payments/$paymentLot-$paymentLotItem")
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling GET allocation details endpoint" when {

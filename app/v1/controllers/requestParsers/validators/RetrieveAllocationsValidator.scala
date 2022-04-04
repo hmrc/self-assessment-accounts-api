@@ -34,4 +34,5 @@ class RetrieveAllocationsValidator extends Validator[RetrieveAllocationsRawReque
   override def validate(data: RetrieveAllocationsRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
+
 }

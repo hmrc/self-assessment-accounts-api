@@ -29,9 +29,9 @@ import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class ListChargesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456A"
+    val nino                 = "AA123456A"
     val from: Option[String] = Some("2018-10-01")
-    val to: Option[String] = Some("2019-10-01")
+    val to: Option[String]   = Some("2019-10-01")
 
     def uri: String = s"/$nino/charges"
 
@@ -42,14 +42,15 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     def request: WSRequest = {
 
       val queryParams = Seq("from" -> from, "to" -> to)
-        .collect {
-          case (k, Some(v)) => (k, v)
+        .collect { case (k, Some(v)) =>
+          (k, v)
         }
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the list charges endpoint" should {
@@ -57,14 +58,14 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
       "valid request is made" in new Test {
 
         val desQueryParams: Map[String, String] = Map(
-          "dateFrom" -> from.get,
-          "dateTo" -> to.get,
-          "onlyOpenItems" -> "false",
-          "includeLocks" -> "true",
-          "calculateAccruedInterest" -> "true",
-          "removePOA" -> "true",
+          "dateFrom"                   -> from.get,
+          "dateTo"                     -> to.get,
+          "onlyOpenItems"              -> "false",
+          "includeLocks"               -> "true",
+          "calculateAccruedInterest"   -> "true",
+          "removePOA"                  -> "true",
           "customerPaymentInformation" -> "true",
-          "includeStatistical" -> "false"
+          "includeStatistical"         -> "false"
         )
 
         override def setupStubs(): StubMapping = {
@@ -84,13 +85,16 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, fromDate: Option[String],
-                              toDate: Option[String], expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String,
+                              fromDate: Option[String],
+                              toDate: Option[String],
+                              expectedStatus: Int,
+                              expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
+          override val nino: String         = requestNino
           override val from: Option[String] = fromDate
-          override val to: Option[String] = toDate
+          override val to: Option[String]   = toDate
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -170,4 +174,5 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

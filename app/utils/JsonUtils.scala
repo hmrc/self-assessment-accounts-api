@@ -27,5 +27,7 @@ trait JsonUtils {
       val transformer = (JsPath \ fieldName).json.prune
       Json.toJson(a)(writes).validate(transformer).get
     }
+
   }
+
 }

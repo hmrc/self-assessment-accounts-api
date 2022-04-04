@@ -19,7 +19,7 @@ package v1.models.response.retrieveTransactionDetails
 import play.api.libs.json._
 import utils.{JsonUtils, Logging}
 
-case class SubItem (subItemId: Option[String],
+case class SubItem(subItemId: Option[String],
                    amount: Option[BigDecimal],
                    clearingDate: Option[String],
                    clearingReason: Option[String],
@@ -36,19 +36,19 @@ object SubItem extends JsonUtils with Logging {
   implicit val writes: OWrites[SubItem] = Json.writes[SubItem].removeField("dueDate")
 
   implicit val reads: Reads[SubItem] = for {
-    subItemId <- (JsPath \ "subItem").readNullable[String](Reads.of[String].filter(subItemJsonError)(isIntString))
-    amount <- (JsPath \ "amount").readNullable[BigDecimal]
-    clearingDate <- (JsPath \ "clearingDate").readNullable[String]
-    clearingReason <- (JsPath \ "clearingReason").readNullable[String]
+    subItemId             <- (JsPath \ "subItem").readNullable[String](Reads.of[String].filter(subItemJsonError)(isIntString))
+    amount                <- (JsPath \ "amount").readNullable[BigDecimal]
+    clearingDate          <- (JsPath \ "clearingDate").readNullable[String]
+    clearingReason        <- (JsPath \ "clearingReason").readNullable[String]
     outgoingPaymentMethod <- (JsPath \ "outgoingPaymentMethod").readNullable[String]
-    paymentAmount <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
-    dueDate <- (JsPath \ "dueDate").readNullable[String]
-    paymentMethod <- (JsPath \ "paymentMethod").readNullable[String]
-    paymentLot <- (JsPath \ "paymentLot").readNullable[String]
-    paymentLotItem <- (JsPath \ "paymentLotItem").readNullable[String]
+    paymentAmount         <- (JsPath \ "paymentAmount").readNullable[BigDecimal]
+    dueDate               <- (JsPath \ "dueDate").readNullable[String]
+    paymentMethod         <- (JsPath \ "paymentMethod").readNullable[String]
+    paymentLot            <- (JsPath \ "paymentLot").readNullable[String]
+    paymentLotItem        <- (JsPath \ "paymentLotItem").readNullable[String]
   } yield {
     val id: Option[String] = for {
-      pl <- paymentLot
+      pl  <- paymentLot
       pli <- paymentLotItem
     } yield s"$pl-$pli"
     SubItem(
@@ -78,4 +78,5 @@ object SubItem extends JsonUtils with Logging {
   private def subItemJsonError: JsonValidationError = JsonValidationError(
     message = "The field 'subItem' should be parsable as an integer"
   )
+
 }
