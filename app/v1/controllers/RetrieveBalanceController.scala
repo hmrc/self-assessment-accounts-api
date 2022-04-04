@@ -36,15 +36,17 @@ import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, Ret
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService,
-                                          val lookupService: MtdIdLookupService,
-                                          auditService: AuditService,
-                                          requestParser: RetrieveBalanceRequestParser,
-                                          service: RetrieveBalanceService,
-                                          hateoasFactory: HateoasFactory,
-                                          cc: ControllerComponents,
-                                          val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+class RetrieveBalanceController @Inject() (val authService: EnrolmentsAuthService,
+                                           val lookupService: MtdIdLookupService,
+                                           auditService: AuditService,
+                                           requestParser: RetrieveBalanceRequestParser,
+                                           service: RetrieveBalanceService,
+                                           hateoasFactory: HateoasFactory,
+                                           cc: ControllerComponents,
+                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -62,7 +64,7 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
       val rawRequest = RetrieveBalanceRawRequest(nino)
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveBalance(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory
@@ -79,7 +81,8 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
               params = Map("nino" -> nino),
               requestBody = None,
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, None, None))
+              auditResponse = AuditResponse(httpStatus = OK, None, None)
+            )
           )
 
           Ok(Json.toJson(vendorResponse))
@@ -88,7 +91,7 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
         }
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -109,15 +112,13 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case NotFoundError                     => NotFound(Json.toJson(errorWrapper))
+      case DownstreamError                   => InternalServerError(Json.toJson(errorWrapper))
+      case _                                 => unhandledError(errorWrapper)
     }
   }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 
     val event = AuditEvent(
       auditType = "retrieveASelfAssessmentBalance",
@@ -127,4 +128,5 @@ class RetrieveBalanceController @Inject()(val authService: EnrolmentsAuthService
 
     auditService.auditEvent(event)
   }
+
 }

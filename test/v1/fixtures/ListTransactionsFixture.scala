@@ -346,4 +346,5 @@ object ListTransactionsFixture {
   val fullMultipleItemsListTransactionsModel: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
     transactions = Seq(chargesTransactionItemModel, paymentsTransactionItemModel)
   )
+
 }

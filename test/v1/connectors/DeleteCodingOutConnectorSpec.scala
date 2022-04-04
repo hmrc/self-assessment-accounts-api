@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class DeleteCodingOutConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
+  val nino: String    = "AA111111A"
   val taxYear: String = "2021-22"
 
   val request: DeleteCodingOutParsedRequest = DeleteCodingOutParsedRequest(
@@ -36,6 +36,7 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
   )
 
   class Test extends MockHttpClient with MockAppConfig {
+
     val connector: DeleteCodingOutConnector = new DeleteCodingOutConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
@@ -52,7 +53,7 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
       "return a 204 status for a success scenario" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        implicit val hc: HeaderCarrier                      = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredIfsHeadersDelete: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
 
         MockHttpClient
@@ -61,10 +62,12 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
             config = dummyIfsHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeadersDelete,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.deleteCodingOut(request)) shouldBe outcome
       }
     }
   }
+
 }

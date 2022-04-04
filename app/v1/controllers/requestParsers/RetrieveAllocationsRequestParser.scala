@@ -21,13 +21,13 @@ import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveAllocationsValidator
 import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
 
-class RetrieveAllocationsRequestParser @Inject()(val validator: RetrieveAllocationsValidator)
-  extends RequestParser[RetrieveAllocationsRawRequest, RetrieveAllocationsParsedRequest] {
+class RetrieveAllocationsRequestParser @Inject() (val validator: RetrieveAllocationsValidator)
+    extends RequestParser[RetrieveAllocationsRawRequest, RetrieveAllocationsParsedRequest] {
 
   override protected def requestFor(data: RetrieveAllocationsRawRequest): RetrieveAllocationsParsedRequest = {
 
-    val paymentLot = data.paymentId.split("-")(0)
-    val paymentLotItem  = data.paymentId.split("-")(1)
+    val paymentLot     = data.paymentId.split("-")(0)
+    val paymentLotItem = data.paymentId.split("-")(1)
 
     RetrieveAllocationsParsedRequest(Nino(data.nino), paymentLot, paymentLotItem)
   }

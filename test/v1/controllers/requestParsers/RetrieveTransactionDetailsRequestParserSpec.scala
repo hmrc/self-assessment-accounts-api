@@ -28,17 +28,18 @@ class RetrieveTransactionDetailsRequestParserSpec extends UnitSpec {
     lazy val parser = new RetrieveTransactionDetailsRequestParser(mockValidator)
   }
 
-  private val validNino = "AA111111A"
-  private val validTransactionId = "F02LDPDEE"
-  private val invalidNino = "notANino"
-  private val invalidTransactionId = "notATransactionNino"
+  private val validNino              = "AA111111A"
+  private val validTransactionId     = "F02LDPDEE"
+  private val invalidNino            = "notANino"
+  private val invalidTransactionId   = "notATransactionNino"
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   "parsing a retrieve TransactionDetails request" should {
     "return a retrieve TransactionDetails request" when {
       "valid data is provided" in new Test {
 
-        MockRetrieveTransactionDetailsValidator.validate(RetrieveTransactionDetailsRawRequest(validNino, validTransactionId))
+        MockRetrieveTransactionDetailsValidator
+          .validate(RetrieveTransactionDetailsRawRequest(validNino, validTransactionId))
           .returns(Nil)
 
         parser.parseRequest(RetrieveTransactionDetailsRawRequest(validNino, validTransactionId)) shouldBe
@@ -48,8 +49,9 @@ class RetrieveTransactionDetailsRequestParserSpec extends UnitSpec {
   }
 
   "return an error" when {
-    "invalid data is provided" in new Test{
-      MockRetrieveTransactionDetailsValidator.validate(RetrieveTransactionDetailsRawRequest(invalidNino, validTransactionId))
+    "invalid data is provided" in new Test {
+      MockRetrieveTransactionDetailsValidator
+        .validate(RetrieveTransactionDetailsRawRequest(invalidNino, validTransactionId))
         .returns(List(NinoFormatError))
 
       parser.parseRequest(RetrieveTransactionDetailsRawRequest(invalidNino, validTransactionId)) shouldBe
@@ -58,12 +60,14 @@ class RetrieveTransactionDetailsRequestParserSpec extends UnitSpec {
   }
 
   "return multiple errors" when {
-    "multiple request parameters are supplied" in new Test{
-      MockRetrieveTransactionDetailsValidator.validate(RetrieveTransactionDetailsRawRequest(invalidNino, invalidTransactionId))
+    "multiple request parameters are supplied" in new Test {
+      MockRetrieveTransactionDetailsValidator
+        .validate(RetrieveTransactionDetailsRawRequest(invalidNino, invalidTransactionId))
         .returns(List(NinoFormatError, TransactionIdFormatError))
 
       parser.parseRequest(RetrieveTransactionDetailsRawRequest(invalidNino, invalidTransactionId)) shouldBe
         Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TransactionIdFormatError))))
     }
   }
+
 }

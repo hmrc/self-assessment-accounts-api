@@ -32,14 +32,13 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListChargesService @Inject()(listChargesConnector: ListChargesConnector)
-  extends DesResponseMappingSupport with Logging {
+class ListChargesService @Inject() (listChargesConnector: ListChargesConnector) extends DesResponseMappingSupport with Logging {
 
-  def list(request: ListChargesParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]] = {
+  def list(request: ListChargesParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(listChargesConnector.listCharges(request)).leftMap(mapDesErrors(desErrorMap))
@@ -50,24 +49,24 @@ class ListChargesService @Inject()(listChargesConnector: ListChargesConnector)
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDTYPE" -> DownstreamError,
-      "INVALID_IDNUMBER" -> NinoFormatError,
-      "INVALID_REGIME_TYPE" -> DownstreamError,
-      "INVALID_DATE_FROM" -> FromDateFormatError,
-      "INVALID_DATE_TO" -> ToDateFormatError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError,
-      "INVALID_DOC_NUMBER" -> DownstreamError,
-      "INVALID_ONLY_OPEN_ITEMS" -> DownstreamError,
-      "INVALID_INCLUDE_LOCKS" -> DownstreamError,
-      "INVALID_CALCULATE_ACCRUED_INTEREST" -> DownstreamError,
+      "INVALID_IDTYPE"                       -> DownstreamError,
+      "INVALID_IDNUMBER"                     -> NinoFormatError,
+      "INVALID_REGIME_TYPE"                  -> DownstreamError,
+      "INVALID_DATE_FROM"                    -> FromDateFormatError,
+      "INVALID_DATE_TO"                      -> ToDateFormatError,
+      "NO_DATA_FOUND"                        -> NotFoundError,
+      "SERVER_ERROR"                         -> DownstreamError,
+      "SERVICE_UNAVAILABLE"                  -> DownstreamError,
+      "INVALID_DOC_NUMBER"                   -> DownstreamError,
+      "INVALID_ONLY_OPEN_ITEMS"              -> DownstreamError,
+      "INVALID_INCLUDE_LOCKS"                -> DownstreamError,
+      "INVALID_CALCULATE_ACCRUED_INTEREST"   -> DownstreamError,
       "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
-      "INVALID_DATE_RANGE" -> RuleDateRangeInvalidError,
-      "INVALID_REQUEST" -> DownstreamError,
-      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> DownstreamError,
-      "INVALID_INCLUDE_STATISTICAL" -> DownstreamError,
-      "REQUEST_NOT_PROCESSED" -> DownstreamError
+      "INVALID_DATE_RANGE"                   -> RuleDateRangeInvalidError,
+      "INVALID_REQUEST"                      -> DownstreamError,
+      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> DownstreamError,
+      "INVALID_INCLUDE_STATISTICAL"          -> DownstreamError,
+      "REQUEST_NOT_PROCESSED"                -> DownstreamError
     )
 
 }

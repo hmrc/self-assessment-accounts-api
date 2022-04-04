@@ -23,14 +23,14 @@ import v1.models.auth.UserDetails
 
 object GenericAuditDetailFixture {
 
-  val nino: String = "ZG903729C"
-  val taxYear: String = "2019-20"
-  val userType: String = "Agent"
+  val nino: String                         = "ZG903729C"
+  val taxYear: String                      = "2019-20"
+  val userType: String                     = "Agent"
   val agentReferenceNumber: Option[String] = Some("012345678")
-  val userDetails: UserDetails = UserDetails("", "Agent", agentReferenceNumber)
-  val pathParams: Map[String, String] = Map("nino" -> nino, "taxYear" -> taxYear)
-  val requestBody: Option[JsValue] = None
-  val correlationId = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
+  val userDetails: UserDetails             = UserDetails("", "Agent", agentReferenceNumber)
+  val pathParams: Map[String, String]      = Map("nino" -> nino, "taxYear" -> taxYear)
+  val requestBody: Option[JsValue]         = None
+  val correlationId                        = "a1e8057e-fbbc-47a8-a8b478d9f015c253"
 
   val genericAuditDetailModelSuccess: GenericAuditDetail =
     GenericAuditDetail(
@@ -75,4 +75,5 @@ object GenericAuditDetailFixture {
        |}
      """.stripMargin
   )
+
 }

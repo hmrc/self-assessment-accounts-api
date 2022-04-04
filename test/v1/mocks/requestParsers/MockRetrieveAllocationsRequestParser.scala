@@ -31,6 +31,7 @@ trait MockRetrieveAllocationsRequestParser extends MockFactory {
     def parse(data: RetrieveAllocationsRawRequest): CallHandler[Either[ErrorWrapper, RetrieveAllocationsParsedRequest]] = {
       (mockRetrieveAllocationsRequestParser.parseRequest(_: RetrieveAllocationsRawRequest)(_: String)).expects(data, *)
     }
+
   }
 
 }

@@ -31,13 +31,13 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends DesResponseMappingSupport with Logging {
+class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOutConnector) extends DesResponseMappingSupport with Logging {
 
-  def amend(request: CreateOrAmendCodingOutParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amend(request: CreateOrAmendCodingOutParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.amendCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
@@ -49,11 +49,12 @@ class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutC
   private def desErrorMap =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_PAYLOAD" -> DownstreamError,
-      "INVALID_REQUEST_TAX_YEAR" -> RuleTaxYearNotEndedError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"     -> DownstreamError,
+      "INVALID_PAYLOAD"           -> DownstreamError,
+      "INVALID_REQUEST_TAX_YEAR"  -> RuleTaxYearNotEndedError,
+      "SERVER_ERROR"              -> DownstreamError,
+      "SERVICE_UNAVAILABLE"       -> DownstreamError
     )
+
 }

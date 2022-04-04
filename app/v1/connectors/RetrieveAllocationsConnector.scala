@@ -28,19 +28,18 @@ import v1.models.response.retrieveAllocations.detail.AllocationDetail
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
-                                             val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveAllocationsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveAllocationsResponse[AllocationDetail]]] = {
+  def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveAllocationsResponse[AllocationDetail]]] = {
 
     val nino = request.nino.nino
 
     val queryParams: Seq[(String, String)] =
       Seq(
-        "paymentLot" -> request.paymentLot,
+        "paymentLot"     -> request.paymentLot,
         "paymentLotItem" -> request.paymentLotItem
       )
 
@@ -49,4 +48,5 @@ class RetrieveAllocationsConnector @Inject()(val http: HttpClient,
       queryParams
     )
   }
+
 }

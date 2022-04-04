@@ -40,4 +40,5 @@ class TransactionIdValidationSpec extends UnitSpec with JsonErrorValidators {
     }
 
   }
+
 }

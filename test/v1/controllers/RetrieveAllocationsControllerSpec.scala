@@ -40,7 +40,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveAllocationsControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockRetrieveAllocationsService
@@ -50,11 +50,11 @@ class RetrieveAllocationsControllerSpec
     with MockAuditService
     with MockIdGenerator {
 
-  private val nino = "AA123456A"
-  private val paymentId = "aLot-anItem"
-  private val paymentLot = "aLot"
+  private val nino           = "AA123456A"
+  private val paymentId      = "aLot-anItem"
+  private val paymentLot     = "aLot"
   private val paymentLotItem = "anItem"
-  private val correlationId = "X-123"
+  private val correlationId  = "X-123"
 
   private val rawRequest: RetrieveAllocationsRawRequest =
     RetrieveAllocationsRawRequest(
@@ -91,7 +91,7 @@ class RetrieveAllocationsControllerSpec
     )
 
   private val retrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
-  private val mtdResponse = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas
+  private val mtdResponse                 = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas
 
   private val hateoasResponse =
     retrieveAllocationsResponse.copy(
@@ -235,4 +235,5 @@ class RetrieveAllocationsControllerSpec
       }
     }
   }
+
 }

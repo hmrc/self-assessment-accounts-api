@@ -51,4 +51,5 @@ object DesStub extends WireMockMethods {
     when(method = GET, uri = url(nino), queryParams = Map("paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem))
       .thenReturn(status = OK, RetrieveAllocationsResponseFixture.desJson)
   }
+
 }

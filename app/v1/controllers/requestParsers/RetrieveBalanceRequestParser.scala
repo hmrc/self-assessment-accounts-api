@@ -21,8 +21,8 @@ import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveBalanceValidator
 import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, RetrieveBalanceRawRequest}
 
-class RetrieveBalanceRequestParser @Inject()(val validator: RetrieveBalanceValidator)
-  extends RequestParser[RetrieveBalanceRawRequest, RetrieveBalanceParsedRequest] {
+class RetrieveBalanceRequestParser @Inject() (val validator: RetrieveBalanceValidator)
+    extends RequestParser[RetrieveBalanceRawRequest, RetrieveBalanceParsedRequest] {
 
   override protected def requestFor(data: RetrieveBalanceRawRequest): RetrieveBalanceParsedRequest = {
     RetrieveBalanceParsedRequest(Nino(data.nino))

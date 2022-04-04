@@ -37,12 +37,12 @@ object TransactionItem {
 
   implicit val reads: Reads[TransactionItem] = for {
     sapDocumentItemId <- (JsPath \ "sapDocumentNumberItem").readNullable[String]
-    transactionType <- (JsPath \ "chargeType").readNullable[String]
-    taxPeriodFrom <- (JsPath \ "taxPeriodFrom").readNullable[String]
-    taxPeriodTo <- (JsPath \ "taxPeriodTo").readNullable[String]
-    originalAmount <- (JsPath \ "originalAmount").readNullable[BigDecimal]
+    transactionType   <- (JsPath \ "chargeType").readNullable[String]
+    taxPeriodFrom     <- (JsPath \ "taxPeriodFrom").readNullable[String]
+    taxPeriodTo       <- (JsPath \ "taxPeriodTo").readNullable[String]
+    originalAmount    <- (JsPath \ "originalAmount").readNullable[BigDecimal]
     outstandingAmount <- (JsPath \ "outstandingAmount").readNullable[BigDecimal]
-    subItems <- (JsPath \ "items").read[Seq[SubItem]].map(_.filterNot(item => item == SubItem.empty || item.subItemId.isEmpty))
+    subItems          <- (JsPath \ "items").read[Seq[SubItem]].map(_.filterNot(item => item == SubItem.empty || item.subItemId.isEmpty))
   } yield {
 
     lazy val lowestNumberedSubItem: SubItem = subItems.foldLeft(SubItem.empty)(returnLowestNumberedItem)
@@ -64,9 +64,10 @@ object TransactionItem {
   val returnLowestNumberedItem: (SubItem, SubItem) => SubItem = (item1: SubItem, item2: SubItem) => {
     (item1.subItemId, item2.subItemId) match {
       case (Some(id1), Some(id2)) => if (id1.toInt < id2.toInt) item1 else item2
-      case (Some(_), None) => item1
-      case (None, Some(_)) => item2
-      case _ => SubItem.empty
+      case (Some(_), None)        => item1
+      case (None, Some(_))        => item2
+      case _                      => SubItem.empty
     }
   }
+
 }

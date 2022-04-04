@@ -30,12 +30,12 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
 
   val nino: String = "AA123456A"
 
-  val paymentLot: String = "anId"
+  val paymentLot: String     = "anId"
   val paymentLotItem: String = "anotherId"
 
   val queryParams: Seq[(String, String)] =
     Seq(
-      "paymentLot" -> paymentLot,
+      "paymentLot"     -> paymentLot,
       "paymentLotItem" -> paymentLotItem
     )
 
@@ -72,10 +72,12 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
             dummyDesHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveAllocations(request)) shouldBe outcome
       }
     }
   }
+
 }

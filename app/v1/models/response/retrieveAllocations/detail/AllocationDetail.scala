@@ -25,18 +25,20 @@ case class AllocationDetail(transactionId: Option[String],
                             `type`: Option[String],
                             amount: Option[BigDecimal],
                             clearedAmount: Option[BigDecimal])
+
 object AllocationDetail {
 
- val emptyAllocation: AllocationDetail = AllocationDetail(None,None,None,None,None,None)
+  val emptyAllocation: AllocationDetail = AllocationDetail(None, None, None, None, None, None)
 
   implicit val writes: OWrites[AllocationDetail] = Json.writes[AllocationDetail]
 
   implicit val reads: Reads[AllocationDetail] = (
-    (JsPath \  "sapDocNumber").readNullable[String] and
+    (JsPath \ "sapDocNumber").readNullable[String] and
       (JsPath \ "taxPeriodStartDate").readNullable[String] and
       (JsPath \ "taxPeriodEndDate").readNullable[String] and
       (JsPath \ "chargeType").readNullable[String] and
       (JsPath \ "amount").readNullable[BigDecimal] and
       (JsPath \ "clearedAmount").readNullable[BigDecimal]
-    )(AllocationDetail.apply _)
+  )(AllocationDetail.apply _)
+
 }

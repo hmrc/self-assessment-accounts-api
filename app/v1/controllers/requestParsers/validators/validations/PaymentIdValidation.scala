@@ -25,4 +25,5 @@ object PaymentIdValidation {
   def validate(paymentId: String): List[MtdError] = {
     if (paymentId.matches(paymentIdRegex)) NoValidationErrors else List(PaymentIdFormatError)
   }
+
 }

@@ -28,12 +28,13 @@ import v1.models.errors.RuleTaxYearNotEndedError
 class TaxYearNotEndedValidationSpec extends UnitSpec {
 
   class Test extends MockCurrentDate {
-    implicit val dateProvider: CurrentDate = mockCurrentDate
+    implicit val dateProvider: CurrentDate   = mockCurrentDate
     val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     def setupDateProvider(date: String): CallHandler[LocalDate] =
       MockCurrentDate.getCurrentDate
         .returns(LocalDate.parse(date, dateTimeFormatter))
+
   }
 
   "validate" should {
@@ -42,7 +43,7 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
 
         setupDateProvider("2022-04-06")
 
-        private val validTaxYear = "2021-22"
+        private val validTaxYear     = "2021-22"
         private val validationResult = TaxYearNotEndedValidation.validate(validTaxYear)
 
         validationResult.isEmpty shouldBe true
@@ -54,7 +55,7 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
 
         setupDateProvider("2022-04-04")
 
-        private val invalidTaxYear = "2021-22"
+        private val invalidTaxYear   = "2021-22"
         private val validationResult = TaxYearNotEndedValidation.validate(invalidTaxYear)
 
         validationResult.isEmpty shouldBe false
@@ -63,4 +64,5 @@ class TaxYearNotEndedValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -21,8 +21,8 @@ import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveChargeHistoryValidator
 import v1.models.request.retrieveChargeHistory.{RetrieveChargeHistoryParsedRequest, RetrieveChargeHistoryRawRequest}
 
-class RetrieveChargeHistoryRequestParser @Inject()(val validator: RetrieveChargeHistoryValidator)
-  extends RequestParser[RetrieveChargeHistoryRawRequest, RetrieveChargeHistoryParsedRequest] {
+class RetrieveChargeHistoryRequestParser @Inject() (val validator: RetrieveChargeHistoryValidator)
+    extends RequestParser[RetrieveChargeHistoryRawRequest, RetrieveChargeHistoryParsedRequest] {
 
   override protected def requestFor(data: RetrieveChargeHistoryRawRequest): RetrieveChargeHistoryParsedRequest = {
     RetrieveChargeHistoryParsedRequest(Nino(data.nino), data.transactionId)

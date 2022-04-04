@@ -33,6 +33,7 @@ trait MockRetrieveAllocationsValidator extends MockFactory {
         .validate(_: RetrieveAllocationsRawRequest))
         .expects(data)
     }
+
   }
 
 }

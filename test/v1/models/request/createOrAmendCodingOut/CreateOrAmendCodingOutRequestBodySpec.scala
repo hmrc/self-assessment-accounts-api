@@ -74,7 +74,8 @@ class CreateOrAmendCodingOutRequestBodySpec extends UnitSpec {
           CreateOrAmendCodingOutRequestBody(TaxCodeComponents(None, None, Some(Seq()), None)).emptyFields shouldBe Seq("/taxCodeComponents/debt")
         }
         "multiple fields are provided and at least one is empty" in {
-          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(Some(Seq(TaxCodeComponent(1, 1))), Some(Seq()), Some(Seq()), None)).emptyFields shouldBe Seq(
+          CreateOrAmendCodingOutRequestBody(
+            TaxCodeComponents(Some(Seq(TaxCodeComponent(1, 1))), Some(Seq()), Some(Seq()), None)).emptyFields shouldBe Seq(
             "/taxCodeComponents/selfAssessmentUnderpayment",
             "/taxCodeComponents/debt")
         }
@@ -94,10 +95,12 @@ class CreateOrAmendCodingOutRequestBodySpec extends UnitSpec {
           CreateOrAmendCodingOutRequestBody(TaxCodeComponents(None, None, Some(Seq(TaxCodeComponent(1, 1))), None)).emptyFields shouldBe Seq()
         }
         "multiple fields are provided and all are non-empty" in {
-          CreateOrAmendCodingOutRequestBody(TaxCodeComponents(Some(Seq(TaxCodeComponent(1, 1))),
-                                                              Some(Seq(TaxCodeComponent(1, 1))),
-                                                              Some(Seq(TaxCodeComponent(1, 1))),
-                                                              None)).emptyFields shouldBe Seq()
+          CreateOrAmendCodingOutRequestBody(
+            TaxCodeComponents(
+              Some(Seq(TaxCodeComponent(1, 1))),
+              Some(Seq(TaxCodeComponent(1, 1))),
+              Some(Seq(TaxCodeComponent(1, 1))),
+              None)).emptyFields shouldBe Seq()
         }
       }
     }

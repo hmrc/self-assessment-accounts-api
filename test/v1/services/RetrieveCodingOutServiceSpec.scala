@@ -83,21 +83,21 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveCodingOutConnector with MockCurrentDate {
 
-    implicit val dateProvider: CurrentDate     = mockCurrentDate
-    val dateTimeFormatter: DateTimeFormatter   = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    implicit val dateProvider: CurrentDate   = mockCurrentDate
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     def setupDateProvider(date: String): CallHandler[LocalDate] =
       MockCurrentDate.getCurrentDate
         .returns(LocalDate.parse(date, dateTimeFormatter))
         .anyNumberOfTimes()
 
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveCodingOutParsedRequest", "retrieveCodingOut")
 
     val service = new RetrieveCodingOutService(
       connector = mockRetrieveCodingOutConnector
     )
+
   }
 
   "RetrieveCodingOutService" when {
@@ -107,7 +107,8 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
         val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse(Some(BigInt(12345678910L)))
 
-        MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+        MockRetrieveCodingOutConnector
+          .retrieveCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
         await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
@@ -121,7 +122,8 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
         val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse(Some(BigInt(12345678910L)))
 
-        MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+        MockRetrieveCodingOutConnector
+          .retrieveCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
         await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
@@ -132,7 +134,8 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
         val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse(None)
 
-        MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+        MockRetrieveCodingOutConnector
+          .retrieveCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
         await(service.retrieveCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
@@ -143,7 +146,8 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
         val connectorResponse: RetrieveCodingOutResponse = retrieveCodingOutResponse(None)
 
-        MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+        MockRetrieveCodingOutConnector
+          .retrieveCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
         await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, DownstreamError))
@@ -157,7 +161,8 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockRetrieveCodingOutConnector.retrieveCodingOut(requestData)
+            MockRetrieveCodingOutConnector
+              .retrieveCodingOut(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -165,17 +170,18 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
         val input: Seq[(String, MtdError)] = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-          "INVALID_TAX_YEAR" -> TaxYearFormatError,
-          "INVALID_VIEW" -> SourceFormatError,
-          "INVALID_CORRELATIONID" -> DownstreamError,
-          "NO_DATA_FOUND" -> CodingOutNotFoundError,
-          "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-          "SERVER_ERROR" -> DownstreamError,
-          "SERVICE_UNAVAILABLE" -> DownstreamError
+          "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+          "INVALID_VIEW"              -> SourceFormatError,
+          "INVALID_CORRELATIONID"     -> DownstreamError,
+          "NO_DATA_FOUND"             -> CodingOutNotFoundError,
+          "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
+          "SERVER_ERROR"              -> DownstreamError,
+          "SERVICE_UNAVAILABLE"       -> DownstreamError
         )
 
         input.foreach(args => (serviceError _).tupled(args))
       }
     }
   }
+
 }

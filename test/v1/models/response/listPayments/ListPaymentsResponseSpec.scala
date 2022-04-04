@@ -21,8 +21,7 @@ import support.UnitSpec
 
 class ListPaymentsResponseSpec extends UnitSpec {
 
-  private val desJson = Json.parse(
-    """
+  private val desJson = Json.parse("""
       |{
       |  "paymentDetails": [
       |    {
@@ -36,8 +35,7 @@ class ListPaymentsResponseSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val invalidDesJson = Json.parse(
-    """
+  private val invalidDesJson = Json.parse("""
       |{
       |  "notPaymentDetails": [
       |    {
@@ -53,8 +51,7 @@ class ListPaymentsResponseSpec extends UnitSpec {
 
   private val mtdModel = ListPaymentsResponse(Seq(Payment(Some("123-456"), Some(10.25), Some("beans"), Some("10/01/2020"))))
 
-  private val mtdJson = Json.parse(
-    """
+  private val mtdJson = Json.parse("""
       |{
       |  "payments": [
       |    {
@@ -84,4 +81,5 @@ class ListPaymentsResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

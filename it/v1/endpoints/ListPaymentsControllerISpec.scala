@@ -29,11 +29,11 @@ import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 class ListPaymentsControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
-    val nino = "AA123456A"
-    val correlationId = "X-123"
+    val nino                 = "AA123456A"
+    val correlationId        = "X-123"
     val from: Option[String] = Some("2018-10-01")
-    val to : Option[String]  = Some("2019-10-01")
-    def uri: String = s"/$nino/payments"
+    val to: Option[String]   = Some("2019-10-01")
+    def uri: String          = s"/$nino/payments"
 
     def desUrl: String = s"/cross-regime/payment-allocation/NINO/$nino/ITSA"
 
@@ -42,14 +42,15 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
     def request: WSRequest = {
 
       val queryParams = Seq("from" -> from, "to" -> to)
-        .collect {
-          case (k, Some(v)) => (k, v)
+        .collect { case (k, Some(v)) =>
+          (k, v)
         }
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the list payments endpoint" should {
@@ -75,13 +76,12 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, fromDate: String,
-                              toDate: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, fromDate: String, toDate: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String = requestNino
+          override val nino: String         = requestNino
           override val from: Option[String] = Some(fromDate)
-          override val to: Option[String] = Some(toDate)
+          override val to: Option[String]   = Some(toDate)
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -157,4 +157,5 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

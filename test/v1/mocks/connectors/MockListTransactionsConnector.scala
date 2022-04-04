@@ -31,11 +31,13 @@ trait MockListTransactionsConnector extends MockFactory {
 
   object MockListTransactionsConnector {
 
-    def listTransactions(requestData: ListTransactionsParsedRequest): CallHandler[Future[DownstreamOutcome[ListTransactionsResponse[TransactionItem]]]] = {
+    def listTransactions(
+        requestData: ListTransactionsParsedRequest): CallHandler[Future[DownstreamOutcome[ListTransactionsResponse[TransactionItem]]]] = {
       (mockListTransactionsConnector
         .listTransactions(_: ListTransactionsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
 
 }

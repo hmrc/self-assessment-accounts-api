@@ -32,9 +32,10 @@ trait MockDeleteCodingOutConnector extends MockFactory {
 
     def deleteCodingOut(requestData: DeleteCodingOutParsedRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockDeleteCodingOutConnector
-        .deleteCodingOut(_: DeleteCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _:String))
+        .deleteCodingOut(_: DeleteCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
 
 }

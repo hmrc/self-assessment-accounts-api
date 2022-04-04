@@ -26,23 +26,29 @@ case class RetrieveTransactionDetailsResponse(transactionItems: Seq[TransactionI
 object RetrieveTransactionDetailsResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveTransactionDetailsResponse] =
-   (JsPath \ "financialDetails").read[Seq[TransactionItem]]
-     .map(items => RetrieveTransactionDetailsResponse(items.filterNot(_ == TransactionItem.empty)))
+    (JsPath \ "financialDetails")
+      .read[Seq[TransactionItem]]
+      .map(items => RetrieveTransactionDetailsResponse(items.filterNot(_ == TransactionItem.empty)))
 
   implicit val writes: OWrites[RetrieveTransactionDetailsResponse] =
     Json.writes[RetrieveTransactionDetailsResponse]
 
-  implicit object RetrieveTransactionDetailsLinksFactory extends HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData]{
+  implicit object RetrieveTransactionDetailsLinksFactory
+      extends HateoasLinksFactory[RetrieveTransactionDetailsResponse, RetrieveTransactionDetailsHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveTransactionDetailsHateoasData): Seq[Link] = {
       import data._
-        paymentId match {
-          case Some(pid) => Seq(
+      paymentId match {
+        case Some(pid) =>
+          Seq(
             retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = true),
             retrievePaymentAllocations(appConfig, nino, pid, isSelf = false))
-          case None => Seq(retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = true))
-        }
+        case None => Seq(retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = true))
+      }
     }
+
   }
+
 }
 
 case class RetrieveTransactionDetailsHateoasData(nino: String, transactionId: String, paymentId: Option[String]) extends HateoasData

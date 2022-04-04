@@ -16,7 +16,7 @@
 
 package v1.models.request.createOrAmendCodingOut
 
-import play.api.libs.json.{ Json, OFormat }
+import play.api.libs.json.{Json, OFormat}
 
 case class CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComponents) {
 
@@ -31,6 +31,7 @@ case class CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComponent
         getEmptyFieldName(seqO = taxCodeComponents.selfAssessmentUnderpayment, fieldName = "selfAssessmentUnderpayment") ++
         getEmptyFieldName(seqO = taxCodeComponents.debt, fieldName = "debt")
     }
+
 }
 
 object CreateOrAmendCodingOutRequestBody {

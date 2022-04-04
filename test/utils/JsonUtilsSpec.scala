@@ -24,8 +24,8 @@ class JsonUtilsSpec extends UnitSpec {
   case class TestClass(field1: String, field2: String)
 
   object TestClass extends JsonUtils {
-    implicit val reads: Reads[TestClass] = Json.reads[TestClass]
-    implicit val writes: OWrites[TestClass] = Json.writes[TestClass].removeField("field2")
+    implicit val reads: Reads[TestClass]         = Json.reads[TestClass]
+    implicit val writes: OWrites[TestClass]      = Json.writes[TestClass].removeField("field2")
     implicit val wrongWrites: OWrites[TestClass] = Json.writes[TestClass].removeField("field3")
   }
 
@@ -59,4 +59,5 @@ class JsonUtilsSpec extends UnitSpec {
       }
     }
   }
+
 }

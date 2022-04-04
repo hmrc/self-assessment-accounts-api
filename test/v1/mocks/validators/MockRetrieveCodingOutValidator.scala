@@ -22,15 +22,18 @@ import v1.controllers.requestParsers.validators.RetrieveCodingOutValidator
 import v1.models.errors.MtdError
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
 
-trait MockRetrieveCodingOutValidator extends MockFactory{
+trait MockRetrieveCodingOutValidator extends MockFactory {
 
   val mockValidator: RetrieveCodingOutValidator = mock[RetrieveCodingOutValidator]
 
   object MockValidator {
+
     def validate(data: RetrieveCodingOutRawRequest): CallHandler1[RetrieveCodingOutRawRequest, List[MtdError]] = {
-      (mockValidator.validate(_: RetrieveCodingOutRawRequest))
+      (mockValidator
+        .validate(_: RetrieveCodingOutRawRequest))
         .expects(data)
     }
+
   }
 
 }

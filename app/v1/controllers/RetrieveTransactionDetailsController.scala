@@ -35,16 +35,19 @@ import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsR
 import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveTransactionDetailsService}
 
 import scala.concurrent.{ExecutionContext, Future}
+
 @Singleton
-class RetrieveTransactionDetailsController @Inject()(val authService: EnrolmentsAuthService,
-                                                     val lookupService: MtdIdLookupService,
-                                                     auditService: AuditService,
-                                                     requestParser: RetrieveTransactionDetailsRequestParser,
-                                                     service: RetrieveTransactionDetailsService,
-                                                     hateoasFactory: HateoasFactory,
-                                                     cc: ControllerComponents,
-                                                     val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+class RetrieveTransactionDetailsController @Inject() (val authService: EnrolmentsAuthService,
+                                                      val lookupService: MtdIdLookupService,
+                                                      auditService: AuditService,
+                                                      requestParser: RetrieveTransactionDetailsRequestParser,
+                                                      service: RetrieveTransactionDetailsService,
+                                                      hateoasFactory: HateoasFactory,
+                                                      cc: ControllerComponents,
+                                                      val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -54,7 +57,6 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
 
   def retrieveTransactionDetails(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -62,17 +64,18 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
 
       val rawRequest = RetrieveTransactionDetailsRawRequest(nino, transactionId)
       val result = for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-          serviceResponse <- EitherT(service.retrieveTransactionDetails(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData,
-                RetrieveTransactionDetailsHateoasData(nino,transactionId,serviceResponse.responseData.transactionItems.head.paymentId))
-              .asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
+        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
+        serviceResponse <- EitherT(service.retrieveTransactionDetails(parsedRequest))
+        vendorResponse <- EitherT.fromEither[Future](
+          hateoasFactory
+            .wrap(
+              serviceResponse.responseData,
+              RetrieveTransactionDetailsHateoasData(nino, transactionId, serviceResponse.responseData.transactionItems.head.paymentId))
+            .asRight[ErrorWrapper])
+      } yield {
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
 
         auditSubmission(
           GenericAuditDetail(
@@ -80,16 +83,17 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
             params = Map("nino" -> nino),
             requestBody = None,
             `X-CorrelationId` = serviceResponse.correlationId,
-            auditResponse = AuditResponse(httpStatus = OK, None, None))
+            auditResponse = AuditResponse(httpStatus = OK, None, None)
+          )
         )
 
         Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
+          .withApiHeaders(serviceResponse.correlationId)
+          .as(MimeTypes.JSON)
+      }
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -111,16 +115,14 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TransactionIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case NoTransactionDetailsFoundError => NotFound(Json.toJson(NoTransactionDetailsFoundError))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case NotFoundError                                                => NotFound(Json.toJson(errorWrapper))
+      case NoTransactionDetailsFoundError                               => NotFound(Json.toJson(NoTransactionDetailsFoundError))
+      case DownstreamError                                              => InternalServerError(Json.toJson(errorWrapper))
+      case _                                                            => unhandledError(errorWrapper)
     }
   }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 
     val event = AuditEvent(
       auditType = "retrieveASelfAssessmentTransactionsDetail",
@@ -130,4 +132,5 @@ class RetrieveTransactionDetailsController @Inject()(val authService: Enrolments
 
     auditService.auditEvent(event)
   }
+
 }

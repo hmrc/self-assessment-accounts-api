@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class CreateOrAmendCodingOutControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockCreateOrAmendCodingOutService
@@ -45,8 +45,8 @@ class CreateOrAmendCodingOutControllerSpec
     with MockIdGenerator
     with MockAuditService {
 
-  private val nino = "AA123456A"
-  private val taxYear = "2019-20"
+  private val nino          = "AA123456A"
+  private val taxYear       = "2019-20"
   private val correlationId = "X-123"
 
   trait Test {
@@ -111,8 +111,7 @@ class CreateOrAmendCodingOutControllerSpec
     inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
   ))
 
-  val responseBody: JsValue = Json.parse(
-    s"""|{
+  val responseBody: JsValue = Json.parse(s"""|{
         |  "links": [
         |    {
         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
@@ -147,7 +146,7 @@ class CreateOrAmendCodingOutControllerSpec
       )
     )
 
-  private val rawData = CreateOrAmendCodingOutRawRequest(nino, taxYear, requestJson)
+  private val rawData     = CreateOrAmendCodingOutRawRequest(nino, taxYear, requestJson)
   private val requestData = CreateOrAmendCodingOutParsedRequest(Nino(nino), taxYear, requestBody)
 
   "handleRequest" should {
@@ -243,4 +242,5 @@ class CreateOrAmendCodingOutControllerSpec
       }
     }
   }
+
 }

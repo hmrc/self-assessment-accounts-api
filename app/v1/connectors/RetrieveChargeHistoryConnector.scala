@@ -27,15 +27,14 @@ import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryConnector @Inject()(val http: HttpClient,
-                                               val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveChargeHistoryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
+  def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
-    val nino = request.nino.nino
+    val nino          = request.nino.nino
     val transactionId = request.transactionId
 
     val queryParams = Seq("docNumber" -> transactionId)
@@ -45,4 +44,5 @@ class RetrieveChargeHistoryConnector @Inject()(val http: HttpClient,
       queryParams
     )
   }
+
 }

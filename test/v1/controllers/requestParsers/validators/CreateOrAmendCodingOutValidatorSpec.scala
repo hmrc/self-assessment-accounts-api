@@ -36,8 +36,9 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
   private val invalidTaxYear      = "not a tax year"
   private val invalidTaxYearRange = "2021-25"
 
-  private val validJson = Json.parse(
-    """
+  private val validJson = Json
+    .parse(
+      """
       |{
       |  "taxCodeComponents": {
       |    "payeUnderpayment": [
@@ -65,7 +66,8 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
       |  }
       |}
     """.stripMargin
-  ).as[JsObject]
+    )
+    .as[JsObject]
 
   private val invalidJson = Json.parse(
     """
@@ -111,10 +113,10 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
 
   class Test extends MockCurrentDate with MockAppConfig {
 
-    implicit val dateProvider: CurrentDate     = mockCurrentDate
-    val dateTimeFormatter: DateTimeFormatter   = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-    implicit val appConfig: AppConfig          = mockAppConfig
-    val validator                              = new CreateOrAmendCodingOutValidator()
+    implicit val dateProvider: CurrentDate   = mockCurrentDate
+    val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    implicit val appConfig: AppConfig        = mockAppConfig
+    val validator                            = new CreateOrAmendCodingOutValidator()
 
     MockCurrentDate.getCurrentDate
       .returns(LocalDate.parse("2022-07-11", dateTimeFormatter))
@@ -134,7 +136,8 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
       }
 
       "a valid request is supplied missing selfAssessmentUnderpayment" in new Test {
-        validator.validate(CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, removeFieldFromJson(validJson, "selfAssessmentUnderpayment"))) shouldBe Nil
+        validator.validate(
+          CreateOrAmendCodingOutRawRequest(validNino, validTaxYear, removeFieldFromJson(validJson, "selfAssessmentUnderpayment"))) shouldBe Nil
       }
 
       "a valid request is supplied missing debt" in new Test {
@@ -200,13 +203,13 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
     }
 
     "return a RuleTaxYearNotSupportedError" when {
-      "the tax year supplied is not supported" in new Test  {
+      "the tax year supplied is not supported" in new Test {
         validator.validate(CreateOrAmendCodingOutRawRequest(validNino, "2020-21", validJson)) shouldBe List(RuleTaxYearNotSupportedError)
       }
     }
 
     "return a RuleTaxYearNotEndedError" when {
-      "the tax year supplied has not ended" in new Test  {
+      "the tax year supplied has not ended" in new Test {
         validator.validate(CreateOrAmendCodingOutRawRequest(validNino, "2022-23", validJson)) shouldBe List(RuleTaxYearNotEndedError)
       }
     }
@@ -239,4 +242,5 @@ class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {
       }
     }
   }
+
 }

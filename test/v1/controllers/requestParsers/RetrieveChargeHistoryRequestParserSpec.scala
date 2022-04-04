@@ -35,7 +35,8 @@ class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
     "return a retrieve Balance request" when {
       "valid data is provided" in new Test {
 
-        MockRetrieveChargeHistoryValidator.validate(validRetrieveChargeHistoryRawRequest)
+        MockRetrieveChargeHistoryValidator
+          .validate(validRetrieveChargeHistoryRawRequest)
           .returns(Nil)
 
         parser.parseRequest(validRetrieveChargeHistoryRawRequest) shouldBe
@@ -45,28 +46,33 @@ class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
   }
 
   "return an error" when {
-    "an invalid nino is provided" in new Test{
-      MockRetrieveChargeHistoryValidator.validate(invalidRetrieveChargeHistoryRawRequestInvalidNino)
+    "an invalid nino is provided" in new Test {
+      MockRetrieveChargeHistoryValidator
+        .validate(invalidRetrieveChargeHistoryRawRequestInvalidNino)
         .returns(List(NinoFormatError))
 
       parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidNino) shouldBe
         Left(ErrorWrapper(correlationId, NinoFormatError, None))
     }
-    "an invalid charge id is provided" in new Test{
-      MockRetrieveChargeHistoryValidator.validate(invalidRetrieveChargeHistoryRawRequestInvalidTransactionId)
+    "an invalid charge id is provided" in new Test {
+      MockRetrieveChargeHistoryValidator
+        .validate(invalidRetrieveChargeHistoryRawRequestInvalidTransactionId)
         .returns(List(TransactionIdFormatError))
 
       parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidTransactionId) shouldBe
         Left(ErrorWrapper(correlationId, TransactionIdFormatError, None))
     }
   }
+
   "return multiple errors" when {
-    "an invalid nino and invalid charge id are provided" in new Test{
-      MockRetrieveChargeHistoryValidator.validate(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId)
+    "an invalid nino and invalid charge id are provided" in new Test {
+      MockRetrieveChargeHistoryValidator
+        .validate(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId)
         .returns(List(NinoFormatError, TransactionIdFormatError))
 
       parser.parseRequest(invalidRetrieveChargeHistoryRawRequestInvalidNinoAndTransactionId) shouldBe
         Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TransactionIdFormatError))))
     }
   }
+
 }

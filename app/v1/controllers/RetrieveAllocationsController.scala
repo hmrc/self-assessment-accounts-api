@@ -36,15 +36,17 @@ import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, Ret
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthService,
-                                              val lookupService: MtdIdLookupService,
-                                              auditService: AuditService,
-                                              requestParser: RetrieveAllocationsRequestParser,
-                                              service: RetrieveAllocationsService,
-                                              hateoasFactory: HateoasFactory,
-                                              cc: ControllerComponents,
-                                              val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+class RetrieveAllocationsController @Inject() (val authService: EnrolmentsAuthService,
+                                               val lookupService: MtdIdLookupService,
+                                               auditService: AuditService,
+                                               requestParser: RetrieveAllocationsRequestParser,
+                                               service: RetrieveAllocationsService,
+                                               hateoasFactory: HateoasFactory,
+                                               cc: ControllerComponents,
+                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -54,7 +56,6 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
 
   def retrieveAllocations(nino: String, paymentId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -63,7 +64,7 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
       val rawRequest = RetrieveAllocationsRawRequest(nino, paymentId)
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
+          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveAllocations(parsedRequest))
           vendorResponse <- EitherT.fromEither[Future](
             hateoasFactory.wrapList(serviceResponse.responseData, RetrieveAllocationsHateoasData(nino, paymentId)).asRight[ErrorWrapper])
@@ -78,7 +79,8 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
               params = Map("nino" -> nino),
               requestBody = None,
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, None, None))
+              auditResponse = AuditResponse(httpStatus = OK, None, None)
+            )
           )
 
           Ok(Json.toJson(vendorResponse))
@@ -88,7 +90,7 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
 
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: $resCorrelationId")
@@ -110,15 +112,13 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | PaymentIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case NotFoundError                                            => NotFound(Json.toJson(errorWrapper))
+      case DownstreamError                                          => InternalServerError(Json.toJson(errorWrapper))
+      case _                                                        => unhandledError(errorWrapper)
     }
   }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 
     val event = AuditEvent(
       auditType = "retrieveASelfAssessmentPaymentsAllocationDetails",
@@ -128,4 +128,5 @@ class RetrieveAllocationsController @Inject()(val authService: EnrolmentsAuthSer
 
     auditService.auditEvent(event)
   }
+
 }

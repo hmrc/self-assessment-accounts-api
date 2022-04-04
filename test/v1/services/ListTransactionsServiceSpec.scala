@@ -31,7 +31,7 @@ class ListTransactionsServiceSpec extends ServiceSpec {
 
   val nino: String = "AA123456A"
   val from: String = "2018-05-05"
-  val to: String = "2019-12-05"
+  val to: String   = "2019-12-05"
 
   val requestData: ListTransactionsParsedRequest = ListTransactionsParsedRequest(
     nino = Nino(nino),
@@ -40,34 +40,36 @@ class ListTransactionsServiceSpec extends ServiceSpec {
   )
 
   val listTransactionsResponse: ListTransactionsResponse[TransactionItem] = ListTransactionsResponse[TransactionItem](
-    transactions = Seq(TransactionItem(
-      taxYear = "2019-20",
-      transactionId = "X1234567890A",
-      paymentId = Some("081203010024-000001"),
-      transactionDate = "2020-01-01",
-      `type` = Some("Balancing Charge Debit"),
-      originalAmount = 12.34,
-      outstandingAmount = 10.33,
-      lastClearingDate = Some("2020-01-02"),
-      lastClearingReason = Some("Incoming payment"),
-      lastClearedAmount = Some(2.01),
-      accruingInterestAmount = Some(8.31),
-      interestRate = Some(2.06),
-      interestFromDate = Some("2020-01-11"),
-      interestEndDate = Some("2020-04-06"),
-      latePaymentInterestAmount = Some(5.01),
-      interestOutstandingAmount = Some(6.01)
-    ))
+    transactions = Seq(
+      TransactionItem(
+        taxYear = "2019-20",
+        transactionId = "X1234567890A",
+        paymentId = Some("081203010024-000001"),
+        transactionDate = "2020-01-01",
+        `type` = Some("Balancing Charge Debit"),
+        originalAmount = 12.34,
+        outstandingAmount = 10.33,
+        lastClearingDate = Some("2020-01-02"),
+        lastClearingReason = Some("Incoming payment"),
+        lastClearedAmount = Some(2.01),
+        accruingInterestAmount = Some(8.31),
+        interestRate = Some(2.06),
+        interestFromDate = Some("2020-01-11"),
+        interestEndDate = Some("2020-04-06"),
+        latePaymentInterestAmount = Some(5.01),
+        interestOutstandingAmount = Some(6.01)
+      ))
   )
 
   trait Test extends MockListTransactionsConnector {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "listTransactions")
 
     val service = new ListTransactionsService(
       connector = mockListTransactionsConnector
     )
+
   }
 
   "listTransactions" should {
@@ -75,7 +77,8 @@ class ListTransactionsServiceSpec extends ServiceSpec {
       "received a valid response for the supplied request" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, listTransactionsResponse))
 
-        MockListTransactionsConnector.listTransactions(requestData)
+        MockListTransactionsConnector
+          .listTransactions(requestData)
           .returns(Future.successful(outcome))
 
         await(service.listTransactions(requestData)) shouldBe outcome
@@ -88,7 +91,8 @@ class ListTransactionsServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockListTransactionsConnector.listTransactions(requestData)
+            MockListTransactionsConnector
+              .listTransactions(requestData)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -119,4 +123,5 @@ class ListTransactionsServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

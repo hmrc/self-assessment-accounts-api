@@ -19,7 +19,6 @@ package v1.models.domain
 import play.api.libs.json.Format
 import utils.enums.Enums
 
-
 sealed trait MtdSource {
   def toDownstreamSource: String
 }
@@ -38,6 +37,6 @@ object MtdSource {
     override def toDownstreamSource: String = "LATEST"
   }
 
-  implicit val format: Format[MtdSource] = Enums.format[MtdSource]
+  implicit val format: Format[MtdSource]         = Enums.format[MtdSource]
   val parser: PartialFunction[String, MtdSource] = Enums.parser[MtdSource]
 }

@@ -21,11 +21,11 @@ import v1.models.errors.{RangeToDateBeforeFromDateError, RuleDateRangeInvalidErr
 
 class DateRangeValidationSpec extends UnitSpec {
 
-  val from2020 = "2020-01-01"
-  val to2021 = "2021-01-01"
-  val from2022 = "2022-01-01" // 732 days from validFrom
-  val from2018 = "2018-04-05"
-  val to2019 = "2019-02-20"
+  val from2020       = "2020-01-01"
+  val to2021         = "2021-01-01"
+  val from2022       = "2022-01-01" // 732 days from validFrom
+  val from2018       = "2018-04-05"
+  val to2019         = "2019-02-20"
   val to2022Plus1Day = "2022-01-02" // 733 days from validFrom
 
   "validate" should {

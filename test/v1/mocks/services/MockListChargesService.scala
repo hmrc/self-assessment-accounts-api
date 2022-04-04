@@ -28,17 +28,19 @@ import v1.services.ListChargesService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockListChargesService extends MockFactory{
+trait MockListChargesService extends MockFactory {
 
   val mockService: ListChargesService = mock[ListChargesService]
 
-  object MockListChargesService{
+  object MockListChargesService {
 
-    def listCharges(requestData: ListChargesParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]]] = {
+    def listCharges(
+        requestData: ListChargesParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]]] = {
       (mockService
         .list(_: ListChargesParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
+
 }

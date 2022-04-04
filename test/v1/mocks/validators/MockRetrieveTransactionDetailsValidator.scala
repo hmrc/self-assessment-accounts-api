@@ -33,6 +33,7 @@ trait MockRetrieveTransactionDetailsValidator extends MockFactory {
         .validate(_: RetrieveTransactionDetailsRawRequest))
         .expects(data)
     }
+
   }
 
 }

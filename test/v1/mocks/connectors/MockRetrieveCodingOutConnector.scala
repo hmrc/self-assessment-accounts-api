@@ -36,5 +36,7 @@ trait MockRetrieveCodingOutConnector extends MockFactory {
         .retrieveCodingOut(_: RetrieveCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

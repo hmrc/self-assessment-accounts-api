@@ -31,6 +31,7 @@ trait MockListTransactionsRequestParser extends MockFactory {
     def parse(data: ListTransactionsRawRequest): CallHandler[Either[ErrorWrapper, ListTransactionsParsedRequest]] = {
       (mockListTransactionsRequestParser.parseRequest(_: ListTransactionsRawRequest)(_: String)).expects(data, *)
     }
+
   }
 
 }

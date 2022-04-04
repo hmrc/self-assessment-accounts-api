@@ -33,6 +33,7 @@ trait MockCreateOrAmendCodingOutValidator extends MockFactory {
         .validate(_: CreateOrAmendCodingOutRawRequest))
         .expects(data)
     }
+
   }
 
 }

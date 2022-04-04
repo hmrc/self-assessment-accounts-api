@@ -21,8 +21,8 @@ import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveTransactionDetailsValidator
 import v1.models.request.retrieveTransactionDetails._
 
-class RetrieveTransactionDetailsRequestParser @Inject()(val validator: RetrieveTransactionDetailsValidator)
-  extends RequestParser[RetrieveTransactionDetailsRawRequest, RetrieveTransactionDetailsParsedRequest] {
+class RetrieveTransactionDetailsRequestParser @Inject() (val validator: RetrieveTransactionDetailsValidator)
+    extends RequestParser[RetrieveTransactionDetailsRawRequest, RetrieveTransactionDetailsParsedRequest] {
 
   override protected def requestFor(data: RetrieveTransactionDetailsRawRequest): RetrieveTransactionDetailsParsedRequest = {
     RetrieveTransactionDetailsParsedRequest(Nino(data.nino), data.transactionId)

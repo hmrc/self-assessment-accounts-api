@@ -28,6 +28,7 @@ case class Charge(taxYear: String,
                   outstandingAmount: BigDecimal)
 
 object Charge {
+
   implicit val reads: Reads[Charge] = (
     (JsPath \ "taxYear").read[String].map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear))) and
       (JsPath \ "documentId").read[String] and
@@ -35,7 +36,7 @@ object Charge {
       (JsPath \ "documentDescription").readNullable[String] and
       (JsPath \ "totalAmount").read[BigDecimal] and
       (JsPath \ "documentOutstandingAmount").read[BigDecimal]
-    ) (Charge.apply _)
+  )(Charge.apply _)
 
   implicit val writes: OWrites[Charge] = Json.writes[Charge]
 

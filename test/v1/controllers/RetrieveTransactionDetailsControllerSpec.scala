@@ -33,28 +33,34 @@ import v1.models.hateoas.RelType._
 import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
-import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsHateoasData, RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
+import v1.models.response.retrieveTransactionDetails.{
+  RetrieveTransactionDetailsHateoasData,
+  RetrieveTransactionDetailsResponse,
+  SubItem,
+  TransactionItem
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockRetrieveTransactionDetailsRequestParser
-  with MockRetrieveTransactionDetailsService
-  with MockHateoasFactory
-  with MockAppConfig
-  with HateoasLinks
-  with MockAuditService
-  with MockIdGenerator {
+class RetrieveTransactionDetailsControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockRetrieveTransactionDetailsRequestParser
+    with MockRetrieveTransactionDetailsService
+    with MockHateoasFactory
+    with MockAppConfig
+    with HateoasLinks
+    with MockAuditService
+    with MockIdGenerator {
 
-  private val nino = "AA123456A"
+  private val nino          = "AA123456A"
   private val transactionId = "11111"
-  private val paymentId = "081203010024-000001"
+  private val paymentId     = "081203010024-000001"
   private val correlationId = "X-123"
 
-  private val rawRequest = RetrieveTransactionDetailsRawRequest(nino, transactionId)
+  private val rawRequest    = RetrieveTransactionDetailsRawRequest(nino, transactionId)
   private val parsedRequest = RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId)
 
   private val paymentTransaction = TransactionItem(
@@ -81,15 +87,19 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
       )
     )
   )
+
   private val mtdResponse = RetrieveTransactionDetailsResponse(transactionItems = Seq(paymentTransaction))
 
   private val paymentAllocationHateoasLink = Link(
     href = s"/accounts/self-assessment/$nino/payments/$paymentId",
-    method = GET, rel = RETRIEVE_PAYMENT_ALLOCATIONS
+    method = GET,
+    rel = RETRIEVE_PAYMENT_ALLOCATIONS
   )
 
   private val transactionsHateoasLink = Link(
-    href = "/accounts/self-assessment/AA123456A/transactions", method = GET, rel = SELF
+    href = "/accounts/self-assessment/AA123456A/transactions",
+    method = GET,
+    rel = SELF
   )
 
   private val hateoasResponse = RetrieveTransactionDetailsResponse(Seq(paymentTransaction))
@@ -132,7 +142,7 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
     detail = GenericAuditDetail(
       userType = "Individual",
       agentReferenceNumber = None,
-      params= Map("nino" -> nino),
+      params = Map("nino" -> nino),
       requestBody = None,
       auditResponse = auditResponse,
       `X-CorrelationId` = correlationId
@@ -172,8 +182,7 @@ class RetrieveTransactionDetailsControllerSpec extends ControllerBaseSpec
 
         MockHateoasFactory
           .wrap(mtdResponse, RetrieveTransactionDetailsHateoasData(nino, transactionId, Some(paymentId)))
-          .returns(HateoasWrapper(hateoasResponse,
-            Seq(transactionsHateoasLink, paymentAllocationHateoasLink)))
+          .returns(HateoasWrapper(hateoasResponse, Seq(transactionsHateoasLink, paymentAllocationHateoasLink)))
 
         val result: Future[Result] = controller.retrieveTransactionDetails(nino, transactionId)(fakeGetRequest)
 

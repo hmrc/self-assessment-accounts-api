@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveAllocations
 
-import play.api.libs.json.{JsError,JsValue, Json}
+import play.api.libs.json.{JsError, JsValue, Json}
 import support.UnitSpec
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
@@ -93,7 +93,6 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
     """.stripMargin
   )
 
-
   "RetrieveAllocationsResponse" when {
     "read from valid JSON" should {
       "return the expected RetrieveAllocationResponse object" in {
@@ -131,5 +130,5 @@ class RetrieveAllocationsResponseSpec extends UnitSpec {
       }
     }
   }
-}
 
+}

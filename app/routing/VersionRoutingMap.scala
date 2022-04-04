@@ -17,7 +17,7 @@
 package routing
 
 import com.google.inject.ImplementedBy
-import config.{ AppConfig, FeatureSwitch }
+import config.{AppConfig, FeatureSwitch}
 import definition.Versions.VERSION_1
 
 import javax.inject.Inject
@@ -37,10 +37,10 @@ trait VersionRoutingMap {
 }
 
 // Add routes corresponding to available versions...
-case class VersionRoutingMapImpl @Inject()(defaultRouter: Router,
-                                           v1Routes: v1.Routes,
-                                           v1WithCodingOutRoutes: v1WithCodingOut.Routes,
-                                           appConfig: AppConfig)
+case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
+                                            v1Routes: v1.Routes,
+                                            v1WithCodingOutRoutes: v1WithCodingOut.Routes,
+                                            appConfig: AppConfig)
     extends VersionRoutingMap
     with Logging {
 
@@ -54,4 +54,5 @@ case class VersionRoutingMapImpl @Inject()(defaultRouter: Router,
       if (isCodingOutEnabled) v1WithCodingOutRoutes else v1Routes
     }
   )
+
 }

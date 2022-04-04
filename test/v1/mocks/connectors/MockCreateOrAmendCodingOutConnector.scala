@@ -35,6 +35,7 @@ trait MockCreateOrAmendCodingOutConnector extends MockFactory {
         .amendCodingOut(_: CreateOrAmendCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)
     }
+
   }
 
 }

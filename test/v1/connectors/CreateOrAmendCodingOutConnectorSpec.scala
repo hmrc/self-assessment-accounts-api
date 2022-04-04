@@ -21,13 +21,18 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
-import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponent, TaxCodeComponents}
+import v1.models.request.createOrAmendCodingOut.{
+  CreateOrAmendCodingOutParsedRequest,
+  CreateOrAmendCodingOutRequestBody,
+  TaxCodeComponent,
+  TaxCodeComponents
+}
 
 import scala.concurrent.Future
 
 class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA111111A"
+  val nino: String    = "AA111111A"
   val taxYear: String = "2021-22"
 
   val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
@@ -61,7 +66,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
       "return a success upon HttpClient success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        implicit val hc: HeaderCarrier = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
+        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
         val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
 
         MockHttpClient
@@ -71,10 +76,12 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
             body = createOrAmendCodingOutRequestBody,
             requiredHeaders = requiredIfsHeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.amendCodingOut(request)) shouldBe outcome
       }
     }
   }
+
 }

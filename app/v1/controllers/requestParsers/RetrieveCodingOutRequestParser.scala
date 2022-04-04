@@ -21,9 +21,10 @@ import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveCodingOutValidator
 import v1.models.request.retrieveCodingOut._
 
-class RetrieveCodingOutRequestParser @Inject()(val validator: RetrieveCodingOutValidator)
-  extends RequestParser[RetrieveCodingOutRawRequest, RetrieveCodingOutParsedRequest] {
+class RetrieveCodingOutRequestParser @Inject() (val validator: RetrieveCodingOutValidator)
+    extends RequestParser[RetrieveCodingOutRawRequest, RetrieveCodingOutParsedRequest] {
 
   override protected def requestFor(data: RetrieveCodingOutRawRequest): RetrieveCodingOutParsedRequest =
     RetrieveCodingOutParsedRequest(Nino(data.nino), data.taxYear, data.source)
+
 }

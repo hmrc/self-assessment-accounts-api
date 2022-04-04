@@ -36,5 +36,7 @@ trait MockRetrieveBalanceConnector extends MockFactory {
         .retrieveBalance(_: RetrieveBalanceParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

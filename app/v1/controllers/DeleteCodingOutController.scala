@@ -32,14 +32,16 @@ import v1.services.{AuditService, DeleteCodingOutService, EnrolmentsAuthService,
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService,
-                                          val lookupService: MtdIdLookupService,
-                                          parser: DeleteCodingOutParser,
-                                          service: DeleteCodingOutService,
-                                          auditService: AuditService,
-                                          cc: ControllerComponents,
-                                          val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc) with BaseController with Logging {
+class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthService,
+                                           val lookupService: MtdIdLookupService,
+                                           parser: DeleteCodingOutParser,
+                                           service: DeleteCodingOutService,
+                                           auditService: AuditService,
+                                           cc: ControllerComponents,
+                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
+    with BaseController
+    with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "DeleteCodingOutController", endpointName = "deleteCodingOut")
@@ -52,7 +54,7 @@ class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService
       val rawData = DeleteCodingOutRawRequest(nino, taxYear)
       val result =
         for {
-          parsedRequest <- EitherT.fromEither[Future](parser.parseRequest(rawData))
+          parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
           serviceResponse <- EitherT(service.deleteCodingOut(parsedRequest))
         } yield {
           logger.info(
@@ -65,7 +67,8 @@ class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService
               params = Map("nino" -> nino, "taxYear" -> taxYear),
               requestBody = None,
               `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = NO_CONTENT, None, None))
+              auditResponse = AuditResponse(httpStatus = NO_CONTENT, None, None)
+            )
           )
 
           NoContent.withApiHeaders(serviceResponse.correlationId)
@@ -73,7 +76,7 @@ class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService
         }
       result.leftMap { errorWrapper =>
         val resCorrelationId = errorWrapper.correlationId
-        val result = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
 
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
@@ -95,24 +98,17 @@ class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case NinoFormatError |
-           BadRequestError |
-           TaxYearFormatError |
-           RuleTaxYearNotSupportedError |
-           RuleTaxYearRangeInvalidError => BadRequest(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
+      case NinoFormatError | BadRequestError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError =>
+        BadRequest(Json.toJson(errorWrapper))
+      case DownstreamError        => InternalServerError(Json.toJson(errorWrapper))
       case CodingOutNotFoundError => NotFound(Json.toJson(errorWrapper))
-      case _ => unhandledError(errorWrapper)
+      case _                      => unhandledError(errorWrapper)
     }
   }
 
-  private def auditSubmission(details: GenericAuditDetail)
-                             (implicit hc: HeaderCarrier,
-                              ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent(
-      auditType = "DeleteCodingOutUnderpayments",
-      transactionName = "delete-coding-out-underpayments",
-      detail = details)
+  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+    val event = AuditEvent(auditType = "DeleteCodingOutUnderpayments", transactionName = "delete-coding-out-underpayments", detail = details)
     auditService.auditEvent(event)
   }
+
 }

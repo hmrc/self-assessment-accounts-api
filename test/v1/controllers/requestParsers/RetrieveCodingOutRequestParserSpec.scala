@@ -24,9 +24,9 @@ import v1.models.request.retrieveCodingOut._
 
 class RetrieveCodingOutRequestParserSpec extends UnitSpec {
 
-  val taxYear: String = "2021-22"
-  val nino: String = "AA123456B"
-  val source: Option[String] = Some("hmrcHeld")
+  val taxYear: String                = "2021-22"
+  val nino: String                   = "AA123456B"
+  val source: Option[String]         = Some("hmrcHeld")
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   val retrieveCodingOutRawData: RetrieveCodingOutRawRequest = RetrieveCodingOutRawRequest(nino, taxYear, source)
@@ -39,7 +39,8 @@ class RetrieveCodingOutRequestParserSpec extends UnitSpec {
     "return a retrieve coding out request" when {
       "valid data is provided" in new Test {
 
-        MockValidator.validate(retrieveCodingOutRawData)
+        MockValidator
+          .validate(retrieveCodingOutRawData)
           .returns(Nil)
 
         parser.parseRequest(retrieveCodingOutRawData) shouldBe
@@ -49,22 +50,23 @@ class RetrieveCodingOutRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockValidator.validate(retrieveCodingOutRawData)
+        MockValidator
+          .validate(retrieveCodingOutRawData)
           .returns(List(NinoFormatError))
-
 
         parser.parseRequest(retrieveCodingOutRawData) shouldBe
           Left(ErrorWrapper(correlationId, NinoFormatError, None))
       }
 
       "multiple validation errors occur" in new Test {
-        MockValidator.validate(retrieveCodingOutRawData)
+        MockValidator
+          .validate(retrieveCodingOutRawData)
           .returns(List(NinoFormatError, TaxYearFormatError, SourceFormatError))
-
 
         parser.parseRequest(retrieveCodingOutRawData) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError, SourceFormatError))))
       }
     }
   }
+
 }

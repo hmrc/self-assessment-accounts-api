@@ -214,4 +214,5 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

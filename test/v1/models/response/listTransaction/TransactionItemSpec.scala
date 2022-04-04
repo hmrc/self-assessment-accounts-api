@@ -53,4 +53,5 @@ class TransactionItemSpec extends UnitSpec {
       Json.toJson(fullTransactionItemModel) shouldBe fullTransactionItemMtdResponse
     }
   }
+
 }

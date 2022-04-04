@@ -20,21 +20,17 @@ import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.domain.DownstreamSource
 import play.api.libs.functional.syntax._
 
-case class TaxCodeComponents(amount: BigDecimal,
-                             relatedTaxYear: Option[String],
-                             submittedOn: String,
-                             source: String,
-                             id: Option[BigInt])
+case class TaxCodeComponents(amount: BigDecimal, relatedTaxYear: Option[String], submittedOn: String, source: String, id: Option[BigInt])
 
 object TaxCodeComponents {
 
   implicit val reads: Reads[TaxCodeComponents] = (
-      (JsPath \ "amount").read[BigDecimal] and
+    (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "relatedTaxYear").readNullable[String] and
       (JsPath \ "submittedOn").read[String] and
       (JsPath \ "source").read[DownstreamSource].map(_.toMtdSource) and
       (JsPath \ "componentIdentifier").readNullable[BigInt]
-    )(TaxCodeComponents.apply _)
+  )(TaxCodeComponents.apply _)
 
   implicit val writes: OWrites[TaxCodeComponents] = Json.writes[TaxCodeComponents]
 }

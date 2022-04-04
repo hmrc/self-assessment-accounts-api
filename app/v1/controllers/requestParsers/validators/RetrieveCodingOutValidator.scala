@@ -22,8 +22,7 @@ import v1.controllers.requestParsers.validators.validations._
 import v1.models.errors.MtdError
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
 
-class RetrieveCodingOutValidator @Inject()(implicit appConfig: AppConfig)
-  extends Validator[RetrieveCodingOutRawRequest] {
+class RetrieveCodingOutValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveCodingOutRawRequest] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
@@ -44,4 +43,5 @@ class RetrieveCodingOutValidator @Inject()(implicit appConfig: AppConfig)
   override def validate(data: RetrieveCodingOutRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
+
 }

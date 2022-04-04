@@ -38,12 +38,13 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveBalanceConnector {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("controller", "retrieveBalance")
 
     val service = new RetrieveBalanceService(
       connector = mockRetrieveBalanceConnector
     )
+
   }
 
   "service" when {
@@ -60,10 +61,11 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
           totalBalance = 100.00
         )
 
-      MockRetrieveBalanceConnector.retrieveBalance(requestData)
+      MockRetrieveBalanceConnector
+        .retrieveBalance(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
-      await(service.retrieveBalance(requestData)) shouldBe Right(ResponseWrapper(correlationId,connectorResponse))
+      await(service.retrieveBalance(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
     }
   }
 
@@ -73,11 +75,12 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveBalanceConnector.retrieveBalance(requestData)
+          MockRetrieveBalanceConnector
+            .retrieveBalance(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.retrieveBalance(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
-      }
+        }
 
       val input: Seq[(String, MtdError)] = Seq(
         ("INVALID_IDTYPE", DownstreamError),
@@ -103,4 +106,5 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
       input.foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

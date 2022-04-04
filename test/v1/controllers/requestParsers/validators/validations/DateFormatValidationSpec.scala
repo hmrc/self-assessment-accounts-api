@@ -19,7 +19,8 @@ package v1.controllers.requestParsers.validators.validations
 import support.UnitSpec
 import v1.models.errors.FromDateFormatError
 
-class DateFormatValidationSpec extends UnitSpec{
+class DateFormatValidationSpec extends UnitSpec {
+
   "validate" should {
     "return an empty list" when {
       "passed a valid date" in {
@@ -44,4 +45,5 @@ class DateFormatValidationSpec extends UnitSpec{
       }
     }
   }
+
 }

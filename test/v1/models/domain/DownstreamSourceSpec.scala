@@ -33,4 +33,5 @@ class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {
       DownstreamSource.`CUSTOMER`.toMtdSource shouldBe "user"
     }
   }
+
 }

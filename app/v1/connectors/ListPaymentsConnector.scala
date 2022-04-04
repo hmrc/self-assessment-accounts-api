@@ -28,19 +28,18 @@ import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsConnector @Inject()(val http: HttpClient,
-                                      val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListPaymentsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listPayments(request: ListPaymentsParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[ListPaymentsResponse[Payment]]] = {
+  def listPayments(request: ListPaymentsParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[ListPaymentsResponse[Payment]]] = {
 
     val nino = request.nino.nino
 
     val queryParams: Seq[(String, String)] = Seq(
       "dateFrom" -> request.from,
-      "dateTo" -> request.to
+      "dateTo"   -> request.to
     )
 
     get(
@@ -48,4 +47,5 @@ class ListPaymentsConnector @Inject()(val http: HttpClient,
       queryParams
     )
   }
+
 }

@@ -29,10 +29,10 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino = "AA123456A"
+    val nino    = "AA123456A"
     val taxYear = "2021-22"
 
-    def uri: String = s"/$nino/$taxYear/collection/tax-code"
+    def uri: String    = s"/$nino/$taxYear/collection/tax-code"
     def desUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 
     def setupStubs(): StubMapping
@@ -50,6 +50,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
          |        "reason": "des message"
          |      }
     """.stripMargin
+
   }
 
   "Calling the delete endpoint" should {
@@ -76,7 +77,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         def validationErrorTest(requestNino: String, requestId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
+            override val nino: String    = requestNino
             override val taxYear: String = requestId
 
             override def setupStubs(): StubMapping = {
@@ -130,4 +131,5 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

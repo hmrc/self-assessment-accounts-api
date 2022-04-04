@@ -33,6 +33,7 @@ trait MockRetrieveBalanceValidator extends MockFactory {
         .validate(_: RetrieveBalanceRawRequest))
         .expects(data)
     }
+
   }
 
 }

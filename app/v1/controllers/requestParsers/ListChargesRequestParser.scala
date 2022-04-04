@@ -21,9 +21,10 @@ import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.ListChargesValidator
 import v1.models.request.listCharges.{ListChargesParsedRequest, ListChargesRawRequest}
 
-class ListChargesRequestParser @Inject()(val validator: ListChargesValidator)
-  extends RequestParser[ListChargesRawRequest, ListChargesParsedRequest] {
+class ListChargesRequestParser @Inject() (val validator: ListChargesValidator)
+    extends RequestParser[ListChargesRawRequest, ListChargesParsedRequest] {
 
   override protected def requestFor(data: ListChargesRawRequest): ListChargesParsedRequest =
     ListChargesParsedRequest(Nino(data.nino), data.from.get, data.to.get)
+
 }

@@ -49,4 +49,5 @@ class ListTransactionsResponseSpec extends UnitSpec {
       }
     }
   }
+
 }

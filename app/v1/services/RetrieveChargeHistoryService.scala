@@ -32,14 +32,13 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryService @Inject()(connector: RetrieveChargeHistoryConnector)
-  extends DesResponseMappingSupport with Logging {
+class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends DesResponseMappingSupport with Logging {
 
-  def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
+  def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveChargeHistory(request)).leftMap(mapDesErrors(desErrorMap))
@@ -51,17 +50,17 @@ class RetrieveChargeHistoryService @Inject()(connector: RetrieveChargeHistoryCon
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_IDTYPE" -> DownstreamError,
-      "INVALID_IDVALUE" -> NinoFormatError,
-      "INVALID_REGIME_TYPE" -> DownstreamError,
-      "INVALID_DOC_NUMBER" -> TransactionIdFormatError,
-      "INVALID_DATE_FROM" -> DownstreamError,
-      "INVALID_DATE_TO" -> DownstreamError,
-      "INVALID_DATE_RANGE" -> DownstreamError,
+      "INVALID_IDTYPE"        -> DownstreamError,
+      "INVALID_IDVALUE"       -> NinoFormatError,
+      "INVALID_REGIME_TYPE"   -> DownstreamError,
+      "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
+      "INVALID_DATE_FROM"     -> DownstreamError,
+      "INVALID_DATE_TO"       -> DownstreamError,
+      "INVALID_DATE_RANGE"    -> DownstreamError,
       "REQUEST_NOT_PROCESSED" -> DownstreamError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "NO_DATA_FOUND"         -> NotFoundError,
+      "SERVER_ERROR"          -> DownstreamError,
+      "SERVICE_UNAVAILABLE"   -> DownstreamError
     )
 
 }

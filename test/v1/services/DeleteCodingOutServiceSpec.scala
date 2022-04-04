@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class DeleteCodingOutServiceSpec extends ServiceSpec {
 
-  private val nino = "AA123456A"
+  private val nino    = "AA123456A"
   private val taxYear = "2021-22"
 
   val request: DeleteCodingOutParsedRequest = DeleteCodingOutParsedRequest(
@@ -41,6 +41,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
     val service: DeleteCodingOutService = new DeleteCodingOutService(
       connector = mockDeleteCodingOutConnector
     )
+
   }
 
   "DeleteCodingOutService" when {
@@ -48,7 +49,8 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockDeleteCodingOutConnector.deleteCodingOut(request)
+        MockDeleteCodingOutConnector
+          .deleteCodingOut(request)
           .returns(Future.successful(outcome))
 
         await(service.deleteCodingOut(request)) shouldBe outcome
@@ -60,7 +62,8 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockDeleteCodingOutConnector.deleteCodingOut(request)
+          MockDeleteCodingOutConnector
+            .deleteCodingOut(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.deleteCodingOut(request)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -78,4 +81,5 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
       input.foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

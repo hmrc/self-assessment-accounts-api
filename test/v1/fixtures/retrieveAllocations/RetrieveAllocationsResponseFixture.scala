@@ -104,7 +104,7 @@ object RetrieveAllocationsResponseFixture {
         | ]
         |}
       """.stripMargin
-  )
+    )
 
   val paymentDetails: RetrieveAllocationsResponse[AllocationDetail] =
     RetrieveAllocationsResponse(

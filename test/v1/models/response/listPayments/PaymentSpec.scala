@@ -21,8 +21,7 @@ import support.UnitSpec
 
 class PaymentSpec extends UnitSpec {
 
-  private val desJson = Json.parse(
-    """
+  private val desJson = Json.parse("""
       |{
       |  "paymentLot": "123",
       |  "paymentLotItem": "456",
@@ -32,8 +31,7 @@ class PaymentSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val desJsonWithNoPL = Json.parse(
-    """
+  private val desJsonWithNoPL = Json.parse("""
       |{
       |  "paymentLotItem": "456",
       |  "paymentAmount": 10.25,
@@ -42,8 +40,7 @@ class PaymentSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val desJsonWithNoPLI = Json.parse(
-    """
+  private val desJsonWithNoPLI = Json.parse("""
       |{
       |  "paymentLot": "123",
       |  "paymentAmount": 10.25,
@@ -52,8 +49,7 @@ class PaymentSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val invalidDesJson = Json.parse(
-    """
+  private val invalidDesJson = Json.parse("""
       |{
       |  "paymentLot": 123,
       |  "paymentLotItem": "456",
@@ -63,11 +59,10 @@ class PaymentSpec extends UnitSpec {
       |}
       |""".stripMargin)
 
-  private val mtdModel = Payment(Some("123-456"), Some(10.25), Some("beans"), Some("10/01/2020"))
+  private val mtdModel     = Payment(Some("123-456"), Some(10.25), Some("beans"), Some("10/01/2020"))
   private val mtdModelNoId = Payment(None, Some(10.25), Some("beans"), Some("10/01/2020"))
 
-  private val mtdJson = Json.parse(
-    """
+  private val mtdJson = Json.parse("""
       |{
       |  "paymentId": "123-456",
       |  "amount": 10.25,
@@ -99,4 +94,5 @@ class PaymentSpec extends UnitSpec {
       }
     }
   }
+
 }

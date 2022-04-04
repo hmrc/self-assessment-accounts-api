@@ -197,4 +197,5 @@ trait RetrieveTransactionDetailsFixture {
       |}
     """.stripMargin
   )
+
 }

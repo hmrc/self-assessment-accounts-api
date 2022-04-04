@@ -33,12 +33,12 @@ trait MockCreateOrAmendCodingOutService extends MockFactory {
 
   object MockCreateOrAmendCodingOutService {
 
-    def amend(request: CreateOrAmendCodingOutParsedRequest):
-    CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def amend(request: CreateOrAmendCodingOutParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockCreateOrAmendCodingOutService
         .amend(_: CreateOrAmendCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(request, *, *, *, *)
     }
+
   }
 
 }

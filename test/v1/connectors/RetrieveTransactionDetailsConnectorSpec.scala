@@ -31,7 +31,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
   class Test extends MockHttpClient with MockAppConfig {
 
     val transactionId: String = "0001"
-    val nino: String = "AA123456A"
+    val nino: String          = "AA123456A"
 
     val requestData: RetrieveTransactionDetailsParsedRequest = RetrieveTransactionDetailsParsedRequest(
       nino = Nino(nino),
@@ -44,13 +44,13 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
     )
 
     val queryParams: Seq[(String, String)] = Seq(
-      "docNumber" -> transactionId,
-      "onlyOpenItems" -> "false",
-      "includeLocks" -> "true",
-      "calculateAccruedInterest" -> "true",
-      "removePOA" -> "false",
+      "docNumber"                  -> transactionId,
+      "onlyOpenItems"              -> "false",
+      "includeLocks"               -> "true",
+      "calculateAccruedInterest"   -> "true",
+      "removePOA"                  -> "false",
       "customerPaymentInformation" -> "true",
-      "includeStatistical" -> "false"
+      "includeStatistical"         -> "false"
     )
 
     MockAppConfig.desBaseUrl returns baseUrl
@@ -103,7 +103,8 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
             dummyIfsHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
-          ).returns(Future.successful(outcome))
+          )
+          .returns(Future.successful(outcome))
 
         await(connector.retrieveTransactionDetails(requestData)) shouldBe outcome
       }
@@ -157,4 +158,5 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
       }
     }
   }
+
 }

@@ -30,7 +30,7 @@ trait HateoasLinks {
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/balance",
       method = GET,
-      rel = if(isSelf) SELF else RETRIEVE_BALANCE
+      rel = if (isSelf) SELF else RETRIEVE_BALANCE
     )
 
   // L2
@@ -38,7 +38,7 @@ trait HateoasLinks {
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/transactions?from=$from&to=$to",
       method = GET,
-      rel = if(isSelf) SELF else LIST_TRANSACTIONS
+      rel = if (isSelf) SELF else LIST_TRANSACTIONS
     )
 
   // L3
@@ -46,7 +46,7 @@ trait HateoasLinks {
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/transactions/$transactionId",
       method = GET,
-      rel = if(isSelf) SELF else RETRIEVE_TRANSACTION_DETAILS
+      rel = if (isSelf) SELF else RETRIEVE_TRANSACTION_DETAILS
     )
 
   // L4
@@ -54,7 +54,7 @@ trait HateoasLinks {
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/charges?from=$from&to=$to",
       method = GET,
-      rel = if(isSelf) SELF else LIST_CHARGES
+      rel = if (isSelf) SELF else LIST_CHARGES
     )
 
   // L5
@@ -62,7 +62,7 @@ trait HateoasLinks {
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/charges/$transactionId",
       method = GET,
-      rel = if(isSelf) SELF else RETRIEVE_CHARGE_HISTORY
+      rel = if (isSelf) SELF else RETRIEVE_CHARGE_HISTORY
     )
 
   // L6
@@ -70,7 +70,7 @@ trait HateoasLinks {
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/payments?from=$from&to=$to",
       method = GET,
-      rel = if(isSelf) SELF else LIST_PAYMENTS
+      rel = if (isSelf) SELF else LIST_PAYMENTS
     )
 
   // L7
@@ -78,7 +78,7 @@ trait HateoasLinks {
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/payments/$paymentId",
       method = GET,
-      rel = if(isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS
+      rel = if (isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS
     )
 
   // Coding Out Underpayments and Debts links
@@ -106,4 +106,5 @@ trait HateoasLinks {
       method = DELETE,
       rel = DELETE_CODING_OUT_UNDERPAYMENTS
     )
+
 }

@@ -30,18 +30,19 @@ class TaxYearNotSupportedValidationSpec extends UnitSpec with JsonErrorValidator
 
     MockAppConfig.minimumPermittedTaxYear
       .returns(2022)
+
   }
 
   "validate" should {
     "return no errors" when {
       "a tax year after 2021-22 is supplied" in new Test {
-        private val validTaxYear = "2022-23"
+        private val validTaxYear     = "2022-23"
         private val validationResult = TaxYearNotSupportedValidation.validate(validTaxYear)
         validationResult.isEmpty shouldBe true
       }
 
       "the minimum allowed tax year is supplied" in new Test {
-        private val validTaxYear = "2021-22"
+        private val validTaxYear     = "2021-22"
         private val validationResult = TaxYearNotSupportedValidation.validate(validTaxYear)
         validationResult.isEmpty shouldBe true
       }
@@ -49,7 +50,7 @@ class TaxYearNotSupportedValidationSpec extends UnitSpec with JsonErrorValidator
 
     "return the given error" when {
       "a tax year before 2021-22 is supplied" in new Test {
-        private val invalidTaxYear = "2020-21"
+        private val invalidTaxYear   = "2020-21"
         private val validationResult = TaxYearNotSupportedValidation.validate(invalidTaxYear)
         validationResult.isEmpty shouldBe false
         validationResult.length shouldBe 1
@@ -57,4 +58,5 @@ class TaxYearNotSupportedValidationSpec extends UnitSpec with JsonErrorValidator
       }
     }
   }
+
 }

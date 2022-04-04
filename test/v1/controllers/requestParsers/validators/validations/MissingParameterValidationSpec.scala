@@ -20,6 +20,7 @@ import support.UnitSpec
 import v1.models.errors.MissingFromDateError
 
 class MissingParameterValidationSpec extends UnitSpec {
+
   "validate" should {
     "return an empty list" when {
       "passed a non-empty Option" in {
@@ -32,4 +33,5 @@ class MissingParameterValidationSpec extends UnitSpec {
       }
     }
   }
+
 }

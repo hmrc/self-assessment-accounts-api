@@ -24,8 +24,8 @@ import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawReques
 import javax.inject.Inject
 import utils.CurrentDate
 
-class CreateOrAmendCodingOutValidator @Inject()(implicit currentDate: CurrentDate, appConfig: AppConfig)
-  extends Validator[CreateOrAmendCodingOutRawRequest] {
+class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDate, appConfig: AppConfig)
+    extends Validator[CreateOrAmendCodingOutRawRequest] {
 
   private val validationSet = List(parameterValidation, parameterRuleValidation, bodyFormatValidation, bodyFieldsEmptyValidation, bodyFieldValidation)
 
@@ -52,7 +52,7 @@ class CreateOrAmendCodingOutValidator @Inject()(implicit currentDate: CurrentDat
   private def bodyFieldsEmptyValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     val body = data.body.as[CreateOrAmendCodingOutRequestBody]
 
-    if(body.emptyFields.nonEmpty) {
+    if (body.emptyFields.nonEmpty) {
       List(List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(body.emptyFields))))
     } else {
       NoValidationErrors
@@ -67,20 +67,20 @@ class CreateOrAmendCodingOutValidator @Inject()(implicit currentDate: CurrentDat
 
   private def bodyValidations(body: CreateOrAmendCodingOutRequestBody): List[List[MtdError]] = {
     val payeUnderpaymentErrors: List[List[MtdError]] = body.taxCodeComponents.payeUnderpayment
-      .map(_.zipWithIndex.map {
-        case (component, i) => getPayeUnderpaymentErrors(component, i)
+      .map(_.zipWithIndex.map { case (component, i) =>
+        getPayeUnderpaymentErrors(component, i)
       })
       .getOrElse(NoValidationErrors)
       .toList
     val selfAssessmentUnderpaymentErrors: List[List[MtdError]] = body.taxCodeComponents.selfAssessmentUnderpayment
-      .map(_.zipWithIndex.map {
-        case (component, i) => getSelfAssessmentUnderpaymentErrors(component, i)
+      .map(_.zipWithIndex.map { case (component, i) =>
+        getSelfAssessmentUnderpaymentErrors(component, i)
       })
       .getOrElse(NoValidationErrors)
       .toList
     val debtErrors: List[List[MtdError]] = body.taxCodeComponents.debt
-      .map(_.zipWithIndex.map {
-        case (component, i) => getDebtErrors(component, i)
+      .map(_.zipWithIndex.map { case (component, i) =>
+        getDebtErrors(component, i)
       })
       .getOrElse(NoValidationErrors)
       .toList
@@ -145,4 +145,5 @@ class CreateOrAmendCodingOutValidator @Inject()(implicit currentDate: CurrentDat
   override def validate(data: CreateOrAmendCodingOutRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
+
 }

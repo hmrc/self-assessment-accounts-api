@@ -27,9 +27,11 @@ trait MockCreateOrAmendCodingOutRequestParser extends MockFactory {
   val mockCreateOrAmendCodingOutRequestParser: CreateOrAmendCodingOutParser = mock[CreateOrAmendCodingOutParser]
 
   object MockCreateOrAmendCodingOutRequestParser {
+
     def parseRequest(data: CreateOrAmendCodingOutRawRequest): CallHandler[Either[ErrorWrapper, CreateOrAmendCodingOutParsedRequest]] = {
       (mockCreateOrAmendCodingOutRequestParser.parseRequest(_: CreateOrAmendCodingOutRawRequest)(_: String)).expects(data, *)
     }
+
   }
 
 }

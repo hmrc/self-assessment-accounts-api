@@ -37,4 +37,5 @@ class RetrieveBalanceValidatorSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -22,7 +22,7 @@ import v1.models.errors.MtdError
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
 import javax.inject.Inject
 
-class DeleteCodingOutValidator @Inject()(implicit appConfig: AppConfig) extends Validator[DeleteCodingOutRawRequest] {
+class DeleteCodingOutValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCodingOutRawRequest] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 

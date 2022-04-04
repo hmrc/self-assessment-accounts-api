@@ -27,8 +27,11 @@ trait MockDeleteCodingOutParser extends MockFactory {
   val mockRequestDataParser: DeleteCodingOutParser = mock[DeleteCodingOutParser]
 
   object MockDeleteCodingOutParser {
+
     def parse(data: DeleteCodingOutRawRequest): CallHandler[Either[ErrorWrapper, DeleteCodingOutParsedRequest]] = {
       (mockRequestDataParser.parseRequest(_: DeleteCodingOutRawRequest)(_: String)).expects(data, *)
     }
+
   }
+
 }

@@ -25,7 +25,8 @@ object SourceValidation {
   def validate(source: String): List[MtdError] = {
     source match {
       case x if sources.contains(x) => NoValidationErrors
-      case _ => List(SourceFormatError)
+      case _                        => List(SourceFormatError)
     }
   }
+
 }

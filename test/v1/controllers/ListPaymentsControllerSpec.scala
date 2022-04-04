@@ -38,21 +38,22 @@ import v1.models.response.listPayments.{ListPaymentsHateoasData, ListPaymentsRes
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class ListPaymentsControllerSpec extends ControllerBaseSpec
-  with MockEnrolmentsAuthService
-  with MockMtdIdLookupService
-  with MockListPaymentsRequestParser
-  with MockListPaymentsService
-  with MockHateoasFactory
-  with HateoasLinks
-  with MockAuditService
-  with MockIdGenerator {
+class ListPaymentsControllerSpec
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockListPaymentsRequestParser
+    with MockListPaymentsService
+    with MockHateoasFactory
+    with HateoasLinks
+    with MockAuditService
+    with MockIdGenerator {
 
-  private val nino = "AA123456A"
-  private val from = "2018-10-01"
-  private val to = "2019-10-01"
+  private val nino          = "AA123456A"
+  private val from          = "2018-10-01"
+  private val to            = "2019-10-01"
   private val correlationId = "X-123"
-  private val rawRequest = ListPaymentsRawRequest(nino, Some(from), Some(to))
+  private val rawRequest    = ListPaymentsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListPaymentsParsedRequest(Nino(nino), from, to)
 
   trait Test {
@@ -118,9 +119,7 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
 
   private val hateoasResponse =
     ListPaymentsResponse(
-      Seq(
-        HateoasWrapper(payment1, Seq(paymentHateoasLink1)),
-        HateoasWrapper(payment2, Seq(paymentHateoasLink2)))
+      Seq(HateoasWrapper(payment1, Seq(paymentHateoasLink1)), HateoasWrapper(payment2, Seq(paymentHateoasLink2)))
     )
 
   "retrieveList" should {
@@ -219,4 +218,5 @@ class ListPaymentsControllerSpec extends ControllerBaseSpec
       }
     }
   }
+
 }

@@ -33,6 +33,7 @@ trait MockListPaymentsValidator extends MockFactory {
         .validate(_: ListPaymentsRawRequest))
         .expects(data)
     }
+
   }
 
 }

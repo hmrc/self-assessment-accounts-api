@@ -18,10 +18,10 @@ package v1.models.request.createOrAmendCodingOut
 
 import play.api.libs.json.{Json, OFormat}
 
-case class TaxCodeComponents (payeUnderpayment: Option[Seq[TaxCodeComponent]],
-                              selfAssessmentUnderpayment: Option[Seq[TaxCodeComponent]],
-                              debt: Option[Seq[TaxCodeComponent]],
-                              inYearAdjustment: Option[TaxCodeComponent]) {
+case class TaxCodeComponents(payeUnderpayment: Option[Seq[TaxCodeComponent]],
+                             selfAssessmentUnderpayment: Option[Seq[TaxCodeComponent]],
+                             debt: Option[Seq[TaxCodeComponent]],
+                             inYearAdjustment: Option[TaxCodeComponent]) {
   def isEmpty: Boolean = payeUnderpayment.isEmpty && selfAssessmentUnderpayment.isEmpty && debt.isEmpty && inYearAdjustment.isEmpty
 }
 

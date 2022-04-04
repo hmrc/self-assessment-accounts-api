@@ -38,5 +38,7 @@ trait MockDeleteCodingOutService extends MockFactory {
         .deleteCodingOut(_: DeleteCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
         .expects(requestData, *, *, *, *)
     }
+
   }
+
 }

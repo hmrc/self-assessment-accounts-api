@@ -23,6 +23,7 @@ import v1.models.hateoas.{HateoasData, Link}
 object CreateOrAmendCodingOutResponse extends HateoasLinks {
 
   implicit object LinksFactory extends HateoasLinksFactory[Unit, CreateOrAmendCodingOutHateoasData] {
+
     override def links(appConfig: AppConfig, data: CreateOrAmendCodingOutHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -31,7 +32,9 @@ object CreateOrAmendCodingOutResponse extends HateoasLinks {
         deleteCodingOut(appConfig, nino, taxYear)
       )
     }
+
   }
+
 }
 
 case class CreateOrAmendCodingOutHateoasData(nino: String, taxYear: String) extends HateoasData

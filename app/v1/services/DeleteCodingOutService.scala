@@ -31,14 +31,13 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector)
-  extends DesResponseMappingSupport with Logging {
+class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends DesResponseMappingSupport with Logging {
 
-  def deleteCodingOut(request: DeleteCodingOutParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.deleteCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
@@ -50,10 +49,11 @@ class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector)
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "NO_DATA_FOUND" -> CodingOutNotFoundError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"     -> DownstreamError,
+      "NO_DATA_FOUND"             -> CodingOutNotFoundError,
+      "SERVER_ERROR"              -> DownstreamError,
+      "SERVICE_UNAVAILABLE"       -> DownstreamError
     )
+
 }

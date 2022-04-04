@@ -33,6 +33,7 @@ trait MockRetrieveChargeHistoryValidator extends MockFactory {
         .validate(_: RetrieveChargeHistoryRawRequest))
         .expects(data)
     }
+
   }
 
 }

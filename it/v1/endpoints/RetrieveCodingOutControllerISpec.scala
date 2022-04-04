@@ -33,7 +33,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
+    val nino: String         = "AA123456A"
     lazy val taxYear: String = "2021-22"
 
     def desParamSource: String = "HMRC-HELD"
@@ -178,7 +178,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
        """.stripMargin
     )
 
-    val mtdResponse: JsValue = mtdResponseWithHateoas(nino, taxYear, mtdBodySource)
+    val mtdResponse: JsValue     = mtdResponseWithHateoas(nino, taxYear, mtdBodySource)
     val mtdResponseNoId: JsValue = mtdResponseWithHateoasNoId(nino, taxYear, mtdBodySource)
 
     def uri: String = s"/$nino/$taxYear/collection/tax-code"
@@ -188,8 +188,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
     def setupStubs(): StubMapping
 
     def request(source: Option[String]): WSRequest = {
-      def queryParams: Seq[(String, String)] = Seq("source" -> source).collect {
-        case (k, Some(v)) => (k, v)
+      def queryParams: Seq[(String, String)] = Seq("source" -> source).collect { case (k, Some(v)) =>
+        (k, v)
       }
 
       setupStubs()
@@ -197,6 +197,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
     }
+
   }
 
   "Calling the 'retrieve coding out' endpoint" should {
@@ -355,11 +356,14 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
     "return error according to spec" when {
 
       "validation error" when {
-        def validationErrorTest(requestNino: String, requestTaxYear: String, requestSource: String,
-                                expectedStatus: Int, expectedBody: MtdError): Unit = {
+        def validationErrorTest(requestNino: String,
+                                requestTaxYear: String,
+                                requestSource: String,
+                                expectedStatus: Int,
+                                expectedBody: MtdError): Unit = {
           s"validation fails with ${expectedBody.code} error" in new Test {
 
-            override val nino: String = requestNino
+            override val nino: String         = requestNino
             override lazy val taxYear: String = requestTaxYear
 
             override def setupStubs(): StubMapping = {
@@ -444,4 +448,5 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

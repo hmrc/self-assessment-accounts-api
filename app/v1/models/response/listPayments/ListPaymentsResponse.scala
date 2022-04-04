@@ -46,11 +46,14 @@ object ListPaymentsResponse extends HateoasLinks {
         listTransactions(appConfig, nino, from, to, isSelf = false)
       )
     }
+
   }
 
   implicit object ResponseFunctor extends Functor[ListPaymentsResponse] {
+
     override def map[A, B](fa: ListPaymentsResponse[A])(f: A => B): ListPaymentsResponse[B] =
       ListPaymentsResponse(fa.payments.map(f))
+
   }
 
 }

@@ -32,7 +32,8 @@ object ListTransactionsResponse extends HateoasLinks {
   implicit def writes[I: Writes]: OWrites[ListTransactionsResponse[I]] =
     Json.writes[ListTransactionsResponse[I]]
 
-  implicit object ListTransactionsLinksFactory extends HateoasListLinksFactory[ListTransactionsResponse, TransactionItem, ListTransactionsHateoasData] {
+  implicit object ListTransactionsLinksFactory
+      extends HateoasListLinksFactory[ListTransactionsResponse, TransactionItem, ListTransactionsHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: ListTransactionsHateoasData, item: TransactionItem): Seq[Link] = {
       import data.nino
@@ -59,11 +60,14 @@ object ListTransactionsResponse extends HateoasLinks {
         listPayments(appConfig, nino, from, to, isSelf = false)
       )
     }
+
   }
 
   implicit object ResponseFunctor extends Functor[ListTransactionsResponse] {
+
     override def map[A, B](fa: ListTransactionsResponse[A])(f: A => B): ListTransactionsResponse[B] =
       ListTransactionsResponse(fa.transactions.map(f))
+
   }
 
 }

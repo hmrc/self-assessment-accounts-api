@@ -21,11 +21,11 @@ import v1.models.errors.ValueFormatError
 
 class NumberValidationSpec extends UnitSpec {
 
-  val validNumber = Some(BigDecimal(2000.99))
-  val negativeNumber = Some(BigDecimal(-2000.99))
+  val validNumber             = Some(BigDecimal(2000.99))
+  val negativeNumber          = Some(BigDecimal(-2000.99))
   val incorrectDecimalsNumber = Some(BigDecimal(2000.999))
-  val tooBigNumber = Some(BigDecimal(199999999999.99))
-  val path = "path"
+  val tooBigNumber            = Some(BigDecimal(199999999999.99))
+  val path                    = "path"
 
   "number validation" should {
     "return no errors" when {

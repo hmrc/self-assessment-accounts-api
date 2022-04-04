@@ -22,7 +22,7 @@ import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 object ListPaymentsFixture {
 
   val desSuccessResponse: String =
-  """
+    """
       |{
       |   "idType":"NINO",
       |   "idValue":"AB123456C",
@@ -116,8 +116,7 @@ object ListPaymentsFixture {
       |}
       |""".stripMargin
 
-  val mtdResponse: JsValue = Json.parse(
-    s"""
+  val mtdResponse: JsValue = Json.parse(s"""
       |{
       |	"payments": [{
       |		"paymentId": "123456789012-123456",

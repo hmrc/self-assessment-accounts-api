@@ -27,7 +27,7 @@ import scala.concurrent.Future
 
 class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
 
-  private val nino = "AA112233A"
+  private val nino    = "AA112233A"
   private val taxYear = "2021-22"
 
   val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
@@ -43,12 +43,13 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
     body = createOrAmendCodingOutRequestBody
   )
 
-  trait Test extends MockCreateOrAmendCodingOutConnector{
+  trait Test extends MockCreateOrAmendCodingOutConnector {
     implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: CreateOrAmendCodingOutService = new CreateOrAmendCodingOutService(
       connector = mockCreateOrAmendCodingOutConnector
     )
+
   }
 
   "CreateOrAmendCodingOutService" when {
@@ -56,7 +57,8 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        MockCreateOrAmendCodingOutConnector.amendCodingOut(request)
+        MockCreateOrAmendCodingOutConnector
+          .amendCodingOut(request)
           .returns(Future.successful(outcome))
 
         await(service.amend(request)) shouldBe outcome
@@ -67,7 +69,8 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
         def serviceError(desErrorCode: String, error: MtdError): Unit =
           s"a $desErrorCode error is returned from the service" in new Test {
 
-            MockCreateOrAmendCodingOutConnector.amendCodingOut(request)
+            MockCreateOrAmendCodingOutConnector
+              .amendCodingOut(request)
               .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.amend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -87,4 +90,5 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
       }
     }
   }
+
 }

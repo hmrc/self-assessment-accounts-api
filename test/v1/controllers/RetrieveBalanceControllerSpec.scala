@@ -39,7 +39,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveBalanceControllerSpec
-  extends ControllerBaseSpec
+    extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
     with MockRetrieveBalanceService
@@ -49,7 +49,7 @@ class RetrieveBalanceControllerSpec
     with MockAuditService
     with MockIdGenerator {
 
-  private val nino = "AA123456A"
+  private val nino          = "AA123456A"
   private val correlationId = "X-123"
 
   private val rawRequest: RetrieveBalanceRawRequest =
@@ -61,7 +61,7 @@ class RetrieveBalanceControllerSpec
     )
 
   private val retrieveBalanceResponse = RetrieveBalanceFixture.fullModel
-  private val mtdResponse = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
+  private val mtdResponse             = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
 
   val balanceLink: Link =
     Link(
@@ -189,4 +189,5 @@ class RetrieveBalanceControllerSpec
       }
     }
   }
+
 }

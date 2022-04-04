@@ -27,15 +27,14 @@ import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequ
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient,
-                                               val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    val nino = request.nino.nino
+    val nino    = request.nino.nino
     val taxYear = request.taxYear
 
     put(
@@ -43,4 +42,5 @@ class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient,
       IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear")
     )
   }
+
 }

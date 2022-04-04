@@ -40,4 +40,5 @@ class TaxCodeComponentsSpec extends UnitSpec {
       }
     }
   }
+
 }

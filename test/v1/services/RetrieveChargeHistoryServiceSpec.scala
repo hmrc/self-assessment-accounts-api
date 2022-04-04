@@ -40,12 +40,13 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveChargeHistoryConnector {
 
-    implicit val hc: HeaderCarrier = HeaderCarrier()
+    implicit val hc: HeaderCarrier              = HeaderCarrier()
     implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveChargeHistoryController", "retrieveChargeHistory")
 
     val service = new RetrieveChargeHistoryService(
       connector = mockRetrieveChargeHistoryConnector
     )
+
   }
 
   "RetrieveChargeHistoryService" when {
@@ -54,7 +55,8 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
 
       val connectorResponse: RetrieveChargeHistoryResponse = RetrieveChargeHistoryFixture.retrieveChargeHistoryResponse
 
-      MockRetrieveChargeHistoryConnector.retrieveChargeHistory(requestData)
+      MockRetrieveChargeHistoryConnector
+        .retrieveChargeHistory(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
       await(service.retrieveChargeHistory(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
@@ -67,7 +69,8 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveChargeHistoryConnector.retrieveChargeHistory(requestData)
+          MockRetrieveChargeHistoryConnector
+            .retrieveChargeHistory(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.retrieveChargeHistory(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -91,4 +94,5 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       input.foreach(args => (serviceError _).tupled(args))
     }
   }
+
 }

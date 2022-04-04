@@ -29,6 +29,7 @@ object RetrieveCodingOutResponse extends HateoasLinks {
   implicit val format: OFormat[RetrieveCodingOutResponse] = Json.format[RetrieveCodingOutResponse]
 
   implicit object RetrieveCodingOutLinksFactory extends HateoasLinksFactory[RetrieveCodingOutResponse, RetrieveCodingOutHateoasData] {
+
     override def links(appConfig: AppConfig, data: RetrieveCodingOutHateoasData): Seq[Link] = {
       import data._
       Seq(
@@ -37,7 +38,9 @@ object RetrieveCodingOutResponse extends HateoasLinks {
         deleteCodingOut(appConfig, nino, taxYear)
       )
     }
+
   }
+
 }
 
 case class RetrieveCodingOutHateoasData(nino: String, taxYear: String) extends HateoasData

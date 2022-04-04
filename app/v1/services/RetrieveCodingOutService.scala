@@ -31,14 +31,15 @@ import v1.support.DesResponseMappingSupport
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)(implicit currentDate: CurrentDate)
-  extends DesResponseMappingSupport with Logging {
+class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit currentDate: CurrentDate)
+    extends DesResponseMappingSupport
+    with Logging {
 
-  def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
+  def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(implicit
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
@@ -51,13 +52,13 @@ class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)(
   private def desErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_VIEW" -> SourceFormatError,
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "NO_DATA_FOUND" -> CodingOutNotFoundError,
-      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError,
-      "SERVER_ERROR" -> DownstreamError,
-      "SERVICE_UNAVAILABLE" -> DownstreamError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_VIEW"              -> SourceFormatError,
+      "INVALID_CORRELATIONID"     -> DownstreamError,
+      "NO_DATA_FOUND"             -> CodingOutNotFoundError,
+      "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
+      "SERVER_ERROR"              -> DownstreamError,
+      "SERVICE_UNAVAILABLE"       -> DownstreamError
     )
-}
 
+}

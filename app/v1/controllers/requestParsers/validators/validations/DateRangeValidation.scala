@@ -24,7 +24,7 @@ object DateRangeValidation {
 
   def validate(from: String, to: String): List[MtdError] = {
     val fmtFrom = LocalDate.parse(from, dateFormat)
-    val fmtTo = LocalDate.parse(to, dateFormat)
+    val fmtTo   = LocalDate.parse(to, dateFormat)
 
     List(
       checkIfToIsBeforeFrom(fmtFrom, fmtTo),
@@ -33,12 +33,17 @@ object DateRangeValidation {
     ).flatten
   }
 
-  private def checkIfToIsBeforeFrom(from: LocalDate, to: LocalDate): List[MtdError] = if(to isBefore from) List(RangeToDateBeforeFromDateError) else Nil
-  private def checkIfFromIsTooEarly(from: LocalDate): List[MtdError] = if(from isBefore earliestDate) List(RuleFromDateNotSupportedError) else Nil
+  private def checkIfToIsBeforeFrom(from: LocalDate, to: LocalDate): List[MtdError] =
+    if (to isBefore from) List(RangeToDateBeforeFromDateError) else Nil
+
+  private def checkIfFromIsTooEarly(from: LocalDate): List[MtdError] = if (from isBefore earliestDate) List(RuleFromDateNotSupportedError) else Nil
+
   private def checkIfDateRangeIsTooLarge(from: LocalDate, to: LocalDate): List[MtdError] = {
     val start = from.atStartOfDay()
-    val end = to.atStartOfDay()
-    if(Duration.between(start, end.plusDays(1) /* add day to make inclusive */).toDays > maxDateRange)
-      List(RuleDateRangeInvalidError) else Nil
+    val end   = to.atStartOfDay()
+    if (Duration.between(start, end.plusDays(1) /* add day to make inclusive */ ).toDays > maxDateRange)
+      List(RuleDateRangeInvalidError)
+    else Nil
   }
+
 }

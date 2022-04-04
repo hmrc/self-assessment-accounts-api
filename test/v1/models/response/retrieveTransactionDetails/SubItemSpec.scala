@@ -65,4 +65,5 @@ class SubItemSpec extends UnitSpec with SubItemFixture {
       }
     }
   }
+
 }
