@@ -39,7 +39,7 @@ package object createOrAmendCodingOut {
 
   val taxCodeComponentDesJson: JsValue = Json.parse("""
       |{
-      |  "componentIdentifier": 12345,
+      |  "componentIdentifier": "12345",
       |  "amount": 123.45
       |}
       |""".stripMargin)
