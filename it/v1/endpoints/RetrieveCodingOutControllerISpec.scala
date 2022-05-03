@@ -18,12 +18,12 @@ package v1.endpoints
 
 import java.time.{LocalDate, ZoneOffset}
 import java.time.format.DateTimeFormatter
-
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveCodingOutFixture._
 import v1.models.errors._
@@ -195,9 +195,11 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
-
   }
 
   "Calling the 'retrieve coding out' endpoint" should {
@@ -349,7 +351,6 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         response.json shouldBe mtdResponseNoId
         response.header("X-CorrelationId").nonEmpty shouldBe true
         response.header("Content-Type") shouldBe Some("application/json")
-
       }
     }
 
@@ -385,7 +386,6 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           ("AA123456A", "2018-19", "latest", BAD_REQUEST, RuleTaxYearNotSupportedError),
           ("AA123456A", "2021-23", "latest", BAD_REQUEST, RuleTaxYearRangeInvalidError)
         )
-
         input.foreach(args => (validationErrorTest _).tupled(args))
       }
 
@@ -424,7 +424,6 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )
-
         input.foreach(args => (serviceErrorTest _).tupled(args))
       }
 
@@ -443,10 +442,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           response.status shouldBe INTERNAL_SERVER_ERROR
           response.json shouldBe Json.toJson(DownstreamError)
           response.header("Content-Type") shouldBe Some("application/json")
-
         }
       }
     }
   }
-
 }

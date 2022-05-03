@@ -21,6 +21,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 import v1.models.errors._
@@ -49,7 +50,10 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
     def request: WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def errorBody(code: String): String =
@@ -105,7 +109,6 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
         ("AA1123A", "f2fb30e5-4ab6", BAD_REQUEST, NinoFormatError),
         ("AA123456A", "this id is invalid", BAD_REQUEST, PaymentIdFormatError)
       )
-
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
@@ -144,9 +147,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
-
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
-
 }

@@ -21,6 +21,7 @@ import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.models.errors._
@@ -45,8 +46,11 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
     def request: WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withHttpHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))
         .withQueryStringParameters(("docNumber", transactionId))
+        .withHttpHeaders(
+          (ACCEPT, "application/vnd.hmrc.1.0+json"),
+          (AUTHORIZATION, "Bearer 123") // some bearer token
+      )
     }
 
     def errorBody(code: String): String =
@@ -133,7 +137,6 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
       val input = Seq(
         ("AA1123A", BAD_REQUEST, NinoFormatError)
       )
-
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
@@ -171,9 +174,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
       )
-
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
-
 }
