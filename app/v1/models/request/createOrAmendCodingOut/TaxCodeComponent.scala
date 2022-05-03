@@ -16,7 +16,6 @@
 
 package v1.models.request.createOrAmendCodingOut
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
 case class TaxCodeComponent(id: BigDecimal, amount: BigDecimal)
@@ -24,9 +23,9 @@ case class TaxCodeComponent(id: BigDecimal, amount: BigDecimal)
 object TaxCodeComponent {
   implicit val reads: Reads[TaxCodeComponent] = Json.reads[TaxCodeComponent]
 
-  implicit val writes: OWrites[TaxCodeComponent] = (
-    (JsPath \ "componentIdentifier").write[BigDecimal] and
-      (JsPath \ "amount").write[BigDecimal]
-  )(unlift(TaxCodeComponent.unapply))
-
+  implicit val writes: OWrites[TaxCodeComponent] = (o: TaxCodeComponent) =>
+    Json.obj(
+      "componentIdentifier" -> o.id.toString(),
+      "amount" -> o.amount
+    )
 }
