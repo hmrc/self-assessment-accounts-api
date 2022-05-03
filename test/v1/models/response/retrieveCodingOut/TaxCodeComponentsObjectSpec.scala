@@ -30,7 +30,7 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |        "relatedTaxYear": "2021-22",
       |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "payeUnderpayment": [
@@ -39,7 +39,7 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |        "relatedTaxYear": "2021-22",
       |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "debt": [
@@ -48,7 +48,7 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |        "relatedTaxYear": "2021-22",
       |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "inYearAdjustment": {
@@ -56,7 +56,7 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
       |      "relatedTaxYear": "2021-22",
       |      "submittedOn": "2021-08-24T14:15:22Z",
       |      "source": "HMRC HELD",
-      |      "componentIdentifier": 12345678910
+      |      "componentIdentifier": "12345678910"
       |    }
       |}
     """.stripMargin

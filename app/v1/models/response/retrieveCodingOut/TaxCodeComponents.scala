@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveCodingOut
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json._
 import v1.models.domain.DownstreamSource
 import play.api.libs.functional.syntax._
 
@@ -29,7 +29,7 @@ object TaxCodeComponents {
       (JsPath \ "relatedTaxYear").readNullable[String] and
       (JsPath \ "submittedOn").read[String] and
       (JsPath \ "source").read[DownstreamSource].map(_.toMtdSource) and
-      (JsPath \ "componentIdentifier").readNullable[BigInt]
+      (JsPath \ "componentIdentifier").readNullable[BigInt].map(BigInt(_))
   )(TaxCodeComponents.apply _)
 
   implicit val writes: OWrites[TaxCodeComponents] = Json.writes[TaxCodeComponents]

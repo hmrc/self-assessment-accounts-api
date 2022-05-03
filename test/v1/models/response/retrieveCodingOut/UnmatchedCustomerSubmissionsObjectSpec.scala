@@ -28,27 +28,27 @@ class UnmatchedCustomerSubmissionsObjectSpec extends UnitSpec {
       |      {
       |        "amount": 0,
       |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "payeUnderpayment": [
       |      {
       |        "amount": 0,
       |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "debt": [
       |      {
       |        "amount": 0,
       |        "submittedOn": "2019-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "inYearAdjustment": {
       |      "amount": 0,
       |      "submittedOn": "2019-08-24T14:15:22Z",
-      |      "componentIdentifier": 12345678910
+      |      "componentIdentifier": "12345678910"
       |  }
       |}
       |""".stripMargin
