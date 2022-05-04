@@ -54,7 +54,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
          |               "source": "$desBodySource",
-         |               "componentIdentifier": 12345678910
+         |               "componentIdentifier": "12345678910"
          |           }
          |       ],
          |       "payeUnderpayment": [
@@ -63,7 +63,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
          |               "source": "$desBodySource",
-         |               "componentIdentifier": 12345678910
+         |               "componentIdentifier": "12345678910"
          |           }
          |       ],
          |       "debt": [
@@ -72,7 +72,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
          |               "source": "$desBodySource",
-         |               "componentIdentifier": 12345678910
+         |               "componentIdentifier": "12345678910"
          |           }
          |       ],
          |       "inYearAdjustment": {
@@ -80,7 +80,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |           "relatedTaxYear": "$taxYear",
          |           "submittedOn": "2021-08-24T14:15:22Z",
          |           "source": "$desBodySource",
-         |           "componentIdentifier": 12345678910
+         |           "componentIdentifier": "12345678910"
          |       }
          |   },
          |   "unmatchedCustomerSubmissions": {
@@ -88,27 +88,27 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |           {
          |               "amount": 0,
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "componentIdentifier": 12345678910
+         |               "componentIdentifier": "12345678910"
          |           }
          |       ],
          |       "payeUnderpayment": [
          |           {
          |               "amount": 0,
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "componentIdentifier": 12345678910
+         |               "componentIdentifier": "12345678910"
          |           }
          |       ],
          |       "debt": [
          |           {
          |               "amount": 0,
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "componentIdentifier": 12345678910
+         |               "componentIdentifier": "12345678910"
          |           }
          |       ],
          |       "inYearAdjustment": {
          |           "amount": 0,
          |           "submittedOn": "2021-08-24T14:15:22Z",
-         |           "componentIdentifier": 12345678910
+         |           "componentIdentifier": "12345678910"
          |       }
          |   }
          |}
