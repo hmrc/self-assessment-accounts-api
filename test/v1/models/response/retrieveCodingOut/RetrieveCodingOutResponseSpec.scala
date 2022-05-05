@@ -31,7 +31,7 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |        "relatedTaxYear": "2021-22",
       |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "payeUnderpayment": [
@@ -40,7 +40,7 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |        "relatedTaxYear": "2021-22",
       |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "debt": [
@@ -49,7 +49,7 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |        "relatedTaxYear": "2021-22",
       |        "submittedOn": "2021-08-24T14:15:22Z",
       |        "source": "HMRC HELD",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "inYearAdjustment": {
@@ -57,7 +57,7 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |      "relatedTaxYear": "2021-22",
       |      "submittedOn": "2021-08-24T14:15:22Z",
       |      "source": "HMRC HELD",
-      |      "componentIdentifier": 12345678910
+      |      "componentIdentifier": "12345678910"
       |    }
       |  },
       |  "unmatchedCustomerSubmissions": {
@@ -65,27 +65,27 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       |      {
       |        "amount": 0,
       |        "submittedOn": "2021-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "payeUnderpayment": [
       |      {
       |        "amount": 0,
       |        "submittedOn": "2021-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "debt": [
       |      {
       |        "amount": 0,
       |        "submittedOn": "2021-08-24T14:15:22Z",
-      |        "componentIdentifier": 12345678910
+      |        "componentIdentifier": "12345678910"
       |      }
       |    ],
       |    "inYearAdjustment": {
       |      "amount": 0,
       |      "submittedOn": "2021-08-24T14:15:22Z",
-      |      "componentIdentifier": 12345678910
+      |      "componentIdentifier": "12345678910"
       |    }
       |  }
       |}
