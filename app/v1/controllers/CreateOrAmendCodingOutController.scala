@@ -18,7 +18,6 @@ package v1.controllers
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -33,6 +32,7 @@ import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasDa
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutResponse.LinksFactory
 import v1.services.{AuditService, CreateOrAmendCodingOutService, EnrolmentsAuthService, MtdIdLookupService}
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -107,11 +107,23 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
+
     errorWrapper.error match {
-      case NinoFormatError | BadRequestError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError |
-          RuleTaxYearNotEndedError | MtdErrorWithCustomMessage(ValueFormatError.code) | MtdErrorWithCustomMessage(IdFormatError.code) |
-          MtdErrorWithCustomMessage(RuleIncorrectOrEmptyBodyError.code) =>
+      case _
+          if errorWrapper.containsAnyOf(
+            NinoFormatError,
+            BadRequestError,
+            TaxYearFormatError,
+            RuleTaxYearNotSupportedError,
+            RuleTaxYearRangeInvalidError,
+            RuleTaxYearNotEndedError,
+            RuleDuplicateIdError,
+            ValueFormatError,
+            IdFormatError,
+            RuleIncorrectOrEmptyBodyError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
+
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
       case _               => unhandledError(errorWrapper)
     }

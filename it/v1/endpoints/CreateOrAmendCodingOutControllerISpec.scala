@@ -16,8 +16,6 @@
 
 package v1.endpoints
 
-import java.time.{LocalDate, ZoneOffset}
-import java.time.format.DateTimeFormatter
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -27,6 +25,9 @@ import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+
+import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, ZoneOffset}
 
 class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
@@ -42,24 +43,24 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
         |    "payeUnderpayment": [
         |      {
         |        "amount": 123.45,
-        |        "id": 12345
+        |        "id": 1
         |      }
         |    ],
         |    "selfAssessmentUnderpayment": [
         |      {
         |        "amount": 123.45,
-        |        "id": 12345
+        |        "id": 2
         |      }
         |    ],
         |    "debt": [
         |      {
         |        "amount": 123.45,
-        |        "id": 12345
+        |        "id": 3
         |      }
         |    ],
         |    "inYearAdjustment": {
         |      "amount": 123.45,
-        |      "id": 12345
+        |      "id": 4
         |    }
         |  }
         |}
@@ -102,14 +103,14 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def errorBody(code: String): String =
       s"""
          |{
          |   "code": "$code",
-         |   "reason": "des message"
+         |   "reason": "A message from downstream"
          |}
         """.stripMargin
 
@@ -135,8 +136,8 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
       }
     }
 
-    "return error according to spec" when {
-      "validation error" when {
+    "return an error according to the spec" when {
+      "the validation error is because" when {
         "an invalid NINO format is provided" in new Test {
           override val nino: String = "INVALID_NINO"
 
@@ -184,6 +185,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
+
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(RuleTaxYearRangeInvalidError)
@@ -202,6 +204,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
             if (currentDate.isBefore(taxYearStartDate)) fromDesIntToString(currentDate.getYear) else fromDesIntToString(currentDate.getYear + 1)
           }
+
           override val taxYear: String = getCurrentTaxYear
 
           override def setupStubs(): StubMapping = {
@@ -209,6 +212,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
+
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(RuleTaxYearNotEndedError)
@@ -250,6 +254,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
+
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(
@@ -308,6 +313,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
+
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(ErrorWrapper(
@@ -364,6 +370,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
+
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(ErrorWrapper(
@@ -421,6 +428,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
+
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(ErrorWrapper(
@@ -477,6 +485,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
+
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(ErrorWrapper(
@@ -510,15 +519,16 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
+
           val response: WSResponse = await(request().put(requestBodyJson))
           response.status shouldBe BAD_REQUEST
           response.json shouldBe Json.toJson(RuleIncorrectOrEmptyBodyError)
         }
       }
 
-      "des service error" when {
+      "the error response from downstream is" when {
         def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"des returns an $desCode error and status $desStatus" in new Test {
+          s"$desCode and status $desStatus" in new Test {
 
             override def setupStubs(): StubMapping = {
               AuditStub.audit()
@@ -539,6 +549,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
           (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
           (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
+          (UNPROCESSABLE_ENTITY, "DUPLICATE_ID_NOT_ALLOWED", BAD_REQUEST, RuleDuplicateIdError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError)
         )
@@ -546,4 +557,5 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

@@ -113,6 +113,12 @@ object RuleTaxYearNotEndedError
       message = "Tax year not ended"
     )
 
+object RuleDuplicateIdError
+    extends MtdError(
+      code = "DUPLICATE_ID_NOT_ALLOWED",
+      message = "Duplicate IDs are not allowed"
+    )
+
 object RuleFromDateNotSupportedError
     extends MtdError(
       code = "RULE_FROM_DATE_NOT_SUPPORTED",

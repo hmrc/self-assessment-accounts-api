@@ -29,6 +29,9 @@ case class ErrorWrapper(correlationId: String, error: MtdError, errors: Option[S
   def auditErrors: Seq[AuditError] =
     allErrors.map(error => AuditError(error.code))
 
+  def containsAnyOf(errorsToCheck: MtdError*): Boolean =
+    allErrors.exists(err => errorsToCheck.exists(_.code == err.code))
+
 }
 
 object ErrorWrapper {

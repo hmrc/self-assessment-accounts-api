@@ -16,9 +16,9 @@
 
 package v1.services
 
-import v1.models.domain.Nino
 import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockCreateOrAmendCodingOutConnector
+import v1.models.domain.Nino
 import v1.models.errors._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.createOrAmendCodingOut._
@@ -66,12 +66,12 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
 
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockCreateOrAmendCodingOutConnector
               .amendCodingOut(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(downstreamErrorCode))))))
 
             await(service.amend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
@@ -82,6 +82,7 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
           ("INVALID_CORRELATIONID", DownstreamError),
           ("INVALID_PAYLOAD", DownstreamError),
           ("INVALID_REQUEST_TAX_YEAR", RuleTaxYearNotEndedError),
+          ("DUPLICATE_ID_NOT_ALLOWED", RuleDuplicateIdError),
           ("SERVER_ERROR", DownstreamError),
           ("SERVICE_UNAVAILABLE", DownstreamError)
         )
