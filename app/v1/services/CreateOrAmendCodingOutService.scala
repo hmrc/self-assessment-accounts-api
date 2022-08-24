@@ -18,7 +18,6 @@ package v1.services
 
 import cats.data.EitherT
 import cats.implicits._
-import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.CreateOrAmendCodingOutConnector
@@ -28,6 +27,7 @@ import v1.models.outcomes.ResponseWrapper
 import v1.models.request.createOrAmendCodingOut._
 import v1.support.DesResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -53,6 +53,7 @@ class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOut
       "INVALID_CORRELATIONID"     -> DownstreamError,
       "INVALID_PAYLOAD"           -> DownstreamError,
       "INVALID_REQUEST_TAX_YEAR"  -> RuleTaxYearNotEndedError,
+      "DUPLICATE_ID_NOT_ALLOWED"  -> RuleDuplicateIdError,
       "SERVER_ERROR"              -> DownstreamError,
       "SERVICE_UNAVAILABLE"       -> DownstreamError
     )
