@@ -444,6 +444,17 @@ traits:
                           description: A taxYear range of one year is required.
                           value:
                             code: RULE_TAX_YEAR_RANGE_INVALID
+  ruleDuplicateIdNotAllowed:
+              responses:
+                400:
+                  body:
+                    application/json:
+                      type: types.errorResponse
+                      examples:
+                        ruleDuplicateIdNotAllowed:
+                          description: The request data contains duplicate ID values.
+                          value:
+                            code: DUPLICATE_ID_NOT_ALLOWED
   formatSource:
         responses:
           400:

@@ -235,6 +235,7 @@ class CreateOrAmendCodingOutControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (TaxYearFormatError, BAD_REQUEST),
           (RuleTaxYearNotEndedError, BAD_REQUEST),
+          (RuleDuplicateIdError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
