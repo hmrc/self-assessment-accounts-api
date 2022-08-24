@@ -115,7 +115,7 @@ object RuleTaxYearNotEndedError
 
 object RuleDuplicateIdError
     extends MtdError(
-      code = "DUPLICATE_ID_NOT_ALLOWED",
+      code = "RULE_DUPLICATE_ID_NOT_ALLOWED",
       message = "Duplicate IDs are not allowed"
     )
 
