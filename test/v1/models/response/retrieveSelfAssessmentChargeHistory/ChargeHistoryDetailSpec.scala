@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package v2.models.response.retrieveSelfAssessmentChargeHistory
+package v1.models.response.retrieveSelfAssessmentChargeHistory
 
 import play.api.libs.json.Json
 import support.UnitSpec
@@ -27,7 +27,7 @@ class ChargeHistoryDetailSpec extends UnitSpec {
       |  "documentId": "123456789",
       |  "documentDate": "2020-01-29",
       |  "documentDescription": "Balancing Charge",
-      |  "totalAmount": 12345678912.12,
+      |  "totalAmount": 54321.12,
       |  "reversalDate": "2020-02-24",
       |  "reversalReason": "amended return"
       |}
@@ -37,11 +37,11 @@ class ChargeHistoryDetailSpec extends UnitSpec {
   val mtdJson = Json.parse(
     """
       |{
-      |  "taxYear": "2019",
+      |  "taxYear": "2018-19",
       |  "transactionId": "123456789",
       |  "transactionDate": "2020-01-29",
       |  "description": "Balancing Charge",
-      |  "totalAmount": 12345678912.12,
+      |  "totalAmount": 54321.12,
       |  "chargeDate": "2020-02-24",
       |  "chargeReason": "amended return"
       |}
@@ -49,13 +49,13 @@ class ChargeHistoryDetailSpec extends UnitSpec {
   )
 
   val validModel: ChargeHistoryDetail = ChargeHistoryDetail(
-    taxYear = Option("2019"),
-    transactionId = "123456789",
-    transactionDate = "2020-01-29",
-    description = "Balancing Charge",
-    totalAmount = 12345678912.12,
-    chargeDate = "2020-02-24",
-    chargeReason = "amended return"
+    taxYear = Some("2018-19"),
+    transactionId = Some("123456789"),
+    transactionDate = Some("2020-01-29"),
+    description = Some("Balancing Charge"),
+    totalAmount = Some(54321.12),
+    chargeDate = Some("2020-02-24"),
+    chargeReason = Some("amended return")
   )
 
   "reads" should {
