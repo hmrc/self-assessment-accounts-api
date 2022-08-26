@@ -25,8 +25,8 @@ case class ChargeHistoryDetail(taxYear: Option[String],
                                transactionDate: String,
                                description: String,
                                totalAmount: BigDecimal,
-                               chargeDate: String,
-                               chargeReason: String)
+                               changeDate: String,
+                               changeReason: String)
 
 object ChargeHistoryDetail {
 

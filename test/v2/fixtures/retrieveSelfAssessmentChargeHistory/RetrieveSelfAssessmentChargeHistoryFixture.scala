@@ -26,8 +26,8 @@ object RetrieveSelfAssessmentChargeHistoryFixture {
     transactionDate = "2020-01-29",
     description = "Balancing Charge",
     totalAmount = 54321.12,
-    chargeDate = "2020-02-24",
-    chargeReason = "amended return"
+    changeDate = "2020-02-24",
+    changeReason = "amended return"
   )
 
 }
