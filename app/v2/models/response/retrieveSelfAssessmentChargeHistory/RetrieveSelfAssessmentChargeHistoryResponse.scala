@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveSelfAssessmentChargeHistory
+package v2.models.response.retrieveSelfAssessmentChargeHistory
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
@@ -25,7 +25,7 @@ object RetrieveSelfAssessmentChargeHistoryResponse {
   implicit val reads: Reads[RetrieveSelfAssessmentChargeHistoryResponse] =
     (JsPath \ "chargeHistoryDetails")
       .read[Seq[ChargeHistoryDetail]]
-      .map(items => RetrieveSelfAssessmentChargeHistoryResponse(items.filterNot(_ == ChargeHistoryDetail.empty)))
+      .map(items => RetrieveSelfAssessmentChargeHistoryResponse(items))
 
   implicit val writes: OWrites[RetrieveSelfAssessmentChargeHistoryResponse] =
     Json.writes[RetrieveSelfAssessmentChargeHistoryResponse]

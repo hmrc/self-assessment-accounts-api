@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package v1.models.response.retrieveSelfAssessmentChargeHistory
+package v2.models.response.retrieveSelfAssessmentChargeHistory
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import v1.models.domain.DesTaxYear
 
 case class ChargeHistoryDetail(taxYear: Option[String],
-                               transactionId: Option[String],
-                               transactionDate: Option[String],
-                               description: Option[String],
-                               totalAmount: Option[BigDecimal],
-                               chargeDate: Option[String],
-                               chargeReason: Option[String])
+                               transactionId: String,
+                               transactionDate: String,
+                               description: String,
+                               totalAmount: BigDecimal,
+                               chargeDate: String,
+                               chargeReason: String)
 
 object ChargeHistoryDetail {
-  val empty: ChargeHistoryDetail = ChargeHistoryDetail(None, None, None, None, None, None, None)
 
   implicit val reads: Reads[ChargeHistoryDetail] =
     ((JsPath \ "taxYear").readNullable[String].map(_.map(DesTaxYear.fromDes)) and
-      (JsPath \ "documentId").readNullable[String] and
-      (JsPath \ "documentDate").readNullable[String] and
-      (JsPath \ "documentDescription").readNullable[String] and
-      (JsPath \ "totalAmount").readNullable[BigDecimal] and
-      (JsPath \ "reversalDate").readNullable[String] and
-      (JsPath \ "reversalReason").readNullable[String])(ChargeHistoryDetail.apply _)
+      (JsPath \ "documentId").read[String] and
+      (JsPath \ "documentDate").read[String] and
+      (JsPath \ "documentDescription").read[String] and
+      (JsPath \ "totalAmount").read[BigDecimal] and
+      (JsPath \ "reversalDate").read[String] and
+      (JsPath \ "reversalReason").read[String])(ChargeHistoryDetail.apply _)
 
   implicit val writes: OWrites[ChargeHistoryDetail] = Json.writes[ChargeHistoryDetail]
 }

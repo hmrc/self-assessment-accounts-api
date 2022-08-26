@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v1.models.request.RetrieveSelfAssessmentChargeHistory
+package v2.models.request.retrieveSelfAssessmentChargeHistory
 
-import v1.models.domain.Nino
+import v2.models.domain.Nino
 
 case class RetrieveSelfAssessmentChargeHistoryRequest(nino: Nino, transactionId: String)
