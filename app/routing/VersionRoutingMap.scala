@@ -18,7 +18,7 @@ package routing
 
 import com.google.inject.ImplementedBy
 import config.{AppConfig, FeatureSwitch}
-import definition.Versions.VERSION_1
+import definition.Versions.{VERSION_1, VERSION_2}
 
 import javax.inject.Inject
 import play.api.routing.Router
@@ -39,6 +39,7 @@ trait VersionRoutingMap {
 // Add routes corresponding to available versions...
 case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
                                             v1Routes: v1.Routes,
+                                            v2Routes: v2.Routes,
                                             v1WithCodingOutRoutes: v1WithCodingOut.Routes,
                                             appConfig: AppConfig)
     extends VersionRoutingMap
@@ -52,7 +53,9 @@ case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
   val map: Map[String, Router] = Map(
     VERSION_1 -> {
       if (isCodingOutEnabled) v1WithCodingOutRoutes else v1Routes
-    }
+    },
+      VERSION_2 -> v2Routes
   )
+
 
 }

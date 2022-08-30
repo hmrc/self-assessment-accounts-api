@@ -45,4 +45,9 @@ case class FeatureSwitch(value: Option[Configuration]) {
     enabled.getOrElse(false)
   }
 
+  val isV2RoutingEnabled: Boolean = value match {
+    case Some(config) => config.getOptional[Boolean]("v2-endpoints.enabled").getOrElse(true)
+    case None         => true
+  }
+
 }
