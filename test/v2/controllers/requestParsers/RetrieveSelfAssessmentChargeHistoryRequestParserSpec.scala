@@ -25,8 +25,8 @@ import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssess
 class RetrieveSelfAssessmentChargeHistoryRequestParserSpec extends UnitSpec {
 
   val validNino: String                    = "AA123456B"
-  val validTransactionId: String           = "717f3agW5415678f"
-  implicit val correlationId: String  = "X-123"
+  val validTransactionId: String           = "717f3agW678f"
+  implicit val correlationId: String       = "X-123"
 
   val inputData: RetrieveSelfAssessmentChargeHistoryRawData =
     RetrieveSelfAssessmentChargeHistoryRawData(validNino, validTransactionId)
