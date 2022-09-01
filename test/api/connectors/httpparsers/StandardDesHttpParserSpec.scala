@@ -21,7 +21,7 @@ import play.api.libs.json.{JsValue, Json, Reads}
 import support.UnitSpec
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 import api.connectors.DownstreamOutcome
-//import api.connectors.httpparsers.StandardDesHttpParser.SuccessCode
+import api.connectors.httpparsers.StandardDesHttpParser._
 import api.models.errors.{BVRError, DesErrorCode, DesErrors, DownstreamError, MtdError, OutboundError}
 import api.models.outcomes.ResponseWrapper
 

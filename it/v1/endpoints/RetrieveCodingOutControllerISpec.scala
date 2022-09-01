@@ -16,6 +16,7 @@
 
 package v1.endpoints
 
+import api.stubs.{AuthStub, DesStub, MtdIdLookupStub}
 import java.time.{LocalDate, ZoneOffset}
 import java.time.format.DateTimeFormatter
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
@@ -26,7 +27,6 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveCodingOutFixture._
-import v1.stubs.{AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 

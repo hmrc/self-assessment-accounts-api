@@ -16,15 +16,12 @@
 
 package v2.controllers
 
-import api.controllers.requestParsers.RequestParser
 import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
-import api.controllers.requestParsers.validators.Validator
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.models.request.RawData
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -33,7 +30,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
 import v1.connectors.RetrieveChargeHistoryConnector
 import v1.support.DesResponseMappingSupport
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
+import v2.controllers.requestParsers.RetrieveSelfAssessmentChargeHistoryRequestParser
+import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest}
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 
 import javax.inject.{Inject, Singleton}
@@ -61,7 +59,7 @@ class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: 
         implicit val correlationId: String = idGenerator.generateCorrelationId
         logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " + s"with correlationId: $correlationId")
 
-        val rawRequest = RetrieveSelfAssessmentChargeHistoryRawRequest(nino, transactionId)
+        val rawRequest = RetrieveSelfAssessmentChargeHistoryRawData(nino, transactionId)
         val result = for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
@@ -100,27 +98,6 @@ class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: 
 }
 
 //-----------STUBS-----------------------------
-
-case class RetrieveSelfAssessmentChargeHistoryRawRequest(nino: String, transactionId: String) extends RawData
-
-class RetrieveSelfAssessmentChargeHistoryRequestParser @Inject() (val validator: RetrieveSelfAssessmentChargeHistoryValidator)
-    extends RequestParser[RetrieveSelfAssessmentChargeHistoryRawRequest, RetrieveSelfAssessmentChargeHistoryRequest] {
-
-  override protected def requestFor(data: RetrieveSelfAssessmentChargeHistoryRawRequest): RetrieveSelfAssessmentChargeHistoryRequest = {
-    ???
-  }
-
-}
-
-class RetrieveSelfAssessmentChargeHistoryValidator extends Validator[RetrieveSelfAssessmentChargeHistoryRawRequest] {
-
-  // private val validationSet = List(parameterFormatValidation)
-
-  override def validate(data: RetrieveSelfAssessmentChargeHistoryRawRequest): List[MtdError] = {
-    ???
-  }
-
-}
 
 @Singleton
 class RetrieveSelfAssessmentChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector)

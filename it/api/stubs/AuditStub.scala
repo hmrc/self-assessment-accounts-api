@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package v2.controllers.requestParsers.validators.validations
+package api.stubs
 
-import v2.models.domain.Nino
-import v2.models.errors.{MtdError, NinoFormatError}
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import play.api.http.Status._
+import support.WireMockMethods
 
-object NinoValidation {
+object AuditStub extends WireMockMethods {
 
-  private val ninoRegex =
-    "^([ACEHJLMOPRSWXY][A-CEGHJ-NPR-TW-Z]|B[A-CEHJ-NPR-TW-Z]|G[ACEGHJ-NPR-TW-Z]|" +
-      "[KT][A-CEGHJ-MPR-TW-Z]|N[A-CEGHJL-NPR-SW-Z]|Z[A-CEGHJ-NPR-TW-Y])[0-9]{6}[A-D ]?$"
+  private val auditUri: String = s"/write/audit.*"
 
-  def validate(nino: String): List[MtdError] = {
-    if (Nino.isValid(nino) && nino.matches(ninoRegex)) NoValidationErrors else List(NinoFormatError)
+  def audit(): StubMapping = {
+    when(method = POST, uri = auditUri)
+      .thenReturn(status = NO_CONTENT)
   }
+
 }
