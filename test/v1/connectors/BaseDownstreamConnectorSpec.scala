@@ -16,6 +16,7 @@
 
 package v1.connectors
 
+import api.connectors.{BaseDownstreamConnector, ConnectorSpec}
 import config.AppConfig
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}

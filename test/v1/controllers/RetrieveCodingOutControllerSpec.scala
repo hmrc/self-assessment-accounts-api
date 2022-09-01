@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.hateoas.{HateoasWrapper, Link}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import v1.models.domain.Nino
@@ -26,9 +27,6 @@ import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveCodingOutRequestParser
 import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveCodingOutService}
 import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
 import v1.models.response.retrieveCodingOut._

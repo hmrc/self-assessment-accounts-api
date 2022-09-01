@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
 import utils.Logging
-import v1.models.errors.{DownstreamError, ErrorWrapper}
+import api.models.errors.{DownstreamError, ErrorWrapper}
 
 trait BaseController {
   self: Logging =>

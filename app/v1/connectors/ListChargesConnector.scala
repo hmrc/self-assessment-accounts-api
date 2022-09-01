@@ -16,12 +16,13 @@
 
 package v1.connectors
 
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1.connectors.DownstreamUri.DesUri
-import v1.connectors.httpparsers.StandardDesHttpParser._
+import api.connectors.DownstreamUri.DesUri
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.{Charge, ListChargesResponse}
 

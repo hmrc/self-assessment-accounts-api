@@ -16,12 +16,13 @@
 
 package v1.connectors
 
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
-import v1.connectors.httpparsers.StandardDesHttpParser._
-import v1.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.IfsUri
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}

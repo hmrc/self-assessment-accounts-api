@@ -16,6 +16,7 @@
 
 package v1.connectors
 
+import api.connectors.ConnectorSpec
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.domain.Nino

@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.hateoas.{HateoasWrapper, Link}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import v1.models.domain.Nino
@@ -28,9 +29,6 @@ import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveAllocationsService}
 import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
 import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType._
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
 import v1.models.response.retrieveAllocations.detail.AllocationDetail

@@ -16,6 +16,7 @@
 
 package v1.models.domain
 
+import api.models.domain.EmptyJsonBody
 import play.api.libs.json.Json
 import support.UnitSpec
 

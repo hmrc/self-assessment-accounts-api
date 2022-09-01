@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.hateoas.{HateoasWrapper, Link}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
@@ -26,8 +27,6 @@ import v1.mocks.services.{MockAuditService, MockCreateOrAmendCodingOutService, M
 import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.models.domain.Nino
 import v1.models.errors._
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.createOrAmendCodingOut._
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData

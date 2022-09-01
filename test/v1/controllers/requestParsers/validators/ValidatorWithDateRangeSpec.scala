@@ -16,9 +16,10 @@
 
 package v1.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.ValidatorWithDateRange
+import api.models.request.RawDataWithDateRange
 import support.UnitSpec
 import v1.models.errors._
-import v1.models.request.RawDataWithDateRange
 
 class ValidatorWithDateRangeSpec extends UnitSpec {
 

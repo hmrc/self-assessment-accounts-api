@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveBalance
 
-import v1.models.request.RawData
+import api.models.request.RawData
 
 case class RetrieveBalanceRawRequest(nino: String) extends RawData

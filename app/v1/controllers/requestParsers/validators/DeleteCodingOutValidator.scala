@@ -16,10 +16,12 @@
 
 package v1.controllers.requestParsers.validators
 
+import api.controllers.requestParsers.validators.Validator
 import config.AppConfig
-import v1.controllers.requestParsers.validators.validations._
-import v1.models.errors.MtdError
+import api.controllers.requestParsers.validators.validations._
+import api.models.errors.MtdError
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
+
 import javax.inject.Inject
 
 class DeleteCodingOutValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCodingOutRawRequest] {

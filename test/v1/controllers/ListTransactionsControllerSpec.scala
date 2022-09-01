@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.hateoas.{HateoasWrapper, Link}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import v1.models.domain.Nino
@@ -27,9 +28,6 @@ import v1.mocks.requestParsers.MockListTransactionsRequestParser
 import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListTransactionsService, MockMtdIdLookupService}
 import v1.models.errors._
 import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
-import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType._
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions._
 import v1.models.response.listTransaction.ListTransactionsResponse

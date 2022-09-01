@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.models.hateoas.{HateoasWrapper, Link}
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import v1.models.domain.Nino
@@ -26,9 +27,6 @@ import v1.mocks.MockIdGenerator
 import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListChargesRequestParser
 import v1.models.errors._
-import v1.models.hateoas.Method.GET
-import v1.models.hateoas.RelType.{LIST_TRANSACTIONS, RETRIEVE_TRANSACTION_DETAILS, SELF}
-import v1.models.hateoas.{HateoasWrapper, Link}
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges._
 import v1.models.response.listCharges.{ListChargesHateoasData, ListChargesResponse}

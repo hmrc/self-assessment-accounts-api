@@ -16,6 +16,7 @@
 
 package v1.connectors
 
+import api.connectors.ConnectorSpec
 import mocks.MockAppConfig
 import v1.models.domain.Nino
 import v1.fixtures.RetrieveChargeHistoryFixture

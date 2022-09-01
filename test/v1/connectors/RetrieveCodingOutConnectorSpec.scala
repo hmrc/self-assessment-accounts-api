@@ -16,8 +16,10 @@
 
 package v1.connectors
 
+import api.connectors.ConnectorSpec
+import api.models.domain.MtdSource
 import mocks.MockAppConfig
-import v1.models.domain.{MtdSource, Nino}
+import v1.models.domain.Nino
 import v1.mocks.MockHttpClient
 import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
