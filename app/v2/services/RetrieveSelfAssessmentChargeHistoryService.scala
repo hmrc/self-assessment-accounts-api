@@ -59,6 +59,7 @@ class RetrieveSelfAssessmentChargeHistoryService @Inject()(connector: RetrieveSe
       "INVALID_DATE_FROM"     -> InternalError,
       "INVALID_DATE_TO"       -> InternalError,
       "INVALID_DATE_RANGE"    -> InternalError,
+      "INVALID_REQUEST"       -> InternalError,
       "REQUEST_NOT_PROCESSED" -> InternalError,
       "NO_DATA_FOUND"         -> NotFoundError,
       "SERVER_ERROR"          -> InternalError,
