@@ -17,6 +17,7 @@
 package v1.connectors
 
 import api.connectors.DownstreamUri.DesUri
+import api.connectors.httpparsers.StandardDesHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 

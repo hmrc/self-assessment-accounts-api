@@ -17,9 +17,9 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.mocks.validators.MockRetrieveAllocationsValidator
-import v1.models.errors._
+import api.models.errors._
 import v1.models.request.retrieveAllocations._
 
 class RetrieveAllocationsRequestParserSpec extends UnitSpec {

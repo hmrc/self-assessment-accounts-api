@@ -16,8 +16,10 @@
 
 package v1.controllers
 
+import api.controllers.EndpointLogContext
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -26,13 +28,14 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveTransactionDetailsRequestParser
-import v1.hateoas.HateoasFactory
-import v1.models.audit.{GenericAuditDetail, AuditEvent, AuditResponse}
-import v1.models.errors._
+import api.hateoas.HateoasFactory
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsRawRequest
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsHateoasData
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse._
-import v1.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService, RetrieveTransactionDetailsService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.RetrieveTransactionDetailsService
 
 import scala.concurrent.{ExecutionContext, Future}
 

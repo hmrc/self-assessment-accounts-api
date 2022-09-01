@@ -16,12 +16,13 @@
 
 package v1.services
 
-import v1.models.domain.Nino
+import api.controllers.EndpointLogContext
+import api.services.ServiceSpec
+import api.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockListPaymentsConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 

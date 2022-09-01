@@ -24,7 +24,6 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixture.RetrieveTransactionDetailsFixture
-import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with RetrieveTransactionDetailsFixture {
@@ -56,7 +55,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def uri: String = s"/$nino/transactions/$transactionId"
@@ -205,4 +204,5 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

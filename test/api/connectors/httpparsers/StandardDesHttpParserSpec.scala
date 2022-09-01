@@ -20,9 +20,10 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json, Reads}
 import support.UnitSpec
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import v1.connectors.DownstreamOutcome
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.connectors.DownstreamOutcome
+//import api.connectors.httpparsers.StandardDesHttpParser.SuccessCode
+import api.models.errors.{BVRError, DesErrorCode, DesErrors, DownstreamError, MtdError, OutboundError}
+import api.models.outcomes.ResponseWrapper
 
 // WLOG if Reads tested elsewhere
 case class SomeModel(data: String)

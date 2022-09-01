@@ -16,19 +16,22 @@
 
 package v1.controllers
 
+import api.controllers.EndpointLogContext
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveCodingOutRequestParser
-import v1.hateoas.HateoasFactory
-import v1.models.errors._
+import api.hateoas.HateoasFactory
+import api.models.errors._
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutHateoasData
-import v1.services.{EnrolmentsAuthService, MtdIdLookupService, RetrieveCodingOutService}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.RetrieveCodingOutService
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package api.connectors
 
+import api.connectors.DownstreamUri.{DesUri, IfsUri}
 import config.AppConfig
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}

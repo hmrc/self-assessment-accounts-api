@@ -22,6 +22,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import api.connectors.DownstreamUri.IfsUri
+import api.connectors.httpparsers.StandardDesHttpParser.reads
 import api.models.domain.MtdSource
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse

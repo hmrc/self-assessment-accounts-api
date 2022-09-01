@@ -16,11 +16,12 @@
 
 package v1.services
 
-import v1.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.services.ServiceSpec
 import v1.mocks.connectors.MockCreateOrAmendCodingOutConnector
-import v1.models.domain.Nino
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.createOrAmendCodingOut._
 
 import scala.concurrent.Future

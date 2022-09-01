@@ -16,11 +16,12 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.services.ServiceSpec
+import api.models.domain.Nino
 import v1.mocks.connectors.MockDeleteCodingOutConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
 import scala.concurrent.Future

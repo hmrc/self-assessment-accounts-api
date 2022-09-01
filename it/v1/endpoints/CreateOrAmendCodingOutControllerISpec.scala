@@ -23,7 +23,6 @@ import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v1.models.errors._
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 import java.time.format.DateTimeFormatter

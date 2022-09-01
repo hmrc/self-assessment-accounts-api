@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.controllers.EndpointLogContext
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError

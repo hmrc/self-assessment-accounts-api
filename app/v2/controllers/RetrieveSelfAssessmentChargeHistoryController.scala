@@ -16,6 +16,7 @@
 
 package v2.controllers
 
+import api.controllers.requestParsers.RequestParser
 import cats.data.EitherT
 import cats.implicits.catsSyntaxEitherId
 import api.controllers.requestParsers.validators.Validator
@@ -23,6 +24,8 @@ import api.controllers.{AuthorisedController, BaseController, EndpointLogContext
 import api.hateoas.HateoasFactory
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.models.request.RawData
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -111,12 +114,7 @@ class RetrieveSelfAssessmentChargeHistoryRequestParser @Inject() (val validator:
 
 class RetrieveSelfAssessmentChargeHistoryValidator extends Validator[RetrieveSelfAssessmentChargeHistoryRawRequest] {
 
-  private val validationSet = List(parameterFormatValidation)
-
-  private def parameterFormatValidation: RetrieveSelfAssessmentChargeHistoryRawRequest => List[List[MtdError]] =
-    (data: RetrieveSelfAssessmentChargeHistoryRawRequest) => {
-      ???
-    }
+  // private val validationSet = List(parameterFormatValidation)
 
   override def validate(data: RetrieveSelfAssessmentChargeHistoryRawRequest): List[MtdError] = {
     ???

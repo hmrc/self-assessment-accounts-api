@@ -26,7 +26,6 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveCodingOutFixture._
-import v1.models.errors._
 import v1.stubs.{AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
@@ -198,8 +197,9 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
   }
 
   "Calling the 'retrieve coding out' endpoint" should {
@@ -446,4 +446,5 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
+
 }

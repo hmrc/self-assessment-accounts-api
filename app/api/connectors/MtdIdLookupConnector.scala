@@ -16,6 +16,7 @@
 
 package api.connectors
 
+import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 

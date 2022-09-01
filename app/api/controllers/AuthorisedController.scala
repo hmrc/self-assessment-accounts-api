@@ -18,6 +18,7 @@ package api.controllers
 
 import api.models.auth.UserDetails
 import api.models.errors.{DownstreamError, InvalidBearerTokenError, NinoFormatError, UnauthorisedError}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc._
 import uk.gov.hmrc.auth.core.Enrolment

@@ -18,7 +18,7 @@ package v1.models.response.createOrAmendCodingOut
 
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
-import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 
 object CreateOrAmendCodingOutResponse extends HateoasLinks {
 

@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.controllers.EndpointLogContext
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.{JsValue, Json}

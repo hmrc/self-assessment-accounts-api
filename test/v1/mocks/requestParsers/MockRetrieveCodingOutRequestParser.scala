@@ -19,7 +19,7 @@ package v1.mocks.requestParsers
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.RetrieveCodingOutRequestParser
-import v1.models.errors.ErrorWrapper
+import api.models.errors.ErrorWrapper
 import v1.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
 
 trait MockRetrieveCodingOutRequestParser extends MockFactory {

@@ -24,6 +24,8 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import api.models.auth.UserDetails
 import api.models.errors._
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+
 import scala.concurrent.{ExecutionContext, Future}
 
 case class UserRequest[A](userDetails: UserDetails, request: Request[A]) extends WrappedRequest[A](request)

@@ -17,9 +17,9 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.mocks.validators.MockDeleteCodingOutValidator
-import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v1.models.request.deleteCodingOut._
 
 class DeleteCodingOutRequestParserSpec extends UnitSpec {

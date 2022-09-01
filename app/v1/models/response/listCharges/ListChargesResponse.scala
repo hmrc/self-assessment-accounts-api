@@ -20,7 +20,7 @@ import api.models.hateoas.{HateoasData, Link}
 import cats.Functor
 import config.AppConfig
 import play.api.libs.json._
-import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
+import api.hateoas.{HateoasLinks, HateoasListLinksFactory}
 
 case class ListChargesResponse[I](charges: Seq[I])
 

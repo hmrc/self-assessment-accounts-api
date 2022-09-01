@@ -17,10 +17,10 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.fixtures.RetrieveBalanceFixture._
 import v1.mocks.validators.MockRetrieveBalanceValidator
-import v1.models.errors.{ErrorWrapper, NinoFormatError}
+import api.models.errors.{ErrorWrapper, NinoFormatError}
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 
 class RetrieveBalanceRequestParserSpec extends UnitSpec {

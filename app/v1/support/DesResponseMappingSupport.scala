@@ -16,11 +16,11 @@
 
 package v1.support
 
+import api.controllers.EndpointLogContext
 import utils.{CurrentDate, Logging}
-import v1.controllers.EndpointLogContext
-import v1.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 

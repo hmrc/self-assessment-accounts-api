@@ -18,7 +18,7 @@ package api.controllers.requestParsers.validators.validations
 
 import java.time.LocalDate
 
-import v1.models.errors.MtdError
+import api.models.errors.MtdError
 
 import scala.util.{Failure, Success, Try}
 

@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveTransactionDetails
 
-import v1.models.domain.Nino
+import api.models.domain.Nino
 
 case class RetrieveTransactionDetailsParsedRequest(nino: Nino, transactionId: String)

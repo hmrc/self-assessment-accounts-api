@@ -16,15 +16,16 @@
 
 package v1.services
 
+import api.controllers.EndpointLogContext
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.ListPaymentsConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 import v1.support.DesResponseMappingSupport

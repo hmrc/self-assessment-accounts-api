@@ -16,6 +16,7 @@
 
 package v1.controllers
 
+import api.controllers.EndpointLogContext
 import cats.data.EitherT
 
 import javax.inject.{Inject, Singleton}

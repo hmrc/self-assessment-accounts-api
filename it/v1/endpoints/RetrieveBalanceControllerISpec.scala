@@ -24,7 +24,6 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveBalanceFixture
-import v1.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError}
 import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
@@ -59,7 +58,7 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def errorBody(code: String): String =
@@ -190,4 +189,5 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }
