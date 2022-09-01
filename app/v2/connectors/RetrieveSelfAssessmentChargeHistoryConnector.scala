@@ -19,6 +19,7 @@ package v2.connectors
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.connectors.DownstreamUri.DesUri
+import v2.connectors.httpparsers.StandardDesHttpParser.reads
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 
@@ -28,22 +29,18 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveSelfAssessmentChargeHistoryConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieve(request: RetrieveSelfAssessmentChargeHistoryRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    correlationId: String): Future[DownstreamOutcome[RetrieveSelfAssessmentChargeHistoryResponse]] = {
+  def retrieveChargeHistory(request: RetrieveSelfAssessmentChargeHistoryRequest)(implicit
+                            hc: HeaderCarrier,
+                            ec: ExecutionContext,
+                            correlationId: String): Future[DownstreamOutcome[RetrieveSelfAssessmentChargeHistoryResponse]] = {
 
-    val nino = request.nino.nino
+    val nino          = request.nino.nino
     val transactionId = request.transactionId
 
-    val response = get(
-      uri = DesUri[RetrieveSelfAssessmentChargeHistoryResponse](
-        s"/cross-regime/charges/NINO/$nino/ITSA"),
-      queryParams =
-        Seq("docNumber" -> transactionId, "dateFrom" -> request.dateFrom, "dateTo" -> request.dateTo) //need to update dateFrom and dateTo params
-    )
+    val queryParams = Seq("docNumber" -> transactionId)
 
-    response
+    get(
+      DesUri[RetrieveSelfAssessmentChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"),
+      queryParams)
   }
-
 }

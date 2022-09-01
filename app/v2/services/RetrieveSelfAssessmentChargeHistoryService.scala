@@ -22,6 +22,7 @@ import utils.Logging
 import v2.connectors.RetrieveSelfAssessmentChargeHistoryConnector
 import v2.controllers.EndpointLogContext
 import v2.models.errors._
+import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 import v2.support.DownstreamResponseMappingSupport
@@ -34,33 +35,33 @@ class RetrieveSelfAssessmentChargeHistoryService @Inject()(connector: RetrieveSe
   extends DownstreamResponseMappingSupport
     with Logging {
 
-  private val downstreamErrorMap =
-    Map(
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDTYPE" -> NinoFormatError,
-      "INVALID_IDVALUE" -> InternalError,
-      "INVALID_REGIME_TYPE" -> InternalError,
-      "INVALID_DOC_NUMBER" -> TransactionIdFormatError,
-      "INVALID_DATE_FROM" -> InternalError,
-      "INVALID_DATE_TO" -> InternalError,
-      "INVALID_DATE_RANGE" -> InternalError,
-      "REQUEST_NOT_PROCESSED" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
-    )
-
-  def retrieve(request: RetrieveSelfAssessmentChargeHistoryRequest)(
-    implicit hc: HeaderCarrier,
-    ec: ExecutionContext,
-    logContext: EndpointLogContext,
-    correlationId: String): Future[ServiceOutcome[RetrieveSelfAssessmentChargeHistoryResponse]] = {
+  def retrieveChargeHistory(request: RetrieveSelfAssessmentChargeHistoryRequest)(implicit
+                                                                         hc: HeaderCarrier,
+                                                                         ec: ExecutionContext,
+                                                                         logContext: EndpointLogContext,
+                                                                         correlationId: String):
+  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfAssessmentChargeHistoryResponse]]] = {
 
     val result = for {
-      resultWrapper <- EitherT(connector.retrieve(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield resultWrapper
+      desResponseWrapper <- EitherT(connector.retrieveChargeHistory(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+    } yield desResponseWrapper.map(des => des)
 
     result.value
   }
 
+  private val downstreamErrorMap =
+    Map(
+      "INVALID_CORRELATIONID" -> InternalError,
+      "INVALID_IDTYPE"        -> InternalError,
+      "INVALID_IDVALUE"       -> NinoFormatError,
+      "INVALID_REGIME_TYPE"   -> InternalError,
+      "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
+      "INVALID_DATE_FROM"     -> InternalError,
+      "INVALID_DATE_TO"       -> InternalError,
+      "INVALID_DATE_RANGE"    -> InternalError,
+      "REQUEST_NOT_PROCESSED" -> InternalError,
+      "NO_DATA_FOUND"         -> NotFoundError,
+      "SERVER_ERROR"          -> InternalError,
+      "SERVICE_UNAVAILABLE"   -> InternalError
+    )
 }
