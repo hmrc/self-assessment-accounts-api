@@ -21,10 +21,11 @@ import utils.{CurrentDate, Logging}
 import api.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.support.ResponseMappingSupport
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
-trait DesResponseMappingSupport {
+trait DesResponseMappingSupport extends ResponseMappingSupport {
   self: Logging =>
 
   final def validateTransactionDetailsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
@@ -77,35 +78,6 @@ trait DesResponseMappingSupport {
     })
 
     taxCodeComponentsIdsMissing || unmatchedCustomerSubmissionsIdsMissing
-  }
-
-  final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DesError])(implicit
-      logContext: EndpointLogContext): ErrorWrapper = {
-
-    lazy val defaultErrorCodeMapping: String => MtdError = { code =>
-      logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No mapping found for error code $code")
-      DownstreamError
-    }
-
-    desResponseWrapper match {
-      case ResponseWrapper(correlationId, DesErrors(error :: Nil)) =>
-        ErrorWrapper(correlationId, errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping), None)
-
-      case ResponseWrapper(correlationId, DesErrors(errorCodes)) =>
-        val mtdErrors = errorCodes.map(error => errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping))
-
-        if (mtdErrors.contains(DownstreamError)) {
-          logger.warn(
-            s"[${logContext.controllerName}] [${logContext.endpointName}] [CorrelationId - $correlationId]" +
-              s" - downstream returned ${errorCodes.map(_.code).mkString(",")}. Revert to ISE")
-          ErrorWrapper(correlationId, DownstreamError, None)
-        } else {
-          ErrorWrapper(correlationId, BadRequestError, Some(mtdErrors))
-        }
-
-      case ResponseWrapper(correlationId, OutboundError(error, errors)) =>
-        ErrorWrapper(correlationId, error, errors)
-    }
   }
 
 }

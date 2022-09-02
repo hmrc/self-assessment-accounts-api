@@ -16,79 +16,16 @@
 
 package v2.models.response.retrieveSelfAssessmentChargeHistory
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture.validObject
+import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
 
 class RetrieveSelfAssessmentChargeHistorySpec extends UnitSpec {
 
-  val downstreamResponse: JsValue = Json.parse("""
-      |{
-      |    "idType": "MTDBSA",
-      |    "idValue": "XQIT00000000001",
-      |    "regimeType": "ITSA",
-      |    "chargeHistoryDetails": [
-      |    {
-      |      "taxYear": "2019",
-      |      "documentId": "123456789",
-      |      "documentDate": "2020-01-29",
-      |      "documentDescription": "Balancing Charge",
-      |      "totalAmount": 54321.12,
-      |      "reversalDate": "2020-02-24",
-      |      "reversalReason": "amended return"
-      |    }
-      |  ]
-      |}
-      |""".stripMargin)
+  val validObjectSingle: RetrieveSelfAssessmentChargeHistoryResponse = RetrieveSelfAssessmentChargeHistoryResponse(
+    Seq(validChargeHistoryDetailObject))
 
-  val downstreamResponseMultiple: JsValue = Json.parse("""
-                                                 |{
-                                                 |    "idType": "MTDBSA",
-                                                 |    "idValue": "XQIT00000000001",
-                                                 |    "regimeType": "ITSA",
-                                                 |    "chargeHistoryDetails": [
-                                                 |    {
-                                                 |        "taxYear": "2019",
-                                                 |        "documentId": "123456789",
-                                                 |        "documentDate": "2020-01-29",
-                                                 |        "documentDescription": "Balancing Charge",
-                                                 |        "totalAmount": 54321.12,
-                                                 |        "reversalDate": "2020-02-24",
-                                                 |        "reversalReason": "amended return"
-                                                 |    },
-                                                 |    {
-                                                 |        "taxYear": "2019",
-                                                 |        "documentId": "123456789",
-                                                 |        "documentDate": "2020-01-29",
-                                                 |        "documentDescription": "Balancing Charge",
-                                                 |        "totalAmount": 54321.12,
-                                                 |        "reversalDate": "2020-02-24",
-                                                 |        "reversalReason": "amended return"
-                                                 |    }
-                                                 |   ]
-                                                 |}
-                                                 |""".stripMargin)
-
-  val mtdResponse: JsValue = Json.parse("""
-      |{
-      |   "chargeHistoryDetails": [
-      |   {
-      |      "taxYear": "2018-19",
-      |      "transactionId": "123456789",
-      |      "transactionDate": "2020-01-29",
-      |      "description": "Balancing Charge",
-      |      "totalAmount": 54321.12,
-      |      "changeDate": "2020-02-24",
-      |      "changeReason": "amended return"
-      |    }
-      |  ]
-      | }   
-      |""".stripMargin)
-
-  val validObjectSingle: RetrieveSelfAssessmentChargeHistoryResponse = RetrieveSelfAssessmentChargeHistoryResponse(Seq(validObject))
-
-  val validObjectMultiple: RetrieveSelfAssessmentChargeHistoryResponse =
-    RetrieveSelfAssessmentChargeHistoryResponse(chargeHistoryDetails = Seq(validObject, validObject))
+  val validObjectMultiple: RetrieveSelfAssessmentChargeHistoryResponse = validChargeHistoryResponseObject
 
   "RetrieveSelfAssessmentChargeHistoryResponse" when {
     "reading valid JSON" should {
@@ -108,7 +45,7 @@ class RetrieveSelfAssessmentChargeHistorySpec extends UnitSpec {
 
   "Written to JSON" should {
     "produce the expected JSON" in {
-      Json.toJson(validObjectSingle) shouldBe mtdResponse
+      Json.toJson(validObjectSingle) shouldBe mtdSingleResponse
     }
   }
 

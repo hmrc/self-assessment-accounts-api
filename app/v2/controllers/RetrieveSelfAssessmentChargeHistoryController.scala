@@ -16,13 +16,13 @@
 
 package v2.controllers
 
-import cats.data.EitherT
-import cats.implicits.catsSyntaxEitherId
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import api.hateoas.HateoasFactory
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import cats.data.EitherT
+import cats.implicits.catsSyntaxEitherId
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -30,9 +30,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
 import v1.connectors.RetrieveChargeHistoryConnector
 import v1.support.DesResponseMappingSupport
+//import v1.support.DesResponseMappingSupport
 import v2.controllers.requestParsers.RetrieveSelfAssessmentChargeHistoryRequestParser
 import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest}
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
+import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -53,7 +55,7 @@ class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveSelfAssessmentChargeHistoryController", endpointName = "retrieveChargeHistory")
 
-  def retrieveChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
+  def retrieveSelfAssessmentChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       {
         implicit val correlationId: String = idGenerator.generateCorrelationId
@@ -63,7 +65,10 @@ class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: 
         val result = for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
           serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
-          vendorResponse  <- EitherT.fromEither[Future](serviceResponse.responseData.asRight[ErrorWrapper])
+          vendorResponse <- EitherT.fromEither[Future](
+            hateoasFactory
+              .wrap(serviceResponse.responseData, RetrieveSelfAssessmentChargeHistoryHateoasData(nino, transactionId))
+              .asRight[ErrorWrapper])
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
