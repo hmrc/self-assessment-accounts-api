@@ -1,0 +1,35 @@
+#%RAML 1.0 Library
+
+uses:
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
+
+traits:
+  fromPayments:
+    queryParameters:
+      from:
+        description: 'From date to return payments.<br><br> Date in the format: YYYY-MM-DD'
+        example: "2019-05-04"
+        required: true
+  fromCharges:
+    queryParameters:
+      from:
+        description: 'From date to return charges.<br><br> Date in the format: YYYY-MM-DD'
+        example: "2019-05-04"
+        required: true
+  toPayments:
+    queryParameters:
+      to:
+        description: 'To date to return payments.<br><br> Date in the format: YYYY-MM-DD'
+        example: "2019-06-12"
+        required: true
+  toCharges:
+    queryParameters:
+      to:
+        description: 'To date to return charges.<br><br> Date in the format: YYYY-MM-DD'
+        example: "2019-06-12"
+        required: true
+  source:
+    queryParameters:
+      source:
+        description: 'Specifies the source of data to be returned. If source is not provided, the latest values will be returned.<p> Limited to the following possible values: <ul><li>`hmrcHeld`<li>`user`<li>`latest`</p>'
+        required: false

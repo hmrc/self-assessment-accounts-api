@@ -38,7 +38,7 @@ To view documentation locally, ensure the Self Assessment Accounts API is runnin
 Then go to http://localhost:9680/api-documentation/docs/preview and enter the full URL path to the RAML file with the appropriate port and version:
 
 ```
-http://localhost:9792/api/conf/1.0/application.raml
+http://localhost:9792/api/conf/2.0/application.raml
 ```
 
 ## Changelog
