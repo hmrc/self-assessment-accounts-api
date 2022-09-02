@@ -17,9 +17,9 @@
 package v2.services
 
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
 import v2.mocks.connectors.MockRetrieveSelfAssessmentChargeHistoryConnector
-import v2.models.domain.Nino
+import api.models.domain.Nino
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
@@ -55,8 +55,10 @@ class RetrieveSelfAssessmentChargeHistoryServiceSpec extends ServiceSpec {
 
   trait Test extends MockRetrieveSelfAssessmentChargeHistoryConnector {
 
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveSelfAssessmentChargeHistoryController", "RetrieveSelfAssessmentChargeHistory")
+    implicit val hc: HeaderCarrier = HeaderCarrier()
+
+    implicit val logContext: EndpointLogContext =
+      EndpointLogContext("RetrieveSelfAssessmentChargeHistoryController", "RetrieveSelfAssessmentChargeHistory")
 
     val service = new RetrieveSelfAssessmentChargeHistoryService(
       connector = mockRetrieveSelfAssessmentChargeHistoryConnector

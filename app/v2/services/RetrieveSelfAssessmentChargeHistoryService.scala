@@ -16,11 +16,11 @@
 
 package v2.services
 
+import api.controllers.EndpointLogContext
 import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.RetrieveSelfAssessmentChargeHistoryConnector
-import v2.controllers.EndpointLogContext
 import v2.models.errors._
 import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
@@ -31,16 +31,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfAssessmentChargeHistoryService @Inject()(connector: RetrieveSelfAssessmentChargeHistoryConnector)
-  extends DownstreamResponseMappingSupport
+class RetrieveSelfAssessmentChargeHistoryService @Inject() (connector: RetrieveSelfAssessmentChargeHistoryConnector)
+    extends DownstreamResponseMappingSupport
     with Logging {
 
   def retrieveChargeHistory(request: RetrieveSelfAssessmentChargeHistoryRequest)(implicit
-                                                                         hc: HeaderCarrier,
-                                                                         ec: ExecutionContext,
-                                                                         logContext: EndpointLogContext,
-                                                                         correlationId: String):
-  Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfAssessmentChargeHistoryResponse]]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfAssessmentChargeHistoryResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveChargeHistory(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
@@ -65,4 +64,5 @@ class RetrieveSelfAssessmentChargeHistoryService @Inject()(connector: RetrieveSe
       "SERVER_ERROR"          -> InternalError,
       "SERVICE_UNAVAILABLE"   -> InternalError
     )
+
 }

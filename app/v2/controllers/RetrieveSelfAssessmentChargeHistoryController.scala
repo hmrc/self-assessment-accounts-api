@@ -17,32 +17,29 @@
 package v2.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.hateoas.HateoasFactory
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
-import cats.implicits.catsSyntaxEitherId
+import cats.implicits._
+
+import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
-import uk.gov.hmrc.http.HeaderCarrier
 import utils.{IdGenerator, Logging}
-import v1.connectors.RetrieveChargeHistoryConnector
-import v1.support.DesResponseMappingSupport
-//import v1.support.DesResponseMappingSupport
 import v2.controllers.requestParsers.RetrieveSelfAssessmentChargeHistoryRequestParser
-import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest}
+import api.hateoas.HateoasFactory
+import v2.models.errors.{BadRequestError, ErrorWrapper, IfsError, NinoFormatError, NotFoundError, TransactionIdFormatError}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import v2.models.outcomes.ResponseWrapper
+import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
+import v2.services.RetrieveSelfAssessmentChargeHistoryService
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: EnrolmentsAuthService,
                                                                val lookupService: MtdIdLookupService,
-                                                               auditService: AuditService,
                                                                requestParser: RetrieveSelfAssessmentChargeHistoryRequestParser,
                                                                service: RetrieveSelfAssessmentChargeHistoryService,
                                                                hateoasFactory: HateoasFactory,
@@ -57,65 +54,46 @@ class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: 
 
   def retrieveSelfAssessmentChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      {
-        implicit val correlationId: String = idGenerator.generateCorrelationId
-        logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " + s"with correlationId: $correlationId")
+      implicit val correlationId: String = idGenerator.generateCorrelationId
+      logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " + s"with correlationId: $correlationId")
 
-        val rawRequest = RetrieveSelfAssessmentChargeHistoryRawData(nino, transactionId)
-        val result = for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-          serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, RetrieveSelfAssessmentChargeHistoryHateoasData(nino, transactionId))
-              .asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with correlationId: ${serviceResponse.correlationId}"
-          )
+      val rawRequest = RetrieveSelfAssessmentChargeHistoryRawData(nino, transactionId)
+      val result = for {
+        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
+        serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
+        vendorResponse <- EitherT.fromEither[Future](
+          hateoasFactory
+            .wrap(serviceResponse.responseData, RetrieveSelfAssessmentChargeHistoryHateoasData(nino, transactionId))
+            .asRight[ErrorWrapper]
+        )
+      } yield {
+        logger.info(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Success response received with correlationId: ${serviceResponse.correlationId}"
+        )
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-        result.leftMap { errorWrapper =>
-          val resCorrelationId = errorWrapper.correlationId
-          val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-          logger.warn(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Error response received with CorrelationId: $resCorrelationId")
-          result
-        }.merge
+        Ok(Json.toJson(vendorResponse))
+          .withApiHeaders(serviceResponse.correlationId)
+          .as(MimeTypes.JSON)
       }
 
+      result.leftMap { errorWrapper =>
+        val resCorrelationId = errorWrapper.correlationId
+        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
+        logger.warn(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Error response received with CorrelationId: $resCorrelationId")
+        result
+      }.merge
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TransactionIdFormatError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError                                                => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError                                              => InternalServerError(Json.toJson(errorWrapper))
+      case IfsError                                                     => InternalServerError(Json.toJson(errorWrapper))
       case _                                                            => unhandledError(errorWrapper)
     }
-  }
-
-}
-
-//-----------STUBS-----------------------------
-
-@Singleton
-class RetrieveSelfAssessmentChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector)
-    extends DesResponseMappingSupport
-    with Logging {
-
-  def retrieveChargeHistory(request: RetrieveSelfAssessmentChargeHistoryRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfAssessmentChargeHistoryResponse]]] = {
-
-    ???
   }
 
 }

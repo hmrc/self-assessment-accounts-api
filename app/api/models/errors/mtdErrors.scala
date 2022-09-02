@@ -224,3 +224,5 @@ object InvalidBodyTypeError
       code = "INVALID_BODY_TYPE",
       message = "Expecting text/json or application/json body"
     )
+
+object InternalError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
