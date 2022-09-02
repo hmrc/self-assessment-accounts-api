@@ -1,0 +1,52 @@
+#%RAML 1.0
+---
+title: Self Assessment Accounts (MTD)
+description: List and retrieve details of Self Assessment balances, transactions, charges and payments.
+version: 2.0
+protocols: [ HTTPS ]
+baseUri: https://api.service.hmrc.gov.uk/
+
+documentation:
+ - title: Overview
+   content: !include docs/overview.md
+ - title: Send fraud prevention data
+   content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/fraud-prevention.md
+ - title: Versioning
+   content: !include https://developer.service.hmrc.gov.uk/api-documentation/assets/common/docs/versioning.md
+ - title: Errors
+   content: !include docs/errors.md
+ - title: Changelog
+   content: !include docs/changelog.md
+ - title: Support
+   content: !include docs/support.md
+ - title: Testing
+   content: !include docs/testing.md
+
+mediaType: application/json
+
+uses:
+  sec: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/securitySchemes.raml
+  annotations: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/annotations.raml
+  types: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
+  errors: errors.raml
+  headers: headers.raml
+  queryParameters: queryParameters.raml
+
+'/accounts/self-assessment':
+  /{nino}:
+    (annotations.group):
+      name: Payments and Liabilities
+      description: These endpoints allow a developer to retrieve accounting information to be shown back to the customer. This includes listing payments the customer has made, how these payments have been allocated and details of any upcoming or outstanding liabilities. The data returned only relates to payments and liabilities arising for tax years since the customer joined the new service. There may also be outstanding liabilities and payment information a customer needs to view for the years prior to signing up to Making Tax Digital for Income Tax Self Assessment that can be viewed using their existing Personal Tax Account.
+    uriParameters:
+      nino:
+        description: National Insurance number, in the format AA999999A.
+        type: string
+        example: TC663795B
+    /charges:
+      /{transactionId}:
+        uriParameters:
+          transactionId:
+            description: "A unique identifier for the charge. <br><br>  Must conform to the regular expression: ^[0-9A-Za-z]{1,16}$ <br/> `^[0-9A-Za-z]{1,12}$`"
+            type: string
+            example: A3948472839A
+        get: !include retrieveSelfAssessmentChargeHistory.raml
