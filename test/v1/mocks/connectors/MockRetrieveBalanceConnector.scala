@@ -16,7 +16,7 @@
 
 package v1.mocks.connectors
 
-import api.connectors.DesOutcome
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +32,7 @@ trait MockRetrieveBalanceConnector extends MockFactory {
 
   object MockRetrieveBalanceConnector {
 
-    def retrieveBalance(requestData: RetrieveBalanceParsedRequest): CallHandler[Future[DesOutcome[RetrieveBalanceResponse]]] = {
+    def retrieveBalance(requestData: RetrieveBalanceParsedRequest): CallHandler[Future[DownstreamOutcome[RetrieveBalanceResponse]]] = {
       (mockRetrieveBalanceConnector
         .retrieveBalance(_: RetrieveBalanceParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

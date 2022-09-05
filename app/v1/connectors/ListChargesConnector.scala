@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DesOutcome}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
@@ -35,7 +35,7 @@ class ListChargesConnector @Inject() (val http: HttpClient, val appConfig: AppCo
   def listCharges(request: ListChargesParsedRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DesOutcome[ListChargesResponse[Charge]]] = {
+      correlationId: String): Future[DownstreamOutcome[ListChargesResponse[Charge]]] = {
 
     val nino = request.nino.nino
 

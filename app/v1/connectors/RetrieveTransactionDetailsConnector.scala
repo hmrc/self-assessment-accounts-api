@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DesOutcome}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
@@ -34,7 +34,7 @@ class RetrieveTransactionDetailsConnector @Inject() (val http: HttpClient, val a
   def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DesOutcome[RetrieveTransactionDetailsResponse]] = {
+      correlationId: String): Future[DownstreamOutcome[RetrieveTransactionDetailsResponse]] = {
 
     val nino          = request.nino.nino
     val transactionId = request.transactionId

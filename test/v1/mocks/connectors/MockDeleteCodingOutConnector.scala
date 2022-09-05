@@ -16,7 +16,7 @@
 
 package v1.mocks.connectors
 
-import api.connectors.DesOutcome
+import api.connectors.{DownstreamOutcome}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,7 +31,7 @@ trait MockDeleteCodingOutConnector extends MockFactory {
 
   object MockDeleteCodingOutConnector {
 
-    def deleteCodingOut(requestData: DeleteCodingOutParsedRequest): CallHandler[Future[DesOutcome[Unit]]] = {
+    def deleteCodingOut(requestData: DeleteCodingOutParsedRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
       (mockDeleteCodingOutConnector
         .deleteCodingOut(_: DeleteCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

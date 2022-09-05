@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DesOutcome}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
@@ -35,7 +35,7 @@ class RetrieveAllocationsConnector @Inject() (val http: HttpClient, val appConfi
   def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DesOutcome[RetrieveAllocationsResponse[AllocationDetail]]] = {
+      correlationId: String): Future[DownstreamOutcome[RetrieveAllocationsResponse[AllocationDetail]]] = {
 
     val nino = request.nino.nino
 

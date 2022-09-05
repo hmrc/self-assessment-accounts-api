@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
 
-class RetrieveSelfAssessmentChargeHistorySpec extends UnitSpec {
+class RetrieveSelfAssessmentChargeHistoryResponseSpec extends UnitSpec {
 
   val validObjectSingle: RetrieveSelfAssessmentChargeHistoryResponse = RetrieveSelfAssessmentChargeHistoryResponse(
     Seq(validChargeHistoryDetailObject))

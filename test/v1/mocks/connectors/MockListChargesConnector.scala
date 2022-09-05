@@ -16,7 +16,7 @@
 
 package v1.mocks.connectors
 
-import api.connectors.DesOutcome
+import api.connectors.{DownstreamOutcome}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +32,7 @@ trait MockListChargesConnector extends MockFactory {
 
   object MockListChargesConnector {
 
-    def retrieve(requestData: ListChargesParsedRequest): CallHandler[Future[DesOutcome[ListChargesResponse[Charge]]]] = {
+    def retrieve(requestData: ListChargesParsedRequest): CallHandler[Future[DownstreamOutcome[ListChargesResponse[Charge]]]] = {
       (mockListChargesConnector
         .listCharges(_: ListChargesParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

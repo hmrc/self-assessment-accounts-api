@@ -16,7 +16,7 @@
 
 package v1.mocks.connectors
 
-import api.connectors.DesOutcome
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
@@ -31,7 +31,8 @@ trait MockRetrieveTransactionDetailsConnector extends MockFactory {
 
   object MockRetrieveTransactionDetailsConnector {
 
-    def retrieveDetails(requestData: RetrieveTransactionDetailsParsedRequest): CallHandler[Future[DesOutcome[RetrieveTransactionDetailsResponse]]] = {
+    def retrieveDetails(
+        requestData: RetrieveTransactionDetailsParsedRequest): CallHandler[Future[DownstreamOutcome[RetrieveTransactionDetailsResponse]]] = {
       (
         mockRetrieveTransactionDetailsConnector
           .retrieveTransactionDetails(_: RetrieveTransactionDetailsParsedRequest)(

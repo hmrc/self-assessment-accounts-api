@@ -16,7 +16,7 @@
 
 package api.connectors.httpparsers
 
-import api.connectors.DesOutcome
+import api.connectors.DownstreamOutcome
 import api.models.errors.{DownstreamError, OutboundError}
 import api.models.outcomes.ResponseWrapper
 import play.api.http.Status._
@@ -28,13 +28,13 @@ object StandardDesHttpParser extends HttpParser {
   case class SuccessCode(status: Int) extends AnyVal
 
   // Return Right[DesResponse[Unit]] as success response has no body - no need to assign it a value
-  implicit def readsEmpty(implicit successCode: SuccessCode = SuccessCode(NO_CONTENT)): HttpReads[DesOutcome[Unit]] =
+  implicit def readsEmpty(implicit successCode: SuccessCode = SuccessCode(NO_CONTENT)): HttpReads[DownstreamOutcome[Unit]] =
     (_: String, url: String, response: HttpResponse) =>
       doRead(url, response) { correlationId =>
         Right(ResponseWrapper(correlationId, ()))
       }
 
-  implicit def reads[A: Reads](implicit successCode: SuccessCode = SuccessCode(OK)): HttpReads[DesOutcome[A]] =
+  implicit def reads[A: Reads](implicit successCode: SuccessCode = SuccessCode(OK)): HttpReads[DownstreamOutcome[A]] =
     (_: String, url: String, response: HttpResponse) =>
       doRead(url, response) { correlationId =>
         response.validateJson[A] match {
@@ -43,8 +43,8 @@ object StandardDesHttpParser extends HttpParser {
         }
       }
 
-  private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DesOutcome[A])(implicit
-      successCode: SuccessCode): DesOutcome[A] = {
+  private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DownstreamOutcome[A])(implicit
+      successCode: SuccessCode): DownstreamOutcome[A] = {
 
     val correlationId = retrieveCorrelationId(response)
 

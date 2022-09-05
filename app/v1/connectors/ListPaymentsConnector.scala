@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.httpparsers.StandardDesHttpParser.reads
-import api.connectors.{BaseDownstreamConnector, DesOutcome}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
@@ -34,7 +34,7 @@ class ListPaymentsConnector @Inject() (val http: HttpClient, val appConfig: AppC
   def listPayments(request: ListPaymentsParsedRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DesOutcome[ListPaymentsResponse[Payment]]] = {
+      correlationId: String): Future[DownstreamOutcome[ListPaymentsResponse[Payment]]] = {
 
     val nino = request.nino.nino
 

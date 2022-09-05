@@ -31,7 +31,7 @@ import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentCha
   mtdMultipleResponseWithHateoas
 }
 
-class RetrieveSelfAssessmentChargeHistoryControllerSpec extends IntegrationBaseSpec {
+class RetrieveSelfAssessmentChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -46,7 +46,6 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec extends IntegrationBaseS
 
     def mtdBodySource: String = "hmrcHeld"
 
-    val downstreamResponse     = downstreamResponseMultiple
     val mtdResponseWithHateoas = mtdMultipleResponseWithHateoas(nino, transactionId)
 
     def uri: String           = s"/$nino/charges/$transactionId"
