@@ -16,6 +16,6 @@
 
 package v2.models.request.retrieveSelfAssessmentChargeHistory
 
-import api.models.request.RawData
+import v2.models.request.RawData
 
 case class RetrieveSelfAssessmentChargeHistoryRawData(nino: String, transactionId: String) extends RawData

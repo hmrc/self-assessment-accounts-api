@@ -16,16 +16,15 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
 import cats.data.EitherT
 import cats.implicits._
-
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.ListTransactionsConnector
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import v1.controllers.EndpointLogContext
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
 import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 import v1.support.DesResponseMappingSupport
@@ -42,7 +41,7 @@ class ListTransactionsService @Inject() (val connector: ListTransactionsConnecto
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.listTransactions(request)).leftMap(mapDownstreamErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.listTransactions(request)).leftMap(mapDesErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

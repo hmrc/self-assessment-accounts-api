@@ -19,8 +19,8 @@ package v1.controllers.requestParsers
 import play.api.libs.json.Json
 import support.UnitSpec
 import v1.mocks.validators.MockCreateOrAmendCodingOutValidator
-import api.models.domain.Nino
-import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
+import v1.models.domain.Nino
+import v1.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v1.models.request.createOrAmendCodingOut._
 
 class CreateOrAmendCodingOutParserSpec extends UnitSpec {

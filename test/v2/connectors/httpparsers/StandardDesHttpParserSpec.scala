@@ -20,9 +20,9 @@ import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json, Reads}
 import support.UnitSpec
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import api.connectors.DownstreamOutcome
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import v1.connectors.DownstreamOutcome
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
 
 // WLOG if Reads tested elsewhere
 case class SomeModel(data: String)
@@ -38,7 +38,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
 
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  import api.connectors.httpparsers.StandardDesHttpParser._
+  import v1.connectors.httpparsers.StandardDesHttpParser._
 
   val httpReads: HttpReads[DownstreamOutcome[Unit]] = implicitly
 
@@ -155,15 +155,14 @@ class StandardDesHttpParserSpec extends UnitSpec {
         "be able to parse a single error" in {
           val httpResponse = HttpResponse(responseCode, singleErrorJson.toString(), Map("CorrelationId" -> Seq(correlationId)))
 
-          httpReads.read(method, url, httpResponse) shouldBe Left(
-            ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("CODE"))))
+          httpReads.read(method, url, httpResponse) shouldBe Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("CODE"))))
         }
 
         "be able to parse multiple errors" in {
           val httpResponse = HttpResponse(responseCode, multipleErrorsJson.toString(), Map("CorrelationId" -> Seq(correlationId)))
 
           httpReads.read(method, url, httpResponse) shouldBe {
-            Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode("CODE 1"), DownstreamErrorCode("CODE 2")))))
+            Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode("CODE 1"), DesErrorCode("CODE 2")))))
           }
         }
 

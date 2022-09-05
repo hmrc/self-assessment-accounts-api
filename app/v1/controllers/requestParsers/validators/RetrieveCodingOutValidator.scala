@@ -16,12 +16,10 @@
 
 package v1.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
 import config.AppConfig
-
 import javax.inject.Inject
-import api.controllers.requestParsers.validators.validations._
-import api.models.errors.MtdError
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.errors.MtdError
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
 
 class RetrieveCodingOutValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveCodingOutRawRequest] {

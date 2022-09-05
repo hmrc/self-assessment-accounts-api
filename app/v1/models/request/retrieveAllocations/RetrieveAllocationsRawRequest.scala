@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveAllocations
 
-import api.models.request.RawData
+import v1.models.request.RawData
 
 case class RetrieveAllocationsRawRequest(nino: String, paymentId: String) extends RawData

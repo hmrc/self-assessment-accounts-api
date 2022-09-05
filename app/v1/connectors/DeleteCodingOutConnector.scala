@@ -16,14 +16,13 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.IfsUri
-import api.connectors.httpparsers.StandardDesHttpParser.readsEmpty
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
+import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v1.connectors.DownstreamUri.IfsUri
+import v1.connectors.httpparsers.StandardDesHttpParser._
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

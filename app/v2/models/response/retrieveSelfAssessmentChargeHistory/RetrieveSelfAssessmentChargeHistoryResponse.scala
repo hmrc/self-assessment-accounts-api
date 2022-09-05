@@ -16,11 +16,7 @@
 
 package v2.models.response.retrieveSelfAssessmentChargeHistory
 
-import api.hateoas.HateoasLinksFactory
-import api.models.hateoas.{HateoasData, Link}
-import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.{retrieveChargeHistory, retrieveTransactionDetails}
 
 case class RetrieveSelfAssessmentChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
 
@@ -34,18 +30,4 @@ object RetrieveSelfAssessmentChargeHistoryResponse {
   implicit val writes: OWrites[RetrieveSelfAssessmentChargeHistoryResponse] =
     Json.writes[RetrieveSelfAssessmentChargeHistoryResponse]
 
-  implicit object RetrieveSelfAssessmentChargeHistoryLinksFactory
-      extends HateoasLinksFactory[RetrieveSelfAssessmentChargeHistoryResponse, RetrieveSelfAssessmentChargeHistoryHateoasData] {
-
-    override def links(appConfig: AppConfig, data: RetrieveSelfAssessmentChargeHistoryHateoasData): Seq[Link] = {
-      import data._
-      Seq(
-        retrieveChargeHistory(appConfig, nino, transactionId, isSelf = true),
-        retrieveTransactionDetails(appConfig, nino, transactionId, isSelf = false)
-      )
-    }
-
-  }
-
-  case class RetrieveSelfAssessmentChargeHistoryHateoasData(nino: String, transactionId: String) extends HateoasData
 }

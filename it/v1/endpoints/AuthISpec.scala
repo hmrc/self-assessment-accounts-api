@@ -22,8 +22,7 @@ import play.api.http.Status
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
-import v1.stubs.DownstreamStub
+import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class AuthISpec extends IntegrationBaseSpec {
 
@@ -40,9 +39,8 @@ class AuthISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
-
   }
 
   "Calling GET allocation details endpoint" when {
@@ -69,7 +67,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.serviceSuccess(nino, paymentLot, paymentLotItem)
+          DesStub.serviceSuccess(nino, paymentLot, paymentLotItem)
         }
 
         val response: WSResponse = await(request().get())
@@ -109,5 +107,4 @@ class AuthISpec extends IntegrationBaseSpec {
       }
     }
   }
-
 }

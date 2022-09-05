@@ -19,8 +19,8 @@ package v2.connectors
 import mocks.MockAppConfig
 import v2.models.response.retrieveSelfAssessmentChargeHistory._
 import v2.mocks.MockHttpClient
-import api.models.domain.Nino
-import api.models.outcomes.ResponseWrapper
+import v2.models.domain.Nino
+import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
 
 import scala.concurrent.Future
@@ -48,8 +48,7 @@ class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveSelfAssessmentChargeHistoryConnector =
-      new RetrieveSelfAssessmentChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveSelfAssessmentChargeHistoryConnector = new RetrieveSelfAssessmentChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     MockAppConfig.desBaseUrl returns baseUrl
     MockAppConfig.desToken returns "des-token"

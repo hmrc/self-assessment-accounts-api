@@ -16,7 +16,6 @@
 
 package v1.controllers.requestParsers.validators
 
-import api.mocks.MockCurrentDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -25,7 +24,8 @@ import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, JsPath, Json}
 import support.UnitSpec
 import utils.CurrentDate
-import api.models.errors._
+import v1.mocks.MockCurrentDate
+import v1.models.errors._
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
 
 class CreateOrAmendCodingOutValidatorSpec extends UnitSpec {

@@ -16,8 +16,8 @@
 
 package v1.models.response.retrieveCodingOut
 
-import api.models.domain.DownstreamSource
 import play.api.libs.json._
+import v1.models.domain.DownstreamSource
 import play.api.libs.functional.syntax._
 
 case class TaxCodeComponents(amount: BigDecimal, relatedTaxYear: Option[String], submittedOn: String, source: String, id: Option[BigInt])

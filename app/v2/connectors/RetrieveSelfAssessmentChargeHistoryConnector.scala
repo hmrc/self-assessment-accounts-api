@@ -18,9 +18,8 @@ package v2.connectors
 
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.DesUri
-import api.connectors.httpparsers.StandardDesHttpParser.reads
-import api.connectors.BaseDownstreamConnector
+import v2.connectors.DownstreamUri.DesUri
+import v2.connectors.httpparsers.StandardDesHttpParser.reads
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 
@@ -28,19 +27,20 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfAssessmentChargeHistoryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveSelfAssessmentChargeHistoryConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveChargeHistory(request: RetrieveSelfAssessmentChargeHistoryRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveSelfAssessmentChargeHistoryResponse]] = {
+                            hc: HeaderCarrier,
+                            ec: ExecutionContext,
+                            correlationId: String): Future[DownstreamOutcome[RetrieveSelfAssessmentChargeHistoryResponse]] = {
 
     val nino          = request.nino.nino
     val transactionId = request.transactionId
 
     val queryParams = Seq("docNumber" -> transactionId)
 
-    get(DesUri[RetrieveSelfAssessmentChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+    get(
+      DesUri[RetrieveSelfAssessmentChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"),
+      queryParams)
   }
-
 }

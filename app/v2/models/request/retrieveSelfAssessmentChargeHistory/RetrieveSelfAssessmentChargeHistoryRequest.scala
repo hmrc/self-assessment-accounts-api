@@ -16,6 +16,6 @@
 
 package v2.models.request.retrieveSelfAssessmentChargeHistory
 
-import api.models.domain.Nino
+import v2.models.domain.Nino
 
 case class RetrieveSelfAssessmentChargeHistoryRequest(nino: Nino, transactionId: String)

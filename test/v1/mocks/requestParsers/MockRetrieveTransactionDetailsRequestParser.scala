@@ -19,7 +19,7 @@ package v1.mocks.requestParsers
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v1.controllers.requestParsers.RetrieveTransactionDetailsRequestParser
-import api.models.errors.ErrorWrapper
+import v1.models.errors.ErrorWrapper
 import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
 
 trait MockRetrieveTransactionDetailsRequestParser extends MockFactory {

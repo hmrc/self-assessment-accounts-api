@@ -16,8 +16,8 @@
 
 package v1.models.response.listTransaction
 
-import api.models.domain.DesTaxYear
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import v1.models.domain.DesTaxYear
 
 case class TransactionItem(taxYear: String,
                            transactionId: String,

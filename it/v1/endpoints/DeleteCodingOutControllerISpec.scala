@@ -16,7 +16,6 @@
 
 package v1.endpoints
 
-import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.libs.json.{JsObject, Json}
@@ -24,8 +23,8 @@ import play.api.http.Status
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import api.stubs.{AuthStub, MtdIdLookupStub}
-import v1.stubs.DownstreamStub
+import v1.models.errors._
+import v1.stubs.{AuthStub, DesStub, MtdIdLookupStub}
 
 class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
 
@@ -45,7 +44,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
 
     def errorBody(code: String): String =
@@ -67,7 +66,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, desUri, Status.NO_CONTENT, JsObject.empty)
+          DesStub.onSuccess(DesStub.DELETE, desUri, Status.NO_CONTENT, JsObject.empty)
         }
 
         val response: WSResponse = await(request().delete())
@@ -113,7 +112,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
             override def setupStubs(): StubMapping = {
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.DELETE, desUri, desStatus, errorBody(desCode))
+              DesStub.onError(DesStub.DELETE, desUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request().delete())
@@ -134,5 +133,4 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
-
 }

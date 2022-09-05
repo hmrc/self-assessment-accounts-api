@@ -18,15 +18,15 @@ package v2.controllers.requestParsers
 
 import support.UnitSpec
 import v2.mocks.validators.MockRetrieveSelfAssessmentChargeHistoryValidator
-import api.models.domain.Nino
-import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
+import v2.models.domain.Nino
+import v2.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
 import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest}
 
 class RetrieveSelfAssessmentChargeHistoryRequestParserSpec extends UnitSpec {
 
-  val validNino: String              = "AA123456B"
-  val validTransactionId: String     = "717f3agW678f"
-  implicit val correlationId: String = "X-123"
+  val validNino: String                    = "AA123456B"
+  val validTransactionId: String           = "717f3agW678f"
+  implicit val correlationId: String       = "X-123"
 
   val inputData: RetrieveSelfAssessmentChargeHistoryRawData =
     RetrieveSelfAssessmentChargeHistoryRawData(validNino, validTransactionId)
@@ -46,8 +46,7 @@ class RetrieveSelfAssessmentChargeHistoryRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockRetrieveSelfAssessmentChargeHistoryValidator
-          .validate(inputData)
+        MockRetrieveSelfAssessmentChargeHistoryValidator.validate(inputData)
           .returns(List(NinoFormatError))
 
         parser.parseRequest(inputData) shouldBe
@@ -55,8 +54,7 @@ class RetrieveSelfAssessmentChargeHistoryRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occur" in new Test {
-        MockRetrieveSelfAssessmentChargeHistoryValidator
-          .validate(inputData)
+        MockRetrieveSelfAssessmentChargeHistoryValidator.validate(inputData)
           .returns(List(NinoFormatError, TransactionIdFormatError))
 
         parser.parseRequest(inputData) shouldBe
@@ -64,5 +62,4 @@ class RetrieveSelfAssessmentChargeHistoryRequestParserSpec extends UnitSpec {
       }
     }
   }
-
 }

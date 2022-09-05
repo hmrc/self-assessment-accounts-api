@@ -16,18 +16,17 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
 import com.google.inject.Inject
 import config.AppConfig
-import api.controllers.requestParsers.validators.validations.TransactionIdValidation
-import api.controllers.requestParsers.validators.validations.NinoValidation
-import api.models.errors.MtdError
+import v2.controllers.requestParsers.validators.validations.TransactionIdValidation
+import v2.controllers.requestParsers.validators.validations.NinoValidation
+import v2.models.errors.MtdError
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
 
 import javax.inject.Singleton
 
 @Singleton
-class RetrieveSelfAssessmentChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Validator[RetrieveSelfAssessmentChargeHistoryRawData] {
+class RetrieveSelfAssessmentChargeHistoryValidator @Inject()(appConfig: AppConfig) extends Validator[RetrieveSelfAssessmentChargeHistoryRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 
@@ -42,5 +41,4 @@ class RetrieveSelfAssessmentChargeHistoryValidator @Inject() (appConfig: AppConf
   override def validate(data: RetrieveSelfAssessmentChargeHistoryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
-
 }

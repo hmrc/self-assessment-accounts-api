@@ -16,8 +16,8 @@
 
 package utils
 
-import api.models.errors._
 import definition.Versions
+import play.api.Configuration
 import play.api._
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -29,6 +29,7 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.bootstrap.backend.http.JsonErrorHandler
 import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
+import v1.models.errors._
 
 import javax.inject._
 import scala.concurrent._

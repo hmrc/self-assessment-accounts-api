@@ -16,8 +16,6 @@
 
 package v1.endpoints
 
-import api.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError, TransactionIdFormatError}
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -26,7 +24,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveChargeHistoryFixture
-import v1.stubs.DownstreamStub
+import v1.models.errors._
+import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
@@ -51,15 +50,15 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
 
     def errorBody(code: String): String =
       s"""
-         |{
-         |   "code": "$code",
-         |   "reason": "des message"
-         |}
+           |{
+           |   "code": "$code",
+           |   "reason": "des message"
+           |}
           """.stripMargin
 
   }
@@ -72,7 +71,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUrl, OK, desResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -87,25 +86,25 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
         val multipleErrors: String =
           """
-            |{
-            |   "failures": [
-            |        {
-            |            "code": "INVALID_IDTYPE",
-            |            "reason": "The provided id type is invalid
-            |        },
-            |        {
-            |            "code": "INVALID_REGIME_TYPE",
-            |            "reason": "The provided regime type is invalid"
-            |        }
-            |    ]
-            |}
+              |{
+              |   "failures": [
+              |        {
+              |            "code": "INVALID_IDTYPE",
+              |            "reason": "The provided id type is invalid
+              |        },
+              |        {
+              |            "code": "INVALID_REGIME_TYPE",
+              |            "reason": "The provided regime type is invalid"
+              |        }
+              |    ]
+              |}
           """.stripMargin
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onError(DownstreamStub.GET, desUrl, BAD_REQUEST, multipleErrors)
+          DesStub.onError(DesStub.GET, desUrl, BAD_REQUEST, multipleErrors)
         }
 
         val response: WSResponse = await(request.get)
@@ -149,7 +148,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
+            DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)
@@ -178,5 +177,4 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
-
 }

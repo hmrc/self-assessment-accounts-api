@@ -16,7 +16,6 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.{JsValue, Json}
@@ -25,14 +24,13 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.CreateOrAmendCodingOutParser
-import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.hateoas.HateoasFactory
+import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.errors._
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutResponse.LinksFactory
-import v1.services.CreateOrAmendCodingOutService
+import v1.services.{AuditService, CreateOrAmendCodingOutService, EnrolmentsAuthService, MtdIdLookupService}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

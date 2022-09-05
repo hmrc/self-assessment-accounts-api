@@ -16,9 +16,9 @@
 
 package v2.models.response.retrieveSelfAssessmentChargeHistory
 
-import api.models.domain.DesTaxYear
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import v1.models.domain.DesTaxYear
 
 case class ChargeHistoryDetail(taxYear: Option[String],
                                transactionId: String,

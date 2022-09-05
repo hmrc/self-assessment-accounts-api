@@ -16,6 +16,6 @@
 
 package v1.models.request.createOrAmendCodingOut
 
-import api.models.domain.Nino
+import v1.models.domain.Nino
 
 case class CreateOrAmendCodingOutParsedRequest(nino: Nino, taxYear: String, body: CreateOrAmendCodingOutRequestBody)

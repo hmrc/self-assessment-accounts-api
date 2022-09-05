@@ -16,7 +16,6 @@
 
 package v1.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.ValidatorWithDateRange
 import v1.models.request.listTransactions.ListTransactionsRawRequest
 
 class ListTransactionsValidator extends ValidatorWithDateRange[ListTransactionsRawRequest]

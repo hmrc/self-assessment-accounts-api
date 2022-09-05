@@ -16,8 +16,7 @@
 
 package v1.controllers.requestParsers
 
-import api.controllers.requestParsers.RequestParser
-import api.models.domain.Nino
+import v1.models.domain.Nino
 import v1.controllers.requestParsers.validators.DeleteCodingOutValidator
 import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
 

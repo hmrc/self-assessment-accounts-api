@@ -16,18 +16,16 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.mocks.MockIdGenerator
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import api.models.domain.Nino
+import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
+import v1.mocks.MockIdGenerator
 import v1.mocks.requestParsers.MockDeleteCodingOutParser
-import v1.mocks.services.MockDeleteCodingOutService
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import v1.mocks.services.{MockDeleteCodingOutService, MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import v1.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCodingOut._
 
 import scala.concurrent.ExecutionContext.Implicits.global

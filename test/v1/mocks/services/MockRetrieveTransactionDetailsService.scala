@@ -16,12 +16,12 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import v1.controllers.EndpointLogContext
+import v1.models.errors.ErrorWrapper
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 import v1.services.RetrieveTransactionDetailsService

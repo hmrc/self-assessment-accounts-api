@@ -16,11 +16,10 @@
 
 package v1.mocks.connectors
 
-import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.RetrieveBalanceConnector
+import v1.connectors.{DownstreamOutcome, RetrieveBalanceConnector}
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 

@@ -17,9 +17,9 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import api.models.domain.Nino
+import v1.models.domain.Nino
 import v1.mocks.validators.MockRetrieveCodingOutValidator
-import api.models.errors._
+import v1.models.errors._
 import v1.models.request.retrieveCodingOut._
 
 class RetrieveCodingOutRequestParserSpec extends UnitSpec {

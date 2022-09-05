@@ -16,10 +16,9 @@
 
 package v1.controllers.requestParsers
 
-import api.controllers.requestParsers.RequestParser
-
 import javax.inject.Inject
-import api.models.domain.Nino
+import v1.models.domain.Nino
+
 import v1.controllers.requestParsers.validators.CreateOrAmendCodingOutValidator
 import v1.models.request.createOrAmendCodingOut.{
   CreateOrAmendCodingOutParsedRequest,

@@ -16,10 +16,10 @@
 
 package v1.models.response.retrieveCodingOut
 
-import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.json.{Json, OFormat}
-import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.hateoas.{HateoasLinks, HateoasLinksFactory}
+import v1.models.hateoas.{HateoasData, Link}
 
 case class RetrieveCodingOutResponse(taxCodeComponents: Option[TaxCodeComponentsObject],
                                      unmatchedCustomerSubmissions: Option[UnmatchedCustomerSubmissionsObject])

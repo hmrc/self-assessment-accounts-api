@@ -16,27 +16,24 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import cats.data.EitherT
 import cats.implicits._
-
 import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.ListTransactionsRequestParser
-import api.hateoas.HateoasFactory
-import api.models.errors._
+import v1.hateoas.HateoasFactory
+import v1.models.errors._
 import v1.models.request.listTransactions.ListTransactionsRawRequest
 import v1.models.response.listTransaction.ListTransactionsHateoasData
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.{AuditService, EnrolmentsAuthService, ListTransactionsService, MtdIdLookupService}
 
 import scala.concurrent.{ExecutionContext, Future}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.services.ListTransactionsService
+import v1.models.audit.{GenericAuditDetail, AuditEvent, AuditResponse}
 
 @Singleton
 class ListTransactionsController @Inject() (val authService: EnrolmentsAuthService,

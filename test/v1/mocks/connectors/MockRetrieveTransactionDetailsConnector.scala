@@ -16,11 +16,10 @@
 
 package v1.mocks.connectors
 
-import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.RetrieveTransactionDetailsConnector
+import v1.connectors.{DownstreamOutcome, RetrieveTransactionDetailsConnector}
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 

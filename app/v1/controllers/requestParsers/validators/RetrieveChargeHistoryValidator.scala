@@ -16,9 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.{NinoValidation, TransactionIdValidation}
-import api.models.errors.MtdError
+import v1.controllers.requestParsers.validators.validations.{NinoValidation, TransactionIdValidation}
+import v1.models.errors.MtdError
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
 
 class RetrieveChargeHistoryValidator extends Validator[RetrieveChargeHistoryRawRequest] {

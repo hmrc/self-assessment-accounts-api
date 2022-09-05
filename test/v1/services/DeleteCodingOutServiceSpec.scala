@@ -16,12 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.services.ServiceSpec
-import api.models.domain.Nino
+import v1.models.domain.Nino
+import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockDeleteCodingOutConnector
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
 import scala.concurrent.Future
@@ -65,7 +64,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
 
           MockDeleteCodingOutConnector
             .deleteCodingOut(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
           await(service.deleteCodingOut(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

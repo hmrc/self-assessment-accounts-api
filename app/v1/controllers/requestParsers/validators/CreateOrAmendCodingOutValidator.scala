@@ -16,10 +16,9 @@
 
 package v1.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
 import config.AppConfig
-import api.controllers.requestParsers.validators.validations._
-import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import v1.controllers.requestParsers.validators.validations._
+import v1.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
 import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponent}
 
 import javax.inject.Inject

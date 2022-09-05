@@ -26,9 +26,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveCodingOutFixture._
-import api.models.errors._
-import api.stubs.{AuthStub, MtdIdLookupStub}
-import v1.stubs.DownstreamStub
+import v1.models.errors._
+import v1.stubs.{AuthStub, DesStub, MtdIdLookupStub}
 
 class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
@@ -199,9 +198,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
-
   }
 
   "Calling the 'retrieve coding out' endpoint" should {
@@ -211,7 +209,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, OK, desResponse)
         }
 
         val response: WSResponse = await(request(None).get())
@@ -230,7 +228,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
         }
 
         val response: WSResponse = await(request(Some(mtdParamSource)).get())
@@ -245,7 +243,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
         }
 
         val response: WSResponse = await(request(Some(mtdParamSource)).get())
@@ -268,7 +266,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
         }
 
         val response: WSResponse = await(request(Some(mtdParamSource)).get())
@@ -285,7 +283,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, OK, desResponse)
         }
 
         val response: WSResponse = await(request(None).get())
@@ -314,7 +312,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
+          DesStub.onSuccess(DesStub.GET, desUri, OK, desResponse)
         }
 
         val response: WSResponse = await(request(None).get())
@@ -345,7 +343,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponseNoId)
+          DesStub.onSuccess(DesStub.GET, desUri, OK, desResponseNoId)
         }
 
         val response: WSResponse = await(request(None).get())
@@ -398,7 +396,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
             override def setupStubs(): StubMapping = {
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
+              DesStub.onError(DesStub.GET, desUri, desStatus, errorBody(desCode))
             }
 
             val response: WSResponse = await(request(None).get())
@@ -437,7 +435,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           override def setupStubs(): StubMapping = {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponseNoId)
+            DesStub.onSuccess(DesStub.GET, desUri, OK, desResponseNoId)
           }
 
           val response: WSResponse = await(request(None).get())
@@ -448,5 +446,4 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       }
     }
   }
-
 }

@@ -16,6 +16,6 @@
 
 package v1.models.request.listTransactions
 
-import api.models.request.RawDataWithDateRange
+import v1.models.request.RawDataWithDateRange
 
 case class ListTransactionsRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange

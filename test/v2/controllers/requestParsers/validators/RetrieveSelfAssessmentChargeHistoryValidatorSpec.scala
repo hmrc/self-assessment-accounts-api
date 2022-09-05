@@ -18,13 +18,13 @@ package v2.controllers.requestParsers.validators
 
 import mocks.MockAppConfig
 import support.UnitSpec
-import api.models.errors._
+import v2.models.errors._
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
 
 class RetrieveSelfAssessmentChargeHistoryValidatorSpec extends UnitSpec with MockAppConfig {
 
-  private val validNino          = "AA123456A"
-  private val validTransactionId = "717f3agW678f"
+  private val validNino           = "AA123456A"
+  private val validTransactionId  = "717f3agW678f"
 
   private val validator = new RetrieveSelfAssessmentChargeHistoryValidator(mockAppConfig)
 
@@ -47,5 +47,4 @@ class RetrieveSelfAssessmentChargeHistoryValidatorSpec extends UnitSpec with Moc
       }
     }
   }
-
 }

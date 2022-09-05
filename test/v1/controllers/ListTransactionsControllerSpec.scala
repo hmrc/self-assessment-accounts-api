@@ -16,27 +16,25 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
-import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.hateoas.{HateoasWrapper, Link}
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import api.models.domain.Nino
+import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.ListTransactionsFixture._
+import v1.hateoas.HateoasLinks
+import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockListTransactionsRequestParser
-import v1.mocks.services.MockListTransactionsService
-import api.models.errors._
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.hateoas.Method.GET
-import api.models.hateoas.RelType.{LIST_CHARGES, LIST_PAYMENTS, RETRIEVE_PAYMENT_ALLOCATIONS, RETRIEVE_TRANSACTION_DETAILS, SELF}
-import api.models.outcomes.ResponseWrapper
+import v1.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockListTransactionsService, MockMtdIdLookupService}
+import v1.models.errors._
+import v1.models.audit.{GenericAuditDetail, AuditError, AuditEvent, AuditResponse}
+import v1.models.hateoas.Method.GET
+import v1.models.hateoas.RelType._
+import v1.models.hateoas.{HateoasWrapper, Link}
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions._
 import v1.models.response.listTransaction.ListTransactionsResponse
 import v1.models.response.listTransaction.ListTransactionsHateoasData
+import v1.mocks.MockIdGenerator
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

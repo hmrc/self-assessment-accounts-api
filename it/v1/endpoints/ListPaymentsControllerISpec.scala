@@ -16,7 +16,6 @@
 
 package v1.endpoints
 
-import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -25,8 +24,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.ListPaymentsFixture._
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
-import v1.stubs.DownstreamStub
+import v1.models.errors._
+import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
 
 class ListPaymentsControllerISpec extends IntegrationBaseSpec {
 
@@ -53,9 +52,8 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-        )
+      )
     }
-
   }
 
   "Calling the list payments endpoint" should {
@@ -68,7 +66,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, desQueryParams, OK, Json.parse(desSuccessResponse))
+          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, Json.parse(desSuccessResponse))
         }
 
         val response: WSResponse = await(request.get)
@@ -129,7 +127,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onError(DownstreamStub.GET, desUrl, desQueryParams, desStatus, errorBody(desCode))
+            DesStub.onError(DesStub.GET, desUrl, desQueryParams, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)
@@ -160,5 +158,4 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
-
 }

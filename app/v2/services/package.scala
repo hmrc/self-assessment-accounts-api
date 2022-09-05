@@ -16,8 +16,8 @@
 
 package v2
 
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
+import v2.models.errors.ErrorWrapper
+import v2.models.outcomes.ResponseWrapper
 
 package object services {
 

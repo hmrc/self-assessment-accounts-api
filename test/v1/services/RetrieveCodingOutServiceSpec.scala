@@ -16,19 +16,17 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.mocks.MockCurrentDate
-import api.services.ServiceSpec
-
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import org.scalamock.handlers.CallHandler
-import api.models.domain.Nino
+import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.CurrentDate
+import v1.controllers.EndpointLogContext
+import v1.mocks.MockCurrentDate
 import v1.mocks.connectors.MockRetrieveCodingOutConnector
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import v1.models.errors._
+import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut._
 
@@ -165,7 +163,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
             MockRetrieveCodingOutConnector
               .retrieveCodingOut(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
 
             await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }

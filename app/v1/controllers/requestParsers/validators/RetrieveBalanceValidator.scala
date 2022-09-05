@@ -16,9 +16,8 @@
 
 package v1.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.NinoValidation
-import api.models.errors.MtdError
+import v1.controllers.requestParsers.validators.validations.NinoValidation
+import v1.models.errors.MtdError
 import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
 
 class RetrieveBalanceValidator extends Validator[RetrieveBalanceRawRequest] {

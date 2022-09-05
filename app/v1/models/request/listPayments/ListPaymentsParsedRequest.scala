@@ -16,6 +16,6 @@
 
 package v1.models.request.listPayments
 
-import api.models.domain.Nino
+import v1.models.domain.Nino
 
 case class ListPaymentsParsedRequest(nino: Nino, from: String, to: String)
