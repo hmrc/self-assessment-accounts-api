@@ -25,7 +25,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
+import v1.stubs.DownstreamStub
 
 class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
 
@@ -74,7 +75,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, queryParams, OK, desResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, queryParams, OK, desResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -120,7 +121,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DesStub.onError(DesStub.GET, desUrl, queryParams, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, desUrl, queryParams, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)

@@ -16,7 +16,7 @@
 
 package v1.mocks.connectors
 
-import api.connectors.DownstreamOutcome
+import api.connectors.DesOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
@@ -32,7 +32,7 @@ trait MockRetrieveCodingOutConnector extends MockFactory {
 
   object MockRetrieveCodingOutConnector {
 
-    def retrieveCodingOut(requestData: RetrieveCodingOutParsedRequest): CallHandler[Future[DownstreamOutcome[RetrieveCodingOutResponse]]] = {
+    def retrieveCodingOut(requestData: RetrieveCodingOutParsedRequest): CallHandler[Future[DesOutcome[RetrieveCodingOutResponse]]] = {
       (mockRetrieveCodingOutConnector
         .retrieveCodingOut(_: RetrieveCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(requestData, *, *, *)

@@ -65,7 +65,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
 
           MockDeleteCodingOutConnector
             .deleteCodingOut(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.deleteCodingOut(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

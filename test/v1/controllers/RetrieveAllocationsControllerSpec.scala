@@ -23,24 +23,20 @@ import api.mocks.hateoas.MockHateoasFactory
 import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
-import api.models.errors.{DownstreamError, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, PaymentIdFormatError}
+import api.models.errors._
 import api.models.hateoas.Method.GET
 import api.models.hateoas.RelType.{RETRIEVE_CHARGE_HISTORY, RETRIEVE_TRANSACTION_DETAILS, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import api.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
 import v1.mocks.services.MockRetrieveAllocationsService
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.{RetrieveAllocationsParsedRequest, RetrieveAllocationsRawRequest}
-import v1.models.response.retrieveAllocations.detail.AllocationDetail
 import v1.models.response.retrieveAllocations.RetrieveAllocationsHateoasData
+import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

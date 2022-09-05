@@ -94,7 +94,7 @@ class ListTransactionsServiceSpec extends ServiceSpec {
 
             MockListTransactionsConnector
               .listTransactions(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.listTransactions(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }

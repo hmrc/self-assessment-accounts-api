@@ -43,7 +43,7 @@ class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(desErrorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateCodingOutResponse(desResponseWrapper, request.taxYear))
     } yield mtdResponseWrapper
 

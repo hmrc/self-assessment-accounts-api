@@ -44,7 +44,7 @@ class RetrieveTransactionDetailsService @Inject() (val connector: RetrieveTransa
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDownstreamErrors(desErrorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTransactionDetailsResponse(desResponseWrapper))
     } yield mtdResponseWrapper
 

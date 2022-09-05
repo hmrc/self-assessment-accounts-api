@@ -14,33 +14,43 @@
  * limitations under the License.
  */
 
-package v1.endpoints
+package v2.endpoints
 
 import api.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError, TransactionIdFormatError}
 import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
-import play.api.libs.json.{JsValue, Json}
+import play.api.http.Status.{BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
+import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v1.fixtures.RetrieveChargeHistoryFixture
-import v1.stubs.DownstreamStub
+import v2.stubs.DownstreamStub
+import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture.{
+  downstreamResponseMultiple,
+  mtdMultipleResponseWithHateoas
+}
 
-class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
+class RetrieveSelfAssessmentChargeHistoryControllerSpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String          = "AA111111A"
-    val transactionId: String = "anId"
-    val correlationId         = "X-123"
+    val nino: String               = "AA123456A"
+    lazy val transactionId: String = "12345678"
 
-    val desResponse: JsValue = RetrieveChargeHistoryFixture.desResponseWithMultipleHHistory
-    val mtdResponse: JsValue = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
+    def desParamSource: String = "HMRC-HELD"
 
-    def uri: String    = s"/$nino/charges/$transactionId"
-    def desUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
+    def mtdParamSource: String = "hmrcHeld"
+
+    def desBodySource: String = "HMRC HELD"
+
+    def mtdBodySource: String = "hmrcHeld"
+
+    val downstreamResponse     = downstreamResponseMultiple
+    val mtdResponseWithHateoas = mtdMultipleResponseWithHateoas(nino, transactionId)
+
+    def uri: String           = s"/$nino/charges/$transactionId"
+    def downstreamUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
 
@@ -49,8 +59,8 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
       buildRequest(uri)
         .withQueryStringParameters(("docNumber", transactionId))
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.1.0+json"),
-          (AUTHORIZATION, "Bearer 123") // some bearer token
+          (ACCEPT, "application/vnd.hmrc.2.0+json"),
+          (AUTHORIZATION, "Bearer 123")
         )
     }
 
@@ -58,54 +68,52 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
       s"""
          |{
          |   "code": "$code",
-         |   "reason": "des message"
+         |   "reason": "downstream message"
          |}
           """.stripMargin
 
   }
 
-  "Calling the 'retrieve a self assessment charge's history' endpoint" should {
+  "Calling the 'retrieve a self assessment charge history' endpoint" should {
     "return a 200 status code" when {
       "any valid request is made" in new Test {
 
         override def setupStubs(): StubMapping = {
-          AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
         }
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
-        response.json shouldBe mtdResponse
+        response.json shouldBe mtdResponseWithHateoas
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
     }
     "return a 500 status code" when {
-      "des returns errors that map to DownstreamError" in new Test {
+      "downstream returns errors that map to DownstreamError" in new Test {
 
         val multipleErrors: String =
           """
-            |{
-            |   "failures": [
-            |        {
-            |            "code": "INVALID_IDTYPE",
-            |            "reason": "The provided id type is invalid
-            |        },
-            |        {
-            |            "code": "INVALID_REGIME_TYPE",
-            |            "reason": "The provided regime type is invalid"
-            |        }
-            |    ]
-            |}
+                |{
+                |   "failures": [
+                |        {
+                |            "code": "INVALID_IDTYPE",
+                |            "reason": "The provided id type is invalid
+                |        },
+                |        {
+                |            "code": "INVALID_REGIME_TYPE",
+                |            "reason": "The provided regime type is invalid"
+                |        }
+                |    ]
+                |}
           """.stripMargin
 
         override def setupStubs(): StubMapping = {
-          AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onError(DownstreamStub.GET, desUrl, BAD_REQUEST, multipleErrors)
+          DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, BAD_REQUEST, multipleErrors)
         }
 
         val response: WSResponse = await(request.get)
@@ -123,7 +131,6 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           override val nino: String = requestNino
 
           override def setupStubs(): StubMapping = {
-            AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
@@ -142,14 +149,14 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
     }
 
     "des service error" when {
-      def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"des returns an $desCode error and status $desStatus" in new Test {
+      def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
           val response: WSResponse = await(request.get)

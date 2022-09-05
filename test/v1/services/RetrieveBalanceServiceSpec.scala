@@ -78,7 +78,7 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
 
           MockRetrieveBalanceConnector
             .retrieveBalance(requestData)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.retrieveBalance(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

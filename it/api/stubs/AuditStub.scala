@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-package v2.models.outcomes
+package api.stubs
 
-case class ResponseWrapper[+A](correlationId: String, responseData: A) {
-  def map[B](f: A => B): ResponseWrapper[B] = ResponseWrapper(correlationId, f(responseData))
+import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import play.api.http.Status._
+import support.WireMockMethods
+
+object AuditStub extends WireMockMethods {
+
+  private val auditUri: String = s"/write/audit.*"
+
+  def audit(): StubMapping = {
+    when(method = POST, uri = auditUri)
+      .thenReturn(status = NO_CONTENT)
+  }
+
 }

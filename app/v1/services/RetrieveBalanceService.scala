@@ -42,7 +42,7 @@ class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) ext
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveBalance(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieveBalance(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper.map(des => des)
 
     result.value

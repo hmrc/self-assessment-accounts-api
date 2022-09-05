@@ -117,7 +117,7 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
 
             MockRetrieveTransactionDetailsConnector
               .retrieveDetails(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }

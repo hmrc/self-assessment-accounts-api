@@ -72,7 +72,7 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
 
             MockCreateOrAmendCodingOutConnector
               .amendCodingOut(request)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(downstreamErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.amend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }

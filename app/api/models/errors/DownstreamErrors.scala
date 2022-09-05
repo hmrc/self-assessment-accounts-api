@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.errors
+package api.models.errors
 
 import play.api.libs.json.{Json, Reads}
 
@@ -30,9 +30,14 @@ sealed trait DownstreamError
 
 case class DownstreamErrors(errors: List[DownstreamErrorCode]) extends DownstreamError
 
-
 object DownstreamErrors {
   def single(error: DownstreamErrorCode): DownstreamErrors = DownstreamErrors(List(error))
 }
 
 case class OutboundError(error: MtdError, errors: Option[Seq[MtdError]] = None) extends DownstreamError
+
+object DownstreamError
+    extends MtdError(
+      code = "INTERNAL_SERVER_ERROR",
+      message = "An internal server error occurred"
+    )

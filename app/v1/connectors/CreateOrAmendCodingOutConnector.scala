@@ -18,7 +18,7 @@ package v1.connectors
 
 import api.connectors.DownstreamUri.IfsUri
 import api.connectors.httpparsers.StandardDesHttpParser.readsEmpty
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{BaseDownstreamConnector, DesOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
@@ -32,7 +32,7 @@ class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient, val appCo
   def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      correlationId: String): Future[DesOutcome[Unit]] = {
 
     val nino    = request.nino.nino
     val taxYear = request.taxYear

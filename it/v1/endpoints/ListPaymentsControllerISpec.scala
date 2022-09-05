@@ -25,7 +25,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.ListPaymentsFixture._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
+import v1.stubs.DownstreamStub
 
 class ListPaymentsControllerISpec extends IntegrationBaseSpec {
 
@@ -67,7 +68,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, Json.parse(desSuccessResponse))
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, desQueryParams, OK, Json.parse(desSuccessResponse))
         }
 
         val response: WSResponse = await(request.get)
@@ -128,7 +129,7 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DesStub.onError(DesStub.GET, desUrl, desQueryParams, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, desUrl, desQueryParams, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)

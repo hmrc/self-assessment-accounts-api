@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{BaseDownstreamConnector, DesOutcome}
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
@@ -34,7 +34,7 @@ class RetrieveChargeHistoryConnector @Inject() (val http: HttpClient, val appCon
   def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
+      correlationId: String): Future[DesOutcome[RetrieveChargeHistoryResponse]] = {
 
     val nino          = request.nino.nino
     val transactionId = request.transactionId

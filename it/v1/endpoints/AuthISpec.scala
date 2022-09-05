@@ -22,7 +22,8 @@ import play.api.http.Status
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
+import v1.stubs.DownstreamStub
 
 class AuthISpec extends IntegrationBaseSpec {
 
@@ -68,7 +69,7 @@ class AuthISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.serviceSuccess(nino, paymentLot, paymentLotItem)
+          DownstreamStub.serviceSuccess(nino, paymentLot, paymentLotItem)
         }
 
         val response: WSResponse = await(request().get())

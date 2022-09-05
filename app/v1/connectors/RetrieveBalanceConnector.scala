@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{BaseDownstreamConnector, DesOutcome}
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
@@ -34,7 +34,7 @@ class RetrieveBalanceConnector @Inject() (val http: HttpClient, val appConfig: A
   def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveBalanceResponse]] = {
+      correlationId: String): Future[DesOutcome[RetrieveBalanceResponse]] = {
 
     val nino = request.nino.nino
 

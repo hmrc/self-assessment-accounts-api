@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{BaseDownstreamConnector, DesOutcome}
 import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
@@ -35,7 +35,7 @@ class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig:
   def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
+      correlationId: String): Future[DesOutcome[RetrieveCodingOutResponse]] = {
 
     val nino    = request.nino.nino
     val taxYear = request.taxYear

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
-package v2.models.auth
+package v2.stubs
 
-case class UserDetails(mtdId: String, userType: String, agentReferenceNumber: Option[String])
+import api.stubs.BaseDownstreamStub
+
+object DownstreamStub extends BaseDownstreamStub {}

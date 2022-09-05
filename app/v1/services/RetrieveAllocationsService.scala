@@ -43,7 +43,7 @@ class RetrieveAllocationsService @Inject() (connector: RetrieveAllocationsConnec
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse[AllocationDetail]]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveAllocations(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieveAllocations(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

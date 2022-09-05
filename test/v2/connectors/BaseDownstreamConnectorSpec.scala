@@ -16,12 +16,13 @@
 
 package v2.connectors
 
+import api.connectors.BaseDownstreamConnector
 import config.AppConfig
 import mocks.MockAppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
-import v2.connectors.DownstreamUri.{DesUri, IfsUri}
-import v2.mocks.MockHttpClient
-import v2.models.outcomes.ResponseWrapper
+import api.connectors.DownstreamUri.{DesUri, IfsUri}
+import api.mocks.MockHttpClient
+import api.models.outcomes.ResponseWrapper
 
 import scala.concurrent.Future
 

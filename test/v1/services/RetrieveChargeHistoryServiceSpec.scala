@@ -72,7 +72,7 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
 
           MockRetrieveChargeHistoryConnector
             .retrieveChargeHistory(requestData)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.retrieveChargeHistory(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

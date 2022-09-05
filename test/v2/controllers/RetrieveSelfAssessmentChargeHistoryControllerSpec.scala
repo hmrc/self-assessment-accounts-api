@@ -20,13 +20,14 @@ import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
 import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
+import api.models.errors._
 import api.models.hateoas.Method.GET
 import api.models.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.JsValue
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
@@ -47,7 +48,6 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
     with MockHateoasFactory
     with MockRetrieveSelfAssessmentChargeHistoryRequestParser
     with HateoasLinks
-    with MockAuditService
     with MockIdGenerator {
 
   private val nino          = "AA123456A"
@@ -86,7 +86,6 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
       requestParser = mockRetrieveSelfAssessmentChargeHistoryRequestParser,
       service = mockRetrieveSelfAssessmentChargeHistoryService,
       hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -121,9 +120,40 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
         val result: Future[Result] = controller.retrieveSelfAssessmentChargeHistory(nino, transactionId)(fakeGetRequest)
 
         status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
+        contentAsJson(result) shouldBe mtdMultipleResponseWithHateoas(nino, transactionId)
         header("X-CorrelationId", result) shouldBe Some(correlationId)
       }
+    }
+
+    "service errors occur" must {
+      def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
+        s"a $mtdError error is returned from the service" in new Test {
+
+          MockRetrieveSelfAssessmentChargeHistoryRequestParser
+            .parse(rawRequest)
+            .returns(Right(parsedRequest))
+
+          MockRetrieveSelfAssessmentChargeHistoryService
+            .retrieveChargeHistory(parsedRequest)
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+
+          val result: Future[Result] = controller.retrieveSelfAssessmentChargeHistory(nino, transactionId)(fakeGetRequest)
+
+          status(result) shouldBe expectedStatus
+          contentAsJson(result) shouldBe Json.toJson(mtdError)
+          header("X-CorrelationId", result) shouldBe Some(correlationId)
+
+        }
+      }
+
+      val input = Seq(
+        (NinoFormatError, BAD_REQUEST),
+        (TransactionIdFormatError, BAD_REQUEST),
+        (NotFoundError, NOT_FOUND),
+        (DownstreamError, INTERNAL_SERVER_ERROR)
+      )
+
+      input.foreach(args => (serviceErrors _).tupled(args))
     }
 
   }

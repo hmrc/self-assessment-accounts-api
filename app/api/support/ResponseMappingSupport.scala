@@ -17,26 +17,26 @@
 package api.support
 
 import api.controllers.EndpointLogContext
-import api.models.errors.{BadRequestError, DesError, DesErrors, DownstreamError, ErrorWrapper, MtdError, OutboundError}
+import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import utils.Logging
 
 trait ResponseMappingSupport {
   self: Logging =>
 
-  final def mapDesErrors[D](errorCodeMap: PartialFunction[String, MtdError])(desResponseWrapper: ResponseWrapper[DesError])(implicit
-      logContext: EndpointLogContext): ErrorWrapper = {
+  final def mapDownstreamErrors[D](errorCodeMap: PartialFunction[String, MtdError])(downstreamResponseWrapper: ResponseWrapper[DownstreamError])(
+      implicit logContext: EndpointLogContext): ErrorWrapper = {
 
     lazy val defaultErrorCodeMapping: String => MtdError = { code =>
       logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No mapping found for error code $code")
       DownstreamError
     }
 
-    desResponseWrapper match {
-      case ResponseWrapper(correlationId, DesErrors(error :: Nil)) =>
+    downstreamResponseWrapper match {
+      case ResponseWrapper(correlationId, DownstreamErrors(error :: Nil)) =>
         ErrorWrapper(correlationId, errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping), None)
 
-      case ResponseWrapper(correlationId, DesErrors(errorCodes)) =>
+      case ResponseWrapper(correlationId, DownstreamErrors(errorCodes)) =>
         val mtdErrors = errorCodes.map(error => errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping))
 
         if (mtdErrors.contains(DownstreamError)) {

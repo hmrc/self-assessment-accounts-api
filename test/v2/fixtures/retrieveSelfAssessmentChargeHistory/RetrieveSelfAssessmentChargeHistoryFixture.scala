@@ -41,7 +41,7 @@ object RetrieveSelfAssessmentChargeHistoryFixture {
       |  "documentId": "${validChargeHistoryDetailObject.transactionId}",
       |  "documentDate":"${validChargeHistoryDetailObject.transactionDate}",
       |  "documentDescription": "${validChargeHistoryDetailObject.description}",
-      |  "totalAmount": "${validChargeHistoryDetailObject.totalAmount}",
+      |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
       |  "reversalDate": "${validChargeHistoryDetailObject.changeDate}",
       |  "reversalReason": "${validChargeHistoryDetailObject.changeReason}"
       |}
@@ -73,11 +73,11 @@ object RetrieveSelfAssessmentChargeHistoryFixture {
     .parse(
       s"""
       |{
-      |  "taxYear": "${validChargeHistoryDetailObject.taxYear}",
+      |  "taxYear": "${validChargeHistoryDetailObject.taxYear.get}",
       |  "transactionId": "${validChargeHistoryDetailObject.transactionId}",
       |  "transactionDate": "${validChargeHistoryDetailObject.transactionDate}",
       |  "description": "${validChargeHistoryDetailObject.description}",
-      |  "totalAmount": "${validChargeHistoryDetailObject.totalAmount}",
+      |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
       |  "changeDate": "${validChargeHistoryDetailObject.changeDate}",
       |  "changeReason": "${validChargeHistoryDetailObject.changeReason}"
       |}

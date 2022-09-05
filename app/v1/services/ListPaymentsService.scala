@@ -42,7 +42,7 @@ class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnecto
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(listPaymentsConnector.listPayments(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(listPaymentsConnector.listPayments(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper
 
     result.value

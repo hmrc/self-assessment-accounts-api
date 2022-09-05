@@ -21,8 +21,8 @@ import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.RetrieveSelfAssessmentChargeHistoryConnector
-import v2.models.errors._
-import v2.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 import v2.support.DownstreamResponseMappingSupport

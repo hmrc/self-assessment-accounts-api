@@ -16,11 +16,11 @@
 
 package v1.mocks.connectors
 
-import api.connectors.DownstreamOutcome
+import api.connectors.DesOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{CreateOrAmendCodingOutConnector}
+import v1.connectors.CreateOrAmendCodingOutConnector
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -31,7 +31,7 @@ trait MockCreateOrAmendCodingOutConnector extends MockFactory {
 
   object MockCreateOrAmendCodingOutConnector {
 
-    def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest): CallHandler[Future[DownstreamOutcome[Unit]]] = {
+    def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest): CallHandler[Future[DesOutcome[Unit]]] = {
       (mockCreateOrAmendCodingOutConnector
         .amendCodingOut(_: CreateOrAmendCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: String))
         .expects(request, *, *, *)

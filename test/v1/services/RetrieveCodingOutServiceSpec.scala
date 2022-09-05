@@ -165,7 +165,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
             MockRetrieveCodingOutConnector
               .retrieveCodingOut(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }

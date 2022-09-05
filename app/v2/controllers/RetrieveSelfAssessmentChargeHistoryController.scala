@@ -17,24 +17,21 @@
 package v2.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.errors._
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveSelfAssessmentChargeHistoryRequestParser
-import api.hateoas.HateoasFactory
-import v2.models.errors.{BadRequestError, ErrorWrapper, IfsError, NinoFormatError, NotFoundError, TransactionIdFormatError}
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import v2.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
 import v2.services.RetrieveSelfAssessmentChargeHistoryService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -91,7 +88,7 @@ class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: 
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | TransactionIdFormatError => BadRequest(Json.toJson(errorWrapper))
       case NotFoundError                                                => NotFound(Json.toJson(errorWrapper))
-      case IfsError                                                     => InternalServerError(Json.toJson(errorWrapper))
+      case DownstreamError                                              => InternalServerError(Json.toJson(errorWrapper))
       case _                                                            => unhandledError(errorWrapper)
     }
   }

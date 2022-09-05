@@ -169,12 +169,6 @@ object NoTransactionDetailsFoundError
       message = "No transaction details found"
     )
 
-object DownstreamError
-    extends MtdError(
-      code = "INTERNAL_SERVER_ERROR",
-      message = "An internal server error occurred"
-    )
-
 object BadRequestError
     extends MtdError(
       code = "INVALID_REQUEST",

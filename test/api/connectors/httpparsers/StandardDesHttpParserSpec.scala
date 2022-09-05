@@ -16,14 +16,14 @@
 
 package api.connectors.httpparsers
 
+import api.connectors.DesOutcome
+import api.connectors.httpparsers.StandardDesHttpParser._
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json, Reads}
 import support.UnitSpec
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import api.connectors.DownstreamOutcome
-import api.connectors.httpparsers.StandardDesHttpParser._
-import api.models.errors.{BVRError, DesErrorCode, DesErrors, DownstreamError, MtdError, OutboundError}
-import api.models.outcomes.ResponseWrapper
 
 // WLOG if Reads tested elsewhere
 case class SomeModel(data: String)
@@ -39,7 +39,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
 
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  val httpReads: HttpReads[DownstreamOutcome[Unit]] = implicitly
+  val httpReads: HttpReads[DesOutcome[Unit]] = implicitly
 
   val data                     = "someData"
   val desExpectedJson: JsValue = Json.obj("data" -> data)
@@ -49,7 +49,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
 
   "The generic HTTP parser" when {
     "no status code is specified" must {
-      val httpReads: HttpReads[DownstreamOutcome[SomeModel]] = implicitly
+      val httpReads: HttpReads[DesOutcome[SomeModel]] = implicitly
 
       "return a Right DES response containing the model object if the response json corresponds to a model object" in {
         val httpResponse: HttpResponse = HttpResponse(OK, desExpectedJson, Map("CorrelationId" -> Seq(correlationId)))
@@ -73,8 +73,8 @@ class StandardDesHttpParserSpec extends UnitSpec {
 
     "a success code is specified" must {
       "use that status code for success" in {
-        implicit val successCode: SuccessCode                  = SuccessCode(PARTIAL_CONTENT)
-        val httpReads: HttpReads[DownstreamOutcome[SomeModel]] = implicitly
+        implicit val successCode: SuccessCode           = SuccessCode(PARTIAL_CONTENT)
+        val httpReads: HttpReads[DesOutcome[SomeModel]] = implicitly
 
         val httpResponse = HttpResponse(PARTIAL_CONTENT, desExpectedJson.toString(), Map("CorrelationId" -> Seq(correlationId)))
 
@@ -85,7 +85,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
 
   "The generic HTTP parser for empty response" when {
     "no status code is specified" must {
-      val httpReads: HttpReads[DownstreamOutcome[Unit]] = implicitly
+      val httpReads: HttpReads[DesOutcome[Unit]] = implicitly
 
       "receiving a 204 response" should {
         "return a Right DesResponse with the correct correlationId and no responseData" in {
@@ -102,8 +102,8 @@ class StandardDesHttpParserSpec extends UnitSpec {
     }
 
     "a success code is specified" must {
-      implicit val successCode: SuccessCode             = SuccessCode(PARTIAL_CONTENT)
-      val httpReads: HttpReads[DownstreamOutcome[Unit]] = implicitly
+      implicit val successCode: SuccessCode      = SuccessCode(PARTIAL_CONTENT)
+      val httpReads: HttpReads[DesOutcome[Unit]] = implicitly
 
       "use that status code for success" in {
         val httpResponse = HttpResponse(PARTIAL_CONTENT, "", Map("CorrelationId" -> Seq(correlationId)))
@@ -148,20 +148,21 @@ class StandardDesHttpParserSpec extends UnitSpec {
     """.stripMargin
   )
 
-  private def handleErrorsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit =
+  private def handleErrorsCorrectly[A](httpReads: HttpReads[DesOutcome[A]]): Unit =
     Seq(BAD_REQUEST, NOT_FOUND, FORBIDDEN, CONFLICT, UNPROCESSABLE_ENTITY).foreach(responseCode =>
       s"receiving a $responseCode response" should {
         "be able to parse a single error" in {
           val httpResponse = HttpResponse(responseCode, singleErrorJson.toString(), Map("CorrelationId" -> Seq(correlationId)))
 
-          httpReads.read(method, url, httpResponse) shouldBe Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode("CODE"))))
+          httpReads.read(method, url, httpResponse) shouldBe Left(
+            ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("CODE"))))
         }
 
         "be able to parse multiple errors" in {
           val httpResponse = HttpResponse(responseCode, multipleErrorsJson.toString(), Map("CorrelationId" -> Seq(correlationId)))
 
           httpReads.read(method, url, httpResponse) shouldBe {
-            Left(ResponseWrapper(correlationId, DesErrors(List(DesErrorCode("CODE 1"), DesErrorCode("CODE 2")))))
+            Left(ResponseWrapper(correlationId, DownstreamErrors(List(DownstreamErrorCode("CODE 1"), DownstreamErrorCode("CODE 2")))))
           }
         }
 
@@ -172,7 +173,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
         }
       })
 
-  private def handleInternalErrorsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit =
+  private def handleInternalErrorsCorrectly[A](httpReads: HttpReads[DesOutcome[A]]): Unit =
     Seq(INTERNAL_SERVER_ERROR, SERVICE_UNAVAILABLE).foreach(responseCode =>
       s"receiving a $responseCode response" should {
         "return an outbound error when the error returned matches the Error model" in {
@@ -188,7 +189,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
         }
       })
 
-  private def handleUnexpectedResponse[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit =
+  private def handleUnexpectedResponse[A](httpReads: HttpReads[DesOutcome[A]]): Unit =
     "receiving an unexpected response" should {
       val responseCode = 499
       "return an outbound error when the error returned matches the Error model" in {
@@ -204,7 +205,7 @@ class StandardDesHttpParserSpec extends UnitSpec {
       }
     }
 
-  private def handleBvrsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit = {
+  private def handleBvrsCorrectly[A](httpReads: HttpReads[DesOutcome[A]]): Unit = {
 
     val singleBvrJson: JsValue = Json.parse("""
         |{
