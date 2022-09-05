@@ -16,6 +16,7 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -24,8 +25,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.ListTransactionsFixture._
-import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
+import v1.stubs.DownstreamStub
 
 class ListTransactionsControllerISpec extends IntegrationBaseSpec {
 
@@ -53,8 +54,9 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
+
   }
 
   "Calling the list transactions endpoint" should {
@@ -76,7 +78,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, desQueryParams, OK, fullMultipleItemsListTransactionsDesResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, desQueryParams, OK, fullMultipleItemsListTransactionsDesResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -121,7 +123,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onError(DesStub.GET, desUrl, desQueryParams, BAD_REQUEST, multipleErrors)
+          DownstreamStub.onError(DownstreamStub.GET, desUrl, desQueryParams, BAD_REQUEST, multipleErrors)
         }
 
         val response: WSResponse = await(request.get)
@@ -196,7 +198,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DesStub.onError(DesStub.GET, desUrl, desQueryParams, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, desUrl, desQueryParams, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)
@@ -229,4 +231,5 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

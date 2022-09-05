@@ -18,7 +18,7 @@ package v1.controllers.requestParsers.validators
 
 import support.UnitSpec
 import v1.fixtures.RetrieveChargeHistoryFixture._
-import v1.models.errors.{NinoFormatError, TransactionIdFormatError}
+import api.models.errors.{NinoFormatError, TransactionIdFormatError}
 
 class RetrieveChargeHistoryValidatorSpec extends UnitSpec {
 

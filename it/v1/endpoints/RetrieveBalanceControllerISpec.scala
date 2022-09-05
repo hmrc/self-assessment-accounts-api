@@ -16,6 +16,7 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -24,8 +25,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.RetrieveBalanceFixture
-import v1.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError}
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
+import v1.stubs.DownstreamStub
 
 class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
 
@@ -59,15 +60,15 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def errorBody(code: String): String =
       s"""
-           |      {
-           |        "code": "$code",
-           |        "reason": "des message"
-           |      }
+         |      {
+         |        "code": "$code",
+         |        "reason": "des message"
+         |      }
     """.stripMargin
 
   }
@@ -80,7 +81,7 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desResponse)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desResponse)
         }
 
         val response: WSResponse = await(request.get)
@@ -95,25 +96,25 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
 
         val multipleErrors: String =
           """
-              |{
-              |   "failures": [
-              |        {
-              |            "code": "INVALID_IDTYPE",
-              |            "reason": "The provided id type is invalid"
-              |        },
-              |        {
-              |            "code": "INVALID_REGIME_TYPE",
-              |            "reason": "The provided regime type is invalid"
-              |        }
-              |    ]
-              |}
+            |{
+            |   "failures": [
+            |        {
+            |            "code": "INVALID_IDTYPE",
+            |            "reason": "The provided id type is invalid"
+            |        },
+            |        {
+            |            "code": "INVALID_REGIME_TYPE",
+            |            "reason": "The provided regime type is invalid"
+            |        }
+            |    ]
+            |}
           """.stripMargin
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onError(DesStub.GET, desUrl, BAD_REQUEST, multipleErrors)
+          DownstreamStub.onError(DownstreamStub.GET, desUrl, BAD_REQUEST, multipleErrors)
         }
 
         val response: WSResponse = await(request.get)
@@ -157,7 +158,7 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)
@@ -190,4 +191,5 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

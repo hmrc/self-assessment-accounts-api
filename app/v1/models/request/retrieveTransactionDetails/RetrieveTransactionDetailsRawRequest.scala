@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveTransactionDetails
 
-import v1.models.request.RawData
+import api.models.request.RawData
 
 case class RetrieveTransactionDetailsRawRequest(nino: String, transactionId: String) extends RawData

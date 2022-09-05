@@ -16,10 +16,13 @@
 
 package v1.connectors
 
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v1.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.DesUri
+import api.connectors.httpparsers.StandardDesHttpParser.reads
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
 import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
 
@@ -32,8 +35,6 @@ class ListTransactionsConnector @Inject() (val http: HttpClient, val appConfig: 
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[ListTransactionsResponse[TransactionItem]]] = {
-
-    import v1.connectors.httpparsers.StandardDesHttpParser._
 
     val nino = request.nino.nino
     val from = request.from

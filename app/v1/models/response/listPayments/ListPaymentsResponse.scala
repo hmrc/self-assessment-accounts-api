@@ -16,11 +16,11 @@
 
 package v1.models.response.listPayments
 
+import api.models.hateoas.{HateoasData, Link}
 import cats.Functor
 import config.AppConfig
 import play.api.libs.json._
-import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
-import v1.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasLinks, HateoasListLinksFactory}
 
 case class ListPaymentsResponse[I](payments: Seq[I])
 

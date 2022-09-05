@@ -16,12 +16,13 @@
 
 package v1.services
 
-import v1.models.domain.Nino
+import api.controllers.EndpointLogContext
+import api.services.ServiceSpec
+import api.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockRetrieveBalanceConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 
@@ -77,7 +78,7 @@ class RetrieveBalanceServiceSpec extends ServiceSpec {
 
           MockRetrieveBalanceConnector
             .retrieveBalance(requestData)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.retrieveBalance(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

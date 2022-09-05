@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveChargeHistory
 
-import v1.models.domain.Nino
+import api.models.domain.Nino
 
 case class RetrieveChargeHistoryParsedRequest(nino: Nino, transactionId: String)

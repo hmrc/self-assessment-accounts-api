@@ -16,15 +16,16 @@
 
 package v1.services
 
+import api.controllers.EndpointLogContext
 import cats.data.EitherT
 import cats.implicits._
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v1.connectors.RetrieveBalanceConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 import v1.support.DesResponseMappingSupport
@@ -41,7 +42,7 @@ class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) ext
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveBalance(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieveBalance(request)).leftMap(mapDownstreamErrors(desErrorMap))
     } yield desResponseWrapper.map(des => des)
 
     result.value

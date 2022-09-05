@@ -16,6 +16,7 @@
 
 package v1.endpoints
 
+import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -24,8 +25,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixture.RetrieveTransactionDetailsFixture
-import v1.models.errors._
-import v1.stubs.{AuditStub, AuthStub, DesStub, MtdIdLookupStub}
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
+import v1.stubs.DownstreamStub
 
 class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with RetrieveTransactionDetailsFixture {
 
@@ -56,7 +57,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.1.0+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
-      )
+        )
     }
 
     def uri: String = s"/$nino/transactions/$transactionId"
@@ -70,7 +71,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonCharge)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desJsonCharge)
         }
 
         val response: WSResponse = await(request.get)
@@ -85,7 +86,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonPayment)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desJsonPayment)
         }
 
         val response: WSResponse = await(request.get)
@@ -102,7 +103,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonNoTransactions)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desJsonNoTransactions)
         }
 
         val response: WSResponse = await(request.get)
@@ -118,7 +119,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DesStub.onSuccess(DesStub.GET, desUrl, OK, desJsonNoRelevantTransactions)
+          DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desJsonNoRelevantTransactions)
         }
 
         val response: WSResponse = await(request.get)
@@ -172,7 +173,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
             AuditStub.audit()
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
-            DesStub.onError(DesStub.GET, desUrl, desStatus, errorBody(desCode))
+            DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
           val response: WSResponse = await(request.get)
@@ -205,4 +206,5 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }
   }
+
 }

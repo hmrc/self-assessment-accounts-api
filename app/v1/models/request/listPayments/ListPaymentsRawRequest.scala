@@ -16,6 +16,6 @@
 
 package v1.models.request.listPayments
 
-import v1.models.request.RawDataWithDateRange
+import api.models.request.RawDataWithDateRange
 
 case class ListPaymentsRawRequest(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange

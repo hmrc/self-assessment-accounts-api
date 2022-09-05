@@ -16,20 +16,22 @@
 
 package v1.controllers
 
+import api.controllers.ControllerBaseSpec
+import api.mocks.MockIdGenerator
+import api.mocks.hateoas.MockHateoasFactory
+import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.hateoas.Method.{DELETE, GET, PUT}
+import api.models.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
+import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import v1.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
-import v1.mocks.MockIdGenerator
-import v1.mocks.hateoas.MockHateoasFactory
 import v1.mocks.requestParsers.MockRetrieveCodingOutRequestParser
-import v1.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService, MockRetrieveCodingOutService}
-import v1.models.errors._
-import v1.models.hateoas.{HateoasWrapper, Link}
-import v1.models.hateoas.Method.{DELETE, GET, PUT}
-import v1.models.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
-import v1.models.outcomes.ResponseWrapper
+import v1.mocks.services.MockRetrieveCodingOutService
 import v1.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
 import v1.models.response.retrieveCodingOut._
 

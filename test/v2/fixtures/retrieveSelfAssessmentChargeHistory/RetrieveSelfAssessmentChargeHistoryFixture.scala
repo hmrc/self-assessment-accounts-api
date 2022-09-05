@@ -16,11 +16,12 @@
 
 package v2.fixtures.retrieveSelfAssessmentChargeHistory
 
-import v2.models.response.retrieveSelfAssessmentChargeHistory.ChargeHistoryDetail
+import play.api.libs.json.{JsObject, JsValue, Json}
+import v2.models.response.retrieveSelfAssessmentChargeHistory.{ChargeHistoryDetail, RetrieveSelfAssessmentChargeHistoryResponse}
 
 object RetrieveSelfAssessmentChargeHistoryFixture {
 
-  val validObject: ChargeHistoryDetail = ChargeHistoryDetail(
+  val validChargeHistoryDetailObject: ChargeHistoryDetail = ChargeHistoryDetail(
     taxYear = Some("2018-19"),
     transactionId = "123456789",
     transactionDate = "2020-01-29",
@@ -29,5 +30,99 @@ object RetrieveSelfAssessmentChargeHistoryFixture {
     changeDate = "2020-02-24",
     changeReason = "amended return"
   )
+
+  val validChargeHistoryResponseObject: RetrieveSelfAssessmentChargeHistoryResponse = RetrieveSelfAssessmentChargeHistoryResponse(
+    Seq(validChargeHistoryDetailObject, validChargeHistoryDetailObject))
+
+  val downstreamDetailSingleJson: JsValue = Json.parse(
+    s"""
+      |{
+      |  "taxYear": "2019",
+      |  "documentId": "${validChargeHistoryDetailObject.transactionId}",
+      |  "documentDate":"${validChargeHistoryDetailObject.transactionDate}",
+      |  "documentDescription": "${validChargeHistoryDetailObject.description}",
+      |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
+      |  "reversalDate": "${validChargeHistoryDetailObject.changeDate}",
+      |  "reversalReason": "${validChargeHistoryDetailObject.changeReason}"
+      |}
+      |""".stripMargin
+  )
+
+  val downstreamResponse: JsValue = Json
+    .parse(s"""
+       |{
+       |    "idType": "MTDBSA",
+       |    "idValue": "XQIT00000000001",
+       |    "regimeType": "ITSA",
+       |    "chargeHistoryDetails": [  $downstreamDetailSingleJson ]
+       |}
+       |""".stripMargin)
+
+  val downstreamResponseMultiple: JsValue = Json
+    .parse(s"""
+      |{
+      |    "idType": "MTDBSA",
+      |    "idValue": "XQIT00000000001",
+      |    "regimeType": "ITSA",
+      |    "chargeHistoryDetails": [ $downstreamDetailSingleJson ,  $downstreamDetailSingleJson
+      |   ]
+      |}
+      |""".stripMargin)
+
+  val mtdSingleJson: JsValue = Json
+    .parse(
+      s"""
+      |{
+      |  "taxYear": "${validChargeHistoryDetailObject.taxYear.get}",
+      |  "transactionId": "${validChargeHistoryDetailObject.transactionId}",
+      |  "transactionDate": "${validChargeHistoryDetailObject.transactionDate}",
+      |  "description": "${validChargeHistoryDetailObject.description}",
+      |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
+      |  "changeDate": "${validChargeHistoryDetailObject.changeDate}",
+      |  "changeReason": "${validChargeHistoryDetailObject.changeReason}"
+      |}
+      |""".stripMargin
+    )
+
+  val mtdSingleResponse: JsValue = Json
+    .parse(s"""
+      |{
+      |   "chargeHistoryDetails": [
+      |      $mtdSingleJson
+      |  ]
+      | }
+      |""".stripMargin)
+
+  val mtdMultipleResponse: JsValue = Json.parse(s"""
+      |{
+      |   "chargeHistoryDetails": [
+      |      $mtdSingleJson,
+      |      $mtdSingleJson
+      |  ]
+      | }
+      |""".stripMargin)
+
+  def mtdMultipleResponseWithHateoas(nino: String, transactionId: String): JsObject = Json
+    .parse(s"""
+       |{
+       |   "chargeHistoryDetails": [
+       |      $mtdSingleJson,
+       |      $mtdSingleJson
+       |  ],
+       |   "links":[
+       |      {
+       |         "href":"/accounts/self-assessment/$nino/charges/$transactionId",
+       |         "method":"GET",
+       |         "rel":"self"
+       |      },
+       |      {
+       |         "href":"/accounts/self-assessment/$nino/transactions/$transactionId",
+       |         "method":"GET",
+       |         "rel":"retrieve-transaction-details"
+       |      }
+       |   ]
+       | }
+       |""".stripMargin)
+    .as[JsObject]
 
 }

@@ -16,12 +16,13 @@
 
 package v1.services
 
-import v1.models.domain.Nino
+import api.controllers.EndpointLogContext
+import api.models.domain.Nino
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
 import v1.mocks.connectors.MockRetrieveAllocationsConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
@@ -80,7 +81,7 @@ class RetrieveAllocationsServiceSpec extends ServiceSpec {
 
             MockRetrieveAllocationsConnector
               .retrieve(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.retrieveAllocations(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }

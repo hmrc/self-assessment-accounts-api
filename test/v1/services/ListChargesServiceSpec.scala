@@ -16,13 +16,14 @@
 
 package v1.services
 
-import v1.models.domain.Nino
+import api.controllers.EndpointLogContext
+import api.services.ServiceSpec
+import api.models.domain.Nino
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.EndpointLogContext
 import v1.fixtures.ListChargesFixture._
 import v1.mocks.connectors.MockListChargesConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.ListChargesResponse
 
@@ -66,7 +67,7 @@ class ListChargesServiceSpec extends ServiceSpec {
 
           MockListChargesConnector
             .retrieve(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.list(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }

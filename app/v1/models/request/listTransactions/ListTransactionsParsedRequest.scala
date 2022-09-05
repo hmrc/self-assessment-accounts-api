@@ -16,6 +16,6 @@
 
 package v1.models.request.listTransactions
 
-import v1.models.domain.Nino
+import api.models.domain.Nino
 
 case class ListTransactionsParsedRequest(nino: Nino, from: String, to: String)

@@ -16,10 +16,11 @@
 
 package v1.mocks.connectors
 
+import api.connectors.{DownstreamOutcome}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.connectors.{CreateOrAmendCodingOutConnector, DownstreamOutcome}
+import v1.connectors.CreateOrAmendCodingOutConnector
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
 
 import scala.concurrent.{ExecutionContext, Future}

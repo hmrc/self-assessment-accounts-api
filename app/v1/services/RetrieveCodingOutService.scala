@@ -16,14 +16,15 @@
 
 package v1.services
 
+import api.controllers.EndpointLogContext
 import cats.data.EitherT
+
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.{CurrentDate, Logging}
 import v1.connectors.RetrieveCodingOutConnector
-import v1.controllers.EndpointLogContext
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.support.DesResponseMappingSupport
@@ -42,7 +43,7 @@ class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
       correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDesErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(desErrorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateCodingOutResponse(desResponseWrapper, request.taxYear))
     } yield mtdResponseWrapper
 

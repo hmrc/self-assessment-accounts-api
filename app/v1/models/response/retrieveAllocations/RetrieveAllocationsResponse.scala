@@ -16,12 +16,12 @@
 
 package v1.models.response.retrieveAllocations
 
+import api.models.hateoas.{HateoasData, Link}
 import cats.Functor
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import v1.hateoas.{HateoasLinks, HateoasListLinksFactory}
-import v1.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
 
 case class RetrieveAllocationsResponse[I](amount: Option[BigDecimal], method: Option[String], transactionDate: Option[String], allocations: Seq[I])

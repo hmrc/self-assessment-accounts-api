@@ -16,11 +16,12 @@
 
 package v1.connectors
 
+import api.connectors.ConnectorSpec
+import api.mocks.MockHttpClient
 import mocks.MockAppConfig
-import v1.models.domain.Nino
+import api.models.domain.Nino
 import v1.fixtures.ListChargesFixture._
-import v1.mocks.MockHttpClient
-import v1.models.outcomes.ResponseWrapper
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.ListChargesResponse
 

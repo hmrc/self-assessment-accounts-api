@@ -16,11 +16,12 @@
 
 package v1.services
 
-import v1.models.domain.Nino
-import v1.controllers.EndpointLogContext
+import api.controllers.EndpointLogContext
+import api.services.ServiceSpec
+import api.models.domain.Nino
 import v1.mocks.connectors.MockRetrieveTransactionDetailsConnector
-import v1.models.errors._
-import v1.models.outcomes.ResponseWrapper
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
@@ -116,7 +117,7 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
 
             MockRetrieveTransactionDetailsConnector
               .retrieveDetails(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DesErrors.single(DesErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
             await(service.retrieveTransactionDetails(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }

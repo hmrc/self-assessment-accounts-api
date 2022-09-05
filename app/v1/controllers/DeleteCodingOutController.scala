@@ -16,7 +16,9 @@
 
 package v1.controllers
 
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
 import cats.data.EitherT
+
 import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -24,10 +26,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.DeleteCodingOutParser
-import v1.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import v1.models.errors._
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
-import v1.services.{AuditService, DeleteCodingOutService, EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import v1.services.DeleteCodingOutService
 
 import scala.concurrent.{ExecutionContext, Future}
 

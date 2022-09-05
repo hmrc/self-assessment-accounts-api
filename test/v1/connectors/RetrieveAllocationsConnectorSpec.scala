@@ -16,10 +16,11 @@
 
 package v1.connectors
 
+import api.connectors.ConnectorSpec
+import api.mocks.MockHttpClient
 import mocks.MockAppConfig
-import v1.models.domain.Nino
-import v1.mocks.MockHttpClient
-import v1.models.outcomes.ResponseWrapper
+import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
