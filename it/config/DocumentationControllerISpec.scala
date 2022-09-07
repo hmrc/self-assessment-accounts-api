@@ -16,6 +16,7 @@
 
 package config
 
+import definition.Versions.{VERSION_1, VERSION_2}
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
@@ -52,8 +53,8 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |      },
       |      {
       |        "version":"2.0",
-      |        "status":"BETA",
-      |        "endpointsEnabled":true
+      |        "status":"ALPHA",
+      |        "endpointsEnabled":false
       |      }
       |    ]
       |  }
@@ -69,11 +70,14 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "a documentation request" must {
-    "return the documentation" in {
-      val response: WSResponse = await(buildRequest("/api/conf/1.0/application.raml").get())
-      response.status shouldBe Status.OK
-      response.body[String] should startWith("#%RAML 1.0")
+    Seq(VERSION_1, VERSION_2).foreach { version  =>
+     s"return the documentation for $version" in {
+        val response: WSResponse = await(buildRequest(s"/api/conf/$version/application.raml").get())
+        response.status shouldBe Status.OK
+        response.body[String] should startWith(s"#%RAML 1.0")
+      }
     }
+
   }
 
 }
