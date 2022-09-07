@@ -19,14 +19,19 @@ package definition
 import play.api.http.HeaderNames.ACCEPT
 import play.api.test.FakeRequest
 import support.UnitSpec
+import Versions._
 
 class VersionSpec extends UnitSpec {
 
   "Versions" when {
-
-    "retrieved from a request header" must {
-      "work" in {
-        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.1.0+json"))) shouldBe Some("1.0")
+    "retrieved from a request header" should {
+      Seq(
+        ("application/vnd.hmrc.1.0+json", VERSION_1),
+        ("application/vnd.hmrc.2.0+json", VERSION_2)
+      ).foreach { case (header, version) =>
+        s"return correct version $version" in {
+          Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, header))) shouldBe Some(version)
+        }
       }
     }
   }
