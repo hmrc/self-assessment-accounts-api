@@ -28,7 +28,7 @@ import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveSelfAssessmentChargeHistoryRequestParser
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
+import v2.models.response.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
 import v2.services.RetrieveSelfAssessmentChargeHistoryService
 
 import javax.inject.{Inject, Singleton}

@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveSelfAssessmentBalanceTransactions
+package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveSelfAssessmentBalanceTransactions.RetrieveSelfAssessmentBalanceTransactionsFixture._
+import v2.fixtures.retrieveBalanceAndTransactions.RetrieveSelfAssessmentBalanceTransactionsFixture._
 
-class BalanceDetailsSpec extends UnitSpec {
+class BalancePerYearSpec extends UnitSpec {
 
   "reads" should {
     "return a valid model" when {
       "valid JSON is supplied" in {
-        downstreamResponseJson
-          .as[BalanceDetails] shouldBe balanceDetailsObject
+        downstreamDetailSingleYearJson
+          .as[BalancePerYear] shouldBe balancePerYearObject
       }
     }
   }
@@ -34,7 +34,7 @@ class BalanceDetailsSpec extends UnitSpec {
   "writes" when {
     "passed a valid model" should {
       "return valid JSON " in {
-        Json.toJson(balanceDetailsObject) shouldBe mtdResponseJson
+        Json.toJson(balancePerYearObject) shouldBe mtdDetailSingleYearJson
       }
     }
   }

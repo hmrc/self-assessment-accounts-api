@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package v2.fixtures.retrieveSelfAssessmentChargeHistory
+package v2.fixtures.retrieveChargeHistory
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v2.models.response.retrieveSelfAssessmentChargeHistory.{ChargeHistoryDetail, RetrieveSelfAssessmentChargeHistoryResponse}
+import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveSelfAssessmentChargeHistoryResponse}
 
 object RetrieveSelfAssessmentChargeHistoryFixture {
 

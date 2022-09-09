@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveSelfAssessmentChargeHistory
+package v2.models.response.retrieveChargeHistory
 
 import api.models.domain.DesTaxYear
 import play.api.libs.functional.syntax._

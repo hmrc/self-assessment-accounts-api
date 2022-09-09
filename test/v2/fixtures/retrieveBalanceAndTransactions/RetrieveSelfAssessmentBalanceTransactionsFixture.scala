@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package v2.fixtures.retrieveSelfAssessmentBalanceTransactions
+package v2.fixtures.retrieveBalanceAndTransactions
 
 import play.api.libs.json.{JsValue, Json}
-import v2.models.response.retrieveSelfAssessmentBalanceTransactions.{BalanceDetails, BalancePerYear}
+import v2.models.response.retrieveBalanceAndTransactions.{BalanceDetails, BalancePerYear}
 
 object RetrieveSelfAssessmentBalanceTransactionsFixture {
   val balancePerYearObject: BalancePerYear = BalancePerYear(Some("2022"), Some(123.45))

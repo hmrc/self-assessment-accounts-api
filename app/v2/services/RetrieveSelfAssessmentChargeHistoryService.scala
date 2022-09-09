@@ -24,7 +24,7 @@ import v2.connectors.RetrieveSelfAssessmentChargeHistoryConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
+import v2.models.response.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}

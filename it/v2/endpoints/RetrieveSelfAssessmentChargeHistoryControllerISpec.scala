@@ -26,10 +26,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.stubs.DownstreamStub
-import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture.{
-  downstreamResponseMultiple,
-  mtdMultipleResponseWithHateoas
-}
+import v2.fixtures.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
 
 class RetrieveSelfAssessmentChargeHistoryControllerISpec extends IntegrationBaseSpec {
 

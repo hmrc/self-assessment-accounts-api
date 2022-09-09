@@ -23,7 +23,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
+import v2.models.response.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 import v2.services.RetrieveSelfAssessmentChargeHistoryService
 
 import scala.concurrent.{ExecutionContext, Future}

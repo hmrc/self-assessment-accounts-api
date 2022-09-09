@@ -22,7 +22,7 @@ import api.connectors.DownstreamUri.DesUri
 import api.connectors.httpparsers.StandardDesHttpParser.reads
 import api.connectors.BaseDownstreamConnector
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
+import v2.models.response.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

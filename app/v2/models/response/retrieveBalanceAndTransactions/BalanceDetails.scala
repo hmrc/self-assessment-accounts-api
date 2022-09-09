@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveSelfAssessmentBalanceTransactions
+package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.Format.GenericFormat

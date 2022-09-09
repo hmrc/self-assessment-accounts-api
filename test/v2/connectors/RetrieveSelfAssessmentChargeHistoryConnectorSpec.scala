@@ -17,7 +17,7 @@
 package v2.connectors
 
 import mocks.MockAppConfig
-import v2.models.response.retrieveSelfAssessmentChargeHistory._
+import v2.models.response.retrieveChargeHistory._
 import v2.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper

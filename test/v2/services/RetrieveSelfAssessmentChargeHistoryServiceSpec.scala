@@ -24,7 +24,7 @@ import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
-import v2.models.response.retrieveSelfAssessmentChargeHistory.{ChargeHistoryDetail, RetrieveSelfAssessmentChargeHistoryResponse}
+import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveSelfAssessmentChargeHistoryResponse}
 
 import scala.concurrent.Future
 

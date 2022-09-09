@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveSelfAssessmentChargeHistory
+package v2.models.response.retrieveChargeHistory
 
 import api.hateoas.HateoasLinksFactory
 import api.models.hateoas.{HateoasData, Link}

@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveSelfAssessmentChargeHistory
+package v2.models.response.retrieveChargeHistory
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
+import v2.fixtures.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
 
 class ChargeHistoryDetailSpec extends UnitSpec {
 
