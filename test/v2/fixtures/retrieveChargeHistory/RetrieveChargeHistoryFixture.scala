@@ -17,9 +17,9 @@
 package v2.fixtures.retrieveChargeHistory
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveSelfAssessmentChargeHistoryResponse}
+import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
 
-object RetrieveSelfAssessmentChargeHistoryFixture {
+object RetrieveChargeHistoryFixture {
 
   val validChargeHistoryDetailObject: ChargeHistoryDetail = ChargeHistoryDetail(
     taxYear = Some("2018-19"),
@@ -31,7 +31,7 @@ object RetrieveSelfAssessmentChargeHistoryFixture {
     changeReason = "amended return"
   )
 
-  val validChargeHistoryResponseObject: RetrieveSelfAssessmentChargeHistoryResponse = RetrieveSelfAssessmentChargeHistoryResponse(
+  val validChargeHistoryResponseObject: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(
     Seq(validChargeHistoryDetailObject, validChargeHistoryDetailObject))
 
   val downstreamDetailSingleJson: JsValue = Json.parse(

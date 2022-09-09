@@ -19,24 +19,23 @@ package v2.mocks.connectors
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DownstreamOutcome, RetrieveSelfAssessmentChargeHistoryConnector}
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
-import v2.models.response.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
+import v2.connectors.{DownstreamOutcome, RetrieveChargeHistoryConnector}
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveSelfAssessmentChargeHistoryConnector extends MockFactory {
+trait MockRetrieveChargeHistoryConnector extends MockFactory {
 
-  val mockRetrieveSelfAssessmentChargeHistoryConnector: RetrieveSelfAssessmentChargeHistoryConnector =
-    mock[RetrieveSelfAssessmentChargeHistoryConnector]
+  val mockRetrieveChargeHistoryConnector: RetrieveChargeHistoryConnector =
+    mock[RetrieveChargeHistoryConnector]
 
-  object MockRetrieveSelfAssessmentChargeHistoryConnector {
+  object MockRetrieveChargeHistoryConnector {
 
-    def retrieveSelfAssessmentChargeHistory(requestData: RetrieveSelfAssessmentChargeHistoryRequest)
-        : CallHandler[Future[DownstreamOutcome[RetrieveSelfAssessmentChargeHistoryResponse]]] = {
+    def retrieveChargeHistory(requestData: RetrieveChargeHistoryRequest): CallHandler[Future[DownstreamOutcome[RetrieveChargeHistoryResponse]]] = {
       (
-        mockRetrieveSelfAssessmentChargeHistoryConnector
-          .retrieveChargeHistory(_: RetrieveSelfAssessmentChargeHistoryRequest)(
+        mockRetrieveChargeHistoryConnector
+          .retrieveChargeHistory(_: RetrieveChargeHistoryRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String

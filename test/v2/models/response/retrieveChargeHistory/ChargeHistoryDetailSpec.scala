@@ -18,7 +18,7 @@ package v2.models.response.retrieveChargeHistory
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
+import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
 
 class ChargeHistoryDetailSpec extends UnitSpec {
 

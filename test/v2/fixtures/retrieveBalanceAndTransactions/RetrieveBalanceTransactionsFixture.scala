@@ -19,7 +19,7 @@ package v2.fixtures.retrieveBalanceAndTransactions
 import play.api.libs.json.{JsValue, Json}
 import v2.models.response.retrieveBalanceAndTransactions.{BalanceDetails, BalancePerYear}
 
-object RetrieveSelfAssessmentBalanceTransactionsFixture {
+object RetrieveBalanceTransactionsFixture {
   val balancePerYearObject: BalancePerYear = BalancePerYear(Some("2022"), Some(123.45))
 
   val balanceDetailsObject: BalanceDetails = BalanceDetails(

@@ -26,41 +26,41 @@ import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.RetrieveSelfAssessmentChargeHistoryRequestParser
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
-import v2.models.response.retrieveChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
-import v2.services.RetrieveSelfAssessmentChargeHistoryService
+import v2.controllers.requestParsers.RetrieveChargeHistoryRequestParser
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
+import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
+import v2.services.RetrieveChargeHistoryService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: EnrolmentsAuthService,
-                                                               val lookupService: MtdIdLookupService,
-                                                               requestParser: RetrieveSelfAssessmentChargeHistoryRequestParser,
-                                                               service: RetrieveSelfAssessmentChargeHistoryService,
-                                                               hateoasFactory: HateoasFactory,
-                                                               cc: ControllerComponents,
-                                                               val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuthService,
+                                                 val lookupService: MtdIdLookupService,
+                                                 requestParser: RetrieveChargeHistoryRequestParser,
+                                                 service: RetrieveChargeHistoryService,
+                                                 hateoasFactory: HateoasFactory,
+                                                 cc: ControllerComponents,
+                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(controllerName = "RetrieveSelfAssessmentChargeHistoryController", endpointName = "retrieveChargeHistory")
+    EndpointLogContext(controllerName = "RetrieveChargeHistoryController", endpointName = "retrieveChargeHistory")
 
-  def retrieveSelfAssessmentChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
+  def retrieveChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " + s"with correlationId: $correlationId")
 
-      val rawRequest = RetrieveSelfAssessmentChargeHistoryRawData(nino, transactionId)
+      val rawRequest = RetrieveChargeHistoryRawData(nino, transactionId)
       val result = for {
         parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
         serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
         vendorResponse <- EitherT.fromEither[Future](
           hateoasFactory
-            .wrap(serviceResponse.responseData, RetrieveSelfAssessmentChargeHistoryHateoasData(nino, transactionId))
+            .wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId))
             .asRight[ErrorWrapper]
         )
       } yield {

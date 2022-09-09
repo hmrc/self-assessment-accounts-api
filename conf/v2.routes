@@ -1,2 +1,2 @@
 # V2 endpoints
-GET        /:nino/charges/:transactionId                   v2.controllers.RetrieveSelfAssessmentChargeHistoryController.retrieveSelfAssessmentChargeHistory(nino: String, transactionId: String)
+GET        /:nino/charges/:transactionId                   v2.controllers.RetrieveChargeHistoryController.retrieveChargeHistory(nino: String, transactionId: String)

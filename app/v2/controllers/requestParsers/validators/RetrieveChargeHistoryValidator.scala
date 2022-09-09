@@ -22,24 +22,24 @@ import config.AppConfig
 import api.controllers.requestParsers.validators.validations.TransactionIdValidation
 import api.controllers.requestParsers.validators.validations.NinoValidation
 import api.models.errors.MtdError
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
 
 import javax.inject.Singleton
 
 @Singleton
-class RetrieveSelfAssessmentChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Validator[RetrieveSelfAssessmentChargeHistoryRawData] {
+class RetrieveChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Validator[RetrieveChargeHistoryRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveSelfAssessmentChargeHistoryRawData => List[List[MtdError]] =
-    (data: RetrieveSelfAssessmentChargeHistoryRawData) => {
+  private def parameterFormatValidation: RetrieveChargeHistoryRawData => List[List[MtdError]] =
+    (data: RetrieveChargeHistoryRawData) => {
       List(
         NinoValidation.validate(data.nino),
         TransactionIdValidation.validate(data.transactionId)
       )
     }
 
-  override def validate(data: RetrieveSelfAssessmentChargeHistoryRawData): List[MtdError] = {
+  override def validate(data: RetrieveChargeHistoryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
