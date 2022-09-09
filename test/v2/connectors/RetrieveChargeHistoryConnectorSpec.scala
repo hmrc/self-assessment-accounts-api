@@ -17,15 +17,15 @@
 package v2.connectors
 
 import mocks.MockAppConfig
-import v2.models.response.retrieveSelfAssessmentChargeHistory._
+import v2.models.response.retrieveChargeHistory._
 import v2.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 
 import scala.concurrent.Future
 
-class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
+class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
   val nino: String          = "AA123456A"
   val transactionId: String = "anId"
@@ -41,15 +41,15 @@ class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
       changeReason = "Example reason"
     )
 
-  val retrieveChargeHistoryResponse: RetrieveSelfAssessmentChargeHistoryResponse =
-    RetrieveSelfAssessmentChargeHistoryResponse(
+  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
+    RetrieveChargeHistoryResponse(
       chargeHistoryDetails = Seq(chargeHistoryDetails)
     )
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveSelfAssessmentChargeHistoryConnector =
-      new RetrieveSelfAssessmentChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveChargeHistoryConnector =
+      new RetrieveChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     MockAppConfig.desBaseUrl returns baseUrl
     MockAppConfig.desToken returns "des-token"
@@ -57,9 +57,9 @@ class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
     MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
-  "RetrieveSelfAssessmentChargeHistoryConnector" when {
+  "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      val request: RetrieveSelfAssessmentChargeHistoryRequest = RetrieveSelfAssessmentChargeHistoryRequest(Nino(nino), transactionId)
+      val request: RetrieveChargeHistoryRequest = RetrieveChargeHistoryRequest(Nino(nino), transactionId)
 
       "return a valid response" in new Test {
 

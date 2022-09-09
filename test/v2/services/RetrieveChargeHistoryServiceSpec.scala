@@ -18,22 +18,22 @@ package v2.services
 
 import uk.gov.hmrc.http.HeaderCarrier
 import api.controllers.EndpointLogContext
-import v2.mocks.connectors.MockRetrieveSelfAssessmentChargeHistoryConnector
+import v2.mocks.connectors.MockRetrieveChargeHistoryConnector
 import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
-import v2.models.response.retrieveSelfAssessmentChargeHistory.{ChargeHistoryDetail, RetrieveSelfAssessmentChargeHistoryResponse}
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
 
 import scala.concurrent.Future
 
-class RetrieveSelfAssessmentChargeHistoryServiceSpec extends ServiceSpec {
+class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
-  private val requestData: RetrieveSelfAssessmentChargeHistoryRequest =
-    RetrieveSelfAssessmentChargeHistoryRequest(
+  private val requestData: RetrieveChargeHistoryRequest =
+    RetrieveChargeHistoryRequest(
       nino = nino,
       transactionId = "anId"
     )
@@ -49,32 +49,32 @@ class RetrieveSelfAssessmentChargeHistoryServiceSpec extends ServiceSpec {
       changeReason = "Example reason"
     )
 
-  val retrieveChargeHistoryResponse: RetrieveSelfAssessmentChargeHistoryResponse =
-    RetrieveSelfAssessmentChargeHistoryResponse(
+  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
+    RetrieveChargeHistoryResponse(
       chargeHistoryDetails = Seq(chargeHistoryDetails)
     )
 
-  trait Test extends MockRetrieveSelfAssessmentChargeHistoryConnector {
+  trait Test extends MockRetrieveChargeHistoryConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
 
     implicit val logContext: EndpointLogContext =
-      EndpointLogContext("RetrieveSelfAssessmentChargeHistoryController", "RetrieveSelfAssessmentChargeHistory")
+      EndpointLogContext("RetrieveChargeHistoryController", "RetrieveChargeHistory")
 
-    val service = new RetrieveSelfAssessmentChargeHistoryService(
-      connector = mockRetrieveSelfAssessmentChargeHistoryConnector
+    val service = new RetrieveChargeHistoryService(
+      connector = mockRetrieveChargeHistoryConnector
     )
 
   }
 
-  "RetrieveSelfAssessmentChargeHistoryService" when {
+  "RetrieveChargeHistoryService" when {
     "service call successful" must {}
     "return mapped result" in new Test {
 
-      val connectorResponse: RetrieveSelfAssessmentChargeHistoryResponse = retrieveChargeHistoryResponse
+      val connectorResponse: RetrieveChargeHistoryResponse = retrieveChargeHistoryResponse
 
-      MockRetrieveSelfAssessmentChargeHistoryConnector
-        .retrieveSelfAssessmentChargeHistory(requestData)
+      MockRetrieveChargeHistoryConnector
+        .retrieveChargeHistory(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
       await(service.retrieveChargeHistory(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
@@ -87,8 +87,8 @@ class RetrieveSelfAssessmentChargeHistoryServiceSpec extends ServiceSpec {
       def serviceError(desErrorCode: String, error: MtdError): Unit =
         s"a $desErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveSelfAssessmentChargeHistoryConnector
-            .retrieveSelfAssessmentChargeHistory(requestData)
+          MockRetrieveChargeHistoryConnector
+            .retrieveChargeHistory(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
 
           await(service.retrieveChargeHistory(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))

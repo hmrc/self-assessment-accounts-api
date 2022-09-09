@@ -17,16 +17,16 @@
 package v2.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import v2.controllers.requestParsers.validators.RetrieveSelfAssessmentChargeHistoryValidator
+import v2.controllers.requestParsers.validators.RetrieveChargeHistoryValidator
 
 import javax.inject.Inject
 import api.models.domain.Nino
-import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest}
+import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
 
-class RetrieveSelfAssessmentChargeHistoryRequestParser @Inject() (val validator: RetrieveSelfAssessmentChargeHistoryValidator)
-    extends RequestParser[RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest] {
+class RetrieveChargeHistoryRequestParser @Inject() (val validator: RetrieveChargeHistoryValidator)
+    extends RequestParser[RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest] {
 
-  override protected def requestFor(data: RetrieveSelfAssessmentChargeHistoryRawData): RetrieveSelfAssessmentChargeHistoryRequest =
-    RetrieveSelfAssessmentChargeHistoryRequest(Nino(data.nino), data.transactionId)
+  override protected def requestFor(data: RetrieveChargeHistoryRawData): RetrieveChargeHistoryRequest =
+    RetrieveChargeHistoryRequest(Nino(data.nino), data.transactionId)
 
 }

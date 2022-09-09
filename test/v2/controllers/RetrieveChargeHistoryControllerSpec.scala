@@ -30,23 +30,23 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
-import v2.mocks.requestParsers.MockRetrieveSelfAssessmentChargeHistoryRequestParser
-import v2.mocks.services.MockRetrieveSelfAssessmentChargeHistoryService
-import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest}
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
+import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
+import v2.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
+import v2.mocks.services.MockRetrieveChargeHistoryService
+import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
+import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
+import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveSelfAssessmentChargeHistoryControllerSpec
+class RetrieveChargeHistoryControllerSpec
     extends ControllerBaseSpec
     with MockEnrolmentsAuthService
     with MockMtdIdLookupService
-    with MockRetrieveSelfAssessmentChargeHistoryService
+    with MockRetrieveChargeHistoryService
     with MockHateoasFactory
-    with MockRetrieveSelfAssessmentChargeHistoryRequestParser
+    with MockRetrieveChargeHistoryRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -54,11 +54,11 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
   private val transactionId = "anId"
   private val correlationId = "X-123"
 
-  private val rawRequest: RetrieveSelfAssessmentChargeHistoryRawData =
-    RetrieveSelfAssessmentChargeHistoryRawData(nino = nino, transactionId = transactionId)
+  private val rawRequest: RetrieveChargeHistoryRawData =
+    RetrieveChargeHistoryRawData(nino = nino, transactionId = transactionId)
 
-  private val parsedRequest: RetrieveSelfAssessmentChargeHistoryRequest =
-    RetrieveSelfAssessmentChargeHistoryRequest(nino = Nino(nino), transactionId = transactionId)
+  private val parsedRequest: RetrieveChargeHistoryRequest =
+    RetrieveChargeHistoryRequest(nino = Nino(nino), transactionId = transactionId)
 
   val chargeHistoryLink: Link =
     Link(
@@ -74,17 +74,17 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
       rel = RETRIEVE_TRANSACTION_DETAILS
     )
 
-  val response: RetrieveSelfAssessmentChargeHistoryResponse = validChargeHistoryResponseObject
-  val mtdResponse: JsValue                                  = mtdMultipleResponse
+  val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
+  val mtdResponse: JsValue                    = mtdMultipleResponse
 
   trait Test {
     val hc: HeaderCarrier = HeaderCarrier()
 
-    val controller = new RetrieveSelfAssessmentChargeHistoryController(
+    val controller = new RetrieveChargeHistoryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveSelfAssessmentChargeHistoryRequestParser,
-      service = mockRetrieveSelfAssessmentChargeHistoryService,
+      requestParser = mockRetrieveChargeHistoryRequestParser,
+      service = mockRetrieveChargeHistoryService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
@@ -99,16 +99,16 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
     "return OK" when {
       "happy path" in new Test {
 
-        MockRetrieveSelfAssessmentChargeHistoryRequestParser
+        MockRetrieveChargeHistoryRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
 
-        MockRetrieveSelfAssessmentChargeHistoryService
+        MockRetrieveChargeHistoryService
           .retrieveChargeHistory(parsedRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
-          .wrap(response, RetrieveSelfAssessmentChargeHistoryHateoasData(nino, transactionId))
+          .wrap(response, RetrieveChargeHistoryHateoasData(nino, transactionId))
           .returns(
             HateoasWrapper(
               response,
@@ -117,7 +117,7 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
                 transactionDetailsLink
               )))
 
-        val result: Future[Result] = controller.retrieveSelfAssessmentChargeHistory(nino, transactionId)(fakeGetRequest)
+        val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdMultipleResponseWithHateoas(nino, transactionId)
@@ -129,15 +129,15 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
       def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
         s"a $mtdError error is returned from the service" in new Test {
 
-          MockRetrieveSelfAssessmentChargeHistoryRequestParser
+          MockRetrieveChargeHistoryRequestParser
             .parse(rawRequest)
             .returns(Right(parsedRequest))
 
-          MockRetrieveSelfAssessmentChargeHistoryService
+          MockRetrieveChargeHistoryService
             .retrieveChargeHistory(parsedRequest)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-          val result: Future[Result] = controller.retrieveSelfAssessmentChargeHistory(nino, transactionId)(fakeGetRequest)
+          val result: Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)

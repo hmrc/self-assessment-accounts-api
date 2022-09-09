@@ -26,12 +26,9 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.stubs.DownstreamStub
-import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture.{
-  downstreamResponseMultiple,
-  mtdMultipleResponseWithHateoas
-}
+import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
 
-class RetrieveSelfAssessmentChargeHistoryControllerISpec extends IntegrationBaseSpec {
+class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -73,7 +70,7 @@ class RetrieveSelfAssessmentChargeHistoryControllerISpec extends IntegrationBase
 
   }
 
-  "Calling the 'retrieve a self assessment charge history' endpoint" should {
+  "Calling the 'retrieve a charge history' endpoint" should {
     "return a 200 status code" when {
       "any valid request is made" in new Test {
 

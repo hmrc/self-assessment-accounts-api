@@ -14,31 +14,30 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveSelfAssessmentChargeHistory
+package v2.models.response.retrieveChargeHistory
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
+import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
 
-class RetrieveSelfAssessmentChargeHistoryResponseSpec extends UnitSpec {
+class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
-  val validObjectSingle: RetrieveSelfAssessmentChargeHistoryResponse = RetrieveSelfAssessmentChargeHistoryResponse(
-    Seq(validChargeHistoryDetailObject))
+  val validObjectSingle: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(Seq(validChargeHistoryDetailObject))
 
-  val validObjectMultiple: RetrieveSelfAssessmentChargeHistoryResponse = validChargeHistoryResponseObject
+  val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
-  "RetrieveSelfAssessmentChargeHistoryResponse" when {
+  "RetrieveChargeHistoryResponse" when {
     "reading valid JSON" should {
       "return the expected object" in {
-        downstreamResponse.as[RetrieveSelfAssessmentChargeHistoryResponse] shouldBe validObjectSingle
+        downstreamResponse.as[RetrieveChargeHistoryResponse] shouldBe validObjectSingle
       }
     }
   }
 
-  "RetrieveSelfAssessmentChargeHistoryResponse" when {
+  "RetrieveChargeHistoryResponse" when {
     "reading valid JSON with multiple charge history details" should {
       "return the expected object" in {
-        downstreamResponseMultiple.as[RetrieveSelfAssessmentChargeHistoryResponse] shouldBe validObjectMultiple
+        downstreamResponseMultiple.as[RetrieveChargeHistoryResponse] shouldBe validObjectMultiple
       }
     }
   }

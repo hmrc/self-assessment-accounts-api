@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveSelfAssessmentChargeHistory
+package v2.models.response.retrieveChargeHistory
 
 import api.hateoas.HateoasLinksFactory
 import api.models.hateoas.{HateoasData, Link}
@@ -22,22 +22,20 @@ import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.{retrieveChargeHistory, retrieveTransactionDetails}
 
-case class RetrieveSelfAssessmentChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
+case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
 
-object RetrieveSelfAssessmentChargeHistoryResponse {
+object RetrieveChargeHistoryResponse {
 
-  implicit val reads: Reads[RetrieveSelfAssessmentChargeHistoryResponse] =
+  implicit val reads: Reads[RetrieveChargeHistoryResponse] =
     (JsPath \ "chargeHistoryDetails")
       .read[Seq[ChargeHistoryDetail]]
-      .map(items => RetrieveSelfAssessmentChargeHistoryResponse(items))
+      .map(items => RetrieveChargeHistoryResponse(items))
 
-  implicit val writes: OWrites[RetrieveSelfAssessmentChargeHistoryResponse] =
-    Json.writes[RetrieveSelfAssessmentChargeHistoryResponse]
+  implicit val writes: OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
 
-  implicit object RetrieveSelfAssessmentChargeHistoryLinksFactory
-      extends HateoasLinksFactory[RetrieveSelfAssessmentChargeHistoryResponse, RetrieveSelfAssessmentChargeHistoryHateoasData] {
+  implicit object RetrieveChargeHistoryLinksFactory extends HateoasLinksFactory[RetrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData] {
 
-    override def links(appConfig: AppConfig, data: RetrieveSelfAssessmentChargeHistoryHateoasData): Seq[Link] = {
+    override def links(appConfig: AppConfig, data: RetrieveChargeHistoryHateoasData): Seq[Link] = {
       import data._
       Seq(
         retrieveChargeHistory(appConfig, nino, transactionId, isSelf = true),
@@ -47,5 +45,5 @@ object RetrieveSelfAssessmentChargeHistoryResponse {
 
   }
 
-  case class RetrieveSelfAssessmentChargeHistoryHateoasData(nino: String, transactionId: String) extends HateoasData
+  case class RetrieveChargeHistoryHateoasData(nino: String, transactionId: String) extends HateoasData
 }
