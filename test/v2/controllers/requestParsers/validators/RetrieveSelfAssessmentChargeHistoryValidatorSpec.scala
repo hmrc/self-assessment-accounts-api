@@ -19,7 +19,7 @@ package v2.controllers.requestParsers.validators
 import mocks.MockAppConfig
 import support.UnitSpec
 import api.models.errors._
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
 
 class RetrieveSelfAssessmentChargeHistoryValidatorSpec extends UnitSpec with MockAppConfig {
 
@@ -31,18 +31,18 @@ class RetrieveSelfAssessmentChargeHistoryValidatorSpec extends UnitSpec with Moc
   "running a validation" should {
     "return no errors" when {
       "a valid request is supplied" in {
-        validator.validate(RetrieveSelfAssessmentChargeHistoryRawData(validNino, validTransactionId)) shouldBe Nil
+        validator.validate(RetrieveChargeHistoryRawData(validNino, validTransactionId)) shouldBe Nil
       }
     }
     "return a path parameter format error" when {
       "an invalid nino is supplied" in {
-        validator.validate(RetrieveSelfAssessmentChargeHistoryRawData("Nino", validTransactionId)) shouldBe List(NinoFormatError)
+        validator.validate(RetrieveChargeHistoryRawData("Nino", validTransactionId)) shouldBe List(NinoFormatError)
       }
       "an invalid transactionId is supplied" in {
-        validator.validate(RetrieveSelfAssessmentChargeHistoryRawData(validNino, "abcdefghijklmn")) shouldBe List(TransactionIdFormatError)
+        validator.validate(RetrieveChargeHistoryRawData(validNino, "abcdefghijklmn")) shouldBe List(TransactionIdFormatError)
       }
       "multiple format errors are made" in {
-        validator.validate(RetrieveSelfAssessmentChargeHistoryRawData("Nino", "abcdefghijklmn")) shouldBe
+        validator.validate(RetrieveChargeHistoryRawData("Nino", "abcdefghijklmn")) shouldBe
           List(NinoFormatError, TransactionIdFormatError)
       }
     }

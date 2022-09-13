@@ -30,12 +30,12 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture._
-import v2.mocks.requestParsers.MockRetrieveSelfAssessmentChargeHistoryRequestParser
+import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
+import v2.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
 import v2.mocks.services.MockRetrieveSelfAssessmentChargeHistoryService
-import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest}
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
+import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
+import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
+import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -46,7 +46,7 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
     with MockMtdIdLookupService
     with MockRetrieveSelfAssessmentChargeHistoryService
     with MockHateoasFactory
-    with MockRetrieveSelfAssessmentChargeHistoryRequestParser
+    with MockRetrieveChargeHistoryRequestParser
     with HateoasLinks
     with MockIdGenerator {
 
@@ -54,11 +54,11 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
   private val transactionId = "anId"
   private val correlationId = "X-123"
 
-  private val rawRequest: RetrieveSelfAssessmentChargeHistoryRawData =
-    RetrieveSelfAssessmentChargeHistoryRawData(nino = nino, transactionId = transactionId)
+  private val rawRequest: RetrieveChargeHistoryRawData =
+    RetrieveChargeHistoryRawData(nino = nino, transactionId = transactionId)
 
-  private val parsedRequest: RetrieveSelfAssessmentChargeHistoryRequest =
-    RetrieveSelfAssessmentChargeHistoryRequest(nino = Nino(nino), transactionId = transactionId)
+  private val parsedRequest: RetrieveChargeHistoryRequest =
+    RetrieveChargeHistoryRequest(nino = Nino(nino), transactionId = transactionId)
 
   val chargeHistoryLink: Link =
     Link(
@@ -74,7 +74,7 @@ class RetrieveSelfAssessmentChargeHistoryControllerSpec
       rel = RETRIEVE_TRANSACTION_DETAILS
     )
 
-  val response: RetrieveSelfAssessmentChargeHistoryResponse = validChargeHistoryResponseObject
+  val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
   val mtdResponse: JsValue                                  = mtdMultipleResponse
 
   trait Test {

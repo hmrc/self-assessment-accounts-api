@@ -23,8 +23,8 @@ import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
-import v2.models.response.retrieveSelfAssessmentChargeHistory.{ChargeHistoryDetail, RetrieveSelfAssessmentChargeHistoryResponse}
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
 
 import scala.concurrent.Future
 
@@ -32,8 +32,8 @@ class RetrieveSelfAssessmentChargeHistoryServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
 
-  private val requestData: RetrieveSelfAssessmentChargeHistoryRequest =
-    RetrieveSelfAssessmentChargeHistoryRequest(
+  private val requestData: RetrieveChargeHistoryRequest =
+    RetrieveChargeHistoryRequest(
       nino = nino,
       transactionId = "anId"
     )
@@ -49,8 +49,8 @@ class RetrieveSelfAssessmentChargeHistoryServiceSpec extends ServiceSpec {
       changeReason = "Example reason"
     )
 
-  val retrieveChargeHistoryResponse: RetrieveSelfAssessmentChargeHistoryResponse =
-    RetrieveSelfAssessmentChargeHistoryResponse(
+  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
+    RetrieveChargeHistoryResponse(
       chargeHistoryDetails = Seq(chargeHistoryDetails)
     )
 
@@ -71,7 +71,7 @@ class RetrieveSelfAssessmentChargeHistoryServiceSpec extends ServiceSpec {
     "service call successful" must {}
     "return mapped result" in new Test {
 
-      val connectorResponse: RetrieveSelfAssessmentChargeHistoryResponse = retrieveChargeHistoryResponse
+      val connectorResponse: RetrieveChargeHistoryResponse = retrieveChargeHistoryResponse
 
       MockRetrieveSelfAssessmentChargeHistoryConnector
         .retrieveSelfAssessmentChargeHistory(requestData)

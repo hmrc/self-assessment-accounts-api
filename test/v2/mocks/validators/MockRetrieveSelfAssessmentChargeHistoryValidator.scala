@@ -20,7 +20,7 @@ import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.validators.RetrieveSelfAssessmentChargeHistoryValidator
 import api.models.errors.MtdError
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
 
 class MockRetrieveSelfAssessmentChargeHistoryValidator extends MockFactory {
 
@@ -28,9 +28,9 @@ class MockRetrieveSelfAssessmentChargeHistoryValidator extends MockFactory {
 
   object MockRetrieveSelfAssessmentChargeHistoryValidator {
 
-    def validate(data: RetrieveSelfAssessmentChargeHistoryRawData): CallHandler1[RetrieveSelfAssessmentChargeHistoryRawData, List[MtdError]] = {
+    def validate(data: RetrieveChargeHistoryRawData): CallHandler1[RetrieveChargeHistoryRawData, List[MtdError]] = {
       (mockValidator
-        .validate(_: RetrieveSelfAssessmentChargeHistoryRawData))
+        .validate(_: RetrieveChargeHistoryRawData))
         .expects(data)
     }
 

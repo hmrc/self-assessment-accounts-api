@@ -17,11 +17,11 @@
 package v2.connectors
 
 import mocks.MockAppConfig
-import v2.models.response.retrieveSelfAssessmentChargeHistory._
+import v2.models.response.retrieveChargeHistory._
 import v2.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 
 import scala.concurrent.Future
 
@@ -41,8 +41,8 @@ class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
       changeReason = "Example reason"
     )
 
-  val retrieveChargeHistoryResponse: RetrieveSelfAssessmentChargeHistoryResponse =
-    RetrieveSelfAssessmentChargeHistoryResponse(
+  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
+    RetrieveChargeHistoryResponse(
       chargeHistoryDetails = Seq(chargeHistoryDetails)
     )
 
@@ -59,7 +59,7 @@ class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
 
   "RetrieveSelfAssessmentChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      val request: RetrieveSelfAssessmentChargeHistoryRequest = RetrieveSelfAssessmentChargeHistoryRequest(Nino(nino), transactionId)
+      val request: RetrieveChargeHistoryRequest = RetrieveChargeHistoryRequest(Nino(nino), transactionId)
 
       "return a valid response" in new Test {
 

@@ -26,7 +26,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v2.stubs.DownstreamStub
-import v2.fixtures.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryFixture.{
+import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture.{
   downstreamResponseMultiple,
   mtdMultipleResponseWithHateoas
 }

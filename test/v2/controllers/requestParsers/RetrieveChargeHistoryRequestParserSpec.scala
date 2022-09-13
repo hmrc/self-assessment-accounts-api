@@ -20,16 +20,16 @@ import support.UnitSpec
 import v2.mocks.validators.MockRetrieveSelfAssessmentChargeHistoryValidator
 import api.models.domain.Nino
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
-import v2.models.request.retrieveSelfAssessmentChargeHistory.{RetrieveSelfAssessmentChargeHistoryRawData, RetrieveSelfAssessmentChargeHistoryRequest}
+import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
 
-class RetrieveSelfAssessmentChargeHistoryRequestParserSpec extends UnitSpec {
+class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
 
   val validNino: String              = "AA123456B"
   val validTransactionId: String     = "717f3agW678f"
   implicit val correlationId: String = "X-123"
 
-  val inputData: RetrieveSelfAssessmentChargeHistoryRawData =
-    RetrieveSelfAssessmentChargeHistoryRawData(validNino, validTransactionId)
+  val inputData: RetrieveChargeHistoryRawData =
+    RetrieveChargeHistoryRawData(validNino, validTransactionId)
 
   trait Test extends MockRetrieveSelfAssessmentChargeHistoryValidator {
     lazy val parser = new RetrieveSelfAssessmentChargeHistoryRequestParser(mockValidator)
@@ -40,7 +40,7 @@ class RetrieveSelfAssessmentChargeHistoryRequestParserSpec extends UnitSpec {
       "valid request data is supplied" in new Test {
         MockRetrieveSelfAssessmentChargeHistoryValidator.validate(inputData).returns(Nil)
 
-        parser.parseRequest(inputData) shouldBe Right(RetrieveSelfAssessmentChargeHistoryRequest(Nino(validNino), validTransactionId))
+        parser.parseRequest(inputData) shouldBe Right(RetrieveChargeHistoryRequest(Nino(validNino), validTransactionId))
       }
     }
 

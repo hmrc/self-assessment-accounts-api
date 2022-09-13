@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveSelfAssessmentChargeHistory
+package v2.models.request.retrieveChargeHistory
 
 import api.models.request.RawData
 
-case class RetrieveSelfAssessmentChargeHistoryRawData(nino: String, transactionId: String) extends RawData
+case class RetrieveChargeHistoryRawData(nino: String, transactionId: String) extends RawData

@@ -22,8 +22,8 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRequest
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.services.RetrieveSelfAssessmentChargeHistoryService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,11 +34,11 @@ trait MockRetrieveSelfAssessmentChargeHistoryService extends MockFactory {
 
   object MockRetrieveSelfAssessmentChargeHistoryService {
 
-    def retrieveChargeHistory(request: RetrieveSelfAssessmentChargeHistoryRequest)
-        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveSelfAssessmentChargeHistoryResponse]]]] = {
+    def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
       (
         mockRetrieveSelfAssessmentChargeHistoryService
-          .retrieveChargeHistory(_: RetrieveSelfAssessmentChargeHistoryRequest)(
+          .retrieveChargeHistory(_: RetrieveChargeHistoryRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: EndpointLogContext,

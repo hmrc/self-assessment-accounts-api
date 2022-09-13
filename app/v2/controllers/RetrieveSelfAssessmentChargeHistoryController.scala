@@ -27,8 +27,8 @@ import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveSelfAssessmentChargeHistoryRequestParser
-import v2.models.request.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryRawData
-import v2.models.response.retrieveSelfAssessmentChargeHistory.RetrieveSelfAssessmentChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
+import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveSelfAssessmentChargeHistoryHateoasData
 import v2.services.RetrieveSelfAssessmentChargeHistoryService
 
 import javax.inject.{Inject, Singleton}
@@ -54,7 +54,7 @@ class RetrieveSelfAssessmentChargeHistoryController @Inject() (val authService: 
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " + s"with correlationId: $correlationId")
 
-      val rawRequest = RetrieveSelfAssessmentChargeHistoryRawData(nino, transactionId)
+      val rawRequest = RetrieveChargeHistoryRawData(nino, transactionId)
       val result = for {
         parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
         serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
