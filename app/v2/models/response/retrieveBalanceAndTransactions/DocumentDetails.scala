@@ -113,15 +113,15 @@ object DocumentDetails {
         (JsPath \ "documentDescription").readNullable[String] and
         (JsPath \ "totalAmount").read[BigDecimal] and
         (JsPath \ "documentOutstandingAmount").read[BigDecimal] and
-        (JsPath).readNullable[LastClearing] and
+        JsPath.readNullable[LastClearing] and
         (JsPath \ "statisticalFlag").read[Boolean] and
         (JsPath \ "informationCode").readNullable[String].map(informationCode) and
         (JsPath \ "paymentLot").readNullable[String] and
         (JsPath \ "paymentLotItem").readNullable[String] and
         (JsPath \ "effectiveDateOfPayment").readNullable[String] and
-        (JsPath).readNullable[LatePaymentInterest] and
+        JsPath.readNullable[LatePaymentInterest] and
         (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
-        (JsPath).readNullable[ReducedCharge]
+        JsPath.readNullable[ReducedCharge]
     )(DocumentDetails.apply _)
 
   implicit val writes: OWrites[DocumentDetails] = Json.writes[DocumentDetails]
