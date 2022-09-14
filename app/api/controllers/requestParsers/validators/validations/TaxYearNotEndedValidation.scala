@@ -27,10 +27,10 @@ object TaxYearNotEndedValidation {
 
   // @param taxYear In format YYYY-YY
   def validate(taxYear: String)(implicit dateProvider: CurrentDate): List[MtdError] = {
-    val desTaxYear             = TaxYear.fromMtd(taxYear).year
+    val downstreamTaxYear      = TaxYear.fromMtd(taxYear).year
     val currentDate: LocalDate = dateProvider.getCurrentDate
 
-    if (desTaxYear >= getCurrentTaxYear(currentDate)) List(RuleTaxYearNotEndedError) else NoValidationErrors
+    if (downstreamTaxYear >= getCurrentTaxYear(currentDate)) List(RuleTaxYearNotEndedError) else NoValidationErrors
   }
 
   private def getCurrentTaxYear(date: LocalDate): Int = {
