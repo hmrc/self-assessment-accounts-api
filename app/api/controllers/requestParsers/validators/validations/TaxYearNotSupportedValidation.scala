@@ -16,17 +16,16 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import config.AppConfig
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 import api.models.errors.{MtdError, RuleTaxYearNotSupportedError}
+import config.AppConfig
 
 object TaxYearNotSupportedValidation {
 
-  // @param taxYear In format YYYY-YY
+  // @param taxYear in MTD (vendor-facing) format YYYY-YY
   def validate(taxYear: String)(implicit appConfig: AppConfig): List[MtdError] = {
-    val desTaxYear = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
-
-    if (desTaxYear < appConfig.minimumPermittedTaxYear) List(RuleTaxYearNotSupportedError) else NoValidationErrors
+    val downstreamTaxYear = TaxYear.fromMtd(taxYear).year
+    if (downstreamTaxYear < appConfig.minimumPermittedTaxYear) List(RuleTaxYearNotSupportedError) else NoValidationErrors
   }
 
 }

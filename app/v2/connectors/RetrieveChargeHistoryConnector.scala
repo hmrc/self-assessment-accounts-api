@@ -16,11 +16,11 @@
 
 package v2.connectors
 
-import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import api.connectors.BaseDownstreamConnector
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.httpparsers.StandardDesHttpParser.reads
-import api.connectors.BaseDownstreamConnector
+import config.AppConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
