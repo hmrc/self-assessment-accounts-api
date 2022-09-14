@@ -18,7 +18,7 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsFixture.{
+import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{
   documentDetails,
   downstreamDocumentDetailsJson,
   mtdDocumentDetailsJson,

@@ -19,7 +19,7 @@ package v2.fixtures.retrieveBalanceAndTransactions
 import play.api.libs.json._
 import v2.models.response.retrieveBalanceAndTransactions.{DocumentDetails, LastClearing, LatePaymentInterest, ReducedCharge}
 
-object RetrieveBalanceAndTransactionsFixture {
+object DocumentDetailsFixture {
 
   // MTD model:
 
