@@ -19,18 +19,18 @@ package v2.mocks.requestParsers
 import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.controllers.requestParsers.RetrieveSelfAssessmentChargeHistoryRequestParser
+import v2.controllers.requestParsers.RetrieveChargeHistoryRequestParser
 import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
 
 trait MockRetrieveChargeHistoryRequestParser extends MockFactory {
 
-  val mockRetrieveSelfAssessmentChargeHistoryRequestParser: RetrieveSelfAssessmentChargeHistoryRequestParser =
-    mock[RetrieveSelfAssessmentChargeHistoryRequestParser]
+  val mockRetrieveChargeHistoryRequestParser: RetrieveChargeHistoryRequestParser =
+    mock[RetrieveChargeHistoryRequestParser]
 
-  object MockRetrieveSelfAssessmentChargeHistoryRequestParser {
+  object MockRetrieveChargeHistoryRequestParser {
 
     def parse(data: RetrieveChargeHistoryRawData): CallHandler[Either[ErrorWrapper, RetrieveChargeHistoryRequest]] = {
-      (mockRetrieveSelfAssessmentChargeHistoryRequestParser
+      (mockRetrieveChargeHistoryRequestParser
         .parseRequest(_: RetrieveChargeHistoryRawData)(_: String))
         .expects(data, *)
     }

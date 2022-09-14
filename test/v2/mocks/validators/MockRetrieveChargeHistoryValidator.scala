@@ -18,15 +18,15 @@ package v2.mocks.validators
 
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v2.controllers.requestParsers.validators.RetrieveSelfAssessmentChargeHistoryValidator
+import v2.controllers.requestParsers.validators.RetrieveChargeHistoryValidator
 import api.models.errors.MtdError
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
 
-class MockRetrieveSelfAssessmentChargeHistoryValidator extends MockFactory {
+class MockRetrieveChargeHistoryValidator extends MockFactory {
 
-  val mockValidator: RetrieveSelfAssessmentChargeHistoryValidator = mock[RetrieveSelfAssessmentChargeHistoryValidator]
+  val mockValidator: RetrieveChargeHistoryValidator = mock[RetrieveChargeHistoryValidator]
 
-  object MockRetrieveSelfAssessmentChargeHistoryValidator {
+  object MockRetrieveChargeHistoryValidator {
 
     def validate(data: RetrieveChargeHistoryRawData): CallHandler1[RetrieveChargeHistoryRawData, List[MtdError]] = {
       (mockValidator

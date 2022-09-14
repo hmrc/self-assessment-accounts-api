@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.controllers
+package v1.controllers
 
 import api.controllers.ControllerBaseSpec
 import api.hateoas.HateoasLinks
@@ -31,7 +31,6 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v1.controllers.RetrieveChargeHistoryController
 import v1.fixtures.RetrieveChargeHistoryFixture
 import v1.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
 import v1.mocks.services.MockRetrieveChargeHistoryService

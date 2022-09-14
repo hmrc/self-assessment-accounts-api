@@ -24,20 +24,20 @@ import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
-import v2.services.RetrieveSelfAssessmentChargeHistoryService
+import v2.services.RetrieveChargeHistoryService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveSelfAssessmentChargeHistoryService extends MockFactory {
+trait MockRetrieveChargeHistoryService extends MockFactory {
 
-  val mockRetrieveSelfAssessmentChargeHistoryService: RetrieveSelfAssessmentChargeHistoryService = mock[RetrieveSelfAssessmentChargeHistoryService]
+  val mockRetrieveChargeHistoryService: RetrieveChargeHistoryService = mock[RetrieveChargeHistoryService]
 
-  object MockRetrieveSelfAssessmentChargeHistoryService {
+  object MockRetrieveChargeHistoryService {
 
-    def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)
-        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
+    def retrieveChargeHistory(
+        request: RetrieveChargeHistoryRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
       (
-        mockRetrieveSelfAssessmentChargeHistoryService
+        mockRetrieveChargeHistoryService
           .retrieveChargeHistory(_: RetrieveChargeHistoryRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,

@@ -21,12 +21,12 @@ import support.UnitSpec
 import api.models.errors._
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
 
-class RetrieveSelfAssessmentChargeHistoryValidatorSpec extends UnitSpec with MockAppConfig {
+class RetrieveChargeHistoryValidatorSpec extends UnitSpec with MockAppConfig {
 
   private val validNino          = "AA123456A"
   private val validTransactionId = "717f3agW678f"
 
-  private val validator = new RetrieveSelfAssessmentChargeHistoryValidator(mockAppConfig)
+  private val validator = new RetrieveChargeHistoryValidator(mockAppConfig)
 
   "running a validation" should {
     "return no errors" when {

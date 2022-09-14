@@ -22,12 +22,10 @@ import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
 
 class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
-  val validObjectSingle: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(
-    Seq(validChargeHistoryDetailObject))
-
+  val validObjectSingle: RetrieveChargeHistoryResponse   = RetrieveChargeHistoryResponse(Seq(validChargeHistoryDetailObject))
   val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
-  "RetrieveSelfAssessmentChargeHistoryResponse" when {
+  "RetrieveChargeHistoryResponse" when {
     "reading valid JSON" should {
       "return the expected object" in {
         downstreamResponse.as[RetrieveChargeHistoryResponse] shouldBe validObjectSingle
@@ -35,7 +33,7 @@ class RetrieveChargeHistoryResponseSpec extends UnitSpec {
     }
   }
 
-  "RetrieveSelfAssessmentChargeHistoryResponse" when {
+  "RetrieveChargeHistoryResponse" when {
     "reading valid JSON with multiple charge history details" should {
       "return the expected object" in {
         downstreamResponseMultiple.as[RetrieveChargeHistoryResponse] shouldBe validObjectMultiple

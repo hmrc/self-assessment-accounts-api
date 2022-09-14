@@ -25,7 +25,7 @@ import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 
 import scala.concurrent.Future
 
-class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
+class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
   val nino: String          = "AA123456A"
   val transactionId: String = "anId"
@@ -48,8 +48,8 @@ class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
 
-    val connector: RetrieveSelfAssessmentChargeHistoryConnector =
-      new RetrieveSelfAssessmentChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    val connector: RetrieveChargeHistoryConnector =
+      new RetrieveChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     MockAppConfig.desBaseUrl returns baseUrl
     MockAppConfig.desToken returns "des-token"
@@ -57,7 +57,7 @@ class RetrieveSelfAssessmentChargeHistoryConnectorSpec extends ConnectorSpec {
     MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
-  "RetrieveSelfAssessmentChargeHistoryConnector" when {
+  "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
       val request: RetrieveChargeHistoryRequest = RetrieveChargeHistoryRequest(Nino(nino), transactionId)
 

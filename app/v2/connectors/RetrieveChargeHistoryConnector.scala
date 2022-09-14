@@ -16,11 +16,11 @@
 
 package v2.connectors
 
-import config.AppConfig
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import api.connectors.BaseDownstreamConnector
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.httpparsers.StandardDesHttpParser.reads
-import api.connectors.BaseDownstreamConnector
+import config.AppConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
@@ -28,12 +28,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfAssessmentChargeHistoryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveChargeHistoryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)(implicit
-                                                                   hc: HeaderCarrier,
-                                                                   ec: ExecutionContext,
-                                                                   correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
     val nino          = request.nino.nino
     val transactionId = request.transactionId

@@ -17,12 +17,13 @@
 package v2.services
 
 import api.controllers.EndpointLogContext
-import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import v2.connectors.RetrieveSelfAssessmentChargeHistoryConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import cats.data.EitherT
+import cats.implicits._
+import uk.gov.hmrc.http.HeaderCarrier
+import utils.Logging
+import v2.connectors.RetrieveChargeHistoryConnector
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.support.DownstreamResponseMappingSupport
@@ -31,15 +32,13 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveSelfAssessmentChargeHistoryService @Inject() (connector: RetrieveSelfAssessmentChargeHistoryConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)(implicit
-                                                                   hc: HeaderCarrier,
-                                                                   ec: ExecutionContext,
-                                                                   logContext: EndpointLogContext,
-                                                                   correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveChargeHistory(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))

@@ -17,17 +17,16 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
+import api.controllers.requestParsers.validators.validations.{NinoValidation, TransactionIdValidation}
+import api.models.errors.MtdError
 import com.google.inject.Inject
 import config.AppConfig
-import api.controllers.requestParsers.validators.validations.TransactionIdValidation
-import api.controllers.requestParsers.validators.validations.NinoValidation
-import api.models.errors.MtdError
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
 
 import javax.inject.Singleton
 
 @Singleton
-class RetrieveSelfAssessmentChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Validator[RetrieveChargeHistoryRawData] {
+class RetrieveChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Validator[RetrieveChargeHistoryRawData] {
 
   private val validationSet = List(parameterFormatValidation)
 
