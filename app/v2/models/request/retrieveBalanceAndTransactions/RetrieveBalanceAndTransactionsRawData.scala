@@ -21,6 +21,10 @@ case class RetrieveBalanceAndTransactionsRawData(
     docNumber: Option[String],
     dateFrom: Option[String],
     dateTo: Option[String],
-    onlyOpenItems: String,
-    includeLocks: String
+    onlyOpenItems: Option[String],
+    includeLocks: Option[String],
+    calculateAccruedInterest: Option[String],
+    removePOA: Option[String],
+    customerPaymentInformation: Option[String],
+    includeStatistical: Option[String]
 )
