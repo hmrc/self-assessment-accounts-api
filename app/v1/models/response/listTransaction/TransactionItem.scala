@@ -16,7 +16,7 @@
 
 package v1.models.response.listTransaction
 
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
 case class TransactionItem(taxYear: String,
@@ -40,7 +40,7 @@ object TransactionItem {
 
   implicit val reads: Reads[TransactionItem] =
     for {
-      taxYear                   <- (JsPath \ "taxYear").read[String].map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear)))
+      taxYear                   <- (JsPath \ "taxYear").read[String].map(TaxYear.fromDownstream(_).asMtd)
       transactionId             <- (JsPath \ "documentId").read[String]
       paymentLot                <- (JsPath \ "paymentLot").readNullable[String]
       paymentLotItem            <- (JsPath \ "paymentLotItem").readNullable[String]

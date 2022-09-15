@@ -17,12 +17,13 @@
 package v2.services
 
 import api.controllers.EndpointLogContext
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import cats.data.EitherT
+import cats.implicits._
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.RetrieveChargeHistoryConnector
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.support.DownstreamResponseMappingSupport

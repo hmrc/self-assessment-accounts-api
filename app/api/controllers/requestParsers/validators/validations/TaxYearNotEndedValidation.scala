@@ -16,27 +16,25 @@
 
 package api.controllers.requestParsers.validators.validations
 
+import api.models.domain.TaxYear
+import api.models.errors.{MtdError, RuleTaxYearNotEndedError}
+import utils.CurrentDate
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
-import utils.CurrentDate
-import api.models.domain.DesTaxYear
-import api.models.errors.{MtdError, RuleTaxYearNotEndedError}
 
 object TaxYearNotEndedValidation {
 
   // @param taxYear In format YYYY-YY
   def validate(taxYear: String)(implicit dateProvider: CurrentDate): List[MtdError] = {
-
-    val desTaxYear             = Integer.parseInt(DesTaxYear.fromMtd(taxYear).value)
+    val downstreamTaxYear      = TaxYear.fromMtd(taxYear).year
     val currentDate: LocalDate = dateProvider.getCurrentDate
 
-    if (desTaxYear >= getCurrentTaxYear(currentDate)) List(RuleTaxYearNotEndedError) else NoValidationErrors
+    if (downstreamTaxYear >= getCurrentTaxYear(currentDate)) List(RuleTaxYearNotEndedError) else NoValidationErrors
   }
 
   private def getCurrentTaxYear(date: LocalDate): Int = {
-
-    lazy val taxYearStartDate: LocalDate = LocalDate.parse(
+    val taxYearStartDate: LocalDate = LocalDate.parse(
       date.getYear + "-04-06",
       DateTimeFormatter.ofPattern("yyyy-MM-dd")
     )

@@ -16,17 +16,17 @@
 
 package v2.endpoints
 
-import api.models.errors.{DownstreamError, MtdError, NinoFormatError, NotFoundError, TransactionIdFormatError}
+import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status.{BAD_REQUEST, FORBIDDEN, INTERNAL_SERVER_ERROR, NOT_FOUND, OK, SERVICE_UNAVAILABLE, UNPROCESSABLE_ENTITY}
+import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v2.stubs.DownstreamStub
 import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
+import v2.stubs.DownstreamStub
 
 class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
