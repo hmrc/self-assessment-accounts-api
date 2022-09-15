@@ -30,17 +30,15 @@ import v2.fixtures.retrieveBalanceAndTransactions.FinanceDetailFixture.{
 class FinanceDetailSpec extends UnitSpec {
 
   "reads" should {
-    "return a valid model" when {
-      "valid JSON is supplied " in {
+    "return a valid model with all properties" when {
+      "valid JSON with all properties is supplied " in {
         downstreamFinanceDetailFullJson.as[FinanceDetail] shouldBe financeDetailFullObject
       }
     }
-    "return a model without mainType" when {
+    "return a valid model without a mainType" when {
       "JSON without mainType is supplied " in {
         downstreamFinanceDetailMissingMainTypeJson.as[FinanceDetail] shouldBe financeDetailNoMainTypeObject
       }
-    }
-    "return a valid model without mainType" when {
       "JSON with invalid mainType is supplied " in {
         downstreamFinanceDetailMismatchedMainTypeJson.as[FinanceDetail] shouldBe financeDetailNoMainTypeObject
       }
@@ -48,14 +46,14 @@ class FinanceDetailSpec extends UnitSpec {
   }
 
   "writes" when {
-    "passed a valid model" should {
-      "return valid JSON" in {
+    "passed a valid model with all properties" should {
+      "return valid JSON with all properties" in {
         Json.toJson(financeDetailFullObject) shouldBe mtdFinanceDetailFullJson
       }
     }
 
     "passed a valid model with no mainType" should {
-      "return valid JSON with without a mainType" in {
+      "return valid JSON with no mainType" in {
         Json.toJson(financeDetailNoMainTypeObject) shouldBe mtdFinanceDetailNoMainTypeJson
       }
     }
