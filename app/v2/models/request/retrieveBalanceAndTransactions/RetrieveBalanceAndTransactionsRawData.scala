@@ -16,6 +16,8 @@
 
 package v2.models.request.retrieveBalanceAndTransactions
 
+import api.models.request.RawData
+
 case class RetrieveBalanceAndTransactionsRawData(
     nino: String,
     docNumber: Option[String],
@@ -27,4 +29,4 @@ case class RetrieveBalanceAndTransactionsRawData(
     removePOA: Option[String],
     customerPaymentInformation: Option[String],
     includeStatistical: Option[String]
-)
+) extends RawData
