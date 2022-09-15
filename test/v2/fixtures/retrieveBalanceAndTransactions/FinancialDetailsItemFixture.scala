@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveBalanceAndTransactions
+package v2.fixtures.retrieveBalanceAndTransactions
 
 import play.api.libs.json.{JsValue, Json}
+import v2.models.response.retrieveBalanceAndTransactions.FinancialDetailsItem
 
 trait FinancialDetailsItemFixture {
 

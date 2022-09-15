@@ -18,6 +18,7 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.{JsObject, JsValue, Json}
 import support.UnitSpec
+import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsItemFixture
 
 class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture {
 
