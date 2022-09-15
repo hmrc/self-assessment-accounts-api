@@ -16,7 +16,7 @@
 
 package v1.models.response.listCharges
 
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
@@ -30,7 +30,7 @@ case class Charge(taxYear: String,
 object Charge {
 
   implicit val reads: Reads[Charge] = (
-    (JsPath \ "taxYear").read[String].map(taxYear => DesTaxYear.fromDesIntToString(Integer.parseInt(taxYear))) and
+    (JsPath \ "taxYear").read[String].map(TaxYear.fromDownstream(_).asMtd) and
       (JsPath \ "documentId").read[String] and
       (JsPath \ "documentDate").read[String] and
       (JsPath \ "documentDescription").readNullable[String] and

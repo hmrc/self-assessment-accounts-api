@@ -16,7 +16,7 @@
 
 package v1.models.response.retrieveChargeHistory
 
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
@@ -33,7 +33,7 @@ object ChargeHistory {
   val empty: ChargeHistory = ChargeHistory(None, None, None, None, None, None, None)
 
   implicit val reads: Reads[ChargeHistory] = (
-    (JsPath \ "taxYear").readNullable[String].map(_.map(DesTaxYear.fromDes)) and
+    (JsPath \ "taxYear").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
       (JsPath \ "documentId").readNullable[String] and
       (JsPath \ "documentDate").readNullable[String] and
       (JsPath \ "documentDescription").readNullable[String] and

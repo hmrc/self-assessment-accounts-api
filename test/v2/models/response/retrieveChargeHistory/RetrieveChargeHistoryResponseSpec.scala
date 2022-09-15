@@ -22,8 +22,7 @@ import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
 
 class RetrieveChargeHistoryResponseSpec extends UnitSpec {
 
-  val validObjectSingle: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(Seq(validChargeHistoryDetailObject))
-
+  val validObjectSingle: RetrieveChargeHistoryResponse   = RetrieveChargeHistoryResponse(Seq(validChargeHistoryDetailObject))
   val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
   "RetrieveChargeHistoryResponse" when {

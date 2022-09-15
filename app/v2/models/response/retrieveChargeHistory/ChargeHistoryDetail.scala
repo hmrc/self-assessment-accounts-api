@@ -16,7 +16,7 @@
 
 package v2.models.response.retrieveChargeHistory
 
-import api.models.domain.DesTaxYear
+import api.models.domain.TaxYear
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 
@@ -31,7 +31,7 @@ case class ChargeHistoryDetail(taxYear: Option[String],
 object ChargeHistoryDetail {
 
   implicit val reads: Reads[ChargeHistoryDetail] =
-    ((JsPath \ "taxYear").readNullable[String].map(_.map(DesTaxYear.fromDes)) and
+    ((JsPath \ "taxYear").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
       (JsPath \ "documentId").read[String] and
       (JsPath \ "documentDate").read[String] and
       (JsPath \ "documentDescription").read[String] and
