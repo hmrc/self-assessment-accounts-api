@@ -16,8 +16,9 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
+import api.models.domain.TaxYear
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import v2.models.response.retrieveBalanceAndTransactions.financeDetailTypes.mapping
 
 case class FinanceDetails(taxYear: String,
@@ -40,9 +41,10 @@ case class FinanceDetails(taxYear: String,
                           items: Seq[FinancialDetailsItem])
 
 object FinanceDetails {
+  implicit val writes: Writes[FinanceDetails] = Json.writes[FinanceDetails]
 
   implicit val reads: Reads[FinanceDetails] = (
-    (JsPath \ "taxYear").read[String] and
+    (JsPath \ "taxYear").read[String].map(TaxYear.fromDownstream(_).asMtd) and
       (JsPath \ "documentId").read[String] and
       (JsPath \ "chargeType").readNullable[String] and
       (JsPath \ "mainType").readNullable[String].map(c => getMainType(c)) and
@@ -63,14 +65,8 @@ object FinanceDetails {
   )(FinanceDetails.apply _)
 
   private def getMainType(downstreamValue: Option[String]): Option[String] = {
-    mapping.get(downstreamValue.get) match {
-      case None    => None
-      case Some(s) => Option(s)
-      case _       => None
-    }
+    downstreamValue.flatMap(x => mapping.get(x))
   }
-
-  implicit val writes: OWrites[FinanceDetails] = Json.writes[FinanceDetails]
 
 }
 

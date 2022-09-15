@@ -16,13 +16,16 @@
 
 package v2.fixtures.retrieveBalanceAndTransactions
 
+import api.models.domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
 import v2.models.response.retrieveBalanceAndTransactions.{FinanceDetails, FinancialDetailsItem}
 
 object FinanceDetailsFixture extends FinancialDetailsItemFixture {
 
+  private val taxYear: TaxYear = TaxYear("2022")
+
   val financeDetailsFullObject: FinanceDetails = FinanceDetails(
-    taxYear = "2022",
+    taxYear = taxYear.asMtd,
     documentId = "123456",
     chargeType = Some("PAYE"),
     mainType = Some("Income Tax Estimate"),
@@ -43,7 +46,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
   )
 
   val financeDetailsNoMainTypeObject: FinanceDetails = FinanceDetails(
-    taxYear = "2022",
+    taxYear = taxYear.asMtd,
     documentId = "123456",
     chargeType = None,
     mainType = None,
@@ -68,7 +71,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
   val downstreamFinanceDetailFullJson: JsValue = Json.parse(
     s"""
        |{
-       |      "taxYear": "${financeDetailsFullObject.taxYear}",
+       |      "taxYear": "${taxYear.asDownstream}",
        |      "documentId": "${financeDetailsFullObject.documentId}",
        |      "chargeType": "${financeDetailsFullObject.chargeType.get}",
        |      "mainType": "${mainTypeDownstream}",
@@ -97,7 +100,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
 
   val downstreamFinanceDetailMismatchedMainTypeJson: JsValue = Json.parse(s"""
        |{
-       |      "taxYear": "${financeDetailsFullObject.taxYear}",
+       |      "taxYear": "${taxYear.asDownstream}",
        |      "documentId": "${financeDetailsFullObject.documentId}",
        |      "mainType": "0000",
        |      "items":  [$financialDetailsItemDownstreamJson]
@@ -106,9 +109,8 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
 
   val downstreamFinanceDetailMissingMainTypeJson: JsValue = Json.parse(s"""
        |{
-       |      "taxYear": "${financeDetailsFullObject.taxYear}",
+       |      "taxYear": "${taxYear.asDownstream}",
        |      "documentId": "${financeDetailsFullObject.documentId}",
-       |      "mainType": "0000",
        |      "items":  [$financialDetailsItemDownstreamJson]
        |}
        |""".stripMargin)
@@ -116,7 +118,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
   val mtdFinanceDetailFullJson: JsValue = Json.parse(
     s"""
        |  {
-       |      "taxYear":"${financeDetailsFullObject.taxYear}",
+       |      "taxYear":"${taxYear.asMtd}",
        |      "documentId": "${financeDetailsFullObject.documentId}",
        |      "chargeType": "${financeDetailsFullObject.chargeType.get}",
        |      "mainType": "${financeDetailsFullObject.mainType.get}",
@@ -141,7 +143,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
   val mtdFinanceDetailNoMainTypeJson: JsValue = Json.parse(
     s"""
        | {
-       |   "taxYear":"${financeDetailsFullObject.taxYear}",
+       |   "taxYear":"${taxYear.asMtd}",
        |   "documentId": "${financeDetailsFullObject.documentId}",
        |   "items": [$financialDetailsItemMtdJson]
        | }
