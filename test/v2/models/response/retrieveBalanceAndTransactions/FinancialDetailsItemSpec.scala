@@ -25,26 +25,26 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
   "FinancialDetailsItem" when {
     "written to MTD JSON" must {
       "work" in {
-        Json.toJson(financialDetailsItemModel) shouldBe financialDetailsItemMtdJson
+        Json.toJson(financialDetailsItem) shouldBe financialDetailsItemMtdJson
       }
     }
 
     "read from downstream" when {
       "when all properties are present" must {
         "work" in {
-          financialDetailsItemDownstreamJson.as[FinancialDetailsItem] shouldBe financialDetailsItemModel
+          financialDetailsItemDownstreamJson.as[FinancialDetailsItem] shouldBe financialDetailsItem
         }
       }
 
       "when no mandatory properties are present" must {
         "work" in {
-          JsObject.empty.as[FinancialDetailsItem] shouldBe financialDetailsItemModelEmpty
+          JsObject.empty.as[FinancialDetailsItem] shouldBe financialDetailsItemEmpty
         }
       }
 
       "converting outgoingPaymentMethod" must {
         def json(value: String): JsValue                       = Json.parse(s"""{ "outgoingPaymentMethod": "$value" }""")
-        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(outgoingPaymentMethod = value)
+        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemEmpty.copy(outgoingPaymentMethod = value)
 
         "convert if present and a mapping is defined" when {
           def doTest(downstreamValue: String, mtdValue: String): Unit =
@@ -62,7 +62,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
 
       "converting paymentLock" must {
         def json(value: String): JsValue                       = Json.parse(s"""{ "paymentLock": "$value" }""")
-        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(paymentLock = value)
+        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemEmpty.copy(paymentLock = value)
 
         "convert if present and a mapping is defined" when {
           def doTest(downstreamValue: String, mtdValue: String): Unit =
@@ -80,7 +80,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
 
       "converting clearingLock" must {
         def json(value: String): JsValue                       = Json.parse(s"""{ "clearingLock": "$value" }""")
-        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(clearingLock = value)
+        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemEmpty.copy(clearingLock = value)
 
         "convert if present and a mapping is defined" when {
           def doTest(downstreamValue: String, mtdValue: String): Unit =
@@ -98,7 +98,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
 
       "converting statisticalDocument to isStatistical" must {
         def json(value: String): JsValue                        = Json.parse(s"""{ "statisticalDocument": "$value" }""")
-        def model(value: Option[Boolean]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isStatistical = value)
+        def model(value: Option[Boolean]): FinancialDetailsItem = financialDetailsItemEmpty.copy(isStatistical = value)
 
         "convert G to true" in {
           json("G").as[FinancialDetailsItem] shouldBe model(Some(true))

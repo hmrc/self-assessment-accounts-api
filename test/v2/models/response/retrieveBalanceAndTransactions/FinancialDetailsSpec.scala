@@ -25,15 +25,15 @@ class FinancialDetailsSpec extends UnitSpec with FinancialDetailsFixture {
   "reads" should {
     "return a valid model with all properties" when {
       "valid JSON with all properties is supplied " in {
-        downstreamFinancialDetailsFullJson.as[FinancialDetails] shouldBe financialDetailsFullObject
+        financialDetailsDownstreamJson.as[FinancialDetails] shouldBe financialDetails
       }
     }
     "return a valid model without a mainType" when {
       "JSON without mainType is supplied " in {
-        downstreamFinancialDetailsMissingMainTypeJson.as[FinancialDetails] shouldBe financialDetailsNoMainTypeObject
+        financialDetailsMissingMainTypeDownstreamJson.as[FinancialDetails] shouldBe financialDetailsNoMainType
       }
       "JSON with invalid mainType is supplied " in {
-        downstreamFinancialDetailsMismatchedMainTypeJson.as[FinancialDetails] shouldBe financialDetailsNoMainTypeObject
+        financialDetailsMismatchedMainTypeDownstreamJson.as[FinancialDetails] shouldBe financialDetailsNoMainType
       }
     }
   }
@@ -41,13 +41,13 @@ class FinancialDetailsSpec extends UnitSpec with FinancialDetailsFixture {
   "writes" when {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
-        Json.toJson(financialDetailsFullObject) shouldBe mtdFinancialDetailsFullJson
+        Json.toJson(financialDetails) shouldBe financialDetailsMtdJson
       }
     }
 
     "passed a valid model with no mainType" should {
       "return valid JSON with no mainType" in {
-        Json.toJson(financialDetailsNoMainTypeObject) shouldBe mtdFinancialDetailsNoMainTypeJson
+        Json.toJson(financialDetailsNoMainType) shouldBe financialDetailsNoMainTypeMtdJson
       }
     }
 

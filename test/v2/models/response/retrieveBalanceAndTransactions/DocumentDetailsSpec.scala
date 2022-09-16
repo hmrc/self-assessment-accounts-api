@@ -25,12 +25,12 @@ class DocumentDetailsSpec extends UnitSpec with DocumentDetailsFixture{
   "reads" should {
     "return a DocumentDetails object" when {
       "given a valid JSON document" in {
-        val result = downstreamDocumentDetailsJson.as[DocumentDetails]
+        val result = documentDetailsDownstreamJson.as[DocumentDetails]
         result shouldBe documentDetails
       }
 
       "given a valid JSON document with 9999 meaning no tax year" in {
-        val json     = newDownstreamDocumentDetailsJson(taxYear = "9999")
+        val json     = newDocumentDetailsDownstreamJson(taxYear = "9999")
         val expected = documentDetails.copy(taxYear = None)
         val result   = json.as[DocumentDetails]
         result shouldBe expected
@@ -42,7 +42,7 @@ class DocumentDetailsSpec extends UnitSpec with DocumentDetailsFixture{
     "return the expected JSON document" when {
       "given a DocumentDetails object" in {
         val result = Json.toJson(documentDetails)
-        result shouldBe mtdDocumentDetailsJson
+        result shouldBe documentDetailsMtdJson
       }
     }
   }

@@ -21,7 +21,7 @@ import v2.models.response.retrieveBalanceAndTransactions.FinancialDetailsItem
 
 trait FinancialDetailsItemFixture {
 
-  val financialDetailsItemModel: FinancialDetailsItem = FinancialDetailsItem(
+  val financialDetailsItem: FinancialDetailsItem = FinancialDetailsItem(
     subItem = Some("subItem"),
     dueDate = Some("2022-02-02"),
     amount = Some(1.23),
@@ -42,7 +42,7 @@ trait FinancialDetailsItemFixture {
     returnReason = Some("returnReason")
   )
 
-  val financialDetailsItemModelEmpty: FinancialDetailsItem =
+  val financialDetailsItemEmpty: FinancialDetailsItem =
     FinancialDetailsItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
 
   val financialDetailsItemMtdJson: JsValue =

@@ -26,18 +26,18 @@ trait DocumentDetailsFixture {
   val lastClearing: LastClearing = LastClearing(
     lastClearingDate = Some("2018-04-05"),
     lastClearingReason = Some("Incoming Payment"),
-    lastClearedAmount = Some(5009.99)
+    lastClearedAmount = Some(5003.99)
   )
 
   val latePaymentInterest: LatePaymentInterest = LatePaymentInterest(
     latePaymentInterestId = Some("1234567890123456"),
-    accruingInterestAmount = Some(5009.99),
+    accruingInterestAmount = Some(5004.99),
     interestRate = Some(1.23),
     interestStartDate = Some("2020-04-01"),
     interestEndDate = Some("2020-04-05"),
-    interestAmount = Some(5009.99),
-    interestDunningLockAmount = Some(5009.99),
-    interestOutstandingAmount = Some(5009.99)
+    interestAmount = Some(5007.99),
+    interestDunningLockAmount = Some(5006.99),
+    interestOutstandingAmount = Some(5008.99)
   )
 
   val reducedCharge: ReducedCharge = ReducedCharge(
@@ -56,16 +56,16 @@ trait DocumentDetailsFixture {
     documentText = Some("ITSA- Bal Charge"),
     documentDueDate = "2021-04-05",
     documentDescription = Some("ITSA- POA 1"),
-    originalAmount = 5009.99,
-    outstandingAmount = 5009.99,
+    originalAmount = 5001.99,
+    outstandingAmount = 5002.99,
     lastClearing = Some(lastClearing),
     isStatistical = true,
     informationCode = Some("Coding Out"),
     paymentLot = Some("AB1023456789"),
     paymentLotItem = Some("000001"),
-    effectiveDateOfPayment = Some("2021-04-05"),
+    effectiveDateOfPayment = Some("2021-06-05"),
     latePaymentInterest = Some(latePaymentInterest),
-    amountCodedOut = Some(5009.99),
+    amountCodedOut = Some(5005.99),
     reducedCharge = Some(reducedCharge)
   )
 
@@ -73,20 +73,20 @@ trait DocumentDetailsFixture {
        |{
        |  "lastClearingDate": "2018-04-05",
        |  "lastClearingReason": "Incoming Payment",
-       |  "lastClearedAmount": 5009.99
+       |  "lastClearedAmount": 5003.99
        |}
        |""".stripMargin)
 
   val latePaymentInterestJson: JsValue = Json.parse("""
        |{
        |  "latePaymentInterestId": "1234567890123456",
-       |  "accruingInterestAmount": 5009.99,
+       |  "accruingInterestAmount": 5004.99,
        |  "interestRate": 1.23,
        |  "interestStartDate": "2020-04-01",
        |  "interestEndDate": "2020-04-05",
-       |  "interestAmount": 5009.99,
-       |  "interestDunningLockAmount": 5009.99,
-       |  "interestOutstandingAmount": 5009.99
+       |  "interestAmount": 5007.99,
+       |  "interestDunningLockAmount": 5006.99,
+       |  "interestOutstandingAmount": 5008.99
        |}
        |""".stripMargin)
 
@@ -99,7 +99,7 @@ trait DocumentDetailsFixture {
        |}
        |""".stripMargin)
 
-  val mtdDocumentDetailsJson: JsValue =
+  val documentDetailsMtdJson: JsValue =
     Json.parse(s"""
        |{
        |  "taxYear": "2020-21",
@@ -110,23 +110,23 @@ trait DocumentDetailsFixture {
        |  "documentText": "ITSA- Bal Charge",
        |  "documentDueDate": "2021-04-05",
        |  "documentDescription": "ITSA- POA 1",
-       |  "originalAmount": 5009.99,
-       |  "outstandingAmount": 5009.99,
+       |  "originalAmount": 5001.99,
+       |  "outstandingAmount": 5002.99,
        |  "lastClearing": $lastClearingJson,
        |  "isStatistical": true,
        |  "informationCode": "Coding Out",
        |  "paymentLot": "AB1023456789",
        |  "paymentLotItem": "000001",
-       |  "effectiveDateOfPayment": "2021-04-05",
+       |  "effectiveDateOfPayment": "2021-06-05",
        |  "latePaymentInterest": $latePaymentInterestJson,
-       |  "amountCodedOut": 5009.99,
+       |  "amountCodedOut": 5005.99,
        |  "reducedCharge": $reducedChargeJson
        |}
        |""".stripMargin)
 
   // Downstream model:
 
-  def newDownstreamDocumentDetailsJson(taxYear: String): JsValue = Json.parse(s"""
+  def newDocumentDetailsDownstreamJson(taxYear: String): JsValue = Json.parse(s"""
        |{
        |  "taxYear": "$taxYear",
        |  "taxYearReducedCharge": "2018",
@@ -135,33 +135,33 @@ trait DocumentDetailsFixture {
        |  "formBundleNumber": "88888888",
        |  "documentDate": "2018-04-05",
        |  "documentText": "ITSA- Bal Charge",
-       |  "effectiveDateOfPayment": "2021-04-05",
+       |  "effectiveDateOfPayment": "2021-06-05",
        |  "documentDueDate": "2021-04-05",
        |  "documentDescription": "ITSA- POA 1",
-       |  "totalAmount": 5009.99,
-       |  "documentOutstandingAmount": 5009.99,
+       |  "totalAmount": 5001.99,
+       |  "documentOutstandingAmount": 5002.99,
        |  "lastClearingDate": "2018-04-05",
        |  "lastClearingReason": "Incoming Payment",
-       |  "lastClearedAmount": 5009.99,
+       |  "lastClearedAmount": 5003.99,
        |  "statisticalFlag": true,
        |  "informationCode": "i",
        |  "paymentLot": "AB1023456789",
        |  "paymentLotItem": "000001",
-       |  "accruingInterestAmount": 5009.99,
+       |  "accruingInterestAmount": 5004.99,
        |  "amendmentDateReducedCharge": "2018-04-05",
-       |  "amountCodedOut": 5009.99,
+       |  "amountCodedOut": 5005.99,
        |  "chargeTypeReducedCharge": "???",
        |  "creditReason": "Voluntary Payment",
        |  "interestRate": 1.23,
        |  "interestFromDate": "2020-04-01",
        |  "interestEndDate": "2020-04-05",
        |  "latePaymentInterestID": "1234567890123456",
-       |  "lpiWithDunningLock": 5009.99,
-       |  "latePaymentInterestAmount": 5009.99,
-       |  "interestOutstandingAmount": 5009.99
+       |  "lpiWithDunningLock": 5006.99,
+       |  "latePaymentInterestAmount": 5007.99,
+       |  "interestOutstandingAmount": 5008.99
        |}
        |""".stripMargin)
 
-  val downstreamDocumentDetailsJson: JsValue = newDownstreamDocumentDetailsJson("2021")
+  val documentDetailsDownstreamJson: JsValue = newDocumentDetailsDownstreamJson("2021")
 
 }

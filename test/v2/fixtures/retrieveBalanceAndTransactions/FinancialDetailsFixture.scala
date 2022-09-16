@@ -24,7 +24,7 @@ trait FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
   private val taxYear: TaxYear = TaxYear("2022")
 
-  val financialDetailsFullObject: FinancialDetails = FinancialDetails(
+  val financialDetails: FinancialDetails = FinancialDetails(
     taxYear = taxYear.asMtd,
     documentId = "123456",
     chargeType = Some("PAYE"),
@@ -42,10 +42,10 @@ trait FinancialDetailsFixture extends FinancialDetailsItemFixture {
     outstandingAmount = Some(452.11),
     clearedAmount = Some(3411.01),
     accruedInterest = Some(123.78),
-    items = Seq[FinancialDetailsItem](financialDetailsItemModel)
+    items = Seq[FinancialDetailsItem](financialDetailsItem)
   )
 
-  val financialDetailsNoMainTypeObject: FinancialDetails = FinancialDetails(
+  val financialDetailsNoMainType: FinancialDetails = FinancialDetails(
     taxYear = taxYear.asMtd,
     documentId = "123456",
     chargeType = None,
@@ -63,88 +63,86 @@ trait FinancialDetailsFixture extends FinancialDetailsItemFixture {
     outstandingAmount = None,
     clearedAmount = None,
     accruedInterest = None,
-    items = Seq[FinancialDetailsItem](financialDetailsItemModel)
+    items = Seq[FinancialDetailsItem](financialDetailsItem)
   )
 
-  val mainTypeDownstream: String = "3880"
-
-  val downstreamFinancialDetailsFullJson: JsValue = Json.parse(
+  val financialDetailsDownstreamJson: JsValue = Json.parse(
     s"""
        |{
        |      "taxYear": "${taxYear.asDownstream}",
-       |      "documentId": "${financialDetailsFullObject.documentId}",
-       |      "chargeType": "${financialDetailsFullObject.chargeType.get}",
-       |      "mainType": "$mainTypeDownstream",
+       |      "documentId": "${financialDetails.documentId}",
+       |      "chargeType": "${financialDetails.chargeType.get}",
+       |      "mainType": "3880",
        |      "periodKey": "13RL",
        |      "periodKeyDescription": "abcde",
-       |      "taxPeriodFrom": "${financialDetailsFullObject.taxPeriodFrom.get}",
-       |      "taxPeriodTo": "${financialDetailsFullObject.taxPeriodTo.get}",
+       |      "taxPeriodFrom": "${financialDetails.taxPeriodFrom.get}",
+       |      "taxPeriodTo": "${financialDetails.taxPeriodTo.get}",
        |      "businessPartner": "6622334455",
-       |      "contractAccountCategory": "${financialDetailsFullObject.contractAccountCategory.get}",
-       |      "contractAccount": "${financialDetailsFullObject.contractAccount.get}",
+       |      "contractAccountCategory": "${financialDetails.contractAccountCategory.get}",
+       |      "contractAccount": "${financialDetails.contractAccount.get}",
        |      "contractObjectType": "ABCD",
        |      "contractObject": "00000003000000002757",
-       |      "sapDocumentNumber": "${financialDetailsFullObject.documentNumber.get}",
-       |      "sapDocumentNumberItem": "${financialDetailsFullObject.documentNumberItem.get}",
-       |      "chargeReference": "${financialDetailsFullObject.chargeReference.get}",
-       |      "mainTransaction": "${financialDetailsFullObject.mainTransaction.get}",
-       |      "subTransaction": "${financialDetailsFullObject.subTransaction.get}",
-       |      "originalAmount": ${financialDetailsFullObject.originalAmount.get},
-       |      "outstandingAmount": ${financialDetailsFullObject.outstandingAmount.get},
-       |      "clearedAmount": ${financialDetailsFullObject.clearedAmount.get},
-       |      "accruedInterest": ${financialDetailsFullObject.accruedInterest.get},
+       |      "sapDocumentNumber": "${financialDetails.documentNumber.get}",
+       |      "sapDocumentNumberItem": "${financialDetails.documentNumberItem.get}",
+       |      "chargeReference": "${financialDetails.chargeReference.get}",
+       |      "mainTransaction": "${financialDetails.mainTransaction.get}",
+       |      "subTransaction": "${financialDetails.subTransaction.get}",
+       |      "originalAmount": ${financialDetails.originalAmount.get},
+       |      "outstandingAmount": ${financialDetails.outstandingAmount.get},
+       |      "clearedAmount": ${financialDetails.clearedAmount.get},
+       |      "accruedInterest": ${financialDetails.accruedInterest.get},
        |      "items":  [$financialDetailsItemDownstreamJson]
        |}
        |""".stripMargin
   )
 
-  val downstreamFinancialDetailsMismatchedMainTypeJson: JsValue = Json.parse(s"""
+  val financialDetailsMismatchedMainTypeDownstreamJson: JsValue = Json.parse(s"""
        |{
        |      "taxYear": "${taxYear.asDownstream}",
-       |      "documentId": "${financialDetailsFullObject.documentId}",
+       |      "documentId": "${financialDetails.documentId}",
        |      "mainType": "0000",
        |      "items":  [$financialDetailsItemDownstreamJson]
        |}
        |""".stripMargin)
 
-  val downstreamFinancialDetailsMissingMainTypeJson: JsValue = Json.parse(s"""
+  val financialDetailsMissingMainTypeDownstreamJson: JsValue = Json.parse(s"""
        |{
        |      "taxYear": "${taxYear.asDownstream}",
-       |      "documentId": "${financialDetailsFullObject.documentId}",
+       |      "documentId": "${financialDetails.documentId}",
        |      "items":  [$financialDetailsItemDownstreamJson]
        |}
        |""".stripMargin)
 
-  val mtdFinancialDetailsFullJson: JsValue = Json.parse(
+  val financialDetailsMtdJson: JsValue = Json.parse(
     s"""
        |  {
        |      "taxYear":"${taxYear.asMtd}",
-       |      "documentId": "${financialDetailsFullObject.documentId}",
-       |      "chargeType": "${financialDetailsFullObject.chargeType.get}",
-       |      "mainType": "${financialDetailsFullObject.mainType.get}",
-       |      "taxPeriodFrom": "${financialDetailsFullObject.taxPeriodFrom.get}",
-       |      "taxPeriodTo": "${financialDetailsFullObject.taxPeriodTo.get}",
-       |      "contractAccountCategory":"${financialDetailsFullObject.contractAccountCategory.get}",
-       |      "contractAccount":"${financialDetailsFullObject.contractAccount.get}",
-       |      "documentNumber": "${financialDetailsFullObject.documentNumber.get}",
-       |      "documentNumberItem": "${financialDetailsFullObject.documentNumberItem.get}",
-       |      "chargeReference": "${financialDetailsFullObject.chargeReference.get}",
-       |      "mainTransaction": "${financialDetailsFullObject.mainTransaction.get}",
-       |      "subTransaction": "${financialDetailsFullObject.subTransaction.get}",
-       |      "originalAmount": ${financialDetailsFullObject.originalAmount.get},
-       |      "outstandingAmount": ${financialDetailsFullObject.outstandingAmount.get},
-       |      "clearedAmount": ${financialDetailsFullObject.clearedAmount.get},
-       |      "accruedInterest": ${financialDetailsFullObject.accruedInterest.get},
+       |      "documentId": "${financialDetails.documentId}",
+       |      "chargeType": "${financialDetails.chargeType.get}",
+       |      "mainType": "${financialDetails.mainType.get}",
+       |      "taxPeriodFrom": "${financialDetails.taxPeriodFrom.get}",
+       |      "taxPeriodTo": "${financialDetails.taxPeriodTo.get}",
+       |      "contractAccountCategory":"${financialDetails.contractAccountCategory.get}",
+       |      "contractAccount":"${financialDetails.contractAccount.get}",
+       |      "documentNumber": "${financialDetails.documentNumber.get}",
+       |      "documentNumberItem": "${financialDetails.documentNumberItem.get}",
+       |      "chargeReference": "${financialDetails.chargeReference.get}",
+       |      "mainTransaction": "${financialDetails.mainTransaction.get}",
+       |      "subTransaction": "${financialDetails.subTransaction.get}",
+       |      "originalAmount": ${financialDetails.originalAmount.get},
+       |      "outstandingAmount": ${financialDetails.outstandingAmount.get},
+       |      "clearedAmount": ${financialDetails.clearedAmount.get},
+       |      "accruedInterest": ${financialDetails.accruedInterest.get},
        |      "items": [$financialDetailsItemMtdJson]
        | }
        |""".stripMargin
   )
 
-  val mtdFinancialDetailsNoMainTypeJson: JsValue = Json.parse(
+  val financialDetailsNoMainTypeMtdJson: JsValue = Json.parse(
     s"""
        | {
        |   "taxYear":"${taxYear.asMtd}",
-       |   "documentId": "${financialDetailsFullObject.documentId}",
+       |   "documentId": "${financialDetails.documentId}",
        |   "items": [$financialDetailsItemMtdJson]
        | }
        |""".stripMargin

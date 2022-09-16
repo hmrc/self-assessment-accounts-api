@@ -11,23 +11,23 @@ import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTrans
 trait RetrieveBalanceAndTransactionsResponseFixture extends BalanceDetailsFixture with DocumentDetailsFixture with FinancialDetailsFixture {
 
   val responseModel: RetrieveBalanceAndTransactionsResponse = RetrieveBalanceAndTransactionsResponse(
-    balanceDetailsObject,
+    balanceDetails,
     Some(Seq(documentDetails)),
-    Some(Seq(financialDetailsFullObject))
+    Some(Seq(financialDetails))
   )
 
   val responseMtdJson: JsValue = Json.parse(s"""
       |{
-      |  "balanceDetails": $mtdResponseJson,
-      |  "documentDetails": [$mtdDocumentDetailsJson],
-      |  "financialDetails": [$mtdFinancialDetailsFullJson]
+      |  "balanceDetails": $balanceDetailsMtdJson,
+      |  "documentDetails": [$documentDetailsMtdJson],
+      |  "financialDetails": [$financialDetailsMtdJson]
       |}""".stripMargin)
 
   val responseDownstreamJson: JsValue = Json.parse(s"""
        |{
-       |  "balanceDetails": $downstreamResponseJson,
-       |  "documentDetails": [$downstreamDocumentDetailsJson],
-       |  "financialDetails": [$downstreamFinancialDetailsFullJson]
+       |  "balanceDetails": $balanceDetailsDownstreamJson,
+       |  "documentDetails": [$documentDetailsDownstreamJson],
+       |  "financialDetails": [$financialDetailsDownstreamJson]
        |}""".stripMargin)
 
 }

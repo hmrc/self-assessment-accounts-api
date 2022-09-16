@@ -20,13 +20,13 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture
 
-class BalanceDetailsSpec extends UnitSpec with BalanceDetailsFixture{
+class BalanceDetailsSpec extends UnitSpec with BalanceDetailsFixture {
 
   "reads" should {
     "return a valid model" when {
       "valid JSON is supplied" in {
-        downstreamResponseJson
-          .as[BalanceDetails] shouldBe balanceDetailsObject
+        balanceDetailsDownstreamJson
+          .as[BalanceDetails] shouldBe balanceDetails
       }
     }
   }
@@ -34,7 +34,7 @@ class BalanceDetailsSpec extends UnitSpec with BalanceDetailsFixture{
   "writes" when {
     "passed a valid model" should {
       "return valid JSON " in {
-        Json.toJson(balanceDetailsObject) shouldBe mtdResponseJson
+        Json.toJson(balanceDetails) shouldBe balanceDetailsMtdJson
       }
     }
   }

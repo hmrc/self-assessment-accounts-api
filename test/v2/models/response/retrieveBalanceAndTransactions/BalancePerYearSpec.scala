@@ -25,8 +25,8 @@ class BalancePerYearSpec extends UnitSpec with BalanceDetailsFixture {
   "reads" should {
     "return a valid model" when {
       "valid JSON is supplied" in {
-        downstreamDetailSingleYearJson
-          .as[BalancePerYear] shouldBe balancePerYearObject
+        balancePerYearDownstreamJson
+          .as[BalancePerYear] shouldBe balancePerYear
       }
     }
   }
@@ -34,7 +34,7 @@ class BalancePerYearSpec extends UnitSpec with BalanceDetailsFixture {
   "writes" when {
     "passed a valid model" should {
       "return valid JSON " in {
-        Json.toJson(balancePerYearObject) shouldBe mtdDetailSingleYearJson
+        Json.toJson(balancePerYear) shouldBe balancePerYearMtdJson
       }
     }
   }
