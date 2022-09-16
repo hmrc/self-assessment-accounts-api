@@ -18,14 +18,9 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{
-  documentDetails,
-  downstreamDocumentDetailsJson,
-  mtdDocumentDetailsJson,
-  newDownstreamDocumentDetailsJson
-}
+import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture
 
-class DocumentDetailsSpec extends UnitSpec {
+class DocumentDetailsSpec extends UnitSpec with DocumentDetailsFixture{
 
   "reads" should {
     "return a DocumentDetails object" when {

@@ -20,7 +20,7 @@ import api.models.domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
 import v2.models.response.retrieveBalanceAndTransactions.{FinanceDetails, FinancialDetailsItem}
 
-object FinanceDetailsFixture extends FinancialDetailsItemFixture {
+trait FinanceDetailsFixture extends FinancialDetailsItemFixture {
 
   private val taxYear: TaxYear = TaxYear("2022")
 
@@ -74,7 +74,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
        |      "taxYear": "${taxYear.asDownstream}",
        |      "documentId": "${financeDetailsFullObject.documentId}",
        |      "chargeType": "${financeDetailsFullObject.chargeType.get}",
-       |      "mainType": "${mainTypeDownstream}",
+       |      "mainType": "$mainTypeDownstream",
        |      "periodKey": "13RL",
        |      "periodKeyDescription": "abcde",
        |      "taxPeriodFrom": "${financeDetailsFullObject.taxPeriodFrom.get}",

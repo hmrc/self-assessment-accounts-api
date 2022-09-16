@@ -18,17 +18,9 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveBalanceAndTransactions.FinanceDetailsFixture.{
-  downstreamFinanceDetailFullJson,
-  downstreamFinanceDetailMismatchedMainTypeJson,
-  downstreamFinanceDetailMissingMainTypeJson,
-  financeDetailsFullObject,
-  financeDetailsNoMainTypeObject,
-  mtdFinanceDetailFullJson,
-  mtdFinanceDetailNoMainTypeJson
-}
+import v2.fixtures.retrieveBalanceAndTransactions.FinanceDetailsFixture
 
-class FinanceDetailsSpec extends UnitSpec {
+class FinanceDetailsSpec extends UnitSpec with FinanceDetailsFixture {
 
   "reads" should {
     "return a valid model with all properties" when {

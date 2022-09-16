@@ -18,9 +18,9 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture._
+import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture
 
-class BalancePerYearSpec extends UnitSpec {
+class BalancePerYearSpec extends UnitSpec with BalanceDetailsFixture {
 
   "reads" should {
     "return a valid model" when {
