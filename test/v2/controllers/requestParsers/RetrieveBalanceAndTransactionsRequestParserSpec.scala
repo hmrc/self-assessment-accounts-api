@@ -16,17 +16,13 @@
 
 package v2.controllers.requestParsers
 
-import api.models.domain.Nino
-import api.models.errors.{ErrorWrapper, NinoFormatError}
+import api.models.errors.{BadRequestError, ErrorWrapper, InvalidDocNumberError, NinoFormatError}
 import support.UnitSpec
+import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.mocks.validators.MockRetrieveBalanceAndTransactionsValidator
-import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest}
 
 class RetrieveBalanceAndTransactionsRequestParserSpec extends UnitSpec {
-  val validNino: String              = "AA123456B"
   implicit val correlationId: String = "X-123"
-
-  val inputData: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(validNino)
 
   trait Test extends MockRetrieveBalanceAndTransactionsValidator {
     lazy val parser = new RetrieveBalanceAndTransactionsRequestParser(mockValidator)
@@ -34,21 +30,42 @@ class RetrieveBalanceAndTransactionsRequestParserSpec extends UnitSpec {
 
   "parse" should {
     "return a request object" when {
-      "valid request data is supplied" in new Test {
-        MockRetrieveBalanceAndTransactionsValidator.validate(inputData).returns(Nil)
+      "valid request data with doc number supplied" in new Test {
+        MockRetrieveBalanceAndTransactionsValidator.validate(inputDataDocNumber).returns(Nil)
 
-        parser.parseRequest(inputData) shouldBe Right(RetrieveBalanceAndTransactionsRequest(Nino(validNino)))
+        parser.parseRequest(inputDataDocNumber) shouldBe Right(requestDocNumber)
+      }
+
+      "valid request data with date from and date to supplied" in new Test {
+        MockRetrieveBalanceAndTransactionsValidator.validate(inputDataDateRange).returns(Nil)
+
+        parser.parseRequest(inputDataDateRange) shouldBe Right(requestDateRange)
+      }
+
+      "valid request data with doc number is supplied" in new Test {
+        MockRetrieveBalanceAndTransactionsValidator.validate(inputDataEverythingTrue).returns(Nil)
+
+        parser.parseRequest(inputDataEverythingTrue) shouldBe Right(requestEverythingTrue)
       }
     }
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
         MockRetrieveBalanceAndTransactionsValidator
-          .validate(inputData)
+          .validate(inputDataDocNumber)
           .returns(List(NinoFormatError))
 
-        parser.parseRequest(inputData) shouldBe
+        parser.parseRequest(inputDataDocNumber) shouldBe
           Left(ErrorWrapper(correlationId, NinoFormatError, None))
+      }
+
+      "multiple validation errors occurs" in new Test {
+        MockRetrieveBalanceAndTransactionsValidator
+          .validate(inputDataDocNumber)
+          .returns(List(NinoFormatError, InvalidDocNumberError))
+
+        parser.parseRequest(inputDataDocNumber) shouldBe
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, InvalidDocNumberError))))
       }
     }
   }

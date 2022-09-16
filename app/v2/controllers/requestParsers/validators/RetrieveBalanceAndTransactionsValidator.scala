@@ -17,8 +17,18 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.NinoValidation
-import api.models.errors.MtdError
+import api.controllers.requestParsers.validators.validations.{BooleanValidation, DateFormatValidation, DocNumberValidation, NinoValidation}
+import api.models.errors.{
+  InvalidCalculateAccruedInterestError,
+  InvalidCustomerPaymentInformationError,
+  InvalidDateFromError,
+  InvalidDateToError,
+  InvalidIncludeLocksError,
+  InvalidIncludeStatisticalError,
+  InvalidOnlyOpenItemsError,
+  InvalidRemovePaymentOnAccountError,
+  MtdError
+}
 import config.AppConfig
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRawData
 
@@ -31,7 +41,16 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
   private def parameterFormatValidation: RetrieveBalanceAndTransactionsRawData => List[List[MtdError]] =
     (data: RetrieveBalanceAndTransactionsRawData) => {
       List(
-        NinoValidation.validate(data.nino)
+        NinoValidation.validate(data.nino),
+        DocNumberValidation.validate(data.docNumber),
+        DateFormatValidation.validate(data.dateFrom, InvalidDateFromError),
+        DateFormatValidation.validate(data.dateTo, InvalidDateToError),
+        BooleanValidation.validate(data.onlyOpenItems, InvalidOnlyOpenItemsError),
+        BooleanValidation.validate(data.includeLocks, InvalidIncludeLocksError),
+        BooleanValidation.validate(data.calculateAccruedInterest, InvalidCalculateAccruedInterestError),
+        BooleanValidation.validate(data.removePOA, InvalidRemovePaymentOnAccountError),
+        BooleanValidation.validate(data.customerPaymentInformation, InvalidCustomerPaymentInformationError),
+        BooleanValidation.validate(data.includeStatistical, InvalidIncludeStatisticalError)
       )
     }
 

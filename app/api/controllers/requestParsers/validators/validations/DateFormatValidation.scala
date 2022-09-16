@@ -16,13 +16,14 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import java.time.LocalDate
-
 import api.models.errors.MtdError
 
+import java.time.LocalDate
 import scala.util.{Failure, Success, Try}
 
 object DateFormatValidation {
+
+  def validate(date: Option[String], error: MtdError): List[MtdError] = date.map(validate(_, error)).getOrElse(Nil)
 
   def validate(date: String, error: MtdError): List[MtdError] = Try {
     LocalDate.parse(date, dateFormat)

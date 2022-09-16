@@ -27,6 +27,18 @@ class RetrieveBalanceAndTransactionsRequestParser @Inject() (val validator: Retr
     extends RequestParser[RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest] {
 
   override protected def requestFor(data: RetrieveBalanceAndTransactionsRawData): RetrieveBalanceAndTransactionsRequest =
-    RetrieveBalanceAndTransactionsRequest(Nino(data.nino))
+    RetrieveBalanceAndTransactionsRequest(
+      nino = Nino(data.nino),
+      docNumber = data.docNumber,
+      dateFrom = data.dateFrom,
+      dateTo = data.dateTo,
+      onlyOpenItems = toBool(data.onlyOpenItems),
+      includeLocks = toBool(data.includeLocks),
+      calculateAccruedInterest = toBool(data.calculateAccruedInterest),
+      removePOA = toBool(data.removePOA),
+      customerPaymentInformation = toBool(data.customerPaymentInformation),
+      includeStatistical = toBool(data.includeStatistical)
+    )
 
+  private def toBool(param: Option[String]): Boolean = param.map(_.toBoolean).getOrElse(false)
 }

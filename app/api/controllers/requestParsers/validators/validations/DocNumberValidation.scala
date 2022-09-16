@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveBalanceAndTransactions
+package api.controllers.requestParsers.validators.validations
 
-import api.models.request.RawData
+import api.models.errors.{InvalidDocNumberError, MtdError}
 
-case class RetrieveBalanceAndTransactionsRawData(
-    nino: String,
-    docNumber: Option[String],
-    dateFrom: Option[String],
-    dateTo: Option[String],
-    onlyOpenItems: Option[String],
-    includeLocks: Option[String],
-    calculateAccruedInterest: Option[String],
-    removePOA: Option[String],
-    customerPaymentInformation: Option[String],
-    includeStatistical: Option[String]
-) extends RawData
+object DocNumberValidation {
+
+  val MAX_LENGTH = 12
+
+  def validate(docNumber: Option[String]): List[MtdError] = {
+    docNumber.map(validate).getOrElse(Nil)
+  }
+
+  def validate(docNumber: String): List[MtdError] = {
+    if (docNumber.length > MAX_LENGTH) List(InvalidDocNumberError) else Nil
+  }
+
+}

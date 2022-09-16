@@ -18,4 +18,15 @@ package v2.models.request.retrieveBalanceAndTransactions
 
 import api.models.domain.Nino
 
-case class RetrieveBalanceAndTransactionsRequest(nino: Nino)
+case class RetrieveBalanceAndTransactionsRequest(
+    nino: Nino,
+    docNumber: Option[String],
+    dateFrom: Option[String],
+    dateTo: Option[String],
+    onlyOpenItems: Boolean,
+    includeLocks: Boolean,
+    calculateAccruedInterest: Boolean,
+    removePOA: Boolean,
+    customerPaymentInformation: Boolean,
+    includeStatistical: Boolean
+)
