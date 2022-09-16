@@ -18,22 +18,22 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveBalanceAndTransactions.FinanceDetailsFixture
+import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture
 
-class FinanceDetailsSpec extends UnitSpec with FinanceDetailsFixture {
+class FinancialDetailsSpec extends UnitSpec with FinancialDetailsFixture {
 
   "reads" should {
     "return a valid model with all properties" when {
       "valid JSON with all properties is supplied " in {
-        downstreamFinanceDetailFullJson.as[FinanceDetails] shouldBe financeDetailsFullObject
+        downstreamFinancialDetailsFullJson.as[FinancialDetails] shouldBe financialDetailsFullObject
       }
     }
     "return a valid model without a mainType" when {
       "JSON without mainType is supplied " in {
-        downstreamFinanceDetailMissingMainTypeJson.as[FinanceDetails] shouldBe financeDetailsNoMainTypeObject
+        downstreamFinancialDetailsMissingMainTypeJson.as[FinancialDetails] shouldBe financialDetailsNoMainTypeObject
       }
       "JSON with invalid mainType is supplied " in {
-        downstreamFinanceDetailMismatchedMainTypeJson.as[FinanceDetails] shouldBe financeDetailsNoMainTypeObject
+        downstreamFinancialDetailsMismatchedMainTypeJson.as[FinancialDetails] shouldBe financialDetailsNoMainTypeObject
       }
     }
   }
@@ -41,13 +41,13 @@ class FinanceDetailsSpec extends UnitSpec with FinanceDetailsFixture {
   "writes" when {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
-        Json.toJson(financeDetailsFullObject) shouldBe mtdFinanceDetailFullJson
+        Json.toJson(financialDetailsFullObject) shouldBe mtdFinancialDetailsFullJson
       }
     }
 
     "passed a valid model with no mainType" should {
       "return valid JSON with no mainType" in {
-        Json.toJson(financeDetailsNoMainTypeObject) shouldBe mtdFinanceDetailNoMainTypeJson
+        Json.toJson(financialDetailsNoMainTypeObject) shouldBe mtdFinancialDetailsNoMainTypeJson
       }
     }
 

@@ -11,7 +11,7 @@ case class RetrieveBalanceAndTransactionsResponse(
     balanceDetails: BalanceDetails,
 //codingDetails: Option[Seq[CodingDetails]],
     documentDetails: Option[Seq[DocumentDetails]],
-    financialDetails: Option[Seq[FinanceDetails]]
+    financialDetails: Option[Seq[FinancialDetails]]
 )
 
 object RetrieveBalanceAndTransactionsResponse {
