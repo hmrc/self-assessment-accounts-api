@@ -23,7 +23,7 @@ import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture._
 class CodingDetailsSpec extends UnitSpec {
 
   "reads" should {
-    "return a valid model" when {
+    "return a deserialized object" when {
       "valid JSON is supplied" in {
         codingDetailsDownstreamDetailsJson
           .as[CodingDetails] shouldBe codingDetailsObject
@@ -32,7 +32,7 @@ class CodingDetailsSpec extends UnitSpec {
   }
 
   "writes" when {
-    "passed a valid model" should {
+    "passed a valid object" should {
       "return valid JSON " in {
         Json.toJson(codingDetailsObject) shouldBe codingDetailsMtdJson
       }
