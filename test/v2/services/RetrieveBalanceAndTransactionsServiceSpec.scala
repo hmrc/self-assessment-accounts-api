@@ -42,16 +42,16 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
 
   private val requestData: RetrieveBalanceAndTransactionsRequest =
     RetrieveBalanceAndTransactionsRequest(
-    Nino(nino),
-    Some(docNumber),
-    Some(dateFrom),
-    Some(dateTo),
-    onlyOpenItems,
-    includeLocks,
-    calculateAccruedInterest,
-    removePOA,
-    customerPaymentInformation,
-    includeStatistical)
+      Nino(nino),
+      Some(docNumber),
+      Some(dateFrom),
+      Some(dateTo),
+      onlyOpenItems,
+      includeLocks,
+      calculateAccruedInterest,
+      removePOA,
+      customerPaymentInformation,
+      includeStatistical)
 
   val balanceDetails: BalanceDetails =
     BalanceDetails(
@@ -63,7 +63,10 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
       earliestPaymentDateOverDue = Some("1920-02-29"),
       totalBalance = -99999999999.99,
       amountCodedOut = Some(3456.67),
-      bcdBalancePerYear = Some(Seq(balancePerYear)),
+      bcdBalancePerYear = Some(Seq(BalancePerYear(
+        taxYear = Some("2022"),
+        bcdAmount = Some(1300.12)
+      ))),
       totalBcdBalance = Some(2600.24),
       unallocatedCredit = Some(3456.67),
       allocatedCredit = Some(2345.67),
@@ -73,10 +76,15 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
       availableCredit = Some(1212.67)
     )
 
-  val balancePerYear: BalancePerYear =
-    BalancePerYear(
-      taxYear = Some("2022"),
-      bcdAmount = Some(1300.12)
+  val codingDetails: CodingDetails =
+    CodingDetails(
+      taxYearReturn = Some("2021"),
+      totalLiabilityAmount = Some(5009.99),
+      taxYearCoding = Some("2021"),
+      coded = Some(Coded(
+        charge = Some(5009.99),
+        initiationDate = Some("2021-04-05")
+      ))
     )
 
   val documentDetails: DocumentDetails =
@@ -91,42 +99,33 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
       documentDescription = Some("ITSA- POA 1"),
       originalAmount = 5009.99,
       outstandingAmount = 5009.99,
-      lastClearing = Some(lastClearing),
+      lastClearing = Some(LastClearing(
+        lastClearingDate = Some("2018-04-05"),
+        lastClearingReason = Some("Incoming Payment"),
+        lastClearedAmount = Some(5009.99)
+      )),
       isStatistical = true,
       informationCode = Some("Coding Out"),
       paymentLot = Some("AB1023456789"),
       paymentLotItem = Some("000001"),
       effectiveDateOfPayment = Some("2021-04-05"),
-      latePaymentInterest = Some(latePaymentInterest),
+      latePaymentInterest = Some(LatePaymentInterest(
+        latePaymentInterestId = Some("1234567890123456"),
+        accruingInterestAmount = Some(5009.99),
+        interestRate = Some(1.23),
+        interestStartDate = Some("2020-04-01"),
+        interestEndDate = Some("2020-04-05"),
+        interestAmount = Some(5009.99),
+        interestDunningLockAmount = Some(5009.99),
+        interestOutstandingAmount = Some(5009.99)
+      )),
       amountCodedOut = Some(5009.99),
-      reducedCharge = Some(reducedCharge)
-    )
-
-  val lastClearing: LastClearing =
-    LastClearing(
-      lastClearingDate = Some("2018-04-05"),
-      lastClearingReason = Some("Incoming Payment"),
-      lastClearedAmount = Some(5009.99)
-    )
-
-  val latePaymentInterest: LatePaymentInterest =
-    LatePaymentInterest(
-      latePaymentInterestId = Some("1234567890123456"),
-      accruingInterestAmount = Some(5009.99),
-      interestRate = Some(1.23),
-      interestStartDate = Some("2020-04-01"),
-      interestEndDate = Some("2020-04-05"),
-      interestAmount = Some(5009.99),
-      interestDunningLockAmount = Some(5009.99),
-      interestOutstandingAmount = Some(5009.99)
-    )
-
-  val reducedCharge: ReducedCharge =
-    ReducedCharge(
-      chargeType = Some("???"),
-      documentNumber = Some("???"),
-      amendmentDate = Some("2018-04-05"),
-      taxYear = Some("2018")
+      reducedCharge = Some(ReducedCharge(
+        chargeType = Some("???"),
+        documentNumber = Some("???"),
+        amendmentDate = Some("2018-04-05"),
+        taxYear = Some("2018")
+      ))
     )
 
   val financeDetails: FinanceDetails =
@@ -148,35 +147,32 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
       outstandingAmount = Some(10000),
       clearedAmount = Some(10000),
       accruedInterest = Some(10000),
-      items = Seq(financialDetailsItem)
-    )
-
-  val financialDetailsItem: FinancialDetailsItem =
-    FinancialDetailsItem(
-      subItem = Some("001"),
-      dueDate = Some("2018-08-13"),
-      amount = Some(10000),
-      clearingDate = Some("2018-08-13"),
-      clearingReason = Some("01"),
-      outgoingPaymentMethod = Some("outgoing Payment"),
-      paymentLock = Some("paymentLock"),
-      clearingLock = Some("clearingLock"),
-      interestLock = Some("interestLock"),
-      dunningLock = Some("dunningLock"),
-      isReturn = Some(true),
-      paymentReference = Some("Ab12453535"),
-      paymentAmount = Some(10000),
-      paymentMethod = Some("Payment"),
-      paymentLot = Some("81203010024"),
-      paymentLotItem = Some("000001"),
-      isStatistical = Some(true),
-      returnReason = Some("ABCA")
+      items = Seq(FinancialDetailsItem(
+        subItem = Some("001"),
+        dueDate = Some("2018-08-13"),
+        amount = Some(10000),
+        clearingDate = Some("2018-08-13"),
+        clearingReason = Some("01"),
+        outgoingPaymentMethod = Some("outgoing Payment"),
+        paymentLock = Some("paymentLock"),
+        clearingLock = Some("clearingLock"),
+        interestLock = Some("interestLock"),
+        dunningLock = Some("dunningLock"),
+        isReturn = Some(true),
+        paymentReference = Some("Ab12453535"),
+        paymentAmount = Some(10000),
+        paymentMethod = Some("Payment"),
+        paymentLot = Some("81203010024"),
+        paymentLotItem = Some("000001"),
+        isStatistical = Some(true),
+        returnReason = Some("ABCA")
+      ))
     )
 
   val retrieveBalanceAndTransactionsResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
       balanceDetails = balanceDetails,
-      //codingDetails = Option[Seq[codingDetails]],
+      codingDetails = Some(Seq(codingDetails)),
       documentDetails = Some(Seq(documentDetails)),
       financeDetails = Some(Seq(financeDetails))
     )

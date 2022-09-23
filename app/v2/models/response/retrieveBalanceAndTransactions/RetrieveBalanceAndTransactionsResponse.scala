@@ -20,7 +20,7 @@ import play.api.libs.json.{Json, OFormat}
 
 case class RetrieveBalanceAndTransactionsResponse(
                                                    balanceDetails: BalanceDetails,
-                                                   //codingDetails: Option[Seq[CodingDetails]],
+                                                   codingDetails: Option[Seq[CodingDetails]],
                                                    documentDetails: Option[Seq[DocumentDetails]],
                                                    financeDetails: Option[Seq[FinanceDetails]] //Shouldn't this be financialDetails?
                                                  )
