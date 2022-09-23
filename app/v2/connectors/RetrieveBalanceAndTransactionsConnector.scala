@@ -35,21 +35,30 @@ class RetrieveBalanceAndTransactionsConnector @Inject()(val http: HttpClient, va
                                                                                      correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
 
     val nino = request.nino.nino
+    val docNumber = request.docNumber
+    val dateFrom = request.dateFrom
+    val dateTo = request.dateTo
+    val onlyOpenItems = request.onlyOpenItems
+    val includeLocks = request.includeLocks
+    val calculateAccruedInterest = request.calculateAccruedInterest
+    val removePOA = request.removePOA
+    val customerPaymentInformation = request.customerPaymentInformation
+    val includeStatistical = request.includeStatistical
 
     val booleanQueryParams: Seq[(String, String)] =
       Seq(
-        "onlyOpenItems"              -> request.onlyOpenItems.toString,
-        "includeLocks"               -> request.includeLocks.toString,
-        "calculateAccruedInterest"   -> request.calculateAccruedInterest.toString,
-        "removePOA"                  -> request.removePOA.toString,
-        "customerPaymentInformation" -> request.customerPaymentInformation.toString,
-        "includeStatistical"         -> request.includeStatistical.toString
+        "onlyOpenItems"              -> onlyOpenItems.toString,
+        "includeLocks"               -> includeLocks.toString,
+        "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
+        "removePOA"                  -> removePOA.toString,
+        "customerPaymentInformation" -> customerPaymentInformation.toString,
+        "includeStatistical"         -> includeStatistical.toString
       )
 
-    val queryParams = request.docNumber match {
+    val queryParams = docNumber match {
       case Some(x) => Seq("docNumber" -> x) ++ booleanQueryParams
-      case _ => Seq("dateFrom" -> request.dateFrom.get,
-                    "dateTo" -> request.dateTo.get) ++ booleanQueryParams
+      case _ => Seq("dateFrom" -> dateFrom.get,
+                    "dateTo" -> dateTo.get) ++ booleanQueryParams
     }
     get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"), queryParams)
   }

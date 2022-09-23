@@ -149,6 +149,29 @@ object RangeToDateBeforeFromDateError
       code = "RANGE_TO_DATE_BEFORE_FROM_DATE",
       message = "The To date must be after the From date"
     )
+// Invalid Errors
+
+object InvalidDocNumberError extends MtdError(code = "INVALID_DOC_NUMBER", message = "The Provided Doc Number is invalid.")
+
+object InvalidOnlyOpenItemsError extends MtdError(code = "INVALID_ONLY_OPEN_ITEMS", message = "The Provided only open item is invalid.")
+
+object InvalidIncludeLocksError extends MtdError(code = "INVALID_INCLUDE_LOCKS", message = "The Provided include lock is invalid.")
+
+object InvalidCalculateAccruedInterestError
+  extends MtdError(code = "INVALID_CALCULATE_ACCRUED_INTEREST", message = "The Provided calculation of accrued interest is invalid.")
+
+object InvalidCustomerPaymentInformationError
+  extends MtdError(code = "INVALID_CUSTOMER_PAYMENT_INFORMATION", message = "The Provided customer Payment Information is invalid.")
+
+object InvalidDateFromError extends MtdError(code = "INVALID_DATE_FROM", message = "The Provided date from is invalid.")
+
+object InvalidDateToError extends MtdError(code = "INVALID_DATE_TO", message = "The Provided date to is invalid.")
+
+object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", message = "The Provided removePOA is invalid.")
+
+object InvalidIncludeStatisticalError extends MtdError(code = "INVALID_INCLUDE_STATISTICAL", message = "The Provided include statistical is invalid.")
+
+object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The Provided Date range is invalid.")
 
 // Standard Errors
 object NotFoundError

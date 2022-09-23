@@ -27,7 +27,16 @@ import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
-  val nino: String = "AA123456A"
+  private val nino = "AA123456A"
+  private val docNumber = "anId"
+  private val dateFrom = "2018-08-13"
+  private val dateTo = "2018-08-14"
+  private val onlyOpenItems = false
+  private val includeLocks = false
+  private val calculateAccruedInterest = false
+  private val removePOA = false
+  private val customerPaymentInformation = false
+  private val includeStatistical = false
 
   val balanceDetails: BalanceDetails =
     BalanceDetails(
@@ -145,7 +154,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       paymentMethod = Some("Payment"),
       paymentLot = Some("81203010024"),
       paymentLotItem = Some("000001"),
-      isStatistical = Some("G"),
+      isStatistical = Some(true),
       returnReason = Some("ABCA")
     )
 
@@ -170,7 +179,17 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
   "RetrieveBalanceAndTransactionsConnector" when {
     "retrieveBalanceAndTransactions" must {
-      val request: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(Nino(nino),) //add query params
+      val request: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
+        Nino(nino),
+        Some(docNumber),
+        Some(dateFrom),
+        Some(dateTo),
+        onlyOpenItems,
+        includeLocks,
+        calculateAccruedInterest,
+        removePOA,
+        customerPaymentInformation,
+        includeStatistical)
 
       "return a valid response" in new Test {
 
@@ -179,7 +198,15 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .parameterGet(
             s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-            Seq("docNumber" ->),
+            Seq(
+              "docNumber" -> "anId",
+              "onlyOpenItems" -> onlyOpenItems.toString,
+              "includeLocks" -> includeLocks.toString,
+              "calculateAccruedInterest" -> calculateAccruedInterest.toString,
+              "removePOA" -> removePOA.toString,
+              "customerPaymentInformation" -> customerPaymentInformation.toString,
+              "includeStatistical" -> includeStatistical.toString
+            ),
             dummyIfsHeaderCarrierConfig,
             requiredIfsHeaders,
             Seq("AnotherHeader" -> "HeaderValue")

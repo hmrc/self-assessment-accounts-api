@@ -29,12 +29,29 @@ import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
 
-  private val nino = Nino("AA123456A")
+  private val nino = "AA123456A"
+  private val docNumber = "anId"
+  private val dateFrom = "2018-08-13"
+  private val dateTo = "2018-08-14"
+  private val onlyOpenItems = false
+  private val includeLocks = false
+  private val calculateAccruedInterest = false
+  private val removePOA = false
+  private val customerPaymentInformation = false
+  private val includeStatistical = false
 
   private val requestData: RetrieveBalanceAndTransactionsRequest =
     RetrieveBalanceAndTransactionsRequest(
-      nino = nino,
-    )
+    Nino(nino),
+    Some(docNumber),
+    Some(dateFrom),
+    Some(dateTo),
+    onlyOpenItems,
+    includeLocks,
+    calculateAccruedInterest,
+    removePOA,
+    customerPaymentInformation,
+    includeStatistical)
 
   val balanceDetails: BalanceDetails =
     BalanceDetails(
@@ -152,7 +169,7 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
       paymentMethod = Some("Payment"),
       paymentLot = Some("81203010024"),
       paymentLotItem = Some("000001"),
-      isStatistical = Some("G"),
+      isStatistical = Some(true),
       returnReason = Some("ABCA")
     )
 
@@ -209,17 +226,17 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
         ("INVALID_IDTYPE", InternalError),
         ("INVALID_IDNUMBER", NinoFormatError),
         ("INVALID_REGIME_TYPE", InternalError),
-        ("INVALID_DOC_NUMBER", ),
-        ("INVALID_ONLY_OPEN_ITEMS", ),
-        ("INVALID_INCLUDE_LOCKS", ),
-        ("INVALID_CALCULATE_ACCRUED_INTEREST", ),
-        ("INVALID_CUSTOMER_PAYMENT_INFORMATION", ),
-        ("INVALID_DATE_FROM", ),
-        ("INVALID_DATE_TO", ),
-        ("INVALID_DATE_RANGE", ),
-        ("INVALID_REQUEST", ),
-        ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", ),
-        ("INVALID_INCLUDE_STATISTICAL", ),
+        ("INVALID_DOC_NUMBER", InvalidDocNumberError),
+        ("INVALID_ONLY_OPEN_ITEMS", InvalidOnlyOpenItemsError),
+        ("INVALID_INCLUDE_LOCKS", InvalidIncludeLocksError),
+        ("INVALID_CALCULATE_ACCRUED_INTEREST", InvalidCalculateAccruedInterestError),
+        ("INVALID_CUSTOMER_PAYMENT_INFORMATION", InvalidCustomerPaymentInformationError),
+        ("INVALID_DATE_FROM", InvalidDateFromError),
+        ("INVALID_DATE_TO", InvalidDateToError),
+        ("INVALID_DATE_RANGE", InvalidDateRangeError),
+        ("INVALID_REQUEST", BadRequestError),
+        ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", InvalidRemovePaymentOnAccountError),
+        ("INVALID_INCLUDE_STATISTICAL", InvalidIncludeStatisticalError),
         ("REQUEST_NOT_PROCESSED", InternalError),
         ("NO_DATA_FOUND", NotFoundError),
         ("SERVER_ERROR", InternalError),
