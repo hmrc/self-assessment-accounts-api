@@ -41,7 +41,8 @@ class FinanceDetailsSpec extends UnitSpec {
         downstreamFinanceDetailMissingMainTypeJson.as[FinanceDetails] shouldBe financeDetailsNoMainTypeObject
       }
       "JSON with invalid mainType is supplied " in {
-        downstreamFinanceDetailMismatchedMainTypeJson.as[FinanceDetails] shouldBe financeDetailsNoMainTypeObject
+        val error = intercept[Exception] { downstreamFinanceDetailMismatchedMainTypeJson.as[FinanceDetails] }
+        error.getMessage shouldBe "Invalid mainType"
       }
     }
   }

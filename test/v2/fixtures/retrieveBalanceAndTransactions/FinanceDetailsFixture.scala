@@ -18,17 +18,30 @@ package v2.fixtures.retrieveBalanceAndTransactions
 
 import api.models.domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
-import v2.models.response.retrieveBalanceAndTransactions.{FinanceDetails, FinancialDetailsItem}
+import v2.models.response.retrieveBalanceAndTransactions.{ChargeDetail, FinanceDetails, FinancialDetailsItem}
 
 object FinanceDetailsFixture extends FinancialDetailsItemFixture {
 
   private val taxYear: TaxYear = TaxYear("2022")
 
+  val chargeDetail: ChargeDetail = ChargeDetail(
+    chargeType = Some("PAYE"),
+    mainType = Some("Income Tax Estimate"),
+    mainTransaction = Some("TR122"),
+    subTransaction = Some("SUB221")
+  )
+
+  val chargeDetailNoMainType: ChargeDetail = ChargeDetail(
+    chargeType = Some("PAYE"),
+    mainType = None,
+    mainTransaction = Some("TR122"),
+    subTransaction = Some("SUB221")
+  )
+
   val financeDetailsFullObject: FinanceDetails = FinanceDetails(
     taxYear = taxYear.asMtd,
     documentId = "123456",
-    chargeType = Some("PAYE"),
-    mainType = Some("Income Tax Estimate"),
+    chargeDetail = Some(chargeDetail),
     taxPeriodFrom = Some("2022-01-01"),
     taxPeriodTo = Some("2022-02-01"),
     contractAccountCategory = Some("02"),
@@ -36,8 +49,6 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
     documentNumber = Some("1040000872"),
     documentNumberItem = Some("XM01"),
     chargeReference = Some("XM002610011594"),
-    mainTransaction = Some("TR122"),
-    subTransaction = Some("SUB221"),
     originalAmount = Some(3453.99),
     outstandingAmount = Some(452.11),
     clearedAmount = Some(3411.01),
@@ -48,8 +59,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
   val financeDetailsNoMainTypeObject: FinanceDetails = FinanceDetails(
     taxYear = taxYear.asMtd,
     documentId = "123456",
-    chargeType = None,
-    mainType = None,
+    chargeDetail = Some(chargeDetailNoMainType),
     taxPeriodFrom = None,
     taxPeriodTo = None,
     contractAccountCategory = None,
@@ -57,8 +67,6 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
     documentNumber = None,
     documentNumberItem = None,
     chargeReference = None,
-    mainTransaction = None,
-    subTransaction = None,
     originalAmount = None,
     outstandingAmount = None,
     clearedAmount = None,
@@ -73,7 +81,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
        |{
        |      "taxYear": "${taxYear.asDownstream}",
        |      "documentId": "${financeDetailsFullObject.documentId}",
-       |      "chargeType": "${financeDetailsFullObject.chargeType.get}",
+       |      "chargeType": "${chargeDetail.chargeType.get}",
        |      "mainType": "${mainTypeDownstream}",
        |      "periodKey": "13RL",
        |      "periodKeyDescription": "abcde",
@@ -87,8 +95,8 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
        |      "sapDocumentNumber": "${financeDetailsFullObject.documentNumber.get}",
        |      "sapDocumentNumberItem": "${financeDetailsFullObject.documentNumberItem.get}",
        |      "chargeReference": "${financeDetailsFullObject.chargeReference.get}",
-       |      "mainTransaction": "${financeDetailsFullObject.mainTransaction.get}",
-       |      "subTransaction": "${financeDetailsFullObject.subTransaction.get}",
+       |      "mainTransaction": "${chargeDetail.mainTransaction.get}",
+       |      "subTransaction": "${chargeDetail.subTransaction.get}",
        |      "originalAmount": ${financeDetailsFullObject.originalAmount.get},
        |      "outstandingAmount": ${financeDetailsFullObject.outstandingAmount.get},
        |      "clearedAmount": ${financeDetailsFullObject.clearedAmount.get},
@@ -111,17 +119,36 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
        |{
        |      "taxYear": "${taxYear.asDownstream}",
        |      "documentId": "${financeDetailsFullObject.documentId}",
+       |      "chargeType" : "${chargeDetail.chargeType.get}",
+       |      "mainTransaction": "${chargeDetail.mainTransaction.get}",
+       |      "subTransaction": "${chargeDetail.subTransaction.get}",
        |      "items":  [$financialDetailsItemDownstreamJson]
        |}
        |""".stripMargin)
+
+  val mtdChargeDetailJson: JsValue = Json.parse(s"""
+      |{
+      |"chargeType" : "${chargeDetail.chargeType.get}",
+      |"mainType": "${chargeDetail.mainType.get}",
+      |"mainTransaction": "${chargeDetail.mainTransaction.get}",
+      |"subTransaction": "${chargeDetail.subTransaction.get}"
+      |}
+      |""".stripMargin)
+
+  val mtdChargeDetailNoMainTypeJson: JsValue = Json.parse(s"""
+      |{
+      |"chargeType" : "${chargeDetail.chargeType.get}",
+      |"mainTransaction": "${chargeDetail.mainTransaction.get}",
+      |"subTransaction": "${chargeDetail.subTransaction.get}"
+      |}
+      |""".stripMargin)
 
   val mtdFinanceDetailFullJson: JsValue = Json.parse(
     s"""
        |  {
        |      "taxYear":"${taxYear.asMtd}",
        |      "documentId": "${financeDetailsFullObject.documentId}",
-       |      "chargeType": "${financeDetailsFullObject.chargeType.get}",
-       |      "mainType": "${financeDetailsFullObject.mainType.get}",
+       |      "chargeDetail": ${mtdChargeDetailJson},
        |      "taxPeriodFrom": "${financeDetailsFullObject.taxPeriodFrom.get}",
        |      "taxPeriodTo": "${financeDetailsFullObject.taxPeriodTo.get}",
        |      "contractAccountCategory":"${financeDetailsFullObject.contractAccountCategory.get}",
@@ -129,8 +156,6 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
        |      "documentNumber": "${financeDetailsFullObject.documentNumber.get}",
        |      "documentNumberItem": "${financeDetailsFullObject.documentNumberItem.get}",
        |      "chargeReference": "${financeDetailsFullObject.chargeReference.get}",
-       |      "mainTransaction": "${financeDetailsFullObject.mainTransaction.get}",
-       |      "subTransaction": "${financeDetailsFullObject.subTransaction.get}",
        |      "originalAmount": ${financeDetailsFullObject.originalAmount.get},
        |      "outstandingAmount": ${financeDetailsFullObject.outstandingAmount.get},
        |      "clearedAmount": ${financeDetailsFullObject.clearedAmount.get},
@@ -144,6 +169,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
     s"""
        | {
        |   "taxYear":"${taxYear.asMtd}",
+       |   "chargeDetail": ${mtdChargeDetailNoMainTypeJson},
        |   "documentId": "${financeDetailsFullObject.documentId}",
        |   "items": [$financialDetailsItemMtdJson]
        | }
