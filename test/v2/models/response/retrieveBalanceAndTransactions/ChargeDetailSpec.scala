@@ -26,14 +26,9 @@ class ChargeDetailSpec extends UnitSpec {
       "valid JSON with all properties is supplied" in {
         downstreamFinanceDetailFullJson.as[ChargeDetail] shouldBe chargeDetail
       }
-      "valid JSON with all properties except mainType is supplied" in {
-        downstreamFinanceDetailMissingMainTypeJson.as[ChargeDetail] shouldBe chargeDetailNoMainType
-      }
+
     }
-    "return an error when JSON with mismatched mainType is supplied" in {
-      val error = intercept[Exception] { downstreamFinanceDetailMismatchedMainTypeJson.as[ChargeDetail] }
-      error.getMessage shouldBe "Invalid mainType"
-    }
+
   }
 
   "writes" should {
@@ -42,9 +37,6 @@ class ChargeDetailSpec extends UnitSpec {
         Json.toJson(chargeDetail) shouldBe mtdChargeDetailJson
       }
 
-      "return valid JSON with all properties except mainType" in {
-        Json.toJson(chargeDetailNoMainType) shouldBe mtdChargeDetailNoMainTypeJson
-      }
     }
   }
 

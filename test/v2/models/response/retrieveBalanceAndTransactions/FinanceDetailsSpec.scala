@@ -20,12 +20,8 @@ import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.FinanceDetailsFixture.{
   downstreamFinanceDetailFullJson,
-  downstreamFinanceDetailMismatchedMainTypeJson,
-  downstreamFinanceDetailMissingMainTypeJson,
   financeDetailsFullObject,
-  financeDetailsNoMainTypeObject,
-  mtdFinanceDetailFullJson,
-  mtdFinanceDetailNoMainTypeJson
+  mtdFinanceDetailFullJson
 }
 
 class FinanceDetailsSpec extends UnitSpec {
@@ -36,15 +32,6 @@ class FinanceDetailsSpec extends UnitSpec {
         downstreamFinanceDetailFullJson.as[FinanceDetails] shouldBe financeDetailsFullObject
       }
     }
-    "return a valid model without a mainType" when {
-      "JSON without mainType is supplied " in {
-        downstreamFinanceDetailMissingMainTypeJson.as[FinanceDetails] shouldBe financeDetailsNoMainTypeObject
-      }
-      "JSON with invalid mainType is supplied " in {
-        val error = intercept[Exception] { downstreamFinanceDetailMismatchedMainTypeJson.as[FinanceDetails] }
-        error.getMessage shouldBe "Invalid mainType"
-      }
-    }
   }
 
   "writes" when {
@@ -53,13 +40,6 @@ class FinanceDetailsSpec extends UnitSpec {
         Json.toJson(financeDetailsFullObject) shouldBe mtdFinanceDetailFullJson
       }
     }
-
-    "passed a valid model with no mainType" should {
-      "return valid JSON with no mainType" in {
-        Json.toJson(financeDetailsNoMainTypeObject) shouldBe mtdFinanceDetailNoMainTypeJson
-      }
-    }
-
   }
 
 }
