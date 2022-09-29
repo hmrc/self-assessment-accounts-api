@@ -42,10 +42,16 @@ class RetrieveBalanceAndTransactionsRequestParserSpec extends UnitSpec {
         parser.parseRequest(inputDataDateRange) shouldBe Right(requestDateRange)
       }
 
-      "valid request data with doc number is supplied" in new Test {
+      "valid request data with everything true" in new Test {
         MockRetrieveBalanceAndTransactionsValidator.validate(inputDataEverythingTrue).returns(Nil)
 
         parser.parseRequest(inputDataEverythingTrue) shouldBe Right(requestEverythingTrue)
+      }
+
+      "valid request data with everything false" in new Test {
+        MockRetrieveBalanceAndTransactionsValidator.validate(inputDataEverythingFalse).returns(Nil)
+
+        parser.parseRequest(inputDataEverythingFalse) shouldBe Right(requestDocNumber)
       }
     }
 

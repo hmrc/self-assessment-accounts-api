@@ -43,12 +43,12 @@ object RequestFixture {
     docNumber = None,
     dateFrom = Some(validDateFrom),
     dateTo = Some(validDateTo),
-    onlyOpenItems = Some("false"),
-    includeLocks = Some("false"),
-    calculateAccruedInterest = Some("false"),
-    removePOA = Some("false"),
-    customerPaymentInformation = Some("false"),
-    includeStatistical = Some("false")
+    onlyOpenItems = None,
+    includeLocks = None,
+    calculateAccruedInterest = None,
+    removePOA = None,
+    customerPaymentInformation = None,
+    includeStatistical = None
   )
 
   val inputDataEverythingTrue: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
@@ -62,6 +62,19 @@ object RequestFixture {
     removePOA = Some("true"),
     customerPaymentInformation = Some("true"),
     includeStatistical = Some("true")
+  )
+
+  val inputDataEverythingFalse: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
+    nino = validNino,
+    docNumber = Some(validDocNumber),
+    dateFrom = None,
+    dateTo = None,
+    onlyOpenItems = Some("false"),
+    includeLocks = Some("false"),
+    calculateAccruedInterest = Some("false"),
+    removePOA = Some("false"),
+    customerPaymentInformation = Some("false"),
+    includeStatistical = Some("false")
   )
 
   val requestDocNumber: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(

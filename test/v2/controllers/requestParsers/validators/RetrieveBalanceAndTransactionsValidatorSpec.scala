@@ -20,6 +20,7 @@ import api.models.errors.{
   InvalidCalculateAccruedInterestError,
   InvalidCustomerPaymentInformationError,
   InvalidDateFromError,
+  InvalidDateRangeError,
   InvalidDateToError,
   InvalidDocNumberError,
   InvalidIncludeLocksError,
@@ -97,6 +98,12 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
         val input          = inputDataDocNumber.copy(dateFrom = Some("invalid"), removePOA = Some("invalid"))
         val expectedErrors = List(InvalidDateFromError, InvalidRemovePaymentOnAccountError)
 
+        validator.validate(input) shouldBe expectedErrors
+      }
+
+      "date from is later than date to" in {
+        val input          = inputDataDateRange.copy(dateFrom = Some("2022-12-01"), dateTo = Some("2022-11-01"))
+        val expectedErrors = List(InvalidDateRangeError)
         validator.validate(input) shouldBe expectedErrors
       }
     }

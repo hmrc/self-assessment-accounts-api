@@ -17,7 +17,13 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.{BooleanValidation, DateFormatValidation, DocNumberValidation, NinoValidation}
+import api.controllers.requestParsers.validators.validations.{
+  BooleanValidation,
+  DateFormatValidation,
+  DateRangeValidationV2,
+  DocNumberValidation,
+  NinoValidation
+}
 import api.models.errors.{
   InvalidCalculateAccruedInterestError,
   InvalidCustomerPaymentInformationError,
@@ -36,7 +42,7 @@ import javax.inject.Inject
 
 class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) extends Validator[RetrieveBalanceAndTransactionsRawData] {
 
-  private val validationSet = List(parameterFormatValidation)
+  private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
   private def parameterFormatValidation: RetrieveBalanceAndTransactionsRawData => List[List[MtdError]] =
     (data: RetrieveBalanceAndTransactionsRawData) => {
@@ -51,6 +57,13 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
         BooleanValidation.validate(data.removePOA, InvalidRemovePaymentOnAccountError),
         BooleanValidation.validate(data.customerPaymentInformation, InvalidCustomerPaymentInformationError),
         BooleanValidation.validate(data.includeStatistical, InvalidIncludeStatisticalError)
+      )
+    }
+
+  private def parameterRuleValidation: RetrieveBalanceAndTransactionsRawData => List[List[MtdError]] =
+    (data: RetrieveBalanceAndTransactionsRawData) => {
+      List(
+        DateRangeValidationV2.validate(data.dateFrom, data.dateTo)
       )
     }
 

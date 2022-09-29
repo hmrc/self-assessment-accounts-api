@@ -30,6 +30,12 @@ class BooleanValidationSpec extends UnitSpec with JsonErrorValidators {
         validationResult shouldBe Nil
       }
 
+      "when the upper case string TRUE is supplied" in {
+        val validBoolean     = "TRUE"
+        val validationResult = BooleanValidation.validate(validBoolean, BadRequestError)
+        validationResult shouldBe Nil
+      }
+
       "when the string false is supplied" in {
         val validBoolean     = "false"
         val validationResult = BooleanValidation.validate(validBoolean, BadRequestError)
