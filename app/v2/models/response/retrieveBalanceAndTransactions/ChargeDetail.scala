@@ -13,12 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
-case class ChargeDetail(mainTransaction: Option[String],
+case class ChargeDetail(documentId: String,
+                        mainTransaction: Option[String],
                         mainTransactionDescription: Option[String],
                         subTransaction: Option[String],
                         subTransactionDescription: Option[String])
@@ -26,7 +28,8 @@ case class ChargeDetail(mainTransaction: Option[String],
 object ChargeDetail {
   implicit val writes: Writes[ChargeDetail] = Json.writes[ChargeDetail]
 
-  implicit val reads: Reads[ChargeDetail] = ((JsPath \ "mainTransaction").readNullable[String] and
+  implicit val reads: Reads[ChargeDetail] = ((JsPath \ "documentId").read[String] and
+    (JsPath \ "mainTransaction").readNullable[String] and
     (JsPath \ "mainType").readNullable[String] and
     (JsPath \ "subTransaction").readNullable[String] and
     (JsPath \ "chargeType").readNullable[String])(ChargeDetail.apply _)

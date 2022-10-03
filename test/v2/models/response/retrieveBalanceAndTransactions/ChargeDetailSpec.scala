@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.Json
@@ -24,7 +25,7 @@ class ChargeDetailSpec extends UnitSpec {
   "reads" should {
     "return a valid model with properties" when {
       "valid JSON with all properties is supplied" in {
-        downstreamFinanceDetailFullJson.as[ChargeDetail] shouldBe chargeDetail
+        downstreamFinanceDetailFullJson.as[ChargeDetail] shouldBe chargeDetailObject
       }
 
     }
@@ -34,7 +35,7 @@ class ChargeDetailSpec extends UnitSpec {
   "writes" should {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
-        Json.toJson(chargeDetail) shouldBe mtdChargeDetailJson
+        Json.toJson(chargeDetailObject) shouldBe mtdChargeDetailJson
       }
 
     }

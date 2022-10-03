@@ -18,10 +18,9 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import api.models.domain.TaxYear
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
 case class FinanceDetails(taxYear: String,
-                          documentId: String,
                           chargeDetail: Option[ChargeDetail],
                           taxPeriodFrom: Option[String],
                           taxPeriodTo: Option[String],
@@ -37,12 +36,11 @@ case class FinanceDetails(taxYear: String,
                           items: Seq[FinancialDetailsItem])
 
 object FinanceDetails {
-  implicit val writes: OWrites[FinanceDetails] = Json.writes[FinanceDetails]
+  implicit val writes: Writes[FinanceDetails] = Json.writes[FinanceDetails]
 
   implicit val reads: Reads[FinanceDetails] = (
     (JsPath \ "taxYear").read[String].map(TaxYear.fromDownstream(_).asMtd) and
-      (JsPath \ "documentId").read[String] and
-      JsPath.readNullable[ChargeDetail] and
+      (JsPath \ "chargeDetail").readNullable[ChargeDetail] and
       (JsPath \ "taxPeriodFrom").readNullable[String] and
       (JsPath \ "taxPeriodTo").readNullable[String] and
       (JsPath \ "contractAccountCategory").readNullable[String] and
