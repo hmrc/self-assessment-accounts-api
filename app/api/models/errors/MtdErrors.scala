@@ -131,6 +131,12 @@ object RuleDateRangeInvalidError
       message = "The specified date range is invalid"
     )
 
+object RuleInconsistentQueryParamsError
+  extends MtdError(
+    code = "RULE_INCONSISTENT_QUERY_PARAMS",
+    message = "The query parameters provided are not consistent."
+  )
+
 // Date Errors
 object MissingFromDateError
     extends MtdError(
@@ -172,6 +178,8 @@ object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOV
 object InvalidIncludeStatisticalError extends MtdError(code = "INVALID_INCLUDE_STATISTICAL", message = "The Provided include statistical is invalid.")
 
 object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The Provided Date range is invalid.")
+
+object InvalidIncludeChargeEstimateError extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The charge estimate was not provided.")
 
 // Standard Errors
 object NotFoundError

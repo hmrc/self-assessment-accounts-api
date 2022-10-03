@@ -25,6 +25,7 @@ import utils.Logging
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
+import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
@@ -47,7 +48,10 @@ class RetrieveBalanceAndTransactionsService @Inject()(connector: RetrieveBalance
     result.value
   }
 
-  private val downstreamErrorMap =
+}
+
+object RetrieveBalanceAndTransactionsService {
+  val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID" -> InternalError,
       "INVALID_IDTYPE" -> InternalError,
@@ -61,13 +65,12 @@ class RetrieveBalanceAndTransactionsService @Inject()(connector: RetrieveBalance
       "INVALID_DATE_FROM" -> InvalidDateFromError,
       "INVALID_DATE_TO" -> InvalidDateToError,
       "INVALID_DATE_RANGE" -> InvalidDateRangeError,
-      "INVALID_REQUEST" -> BadRequestError,
+      "INVALID_REQUEST" -> RuleInconsistentQueryParamsError,
       "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> InvalidRemovePaymentOnAccountError,
-      "INVALID_INCLUDE_STATISTICAL" -> InvalidIncludeStatisticalError,
+      "INVALID_INCLUDE_STATISTICAL" -> InvalidIncludeChargeEstimateError,
       "REQUEST_NOT_PROCESSED" -> InternalError,
       "NO_DATA_FOUND" -> NotFoundError,
       "SERVER_ERROR" -> InternalError,
       "SERVICE_UNAVAILABLE" -> InternalError
     )
-
 }
