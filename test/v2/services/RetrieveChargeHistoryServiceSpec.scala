@@ -25,6 +25,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
+import v2.services.RetrieveChargeHistoryService.downstreamErrorMap
 
 import scala.concurrent.Future
 
@@ -54,6 +55,36 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       chargeHistoryDetails = Seq(chargeHistoryDetails)
     )
 
+  "RetrieveChargeHistoryService" should {
+    "service call successful" when {
+      "return mapped result" in new Test {
+        MockRetrieveChargeHistoryConnector
+          .retrieveChargeHistory(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))))
+
+        private val result = await(service.retrieveChargeHistory(requestData))
+        result shouldBe Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
+      }
+    }
+  }
+
+  "unsuccessful" must {
+    "map errors according to spec" when {
+
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error is returned from the service" in new Test {
+
+          MockRetrieveChargeHistoryConnector
+            .retrieveChargeHistory(requestData)
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
+
+          await(service.retrieveChargeHistory(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
+        }
+
+      downstreamErrorMap.foreach(args => (serviceError _).tupled(args))
+    }
+  }
+
   trait Test extends MockRetrieveChargeHistoryConnector {
 
     implicit val hc: HeaderCarrier = HeaderCarrier()
@@ -66,52 +97,4 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
     )
 
   }
-
-  "RetrieveChargeHistoryService" when {
-    "service call successful" must {}
-    "return mapped result" in new Test {
-
-      val connectorResponse: RetrieveChargeHistoryResponse = retrieveChargeHistoryResponse
-
-      MockRetrieveChargeHistoryConnector
-        .retrieveChargeHistory(requestData)
-        .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
-
-      await(service.retrieveChargeHistory(requestData)) shouldBe Right(ResponseWrapper(correlationId, connectorResponse))
-    }
-  }
-
-  "unsuccessful" must {
-    "map errors according to spec" when {
-
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
-
-          MockRetrieveChargeHistoryConnector
-            .retrieveChargeHistory(requestData)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
-
-          await(service.retrieveChargeHistory(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
-        }
-
-      val input: Seq[(String, MtdError)] = Seq(
-        ("INVALID_CORRELATIONID", InternalError),
-        ("INVALID_IDTYPE", InternalError),
-        ("INVALID_IDVALUE", NinoFormatError),
-        ("INVALID_REGIME_TYPE", InternalError),
-        ("INVALID_DOC_NUMBER", TransactionIdFormatError),
-        ("INVALID_DATE_FROM", InternalError),
-        ("INVALID_DATE_TO", InternalError),
-        ("INVALID_DATE_RANGE", InternalError),
-        ("INVALID_REQUEST", InternalError),
-        ("REQUEST_NOT_PROCESSED", InternalError),
-        ("NO_DATA_FOUND", NotFoundError),
-        ("SERVER_ERROR", InternalError),
-        ("SERVICE_UNAVAILABLE", InternalError)
-      )
-
-      input.foreach(args => (serviceError _).tupled(args))
-    }
-  }
-
 }
