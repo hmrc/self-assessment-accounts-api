@@ -134,7 +134,7 @@ object RuleDateRangeInvalidError
 object RuleInconsistentQueryParamsError
   extends MtdError(
     code = "RULE_INCONSISTENT_QUERY_PARAMS",
-    message = "The query parameters provided are not consistent."
+    message = "Provide date range or docNumber when onlyOpen items are false"
   )
 
 // Date Errors
@@ -179,7 +179,7 @@ object InvalidIncludeStatisticalError extends MtdError(code = "INVALID_INCLUDE_S
 
 object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The Provided Date range is invalid.")
 
-object InvalidIncludeChargeEstimateError extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The charge estimate was not provided.")
+object InvalidIncludeChargeEstimateError extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
 
 // Standard Errors
 object NotFoundError
