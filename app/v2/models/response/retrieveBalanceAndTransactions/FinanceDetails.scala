@@ -40,7 +40,7 @@ object FinanceDetails {
 
   implicit val reads: Reads[FinanceDetails] = (
     (JsPath \ "taxYear").read[String].map(TaxYear.fromDownstream(_).asMtd) and
-      (JsPath \ "chargeDetail").readNullable[ChargeDetail] and
+      JsPath.readNullable[ChargeDetail] and
       (JsPath \ "taxPeriodFrom").readNullable[String] and
       (JsPath \ "taxPeriodTo").readNullable[String] and
       (JsPath \ "contractAccountCategory").readNullable[String] and
