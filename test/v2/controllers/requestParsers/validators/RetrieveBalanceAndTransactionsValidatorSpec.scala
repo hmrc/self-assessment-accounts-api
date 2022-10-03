@@ -24,7 +24,7 @@ import api.models.errors.{
   InvalidDateToError,
   InvalidDocNumberError,
   InvalidIncludeLocksError,
-  InvalidIncludeStatisticalError,
+  InvalidIncludeChargeEstimateError,
   InvalidOnlyOpenItemsError,
   InvalidRemovePaymentOnAccountError,
   NinoFormatError
@@ -90,8 +90,8 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
           InvalidCustomerPaymentInformationError)
       }
 
-      "an invalid include statistical is supplied" in {
-        validator.validate(inputDataDocNumber.copy(includeStatistical = Some("invalid"))) shouldBe List(InvalidIncludeStatisticalError)
+      "an invalid include charge estimate is supplied" in {
+        validator.validate(inputDataDocNumber.copy(includeChargeEstimate = Some("invalid"))) shouldBe List(InvalidIncludeChargeEstimateError)
       }
 
       "multiple invalid values are supplied" in {

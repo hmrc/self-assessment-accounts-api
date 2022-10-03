@@ -35,7 +35,7 @@ object RequestFixture {
     calculateAccruedInterest = None,
     removePOA = None,
     customerPaymentInformation = None,
-    includeStatistical = None
+    includeChargeEstimate = None
   )
 
   val inputDataDateRange: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
@@ -48,7 +48,7 @@ object RequestFixture {
     calculateAccruedInterest = None,
     removePOA = None,
     customerPaymentInformation = None,
-    includeStatistical = None
+    includeChargeEstimate = None
   )
 
   val inputDataEverythingTrue: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
@@ -61,7 +61,7 @@ object RequestFixture {
     calculateAccruedInterest = Some("true"),
     removePOA = Some("true"),
     customerPaymentInformation = Some("true"),
-    includeStatistical = Some("true")
+    includeChargeEstimate = Some("true")
   )
 
   val inputDataEverythingFalse: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
@@ -74,7 +74,7 @@ object RequestFixture {
     calculateAccruedInterest = Some("false"),
     removePOA = Some("false"),
     customerPaymentInformation = Some("false"),
-    includeStatistical = Some("false")
+    includeChargeEstimate = Some("false")
   )
 
   val requestDocNumber: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
@@ -87,7 +87,7 @@ object RequestFixture {
     calculateAccruedInterest = false,
     removePOA = false,
     customerPaymentInformation = false,
-    includeStatistical = false
+    includeChargeEstimate = false
   )
 
   val requestDateRange: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
@@ -100,7 +100,7 @@ object RequestFixture {
     calculateAccruedInterest = false,
     removePOA = false,
     customerPaymentInformation = false,
-    includeStatistical = false
+    includeChargeEstimate = false
   )
 
   val requestEverythingTrue: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
@@ -113,7 +113,7 @@ object RequestFixture {
     calculateAccruedInterest = true,
     removePOA = true,
     customerPaymentInformation = true,
-    includeStatistical = true
+    includeChargeEstimate = true
   )
 
 }

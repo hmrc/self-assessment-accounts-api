@@ -28,5 +28,5 @@ case class RetrieveBalanceAndTransactionsRawData(
     calculateAccruedInterest: Option[String],
     removePOA: Option[String],
     customerPaymentInformation: Option[String],
-    includeStatistical: Option[String]
+    includeChargeEstimate: Option[String]
 ) extends RawData

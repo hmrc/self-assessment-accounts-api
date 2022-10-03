@@ -37,7 +37,7 @@ class RetrieveBalanceAndTransactionsRequestParser @Inject() (val validator: Retr
       calculateAccruedInterest = toBool(data.calculateAccruedInterest),
       removePOA = toBool(data.removePOA),
       customerPaymentInformation = toBool(data.customerPaymentInformation),
-      includeStatistical = toBool(data.includeStatistical)
+      includeChargeEstimate = toBool(data.includeChargeEstimate)
     )
 
   private def toBool(param: Option[String]): Boolean = param.map(_.toBoolean).getOrElse(false)

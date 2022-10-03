@@ -30,7 +30,7 @@ import api.models.errors.{
   InvalidDateFromError,
   InvalidDateToError,
   InvalidIncludeLocksError,
-  InvalidIncludeStatisticalError,
+  InvalidIncludeChargeEstimateError,
   InvalidOnlyOpenItemsError,
   InvalidRemovePaymentOnAccountError,
   MtdError
@@ -56,7 +56,7 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
         BooleanValidation.validate(data.calculateAccruedInterest, InvalidCalculateAccruedInterestError),
         BooleanValidation.validate(data.removePOA, InvalidRemovePaymentOnAccountError),
         BooleanValidation.validate(data.customerPaymentInformation, InvalidCustomerPaymentInformationError),
-        BooleanValidation.validate(data.includeStatistical, InvalidIncludeStatisticalError)
+        BooleanValidation.validate(data.includeChargeEstimate, InvalidIncludeChargeEstimateError)
       )
     }
 
