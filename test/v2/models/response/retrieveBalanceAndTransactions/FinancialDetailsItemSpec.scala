@@ -42,6 +42,26 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
         }
       }
 
+      "converting clearingReason" must {
+        def json(value: String): JsValue = Json.parse(s"""{ "clearingReason": "$value" }""")
+
+        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(clearingReason = value)
+
+        "convert if present and a mapping is defined" when {
+          def doTest(downstreamValue: String, mtdValue: String): Unit =
+            s"downstream value is $downstreamValue" in {
+              json(downstreamValue).as[FinancialDetailsItem] shouldBe model(Some(mtdValue))
+            }
+
+          Seq("01" -> "Incoming Payment", "02" -> "Outgoing Payment", "05" -> "Reversal", "06" -> "Manual Clearing", "08" -> "Automatic Clearing")
+            .foreach((doTest _).tupled)
+        }
+
+        "leave absent if present and no mapping is defined" in { // FIXME is this right?
+          json("UNKNOWN").as[FinancialDetailsItem] shouldBe model(None)
+        }
+      }
+
       "converting outgoingPaymentMethod" must {
         def json(value: String): JsValue                       = Json.parse(s"""{ "outgoingPaymentMethod": "$value" }""")
         def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(outgoingPaymentMethod = value)
@@ -60,52 +80,89 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
         }
       }
 
-      "converting paymentLock" must {
-        def json(value: String): JsValue                       = Json.parse(s"""{ "paymentLock": "$value" }""")
-        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(paymentLock = value)
+      "converting paymentLock to isChargeOnHold" must {
+        def json(value: String): JsValue                = Json.parse(s"""{ "paymentLock": "$value" }""")
+        def model(value: Boolean): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isChargeOnHold = value)
 
-        "convert if present and a mapping is defined" when {
-          def doTest(downstreamValue: String, mtdValue: String): Unit =
-            s"downstream value is $downstreamValue" in {
-              json(downstreamValue).as[FinancialDetailsItem] shouldBe model(Some(mtdValue))
-            }
-
-          Seq("K" -> "Additional Security Checks").foreach((doTest _).tupled)
+        "convert non-empty string to true" in {
+          json("ANYTHING").as[FinancialDetailsItem] shouldBe model(true)
         }
 
-        "leave absent if present and no mapping is defined" in { // FIXME is this right?
-          json("UNKNOWN").as[FinancialDetailsItem] shouldBe model(None)
-        }
-      }
-
-      "converting clearingLock" must {
-        def json(value: String): JsValue                       = Json.parse(s"""{ "clearingLock": "$value" }""")
-        def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(clearingLock = value)
-
-        "convert if present and a mapping is defined" when {
-          def doTest(downstreamValue: String, mtdValue: String): Unit =
-            s"downstream value is $downstreamValue" in {
-              json(downstreamValue).as[FinancialDetailsItem] shouldBe model(Some(mtdValue))
-            }
-
-          Seq("0" -> "No Reallocation").foreach((doTest _).tupled)
+        "convert empty string to false" in {
+          json("").as[FinancialDetailsItem] shouldBe model(false)
         }
 
-        "leave absent if present and no mapping is defined" in { // FIXME is this right?
-          json("UNKNOWN").as[FinancialDetailsItem] shouldBe model(None)
+        "convert absent field to false" in {
+          JsObject.empty.as[FinancialDetailsItem] shouldBe model(false)
         }
       }
 
-      "converting statisticalDocument to isStatistical" must {
-        def json(value: String): JsValue                        = Json.parse(s"""{ "statisticalDocument": "$value" }""")
-        def model(value: Option[Boolean]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isStatistical = value)
+      "converting clearingLock to isEstimatedChargeOnHold" must {
+        def json(value: String): JsValue                = Json.parse(s"""{ "clearingLock": "$value" }""")
+        def model(value: Boolean): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isEstimatedChargeOnHold = value)
 
-        "convert G to true" in {
-          json("G").as[FinancialDetailsItem] shouldBe model(Some(true))
+        "convert non-empty string to true" in {
+          json("ANYTHING").as[FinancialDetailsItem] shouldBe model(true)
         }
 
-        "set false if present and no mapping is defined" in { // FIXME is this right?
-          json("UNKNOWN").as[FinancialDetailsItem] shouldBe model(Some(false))
+        "convert empty string to false" in {
+          json("").as[FinancialDetailsItem] shouldBe model(false)
+        }
+
+        "convert absent field to false" in {
+          JsObject.empty.as[FinancialDetailsItem] shouldBe model(false)
+        }
+      }
+
+      "converting interestLock to isInterestAccrualOnHold" must {
+        def json(value: String): JsValue                = Json.parse(s"""{ "interestLock": "$value" }""")
+        def model(value: Boolean): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isInterestAccrualOnHold = value)
+
+        "convert non-empty string to true" in {
+          json("ANYTHING").as[FinancialDetailsItem] shouldBe model(true)
+        }
+
+        "convert empty string to false" in {
+          json("").as[FinancialDetailsItem] shouldBe model(false)
+        }
+
+        "convert absent field to false" in {
+          JsObject.empty.as[FinancialDetailsItem] shouldBe model(false)
+        }
+      }
+
+      "converting dunningLock to isInterestChargeOnHold" must {
+        def json(value: String): JsValue = Json.parse(s"""{ "dunningLock": "$value" }""")
+
+        def model(value: Boolean): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isInterestChargeOnHold = value)
+
+        "convert non-empty string to true" in {
+          json("ANYTHING").as[FinancialDetailsItem] shouldBe model(true)
+        }
+
+        "convert empty string to false" in {
+          json("").as[FinancialDetailsItem] shouldBe model(false)
+        }
+
+        "convert absent field to false" in {
+          JsObject.empty.as[FinancialDetailsItem] shouldBe model(false)
+        }
+      }
+
+      "converting statisticalDocument to isChargeEstimate" must {
+        def json(value: String): JsValue                = Json.parse(s"""{ "statisticalDocument": "$value" }""")
+        def model(value: Boolean): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isChargeEstimate = value)
+
+        "convert non-empty string to true" in {
+          json("ANYTHING").as[FinancialDetailsItem] shouldBe model(true)
+        }
+
+        "convert empty string to false" in {
+          json("").as[FinancialDetailsItem] shouldBe model(false)
+        }
+
+        "convert absent field to false" in {
+          JsObject.empty.as[FinancialDetailsItem] shouldBe model(false)
         }
       }
     }

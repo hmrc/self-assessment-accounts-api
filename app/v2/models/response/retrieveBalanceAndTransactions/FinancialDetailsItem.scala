@@ -25,48 +25,56 @@ case class FinancialDetailsItem(subItem: Option[String],
                                 clearingDate: Option[String],
                                 clearingReason: Option[String],
                                 outgoingPaymentMethod: Option[String],
-                                paymentLock: Option[String],
-                                clearingLock: Option[String],
-                                interestLock: Option[String],
-                                dunningLock: Option[String],
+                                isChargeOnHold: Boolean,
+                                isEstimatedChargeOnHold: Boolean,
+                                isInterestAccrualOnHold: Boolean,
+                                isInterestChargeOnHold: Boolean,
                                 isReturn: Option[Boolean],
                                 paymentReference: Option[String],
                                 paymentAmount: Option[BigDecimal],
                                 paymentMethod: Option[String],
                                 paymentLot: Option[String],
                                 paymentLotItem: Option[String],
-                                isStatistical: Option[Boolean],
-                                returnReason: Option[String])
+                                clearingSAPDocument: Option[String],
+                                isChargeEstimate: Boolean)
 
 object FinancialDetailsItem {
   implicit val writes: Writes[FinancialDetailsItem] = Json.writes
 
   implicit val reads: Reads[FinancialDetailsItem] = {
+    val clearingReasonConverter: Option[String] => Option[String] =
+      convertToMtd(
+        Map(
+          "01" -> "Incoming Payment",
+          "02" -> "Outgoing Payment",
+          "05" -> "Reversal",
+          "06" -> "Manual Clearing",
+          "08" -> "Automatic Clearing"
+        ))
+
     val paymentMethodConverter: Option[String] => Option[String] =
       convertToMtd(Map("A" -> "Repayment to Card", "P" -> "Payable Order Repayment", "R" -> "BACS Payment out"))
 
-    val paymentLockConverter: Option[String] => Option[String] = convertToMtd(Map("K" -> "Additional Security Checks"))
-
-    val clearingLockConverter: Option[String] => Option[String] = convertToMtd(Map("0" -> "No Reallocation"))
+    val stringToBooleanConverter: Option[String] => Boolean = _.exists(_.nonEmpty)
 
     ((__ \ "subItem").readNullable[String] and
       (__ \ "dueDate").readNullable[String] and
       (__ \ "amount").readNullable[BigDecimal] and
       (__ \ "clearingDate").readNullable[String] and
-      (__ \ "clearingReason").readNullable[String] and
+      (__ \ "clearingReason").readNullable[String].map(clearingReasonConverter) and
       (__ \ "outgoingPaymentMethod").readNullable[String].map(paymentMethodConverter) and
-      (__ \ "paymentLock").readNullable[String].map(paymentLockConverter) and
-      (__ \ "clearingLock").readNullable[String].map(clearingLockConverter) and
-      (__ \ "interestLock").readNullable[String] and
-      (__ \ "dunningLock").readNullable[String] and
+      (__ \ "paymentLock").readNullable[String].map(stringToBooleanConverter) and
+      (__ \ "clearingLock").readNullable[String].map(stringToBooleanConverter) and
+      (__ \ "interestLock").readNullable[String].map(stringToBooleanConverter) and
+      (__ \ "dunningLock").readNullable[String].map(stringToBooleanConverter) and
       (__ \ "returnFlag").readNullable[Boolean] and
       (__ \ "paymentReference").readNullable[String] and
       (__ \ "paymentAmount").readNullable[BigDecimal] and
       (__ \ "paymentMethod").readNullable[String] and
       (__ \ "paymentLot").readNullable[String] and
       (__ \ "paymentLotItem").readNullable[String] and
-      (__ \ "statisticalDocument").readNullable[String].map(_.map(_ == "G")) and
-      (__ \ "returnReason").readNullable[String])(FinancialDetailsItem.apply _)
+      (__ \ "clearingSAPDocument").readNullable[String] and
+      (__ \ "statisticalDocument").readNullable[String].map(stringToBooleanConverter))(FinancialDetailsItem.apply _)
   }
 
   private def convertToMtd(mapping: Map[String, String])(maybeDownstream: Option[String]): Option[String] =
