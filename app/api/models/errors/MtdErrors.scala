@@ -157,29 +157,28 @@ object RangeToDateBeforeFromDateError
     )
 // Invalid Errors
 
-object InvalidDocNumberError extends MtdError(code = "INVALID_DOC_NUMBER", message = "The Provided Doc Number is invalid.")
+object InvalidDocNumberError extends MtdError(code = "INVALID_DOC_NUMBER", message = "The provided docNumber is invalid.")
 
-object InvalidOnlyOpenItemsError extends MtdError(code = "INVALID_ONLY_OPEN_ITEMS", message = "The Provided only open item is invalid.")
+object InvalidOnlyOpenItemsError extends MtdError(code = "INVALID_ONLY_OPEN_ITEMS", message = "The provided onlyOpenItems is invalid.")
 
-object InvalidIncludeLocksError extends MtdError(code = "INVALID_INCLUDE_LOCKS", message = "The Provided include lock is invalid.")
+object InvalidIncludeLocksError extends MtdError(code = "INVALID_INCLUDE_LOCKS", message = "The provided includeLocks is invalid.")
 
 object InvalidCalculateAccruedInterestError
-  extends MtdError(code = "INVALID_CALCULATE_ACCRUED_INTEREST", message = "The Provided calculation of accrued interest is invalid.")
+  extends MtdError(code = "INVALID_CALCULATE_ACCRUED_INTEREST", message = "The provided calculateAccruedInterest is invalid.")
 
 object InvalidCustomerPaymentInformationError
-  extends MtdError(code = "INVALID_CUSTOMER_PAYMENT_INFORMATION", message = "The Provided customer Payment Information is invalid.")
+  extends MtdError(code = "INVALID_CUSTOMER_PAYMENT_INFORMATION", message = "The provided customerPaymentInformation is invalid.")
 
-object InvalidDateFromError extends MtdError(code = "INVALID_DATE_FROM", message = "The Provided date from is invalid.")
+object InvalidDateFromError extends MtdError(code = "INVALID_DATE_FROM", message = "The provided dateFrom is invalid.")
 
-object InvalidDateToError extends MtdError(code = "INVALID_DATE_TO", message = "The Provided date to is invalid.")
+object InvalidDateToError extends MtdError(code = "INVALID_DATE_TO", message = "The provided dateTo is invalid.")
 
-object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", message = "The Provided removePOA is invalid.")
+object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", message = "The provided removePOA is invalid.")
 
-object InvalidIncludeStatisticalError extends MtdError(code = "INVALID_INCLUDE_STATISTICAL", message = "The Provided include statistical is invalid.")
+object InvalidIncludeChargeEstimateError
+  extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
 
-object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The Provided Date range is invalid.")
-
-object InvalidIncludeChargeEstimateError extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
+object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The provided date range is invalid.")
 
 // Standard Errors
 object NotFoundError
