@@ -34,7 +34,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   private val nino = "AA123456A"
   private val docNumber = "anId"
   private val dateFrom = "2018-08-13"
-  private val dateTo = "2018-08-14"
+  private val dateTo = "2019-08-13"
   private val onlyOpenItems = false
   private val includeLocks = false
   private val calculateAccruedInterest = false
@@ -42,13 +42,34 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   private val customerPaymentInformation = false
   private val includeChargeEstimate = false
 
-  val retrieveBalanceAndTransactionsResponse: RetrieveBalanceAndTransactionsResponse =
+  private val validResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
       balanceDetails = balanceDetailsObject,
       codingDetails = Some(Seq(codingDetailsObject)),
       documentDetails = Some(Seq(documentDetails)),
       financeDetails = Some(Seq(financeDetailsFullObject))
     )
+
+  private val validRequest: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
+    nino = Nino(nino),
+    docNumber = Some(docNumber),
+    dateFrom = Some(dateFrom),
+    dateTo = Some(dateTo),
+    onlyOpenItems = onlyOpenItems,
+    includeLocks = includeLocks,
+    calculateAccruedInterest = calculateAccruedInterest,
+    removePOA = removePOA,
+    customerPaymentInformation = customerPaymentInformation,
+    includeChargeEstimate = includeChargeEstimate)
+
+  private val commonQueryParams: Seq[(String, String)] = Seq(
+    "onlyOpenItems" -> onlyOpenItems.toString,
+    "includeLocks" -> includeLocks.toString,
+    "calculateAccruedInterest" -> calculateAccruedInterest.toString,
+    "removePOA" -> removePOA.toString,
+    "customerPaymentInformation" -> customerPaymentInformation.toString,
+    "includeChargeEstimate" -> includeChargeEstimate.toString
+  )
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -59,47 +80,64 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     MockAppConfig.ifsToken returns "ifs-token"
     MockAppConfig.ifsEnvironment returns "ifs-environment"
     MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+
+    def connectorRequest(request: RetrieveBalanceAndTransactionsRequest,
+                         response: RetrieveBalanceAndTransactionsResponse,
+                         queryParams: Seq[(String, String)]): Unit = {
+
+      val outcome = Right(ResponseWrapper(correlationId, response))
+
+      MockHttpClient
+        .parameterGet(
+          s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+          queryParams,
+          dummyIfsHeaderCarrierConfig,
+          requiredIfsHeaders,
+          Seq("AnotherHeader" -> "HeaderValue")
+        )
+        .returns(Future.successful(outcome))
+
+      await(connector.retrieveBalanceAndTransactions(request)) shouldBe outcome
+    }
   }
 
-  "RetrieveBalanceAndTransactionsConnector" when {
-    "retrieveBalanceAndTransactions" must {
-      val request: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
-        nino = Nino(nino),
-        docNumber = Some(docNumber),
-        dateFrom = Some(dateFrom),
-        dateTo = Some(dateTo),
-        onlyOpenItems = onlyOpenItems,
-        includeLocks = includeLocks,
-        calculateAccruedInterest = calculateAccruedInterest,
-        removePOA = removePOA,
-        customerPaymentInformation = customerPaymentInformation,
-        includeChargeEstimate = includeChargeEstimate)
+  "RetrieveBalanceAndTransactionsConnector" should {
 
-      "return a valid response" in new Test {
+      "return a valid response" when {
 
-        val outcome = Right(ResponseWrapper(correlationId, retrieveBalanceAndTransactionsResponse))
+        "a valid request containing both docNumber and dateFrom and dateTo is supplied" in new Test {
+          val queryParams: Seq[(String, String)] =
+            commonQueryParams ++ Seq(
+              "docNumber" -> s"$docNumber",
+              "dateFrom" -> s"$dateFrom",
+              "dateTo" -> s"$dateTo",
+            )
 
-        MockHttpClient
-          .parameterGet(
-            s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-            Seq(
-              "docNumber" -> "anId",
-              "onlyOpenItems" -> onlyOpenItems.toString,
-              "includeLocks" -> includeLocks.toString,
-              "calculateAccruedInterest" -> calculateAccruedInterest.toString,
-              "removePOA" -> removePOA.toString,
-              "customerPaymentInformation" -> customerPaymentInformation.toString,
-              "includeChargeEstimate" -> includeChargeEstimate.toString
-            ),
-            dummyIfsHeaderCarrierConfig,
-            requiredIfsHeaders,
-            Seq("AnotherHeader" -> "HeaderValue")
+          connectorRequest(validRequest, validResponse, queryParams)
+        }
+
+        "a valid request containing docNumber and not dateFrom or dateTo is supplied" in new Test {
+          val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(dateFrom = None, dateTo = None)
+
+          val queryParams: Seq[(String, String)] =
+            commonQueryParams ++ Seq("docNumber" -> s"$docNumber")
+
+          connectorRequest(request, validResponse, queryParams)
+        }
+
+        "a valid request containing dateFrom and dateTo and no docNumber is supplied" in new Test {
+          val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(docNumber = None)
+
+          val queryParams: Seq[(String, String)] =
+            commonQueryParams ++ Seq(
+            "dateFrom" -> s"$dateFrom",
+            "dateTo" -> s"$dateTo"
           )
-          .returns(Future.successful(outcome))
 
-        await(connector.retrieveBalanceAndTransactions(request)) shouldBe outcome
+          connectorRequest(request, validResponse, queryParams)
+        }
+
       }
-    }
   }
 
 }

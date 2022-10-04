@@ -22,7 +22,7 @@ case class RetrieveBalanceAndTransactionsResponse(
                                                    balanceDetails: BalanceDetails,
                                                    codingDetails: Option[Seq[CodingDetails]],
                                                    documentDetails: Option[Seq[DocumentDetails]],
-                                                   financeDetails: Option[Seq[FinanceDetails]] //Shouldn't this be financialDetails?
+                                                   financeDetails: Option[Seq[FinanceDetails]]
                                                  )
 
 object RetrieveBalanceAndTransactionsResponse {

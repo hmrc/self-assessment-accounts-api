@@ -56,11 +56,19 @@ class RetrieveBalanceAndTransactionsConnector @Inject()(val http: HttpClient, va
         "includeChargeEstimate"         -> includeChargeEstimate.toString
       )
 
-    val queryParams = docNumber match {
-      case Some(x) => Seq("docNumber" -> x) ++ booleanQueryParams
-      case _ => Seq("dateFrom" -> dateFrom.get,
-                    "dateTo" -> dateTo.get) ++ booleanQueryParams
+    def getIfExists(option: Option[String], name: String): Seq[(String, String)] = option match {
+      case Some(x) => Seq(name -> x)
+      case _ => Seq()
     }
+
+    val optionalQueryParams: Seq[(String, String)] =
+      getIfExists(docNumber, "docNumber") ++
+      getIfExists(dateFrom, "dateFrom") ++
+      getIfExists(dateTo, "dateTo")
+
+    val queryParams = booleanQueryParams ++
+      optionalQueryParams
+
     get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"), queryParams)
   }
 
