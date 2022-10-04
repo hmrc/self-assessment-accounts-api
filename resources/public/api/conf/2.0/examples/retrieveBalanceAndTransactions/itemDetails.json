@@ -1,7 +1,7 @@
 {
   "subItem": "001",
   "dueDate": "2018-08-13",
-  "amount": 10000,
+  "amount": 10000.00,
   "clearingDate": "2018-08-13",
   "clearingReason": "01",
   "outgoingPaymentMethod": "outgoing Payment",
@@ -11,7 +11,7 @@
   "isInterestChargeOnHold": false,
   "isReturn": true,
   "paymentReference": "Ab12453535",
-  "paymentAmount": 10000,
+  "paymentAmount": 10000.00,
   "paymentMethod": "Payment",
   "paymentLot": "81203010024",
   "paymentLotItem": "000001",

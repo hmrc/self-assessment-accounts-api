@@ -35,9 +35,24 @@
     "outgoingPaymentMethod": {
       "description": "The method used to make the outgoing payment.",
       "oneOf": [
-        { "enum": ["A"], "description": "Repayment to Card"},
-        { "enum": ["P"], "description": "Payable Order Repayment"},
-        { "enum": ["R"], "description": "BACS Payment out"}
+        {
+          "enum": [
+            "A"
+          ],
+          "description": "Repayment to Card"
+        },
+        {
+          "enum": [
+            "P"
+          ],
+          "description": "Payable Order Repayment"
+        },
+        {
+          "enum": [
+            "R"
+          ],
+          "description": "BACS Payment out"
+        }
       ],
       "example": "Payable Order Repayment"
     },
