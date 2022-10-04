@@ -1,13 +1,9 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Retrieve coding details",
-  "description": "",
+  "description": "An Object containing coding details",
   "type": "object",
   "properties": {
-    "chargeHistoryDetails": {
-      "description": "An array containing coding details",
-      "type": "object",
-      "items": {
         "taxYearReturn": {
           "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
           "type": "string",
@@ -47,5 +43,3 @@
         }
       }
     }
-  }
-}
