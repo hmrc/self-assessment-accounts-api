@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package v2.models.response.retrieveBalanceAndTransactions
+package api.controllers.requestParsers.validators.validations
 
-import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import api.models.errors.{InvalidDocNumberError, MtdError}
 
-case class BalancePerYear(taxYear: Option[String], bcdAmount: Option[BigDecimal])
+object DocNumberValidation {
 
-object BalancePerYear {
+  val MAX_LENGTH = 12
 
-  implicit val reads: Reads[BalancePerYear] =
-    ((JsPath \ "taxYear").readNullable[String] and
-      (JsPath \ "amount").readNullable[BigDecimal])(BalancePerYear.apply _)
+  def validate(docNumber: Option[String]): List[MtdError] = {
+    docNumber.map(validate).getOrElse(Nil)
+  }
 
-  implicit val writes: OWrites[BalancePerYear] =
-    Json.writes[BalancePerYear]
+  def validate(docNumber: String): List[MtdError] = {
+    if (docNumber.length > MAX_LENGTH) List(InvalidDocNumberError) else Nil
+  }
 
 }

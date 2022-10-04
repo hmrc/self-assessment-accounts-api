@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators
 
-import api.controllers.requestParsers.validators.validations.{DateFormatValidation, DateRangeValidation, MissingParameterValidation, NinoValidation}
+import api.controllers.requestParsers.validators.validations.{DateFormatValidation, DateRangeValidationV1, MissingParameterValidation, NinoValidation}
 import api.models.errors.{FromDateFormatError, MissingFromDateError, MissingToDateError, MtdError, ToDateFormatError}
 import api.models.request.RawDataWithDateRange
 
@@ -38,7 +38,7 @@ trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
       (for {
         from <- data.from
         to   <- data.to
-      } yield DateRangeValidation.validate(from, to)).getOrElse(Nil)
+      } yield DateRangeValidationV1.validate(from, to)).getOrElse(Nil)
     )
   }
 

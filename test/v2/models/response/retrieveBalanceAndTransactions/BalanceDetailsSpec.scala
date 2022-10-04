@@ -23,8 +23,8 @@ import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture._
 class BalanceDetailsSpec extends UnitSpec {
 
   "reads" should {
-    "return a valid model" when {
-      "valid JSON is supplied" in {
+    "return a BalanceDetails object" when {
+      "passed a valid JSON document" in {
         downstreamResponseJson
           .as[BalanceDetails] shouldBe balanceDetailsObject
       }
@@ -32,8 +32,8 @@ class BalanceDetailsSpec extends UnitSpec {
   }
 
   "writes" when {
-    "passed a valid model" should {
-      "return valid JSON " in {
+    "passed a BalanceDetails object" should {
+      "return valid JSON" in {
         Json.toJson(balanceDetailsObject) shouldBe mtdResponseJson
       }
     }

@@ -20,7 +20,7 @@ import java.time.{Duration, LocalDate}
 
 import api.models.errors.{MtdError, RangeToDateBeforeFromDateError, RuleDateRangeInvalidError, RuleFromDateNotSupportedError}
 
-object DateRangeValidation {
+object DateRangeValidationV1 {
 
   def validate(from: String, to: String): List[MtdError] = {
     val fmtFrom = LocalDate.parse(from, dateFormat)
