@@ -41,7 +41,12 @@
           },
           "outgoingPaymentMethod": {
             "description": "The method used to make the outgoing payment. One of Repayment to Card, Payable Order Repayment or BACS Payment out",
-            "example": "Payable Order Repayment"
+            "example": "Payable Order Repayment",
+            "enum": [
+              "Repayment to Card",
+              "Payable Order Repayment",
+              "BACS Payment out"
+            ]
           },
           "isChargeOnHold": {
             "description": "A signal that indicates that the charge has been paused whilst under review or investigation.",
@@ -105,14 +110,14 @@
             "description": "Estimated charges due for the customer",
             "type": "boolean",
             "example": "true"
-          },
-          "required": [
-            "isChargeOnHold",
-            "isEstimatedChargeOnHold",
-            "isInterestAccrualOnHold",
-            "isInterestChargeOnHold"
-          ]
-        }
+          }
+        },
+        "required": [
+          "isChargeOnHold",
+          "isEstimatedChargeOnHold",
+          "isInterestAccrualOnHold",
+          "isInterestChargeOnHold"
+        ]
       }
     }
   }
