@@ -40,5 +40,5 @@ class RetrieveBalanceAndTransactionsRequestParser @Inject() (val validator: Retr
       includeChargeEstimate = toBool(data.includeChargeEstimate)
     )
 
-  private def toBool(param: Option[String]): Boolean = param.map(_.toBoolean).getOrElse(false)
+  private def toBool(param: Option[String]): Boolean = param.exists(_.toBoolean)
 }
