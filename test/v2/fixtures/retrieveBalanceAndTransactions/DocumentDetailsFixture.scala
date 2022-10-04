@@ -26,25 +26,25 @@ object DocumentDetailsFixture {
   val lastClearing: LastClearing = LastClearing(
     lastClearingDate = Some("2018-04-05"),
     lastClearingReason = Some("Incoming Payment"),
-    lastClearedAmount = Some(5009.99)
+    lastClearedAmount = Some(3.99)
   )
 
   val latePaymentInterest: LatePaymentInterest = LatePaymentInterest(
     latePaymentInterestId = Some("1234567890123456"),
-    accruingInterestAmount = Some(5009.99),
-    interestRate = Some(1.23),
+    accruingInterestAmount = Some(4.99),
+    interestRate = Some(6.99),
     interestStartDate = Some("2020-04-01"),
     interestEndDate = Some("2020-04-05"),
-    interestAmount = Some(5009.99),
-    interestDunningLockAmount = Some(5009.99),
-    interestOutstandingAmount = Some(5009.99)
+    interestAmount = Some(8.99),
+    interestDunningLockAmount = Some(7.99),
+    interestOutstandingAmount = Some(9.99)
   )
 
   val reducedCharge: ReducedCharge = ReducedCharge(
     chargeType = Some("???"),
     documentNumber = Some("???"),
     amendmentDate = Some("2018-04-05"),
-    taxYear = Some("2018")
+    taxYear = Some("2017-18")
   )
 
   val documentDetails: DocumentDetails = DocumentDetails(
@@ -56,37 +56,59 @@ object DocumentDetailsFixture {
     documentText = Some("ITSA- Bal Charge"),
     documentDueDate = "2021-04-05",
     documentDescription = Some("ITSA- POA 1"),
-    originalAmount = 5009.99,
-    outstandingAmount = 5009.99,
+    originalAmount = 1.99,
+    outstandingAmount = 2.99,
     lastClearing = Some(lastClearing),
-    isStatistical = true,
-    informationCode = Some("Coding Out"),
+    isChargeEstimate = true,
+    chargeHasMultipleItems = true,
     paymentLot = Some("AB1023456789"),
     paymentLotItem = Some("000001"),
     effectiveDateOfPayment = Some("2021-04-05"),
     latePaymentInterest = Some(latePaymentInterest),
-    amountCodedOut = Some(5009.99),
+    amountCodedOut = Some(5.99),
     reducedCharge = Some(reducedCharge)
+  )
+
+  val documentDetailsMinimal: DocumentDetails = DocumentDetails(
+    None,
+    documentId = "1455",
+    None,
+    None,
+    documentDate = "2018-04-05",
+    None,
+    documentDueDate = "2021-04-05",
+    None,
+    originalAmount = 1.99,
+    outstandingAmount = 2.99,
+    None,
+    isChargeEstimate = false,
+    chargeHasMultipleItems = false,
+    None,
+    None,
+    None,
+    None,
+    None,
+    None
   )
 
   val lastClearingJson: JsValue = Json.parse("""
        |{
        |  "lastClearingDate": "2018-04-05",
        |  "lastClearingReason": "Incoming Payment",
-       |  "lastClearedAmount": 5009.99
+       |  "lastClearedAmount": 3.99
        |}
        |""".stripMargin)
 
   val latePaymentInterestJson: JsValue = Json.parse("""
        |{
        |  "latePaymentInterestId": "1234567890123456",
-       |  "accruingInterestAmount": 5009.99,
-       |  "interestRate": 1.23,
+       |  "accruingInterestAmount": 4.99,
+       |  "interestRate": 6.99,
        |  "interestStartDate": "2020-04-01",
        |  "interestEndDate": "2020-04-05",
-       |  "interestAmount": 5009.99,
-       |  "interestDunningLockAmount": 5009.99,
-       |  "interestOutstandingAmount": 5009.99
+       |  "interestAmount": 8.99,
+       |  "interestDunningLockAmount": 7.99,
+       |  "interestOutstandingAmount": 9.99
        |}
        |""".stripMargin)
 
@@ -95,7 +117,7 @@ object DocumentDetailsFixture {
        |  "chargeType": "???",
        |  "documentNumber": "???",
        |  "amendmentDate": "2018-04-05",
-       |  "taxYear": "2018"
+       |  "taxYear": "2017-18"
        |}
        |""".stripMargin)
 
@@ -110,16 +132,16 @@ object DocumentDetailsFixture {
        |  "documentText": "ITSA- Bal Charge",
        |  "documentDueDate": "2021-04-05",
        |  "documentDescription": "ITSA- POA 1",
-       |  "originalAmount": 5009.99,
-       |  "outstandingAmount": 5009.99,
+       |  "originalAmount": 1.99,
+       |  "outstandingAmount": 2.99,
        |  "lastClearing": $lastClearingJson,
-       |  "isStatistical": true,
-       |  "informationCode": "Coding Out",
+       |  "isChargeEstimate": true,
+       |  "chargeHasMultipleItems": true,
        |  "paymentLot": "AB1023456789",
        |  "paymentLotItem": "000001",
        |  "effectiveDateOfPayment": "2021-04-05",
        |  "latePaymentInterest": $latePaymentInterestJson,
-       |  "amountCodedOut": 5009.99,
+       |  "amountCodedOut": 5.99,
        |  "reducedCharge": $reducedChargeJson
        |}
        |""".stripMargin)
@@ -138,30 +160,41 @@ object DocumentDetailsFixture {
        |  "effectiveDateOfPayment": "2021-04-05",
        |  "documentDueDate": "2021-04-05",
        |  "documentDescription": "ITSA- POA 1",
-       |  "totalAmount": 5009.99,
-       |  "documentOutstandingAmount": 5009.99,
+       |  "totalAmount": 1.99,
+       |  "documentOutstandingAmount": 2.99,
        |  "lastClearingDate": "2018-04-05",
        |  "lastClearingReason": "Incoming Payment",
-       |  "lastClearedAmount": 5009.99,
+       |  "lastClearedAmount": 3.99,
        |  "statisticalFlag": true,
        |  "informationCode": "i",
        |  "paymentLot": "AB1023456789",
        |  "paymentLotItem": "000001",
-       |  "accruingInterestAmount": 5009.99,
+       |  "accruingInterestAmount": 4.99,
        |  "amendmentDateReducedCharge": "2018-04-05",
-       |  "amountCodedOut": 5009.99,
+       |  "amountCodedOut": 5.99,
        |  "chargeTypeReducedCharge": "???",
        |  "creditReason": "Voluntary Payment",
-       |  "interestRate": 1.23,
+       |  "interestRate": 6.99,
        |  "interestFromDate": "2020-04-01",
        |  "interestEndDate": "2020-04-05",
        |  "latePaymentInterestID": "1234567890123456",
-       |  "lpiWithDunningLock": 5009.99,
-       |  "latePaymentInterestAmount": 5009.99,
-       |  "interestOutstandingAmount": 5009.99
+       |  "lpiWithDunningLock": 7.99,
+       |  "latePaymentInterestAmount": 8.99,
+       |  "interestOutstandingAmount": 9.99
        |}
        |""".stripMargin)
 
   val downstreamDocumentDetailsJson: JsValue = newDownstreamDocumentDetailsJson("2021")
+
+  val downstreamDocumentDetailsMinimalJson: JsValue = Json.parse(s"""
+       |{
+       |  "documentId": "1455",
+       |  "documentDate": "2018-04-05",
+       |  "documentDueDate": "2021-04-05",
+       |  "totalAmount": 1.99,
+       |  "documentOutstandingAmount": 2.99,     
+       |  "statisticalFlag": false
+       |}
+       |""".stripMargin)
 
 }
