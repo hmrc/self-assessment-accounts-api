@@ -40,7 +40,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   private val calculateAccruedInterest = false
   private val removePOA = false
   private val customerPaymentInformation = false
-  private val includeStatistical = false
+  private val includeChargeEstimate = false
 
   val retrieveBalanceAndTransactionsResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
@@ -73,7 +73,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
         calculateAccruedInterest = calculateAccruedInterest,
         removePOA = removePOA,
         customerPaymentInformation = customerPaymentInformation,
-        includeStatistical = includeStatistical)
+        includeChargeEstimate = includeChargeEstimate)
 
       "return a valid response" in new Test {
 
@@ -89,7 +89,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
               "calculateAccruedInterest" -> calculateAccruedInterest.toString,
               "removePOA" -> removePOA.toString,
               "customerPaymentInformation" -> customerPaymentInformation.toString,
-              "includeStatistical" -> includeStatistical.toString
+              "includeChargeEstimate" -> includeChargeEstimate.toString
             ),
             dummyIfsHeaderCarrierConfig,
             requiredIfsHeaders,

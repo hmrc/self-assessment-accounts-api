@@ -44,7 +44,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject()(val http: HttpClient, va
     val calculateAccruedInterest = request.calculateAccruedInterest
     val removePOA = request.removePOA
     val customerPaymentInformation = request.customerPaymentInformation
-    val includeStatistical = request.includeStatistical
+    val includeChargeEstimate = request.includeChargeEstimate
 
     val booleanQueryParams: Seq[(String, String)] =
       Seq(
@@ -53,7 +53,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject()(val http: HttpClient, va
         "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
         "removePOA"                  -> removePOA.toString,
         "customerPaymentInformation" -> customerPaymentInformation.toString,
-        "includeStatistical"         -> includeStatistical.toString
+        "includeChargeEstimate"         -> includeChargeEstimate.toString
       )
 
     val queryParams = docNumber match {
