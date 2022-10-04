@@ -16,20 +16,24 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.MtdError
+import api.models.errors.{InvalidDateRangeError, MtdError}
 
 import java.time.LocalDate
-import scala.util.{Failure, Success, Try}
 
-object DateFormatValidation {
+object DateRangeValidationV2 {
 
-  def validate(date: Option[String], error: MtdError): List[MtdError] = date.map(validate(_, error)).getOrElse(Nil)
+  def validate(from: Option[String], to: Option[String]): List[MtdError] = {
+    (from, to) match {
+      case (Some(f), Some(t)) => checkIfToIsBeforeFrom(f, t)
+      case (None, None)       => Nil
+      case _                  => List(InvalidDateRangeError)
+    }
+  }
 
-  def validate(date: String, error: MtdError): List[MtdError] = Try {
-    LocalDate.parse(date, dateFormat)
-  } match {
-    case Success(_) => NoValidationErrors
-    case Failure(_) => List(error)
+  private def checkIfToIsBeforeFrom(from: String, to: String): List[MtdError] = {
+    val fmtFrom = LocalDate.parse(from, dateFormat)
+    val fmtTo   = LocalDate.parse(to, dateFormat)
+    if (fmtTo isBefore fmtFrom) List(InvalidDateRangeError) else Nil
   }
 
 }

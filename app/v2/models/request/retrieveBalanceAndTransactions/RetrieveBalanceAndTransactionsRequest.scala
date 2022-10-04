@@ -28,5 +28,5 @@ case class RetrieveBalanceAndTransactionsRequest(
     calculateAccruedInterest: Boolean,
     removePOA: Boolean,
     customerPaymentInformation: Boolean,
-    includeStatistical: Boolean
+    includeChargeEstimate: Boolean
 )

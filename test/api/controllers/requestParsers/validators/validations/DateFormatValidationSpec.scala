@@ -26,7 +26,12 @@ class DateFormatValidationSpec extends UnitSpec {
       "passed a valid date" in {
         DateFormatValidation.validate("2019-02-02", FromDateFormatError) shouldBe List()
       }
+
+      "passed an optional valid date" in {
+        DateFormatValidation.validate(Some("2019-02-02"), FromDateFormatError) shouldBe List()
+      }
     }
+
     "return a list containing an error" when {
       "passed a date with an invalid month" in {
         DateFormatValidation.validate("2019-13-02", FromDateFormatError) shouldBe List(FromDateFormatError)
@@ -42,6 +47,9 @@ class DateFormatValidationSpec extends UnitSpec {
       }
       "passed a date written as text" in {
         DateFormatValidation.validate("2nd Feb 2012", FromDateFormatError) shouldBe List(FromDateFormatError)
+      }
+      "passed a optional invalid date" in {
+        DateFormatValidation.validate(Some("2nd Feb 2012"), FromDateFormatError) shouldBe List(FromDateFormatError)
       }
     }
   }
