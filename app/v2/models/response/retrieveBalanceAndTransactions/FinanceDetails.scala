@@ -24,7 +24,6 @@ case class FinanceDetails(taxYear: String,
                           chargeDetail: Option[ChargeDetail],
                           taxPeriodFrom: Option[String],
                           taxPeriodTo: Option[String],
-                          contractAccountCategory: Option[String],
                           contractAccount: Option[String],
                           documentNumber: Option[String],
                           documentNumberItem: Option[String],
@@ -43,7 +42,6 @@ object FinanceDetails {
       JsPath.readNullable[ChargeDetail] and
       (JsPath \ "taxPeriodFrom").readNullable[String] and
       (JsPath \ "taxPeriodTo").readNullable[String] and
-      (JsPath \ "contractAccountCategory").readNullable[String] and
       (JsPath \ "contractAccount").readNullable[String] and
       (JsPath \ "sapDocumentNumber").readNullable[String] and
       (JsPath \ "sapDocumentNumberItem").readNullable[String] and
