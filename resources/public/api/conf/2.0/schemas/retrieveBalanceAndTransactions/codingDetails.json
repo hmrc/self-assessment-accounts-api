@@ -2,10 +2,10 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Retrieve coding details",
   "description": "",
-  "type": "codingDetails",
+  "type": "object",
   "properties": {
     "chargeHistoryDetails": {
-      "description": "An object contain codingDetails",
+      "description": "An array containing coding details",
       "type": "object",
       "items": {
         "taxYearReturn": {
