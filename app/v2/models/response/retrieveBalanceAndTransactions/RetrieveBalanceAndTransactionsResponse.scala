@@ -18,7 +18,12 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.{Json, OWrites, Reads}
 
-case class RetrieveBalanceAndTransactionsResponse(balanceDetails: BalanceDetails)
+case class RetrieveBalanceAndTransactionsResponse(
+    balanceDetails: BalanceDetails,
+    codingDetails: Option[Seq[CodingDetails]],
+    documentDetails: Option[Seq[DocumentDetails]],
+    financialDetails: Option[Seq[FinancialDetails]]
+)
 
 object RetrieveBalanceAndTransactionsResponse {
   implicit val reads: Reads[RetrieveBalanceAndTransactionsResponse]    = Json.reads[RetrieveBalanceAndTransactionsResponse]

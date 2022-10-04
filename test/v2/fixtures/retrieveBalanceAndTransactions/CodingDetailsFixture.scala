@@ -21,20 +21,17 @@ import v2.models.response.retrieveBalanceAndTransactions.{Coded, CodingDetails}
 
 object CodingDetailsFixture {
 
-  val coded: Coded = Coded(charge = Some(123.45),
-    initiationDate = Some("2022-10-13"))
+  val coded: Coded = Coded(charge = Some(123.45), initiationDate = Some("2022-10-13"))
 
-  val codingDetailsObject: CodingDetails = CodingDetails(taxYearReturn = Some("2022"),
-    totalLiabilityAmount = Some(123.45),
-    taxYearCoding = Some("2022"),
-    coded = Some(coded))
+  val codingDetails: CodingDetails =
+    CodingDetails(taxYearReturn = Some("2022"), totalLiabilityAmount = Some(123.45), taxYearCoding = Some("2022"), coded = Some(coded))
 
-  val codingDetailsDownstreamDetailsJson: JsValue = Json.parse(
+  val codingDetailsDownstreamResponseJson: JsValue = Json.parse(
     s"""
        |{
-       |   "taxYearReturn": "${codingDetailsObject.taxYearReturn.get}",
-       |   "totalLiabilityAmount": ${codingDetailsObject.totalLiabilityAmount.get},
-       |   "taxYearCoding": "${codingDetailsObject.taxYearCoding.get}",
+       |   "taxYearReturn": "${codingDetails.taxYearReturn.get}",
+       |   "totalLiabilityAmount": ${codingDetails.totalLiabilityAmount.get},
+       |   "taxYearCoding": "${codingDetails.taxYearCoding.get}",
        |   "coded": {
        |      "amount": 123.45,
        |      "initiationDate": "${coded.initiationDate.get}"
@@ -43,12 +40,12 @@ object CodingDetailsFixture {
        |""".stripMargin
   )
 
-  val codingDetailsMtdJson: JsValue = Json.parse(
+  val codingDetailsMtdResponseJson: JsValue = Json.parse(
     s"""
        |{
-       |   "taxYearReturn": "${codingDetailsObject.taxYearReturn.get}",
-       |   "totalLiabilityAmount": ${codingDetailsObject.totalLiabilityAmount.get},
-       |   "taxYearCoding": "${codingDetailsObject.taxYearCoding.get}",
+       |   "taxYearReturn": "${codingDetails.taxYearReturn.get}",
+       |   "totalLiabilityAmount": ${codingDetails.totalLiabilityAmount.get},
+       |   "taxYearCoding": "${codingDetails.taxYearCoding.get}",
        |   "coded": {
        |      "charge": ${coded.charge.get},
        |      "initiationDate": "${coded.initiationDate.get}"
@@ -56,4 +53,5 @@ object CodingDetailsFixture {
        |}
        |""".stripMargin
   )
+
 }

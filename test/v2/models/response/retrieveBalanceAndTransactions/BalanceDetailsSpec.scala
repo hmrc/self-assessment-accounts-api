@@ -25,8 +25,8 @@ class BalanceDetailsSpec extends UnitSpec {
   "reads" should {
     "return a BalanceDetails object" when {
       "passed a valid JSON document" in {
-        downstreamResponseJson
-          .as[BalanceDetails] shouldBe balanceDetailsObject
+        balanceDetailsDownstreamResponseJson
+          .as[BalanceDetails] shouldBe balanceDetails
       }
     }
   }
@@ -34,7 +34,7 @@ class BalanceDetailsSpec extends UnitSpec {
   "writes" when {
     "passed a BalanceDetails object" should {
       "return valid JSON" in {
-        Json.toJson(balanceDetailsObject) shouldBe mtdResponseJson
+        Json.toJson(balanceDetails) shouldBe balanceDetailsMtdResponseJson
       }
     }
   }
