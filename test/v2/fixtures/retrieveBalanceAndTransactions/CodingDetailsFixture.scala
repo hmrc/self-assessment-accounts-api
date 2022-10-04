@@ -36,7 +36,7 @@ object CodingDetailsFixture {
        |   "totalLiabilityAmount": ${codingDetailsObject.totalLiabilityAmount.get},
        |   "taxYearCoding": "${codingDetailsObject.taxYearCoding.get}",
        |   "coded": {
-       |      "charge": ${coded.charge.get},
+       |      "amount": 123.45,
        |      "initiationDate": "${coded.initiationDate.get}"
        |   }
        |}

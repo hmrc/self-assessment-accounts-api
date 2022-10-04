@@ -16,7 +16,8 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.functional.syntax.toFunctionalBuilderOps
+import play.api.libs.json.{JsPath, Json, OFormat, OWrites, Reads}
 
 case class CodingDetails(taxYearReturn: Option[String],
                          totalLiabilityAmount: Option[BigDecimal],
@@ -32,6 +33,11 @@ case class Coded(charge: Option[BigDecimal],
                  initiationDate: Option[String])
 
 object Coded {
-  implicit val format: OFormat[Coded] = Json.format[Coded]
+  implicit val reads: Reads[Coded] = (
+    (JsPath \ "amount").readNullable[BigDecimal] and
+      (JsPath \ "initiationDate").readNullable[String]
+  )(Coded.apply _)
+
+  implicit val writes: OWrites[Coded] = Json.writes[Coded]
 }
 
