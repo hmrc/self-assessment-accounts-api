@@ -1,0 +1,188 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve document details",
+  "description": "An object containing document details",
+  "type": "object",
+  "properties": {
+    "taxYear": {
+      "description": "The tax year of the Document (Billing period from – billing period to), in the format YYYY-YY.",
+      "type": "string",
+      "example": "2020-21"
+    },
+    "documentId": {
+      "description": "DocumentID may contain SAP document number or Form Bundle Number for zero-amount documents. Must conform to the regular expression ^[0-9a-zA-Z]{1,30}$",
+      "type": "string",
+      "example": "1455"
+    },
+    "formBundleNumber": {
+      "description": "The form bundle number designates a package of related transactions gathered together. ",
+      "type": "string",
+      "example": "88888888"
+    },
+    "creditReason": {
+      "description": "Credit Reason gives the reason as to why there is a credit on the account. For Examples Voluntary Payment, Income tax Self Assessment Return, Excess Payment",
+      "type": "string",
+      "example": "2021-22"
+    },
+
+    "documentDate": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "documentText": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+
+    "documentDueDate": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "documentDescription": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "originalAmount": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "outstandingAmount": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+
+    "lastClearing": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "object",
+      "items": {
+
+        "lastClearingDate": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "lastClearingReason": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "lastClearedAmount": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        }
+      }
+    },
+    "isChargeEstimate": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "chargeHasMultipleItems": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "paymentLot": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "paymentLotItem": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "effectiveDateOfPaymet": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+    "latePaymentInterest": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "object": "string",
+      "items": {
+
+        "latePaymentInterestId": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "accruingInterestAmount": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "interestRate": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "interestStartDate": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "interestEndDate": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "interestAmount": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "interestDunningLockAmount": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "interestOutstandingAmount": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        }
+      }
+      },
+    "amountCodedOUt": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "type": "string",
+      "example": "2021-22"
+    },
+
+    "reducedCharge": {
+      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "object": "string",
+      "items": {
+
+        "chargeType": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "documentNumber": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "amendmentDate": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        },
+        "taxYear": {
+          "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+          "type": "string",
+          "example": "2021-22"
+        }
+      }
+      }
+    }
+    }
