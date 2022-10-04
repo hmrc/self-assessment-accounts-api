@@ -64,16 +64,16 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   "RetrieveBalanceAndTransactionsConnector" when {
     "retrieveBalanceAndTransactions" must {
       val request: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
-        Nino(nino),
-        Some(docNumber),
-        Some(dateFrom),
-        Some(dateTo),
-        onlyOpenItems,
-        includeLocks,
-        calculateAccruedInterest,
-        removePOA,
-        customerPaymentInformation,
-        includeStatistical)
+        nino = Nino(nino),
+        docNumber = Some(docNumber),
+        dateFrom = Some(dateFrom),
+        dateTo = Some(dateTo),
+        onlyOpenItems = onlyOpenItems,
+        includeLocks = includeLocks,
+        calculateAccruedInterest = calculateAccruedInterest,
+        removePOA = removePOA,
+        customerPaymentInformation = customerPaymentInformation,
+        includeStatistical = includeStatistical)
 
       "return a valid response" in new Test {
 
