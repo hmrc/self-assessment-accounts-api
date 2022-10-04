@@ -104,7 +104,6 @@
         "payableAmount",
         "pendingChargeDueAmount",
         "overdueAmount",
-        "bcdBalancePerYear",
         "totalBalance"
       ]
     }
