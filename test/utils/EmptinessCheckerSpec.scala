@@ -16,11 +16,13 @@
 
 package utils
 
+import org.scalacheck.{Arbitrary, Gen}
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import support.UnitSpec
 import utils.EmptinessChecker._
 import utils.EmptyPathsResult._
 
-class EmptinessCheckerSpec extends UnitSpec {
+class EmptinessCheckerSpec extends UnitSpec with ScalaCheckPropertyChecks {
 
   sealed trait SomeEnum
 
@@ -29,10 +31,34 @@ class EmptinessCheckerSpec extends UnitSpec {
     case object E2 extends SomeEnum
 
     implicit val ckr: EmptinessChecker[SomeEnum] = EmptinessChecker.primitive
+    implicit val arb: Arbitrary[SomeEnum]        = Arbitrary(Gen.oneOf(E1, E2))
   }
 
+  // balanced so that there is a fair chance of None
+  def balancedArbitraryOption[T](implicit arb: Arbitrary[T]): Gen[Option[T]] =
+    Gen.frequency(1 -> Gen.const(None), 1 -> Gen.some(Arbitrary.arbitrary(arb)))
+
   case class Baz(a: Option[Int] = None, e: Option[SomeEnum] = None)
-  case class Bar(baz: Option[Baz] = None, arr: Option[List[Bar]] = None)
+
+  object Baz {
+
+    implicit val arb: Arbitrary[Baz] = Arbitrary(for {
+      a <- balancedArbitraryOption[Int]
+      e <- balancedArbitraryOption[SomeEnum]
+    } yield Baz(a, e))
+
+  }
+
+  case class Bar(baz: Option[Baz] = None, arr: Option[List[Baz]] = None)
+
+  object Bar {
+
+    implicit val arb: Arbitrary[Bar] = Arbitrary(for {
+      baz <- balancedArbitraryOption[Baz]
+      arr <- balancedArbitraryOption[List[Baz]]
+    } yield Bar(baz, arr))
+
+  }
 
   case class Foo(bar: Option[Bar] = None,
                  arr1: Option[List[Bar]] = None,
@@ -97,6 +123,16 @@ class EmptinessCheckerSpec extends UnitSpec {
           EmptyPaths(List("/bar/baz", "/arr1", "/arr2/0", "/arr3/0/baz", "/bar2"))
       }
     }
+  }
+
+  "EmptinessChecker" must {
+    "return CompletelyEmpty if and only if all fields are None" in {
+      val emptyBar = Bar(None, None)
+      forAll { bar: Bar =>
+        (EmptinessChecker.findEmptyPaths(bar) == CompletelyEmpty) shouldBe (bar == emptyBar)
+      }
+    }
+
   }
 
 }
