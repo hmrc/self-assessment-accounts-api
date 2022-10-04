@@ -20,7 +20,7 @@ import play.api.libs.json.{JsValue, Json}
 import v2.models.response.retrieveBalanceAndTransactions.{BalanceDetails, BalancePerYear}
 
 object BalanceDetailsFixture {
-  val balancePerYearObject: BalancePerYear = BalancePerYear(Some("2022"), Some(123.45))
+  val balancePerYearObject: BalancePerYear = BalancePerYear(Some(123.45), Some("2022"))
 
   val balanceDetailsObject: BalanceDetails = BalanceDetails(
     payableAmount = 124.20,
@@ -28,10 +28,10 @@ object BalanceDetailsFixture {
     pendingChargeDueAmount = 0.12,
     pendingChargeDueDate = Some("2022-01-01"),
     overdueAmount = 12.65,
-    earliestPaymentDateOverDue = Some("2022-05-05"),
+    bcdBalancePerYear = Some(Seq(balancePerYearObject)),
+    earliestPaymentDateOverdue = Some("2022-05-05"),
     totalBalance = 1263.12,
     amountCodedOut = Some(12.12),
-    bcdBalancePerYear = Some(Seq(balancePerYearObject)),
     totalBcdBalance = Some(99.10),
     unallocatedCredit = Some(8.56),
     allocatedCredit = Some(12.34),
@@ -44,8 +44,8 @@ object BalanceDetailsFixture {
   val downstreamDetailSingleYearJson: JsValue = Json.parse(
     s"""
        |{
-       |   "taxYear": "${balancePerYearObject.taxYear.get}",
-       |   "amount": ${balancePerYearObject.bcdAmount.get}
+       |   "amount": ${balancePerYearObject.bcdAmount.get},
+       |   "taxYear": "${balancePerYearObject.taxYear.get}"
        |}
        |""".stripMargin
   )
@@ -53,8 +53,8 @@ object BalanceDetailsFixture {
   val mtdDetailSingleYearJson: JsValue = Json.parse(
     s"""
        |{
-       |   "taxYear": "${balancePerYearObject.taxYear.get}",
-       |   "bcdAmount": ${balancePerYearObject.bcdAmount.get}
+       |   "bcdAmount": ${balancePerYearObject.bcdAmount.get},
+       |   "taxYear": "${balancePerYearObject.taxYear.get}"
        |}
        |""".stripMargin
   )
@@ -67,7 +67,7 @@ object BalanceDetailsFixture {
        |    "balanceNotDueIn30Days": ${balanceDetailsObject.pendingChargeDueAmount},
        |    "nextPaymentDateBalanceNotDue": "${balanceDetailsObject.pendingChargeDueDate.get}",
        |    "overDueAmount": ${balanceDetailsObject.overdueAmount},
-       |    "earliestPaymentDateOverDue": "${balanceDetailsObject.earliestPaymentDateOverDue.get}",
+       |    "earliestPaymentDateOverDue": "${balanceDetailsObject.earliestPaymentDateOverdue.get}",
        |    "totalBalance": ${balanceDetailsObject.totalBalance},
        |    "amountCodedOut": ${balanceDetailsObject.amountCodedOut.get},
        |    "bcdBalancePerYear": [
@@ -92,12 +92,12 @@ object BalanceDetailsFixture {
        |    "pendingChargeDueAmount": ${balanceDetailsObject.pendingChargeDueAmount},
        |    "pendingChargeDueDate": "${balanceDetailsObject.pendingChargeDueDate.get}",
        |    "overdueAmount": ${balanceDetailsObject.overdueAmount},
-       |    "earliestPaymentDateOverDue": "${balanceDetailsObject.earliestPaymentDateOverDue.get}",
-       |    "totalBalance": ${balanceDetailsObject.totalBalance},
-       |    "amountCodedOut": ${balanceDetailsObject.amountCodedOut.get},
        |    "bcdBalancePerYear": [
        |      $mtdDetailSingleYearJson
-       |    ],      
+       |    ],
+       |    "earliestPaymentDateOverdue": "${balanceDetailsObject.earliestPaymentDateOverdue.get}",
+       |    "totalBalance": ${balanceDetailsObject.totalBalance},
+       |    "amountCodedOut": ${balanceDetailsObject.amountCodedOut.get},
        |    "totalBcdBalance": ${balanceDetailsObject.totalBcdBalance.get},
        |    "unallocatedCredit": ${balanceDetailsObject.unallocatedCredit.get},
        |    "allocatedCredit": ${balanceDetailsObject.allocatedCredit.get},
