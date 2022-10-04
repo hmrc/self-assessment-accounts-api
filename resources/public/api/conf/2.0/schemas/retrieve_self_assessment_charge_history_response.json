@@ -40,7 +40,7 @@
             "example": "600.00"
           },
           "changeDate": {
-            "description": "The date the charge was changed in the format:YYYY-MM-DD.",
+            "description": "The date the charge was changed in the format: YYYY-MM-DD.",
             "type": "string",
             "example": "2018-04-05"
           },
