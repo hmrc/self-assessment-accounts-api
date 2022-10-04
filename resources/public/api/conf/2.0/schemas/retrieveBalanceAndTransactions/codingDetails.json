@@ -15,14 +15,14 @@
           "multipleOf": 0.01,
           "minimum": -99999999999.99,
           "maximum": 99999999999.99,
-          "example": 5009.99
+          "example": "5009.99"
         },
         "taxYearCoding": {
           "description": "The tax year to which the coded out charge will be attached, in the format YYYY-YY.",
           "type": "string",
           "example": "2021-22"
         },
-        "coding": {
+        "coded": {
           "description": "An object containing a coded amount and initiation date",
           "type": "object",
           "properties": {
