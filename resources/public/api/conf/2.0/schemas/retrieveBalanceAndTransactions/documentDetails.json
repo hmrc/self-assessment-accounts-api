@@ -20,20 +20,20 @@
       "example": "88888888"
     },
     "creditReason": {
-      "description": "Credit Reason gives the reason as to why there is a credit on the account. For Examples Voluntary Payment, Income tax Self Assessment Return, Excess Payment",
+      "description": "Credit Reason gives the reason as to why there is a credit on the account. One of Voluntary Payment, Income tax Self Assessment Return or Excess Payment",
       "type": "string",
       "example": "2021-22"
     },
 
     "documentDate": {
-      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "description": "The date when the document for a particular tax group containing charges was created in the format YYYY-MM-DD.",
       "type": "string",
-      "example": "2021-22"
+      "example": "2021-04-05"
     },
     "documentText": {
-      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+      "description": "Provides details about the tax group that the charge belongs to.",
       "type": "string",
-      "example": "2021-22"
+      "example": "ITSA - Bal Charge"
     },
 
     "documentDueDate": {
