@@ -41,9 +41,7 @@ class RetrieveBalanceAndTransactionsService @Inject()(connector: RetrieveBalance
                                                                                      logContext: EndpointLogContext,
                                                                                      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveBalanceAndTransactions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield desResponseWrapper.map(des => des)
+    val result = EitherT(connector.retrieveBalanceAndTransactions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }
