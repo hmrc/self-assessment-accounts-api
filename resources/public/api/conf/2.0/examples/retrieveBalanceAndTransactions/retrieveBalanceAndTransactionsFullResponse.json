@@ -25,5 +25,58 @@
     "firstPendingAmountRequested": 1234.67,
     "secondPendingAmountRequested": 3100.67,
     "availableCredit": 1212.67
-  }
+  },
+  "codingDetails": {
+    "taxYearReturn": "2020-21",
+    "totalLiabilityAmount": 5009.99,
+    "taxYearCoding": "2020-21",
+    "coded": {
+      "charge": 5009.99,
+      "initiationDate": "2021-04-05"
+    }
+  },
+  "financialDetails": [
+    {
+      "taxYear": "2016-17",
+      "chargeDetail": {
+        "documentId": "12345678901234568",
+        "documentType": "1234",
+        "documentTypeDescription": "Income Tax Estimate",
+        "chargeType": "5678",
+        "chargeTypeDescription": "Income Tax Estimate - ITSA"
+      },
+      "taxPeriodFrom": "2018-08-13",
+      "taxPeriodTo": "2018-08-14",
+      "contractAccount": "X",
+      "documentNumber": "1040000872",
+      "documentNumberItem": "XM00",
+      "chargeReference": "XM002610011594",
+      "originalAmount": 10000,
+      "outstandingAmount": 10000,
+      "clearedAmount": 10000,
+      "accruedInterest": 10000,
+      "items": [
+        {
+          "subItem": "001",
+          "dueDate": "2018-08-13",
+          "amount": 10000.00,
+          "clearingDate": "2018-08-13",
+          "clearingReason": "01",
+          "outgoingPaymentMethod": "Payable Order Repayment",
+          "isChargeOnHold": false,
+          "isEstimatedChargeOnHold": false,
+          "isInterestAccrualOnHold": false,
+          "isInterestChargeOnHold": false,
+          "isReturn": true,
+          "paymentReference": "Ab12453535",
+          "paymentAmount": 10000.00,
+          "paymentMethod": "Payment",
+          "paymentLot": "81203010024",
+          "paymentLotItem": "000001",
+          "clearingSAPDocument": "3350000253",
+          "isChargeEstimate": true
+        }
+      ]
+    }
+  ]
 }
