@@ -2,9 +2,18 @@ is:
   - headers.acceptJson
   - headers.testScenarioHeader
   - errors.formatNino
+  - errors.invalidDocNumber
+  - errors.invalidOnlyOpenItems
+  - errors.invalidIncludeLocks
+  - errors.invalidCalculateAccruedInterest
+  - errors.invalidCustomerPaymentInformation
+  - errors.invalidDateFrom
+  - errors.invalidDateTo
+  - errors.invalidRemovePaymentOnAccount
+  - errors.invalidIncludeChargeEstimate
+  - errors.invalidDateRange
+  - errors.ruleInconsistentQueryParams
   - errors.clientOrAgentNotAuthorised
-  - errors.formatTransactionId
-  - errors.notFound
 displayName: "Retrieve Self Assessment Balance and Transactions [test only]"
 description: This endpoint enables you to retrieve the overall liability broken down into overdue, currently due (payable), and pending (not yet due) amounts. A National Insurance number must be provided.
 (annotations.sandboxData): !include scenarios/default.md
@@ -14,10 +23,10 @@ responses:
   200:
     body:
       type: !include schemas/retrieveBalanceAndTransactions.json
-      examples:
-        example-1:
-          description:
-          value: !include examples/retrieveBalanceAndTransactions/retrieveBalanceAndTransactionsFullResponse.json
+#      examples:
+#        example-1:
+#          description:
+#          value: !include examples/retrieveBalanceAndTransactions/retrieveBalanceAndTransactionsFullResponse.json
 
     headers:
       X-CorrelationId:
