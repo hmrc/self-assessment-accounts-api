@@ -21,10 +21,10 @@ import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetailsObject
-import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDetailsObject
+import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
+import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDetails
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
-import v2.fixtures.retrieveBalanceAndTransactions.FinanceDetailsFixture.financeDetailsFullObject
+import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetails
 import v2.mocks.connectors.MockRetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions._
@@ -60,10 +60,10 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
 
   val retrieveBalanceAndTransactionsResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
-      balanceDetails = balanceDetailsObject,
-      codingDetails = Some(Seq(codingDetailsObject)),
+      balanceDetails = balanceDetails,
+      codingDetails = Some(Seq(codingDetails)),
       documentDetails = Some(Seq(documentDetails)),
-      financeDetails = Some(Seq(financeDetailsFullObject))
+      financialDetails = Some(Seq(financialDetails))
     )
 
   "RetrieveBalanceAndTransactionsService" should {

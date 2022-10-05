@@ -16,29 +16,58 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsString, Json}
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{
   documentDetails,
-  downstreamDocumentDetailsJson,
-  mtdDocumentDetailsJson,
+  documentDetailsMinimal,
+  documentDetailsDownstreamResponseJson,
+  documentDetailsDownstreamResponseMinimalJson,
+  documentDetailsMtdResponseJson,
   newDownstreamDocumentDetailsJson
 }
+import v2.models.utils.JsonErrorValidators
 
-class DocumentDetailsSpec extends UnitSpec {
+class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
 
-  "reads" should {
-    "return a DocumentDetails object" when {
-      "given a valid JSON document" in {
-        val result = downstreamDocumentDetailsJson.as[DocumentDetails]
+  "reads" when {
+    "given a valid downstream JSON document" must {
+      "return a DocumentDetails object" in {
+        val result = documentDetailsDownstreamResponseJson.as[DocumentDetails]
         result shouldBe documentDetails
       }
+    }
 
-      "given a valid JSON document with 9999 meaning no tax year" in {
+    "given a valid downstreamJSON document with 9999 (meaning no tax year)" must {
+      "omit the tax year in the DocumentDetails object" in {
         val json     = newDownstreamDocumentDetailsJson(taxYear = "9999")
         val expected = documentDetails.copy(taxYear = None)
         val result   = json.as[DocumentDetails]
         result shouldBe expected
+      }
+    }
+
+    "given a downstream JSON where MTD child objects in the model would be empty" must {
+      "convert to a DocumentDetails object without these child objects" in {
+        documentDetailsDownstreamResponseMinimalJson.as[DocumentDetails] shouldBe documentDetailsMinimal
+      }
+    }
+
+    "converting informationCode to chargeHasMultipleItems" must {
+      def json(informationCode: String) = documentDetailsDownstreamResponseMinimalJson.update("informationCode", JsString(informationCode))
+
+      "convert 'i' to true" in {
+        json("i").as[DocumentDetails] shouldBe
+          documentDetailsMinimal.copy(chargeHasMultipleItems = true)
+      }
+      "convert another value to false" in {
+        json("x").as[DocumentDetails] shouldBe
+          documentDetailsMinimal.copy(chargeHasMultipleItems = false)
+      }
+
+      "convert an absent field to false" in {
+        documentDetailsDownstreamResponseMinimalJson.removeProperty("informationCode").as[DocumentDetails] shouldBe
+          documentDetailsMinimal.copy(chargeHasMultipleItems = false)
       }
     }
   }
@@ -47,7 +76,7 @@ class DocumentDetailsSpec extends UnitSpec {
     "return the expected JSON document" when {
       "given a DocumentDetails object" in {
         val result = Json.toJson(documentDetails)
-        result shouldBe mtdDocumentDetailsJson
+        result shouldBe documentDetailsMtdResponseJson
       }
     }
   }

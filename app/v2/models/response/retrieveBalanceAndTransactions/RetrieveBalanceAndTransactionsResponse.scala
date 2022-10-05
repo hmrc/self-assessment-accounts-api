@@ -16,15 +16,16 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
-import play.api.libs.json.{Json, OFormat}
+import play.api.libs.json.{Json, OWrites, Reads}
 
 case class RetrieveBalanceAndTransactionsResponse(
-                                                   balanceDetails: BalanceDetails,
-                                                   codingDetails: Option[Seq[CodingDetails]],
-                                                   documentDetails: Option[Seq[DocumentDetails]],
-                                                   financeDetails: Option[Seq[FinanceDetails]]
-                                                 )
+    balanceDetails: BalanceDetails,
+    codingDetails: Option[Seq[CodingDetails]],
+    documentDetails: Option[Seq[DocumentDetails]],
+    financialDetails: Option[Seq[FinancialDetails]]
+)
 
 object RetrieveBalanceAndTransactionsResponse {
-  implicit val format: OFormat[RetrieveBalanceAndTransactionsResponse] = Json.format
+  implicit val reads: Reads[RetrieveBalanceAndTransactionsResponse]    = Json.reads[RetrieveBalanceAndTransactionsResponse]
+  implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
 }

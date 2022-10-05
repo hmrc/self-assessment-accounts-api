@@ -1,0 +1,29 @@
+{
+  "balanceDetails": {
+    "payableAmount": -99999999999.99,
+    "payableDueDate": "1920-02-29",
+    "pendingChargeDueAmount": -99999999999.99,
+    "pendingChargeDueDate": "1920-02-29",
+    "overdueAmount": -99999999999.99,
+    "bcdBalancePerYear": [
+      {
+        "taxYear": "2022-23",
+        "bcdAmount": 1300.12
+      },
+      {
+        "taxYear": "2020-21",
+        "bcdAmount": 1600.12
+      }
+    ],
+    "earliestPaymentDateOverdue": "1920-02-29",
+    "totalBalance": -99999999999.99,
+    "amountCodedOut": 3456.67,
+    "totalBcdBalance": 2600.24,
+    "unallocatedCredit": 3456.67,
+    "allocatedCredit": 2345.67,
+    "totalCredit": 4567.67,
+    "firstPendingAmountRequested": 1234.67,
+    "secondPendingAmountRequested": 3100.67,
+    "availableCredit": 1212.67
+  }
+}
