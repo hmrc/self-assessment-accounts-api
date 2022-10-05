@@ -79,22 +79,22 @@
           "originalAmount":{
             "type":"number",
             "description":"The original amount of this transaction.\nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places.",
-            "example":5009.99
+            "example": "5009.99"
           },
           "outstandingAmount":{
             "type":"number",
             "description":"The remaining amount is due on this transaction.\nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places.",
-            "example":5009.99
+            "example": "5009.99"
           },
           "clearedAmount":{
             "type":"number",
             "description":"The cleared value of this transaction. For example, the paid amount of a charge. \nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places.",
-            "example":5009.99
+            "example": "5009.99"
           },
           "accruedInterest":{
             "type":"number",
             "description":"The accrued interest of this transaction.\nAccrued interest is interest calculated and charged.\nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places",
-            "example":5009.99
+            "example": "5009.99"
           }
         },
         "required":[
