@@ -22,7 +22,7 @@
   "latePaymentInterest": {
     "latePaymentInterestId": "1234567890123456",
     "accruingInterestAmount": 5009.99,
-    "interestRate": 1.23,
+    "interestRate": 5.99,
     "interestStartDate": "2020-04-01",
     "interestEndDate": "2020-04-05",
     "interestAmount": 5009.99,
@@ -31,8 +31,8 @@
   },
   "amountCodedOut": 5009.99,
   "reducedCharge": {
-    "chargeType": "???",
-    "documentNumber": "???",
+    "chargeType": "AA",
+    "documentNumber": "1234567890123456",
     "amendmentDate": "2018-04-05",
     "taxYear": "2017-18"
   }
