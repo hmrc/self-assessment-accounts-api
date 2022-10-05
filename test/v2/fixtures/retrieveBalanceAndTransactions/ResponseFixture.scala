@@ -28,11 +28,7 @@ import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{
   documentDetailsDownstreamResponseJson,
   documentDetailsMtdResponseJson
 }
-import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.{
-  financialDetails,
-  financialDetailsDownstreamResponseJson,
-  financialDetailsMtdResponseJson
-}
+import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture._
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
 
 object ResponseFixture {
@@ -42,7 +38,7 @@ object ResponseFixture {
       balanceDetails,
       Some(List(codingDetails)),
       Some(List(documentDetails)),
-      Some(List(financialDetails))
+      Some(List(financialDetailsFullObject))
     )
 
   val minimalResponse: RetrieveBalanceAndTransactionsResponse =
@@ -64,7 +60,7 @@ object ResponseFixture {
        |        $documentDetailsMtdResponseJson
        |    ],
        |    "financialDetails": [
-       |        $financialDetailsMtdResponseJson
+       |        $mtdFinancialDetailsFullJson
        |    ]
        |  }
        |""".stripMargin
@@ -81,7 +77,7 @@ object ResponseFixture {
         |        $documentDetailsDownstreamResponseJson
         |    ],
         |    "financialDetails": [
-        |        $financialDetailsDownstreamResponseJson
+        |        $downstreamFinancialDetailsFullJson
         |    ]
         |  }
         |""".stripMargin
