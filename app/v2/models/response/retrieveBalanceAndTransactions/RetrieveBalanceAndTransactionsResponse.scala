@@ -16,27 +16,16 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
-import play.api.libs.json.Json
-import support.UnitSpec
-import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture._
+import play.api.libs.json.{Json, OWrites, Reads}
 
-class BalanceDetailsSpec extends UnitSpec {
+case class RetrieveBalanceAndTransactionsResponse(
+    balanceDetails: BalanceDetails,
+    codingDetails: Option[Seq[CodingDetails]],
+    documentDetails: Option[Seq[DocumentDetails]],
+    financialDetails: Option[Seq[FinancialDetails]]
+)
 
-  "reads" should {
-    "return a BalanceDetails object" when {
-      "passed a valid JSON document" in {
-        balanceDetailsDownstreamResponseJson
-          .as[BalanceDetails] shouldBe balanceDetails
-      }
-    }
-  }
-
-  "writes" when {
-    "passed a BalanceDetails object" should {
-      "return valid JSON" in {
-        Json.toJson(balanceDetails) shouldBe balanceDetailsMtdResponseJson
-      }
-    }
-  }
-
+object RetrieveBalanceAndTransactionsResponse {
+  implicit val reads: Reads[RetrieveBalanceAndTransactionsResponse]    = Json.reads[RetrieveBalanceAndTransactionsResponse]
+  implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
 }

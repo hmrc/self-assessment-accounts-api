@@ -21,9 +21,9 @@ import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{
   documentDetails,
   documentDetailsMinimal,
-  downstreamDocumentDetailsJson,
-  downstreamDocumentDetailsMinimalJson,
-  mtdDocumentDetailsJson,
+  documentDetailsDownstreamResponseJson,
+  documentDetailsDownstreamResponseMinimalJson,
+  documentDetailsMtdResponseJson,
   newDownstreamDocumentDetailsJson
 }
 import v2.models.utils.JsonErrorValidators
@@ -33,7 +33,7 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
   "reads" when {
     "given a valid downstream JSON document" must {
       "return a DocumentDetails object" in {
-        val result = downstreamDocumentDetailsJson.as[DocumentDetails]
+        val result = documentDetailsDownstreamResponseJson.as[DocumentDetails]
         result shouldBe documentDetails
       }
     }
@@ -49,12 +49,12 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
 
     "given a downstream JSON where MTD child objects in the model would be empty" must {
       "convert to a DocumentDetails object without these child objects" in {
-        downstreamDocumentDetailsMinimalJson.as[DocumentDetails] shouldBe documentDetailsMinimal
+        documentDetailsDownstreamResponseMinimalJson.as[DocumentDetails] shouldBe documentDetailsMinimal
       }
     }
 
     "converting informationCode to chargeHasMultipleItems" must {
-      def json(informationCode: String) = downstreamDocumentDetailsMinimalJson.update("informationCode", JsString(informationCode))
+      def json(informationCode: String) = documentDetailsDownstreamResponseMinimalJson.update("informationCode", JsString(informationCode))
 
       "convert 'i' to true" in {
         json("i").as[DocumentDetails] shouldBe
@@ -66,7 +66,7 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
       }
 
       "convert an absent field to false" in {
-        downstreamDocumentDetailsMinimalJson.removeProperty("informationCode").as[DocumentDetails] shouldBe
+        documentDetailsDownstreamResponseMinimalJson.removeProperty("informationCode").as[DocumentDetails] shouldBe
           documentDetailsMinimal.copy(chargeHasMultipleItems = false)
       }
     }
@@ -76,7 +76,7 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
     "return the expected JSON document" when {
       "given a DocumentDetails object" in {
         val result = Json.toJson(documentDetails)
-        result shouldBe mtdDocumentDetailsJson
+        result shouldBe documentDetailsMtdResponseJson
       }
     }
   }

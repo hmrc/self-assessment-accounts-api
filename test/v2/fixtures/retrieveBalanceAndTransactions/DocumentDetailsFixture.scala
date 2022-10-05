@@ -121,7 +121,7 @@ object DocumentDetailsFixture {
        |}
        |""".stripMargin)
 
-  val mtdDocumentDetailsJson: JsValue =
+  val documentDetailsMtdResponseJson: JsValue =
     Json.parse(s"""
        |{
        |  "taxYear": "2020-21",
@@ -146,7 +146,7 @@ object DocumentDetailsFixture {
        |}
        |""".stripMargin)
 
-  // Downstream model:
+  // Downstream response JSON:
 
   def newDownstreamDocumentDetailsJson(taxYear: String): JsValue = Json.parse(s"""
        |{
@@ -184,9 +184,9 @@ object DocumentDetailsFixture {
        |}
        |""".stripMargin)
 
-  val downstreamDocumentDetailsJson: JsValue = newDownstreamDocumentDetailsJson("2021")
+  val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021")
 
-  val downstreamDocumentDetailsMinimalJson: JsValue = Json.parse(s"""
+  val documentDetailsDownstreamResponseMinimalJson: JsValue = Json.parse(s"""
        |{
        |  "documentId": "1455",
        |  "documentDate": "2018-04-05",

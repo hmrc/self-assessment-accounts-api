@@ -25,8 +25,8 @@ class CodingDetailsSpec extends UnitSpec {
   "reads" should {
     "return a deserialized object" when {
       "valid JSON is supplied" in {
-        codingDetailsDownstreamDetailsJson
-          .as[CodingDetails] shouldBe codingDetailsObject
+        codingDetailsDownstreamResponseJson
+          .as[CodingDetails] shouldBe codingDetails
       }
     }
   }
@@ -34,7 +34,7 @@ class CodingDetailsSpec extends UnitSpec {
   "writes" when {
     "passed a valid object" should {
       "return valid JSON " in {
-        Json.toJson(codingDetailsObject) shouldBe codingDetailsMtdJson
+        Json.toJson(codingDetails) shouldBe codingDetailsMtdResponseJson
       }
     }
   }
