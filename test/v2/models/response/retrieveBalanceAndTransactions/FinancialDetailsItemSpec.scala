@@ -16,7 +16,7 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsError, JsObject, JsValue, Json}
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsItemFixture
 
@@ -57,7 +57,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
             .foreach((doTest _).tupled)
         }
 
-        "leave absent if present and no mapping is defined" in { // FIXME is this right?
+        "leave absent if present and no mapping is defined" in {
           json("UNKNOWN").as[FinancialDetailsItem] shouldBe model(None)
         }
       }
@@ -75,7 +75,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
           Seq("A" -> "Repayment to Card", "P" -> "Payable Order Repayment", "R" -> "BACS Payment out").foreach((doTest _).tupled)
         }
 
-        "leave absent if present and no mapping is defined" in { // FIXME is this right?
+        "leave absent if present and no mapping is defined" in {
           json("UNKNOWN").as[FinancialDetailsItem] shouldBe model(None)
         }
       }
@@ -153,8 +153,8 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
         def json(value: String): JsValue                = Json.parse(s"""{ "statisticalDocument": "$value" }""")
         def model(value: Boolean): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isChargeEstimate = value)
 
-        "convert non-empty string to true" in {
-          json("ANYTHING").as[FinancialDetailsItem] shouldBe model(true)
+        "convert G string to true" in {
+          json("G").as[FinancialDetailsItem] shouldBe model(true)
         }
 
         "convert empty string to false" in {
@@ -163,6 +163,10 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
 
         "convert absent field to false" in {
           JsObject.empty.as[FinancialDetailsItem] shouldBe model(false)
+        }
+
+        "convert anything else to an error" in {
+          json("X").validate[FinancialDetailsItem] shouldBe a[JsError]
         }
       }
     }

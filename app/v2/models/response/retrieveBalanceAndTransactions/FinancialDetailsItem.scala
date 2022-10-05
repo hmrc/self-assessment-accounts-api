@@ -74,7 +74,12 @@ object FinancialDetailsItem {
       (__ \ "paymentLot").readNullable[String] and
       (__ \ "paymentLotItem").readNullable[String] and
       (__ \ "clearingSAPDocument").readNullable[String] and
-      (__ \ "statisticalDocument").readNullable[String].map(stringToBooleanConverter))(FinancialDetailsItem.apply _)
+      (__ \ "statisticalDocument").readNullable[String].flatMap[Boolean] {
+        case Some(x) if x == "G" => Reads.pure(true)
+        case Some(x) if x == ""  => Reads.pure(false)
+        case Some(x)             => Reads.failed(s"expected '' or 'G' but was `$x`")
+        case None                => Reads.pure(false)
+      })(FinancialDetailsItem.apply _)
   }
 
   private def convertToMtd(mapping: Map[String, String])(maybeDownstream: Option[String]): Option[String] =
