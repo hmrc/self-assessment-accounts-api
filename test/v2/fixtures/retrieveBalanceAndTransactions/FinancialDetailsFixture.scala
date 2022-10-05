@@ -18,7 +18,7 @@ package v2.fixtures.retrieveBalanceAndTransactions
 
 import api.models.domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
-import v2.models.response.retrieveBalanceAndTransactions.{ChargeDetail, FinanceDetails, FinancialDetailsItem}
+import v2.models.response.retrieveBalanceAndTransactions.{ChargeDetail, FinancialDetails, FinancialDetailsItem}
 
 object FinanceDetailsFixture extends FinancialDetailsItemFixture {
 
@@ -32,7 +32,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
     subTransactionDescription = Some("PAYE")
   )
 
-  val financeDetailsFullObject: FinanceDetails = FinanceDetails(
+  val financeDetailsFullObject: FinancialDetails = FinancialDetails(
     taxYear = taxYear.asMtd,
     chargeDetail = Some(chargeDetailObject),
     taxPeriodFrom = Some("2022-01-01"),
