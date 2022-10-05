@@ -27,6 +27,7 @@
           },
           "creditReason": {
             "description": "Credit Reason gives the reason as to why there is a credit on the account.",
+            "type":"string",
             "example": "Voluntary Payment",
             "enum": [
               "Voluntary Payment",
@@ -51,6 +52,7 @@
           },
           "documentDescription": {
             "description": "The primary method to identify what type of document has been called.",
+            "type":"string",
             "example": "ITSA- POA 1",
             "enum": [
               "ITSA- POA 1",
@@ -83,7 +85,7 @@
           "lastClearing": {
             "description": "Details if the amount was previously modified.",
             "type": "object",
-            "items": {
+            "properties": {
               "lastClearingDate": {
                 "description": "The date the outstanding amount was last modified, in the format YYYY-MM-DD.",
                 "type": "string",
@@ -91,6 +93,7 @@
               },
               "lastClearingReason": {
                 "description": "The reason for the change. For example, an interest charge was created.",
+                "type":"string",
                 "example": "Incoming Payment",
                 "enum": [
                   "Incoming Payment",
@@ -138,7 +141,7 @@
           "latePaymentInterest": {
             "description": "An object containing late payment interest details.",
             "type": "object",
-            "items": {
+            "properties": {
               "latePaymentInterestId": {
                 "description": "Late Payment Interest ID is the Charge Reference Number of all the monthly and final interest charges of the same parent charge.",
                 "type": "string",
@@ -207,7 +210,7 @@
           "reducedCharge": {
             "description": "Details if Charge has been reduced.",
             "type": "object",
-            "items": {
+            "properties": {
               "chargeType": {
                 "description": "Document name of charge reduced. \r\nThis will be the Charge type name of the original charge",
                 "type": "string",
