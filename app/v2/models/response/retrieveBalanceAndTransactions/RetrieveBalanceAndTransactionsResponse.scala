@@ -16,18 +16,16 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
-import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json.{Json, OWrites, Reads}
 
-case class BalancePerYear(taxYear: Option[String], bcdAmount: Option[BigDecimal])
+case class RetrieveBalanceAndTransactionsResponse(
+    balanceDetails: BalanceDetails,
+    codingDetails: Option[Seq[CodingDetails]],
+    documentDetails: Option[Seq[DocumentDetails]],
+    financialDetails: Option[Seq[FinancialDetails]]
+)
 
-object BalancePerYear {
-
-  implicit val reads: Reads[BalancePerYear] =
-    ((JsPath \ "taxYear").readNullable[String] and
-      (JsPath \ "amount").readNullable[BigDecimal])(BalancePerYear.apply _)
-
-  implicit val writes: OWrites[BalancePerYear] =
-    Json.writes[BalancePerYear]
-
+object RetrieveBalanceAndTransactionsResponse {
+  implicit val reads: Reads[RetrieveBalanceAndTransactionsResponse]    = Json.reads[RetrieveBalanceAndTransactionsResponse]
+  implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
 }

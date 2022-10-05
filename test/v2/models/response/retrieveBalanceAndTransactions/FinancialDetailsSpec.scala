@@ -18,30 +18,30 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.retrieveBalanceAndTransactions.FinanceDetailsFixture.{
-  downstreamFinanceDetailFullJson,
-  downstreamFinanceDetailMismatchedMainTypeJson,
-  downstreamFinanceDetailMissingMainTypeJson,
-  financeDetailsFullObject,
-  financeDetailsNoMainTypeObject,
-  mtdFinanceDetailFullJson,
-  mtdFinanceDetailNoMainTypeJson
+import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.{
+  financialDetailsDownstreamResponseJson,
+  financialDetailsMismatchedMainTypeDownstreamResponseJson,
+  financialDetailsMissingMainTypeDownstreamResponseJson,
+  financialDetails,
+  financialDetailsNoMainType,
+  financialDetailsMtdResponseJson,
+  financialDetailsNoMainTypeMtdResponseJson
 }
 
-class FinanceDetailsSpec extends UnitSpec {
+class FinancialDetailsSpec extends UnitSpec {
 
   "reads" should {
     "return a valid model with all properties" when {
       "valid JSON with all properties is supplied " in {
-        downstreamFinanceDetailFullJson.as[FinanceDetails] shouldBe financeDetailsFullObject
+        financialDetailsDownstreamResponseJson.as[FinancialDetails] shouldBe financialDetails
       }
     }
     "return a valid model without a mainType" when {
       "JSON without mainType is supplied " in {
-        downstreamFinanceDetailMissingMainTypeJson.as[FinanceDetails] shouldBe financeDetailsNoMainTypeObject
+        financialDetailsMissingMainTypeDownstreamResponseJson.as[FinancialDetails] shouldBe financialDetailsNoMainType
       }
       "JSON with invalid mainType is supplied " in {
-        downstreamFinanceDetailMismatchedMainTypeJson.as[FinanceDetails] shouldBe financeDetailsNoMainTypeObject
+        financialDetailsMismatchedMainTypeDownstreamResponseJson.as[FinancialDetails] shouldBe financialDetailsNoMainType
       }
     }
   }
@@ -49,13 +49,13 @@ class FinanceDetailsSpec extends UnitSpec {
   "writes" when {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
-        Json.toJson(financeDetailsFullObject) shouldBe mtdFinanceDetailFullJson
+        Json.toJson(financialDetails) shouldBe financialDetailsMtdResponseJson
       }
     }
 
     "passed a valid model with no mainType" should {
       "return valid JSON with no mainType" in {
-        Json.toJson(financeDetailsNoMainTypeObject) shouldBe mtdFinanceDetailNoMainTypeJson
+        Json.toJson(financialDetailsNoMainType) shouldBe financialDetailsNoMainTypeMtdResponseJson
       }
     }
 

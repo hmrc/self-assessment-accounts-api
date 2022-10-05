@@ -21,29 +21,29 @@ import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 import v2.models.response.retrieveBalanceAndTransactions.financeDetailTypes.mapping
 
-case class FinanceDetails(taxYear: String,
-                          documentId: String,
-                          chargeType: Option[String],
-                          mainType: Option[String],
-                          taxPeriodFrom: Option[String],
-                          taxPeriodTo: Option[String],
-                          contractAccountCategory: Option[String],
-                          contractAccount: Option[String],
-                          documentNumber: Option[String],
-                          documentNumberItem: Option[String],
-                          chargeReference: Option[String],
-                          mainTransaction: Option[String],
-                          subTransaction: Option[String],
-                          originalAmount: Option[BigDecimal],
-                          outstandingAmount: Option[BigDecimal],
-                          clearedAmount: Option[BigDecimal],
-                          accruedInterest: Option[BigDecimal],
-                          items: Seq[FinancialDetailsItem])
+case class FinancialDetails(taxYear: String,
+                            documentId: String,
+                            chargeType: Option[String],
+                            mainType: Option[String],
+                            taxPeriodFrom: Option[String],
+                            taxPeriodTo: Option[String],
+                            contractAccountCategory: Option[String],
+                            contractAccount: Option[String],
+                            documentNumber: Option[String],
+                            documentNumberItem: Option[String],
+                            chargeReference: Option[String],
+                            mainTransaction: Option[String],
+                            subTransaction: Option[String],
+                            originalAmount: Option[BigDecimal],
+                            outstandingAmount: Option[BigDecimal],
+                            clearedAmount: Option[BigDecimal],
+                            accruedInterest: Option[BigDecimal],
+                            items: Seq[FinancialDetailsItem])
 
-object FinanceDetails {
-  implicit val writes: Writes[FinanceDetails] = Json.writes[FinanceDetails]
+object FinancialDetails {
+  implicit val writes: Writes[FinancialDetails] = Json.writes[FinancialDetails]
 
-  implicit val reads: Reads[FinanceDetails] = (
+  implicit val reads: Reads[FinancialDetails] = (
     (JsPath \ "taxYear").read[String].map(TaxYear.fromDownstream(_).asMtd) and
       (JsPath \ "documentId").read[String] and
       (JsPath \ "chargeType").readNullable[String] and
@@ -62,7 +62,7 @@ object FinanceDetails {
       (JsPath \ "clearedAmount").readNullable[BigDecimal] and
       (JsPath \ "accruedInterest").readNullable[BigDecimal] and
       (JsPath \ "items").read[Seq[FinancialDetailsItem]]
-  )(FinanceDetails.apply _)
+  )(FinancialDetails.apply _)
 
   private def getMainType(downstreamValue: Option[String]): Option[String] = {
     downstreamValue.flatMap(x => mapping.get(x))
