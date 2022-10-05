@@ -14,19 +14,23 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveBalanceAndTransactions
+package api.controllers.requestParsers.validators.validations
 
-import api.models.request.RawData
+import api.models.errors.MtdError
 
-case class RetrieveBalanceAndTransactionsRawData(
-    nino: String,
-    docNumber: Option[String],
-    dateFrom: Option[String],
-    dateTo: Option[String],
-    onlyOpenItems: Option[String],
-    includeLocks: Option[String],
-    calculateAccruedInterest: Option[String],
-    removePOA: Option[String],
-    customerPaymentInformation: Option[String],
-    includeChargeEstimate: Option[String]
-) extends RawData
+import scala.util.{Failure, Success, Try}
+
+object BooleanValidation {
+
+  def validate(value: Option[String], error: MtdError): List[MtdError] = {
+    value.map(validate(_, error)).getOrElse(Nil)
+  }
+
+  def validate(value: String, error: MtdError): List[MtdError] = Try {
+    value.toBoolean
+  } match {
+    case Success(_) => Nil
+    case Failure(_) => List(error)
+  }
+
+}

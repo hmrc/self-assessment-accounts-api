@@ -20,7 +20,7 @@ import api.models.domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
 import v2.models.response.retrieveBalanceAndTransactions.{ChargeDetail, FinancialDetails, FinancialDetailsItem}
 
-object FinanceDetailsFixture extends FinancialDetailsItemFixture {
+object FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
   private val taxYear: TaxYear = TaxYear("2022")
 
@@ -32,7 +32,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
     subTransactionDescription = Some("PAYE")
   )
 
-  val financeDetailsFullObject: FinancialDetails = FinancialDetails(
+  val financialDetailsFullObject: FinancialDetails = FinancialDetails(
     taxYear = taxYear.asMtd,
     chargeDetail = Some(chargeDetailObject),
     taxPeriodFrom = Some("2022-01-01"),
@@ -48,7 +48,7 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
     items = Seq[FinancialDetailsItem](financialDetailsItemModel)
   )
 
-  val downstreamFinanceDetailFullJson: JsValue = Json.parse(
+  val downstreamFinancialDetailsFullJson: JsValue = Json.parse(
     s"""
        |{
        |      "taxYear": "${taxYear.asDownstream}",
@@ -57,21 +57,21 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
        |      "mainType": "${chargeDetailObject.mainTransactionDescription.get}",
        |      "periodKey": "13RL",
        |      "periodKeyDescription": "abcde",
-       |      "taxPeriodFrom": "${financeDetailsFullObject.taxPeriodFrom.get}",
-       |      "taxPeriodTo": "${financeDetailsFullObject.taxPeriodTo.get}",
+       |      "taxPeriodFrom": "${financialDetailsFullObject.taxPeriodFrom.get}",
+       |      "taxPeriodTo": "${financialDetailsFullObject.taxPeriodTo.get}",
        |      "businessPartner": "6622334455",       
-       |      "contractAccount": "${financeDetailsFullObject.contractAccount.get}",
+       |      "contractAccount": "${financialDetailsFullObject.contractAccount.get}",
        |      "contractObjectType": "ABCD",
        |      "contractObject": "00000003000000002757",
-       |      "sapDocumentNumber": "${financeDetailsFullObject.documentNumber.get}",
-       |      "sapDocumentNumberItem": "${financeDetailsFullObject.documentNumberItem.get}",
-       |      "chargeReference": "${financeDetailsFullObject.chargeReference.get}",
+       |      "sapDocumentNumber": "${financialDetailsFullObject.documentNumber.get}",
+       |      "sapDocumentNumberItem": "${financialDetailsFullObject.documentNumberItem.get}",
+       |      "chargeReference": "${financialDetailsFullObject.chargeReference.get}",
        |      "mainTransaction": "${chargeDetailObject.mainTransaction.get}",
        |      "subTransaction": "${chargeDetailObject.subTransaction.get}",
-       |      "originalAmount": ${financeDetailsFullObject.originalAmount.get},
-       |      "outstandingAmount": ${financeDetailsFullObject.outstandingAmount.get},
-       |      "clearedAmount": ${financeDetailsFullObject.clearedAmount.get},
-       |      "accruedInterest": ${financeDetailsFullObject.accruedInterest.get},
+       |      "originalAmount": ${financialDetailsFullObject.originalAmount.get},
+       |      "outstandingAmount": ${financialDetailsFullObject.outstandingAmount.get},
+       |      "clearedAmount": ${financialDetailsFullObject.clearedAmount.get},
+       |      "accruedInterest": ${financialDetailsFullObject.accruedInterest.get},
        |      "items":  [$financialDetailsItemDownstreamJson]
        |}
        |""".stripMargin
@@ -87,21 +87,21 @@ object FinanceDetailsFixture extends FinancialDetailsItemFixture {
       |}
       |""".stripMargin)
 
-  val mtdFinanceDetailFullJson: JsValue = Json.parse(
+  val mtdFinancialDetailsFullJson: JsValue = Json.parse(
     s"""
        |  {
        |      "taxYear":"${taxYear.asMtd}",
        |      "chargeDetail": ${mtdChargeDetailJson},
-       |      "taxPeriodFrom": "${financeDetailsFullObject.taxPeriodFrom.get}",
-       |      "taxPeriodTo": "${financeDetailsFullObject.taxPeriodTo.get}",
-       |      "contractAccount":"${financeDetailsFullObject.contractAccount.get}",
-       |      "documentNumber": "${financeDetailsFullObject.documentNumber.get}",
-       |      "documentNumberItem": "${financeDetailsFullObject.documentNumberItem.get}",
-       |      "chargeReference": "${financeDetailsFullObject.chargeReference.get}",
-       |      "originalAmount": ${financeDetailsFullObject.originalAmount.get},
-       |      "outstandingAmount": ${financeDetailsFullObject.outstandingAmount.get},
-       |      "clearedAmount": ${financeDetailsFullObject.clearedAmount.get},
-       |      "accruedInterest": ${financeDetailsFullObject.accruedInterest.get},
+       |      "taxPeriodFrom": "${financialDetailsFullObject.taxPeriodFrom.get}",
+       |      "taxPeriodTo": "${financialDetailsFullObject.taxPeriodTo.get}",
+       |      "contractAccount":"${financialDetailsFullObject.contractAccount.get}",
+       |      "documentNumber": "${financialDetailsFullObject.documentNumber.get}",
+       |      "documentNumberItem": "${financialDetailsFullObject.documentNumberItem.get}",
+       |      "chargeReference": "${financialDetailsFullObject.chargeReference.get}",
+       |      "originalAmount": ${financialDetailsFullObject.originalAmount.get},
+       |      "outstandingAmount": ${financialDetailsFullObject.outstandingAmount.get},
+       |      "clearedAmount": ${financialDetailsFullObject.clearedAmount.get},
+       |      "accruedInterest": ${financialDetailsFullObject.accruedInterest.get},
        |      "items": [$financialDetailsItemMtdJson]
        | }
        |""".stripMargin
