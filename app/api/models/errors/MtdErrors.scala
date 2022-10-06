@@ -52,6 +52,12 @@ object FromDateFormatError
       message = "The provided From date is invalid"
     )
 
+object StartDateFormatError
+  extends MtdError(
+    code = "FORMAT_START_DATE",
+    message = "The provided start date is invalid"
+  )
+
 object ValueFormatError
     extends MtdError(
       code = "FORMAT_VALUE",
@@ -63,6 +69,12 @@ object ToDateFormatError
       code = "FORMAT_TO_DATE",
       message = "The provided To date is invalid"
     )
+
+object EndDateFormatError
+  extends MtdError(
+    code = "FORMAT_END_DATE",
+    message = "The provided end date is invalid"
+  )
 
 object PaymentIdFormatError
     extends MtdError(
@@ -87,6 +99,18 @@ object SourceFormatError
       code = "FORMAT_SOURCE",
       message = "The format of the supplied source is not valid"
     )
+
+object PaymentLotFormatError
+  extends MtdError(
+    code = "FORMAT_PAYMENT_LOT",
+    message = "The format of the supplied Payment Lot field is not valid"
+  )
+
+object PaymentLotItemFormatError
+  extends MtdError(
+    code = "FORMAT_PAYMENT_LOT_ITEM",
+    message = "The format of the supplied Payment Lot Item field is not valid"
+  )
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
@@ -130,6 +154,12 @@ object RuleDateRangeInvalidError
       code = "RULE_DATE_RANGE_INVALID",
       message = "The specified date range is invalid"
     )
+
+object RuleEndBeforeStartError
+  extends MtdError(
+    code = "RULE_END_DATE_BEFORE_START_DATE",
+    message = "The end date is earlier than the start date"
+)
 
 object RuleInconsistentQueryParamsError
   extends MtdError(
