@@ -10,6 +10,9 @@
     "codingDetails": {
       "$ref": "retrieveBalanceAndTransactions/codingDetails.json"
     },
+    "documentDetails": {
+      "$ref": "retrieveBalanceAndTransactions/documentDetails.json"
+    },
     "financialDetails": {
       "$ref": "retrieveBalanceAndTransactions/financialDetails.json"
     }
