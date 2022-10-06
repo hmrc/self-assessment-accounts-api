@@ -96,12 +96,13 @@
       "items": {
         "$ref": "itemDetails.json"
       }
-    }
-  },
-  "required": [
-    "taxYear",
-    "chargeDetail"
-  ]
+    },
+    "required": [
+      "taxYear",
+      "chargeDetail",
+      "items"
+    ]
+  }
 }
 
 
