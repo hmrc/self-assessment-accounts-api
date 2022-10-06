@@ -14,5 +14,10 @@
       "$ref": "retrieveBalanceAndTransactions/financialDetails.json"
     }
   },
+  "required": [
+    "balanceDetails",
+    "codingDetails",
+    "financialDetails"
+  ],
   "additionalProperties": false
 }
