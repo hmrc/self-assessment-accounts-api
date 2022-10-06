@@ -26,24 +26,43 @@ trait FinancialDetailsItemFixture {
     dueDate = Some("2022-02-02"),
     amount = Some(1.23),
     clearingDate = Some("2021-01-01"),
-    clearingReason = Some("01"),
+    clearingReason = Some("Incoming Payment"),
     outgoingPaymentMethod = Some("Repayment to Card"),
-    paymentLock = Some("Additional Security Checks"),
-    clearingLock = Some("No Reallocation"),
-    interestLock = Some("interestLock"),
-    dunningLock = Some("dunningLock"),
+    isChargeOnHold = true,
+    isEstimatedChargeOnHold = true,
+    isInterestAccrualOnHold = true,
+    isInterestChargeOnHold = true,
     isReturn = Some(true),
     paymentReference = Some("paymentReference"),
     paymentAmount = Some(2.23),
     paymentMethod = Some("paymentMethod"),
     paymentLot = Some("paymentLot"),
     paymentLotItem = Some("paymentLotItem"),
-    isStatistical = Some(true),
-    returnReason = Some("returnReason")
+    clearingSAPDocument = Some("clearingSAPDocument"),
+    isChargeEstimate = true
   )
 
   val financialDetailsItemModelEmpty: FinancialDetailsItem =
-    FinancialDetailsItem(None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+    FinancialDetailsItem(
+      subItem = None,
+      dueDate = None,
+      amount = None,
+      clearingDate = None,
+      clearingReason = None,
+      outgoingPaymentMethod = None,
+      isChargeOnHold = false,
+      isEstimatedChargeOnHold = false,
+      isInterestAccrualOnHold = false,
+      isInterestChargeOnHold = false,
+      isReturn = None,
+      paymentReference = None,
+      paymentAmount = None,
+      paymentMethod = None,
+      paymentLot = None,
+      paymentLotItem = None,
+      clearingSAPDocument = None,
+      isChargeEstimate = false
+    )
 
   val financialDetailsItemMtdJson: JsValue =
     Json.parse("""
@@ -52,20 +71,20 @@ trait FinancialDetailsItemFixture {
       |  "dueDate": "2022-02-02",
       |  "amount": 1.23,
       |  "clearingDate": "2021-01-01",
-      |  "clearingReason": "01",
+      |  "clearingReason": "Incoming Payment",
       |  "outgoingPaymentMethod": "Repayment to Card",
-      |  "paymentLock": "Additional Security Checks",
-      |  "clearingLock": "No Reallocation",
-      |  "interestLock": "interestLock",
-      |  "dunningLock": "dunningLock",
+      |  "isChargeOnHold": true,
+      |  "isEstimatedChargeOnHold": true,
+      |  "isInterestAccrualOnHold": true,
+      |  "isInterestChargeOnHold": true,
       |  "isReturn": true,
       |  "paymentReference": "paymentReference",         
       |  "paymentAmount": 2.23,
       |  "paymentMethod": "paymentMethod",
       |  "paymentLot": "paymentLot",
       |  "paymentLotItem": "paymentLotItem",
-      |  "isStatistical": true,
-      |  "returnReason": "returnReason"
+      |  "clearingSAPDocument": "clearingSAPDocument",
+      |  "isChargeEstimate": true
       |}
       |""".stripMargin)
 
@@ -89,7 +108,7 @@ trait FinancialDetailsItemFixture {
         |  "paymentMethod": "paymentMethod",
         |  "paymentLot": "paymentLot",
         |  "paymentLotItem": "paymentLotItem",
-        |  "clearingSAPDocument": "3350000253",
+        |  "clearingSAPDocument": "clearingSAPDocument",
         |  "codingInitiationDate": "2021-01-11",
         |  "statisticalDocument": "G",
         |  "returnReason": "returnReason"

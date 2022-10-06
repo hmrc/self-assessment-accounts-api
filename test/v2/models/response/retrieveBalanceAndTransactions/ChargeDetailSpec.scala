@@ -19,23 +19,25 @@ package v2.models.response.retrieveBalanceAndTransactions
 import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture._
-import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFullObject
 
-class FinancialDetailsSpec extends UnitSpec {
+class ChargeDetailSpec extends UnitSpec {
 
   "reads" should {
-    "return a valid model with all properties" when {
-      "valid JSON with all properties is supplied " in {
-        downstreamFinancialDetailsFullJson.as[FinancialDetails] shouldBe financialDetailsFullObject
+    "return a valid model with properties" when {
+      "valid JSON with all properties is supplied" in {
+        downstreamFinancialDetailsFullJson.as[ChargeDetail] shouldBe chargeDetailObject
       }
+
     }
+
   }
 
-  "writes" when {
+  "writes" should {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
-        Json.toJson(financialDetailsFullObject) shouldBe mtdFinancialDetailsFullJson
+        Json.toJson(chargeDetailObject) shouldBe mtdChargeDetailJson
       }
+
     }
   }
 
