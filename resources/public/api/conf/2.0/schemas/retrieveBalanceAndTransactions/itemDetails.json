@@ -38,6 +38,7 @@
       "outgoingPaymentMethod": {
         "description": "The method used to make the outgoing payment. One of Repayment to Card, Payable Order Repayment or BACS Payment out",
         "example": "Payable Order Repayment",
+        "type": "string",
         "enum": [
           "Repayment to Card",
           "Payable Order Repayment",

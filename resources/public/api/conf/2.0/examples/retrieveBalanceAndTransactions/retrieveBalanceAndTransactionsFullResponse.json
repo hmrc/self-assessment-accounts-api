@@ -26,15 +26,17 @@
     "secondPendingAmountRequested": 3100.67,
     "availableCredit": 1212.67
   },
-  "codingDetails": {
-    "taxYearReturn": "2020-21",
-    "totalLiabilityAmount": 5009.99,
-    "taxYearCoding": "2020-21",
-    "coded": {
-      "charge": 5009.99,
-      "initiationDate": "2021-04-05"
+  "codingDetails": [
+    {
+      "taxYearReturn": "2020-21",
+      "totalLiabilityAmount": 5009.99,
+      "taxYearCoding": "2020-21",
+      "coded": {
+        "charge": 5009.99,
+        "initiationDate": "2021-04-05"
+      }
     }
-  },
+  ],
   "documentDetails": {
     "taxYear": "2020-21",
     "documentId": "1455",
