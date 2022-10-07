@@ -17,7 +17,6 @@
 package v2.models.request.listPaymentsAndAllocationDetails
 
 import api.models.domain.Nino
-import api.models.request.RawData
 
 case class ListPaymentsAndAllocationDetailsRequest(
     nino: Nino,
@@ -25,4 +24,4 @@ case class ListPaymentsAndAllocationDetailsRequest(
     dateTo: Option[String],
     paymentLot: Option[String],
     paymentLotItems: Option[String]
-) extends RawData
+)
