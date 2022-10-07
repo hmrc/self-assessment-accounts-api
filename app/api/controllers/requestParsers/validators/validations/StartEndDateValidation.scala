@@ -16,12 +16,20 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{InvalidDateRangeError, MissingFromDateError, MissingToDateError, MtdError, RuleDateRangeInvalidError, RuleEndBeforeStartError}
-
+import api.models.errors.{
+  EndDateFormatError,
+  InvalidDateRangeError,
+  MissingFromDateError,
+  MissingToDateError,
+  MtdError,
+  RuleDateRangeInvalidError,
+  RuleEndBeforeStartError,
+  StartDateFormatError
+}
 import java.time.temporal.ChronoUnit.DAYS
 import java.time.LocalDate
 
-object ToFromDateValidation {
+object StartEndDateValidation {
 
   def validate(from: Option[String], to: Option[String]): List[MtdError] = {
     (from, to) match {
@@ -34,12 +42,15 @@ object ToFromDateValidation {
   }
 
   private def validateDates(from: String, to: String): List[MtdError] = {
-    val toBeforeFromError: List[MtdError] = checkIfToIsBeforeFrom(from, to)
+    val dateFormatErrors = DateFormatValidation.validate(from, StartDateFormatError) ++
+      DateFormatValidation.validate(to, EndDateFormatError)
 
-    if (toBeforeFromError.equals(Nil)) {
-      checkDateRange(from, to)
+    if (dateFormatErrors.equals(Nil)) {
+      val toBeforeFromErrors: List[MtdError] = checkIfToIsBeforeFrom(from, to)
+
+      if (toBeforeFromErrors.equals(Nil)) checkDateRange(from, to) else toBeforeFromErrors
     } else {
-      toBeforeFromError
+      dateFormatErrors
     }
   }
 
@@ -56,11 +67,7 @@ object ToFromDateValidation {
     val MAX_DATE_RANGE: Int = 366
     val days: Int           = DAYS.between(fmtFrom, fmtTo).toInt
 
-    if (days > MAX_DATE_RANGE) {
-        List(RuleDateRangeInvalidError)
-    } else {
-        NoValidationErrors
-    }
+    if (days > MAX_DATE_RANGE) List(RuleDateRangeInvalidError) else NoValidationErrors
   }
 
 }

@@ -17,22 +17,21 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.{BooleanValidation, DateFormatValidation, DateRangeValidationV2, DocNumberValidation, NinoValidation, PaymentLotItemValidation, PaymentLotValidation, ToFromDateValidation}
-import api.models.errors.{EndDateFormatError, InvalidCalculateAccruedInterestError, InvalidCustomerPaymentInformationError, InvalidDateFromError, InvalidDateToError, InvalidIncludeChargeEstimateError, InvalidIncludeLocksError, InvalidOnlyOpenItemsError, InvalidRemovePaymentOnAccountError, MtdError, StartDateFormatError}
+import api.controllers.requestParsers.validators.validations.{NinoValidation, PaymentLotItemValidation, PaymentLotValidation, StartEndDateValidation}
+import api.models.errors.MtdError
 import config.AppConfig
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRawData
 
 import javax.inject.Inject
 
 class ListPaymentAndAllocationDetailsValidator @Inject() (appConfig: AppConfig) extends Validator[ListPaymentAndAllocationDetailsRawData] {
 
-  private val validationSet = List(parameterFormatValidation)
+  private val validationSet = List(parameterValidation)
 
-  private def parameterFormatValidation: ListPaymentAndAllocationDetailsRawData => List[List[MtdError]] =
+  private def parameterValidation: ListPaymentAndAllocationDetailsRawData => List[List[MtdError]] =
     (data: ListPaymentAndAllocationDetailsRawData) => {
       List(
         NinoValidation.validate(data.nino),
-        ToFromDateValidation.validate(data.from, data.to),
+        StartEndDateValidation.validate(data.from, data.to),
         PaymentLotValidation.validate(data.paymentLot),
         PaymentLotItemValidation.validate(data.paymentLotItem),
       )

@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package v2.controllers.requestParsers
+package v2.mocks.validators
 
-import api.controllers.requestParsers.RequestParser
+import api.models.errors.MtdError
+import org.scalamock.handlers.CallHandler1
+import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.validators.ListPaymentAndAllocationDetailsValidator
 
-import javax.inject.Inject
+class MockListPaymentAndAllocationDetailsValidator extends MockFactory {
 
-class ListPaymentAndAllocationDetailsRequestParser @Inject() (val validator: ListPaymentAndAllocationDetailsValidator)
-  extends RequestParser[ListPaymentAndAllocationDetailsRawData, ListPaymentAndAllocationDetailsRequest] {
+  val mockValidator: ListPaymentAndAllocationDetailsValidator = mock[ListPaymentAndAllocationDetailsValidator]
 
-  override protected def requestFor(data: ListPaymentAndAllocationDetailsRawData): ListPaymentAndAllocationDetailsRequest =
-    ListPaymentAndAllocationDetailsRequest()
+  object MockListPaymentAndAllocationDetailsValidator {
+
+    def validate(data: ListPaymentAndAllocationDetailsRawData): CallHandler1[ListPaymentAndAllocationDetailsRawData, List[MtdError]] = {
+      (mockValidator
+        .validate(_: ListPaymentAndAllocationDetailsRawData))
+        .expects(data)
+    }
+
+  }
 
 }
