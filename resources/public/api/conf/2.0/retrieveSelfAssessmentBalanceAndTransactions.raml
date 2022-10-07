@@ -19,6 +19,11 @@ description: This endpoint enables you to retrieve the overall liability broken 
 (annotations.sandboxData): !include scenarios/retrieveSelfAssessmentBalanceAndTransactions.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+queryParameters:
+  docNumber:
+    description: An example description.
+    type: string
+    example: "1234"
 responses:
   200:
     body:
