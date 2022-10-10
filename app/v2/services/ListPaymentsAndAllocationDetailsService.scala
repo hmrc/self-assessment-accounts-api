@@ -25,7 +25,6 @@ import utils.Logging
 import v2.connectors.ListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
-import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
@@ -46,9 +45,6 @@ class ListPaymentsAndAllocationDetailsService @Inject()(connector: ListPaymentsA
     result.value
   }
 
-}
-
-object ListPaymentsAndAllocationDetailsService {
   val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID" -> InternalError,
