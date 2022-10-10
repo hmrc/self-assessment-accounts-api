@@ -1,0 +1,84 @@
+is:
+  - headers.acceptJson
+  - headers.testScenarioHeader
+  - errors.formatNino
+  - errors.invalidDocNumber
+  - errors.invalidOnlyOpenItems
+  - errors.invalidIncludeLocks
+  - errors.invalidCalculateAccruedInterest
+  - errors.invalidCustomerPaymentInformation
+  - errors.invalidDateFrom
+  - errors.invalidDateTo
+  - errors.invalidRemovePaymentOnAccount
+  - errors.invalidIncludeChargeEstimate
+  - errors.invalidDateRange
+  - errors.ruleInconsistentQueryParams
+  - errors.clientOrAgentNotAuthorised
+  - errors.notFound
+displayName: "Retrieve Self Assessment Balance and Transactions [test only]"
+description: This endpoint enables you to retrieve the overall liability broken down into overdue, currently due (payable), and pending (not yet due) amounts. A National Insurance number must be provided.
+(annotations.sandboxData): !include scenarios/retrieveSelfAssessmentBalanceAndTransactions.md
+(annotations.scope): "read:self-assessment"
+securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+queryParameters:
+  docNumber:
+    description: The docNumber is a unique number per tax grouping in the Account display. (When onlyOpenItems has been set to false, either the date range (dateFrom and dateTo) or doc number should be supplied.)
+    type: string
+    example: "3060013199"
+    required: false
+  dateFrom:
+    description: Start date range to return balances and transactions. (When onlyOpenItems has been set to false, either the date range (dateFrom and dateTo) OR docNumber should be supplied.)
+    type: string
+    example: "2023-12-12"
+    required: false
+  dateTo:
+    description: End date range to return balances and transactions. (When onlyOpenItems has been set to false, either the date range (dateFrom and dateTo) OR docNumber should be supplied.)
+    type: string
+    example: "2024-12-12"
+    required: false
+  onlyOpenItems:
+    description: Limits the extraction to unpaid or not reversed charges. (When onlyOpenItems has been set to false, either the date range (dateFrom and dateTo) OR docNumber should be supplied.). Defaults to false
+    type: boolean
+    example: false
+    required: false
+  includeLocks:
+    description: "Include additional information related to claim and debt management.Defaults to false"
+    type: boolean
+    example: false
+    required: false
+  calculateAccruedInterest:
+    description: "Calculate accrued interest. Accruing interest is the amount of interest calculated
+  a) To ‘today’s date (or in the case of a created statement, to the statement date)
+  b) On any overdue interest-bearing liability
+  No interest charge is created for an amount of accruing interest. \n An interest charge is only created when the related liability is paid in full."
+    type: boolean
+    example: false
+    required: false
+  removePOA:
+    description: Remove Payment on Account details. When true, details of any payments that the customer has made will not be returned. Defaults to false.
+    type: boolean
+    example: false
+    required: false
+  customerPaymentInformation:
+    description: "Include customer payment information in the response. When true, the following information is returned: Payment Reference, Payment Amount, Payment Method, Payment Lot, Payment Lot Item, Clearing SAP Document. Note that if removePOA is true, no information is returned even if customerPaymentInformation is true. Defaults to false."
+    type: boolean
+    example: false
+    required: false
+  includeChargeEstimate:
+    description: Include statistical (estimated) values for monthly payments.Defaults to false.
+    type: boolean
+    example: false
+    required: false
+responses:
+  200:
+    body:
+      type: !include schemas/retrieveBalanceAndTransactions.json
+      examples:
+        example-1:
+          description:
+          value: !include examples/retrieveBalanceAndTransactions/retrieveBalanceAndTransactionsFullResponse.json
+
+    headers:
+      X-CorrelationId:
+        example: c75f40a6-a3df-4429-a697-471eeec46435
+        description: Unique ID for operation tracking <br> String, 36 characters.

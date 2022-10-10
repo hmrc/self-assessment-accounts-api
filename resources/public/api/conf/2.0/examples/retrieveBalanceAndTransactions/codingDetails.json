@@ -1,9 +1,13 @@
 {
-  "taxYearReturn": "2020-21",
-  "totalLiabilityAmount": 5009.99,
-  "taxYearCoding": "2020-21",
-  "coded": {
-    "charge": 5009.99,
-    "initiationDate": "2021-04-05"
-  }
+  "codingDetails": [
+    {
+      "taxYearReturn": "2020-21",
+      "totalLiabilityAmount": 5009.99,
+      "taxYearCoding": "2020-21",
+      "coded": {
+        "charge": 5009.99,
+        "initiationDate": "2021-04-05"
+      }
+    }
+  ]
 }
