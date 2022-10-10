@@ -29,13 +29,13 @@ import scala.concurrent.Future
 class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
   private val nino = "AA123456A"
-  private val from = "2018-08-13"
-  private val to = "2019-08-13"
+  private val dateFrom = "2018-08-13"
+  private val dateTo = "2019-08-13"
   private val paymentLot = "081203010024"
   private val paymentLotItem = "000001"
 
   private val validRequest: ListPaymentsAndAllocationDetailsRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some(from), Some(to), Some(paymentLot), Some(paymentLotItem))
+    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some(dateFrom), Some(dateTo), Some(paymentLot), Some(paymentLotItem))
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -73,8 +73,8 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       "a valid request is supplied" in new Test {
         val queryParams: Seq[(String, String)] =
           Seq(
-            "from" -> s"$from",
-            "to" -> s"$to",
+            "dateFrom" -> s"$dateFrom",
+            "dateTo" -> s"$dateTo",
             "paymentLot" -> s"$paymentLot",
             "paymentLotItem" -> s"$paymentLotItem",
           )

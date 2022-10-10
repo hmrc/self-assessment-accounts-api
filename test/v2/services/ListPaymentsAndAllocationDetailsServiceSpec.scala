@@ -31,13 +31,13 @@ import scala.concurrent.Future
 class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
 
   private val nino = "AA123456A"
-  private val from = "2018-08-13"
-  private val to = "2019-08-13"
+  private val dateFrom = "2018-08-13"
+  private val dateTo = "2019-08-13"
   private val paymentLot = "081203010024"
   private val paymentLotItem = "000001"
 
   private val validRequest: ListPaymentsAndAllocationDetailsRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some(from), Some(to), Some(paymentLot), Some(paymentLotItem))
+    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some(dateFrom), Some(dateTo), Some(paymentLot), Some(paymentLotItem))
 
   "ListPaymentsAndAllocationDetailsService" should {
     "service call successful" when {

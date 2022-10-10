@@ -37,8 +37,8 @@ class ListPaymentsAndAllocationDetailsConnector @Inject()(val http: HttpClient, 
                                                                                      correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
     val nino = request.nino.nino
-    val from = request.dateFrom
-    val to = request.dateTo
+    val dateFrom = request.dateFrom
+    val dateTo = request.dateTo
     val paymentLot = request.paymentLot
     val paymentLotItem = request.paymentLotItem
 
@@ -48,8 +48,8 @@ class ListPaymentsAndAllocationDetailsConnector @Inject()(val http: HttpClient, 
     }
 
     val queryParams: Seq[(String, String)] =
-      getIfExists(from, "from") ++
-        getIfExists(to, "to") ++
+      getIfExists(dateFrom, "dateFrom") ++
+        getIfExists(dateTo, "dateTo") ++
         getIfExists(paymentLot, "paymentLot") ++
         getIfExists(paymentLotItem, "paymentLotItem")
 
