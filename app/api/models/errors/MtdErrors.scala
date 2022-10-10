@@ -52,12 +52,6 @@ object FromDateFormatError
       message = "The provided From date is invalid"
     )
 
-object StartDateFormatError
-  extends MtdError(
-    code = "FORMAT_START_DATE",
-    message = "The provided start date is invalid"
-  )
-
 object ValueFormatError
     extends MtdError(
       code = "FORMAT_VALUE",
@@ -69,12 +63,6 @@ object ToDateFormatError
       code = "FORMAT_TO_DATE",
       message = "The provided To date is invalid"
     )
-
-object EndDateFormatError
-  extends MtdError(
-    code = "FORMAT_END_DATE",
-    message = "The provided end date is invalid"
-  )
 
 object PaymentIdFormatError
     extends MtdError(
@@ -110,6 +98,18 @@ object PaymentLotItemFormatError
   extends MtdError(
     code = "FORMAT_PAYMENT_LOT_ITEM",
     message = "The format of the supplied Payment Lot Item field is not valid"
+  )
+
+object DateFromFormatError
+  extends MtdError(
+    code = "FORMAT_DATE_FROM",
+    message = "The provided dateFrom is invalid"
+  )
+
+object DateToFormatError
+  extends MtdError(
+    code = "FORMAT_DATE_TO",
+    message = "The provided dateTo is invalid"
   )
 
 // Rule Errors
@@ -155,16 +155,16 @@ object RuleDateRangeInvalidError
       message = "The specified date range is invalid"
     )
 
-object RuleEndBeforeStartError
-  extends MtdError(
-    code = "RULE_END_DATE_BEFORE_START_DATE",
-    message = "The end date is earlier than the start date"
-)
-
 object RuleInconsistentQueryParamsError
   extends MtdError(
     code = "RULE_INCONSISTENT_QUERY_PARAMS",
     message = "Provide date range or docNumber when onlyOpen items are false"
+  )
+
+object RuleDateToBeforeDateFromError
+  extends MtdError(
+    code = "RULE_DATE_TO_BEFORE_DATE_FROM",
+    message = "The dateTo cannot be earlier than the dateFrom"
   )
 
 // Date Errors

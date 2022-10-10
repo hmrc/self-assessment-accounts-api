@@ -16,16 +16,8 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{
-  EndDateFormatError,
-  InvalidDateRangeError,
-  MissingFromDateError,
-  MissingToDateError,
-  MtdError,
-  RuleDateRangeInvalidError,
-  RuleEndBeforeStartError,
-  StartDateFormatError
-}
+import api.models.errors.{DateFromFormatError, DateToFormatError, InvalidDateRangeError, MissingFromDateError, MissingToDateError, MtdError, RuleDateRangeInvalidError, RuleDateToBeforeDateFromError}
+
 import java.time.temporal.ChronoUnit.DAYS
 import java.time.LocalDate
 
@@ -42,8 +34,8 @@ object StartEndDateValidation {
   }
 
   private def validateDates(from: String, to: String): List[MtdError] = {
-    val dateFormatErrors = DateFormatValidation.validate(from, StartDateFormatError) ++
-      DateFormatValidation.validate(to, EndDateFormatError)
+    val dateFormatErrors = DateFormatValidation.validate(from, DateFromFormatError) ++
+      DateFormatValidation.validate(to, DateToFormatError)
 
     if (dateFormatErrors.equals(Nil)) {
       val toBeforeFromErrors: List[MtdError] = checkIfToIsBeforeFrom(from, to)
@@ -57,7 +49,7 @@ object StartEndDateValidation {
   private def checkIfToIsBeforeFrom(from: String, to: String): List[MtdError] = {
     val fmtFrom = LocalDate.parse(from, dateFormat)
     val fmtTo   = LocalDate.parse(to, dateFormat)
-    if (fmtTo isBefore fmtFrom) List(RuleEndBeforeStartError) else NoValidationErrors
+    if (fmtTo isBefore fmtFrom) List(RuleDateToBeforeDateFromError) else NoValidationErrors
   }
 
   private def checkDateRange(from: String, to: String): List[MtdError] = {

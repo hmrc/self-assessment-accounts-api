@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{EndDateFormatError, MissingFromDateError, MissingToDateError, RuleDateRangeInvalidError, RuleEndBeforeStartError, StartDateFormatError}
+import api.models.errors.{DateFromFormatError, DateToFormatError, MissingFromDateError, MissingToDateError, RuleDateRangeInvalidError, RuleDateToBeforeDateFromError}
 import support.UnitSpec
 
 class StartEndDateValidationSpec extends UnitSpec {
@@ -36,7 +36,7 @@ class StartEndDateValidationSpec extends UnitSpec {
     }
     "return a list containing an error" when {
       "passed a start date which is after the end date" in {
-        StartEndDateValidation.validate(date2021, date2020) shouldBe List(RuleEndBeforeStartError)
+        StartEndDateValidation.validate(date2021, date2020) shouldBe List(RuleDateToBeforeDateFromError)
       }
       "passed a start date but not a end date" in {
         StartEndDateValidation.validate(date2020, None) shouldBe List(MissingToDateError)
@@ -45,10 +45,10 @@ class StartEndDateValidationSpec extends UnitSpec {
         StartEndDateValidation.validate(None, date2021) shouldBe List(MissingFromDateError)
       }
       "passed a valid start date and an invalid end date" in {
-        StartEndDateValidation.validate(date2021, Some("invalid")) shouldBe List(EndDateFormatError)
+        StartEndDateValidation.validate(date2021, Some("invalid")) shouldBe List(DateToFormatError)
       }
       "passed a invalid start date and an valid end date" in {
-        StartEndDateValidation.validate(Some("invalid"), date2021) shouldBe List(StartDateFormatError)
+        StartEndDateValidation.validate(Some("invalid"), date2021) shouldBe List(DateFromFormatError)
       }
       "passed a start date and end date with invalid date range" in {
         StartEndDateValidation.validate(date2020, date2022) shouldBe List(RuleDateRangeInvalidError)
