@@ -16,16 +16,16 @@ traits:
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   notFoundTransactionDetails:
-      responses:
-        404:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                notFoundTransactionDetails:
-                  description: No transaction details found for the supplied transaction ID.
-                  value:
-                    code: NO_DETAILS_FOUND
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              notFoundTransactionDetails:
+                description: No transaction details found for the supplied transaction ID.
+                value:
+                  code: NO_DETAILS_FOUND
   clientOrAgentNotAuthorised:
     responses:
       403:
@@ -182,16 +182,16 @@ traits:
                 value:
                   code: RULE_FROM_DATE_NOT_SUPPORTED
   ruleDateTooLong:
-      responses:
-        400:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                ruleDateTooLong:
-                  description: The date range is longer than 732 days.
-                  value:
-                    code: RANGE_DATE_TOO_LONG
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleDateTooLong:
+                description: The date range is longer than 732 days.
+                value:
+                  code: RANGE_DATE_TOO_LONG
 
   incorrectOrEmptyBody:
     responses:
@@ -227,16 +227,16 @@ traits:
                 value:
                   code: RULE_TAX_YEAR_RANGE_EXCEEDED
   ruleTaxYearNotEnded:
-      responses:
-        400:
-          body:
-            application/json:
-              type: types.errorResponse
-              examples:
-                ruleTaxYearNotEnded:
-                  description: The submission has been made before the taxYear it relates to has ended.
-                  value:
-                    code: RULE_TAX_YEAR_NOT_ENDED
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTaxYearNotEnded:
+                description: The submission has been made before the taxYear it relates to has ended.
+                value:
+                  code: RULE_TAX_YEAR_NOT_ENDED
   ruleNoChangeTypeOfClaim:
     responses:
       403:
@@ -314,6 +314,28 @@ traits:
                 description: The format of the supplied payment identifier field is not valid.
                 value:
                   code: FORMAT_PAYMENT_ID
+  formatPaymentLot:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatPaymentLot:
+                description: The provided Payment Lot is not valid.
+                value:
+                  code: FORMAT_PAYMENT_LOT
+  formatPaymentLotItem:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatPaymentLotItem:
+                description: The provided Payment Lot Item is not valid
+                value:
+                  code: FORMAT_PAYMENT_LOT_ITEM
   formatLossId:
     responses:
       400:
@@ -370,16 +392,16 @@ traits:
                 value:
                   code: RULE_TYPE_OF_CLAIM_INVALID
   tax:
-        responses:
-          400:
-            body:
-              application/json:
-                type: types.errorResponse
-                examples:
-                  ruleTypeOfClaim:
-                    description: The type of claim supplied is not valid.
-                    value:
-                      code: RULE_TYPE_OF_CLAIM_INVALID
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTypeOfClaim:
+                description: The type of claim supplied is not valid.
+                value:
+                  code: RULE_TYPE_OF_CLAIM_INVALID
   ruleTypeOfClaim403:
     responses:
       403:
@@ -469,49 +491,49 @@ traits:
                 value:
                   code: RULE_NO_ACCOUNTING_PERIOD
   ruleTaxYearRangeInvalid:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        ruleTaxYearRangeInvalid:
-                          description: A taxYear range of one year is required.
-                          value:
-                            code: RULE_TAX_YEAR_RANGE_INVALID
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleTaxYearRangeInvalid:
+                description: A taxYear range of one year is required.
+                value:
+                  code: RULE_TAX_YEAR_RANGE_INVALID
   ruleDuplicateIdNotAllowed:
-              responses:
-                400:
-                  body:
-                    application/json:
-                      type: types.errorResponse
-                      examples:
-                        ruleDuplicateIdNotAllowed:
-                          description: The request data contains duplicate ID values.
-                          value:
-                            code: RULE_DUPLICATE_ID_NOT_ALLOWED
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleDuplicateIdNotAllowed:
+                description: The request data contains duplicate ID values.
+                value:
+                  code: RULE_DUPLICATE_ID_NOT_ALLOWED
   formatSource:
-        responses:
-          400:
-            body:
-              application/json:
-                type: types.errorResponse
-                examples:
-                  formatSource:
-                    description: The format of the supplied source is not valid.
-                    value:
-                      code: FORMAT_SOURCE
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              formatSource:
+                description: The format of the supplied source is not valid.
+                value:
+                  code: FORMAT_SOURCE
   codingOutNotFound:
-        responses:
-          404:
-            body:
-              application/json:
-                type: types.errorResponse
-                examples:
-                  codingOutNotFound:
-                    description: Coding out amounts could not be found for the supplied nino and taxYear.
-                    value:
-                      code: MATCHING_RESOURCE_NOT_FOUND
+    responses:
+      404:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              codingOutNotFound:
+                description: Coding out amounts could not be found for the supplied nino and taxYear.
+                value:
+                  code: MATCHING_RESOURCE_NOT_FOUND
   invalidDocNumber:
     responses:
       400:

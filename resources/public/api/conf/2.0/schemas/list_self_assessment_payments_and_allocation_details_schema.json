@@ -1,0 +1,178 @@
+{
+  "type": "object",
+  "properties": {
+    "payments": {
+      "description": "An array containing payments made by the customer.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "paymentLot": {
+            "type": "string",
+            "description": "PENDING. ",
+            "example": "081203010024"
+          },
+          "paymentLotItem": {
+            "type": "string",
+            "description": "An identifier for each payment within a payment lot. paymentLot and paymentLotItem together uniquely identify a payment.",
+            "example": "000001"
+          },
+          "paymentReference": {
+            "type": "string",
+            "description": "A unique reference number associated with the payment.",
+            "example": "000001700000001"
+          },
+          "paymentAmount": {
+            "type": "number",
+            "description": "The amount of the payment received into the account. \n\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+            "example": "10000.00"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "description": "The method used to make the payment. \n\nMust conform to the regular expression:\n^[0-9A-Za-z]{1,30}$",
+            "example": "BACS, Payment by card"
+          },
+          "transactionDate": {
+            "type": "string",
+            "description": "The date the payment was received into the account in the format: YYYY-MM-DD",
+            "example": "2018-04-05"
+          },
+
+          "allocations": {
+            "type": "array",
+            "description": "A list of charges, allocated amounts from the payment.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "chargeReference": {
+                  "type": "string",
+                  "description": "PENDING",
+                  "example": "XM002610011595"
+                },
+                "periodKey": {
+                  "type": "string",
+                  "description": "The period key attributed to the charge.\n\nA four digit reference containing characters and numbers to identify the specific tax period.",
+                  "example": "16RL"
+                },
+                "periodKeyDescription": {
+                  "type": "string",
+                  "description": "A description of the period key as a tax period.",
+                  "example": "6th April 2020 to 5th April 2021"
+                },
+                "startDate": {
+                  "type": "string",
+                  "description": "The start date of the tax year for the charge in the format YYYY-MM-DD",
+                  "example": "2018-04-06"
+                },
+                "endDate": {
+                  "type": "string",
+                  "description": "The end date of the tax year for the charge in the format YYYY-MM-DD",
+                  "example": "2019-04-05"
+                },
+                "dueDate": {
+                  "type": "string",
+                  "description": "The date the charge must be paid by. Interest or penalties will be accrued after this date.",
+                  "example": "2019-07-27"
+                },
+                "chargeDetail": {
+                  "type": "object",
+                  "properties": {
+                    "documentId": {
+                      "type": "string",
+                      "description": "Same as Document Number/ID unless on output there are no postings (zero amounts) then the Form Bundle is returned \n\nMust conform to the regular expression: ^[0-9A-Za-z]{1,12}$",
+                      "example": "1040000872"
+                    },
+                    "documentType": {
+                      "type": "string",
+                      "description": "A unique ID used to reference the document type of which this is a subitem.",
+                      "example": "3880"
+                    },
+                    "documentTypeDescription": {
+                      "type": "string",
+                      "description": "Description of the document type.",
+                      "example": "Income Tax Estimate"
+                    },
+                    "chargeType": {
+                      "type": "string",
+                      "description": "A unique ID used to identify the type of charge.",
+                      "example": "1005"
+                    },
+                    "chargeTypeDescription": {
+                      "type": "string",
+                      "description": "Description of the charge type.",
+                      "example": "Income Tax Estimate -  ITSA"
+                    }
+
+                  }
+                },
+                "amount": {
+                  "type": "number",
+                  "description": "The original value of this transaction.\n\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                  "example": "600.00"
+                },
+                "clearedAmount": {
+                  "type": "number",
+                  "description": "The cleared value of this transaction.\n\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                  "example": "600.00"
+                },
+                "contractAccountCategory": {
+                  "type": "string",
+                  "description": "PENDING",
+                  "example": "02"
+                },
+                "contractAccount": {
+                  "type": "string",
+                  "description": "The accounting record for a particular charge type.",
+                  "example": "ABC"
+                }
+
+              },
+              "required": [
+                "chargeReference"
+              ]
+            }
+          }
+        },
+        "required": [
+          "allocations"
+        ]
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "method": {
+            "type": "string",
+            "description": "The HTTP method type for the endpoint.",
+            "enum": [
+              "GET"
+            ]
+          },
+          "rel": {
+            "type": "string",
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
+            "enum": [
+              "self"
+            ]
+          },
+          "href": {
+            "type": "string",
+            "description": "The relative URL of the endpoint.",
+            "example": "/accounts/self-assessment/AA999999A/payments-and-allocations"
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  },
+  "required": [
+    "payments",
+    "links"
+  ]
+}
