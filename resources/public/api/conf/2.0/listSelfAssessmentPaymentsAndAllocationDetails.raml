@@ -17,6 +17,27 @@ description: This endpoint enables you to list the payments and allocation detai
 (annotations.sandboxData): !include scenarios/default.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
+queryParameters:
+  from:
+    description: "The start date of the period to filter payments."
+    type: string
+    example: "2019-01-02"
+    required: true
+  to:
+    description: "The end date of the period to filter payments."
+    type: string
+    example: "2020-01-02"
+    required: true
+  paymentLot:
+    description: "An identifier for the batch process that processed the payment and assigned it to the taxpayer's account."
+    type: string
+    example: "081203010024"
+    required: false
+  paymentLotItem:
+    description: "An identifier for each payment within a payment lot. paymentLot and paymentLotItem together uniquely identify a payment."
+    type: string
+    example: "000001"
+    required: false
 responses:
   200:
     body:
