@@ -29,6 +29,14 @@ class PaymentLotValidationSpec extends UnitSpec with JsonErrorValidators {
 
         PaymentLotValidation.validate(validPaymentLot) shouldBe List()
       }
+      "when a valid optional paymentLot is supplied" in {
+        val validPaymentLot   = Some("AA123456aa12")
+
+        PaymentLotValidation.validate(validPaymentLot) shouldBe List()
+      }
+      "when a no paymentLot value is supplied" in {
+        PaymentLotValidation.validate(None) shouldBe List()
+      }
     }
 
     "return an error" when {

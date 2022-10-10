@@ -16,26 +16,28 @@
 
 package v2.controllers.requestParsers
 
-import api.models.errors.{BadRequestError, ErrorWrapper, InvalidDateRangeError, InvalidDocNumberError, NinoFormatError}
+import api.models.domain.Nino
+import api.models.errors.{BadRequestError, ErrorWrapper, InvalidDateRangeError, NinoFormatError}
 import support.UnitSpec
 import v2.mocks.validators.MockListPaymentAndAllocationDetailsValidator
+import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
 
 class ListPaymentAndAllocationDetailsRequestParserSpec extends UnitSpec {
-  val nino: String                    = ""
-  val from: Option[String]            = Some("")
-  val to: Option[String]              = Some("")
-  val paymentLot: Option[String]      = Some("")
-  val paymentLotItem: Option[String]  = Some("")
+  val nino: String                    = "AA999999A"
+  val dateFrom: Option[String]        = Some("2021-01-01")
+  val dateTo: Option[String]          = Some("2022-01-01")
+  val paymentLot: Option[String]      = Some("081203010024")
+  val paymentLotItem: Option[String]  = Some("000001")
 
-  val validRequestRawDataWithoutOptionals: ListPaymentAndAllocationDetailsRawData =
-    ListPaymentAndAllocationDetailsRawData(nino, None, None, None, None)
-  val validRequestWithoutOptionals: ListPaymentAndAllocationDetailsRequest =
-    ListPaymentAndAllocationDetailsRequest(nino, None, None, None, None)
+  val validRequestRawDataWithoutOptionals: ListPaymentsAndAllocationDetailsRawData =
+    ListPaymentsAndAllocationDetailsRawData(nino, None, None, None, None)
+  val validRequestWithoutOptionals: ListPaymentsAndAllocationDetailsRequest =
+    ListPaymentsAndAllocationDetailsRequest(Nino(nino), None, None, None, None)
 
-  val validRequestRawDataWithOptionals: ListPaymentAndAllocationDetailsRawData=
-    ListPaymentAndAllocationDetailsRawData(nino, from, to, paymentLot, paymentLotItem)
-  val validRequestWithOptionals: ListPaymentAndAllocationDetailsRequest =
-    ListPaymentAndAllocationDetailsRequest(nino, from, to, paymentLot, paymentLotItem)
+  val validRequestRawDataWithOptionals: ListPaymentsAndAllocationDetailsRawData =
+    ListPaymentsAndAllocationDetailsRawData(nino, dateFrom, dateTo, paymentLot, paymentLotItem)
+  val validRequestWithOptionals: ListPaymentsAndAllocationDetailsRequest =
+    ListPaymentsAndAllocationDetailsRequest(Nino(nino), dateFrom, dateTo, paymentLot, paymentLotItem)
 
 
   implicit val correlationId: String = "X-123"
@@ -73,7 +75,7 @@ class ListPaymentAndAllocationDetailsRequestParserSpec extends UnitSpec {
       "multiple validation errors occurs" in new Test {
         MockListPaymentAndAllocationDetailsValidator
           .validate(validRequestRawDataWithOptionals)
-          .returns(List(NinoFormatError, InvalidDocNumberError))
+          .returns(List(NinoFormatError, InvalidDateRangeError))
 
         parser.parseRequest(validRequestRawDataWithOptionals) shouldBe
           Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, InvalidDateRangeError))))

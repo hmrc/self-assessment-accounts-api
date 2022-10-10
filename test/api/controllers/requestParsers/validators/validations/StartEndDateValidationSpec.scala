@@ -23,6 +23,7 @@ class StartEndDateValidationSpec extends UnitSpec {
 
   val date2020: Option[String] = Some("2020-01-01")
   val date2021: Option[String] = Some("2021-01-01")
+  val date2022: Option[String] = Some("2022-01-01")
 
   "validate" should {
     "return an empty list" when {
@@ -44,13 +45,13 @@ class StartEndDateValidationSpec extends UnitSpec {
         StartEndDateValidation.validate(None, date2021) shouldBe List(MissingFromDateError)
       }
       "passed a valid start date and an invalid end date" in {
-        StartEndDateValidation.validate(None, date2021) shouldBe List(EndDateFormatError)
+        StartEndDateValidation.validate(date2021, Some("invalid")) shouldBe List(EndDateFormatError)
       }
       "passed a invalid start date and an valid end date" in {
-        StartEndDateValidation.validate(None, date2021) shouldBe List(StartDateFormatError)
+        StartEndDateValidation.validate(Some("invalid"), date2021) shouldBe List(StartDateFormatError)
       }
       "passed a start date and end date with invalid date range" in {
-        StartEndDateValidation.validate(None, date2021) shouldBe List(RuleDateRangeInvalidError)
+        StartEndDateValidation.validate(date2020, date2022) shouldBe List(RuleDateRangeInvalidError)
       }
     }
   }

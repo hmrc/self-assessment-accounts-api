@@ -20,24 +20,25 @@ import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations.{NinoValidation, PaymentLotItemValidation, PaymentLotValidation, StartEndDateValidation}
 import api.models.errors.MtdError
 import config.AppConfig
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRawData
 
 import javax.inject.Inject
 
-class ListPaymentAndAllocationDetailsValidator @Inject() (appConfig: AppConfig) extends Validator[ListPaymentAndAllocationDetailsRawData] {
+class ListPaymentAndAllocationDetailsValidator @Inject() (appConfig: AppConfig) extends Validator[ListPaymentsAndAllocationDetailsRawData] {
 
   private val validationSet = List(parameterValidation)
 
-  private def parameterValidation: ListPaymentAndAllocationDetailsRawData => List[List[MtdError]] =
-    (data: ListPaymentAndAllocationDetailsRawData) => {
+  private def parameterValidation: ListPaymentsAndAllocationDetailsRawData => List[List[MtdError]] =
+    (data: ListPaymentsAndAllocationDetailsRawData) => {
       List(
         NinoValidation.validate(data.nino),
-        StartEndDateValidation.validate(data.from, data.to),
+        StartEndDateValidation.validate(data.dateFrom, data.dateTo),
         PaymentLotValidation.validate(data.paymentLot),
         PaymentLotItemValidation.validate(data.paymentLotItem),
       )
     }
 
-  override def validate(data: ListPaymentAndAllocationDetailsRawData): List[MtdError] = {
+  override def validate(data: ListPaymentsAndAllocationDetailsRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
