@@ -91,25 +91,25 @@ object SourceFormatError
 object PaymentLotFormatError
   extends MtdError(
     code = "FORMAT_PAYMENT_LOT",
-    message = "The provided paymentLot is not valid."
+    message = "The provided paymentLot is invalid."
   )
 
 object PaymentLotItemFormatError
   extends MtdError(
     code = "FORMAT_PAYMENT_LOT_ITEM",
-    message = "The provided paymentLotItem is not valid."
+    message = "The provided paymentLotItem is invalid."
   )
 
-object StartDateFormatError
+object DateFromFormatError
   extends MtdError(
-    code = "FORMAT_START_DATE",
-    message = "The provided start is invalid"
+    code = "FORMAT_DATE_FROM",
+    message = "The provided dateFrom is invalid"
   )
 
-object EndDateFormatError
+object DateToFormatError
   extends MtdError(
-    code = "FORMAT_END_DATE",
-    message = "The provided end is invalid"
+    code = "FORMAT_DATE_TO",
+    message = "The provided dateTo is invalid"
   )
 
 
