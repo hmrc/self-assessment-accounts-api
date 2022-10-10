@@ -19,7 +19,10 @@ package v2.connectors
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
+import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
 import v2.mocks.MockHttpClient
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
 import scala.concurrent.Future
 
@@ -30,6 +33,9 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
   private val to = "2019-08-13"
   private val paymentLot = "081203010024"
   private val paymentLotItem = "000001"
+
+  private val validRequest: ListPaymentsAndAllocationDetailsRequest =
+    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some(from), Some(to), Some(paymentLot), Some(paymentLotItem))
 
   class Test extends MockHttpClient with MockAppConfig {
 
@@ -51,8 +57,8 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
         .parameterGet(
           s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
           queryParams,
-          dummyIfsHeaderCarrierConfig,
-          requiredIfsHeaders,
+          dummyDesHeaderCarrierConfig,
+          requiredDesHeaders,
           Seq("AnotherHeader" -> "HeaderValue")
         )
         .returns(Future.successful(outcome))
@@ -73,7 +79,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
             "paymentLotItem" -> s"$paymentLotItem",
           )
 
-        connectorRequest(validRequest, validResponse, queryParams)
+        connectorRequest(validRequest, responseObject, queryParams)
       }
     }
   }

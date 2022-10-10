@@ -23,6 +23,8 @@ import cats.data.EitherT
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.ListPaymentsAndAllocationDetailsConnector
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 import v2.support.DownstreamResponseMappingSupport
 

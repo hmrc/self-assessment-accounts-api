@@ -18,14 +18,18 @@ package v2.connectors
 
 import api.connectors.BaseDownstreamConnector
 import api.connectors.DownstreamUri.DesUri
+import api.connectors.httpparsers.StandardDesHttpParser.reads
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsAndAllocationDetailsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListPaymentsAndAllocationDetailsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig)
+  extends BaseDownstreamConnector {
 
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
                                                                                      hc: HeaderCarrier,
@@ -33,8 +37,8 @@ class ListPaymentsAndAllocationDetailsConnector @Inject()(val http: HttpClient, 
                                                                                      correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
     val nino = request.nino.nino
-    val from = request.from
-    val to = request.to
+    val from = request.dateFrom
+    val to = request.dateTo
     val paymentLot = request.paymentLot
     val paymentLotItem = request.paymentLotItem
 
@@ -50,6 +54,7 @@ class ListPaymentsAndAllocationDetailsConnector @Inject()(val http: HttpClient, 
         getIfExists(paymentLotItem, "paymentLotItem")
 
     get(DesUri[ListPaymentsAndAllocationDetailsResponse](s"cross-regime/payment-allocation/NINO/$nino/ITSA"), queryParams)
+
   }
 
 }

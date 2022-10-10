@@ -21,6 +21,9 @@ import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.HeaderCarrier
+import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
+import v2.mocks.connectors.MockListPaymentsAndAllocationDetailsConnector
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
 import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 
 import scala.concurrent.Future
@@ -33,15 +36,18 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
   private val paymentLot = "081203010024"
   private val paymentLotItem = "000001"
 
+  private val validRequest: ListPaymentsAndAllocationDetailsRequest =
+    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some(from), Some(to), Some(paymentLot), Some(paymentLotItem))
+
   "ListPaymentsAndAllocationDetailsService" should {
     "service call successful" when {
       "return mapped result" in new Test {
         MockListPaymentsAndAllocationDetailsConnector
-          .retrieveBalanceAndTransactions(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, listPaymentsAndAllocationDetailsResponse))))
+          .listPaymentsAndAllocationDetails(validRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObject))))
 
-        val result = await(service.listPaymentsAndAllocationDetails(requestData))
-        result shouldBe Right(ResponseWrapper(correlationId, listPaymentsAndAllocationDetailsResponse))
+        val result = await(service.listPaymentsAndAllocationDetails(validRequest))
+        result shouldBe Right(ResponseWrapper(correlationId, responseObject))
       }
     }
 
@@ -50,10 +56,10 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
         s"a $downstreamErrorCode error is returned from the service" in new Test {
 
           MockListPaymentsAndAllocationDetailsConnector
-            .listPaymentsAndAllocationDetails(requestData)
+            .listPaymentsAndAllocationDetails(validRequest)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-          private val result = await(service.listPaymentsAndAllocationDetails(requestData))
+          private val result = await(service.listPaymentsAndAllocationDetails(validRequest))
           result shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
@@ -70,7 +76,7 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
       EndpointLogContext("ListPaymentsAndAllocationDetailsController", "ListPaymentsAndAllocationDetails")
 
     val service = new ListPaymentsAndAllocationDetailsService(
-      connector = listPaymentsAndAllocationDetailsConnector
+      connector = mockListPaymentsAndAllocationDetailsConnector
     )
   }
 }
