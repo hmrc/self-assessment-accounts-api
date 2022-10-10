@@ -92,6 +92,28 @@ traits:
                 description: The To date is not a valid ISO format date.
                 value:
                   code: FORMAT_TO_DATE
+  invalidDateFrom:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidDateFrom:
+                description: The format of dateFrom is not valid. .
+                value:
+                  code: INVALID_DATE_FROM
+  invalidDateTo:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidDateTo:
+                description: The format of dateTo is not valid. .
+                value:
+                  code: INVALID_DATE_TO
   missingFromDate:
     responses:
       400:
@@ -136,6 +158,18 @@ traits:
                 description: The date range is longer than 732 days.
                 value:
                   code: RULE_DATE_RANGE_INVALID
+  invalidDateRange:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidDateRange:
+                description: The provided date range is not valid.
+                value:
+                  code: INVALID_DATE_RANGE
+
   ruleFromDateNotSupported:
     responses:
       400:
@@ -158,6 +192,7 @@ traits:
                   description: The date range is longer than 732 days.
                   value:
                     code: RANGE_DATE_TOO_LONG
+
   incorrectOrEmptyBody:
     responses:
       400:
@@ -477,3 +512,91 @@ traits:
                     description: Coding out amounts could not be found for the supplied nino and taxYear.
                     value:
                       code: MATCHING_RESOURCE_NOT_FOUND
+  invalidDocNumber:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidDocNUmber:
+                description: The format of docNumber is not valid.
+                value:
+                  code: INVALID_DOC_NUMBER
+  invalidOnlyOpenItems:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidOnlyOpenItems:
+                description: The format of onlyOpenItem is not valid.
+                value:
+                  code: INVALID_ONLY_OPEN_ITEMS
+  invalidIncludeLocks:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidIncludeLocks:
+                description: The format of includeLocks is not valid.
+                value:
+                  code: INVALID_INCLUDE_LOCKS
+  invalidCalculateAccruedInterest:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidCalculateAccruedInterest:
+                description: The format for calculatingAccruedInterest is not valid.
+                value:
+                  code: INVALID_CALCULATE_ACCRUED_INTEREST
+  invalidCustomerPaymentInformation:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidCustomerPaymentInformation:
+                description: The format of customerPaymentInformation is not valid.
+                value:
+                  code: INVALID_CUSTOMER_PAYMENT_INFORMATION
+  invalidRemovePaymentOnAccount:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidRemovePaymentOnAccount:
+                description: The format of removePOA is not valid.
+                value:
+                  code: INVALID_REMOVE_PAYMENT_ON_ACCOUNT
+  invalidIncludeChargeEstimate:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              invalidIncludeChargeEstimate:
+                description: The format of includeChargeEstimate is not valid
+                value:
+                  code: INVALID_INCLUDE_CHARGE_ESTIMATE
+  ruleInconsistentQueryParams:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleInconsistentQueryParams:
+                description: Provide date range or docNumber when only openItems are false.
+                value:
+                  code: RULE_INCONSISTENT_QUERY_PARAMS
