@@ -24,7 +24,7 @@ import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocat
 
 import javax.inject.Inject
 
-class ListPaymentAndAllocationDetailsValidator @Inject() (appConfig: AppConfig) extends Validator[ListPaymentsAndAllocationDetailsRawData] {
+class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig) extends Validator[ListPaymentsAndAllocationDetailsRawData] {
 
   private val validationSet = List(parameterValidation)
 

@@ -19,10 +19,10 @@ package v2.controllers.requestParsers
 import api.models.domain.Nino
 import api.models.errors.{BadRequestError, ErrorWrapper, InvalidDateRangeError, NinoFormatError}
 import support.UnitSpec
-import v2.mocks.validators.MockListPaymentAndAllocationDetailsValidator
+import v2.mocks.validators.MockListPaymentsAndAllocationDetailsValidator
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
 
-class ListPaymentAndAllocationDetailsRequestParserSpec extends UnitSpec {
+class ListPaymentsAndAllocationDetailsRequestParserSpec extends UnitSpec {
   val nino: String                    = "AA999999A"
   val dateFrom: Option[String]        = Some("2021-01-01")
   val dateTo: Option[String]          = Some("2022-01-01")
@@ -42,20 +42,20 @@ class ListPaymentAndAllocationDetailsRequestParserSpec extends UnitSpec {
 
   implicit val correlationId: String = "X-123"
 
-  trait Test extends MockListPaymentAndAllocationDetailsValidator {
-    lazy val parser = new ListPaymentAndAllocationDetailsRequestParser(mockValidator)
+  trait Test extends MockListPaymentsAndAllocationDetailsValidator {
+    lazy val parser = new ListPaymentsAndAllocationDetailsRequestParser(mockValidator)
   }
 
   "parse" should {
     "return a request object" when {
       "valid request data is supplied" in new Test {
-        MockListPaymentAndAllocationDetailsValidator.validate(validRequestRawDataWithoutOptionals).returns(Nil)
+        MockListPaymentsAndAllocationDetailsValidator.validate(validRequestRawDataWithoutOptionals).returns(Nil)
 
         parser.parseRequest(validRequestRawDataWithoutOptionals) shouldBe Right(validRequestWithoutOptionals)
       }
 
       "valid request data with date from and date to supplied" in new Test {
-        MockListPaymentAndAllocationDetailsValidator.validate(validRequestRawDataWithOptionals).returns(Nil)
+        MockListPaymentsAndAllocationDetailsValidator.validate(validRequestRawDataWithOptionals).returns(Nil)
 
         parser.parseRequest(validRequestRawDataWithOptionals) shouldBe Right(validRequestWithOptionals)
       }
@@ -64,7 +64,7 @@ class ListPaymentAndAllocationDetailsRequestParserSpec extends UnitSpec {
 
     "return an ErrorWrapper" when {
       "a single validation error occurs" in new Test {
-        MockListPaymentAndAllocationDetailsValidator
+        MockListPaymentsAndAllocationDetailsValidator
           .validate(validRequestRawDataWithoutOptionals)
           .returns(List(NinoFormatError))
 
@@ -73,7 +73,7 @@ class ListPaymentAndAllocationDetailsRequestParserSpec extends UnitSpec {
       }
 
       "multiple validation errors occurs" in new Test {
-        MockListPaymentAndAllocationDetailsValidator
+        MockListPaymentsAndAllocationDetailsValidator
           .validate(validRequestRawDataWithOptionals)
           .returns(List(NinoFormatError, InvalidDateRangeError))
 

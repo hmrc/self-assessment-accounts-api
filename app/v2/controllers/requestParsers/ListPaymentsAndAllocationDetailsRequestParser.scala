@@ -18,12 +18,12 @@ package v2.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
-import v2.controllers.requestParsers.validators.ListPaymentAndAllocationDetailsValidator
+import v2.controllers.requestParsers.validators.ListPaymentsAndAllocationDetailsValidator
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
 
 import javax.inject.Inject
 
-class ListPaymentAndAllocationDetailsRequestParser @Inject() (val validator: ListPaymentAndAllocationDetailsValidator)
+class ListPaymentsAndAllocationDetailsRequestParser @Inject() (val validator: ListPaymentsAndAllocationDetailsValidator)
   extends RequestParser[ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest] {
 
   override protected def requestFor(data: ListPaymentsAndAllocationDetailsRawData): ListPaymentsAndAllocationDetailsRequest =

@@ -22,7 +22,7 @@ import mocks.MockAppConfig
 import support.UnitSpec
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
 
-class ListPaymentAndAllocationDetailsValidatorSpec extends UnitSpec with MockAppConfig {
+class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAppConfig {
   val nino: String                    = "AA999999A"
   val dateFrom: Option[String]        = Some("2021-01-01")
   val dateTo: Option[String]          = Some("2022-01-01")
@@ -40,7 +40,7 @@ class ListPaymentAndAllocationDetailsValidatorSpec extends UnitSpec with MockApp
     ListPaymentsAndAllocationDetailsRequest(Nino(nino), dateFrom, dateTo, paymentLot, paymentLotItem)
 
 
-  private val validator = new ListPaymentAndAllocationDetailsValidator(mockAppConfig)
+  private val validator = new ListPaymentsAndAllocationDetailsValidator(mockAppConfig)
 
   "running a validation" should {
     "return no errors" when {

@@ -19,14 +19,14 @@ package v2.mocks.validators
 import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
-import v2.controllers.requestParsers.validators.ListPaymentAndAllocationDetailsValidator
+import v2.controllers.requestParsers.validators.ListPaymentsAndAllocationDetailsValidator
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRawData
 
-class MockListPaymentAndAllocationDetailsValidator extends MockFactory {
+class MockListPaymentsAndAllocationDetailsValidator extends MockFactory {
 
-  val mockValidator: ListPaymentAndAllocationDetailsValidator = mock[ListPaymentAndAllocationDetailsValidator]
+  val mockValidator: ListPaymentsAndAllocationDetailsValidator = mock[ListPaymentsAndAllocationDetailsValidator]
 
-  object MockListPaymentAndAllocationDetailsValidator {
+  object MockListPaymentsAndAllocationDetailsValidator {
 
     def validate(data: ListPaymentsAndAllocationDetailsRawData): CallHandler1[ListPaymentsAndAllocationDetailsRawData, List[MtdError]] = {
       (mockValidator
