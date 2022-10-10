@@ -2,42 +2,45 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Retrieve coding details",
   "description": "An Object containing coding details",
-  "type": "object",
-  "properties": {
-    "taxYearReturn": {
-      "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
-      "type": "string",
-      "example": "2021-22"
-    },
-    "totalLiabilityAmount": {
-      "description": "The total amount of the Self Assessment tax return inclusive of coded charges. \r\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-      "type": "number",
-      "multipleOf": 0.01,
-      "minimum": -99999999999.99,
-      "maximum": 99999999999.99,
-      "example": "5009.99"
-    },
-    "taxYearCoding": {
-      "description": "The tax year to which the coded out charge will be attached, in the format YYYY-YY.",
-      "type": "string",
-      "example": "2021-22"
-    },
-    "coded": {
-      "description": "An object containing a coded amount and initiation date",
-      "type": "object",
-      "properties": {
-        "charge": {
-          "description": "The coded out charge. \r\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-          "type": "number",
-          "multipleOf": 0.01,
-          "minimum": -99999999999.99,
-          "maximum": 99999999999.99,
-          "example": "5009.99"
-        },
-        "initiationDate": {
-          "description": "Initiation date of the coded out charge, in the format YYYY-MM-DD.",
-          "type": "string",
-          "example": "2021-04-05"
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "taxYearReturn": {
+        "description": "The ending year of the tax year to which the return relates, in the format YYYY-YY.",
+        "type": "string",
+        "example": "2021-22"
+      },
+      "totalLiabilityAmount": {
+        "description": "The total amount of the Self Assessment tax return inclusive of coded charges. \r\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+        "type": "number",
+        "multipleOf": 0.01,
+        "minimum": -99999999999.99,
+        "maximum": 99999999999.99,
+        "example": "5009.99"
+      },
+      "taxYearCoding": {
+        "description": "The tax year to which the coded out charge will be attached, in the format YYYY-YY.",
+        "type": "string",
+        "example": "2021-22"
+      },
+      "coded": {
+        "description": "An object containing a coded amount and initiation date",
+        "type": "object",
+        "properties": {
+          "charge": {
+            "description": "The coded out charge. \r\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+            "type": "number",
+            "multipleOf": 0.01,
+            "minimum": -99999999999.99,
+            "maximum": 99999999999.99,
+            "example": "5009.99"
+          },
+          "initiationDate": {
+            "description": "Initiation date of the coded out charge, in the format YYYY-MM-DD.",
+            "type": "string",
+            "example": "2021-04-05"
+          }
         }
       }
     }
