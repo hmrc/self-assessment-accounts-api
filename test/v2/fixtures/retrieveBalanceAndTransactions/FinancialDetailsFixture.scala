@@ -24,7 +24,7 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
   private val taxYear: TaxYear = TaxYear("2022")
 
-  val chargeDetailObject = ChargeDetail(
+  val chargeDetailObject: ChargeDetail = ChargeDetail(
     documentId = "123456",
     mainTransaction = Option("1234"),
     mainTransactionDescription = Some("Income Tax Estimate"),
