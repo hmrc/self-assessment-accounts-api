@@ -88,6 +88,32 @@ object SourceFormatError
       message = "The format of the supplied source is not valid"
     )
 
+object PaymentLotFormatError
+  extends MtdError(
+    code = "FORMAT_PAYMENT_LOT",
+    message = "The provided paymentLot is not valid."
+  )
+
+object PaymentLotItemFormatError
+  extends MtdError(
+    code = "FORMAT_PAYMENT_LOT_ITEM",
+    message = "The provided paymentLotItem is not valid."
+  )
+
+object StartDateFormatError
+  extends MtdError(
+    code = "FORMAT_START_DATE",
+    message = "The provided start is invalid"
+  )
+
+object EndDateFormatError
+  extends MtdError(
+    code = "FORMAT_END_DATE",
+    message = "The provided end is invalid"
+  )
+
+
+
 // Rule Errors
 object RuleTaxYearNotSupportedError
     extends MtdError(
@@ -173,21 +199,12 @@ object InvalidDateFromError extends MtdError(code = "INVALID_DATE_FROM", message
 
 object InvalidDateToError extends MtdError(code = "INVALID_DATE_TO", message = "The provided dateTo is invalid.")
 
-object InvalidStartDateError extends MtdError(code = "INVALID_START_DATE", message = "The provided from is invalid")
-
-object InvalidEndDateError extends MtdError(code = "INVALID_END_DATE", message = "The provided to is invalid")
-
 object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", message = "The provided removePOA is invalid.")
 
 object InvalidIncludeChargeEstimateError
   extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
 
 object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The provided date range is invalid.")
-
-object InvalidPaymentLot extends MtdError(code = "INVALID_PAYMENT_LOT", message = "The provided paymentLot is invalid.")
-
-object InvalidPaymentLotItem extends MtdError(code = "INVALID_PAYMENT_LOT_ITEM", message = "The provided paymentLotItem is invalid.")
-
 
 // Standard Errors
 object NotFoundError
