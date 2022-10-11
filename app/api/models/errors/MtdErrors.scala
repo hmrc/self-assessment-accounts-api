@@ -112,8 +112,6 @@ object DateToFormatError
     message = "The provided dateTo is invalid"
   )
 
-
-
 // Rule Errors
 object RuleTaxYearNotSupportedError
     extends MtdError(
@@ -161,6 +159,12 @@ object RuleInconsistentQueryParamsError
   extends MtdError(
     code = "RULE_INCONSISTENT_QUERY_PARAMS",
     message = "Provide date range or docNumber when onlyOpen items are false"
+  )
+
+object RuleDateToBeforeDateFromError
+  extends MtdError(
+    code = "RULE_DATE_TO_BEFORE_DATE_FROM",
+    message = "The dateTo cannot be earlier than the dateFrom"
   )
 
 // Date Errors
