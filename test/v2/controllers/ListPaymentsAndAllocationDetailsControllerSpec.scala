@@ -86,8 +86,6 @@ class ListPaymentsAndAllocationDetailsControllerSpec
       }
     }
 
-    "check hateoas" in fail
-
     "return the error as per spec" when {
       "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {

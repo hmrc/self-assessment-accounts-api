@@ -61,11 +61,6 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
           serviceResponse <- EitherT(service.listPaymentsAndAllocationDetails(parsedRequest))
-//          vendorResponse <- EitherT.fromEither[Future](
-//            hateoasFactory
-//              .wrapList(serviceResponse.responseData, ListPaymentsHateoasData(nino, parsedRequest.from, parsedRequest.to))
-//              .asRight[ErrorWrapper]
-//          )
         } yield {
           logger.info(
             s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +

@@ -25,7 +25,6 @@ import utils.Logging
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
-import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
@@ -46,9 +45,6 @@ class RetrieveBalanceAndTransactionsService @Inject()(connector: RetrieveBalance
     result.value
   }
 
-}
-
-object RetrieveBalanceAndTransactionsService {
   val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID" -> InternalError,

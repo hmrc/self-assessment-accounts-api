@@ -26,7 +26,6 @@ import utils.Logging
 import v2.connectors.RetrieveChargeHistoryConnector
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
-import v2.services.RetrieveChargeHistoryService.downstreamErrorMap
 import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
@@ -48,9 +47,6 @@ class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryCo
     result.value
   }
 
-}
-
-object RetrieveChargeHistoryService {
   val downstreamErrorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID" -> InternalError,
@@ -67,4 +63,5 @@ object RetrieveChargeHistoryService {
       "SERVER_ERROR"          -> InternalError,
       "SERVICE_UNAVAILABLE"   -> InternalError
     )
+
 }
