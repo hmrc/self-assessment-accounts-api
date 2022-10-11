@@ -88,6 +88,32 @@ object SourceFormatError
       message = "The format of the supplied source is not valid"
     )
 
+object PaymentLotFormatError
+  extends MtdError(
+    code = "FORMAT_PAYMENT_LOT",
+    message = "The provided paymentLot is invalid."
+  )
+
+object PaymentLotItemFormatError
+  extends MtdError(
+    code = "FORMAT_PAYMENT_LOT_ITEM",
+    message = "The provided paymentLotItem is invalid."
+  )
+
+object DateFromFormatError
+  extends MtdError(
+    code = "FORMAT_DATE_FROM",
+    message = "The provided dateFrom is invalid"
+  )
+
+object DateToFormatError
+  extends MtdError(
+    code = "FORMAT_DATE_TO",
+    message = "The provided dateTo is invalid"
+  )
+
+
+
 // Rule Errors
 object RuleTaxYearNotSupportedError
     extends MtdError(
