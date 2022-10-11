@@ -39,12 +39,12 @@ object StandardIfsHttpParser extends HttpParser {
       doRead(url, response) { correlationId =>
         response.validateJson[A] match {
           case Some(ref) => Right(ResponseWrapper(correlationId, ref))
-          case None => Left(ResponseWrapper(correlationId, OutboundError(DownstreamError)))
+          case None      => Left(ResponseWrapper(correlationId, OutboundError(DownstreamError)))
         }
       }
 
-  private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DownstreamOutcome[A])(
-    implicit successCode: SuccessCode): DownstreamOutcome[A] = {
+  private def doRead[A](url: String, response: HttpResponse)(successOutcomeFactory: String => DownstreamOutcome[A])(implicit
+      successCode: SuccessCode): DownstreamOutcome[A] = {
 
     val correlationId = retrieveCorrelationId(response)
 
@@ -65,4 +65,5 @@ object StandardIfsHttpParser extends HttpParser {
       case _ => Left(ResponseWrapper(correlationId, OutboundError(DownstreamError)))
     }
   }
+
 }

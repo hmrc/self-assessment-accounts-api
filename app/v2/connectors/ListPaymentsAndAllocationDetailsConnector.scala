@@ -28,23 +28,22 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsAndAllocationDetailsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig)
-  extends BaseDownstreamConnector {
+class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
-                                                                                     hc: HeaderCarrier,
-                                                                                     ec: ExecutionContext,
-                                                                                     correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
-    val nino = request.nino.nino
-    val dateFrom = request.dateFrom
-    val dateTo = request.dateTo
-    val paymentLot = request.paymentLot
+    val nino           = request.nino.nino
+    val dateFrom       = request.dateFrom
+    val dateTo         = request.dateTo
+    val paymentLot     = request.paymentLot
     val paymentLotItem = request.paymentLotItem
 
     def getIfExists(option: Option[String], name: String): Seq[(String, String)] = option match {
       case Some(x) => Seq(name -> x)
-      case _ => Seq()
+      case _       => Seq()
     }
 
     val queryParams: Seq[(String, String)] =

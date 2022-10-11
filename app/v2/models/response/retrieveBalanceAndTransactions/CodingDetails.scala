@@ -19,20 +19,17 @@ package v2.models.response.retrieveBalanceAndTransactions
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, OFormat, OWrites, Reads}
 
-case class CodingDetails(taxYearReturn: Option[String],
-                         totalLiabilityAmount: Option[BigDecimal],
-                         taxYearCoding: Option[String],
-                         coded: Option[Coded])
+case class CodingDetails(taxYearReturn: Option[String], totalLiabilityAmount: Option[BigDecimal], taxYearCoding: Option[String], coded: Option[Coded])
 
 object CodingDetails {
 
   implicit val format: OFormat[CodingDetails] = Json.format[CodingDetails]
 }
 
-case class Coded(charge: Option[BigDecimal],
-                 initiationDate: Option[String])
+case class Coded(charge: Option[BigDecimal], initiationDate: Option[String])
 
 object Coded {
+
   implicit val reads: Reads[Coded] = (
     (JsPath \ "amount").readNullable[BigDecimal] and
       (JsPath \ "initiationDate").readNullable[String]
@@ -40,4 +37,3 @@ object Coded {
 
   implicit val writes: OWrites[Coded] = Json.writes[Coded]
 }
-

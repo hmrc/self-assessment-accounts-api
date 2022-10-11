@@ -24,7 +24,6 @@ object PaymentLotItemValidation {
 
   def validate(paymentLotItem: Option[String]): List[MtdError] = paymentLotItem.map(validate).getOrElse(NoValidationErrors)
 
-
   def validate(paymentLotItem: String): List[MtdError] = {
     if (paymentLotItem.matches(paymentLotItemRegex)) NoValidationErrors else List(PaymentLotItemFormatError)
   }

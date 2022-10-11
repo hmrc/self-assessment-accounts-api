@@ -91,7 +91,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
           .retrieveBalanceAndTransactions(parsedRequest)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        val result: Future[Result] = controller.retrieveBalanceAndTransactions(nino = nino,
+        val result: Future[Result] = controller.retrieveBalanceAndTransactions(
+          nino = nino,
           docNumber = Some(validDocNumber),
           dateFrom = None,
           dateTo = None,
@@ -100,7 +101,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
           calculateAccruedInterest = Some("true"),
           removePOA = Some("true"),
           customerPaymentInformation = Some("true"),
-          includeChargeEstimate = Some("true"))(fakeGetRequest)
+          includeChargeEstimate = Some("true")
+        )(fakeGetRequest)
 
         status(result) shouldBe OK
         contentAsJson(result) shouldBe mtdResponseJson
@@ -117,7 +119,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
               .parse(rawRequest)
               .returns(Left(ErrorWrapper(correlationId, error, None)))
 
-            val result: Future[Result] = controller.retrieveBalanceAndTransactions(nino = nino,
+            val result: Future[Result] = controller.retrieveBalanceAndTransactions(
+              nino = nino,
               docNumber = Some(validDocNumber),
               dateFrom = None,
               dateTo = None,
@@ -126,7 +129,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
               calculateAccruedInterest = Some("true"),
               removePOA = Some("true"),
               customerPaymentInformation = Some("true"),
-              includeChargeEstimate = Some("true"))(fakeGetRequest)
+              includeChargeEstimate = Some("true")
+            )(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
             contentAsJson(result) shouldBe Json.toJson(error)
@@ -166,7 +170,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
             .retrieveBalanceAndTransactions(parsedRequest)
             .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
 
-          val result: Future[Result] = controller.retrieveBalanceAndTransactions(nino = nino,
+          val result: Future[Result] = controller.retrieveBalanceAndTransactions(
+            nino = nino,
             docNumber = Some(validDocNumber),
             dateFrom = None,
             dateTo = None,
@@ -175,7 +180,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
             calculateAccruedInterest = Some("true"),
             removePOA = Some("true"),
             customerPaymentInformation = Some("true"),
-            includeChargeEstimate = Some("true"))(fakeGetRequest)
+            includeChargeEstimate = Some("true")
+          )(fakeGetRequest)
 
           status(result) shouldBe expectedStatus
           contentAsJson(result) shouldBe Json.toJson(mtdError)

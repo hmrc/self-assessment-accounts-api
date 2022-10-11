@@ -17,28 +17,39 @@
 package v2.controllers.requestParsers.validators
 
 import api.models.domain.Nino
-import api.models.errors.{DateFromFormatError, DateToFormatError, MissingFromDateError, MissingToDateError, NinoFormatError, PaymentLotFormatError, PaymentLotItemFormatError, RuleDateRangeInvalidError, RuleDateToBeforeDateFromError}
+import api.models.errors.{
+  DateFromFormatError,
+  DateToFormatError,
+  MissingFromDateError,
+  MissingToDateError,
+  NinoFormatError,
+  PaymentLotFormatError,
+  PaymentLotItemFormatError,
+  RuleDateRangeInvalidError,
+  RuleDateToBeforeDateFromError
+}
 import mocks.MockAppConfig
 import support.UnitSpec
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
 
 class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAppConfig {
-  val nino: String                    = "AA999999A"
-  val dateFrom: Option[String]        = Some("2021-01-01")
-  val dateTo: Option[String]          = Some("2022-01-01")
-  val paymentLot: Option[String]      = Some("081203010024")
-  val paymentLotItem: Option[String]  = Some("000001")
+  val nino: String                   = "AA999999A"
+  val dateFrom: Option[String]       = Some("2021-01-01")
+  val dateTo: Option[String]         = Some("2022-01-01")
+  val paymentLot: Option[String]     = Some("081203010024")
+  val paymentLotItem: Option[String] = Some("000001")
 
   val validRequestRawDataWithoutOptionals: ListPaymentsAndAllocationDetailsRawData =
     ListPaymentsAndAllocationDetailsRawData(nino, None, None, None, None)
+
   val validRequestWithoutOptionals: ListPaymentsAndAllocationDetailsRequest =
     ListPaymentsAndAllocationDetailsRequest(Nino(nino), None, None, None, None)
 
-  val validRequestRawDataWithOptionals: ListPaymentsAndAllocationDetailsRawData=
+  val validRequestRawDataWithOptionals: ListPaymentsAndAllocationDetailsRawData =
     ListPaymentsAndAllocationDetailsRawData(nino, dateFrom, dateTo, paymentLot, paymentLotItem)
+
   val validRequestWithOptionals: ListPaymentsAndAllocationDetailsRequest =
     ListPaymentsAndAllocationDetailsRequest(Nino(nino), dateFrom, dateTo, paymentLot, paymentLotItem)
-
 
   private val validator = new ListPaymentsAndAllocationDetailsValidator(mockAppConfig)
 
@@ -91,7 +102,12 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
       }
 
       "multiple invalid values are supplied" in {
-        val input = validRequestRawDataWithOptionals.copy(nino = "invalid", dateFrom = Some("invalid"), dateTo = Some("invalid"), paymentLot = Some("invalid!"), paymentLotItem = Some("invalid!"))
+        val input = validRequestRawDataWithOptionals.copy(
+          nino = "invalid",
+          dateFrom = Some("invalid"),
+          dateTo = Some("invalid"),
+          paymentLot = Some("invalid!"),
+          paymentLotItem = Some("invalid!"))
         val expectedErrors = List(NinoFormatError, DateFromFormatError, DateToFormatError, PaymentLotFormatError, PaymentLotItemFormatError)
 
         validator.validate(input) shouldBe expectedErrors

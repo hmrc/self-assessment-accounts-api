@@ -26,6 +26,7 @@ object TaxCodeComponent {
   implicit val writes: OWrites[TaxCodeComponent] = (o: TaxCodeComponent) =>
     Json.obj(
       "componentIdentifier" -> o.id.toString(),
-      "amount" -> o.amount
+      "amount"              -> o.amount
     )
+
 }
