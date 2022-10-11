@@ -91,13 +91,13 @@ object SourceFormatError
 object PaymentLotFormatError
   extends MtdError(
     code = "FORMAT_PAYMENT_LOT",
-    message = "The format of the supplied Payment Lot field is not valid"
+    message = "The provided paymentLot is invalid."
   )
 
 object PaymentLotItemFormatError
   extends MtdError(
     code = "FORMAT_PAYMENT_LOT_ITEM",
-    message = "The format of the supplied Payment Lot Item field is not valid"
+    message = "The provided paymentLotItem is invalid."
   )
 
 object DateFromFormatError
