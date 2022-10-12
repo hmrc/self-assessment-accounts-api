@@ -24,7 +24,6 @@
           },
           "amount": 12345678912.02,
           "clearedAmount": 345678912.02,
-          "contractAccountCategory": "02",
           "contractAccount": "ABC"
         },
         {
@@ -56,3 +55,6 @@
     }
   ]
 }
+
+
+

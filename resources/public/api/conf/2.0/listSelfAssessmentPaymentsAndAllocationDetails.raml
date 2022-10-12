@@ -2,8 +2,8 @@ is:
   - headers.acceptJson
   - headers.testScenarioHeader
   - errors.formatNino
-#  - errors.formatStartDate
-#  - errors.formatEndDate
+  - errors.formatFromDate
+  - errors.formatToDate
 #  - errors.ruleEndDateBeforeStartDate
   - errors.invalidDateRange
   - errors.missingToDate
@@ -18,12 +18,12 @@ description: This endpoint enables you to list the payments and allocation detai
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 queryParameters:
-  from:
+  dateFrom:
     description: "The start date of the period to filter payments."
     type: string
     example: "2019-01-02"
     required: false
-  to:
+  dateTo:
     description: "The end date of the period to filter payments."
     type: string
     example: "2020-01-02"
