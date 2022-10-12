@@ -105,13 +105,14 @@ class ListPaymentsAndAllocationDetailsControllerSpec
         }
 
         val input = Seq(
+          (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
           (DateFromFormatError, BAD_REQUEST),
           (DateToFormatError, BAD_REQUEST),
           (RuleDateToBeforeDateFromError, BAD_REQUEST),
+          (RuleDateRangeInvalidError, BAD_REQUEST),
           (MissingFromDateError, BAD_REQUEST),
           (MissingToDateError, BAD_REQUEST),
-          (RuleDateRangeInvalidError, BAD_REQUEST),
           (PaymentLotFormatError, BAD_REQUEST),
           (PaymentLotItemFormatError, BAD_REQUEST)
         )
@@ -142,8 +143,11 @@ class ListPaymentsAndAllocationDetailsControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
+          (PaymentLotFormatError, BAD_REQUEST),
+          (PaymentLotItemFormatError, BAD_REQUEST),
           (DateFromFormatError, BAD_REQUEST),
           (DateToFormatError, BAD_REQUEST),
+          (RuleDateRangeInvalidError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

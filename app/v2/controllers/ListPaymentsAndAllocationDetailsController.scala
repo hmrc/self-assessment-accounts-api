@@ -93,7 +93,6 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
             MissingFromDateError,
             MissingToDateError,
             RuleDateToBeforeDateFromError,
-            RuleFromDateNotSupportedError,
             RuleDateRangeInvalidError,
             PaymentLotFormatError,
             PaymentLotItemFormatError
