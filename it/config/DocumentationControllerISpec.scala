@@ -70,8 +70,8 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "a documentation request" must {
-    Seq(VERSION_1, VERSION_2).foreach { version  =>
-     s"return the documentation for $version" in {
+    Seq(VERSION_1, VERSION_2).foreach { version =>
+      s"return the documentation for $version" in {
         val response: WSResponse = await(buildRequest(s"/api/conf/$version/application.raml").get())
         response.status shouldBe Status.OK
         response.body[String] should startWith(s"#%RAML 1.0")

@@ -23,22 +23,23 @@ import v2.mocks.validators.MockListPaymentsAndAllocationDetailsValidator
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
 
 class ListPaymentsAndAllocationDetailsRequestParserSpec extends UnitSpec {
-  val nino: String                    = "AA999999A"
-  val dateFrom: Option[String]        = Some("2021-01-01")
-  val dateTo: Option[String]          = Some("2022-01-01")
-  val paymentLot: Option[String]      = Some("081203010024")
-  val paymentLotItem: Option[String]  = Some("000001")
+  val nino: String                   = "AA999999A"
+  val dateFrom: Option[String]       = Some("2021-01-01")
+  val dateTo: Option[String]         = Some("2022-01-01")
+  val paymentLot: Option[String]     = Some("081203010024")
+  val paymentLotItem: Option[String] = Some("000001")
 
   val validRequestRawDataWithoutOptionals: ListPaymentsAndAllocationDetailsRawData =
     ListPaymentsAndAllocationDetailsRawData(nino, None, None, None, None)
+
   val validRequestWithoutOptionals: ListPaymentsAndAllocationDetailsRequest =
     ListPaymentsAndAllocationDetailsRequest(Nino(nino), None, None, None, None)
 
   val validRequestRawDataWithOptionals: ListPaymentsAndAllocationDetailsRawData =
     ListPaymentsAndAllocationDetailsRawData(nino, dateFrom, dateTo, paymentLot, paymentLotItem)
+
   val validRequestWithOptionals: ListPaymentsAndAllocationDetailsRequest =
     ListPaymentsAndAllocationDetailsRequest(Nino(nino), dateFrom, dateTo, paymentLot, paymentLotItem)
-
 
   implicit val correlationId: String = "X-123"
 

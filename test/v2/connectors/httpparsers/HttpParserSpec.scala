@@ -25,4 +25,5 @@ trait HttpParserSpec {
   object SomeModel {
     implicit val reads: Reads[SomeModel] = Json.reads
   }
+
 }

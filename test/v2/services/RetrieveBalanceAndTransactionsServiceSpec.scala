@@ -28,22 +28,21 @@ import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financ
 import v2.mocks.connectors.MockRetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions._
-import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 
 import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA123456A"
-  private val docNumber = "anId"
-  private val dateFrom = "2018-08-13"
-  private val dateTo = "2018-08-14"
-  private val onlyOpenItems = false
-  private val includeLocks = false
-  private val calculateAccruedInterest = false
-  private val removePOA = false
+  private val nino                       = "AA123456A"
+  private val docNumber                  = "anId"
+  private val dateFrom                   = "2018-08-13"
+  private val dateTo                     = "2018-08-14"
+  private val onlyOpenItems              = false
+  private val includeLocks               = false
+  private val calculateAccruedInterest   = false
+  private val removePOA                  = false
   private val customerPaymentInformation = false
-  private val includeStatistical = false
+  private val includeStatistical         = false
 
   private val requestData: RetrieveBalanceAndTransactionsRequest =
     RetrieveBalanceAndTransactionsRequest(
@@ -56,7 +55,8 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
       calculateAccruedInterest,
       removePOA,
       customerPaymentInformation,
-      includeStatistical)
+      includeStatistical
+    )
 
   val retrieveBalanceAndTransactionsResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
@@ -73,7 +73,8 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
           .retrieveBalanceAndTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBalanceAndTransactionsResponse))))
 
-        await(service.retrieveBalanceAndTransactions(requestData)) shouldBe Right(ResponseWrapper(correlationId, retrieveBalanceAndTransactionsResponse))
+        await(service.retrieveBalanceAndTransactions(requestData)) shouldBe Right(
+          ResponseWrapper(correlationId, retrieveBalanceAndTransactionsResponse))
       }
     }
 
@@ -89,7 +90,30 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
           result shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      downstreamErrorMap.foreach(args => (serviceError _).tupled(args))
+      val errors: Seq[(String, MtdError)] =
+        Seq(
+          "INVALID_CORRELATIONID"                -> InternalError,
+          "INVALID_IDTYPE"                       -> InternalError,
+          "INVALID_IDNUMBER"                     -> NinoFormatError,
+          "INVALID_REGIME_TYPE"                  -> InternalError,
+          "INVALID_DOC_NUMBER"                   -> InvalidDocNumberError,
+          "INVALID_ONLY_OPEN_ITEMS"              -> InvalidOnlyOpenItemsError,
+          "INVALID_INCLUDE_LOCKS"                -> InvalidIncludeLocksError,
+          "INVALID_CALCULATE_ACCRUED_INTEREST"   -> InvalidCalculateAccruedInterestError,
+          "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> InvalidCustomerPaymentInformationError,
+          "INVALID_DATE_FROM"                    -> InvalidDateFromError,
+          "INVALID_DATE_TO"                      -> InvalidDateToError,
+          "INVALID_DATE_RANGE"                   -> InvalidDateRangeError,
+          "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
+          "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> InvalidRemovePaymentOnAccountError,
+          "INVALID_INCLUDE_STATISTICAL"          -> InvalidIncludeChargeEstimateError,
+          "REQUEST_NOT_PROCESSED"                -> InternalError,
+          "NO_DATA_FOUND"                        -> NotFoundError,
+          "SERVER_ERROR"                         -> InternalError,
+          "SERVICE_UNAVAILABLE"                  -> InternalError
+        )
+
+      errors.foreach(args => (serviceError _).tupled(args))
     }
 
   }
@@ -104,5 +128,7 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
     val service = new RetrieveBalanceAndTransactionsService(
       connector = mockRetrieveBalanceAndTransactionsConnector
     )
+
   }
+
 }

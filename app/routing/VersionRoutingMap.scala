@@ -54,8 +54,7 @@ case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
     VERSION_1 -> {
       if (isCodingOutEnabled) v1WithCodingOutRoutes else v1Routes
     },
-      VERSION_2 -> v2Routes
+    VERSION_2 -> v2Routes
   )
-
 
 }

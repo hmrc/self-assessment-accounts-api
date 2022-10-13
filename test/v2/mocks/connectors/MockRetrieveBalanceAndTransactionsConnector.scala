@@ -32,8 +32,8 @@ trait MockRetrieveBalanceAndTransactionsConnector extends MockFactory {
 
   object MockRetrieveBalanceAndTransactionsConnector {
 
-    def retrieveBalanceAndTransactions(requestData: RetrieveBalanceAndTransactionsRequest):
-    CallHandler[Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]]] = {
+    def retrieveBalanceAndTransactions(
+        requestData: RetrieveBalanceAndTransactionsRequest): CallHandler[Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]]] = {
       (
         mockRetrieveBalanceAndTransactionsConnector
           .retrieveBalanceAndTransactions(_: RetrieveBalanceAndTransactionsRequest)(

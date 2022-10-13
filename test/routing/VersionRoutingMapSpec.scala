@@ -26,9 +26,9 @@ import support.UnitSpec
 
 class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneAppPerSuite {
 
-  val defaultRouter: Router = mock[Router]
-  val v1Routes: v1.Routes = app.injector.instanceOf[v1.Routes]
-  val v2Routes: v2.Routes = app.injector.instanceOf[v2.Routes]
+  val defaultRouter: Router                         = mock[Router]
+  val v1Routes: v1.Routes                           = app.injector.instanceOf[v1.Routes]
+  val v2Routes: v2.Routes                           = app.injector.instanceOf[v2.Routes]
   val v1WithCodingOutRoutes: v1WithCodingOut.Routes = app.injector.instanceOf[v1WithCodingOut.Routes]
 
   "map" when {
@@ -36,11 +36,11 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       def test(isCodingOutEnabled: Boolean, routes: Any): Unit = {
         s"coding out feature switch is $isCodingOutEnabled" should {
           s"route to ${routes.toString}" in {
-            MockAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
-              s"""
+            MockAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
                  |coding-out.enabled = $isCodingOutEnabled
                  |""".stripMargin))))
-            val versionRoutingMap: VersionRoutingMapImpl = VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, mockAppConfig)
+            val versionRoutingMap: VersionRoutingMapImpl =
+              VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, mockAppConfig)
 
             versionRoutingMap.map(Versions.VERSION_1) shouldBe routes
           }
@@ -51,8 +51,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
     }
     "routing a v2 request" should {
       "route to v2.routes" in {
-        MockAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(
-          s"""
+        MockAppConfig.featureSwitch.returns(Some(Configuration(ConfigFactory.parseString(s"""
              |version-2.enabled = true
              |""".stripMargin))))
         val versionRoutingMap: VersionRoutingMapImpl = VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, mockAppConfig)

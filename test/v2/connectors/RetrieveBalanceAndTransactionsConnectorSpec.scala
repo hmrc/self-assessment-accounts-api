@@ -31,16 +31,16 @@ import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
-  private val nino = "AA123456A"
-  private val docNumber = "anId"
-  private val dateFrom = "2018-08-13"
-  private val dateTo = "2019-08-13"
-  private val onlyOpenItems = false
-  private val includeLocks = false
-  private val calculateAccruedInterest = false
-  private val removePOA = false
+  private val nino                       = "AA123456A"
+  private val docNumber                  = "anId"
+  private val dateFrom                   = "2018-08-13"
+  private val dateTo                     = "2019-08-13"
+  private val onlyOpenItems              = false
+  private val includeLocks               = false
+  private val calculateAccruedInterest   = false
+  private val removePOA                  = false
   private val customerPaymentInformation = false
-  private val includeChargeEstimate = false
+  private val includeChargeEstimate      = false
 
   private val validResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
@@ -60,15 +60,16 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     calculateAccruedInterest = calculateAccruedInterest,
     removePOA = removePOA,
     customerPaymentInformation = customerPaymentInformation,
-    includeChargeEstimate = includeChargeEstimate)
+    includeChargeEstimate = includeChargeEstimate
+  )
 
   private val commonQueryParams: Seq[(String, String)] = Seq(
-    "onlyOpenItems" -> onlyOpenItems.toString,
-    "includeLocks" -> includeLocks.toString,
-    "calculateAccruedInterest" -> calculateAccruedInterest.toString,
-    "removePOA" -> removePOA.toString,
+    "onlyOpenItems"              -> onlyOpenItems.toString,
+    "includeLocks"               -> includeLocks.toString,
+    "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
+    "removePOA"                  -> removePOA.toString,
     "customerPaymentInformation" -> customerPaymentInformation.toString,
-    "includeChargeEstimate" -> includeChargeEstimate.toString
+    "includeChargeEstimate"      -> includeChargeEstimate.toString
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -99,45 +100,46 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
       await(connector.retrieveBalanceAndTransactions(request)) shouldBe outcome
     }
+
   }
 
   "RetrieveBalanceAndTransactionsConnector" should {
 
-      "return a valid response" when {
+    "return a valid response" when {
 
-        "a valid request containing both docNumber and dateFrom and dateTo is supplied" in new Test {
-          val queryParams: Seq[(String, String)] =
-            commonQueryParams ++ Seq(
-              "docNumber" -> s"$docNumber",
-              "dateFrom" -> s"$dateFrom",
-              "dateTo" -> s"$dateTo",
-            )
-
-          connectorRequest(validRequest, validResponse, queryParams)
-        }
-
-        "a valid request containing docNumber and not dateFrom or dateTo is supplied" in new Test {
-          val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(dateFrom = None, dateTo = None)
-
-          val queryParams: Seq[(String, String)] =
-            commonQueryParams ++ Seq("docNumber" -> s"$docNumber")
-
-          connectorRequest(request, validResponse, queryParams)
-        }
-
-        "a valid request containing dateFrom and dateTo and no docNumber is supplied" in new Test {
-          val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(docNumber = None)
-
-          val queryParams: Seq[(String, String)] =
-            commonQueryParams ++ Seq(
-            "dateFrom" -> s"$dateFrom",
-            "dateTo" -> s"$dateTo"
+      "a valid request containing both docNumber and dateFrom and dateTo is supplied" in new Test {
+        val queryParams: Seq[(String, String)] =
+          commonQueryParams ++ Seq(
+            "docNumber" -> s"$docNumber",
+            "dateFrom"  -> s"$dateFrom",
+            "dateTo"    -> s"$dateTo"
           )
 
-          connectorRequest(request, validResponse, queryParams)
-        }
-
+        connectorRequest(validRequest, validResponse, queryParams)
       }
+
+      "a valid request containing docNumber and not dateFrom or dateTo is supplied" in new Test {
+        val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(dateFrom = None, dateTo = None)
+
+        val queryParams: Seq[(String, String)] =
+          commonQueryParams ++ Seq("docNumber" -> s"$docNumber")
+
+        connectorRequest(request, validResponse, queryParams)
+      }
+
+      "a valid request containing dateFrom and dateTo and no docNumber is supplied" in new Test {
+        val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(docNumber = None)
+
+        val queryParams: Seq[(String, String)] =
+          commonQueryParams ++ Seq(
+            "dateFrom" -> s"$dateFrom",
+            "dateTo"   -> s"$dateTo"
+          )
+
+        connectorRequest(request, validResponse, queryParams)
+      }
+
+    }
   }
 
 }

@@ -16,7 +16,14 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{DateFromFormatError, DateToFormatError, MissingFromDateError, MissingToDateError, RuleDateRangeInvalidError, RuleDateToBeforeDateFromError}
+import api.models.errors.{
+  DateFromFormatError,
+  DateToFormatError,
+  MissingFromDateError,
+  MissingToDateError,
+  RuleDateRangeInvalidError,
+  RuleDateToBeforeDateFromError
+}
 import support.UnitSpec
 
 class StartEndDateValidationSpec extends UnitSpec {

@@ -28,23 +28,23 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceAndTransactionsConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
-                                                                                     hc: HeaderCarrier,
-                                                                                     ec: ExecutionContext,
-                                                                                     correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
 
-    val nino = request.nino.nino
-    val docNumber = request.docNumber
-    val dateFrom = request.dateFrom
-    val dateTo = request.dateTo
-    val onlyOpenItems = request.onlyOpenItems
-    val includeLocks = request.includeLocks
-    val calculateAccruedInterest = request.calculateAccruedInterest
-    val removePOA = request.removePOA
+    val nino                       = request.nino.nino
+    val docNumber                  = request.docNumber
+    val dateFrom                   = request.dateFrom
+    val dateTo                     = request.dateTo
+    val onlyOpenItems              = request.onlyOpenItems
+    val includeLocks               = request.includeLocks
+    val calculateAccruedInterest   = request.calculateAccruedInterest
+    val removePOA                  = request.removePOA
     val customerPaymentInformation = request.customerPaymentInformation
-    val includeChargeEstimate = request.includeChargeEstimate
+    val includeChargeEstimate      = request.includeChargeEstimate
 
     val booleanQueryParams: Seq[(String, String)] =
       Seq(
@@ -53,18 +53,18 @@ class RetrieveBalanceAndTransactionsConnector @Inject()(val http: HttpClient, va
         "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
         "removePOA"                  -> removePOA.toString,
         "customerPaymentInformation" -> customerPaymentInformation.toString,
-        "includeChargeEstimate"         -> includeChargeEstimate.toString
+        "includeChargeEstimate"      -> includeChargeEstimate.toString
       )
 
     def getIfExists(option: Option[String], name: String): Seq[(String, String)] = option match {
       case Some(x) => Seq(name -> x)
-      case _ => Seq()
+      case _       => Seq()
     }
 
     val optionalQueryParams: Seq[(String, String)] =
       getIfExists(docNumber, "docNumber") ++
-      getIfExists(dateFrom, "dateFrom") ++
-      getIfExists(dateTo, "dateTo")
+        getIfExists(dateFrom, "dateFrom") ++
+        getIfExists(dateTo, "dateTo")
 
     val queryParams = booleanQueryParams ++
       optionalQueryParams

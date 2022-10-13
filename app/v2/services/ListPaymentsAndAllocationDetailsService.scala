@@ -25,46 +25,44 @@ import utils.Logging
 import v2.connectors.ListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
-import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsAndAllocationDetailsService @Inject()(connector: ListPaymentsAndAllocationDetailsConnector) extends
-  DownstreamResponseMappingSupport with Logging {
+class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPaymentsAndAllocationDetailsConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
-                                                                                     hc: HeaderCarrier,
-                                                                                     ec: ExecutionContext,
-                                                                                     logContext: EndpointLogContext,
-                                                                                     correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsAndAllocationDetailsResponse]]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsAndAllocationDetailsResponse]]] = {
 
     val result = EitherT(connector.listPaymentsAndAllocationDetails(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }
 
-}
-
-object ListPaymentsAndAllocationDetailsService {
   val downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDVALUE" -> NinoFormatError,
-      "INVALID_IDTYPE" -> InternalError,
-      "INVALID_REGIME_TYPE" -> InternalError,
-      "INVALID_PAYMENT_LOT" -> PaymentLotFormatError,
+      "INVALID_CORRELATIONID"    -> InternalError,
+      "INVALID_IDVALUE"          -> NinoFormatError,
+      "INVALID_IDTYPE"           -> InternalError,
+      "INVALID_REGIME_TYPE"      -> InternalError,
+      "INVALID_PAYMENT_LOT"      -> PaymentLotFormatError,
       "INVALID_PAYMENT_LOT_ITEM" -> PaymentLotItemFormatError,
-      "INVALID_CLEARING_DOC" -> InternalError,
-      "INVALID_DATE_FROM" -> DateFromFormatError,
-      "INVALID_DATE_TO" -> DateToFormatError,
-      "INVALID_DATE_RANGE" -> RuleDateRangeInvalidError,
-      "REQUEST_NOT_PROCESSED" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "PARTIALLY_MIGRATED" -> InternalError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "INVALID_CLEARING_DOC"     -> InternalError,
+      "INVALID_DATE_FROM"        -> DateFromFormatError,
+      "INVALID_DATE_TO"          -> DateToFormatError,
+      "INVALID_DATE_RANGE"       -> RuleDateRangeInvalidError,
+      "REQUEST_NOT_PROCESSED"    -> InternalError,
+      "NO_DATA_FOUND"            -> NotFoundError,
+      "PARTIALLY_MIGRATED"       -> InternalError,
+      "SERVER_ERROR"             -> InternalError,
+      "SERVICE_UNAVAILABLE"      -> InternalError
     )
+
 }

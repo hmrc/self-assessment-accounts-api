@@ -28,10 +28,10 @@ import scala.concurrent.Future
 
 class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
-  private val nino = "AA123456A"
-  private val dateFrom = "2018-08-13"
-  private val dateTo = "2019-08-13"
-  private val paymentLot = "081203010024"
+  private val nino           = "AA123456A"
+  private val dateFrom       = "2018-08-13"
+  private val dateTo         = "2019-08-13"
+  private val paymentLot     = "081203010024"
   private val paymentLotItem = "000001"
 
   private val validRequest: ListPaymentsAndAllocationDetailsRequest =
@@ -66,6 +66,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       val result = await(connector.listPaymentsAndAllocationDetails(request))
       result shouldBe outcome
     }
+
   }
 
   "ListPaymentsAndAllocationDetailsConnector" should {
@@ -73,10 +74,10 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       "a valid request is supplied" in new Test {
         val queryParams: Seq[(String, String)] =
           Seq(
-            "dateFrom" -> s"$dateFrom",
-            "dateTo" -> s"$dateTo",
-            "paymentLot" -> s"$paymentLot",
-            "paymentLotItem" -> s"$paymentLotItem",
+            "dateFrom"       -> s"$dateFrom",
+            "dateTo"         -> s"$dateTo",
+            "paymentLot"     -> s"$paymentLot",
+            "paymentLotItem" -> s"$paymentLotItem"
           )
 
         connectorRequest(validRequest, responseObject, queryParams)

@@ -25,50 +25,48 @@ import utils.Logging
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
-import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceAndTransactionsService @Inject()(connector: RetrieveBalanceAndTransactionsConnector) extends
-  DownstreamResponseMappingSupport with Logging {
+class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanceAndTransactionsConnector)
+    extends DownstreamResponseMappingSupport
+    with Logging {
 
   def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
-                                                                                     hc: HeaderCarrier,
-                                                                                     ec: ExecutionContext,
-                                                                                     logContext: EndpointLogContext,
-                                                                                     correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      logContext: EndpointLogContext,
+      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
 
     val result = EitherT(connector.retrieveBalanceAndTransactions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
     result.value
   }
 
-}
-
-object RetrieveBalanceAndTransactionsService {
   val downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDTYPE" -> InternalError,
-      "INVALID_IDNUMBER" -> NinoFormatError,
-      "INVALID_REGIME_TYPE" -> InternalError,
-      "INVALID_DOC_NUMBER" -> InvalidDocNumberError,
-      "INVALID_ONLY_OPEN_ITEMS" -> InvalidOnlyOpenItemsError,
-      "INVALID_INCLUDE_LOCKS" -> InvalidIncludeLocksError,
-      "INVALID_CALCULATE_ACCRUED_INTEREST" -> InvalidCalculateAccruedInterestError,
+      "INVALID_CORRELATIONID"                -> InternalError,
+      "INVALID_IDTYPE"                       -> InternalError,
+      "INVALID_IDNUMBER"                     -> NinoFormatError,
+      "INVALID_REGIME_TYPE"                  -> InternalError,
+      "INVALID_DOC_NUMBER"                   -> InvalidDocNumberError,
+      "INVALID_ONLY_OPEN_ITEMS"              -> InvalidOnlyOpenItemsError,
+      "INVALID_INCLUDE_LOCKS"                -> InvalidIncludeLocksError,
+      "INVALID_CALCULATE_ACCRUED_INTEREST"   -> InvalidCalculateAccruedInterestError,
       "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> InvalidCustomerPaymentInformationError,
-      "INVALID_DATE_FROM" -> InvalidDateFromError,
-      "INVALID_DATE_TO" -> InvalidDateToError,
-      "INVALID_DATE_RANGE" -> InvalidDateRangeError,
-      "INVALID_REQUEST" -> RuleInconsistentQueryParamsError,
-      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> InvalidRemovePaymentOnAccountError,
-      "INVALID_INCLUDE_STATISTICAL" -> InvalidIncludeChargeEstimateError,
-      "REQUEST_NOT_PROCESSED" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "INVALID_DATE_FROM"                    -> InvalidDateFromError,
+      "INVALID_DATE_TO"                      -> InvalidDateToError,
+      "INVALID_DATE_RANGE"                   -> InvalidDateRangeError,
+      "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
+      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> InvalidRemovePaymentOnAccountError,
+      "INVALID_INCLUDE_STATISTICAL"          -> InvalidIncludeChargeEstimateError,
+      "REQUEST_NOT_PROCESSED"                -> InternalError,
+      "NO_DATA_FOUND"                        -> NotFoundError,
+      "SERVER_ERROR"                         -> InternalError,
+      "SERVICE_UNAVAILABLE"                  -> InternalError
     )
+
 }

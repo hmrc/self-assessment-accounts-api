@@ -16,16 +16,14 @@
 
 package v2.services
 
-import uk.gov.hmrc.http.HeaderCarrier
 import api.controllers.EndpointLogContext
-import v2.mocks.connectors.MockRetrieveChargeHistoryConnector
 import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError}
-import api.models.errors._
+import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.HeaderCarrier
+import v2.mocks.connectors.MockRetrieveChargeHistoryConnector
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
-import v2.services.RetrieveChargeHistoryService.downstreamErrorMap
 
 import scala.concurrent.Future
 
@@ -81,7 +79,24 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
           await(service.retrieveChargeHistory(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      downstreamErrorMap.foreach(args => (serviceError _).tupled(args))
+      val errors: Seq[(String, MtdError)] =
+        Seq(
+          "INVALID_CORRELATIONID" -> InternalError,
+          "INVALID_IDTYPE"        -> InternalError,
+          "INVALID_IDVALUE"       -> NinoFormatError,
+          "INVALID_REGIME_TYPE"   -> InternalError,
+          "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
+          "INVALID_DATE_FROM"     -> InternalError,
+          "INVALID_DATE_TO"       -> InternalError,
+          "INVALID_DATE_RANGE"    -> InternalError,
+          "INVALID_REQUEST"       -> InternalError,
+          "REQUEST_NOT_PROCESSED" -> InternalError,
+          "NO_DATA_FOUND"         -> NotFoundError,
+          "SERVER_ERROR"          -> InternalError,
+          "SERVICE_UNAVAILABLE"   -> InternalError
+        )
+
+      errors.foreach(args => (serviceError _).tupled(args))
     }
   }
 
@@ -97,4 +112,5 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
     )
 
   }
+
 }

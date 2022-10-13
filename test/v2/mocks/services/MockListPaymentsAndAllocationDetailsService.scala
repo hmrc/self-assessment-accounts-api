@@ -14,35 +14,38 @@
  * limitations under the License.
  */
 
-package v2.mocks.connectors
+package v2.mocks.services
 
+import api.controllers.EndpointLogContext
+import api.models.errors.ErrorWrapper
+import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.connectors.{DownstreamOutcome, ListPaymentsAndAllocationDetailsConnector}
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
+import v2.services.ListPaymentsAndAllocationDetailsService
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockListPaymentsAndAllocationDetailsConnector extends MockFactory {
+trait MockListPaymentsAndAllocationDetailsService extends MockFactory {
 
-  val mockListPaymentsAndAllocationDetailsConnector: ListPaymentsAndAllocationDetailsConnector =
-    mock[ListPaymentsAndAllocationDetailsConnector]
+  val mockListPaymentsAndAllocationDetailsService: ListPaymentsAndAllocationDetailsService = mock[ListPaymentsAndAllocationDetailsService]
 
-  object MockListPaymentsAndAllocationDetailsConnector {
+  object MockListPaymentsAndAllocationDetailsService {
 
-    def listPaymentsAndAllocationDetails(
-        requestData: ListPaymentsAndAllocationDetailsRequest): CallHandler[Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]]] = {
+    def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsAndAllocationDetailsResponse]]]] = {
       (
-        mockListPaymentsAndAllocationDetailsConnector
+        mockListPaymentsAndAllocationDetailsService
           .listPaymentsAndAllocationDetails(_: ListPaymentsAndAllocationDetailsRequest)(
             _: HeaderCarrier,
             _: ExecutionContext,
+            _: EndpointLogContext,
             _: String
           )
         )
-        .expects(requestData, *, *, *)
+        .expects(request, *, *, *, *)
     }
 
   }

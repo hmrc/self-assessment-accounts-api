@@ -24,16 +24,15 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
 import v2.mocks.connectors.MockListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
-import v2.services.RetrieveBalanceAndTransactionsService.downstreamErrorMap
 
 import scala.concurrent.Future
 
 class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
 
-  private val nino = "AA123456A"
-  private val dateFrom = "2018-08-13"
-  private val dateTo = "2019-08-13"
-  private val paymentLot = "081203010024"
+  private val nino           = "AA123456A"
+  private val dateFrom       = "2018-08-13"
+  private val dateTo         = "2019-08-13"
+  private val paymentLot     = "081203010024"
   private val paymentLotItem = "000001"
 
   private val validRequest: ListPaymentsAndAllocationDetailsRequest =
@@ -63,7 +62,25 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
           result shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      downstreamErrorMap.foreach(args => (serviceError _).tupled(args))
+      val errors: Seq[(String, MtdError)] = Seq(
+        "INVALID_CORRELATIONID"    -> InternalError,
+        "INVALID_IDVALUE"          -> NinoFormatError,
+        "INVALID_IDTYPE"           -> InternalError,
+        "INVALID_REGIME_TYPE"      -> InternalError,
+        "INVALID_PAYMENT_LOT"      -> PaymentLotFormatError,
+        "INVALID_PAYMENT_LOT_ITEM" -> PaymentLotItemFormatError,
+        "INVALID_CLEARING_DOC"     -> InternalError,
+        "INVALID_DATE_FROM"        -> DateFromFormatError,
+        "INVALID_DATE_TO"          -> DateToFormatError,
+        "INVALID_DATE_RANGE"       -> RuleDateRangeInvalidError,
+        "REQUEST_NOT_PROCESSED"    -> InternalError,
+        "NO_DATA_FOUND"            -> NotFoundError,
+        "PARTIALLY_MIGRATED"       -> InternalError,
+        "SERVER_ERROR"             -> InternalError,
+        "SERVICE_UNAVAILABLE"      -> InternalError
+      )
+
+      errors.foreach(args => (serviceError _).tupled(args))
     }
 
   }
@@ -78,5 +95,7 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
     val service = new ListPaymentsAndAllocationDetailsService(
       connector = mockListPaymentsAndAllocationDetailsConnector
     )
+
   }
+
 }

@@ -30,7 +30,7 @@ case class ErrorWrapper(correlationId: String, error: MtdError, errors: Option[S
     allErrors.map(error => AuditError(error.code))
 
   def containsAnyOf(errorsToCheck: MtdError*): Boolean =
-    allErrors.exists(err => errorsToCheck.exists(_.code == err.code))
+    errorsToCheck.exists(_.code == error.code)
 
 }
 

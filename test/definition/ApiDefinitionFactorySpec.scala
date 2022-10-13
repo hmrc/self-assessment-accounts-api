@@ -39,8 +39,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockAppConfig.featureSwitch returns None
         MockAppConfig.apiStatus(VERSION_1) returns "ALPHA"
         MockAppConfig.apiStatus(VERSION_2) returns "BETA"
-        MockAppConfig.endpointsEnabled(VERSION_1) returns false anyNumberOfTimes()
-        MockAppConfig.endpointsEnabled(VERSION_2) returns true anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(VERSION_1) returns false anyNumberOfTimes ()
+        MockAppConfig.endpointsEnabled(VERSION_2) returns true anyNumberOfTimes ()
 
         MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
           definitionEnabled = true,
@@ -117,7 +117,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
-      Seq(VERSION_1, VERSION_2).foreach { version  =>
+      Seq(VERSION_1, VERSION_2).foreach { version =>
         s"default to alpha for $version " in new Test {
           MockAppConfig.apiStatus(version) returns "ALPHO"
           apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA

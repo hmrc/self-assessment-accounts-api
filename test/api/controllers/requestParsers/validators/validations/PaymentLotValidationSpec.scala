@@ -25,12 +25,12 @@ class PaymentLotValidationSpec extends UnitSpec with JsonErrorValidators {
   "validate" should {
     "return no errors" when {
       "when a valid paymentLot is supplied" in {
-        val validPaymentLot   = "AA123456aa12"
+        val validPaymentLot = "AA123456aa12"
 
         PaymentLotValidation.validate(validPaymentLot) shouldBe List()
       }
       "when a valid optional paymentLot is supplied" in {
-        val validPaymentLot   = Some("AA123456aa12")
+        val validPaymentLot = Some("AA123456aa12")
 
         PaymentLotValidation.validate(validPaymentLot) shouldBe List()
       }

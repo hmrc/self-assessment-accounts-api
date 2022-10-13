@@ -34,7 +34,7 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
         NinoValidation.validate(data.nino),
         StartEndDateValidation.validate(data.dateFrom, data.dateTo),
         PaymentLotValidation.validate(data.paymentLot),
-        PaymentLotItemValidation.validate(data.paymentLotItem),
+        PaymentLotItemValidation.validate(data.paymentLotItem)
       )
     }
 

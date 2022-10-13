@@ -24,7 +24,6 @@ import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveChargeHistoryRequestParser
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
@@ -71,7 +70,6 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
 
         Ok(Json.toJson(vendorResponse))
           .withApiHeaders(serviceResponse.correlationId)
-          .as(MimeTypes.JSON)
       }
 
       result.leftMap { errorWrapper =>

@@ -24,7 +24,7 @@ import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAlloca
 import javax.inject.Inject
 
 class ListPaymentsAndAllocationDetailsRequestParser @Inject() (val validator: ListPaymentsAndAllocationDetailsValidator)
-  extends RequestParser[ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest] {
+    extends RequestParser[ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest] {
 
   override protected def requestFor(data: ListPaymentsAndAllocationDetailsRawData): ListPaymentsAndAllocationDetailsRequest =
     ListPaymentsAndAllocationDetailsRequest(
