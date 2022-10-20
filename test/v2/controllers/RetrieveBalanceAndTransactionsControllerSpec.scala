@@ -29,7 +29,7 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture.{inputDataEverythingTrue, requestEverythingTrue, validDocNumber, validNino}
+import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
 import v2.mocks.requestParsers.MockRetrieveBalanceAndTransactionsRequestParser
 import v2.mocks.services.MockRetrieveBalanceAndTransactionsService

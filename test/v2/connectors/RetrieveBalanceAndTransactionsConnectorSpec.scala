@@ -33,8 +33,8 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
   private val nino                       = "AA123456A"
   private val docNumber                  = "anId"
-  private val dateFrom                   = "2018-08-13"
-  private val dateTo                     = "2019-08-13"
+  private val fromDate                   = "2018-08-13"
+  private val toDate                     = "2019-08-13"
   private val onlyOpenItems              = false
   private val includeLocks               = false
   private val calculateAccruedInterest   = false
@@ -53,14 +53,14 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   private val validRequest: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
     nino = Nino(nino),
     docNumber = Some(docNumber),
-    dateFrom = Some(dateFrom),
-    dateTo = Some(dateTo),
+    fromDate = Some(fromDate),
+    toDate = Some(toDate),
     onlyOpenItems = onlyOpenItems,
     includeLocks = includeLocks,
     calculateAccruedInterest = calculateAccruedInterest,
     removePOA = removePOA,
     customerPaymentInformation = customerPaymentInformation,
-    includeChargeEstimate = includeChargeEstimate
+    includeEstimatedCharges = includeChargeEstimate
   )
 
   private val commonQueryParams: Seq[(String, String)] = Seq(
@@ -69,7 +69,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
     "removePOA"                  -> removePOA.toString,
     "customerPaymentInformation" -> customerPaymentInformation.toString,
-    "includeChargeEstimate"      -> includeChargeEstimate.toString
+    "includeStatistical"         -> includeChargeEstimate.toString
   )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -107,19 +107,19 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
     "return a valid response" when {
 
-      "a valid request containing both docNumber and dateFrom and dateTo is supplied" in new Test {
+      "a valid request containing both docNumber and fromDate and dateTo is supplied" in new Test {
         val queryParams: Seq[(String, String)] =
           commonQueryParams ++ Seq(
             "docNumber" -> s"$docNumber",
-            "dateFrom"  -> s"$dateFrom",
-            "dateTo"    -> s"$dateTo"
+            "dateFrom"  -> s"$fromDate",
+            "dateTo"    -> s"$toDate"
           )
 
         connectorRequest(validRequest, validResponse, queryParams)
       }
 
-      "a valid request containing docNumber and not dateFrom or dateTo is supplied" in new Test {
-        val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(dateFrom = None, dateTo = None)
+      "a valid request containing docNumber and not fromDate or dateTo is supplied" in new Test {
+        val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(fromDate = None, toDate = None)
 
         val queryParams: Seq[(String, String)] =
           commonQueryParams ++ Seq("docNumber" -> s"$docNumber")
@@ -127,13 +127,13 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
         connectorRequest(request, validResponse, queryParams)
       }
 
-      "a valid request containing dateFrom and dateTo and no docNumber is supplied" in new Test {
+      "a valid request containing fromDate and dateTo and no docNumber is supplied" in new Test {
         val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(docNumber = None)
 
         val queryParams: Seq[(String, String)] =
           commonQueryParams ++ Seq(
-            "dateFrom" -> s"$dateFrom",
-            "dateTo"   -> s"$dateTo"
+            "dateFrom" -> s"$fromDate",
+            "dateTo"   -> s"$toDate"
           )
 
         connectorRequest(request, validResponse, queryParams)

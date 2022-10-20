@@ -49,21 +49,21 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
       List(
         NinoValidation.validate(data.nino),
         DocNumberValidation.validate(data.docNumber),
-        DateFormatValidation.validate(data.dateFrom, InvalidDateFromError),
-        DateFormatValidation.validate(data.dateTo, InvalidDateToError),
+        DateFormatValidation.validate(data.fromDate, InvalidDateFromError),
+        DateFormatValidation.validate(data.toDate, InvalidDateToError),
         BooleanValidation.validate(data.onlyOpenItems, InvalidOnlyOpenItemsError),
         BooleanValidation.validate(data.includeLocks, InvalidIncludeLocksError),
         BooleanValidation.validate(data.calculateAccruedInterest, InvalidCalculateAccruedInterestError),
         BooleanValidation.validate(data.removePOA, InvalidRemovePaymentOnAccountError),
         BooleanValidation.validate(data.customerPaymentInformation, InvalidCustomerPaymentInformationError),
-        BooleanValidation.validate(data.includeChargeEstimate, InvalidIncludeChargeEstimateError)
+        BooleanValidation.validate(data.includeEstimatedCharges, InvalidIncludeChargeEstimateError)
       )
     }
 
   private def parameterRuleValidation: RetrieveBalanceAndTransactionsRawData => List[List[MtdError]] =
     (data: RetrieveBalanceAndTransactionsRawData) => {
       List(
-        DateRangeValidationV2.validate(data.dateFrom, data.dateTo)
+        DateRangeValidationV2.validate(data.fromDate, data.toDate)
       )
     }
 

@@ -37,14 +37,14 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
 
     val nino                       = request.nino.nino
     val docNumber                  = request.docNumber
-    val dateFrom                   = request.dateFrom
-    val dateTo                     = request.dateTo
+    val dateFrom                   = request.fromDate
+    val dateTo                     = request.toDate
     val onlyOpenItems              = request.onlyOpenItems
     val includeLocks               = request.includeLocks
     val calculateAccruedInterest   = request.calculateAccruedInterest
     val removePOA                  = request.removePOA
     val customerPaymentInformation = request.customerPaymentInformation
-    val includeChargeEstimate      = request.includeChargeEstimate
+    val includeChargeEstimate      = request.includeEstimatedCharges
 
     val booleanQueryParams: Seq[(String, String)] =
       Seq(
@@ -53,7 +53,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
         "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
         "removePOA"                  -> removePOA.toString,
         "customerPaymentInformation" -> customerPaymentInformation.toString,
-        "includeChargeEstimate"      -> includeChargeEstimate.toString
+        "includeStatistical"         -> includeChargeEstimate.toString
       )
 
     def getIfExists(option: Option[String], name: String): Seq[(String, String)] = option match {

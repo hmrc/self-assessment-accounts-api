@@ -92,7 +92,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
       "calculateAccruedInterest"   -> calculateAccruedInterest,
       "removePOA"                  -> removePOA,
       "customerPaymentInformation" -> customerPaymentInformation,
-      "includeChargeEstimate"      -> includeEstimatedCharges
+      "includeStatistical"         -> includeEstimatedCharges
     ).collect { case (k, Some(v)) =>
       (k, v)
     }
@@ -101,7 +101,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
   "Calling the 'retrieve a charge history' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made with doc number, dateFrom, dateTo and all flag params as false" in new Test {
+      "any valid request is made with doc number, fromDate, toDate and all flag params as false" in new Test {
 
         override val onlyOpenItems: Option[String]              = Some("false")
         override val includeLocks: Option[String]               = Some("false")
@@ -139,7 +139,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "any valid request is made with no doc number, but with dateFrom, dateTo and all flag params as true" in new Test {
+      "any valid request is made with no doc number, but with fromDate, toDate and all flag params as true" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()

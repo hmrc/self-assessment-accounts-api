@@ -62,11 +62,11 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "an invalid date from is supplied" in {
-        validator.validate(inputDataDocNumber.copy(dateFrom = Some("invalid"))) shouldBe List(InvalidDateFromError)
+        validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"))) shouldBe List(InvalidDateFromError)
       }
 
       "an invalid date to is supplied" in {
-        validator.validate(inputDataDocNumber.copy(dateTo = Some("invalid"))) shouldBe List(InvalidDateToError)
+        validator.validate(inputDataDocNumber.copy(toDate = Some("invalid"))) shouldBe List(InvalidDateToError)
       }
 
       "an invalid only open items is supplied" in {
@@ -91,18 +91,18 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "an invalid include charge estimate is supplied" in {
-        validator.validate(inputDataDocNumber.copy(includeChargeEstimate = Some("invalid"))) shouldBe List(InvalidIncludeChargeEstimateError)
+        validator.validate(inputDataDocNumber.copy(includeEstimatedCharges = Some("invalid"))) shouldBe List(InvalidIncludeChargeEstimateError)
       }
 
       "multiple invalid values are supplied" in {
-        val input          = inputDataDocNumber.copy(dateFrom = Some("invalid"), removePOA = Some("invalid"))
+        val input          = inputDataDocNumber.copy(fromDate = Some("invalid"), removePOA = Some("invalid"))
         val expectedErrors = List(InvalidDateFromError, InvalidRemovePaymentOnAccountError)
 
         validator.validate(input) shouldBe expectedErrors
       }
 
       "date from is later than date to" in {
-        val input          = inputDataDateRange.copy(dateFrom = Some("2022-12-01"), dateTo = Some("2022-11-01"))
+        val input          = inputDataDateRange.copy(fromDate = Some("2022-12-01"), toDate = Some("2022-11-01"))
         val expectedErrors = List(InvalidDateRangeError)
         validator.validate(input) shouldBe expectedErrors
       }

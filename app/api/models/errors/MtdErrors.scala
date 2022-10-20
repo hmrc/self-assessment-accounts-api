@@ -206,7 +206,7 @@ object InvalidDateToError extends MtdError(code = "INVALID_DATE_TO", message = "
 object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", message = "The provided removePOA is invalid.")
 
 object InvalidIncludeChargeEstimateError
-    extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
+    extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeEstimatedCharges is invalid.")
 
 object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The provided date range is invalid.")
 
