@@ -91,13 +91,13 @@ object SourceFormatError
 object PaymentLotFormatError
     extends MtdError(
       code = "FORMAT_PAYMENT_LOT",
-      message = "The provided paymentLot is invalid."
+      message = "The provided payment lot is invalid"
     )
 
 object PaymentLotItemFormatError
     extends MtdError(
       code = "FORMAT_PAYMENT_LOT_ITEM",
-      message = "The provided paymentLotItem is invalid."
+      message = "The provided payment lot item is invalid"
     )
 
 object DateFromFormatError
@@ -208,7 +208,7 @@ object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOV
 object InvalidIncludeChargeEstimateError
     extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
 
-object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The provided date range is invalid.")
+object InvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The specified date range is invalid")
 
 // Standard Errors
 object NotFoundError
@@ -246,6 +246,12 @@ object ServiceUnavailableError
       code = "SERVICE_UNAVAILABLE",
       message = "Internal server error"
     )
+
+object MissingPaymentLotError
+  extends MtdError(
+    code = "MISSING_PAYMENT_LOT",
+    message = "The Payment Lot parameter is missing"
+  )
 
 // Authorisation Errors
 object UnauthorisedError

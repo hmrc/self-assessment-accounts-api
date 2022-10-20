@@ -10,7 +10,7 @@
           "paymentLot": {
             "type": "string",
             "description": "An identifier for the batch process that processed the payment and assigned it to the taxpayer's account.",
-            "example": "081203010024"
+            "example": "AB1023456789-000001"
           },
           "paymentLotItem": {
             "type": "string",
@@ -40,7 +40,7 @@
 
           "allocations": {
             "type": "array",
-            "description": "A list of charges, allocated amounts from the payment.",
+            "description": "A list of charges which are allocated amounts from the payment",
             "items": {
               "type": "object",
               "properties": {
@@ -79,12 +79,12 @@
                   "properties": {
                     "documentId": {
                       "type": "string",
-                      "description": "Same as Document Number/ID unless on output there are no postings (zero amounts) then the Form Bundle is returned \n\nMust conform to the regular expression: ^[0-9A-Za-z]{1,12}$",
+                      "description": "Same as Document Number unless on output there are no postings then the Form Bundle number is returned. Must conform to the regular expression: ^[0-9A-Za-z]{1,12}$",
                       "example": "1040000872"
                     },
                     "documentType": {
                       "type": "string",
-                      "description": "A unique ID used to reference the document type of which this is a subitem.",
+                      "description": "A code to specify the document type of which this is a subitem.",
                       "example": "3880"
                     },
                     "documentTypeDescription": {
@@ -94,7 +94,7 @@
                     },
                     "chargeType": {
                       "type": "string",
-                      "description": "A unique ID used to identify the type of charge.",
+                      "description": "A code to specify the type of charge.",
                       "example": "1005"
                     },
                     "chargeTypeDescription": {
@@ -118,7 +118,7 @@
                 "contractAccount": {
                   "type": "string",
                   "description": "The accounting record for a particular charge type.",
-                  "example": "ABC"
+                  "example": " PAYE contract account "
                 }
 
               },

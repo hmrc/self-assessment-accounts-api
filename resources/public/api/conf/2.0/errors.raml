@@ -168,7 +168,7 @@ traits:
               invalidDateRange:
                 description: The provided date range is not valid.
                 value:
-                  code: INVALID_DATE_RANGE
+                  code: RULE_INVALID_DATE_RANGE
 
   ruleFromDateNotSupported:
     responses:
@@ -322,7 +322,7 @@ traits:
             type: types.errorResponse
             examples:
               formatPaymentLot:
-                description: The provided Payment Lot is not valid.
+                description: The format of the supplied Payment Lot field is not valid.
                 value:
                   code: FORMAT_PAYMENT_LOT
   formatPaymentLotItem:
@@ -333,9 +333,20 @@ traits:
             type: types.errorResponse
             examples:
               formatPaymentLotItem:
-                description: The provided Payment Lot Item is not valid
+                description: The format of the supplied Payment Lot Item field is not valid.
                 value:
                   code: FORMAT_PAYMENT_LOT_ITEM
+  missingPaymentLot:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              missingPaymentLot:
+                description: The Payment lot parameter is missing.
+                value:
+                  code: MISSING_PAYMENT_LOT
   formatLossId:
     responses:
       400:
