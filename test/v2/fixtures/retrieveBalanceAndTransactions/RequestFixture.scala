@@ -22,8 +22,8 @@ import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTrans
 object RequestFixture {
   val validNino: String      = "AA123456B"
   val validDocNumber: String = "1234"
-  val validDateFrom: String  = "2022-08-15"
-  val validDateTo: String    = "2022-09-15"
+  val validFromDate: String  = "2022-08-15"
+  val validToDate: String    = "2022-09-15"
 
   val inputDataDocNumber: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
     nino = validNino,
@@ -41,8 +41,8 @@ object RequestFixture {
   val inputDataDateRange: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
     nino = validNino,
     docNumber = None,
-    fromDate = Some(validDateFrom),
-    toDate = Some(validDateTo),
+    fromDate = Some(validFromDate),
+    toDate = Some(validToDate),
     onlyOpenItems = None,
     includeLocks = None,
     calculateAccruedInterest = None,
@@ -93,8 +93,8 @@ object RequestFixture {
   val requestDateRange: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
     nino = Nino(validNino),
     docNumber = None,
-    fromDate = Some(validDateFrom),
-    toDate = Some(validDateTo),
+    fromDate = Some(validFromDate),
+    toDate = Some(validToDate),
     onlyOpenItems = false,
     includeLocks = false,
     calculateAccruedInterest = false,

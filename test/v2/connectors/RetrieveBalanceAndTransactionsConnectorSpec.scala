@@ -40,7 +40,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   private val calculateAccruedInterest   = false
   private val removePOA                  = false
   private val customerPaymentInformation = false
-  private val includeChargeEstimate      = false
+  private val includeEstimatedCharges    = false
 
   private val validResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
@@ -60,7 +60,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     calculateAccruedInterest = calculateAccruedInterest,
     removePOA = removePOA,
     customerPaymentInformation = customerPaymentInformation,
-    includeEstimatedCharges = includeChargeEstimate
+    includeEstimatedCharges = includeEstimatedCharges
   )
 
   private val commonQueryParams: Seq[(String, String)] = Seq(
@@ -69,7 +69,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
     "removePOA"                  -> removePOA.toString,
     "customerPaymentInformation" -> customerPaymentInformation.toString,
-    "includeStatistical"         -> includeChargeEstimate.toString
+    "includeStatistical"         -> includeEstimatedCharges.toString
   )
 
   class Test extends MockHttpClient with MockAppConfig {

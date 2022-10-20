@@ -158,28 +158,28 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
       def validationErrorTest(requestNino: String,
                               requestDocNumber: Option[String],
-                              requestDateFrom: Option[String],
-                              requestDateTo: Option[String],
+                              requestFromDate: Option[String],
+                              requestToDate: Option[String],
                               requestOnlyOpenItems: Option[String],
                               requestIncludeLocks: Option[String],
                               requestCalculateAccruedInterest: Option[String],
                               requestRemovePOA: Option[String],
                               requestCustomerPaymentInformation: Option[String],
-                              requestIncludeChargeEstimate: Option[String],
+                              requestIncludeEstimatedCharges: Option[String],
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String                               = requestNino
           override val docNumber: Option[String]                  = requestDocNumber
-          override val fromDate: Option[String]                   = requestDateFrom
-          override val toDate: Option[String]                     = requestDateTo
+          override val fromDate: Option[String]                   = requestFromDate
+          override val toDate: Option[String]                     = requestToDate
           override val onlyOpenItems: Option[String]              = requestOnlyOpenItems
           override val includeLocks: Option[String]               = requestIncludeLocks
           override val calculateAccruedInterest: Option[String]   = requestCalculateAccruedInterest
           override val removePOA: Option[String]                  = requestRemovePOA
           override val customerPaymentInformation: Option[String] = requestCustomerPaymentInformation
-          override val includeEstimatedCharges: Option[String]    = requestIncludeChargeEstimate
+          override val includeEstimatedCharges: Option[String]    = requestIncludeEstimatedCharges
 
           override def setupStubs(): StubMapping = {
             AuthStub.authorised()
@@ -194,15 +194,15 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
       }
 
       val input = Seq(
-        ("AA1123A", Some(validDocNumber), Some(validDateFrom), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, NinoFormatError),
-        ("AA123456A", Some("a" * 13), Some(validDateFrom), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, DocNumberFormatError),
-        ("AA123456A", Some(validDocNumber), Some("invalid"), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, FromDateFormatError),
-        ("AA123456A", Some(validDocNumber), Some(validDateFrom), Some("invalid"), None, None, None, None, None, None, BAD_REQUEST, ToDateFormatError),
+        ("AA1123A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, NinoFormatError),
+        ("AA123456A", Some("a" * 13), Some(validFromDate), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, DocNumberFormatError),
+        ("AA123456A", Some(validDocNumber), Some("invalid"), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, FromDateFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some("invalid"), None, None, None, None, None, None, BAD_REQUEST, ToDateFormatError),
         (
           "AA123456A",
           Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
+          Some(validFromDate),
+          Some(validToDate),
           Some("invalid"),
           None,
           None,
@@ -214,8 +214,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (
           "AA123456A",
           Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
+          Some(validFromDate),
+          Some(validToDate),
           None,
           Some("invalid"),
           None,
@@ -227,8 +227,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (
           "AA123456A",
           Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
+          Some(validFromDate),
+          Some(validToDate),
           None,
           None,
           Some("invalid"),
@@ -240,8 +240,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (
           "AA123456A",
           Some(validDocNumber),
-          Some(validDateTo),
-          Some(validDateFrom),
+          Some(validToDate),
+          Some(validFromDate),
           None,
           None,
           None,
@@ -253,8 +253,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (
           "AA123456A",
           Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
+          Some(validFromDate),
+          Some(validToDate),
           None,
           None,
           None,
@@ -266,8 +266,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (
           "AA123456A",
           Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
+          Some(validFromDate),
+          Some(validToDate),
           None,
           None,
           None,
@@ -279,8 +279,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (
           "AA123456A",
           Some(validDocNumber),
-          Some(validDateTo),
-          Some(validDateFrom),
+          Some(validToDate),
+          Some(validFromDate),
           None,
           None,
           None,
