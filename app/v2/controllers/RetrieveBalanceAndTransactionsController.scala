@@ -47,14 +47,14 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
 
   def retrieveBalanceAndTransactions(nino: String,
                                      docNumber: Option[String],
-                                     dateFrom: Option[String],
-                                     dateTo: Option[String],
+                                     fromDate: Option[String],
+                                     toDate: Option[String],
                                      onlyOpenItems: Option[String],
                                      includeLocks: Option[String],
                                      calculateAccruedInterest: Option[String],
                                      removePOA: Option[String],
                                      customerPaymentInformation: Option[String],
-                                     includeChargeEstimate: Option[String]): Action[AnyContent] =
+                                     includeEstimatedCharges: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " + s"with correlationId: $correlationId")
@@ -62,14 +62,14 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
       val rawRequest = RetrieveBalanceAndTransactionsRawData(
         nino,
         docNumber: Option[String],
-        dateFrom: Option[String],
-        dateTo: Option[String],
+        fromDate: Option[String],
+        toDate: Option[String],
         onlyOpenItems: Option[String],
         includeLocks: Option[String],
         calculateAccruedInterest: Option[String],
         removePOA: Option[String],
         customerPaymentInformation: Option[String],
-        includeChargeEstimate: Option[String]
+        includeEstimatedCharges: Option[String]
       )
 
       val result = for {

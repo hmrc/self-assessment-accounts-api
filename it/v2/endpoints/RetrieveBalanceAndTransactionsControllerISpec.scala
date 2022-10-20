@@ -35,37 +35,37 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
     val nino: String                               = "AA123456A"
     val docNumber: Option[String]                  = Some("1234")
-    val dateFrom: Option[String]                   = Some("2022-08-15")
-    val dateTo: Option[String]                     = Some("2022-09-15")
+    val fromDate: Option[String]                   = Some("2022-08-15")
+    val toDate: Option[String]                     = Some("2022-09-15")
     val onlyOpenItems: Option[String]              = Some("true")
     val includeLocks: Option[String]               = Some("true")
     val calculateAccruedInterest: Option[String]   = Some("true")
     val removePOA: Option[String]                  = Some("true")
     val customerPaymentInformation: Option[String] = Some("true")
-    val includeChargeEstimate: Option[String]      = Some("true")
+    val includeEstimatedCharges: Option[String]    = Some("true")
 
     def uri: String           = s"/$nino/balance-and-transactions"
     def downstreamUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
-    def queryParams: Seq[(String, String)] =
-      Seq(
-        "docNumber"                  -> docNumber,
-        "dateFrom"                   -> dateFrom,
-        "dateTo"                     -> dateTo,
-        "onlyOpenItems"              -> onlyOpenItems,
-        "includeLocks"               -> includeLocks,
-        "calculateAccruedInterest"   -> calculateAccruedInterest,
-        "removePOA"                  -> removePOA,
-        "customerPaymentInformation" -> customerPaymentInformation,
-        "includeChargeEstimate"      -> includeChargeEstimate
-      )
-        .collect { case (k, Some(v)) =>
-          (k, v)
-        }
-
     def setupStubs(): StubMapping
 
-    def request(queryParams: Seq[(String, String)]): WSRequest = {
+    def request: WSRequest = {
+      val queryParams =
+        Seq(
+          "docNumber"                  -> docNumber,
+          "fromDate"                   -> fromDate,
+          "toDate"                     -> toDate,
+          "onlyOpenItems"              -> onlyOpenItems,
+          "includeLocks"               -> includeLocks,
+          "calculateAccruedInterest"   -> calculateAccruedInterest,
+          "removePOA"                  -> removePOA,
+          "customerPaymentInformation" -> customerPaymentInformation,
+          "includeEstimatedCharges"    -> includeEstimatedCharges
+        )
+          .collect { case (k, Some(v)) =>
+            (k, v)
+          }
+
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
@@ -85,14 +85,14 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
     def ifsQueryParams: Map[String, String] = Map(
       "docNumber"                  -> docNumber,
-      "dateFrom"                   -> dateFrom,
-      "dateTo"                     -> dateTo,
+      "dateFrom"                   -> fromDate,
+      "dateTo"                     -> toDate,
       "onlyOpenItems"              -> onlyOpenItems,
       "includeLocks"               -> includeLocks,
       "calculateAccruedInterest"   -> calculateAccruedInterest,
       "removePOA"                  -> removePOA,
       "customerPaymentInformation" -> customerPaymentInformation,
-      "includeChargeEstimate"      -> includeChargeEstimate
+      "includeChargeEstimate"      -> includeEstimatedCharges
     ).collect { case (k, Some(v)) =>
       (k, v)
     }
@@ -108,7 +108,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         override val calculateAccruedInterest: Option[String]   = Some("false")
         override val removePOA: Option[String]                  = Some("false")
         override val customerPaymentInformation: Option[String] = Some("false")
-        override val includeChargeEstimate: Option[String]      = Some("false")
+        override val includeEstimatedCharges: Option[String]    = Some("false")
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -116,7 +116,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request(queryParams).get)
+        val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
@@ -124,8 +124,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
       "any valid request is made with only doc number and all flag params as true" in new Test {
 
-        override val dateFrom: Option[String] = None
-        override val dateTo: Option[String]   = None
+        override val fromDate: Option[String] = None
+        override val toDate: Option[String]   = None
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -133,7 +133,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request(queryParams).get)
+        val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
@@ -147,7 +147,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request(queryParams).get)
+        val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
@@ -172,21 +172,21 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
           override val nino: String                               = requestNino
           override val docNumber: Option[String]                  = requestDocNumber
-          override val dateFrom: Option[String]                   = requestDateFrom
-          override val dateTo: Option[String]                     = requestDateTo
+          override val fromDate: Option[String]                   = requestDateFrom
+          override val toDate: Option[String]                     = requestDateTo
           override val onlyOpenItems: Option[String]              = requestOnlyOpenItems
           override val includeLocks: Option[String]               = requestIncludeLocks
           override val calculateAccruedInterest: Option[String]   = requestCalculateAccruedInterest
           override val removePOA: Option[String]                  = requestRemovePOA
           override val customerPaymentInformation: Option[String] = requestCustomerPaymentInformation
-          override val includeChargeEstimate: Option[String]      = requestIncludeChargeEstimate
+          override val includeEstimatedCharges: Option[String]    = requestIncludeChargeEstimate
 
           override def setupStubs(): StubMapping = {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request(queryParams).get)
+          val response: WSResponse = await(request.get)
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -328,7 +328,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request(queryParams).get)
+          val response: WSResponse = await(request.get)
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

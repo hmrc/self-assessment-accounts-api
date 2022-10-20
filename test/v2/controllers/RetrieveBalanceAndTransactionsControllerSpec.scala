@@ -94,14 +94,14 @@ class RetrieveBalanceAndTransactionsControllerSpec
         val result: Future[Result] = controller.retrieveBalanceAndTransactions(
           nino = nino,
           docNumber = Some(validDocNumber),
-          dateFrom = None,
-          dateTo = None,
+          fromDate = None,
+          toDate = None,
           onlyOpenItems = Some("true"),
           includeLocks = Some("true"),
           calculateAccruedInterest = Some("true"),
           removePOA = Some("true"),
           customerPaymentInformation = Some("true"),
-          includeChargeEstimate = Some("true")
+          includeEstimatedCharges = Some("true")
         )(fakeGetRequest)
 
         status(result) shouldBe OK
@@ -122,14 +122,14 @@ class RetrieveBalanceAndTransactionsControllerSpec
             val result: Future[Result] = controller.retrieveBalanceAndTransactions(
               nino = nino,
               docNumber = Some(validDocNumber),
-              dateFrom = None,
-              dateTo = None,
+              fromDate = None,
+              toDate = None,
               onlyOpenItems = Some("true"),
               includeLocks = Some("true"),
               calculateAccruedInterest = Some("true"),
               removePOA = Some("true"),
               customerPaymentInformation = Some("true"),
-              includeChargeEstimate = Some("true")
+              includeEstimatedCharges = Some("true")
             )(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
@@ -173,14 +173,14 @@ class RetrieveBalanceAndTransactionsControllerSpec
           val result: Future[Result] = controller.retrieveBalanceAndTransactions(
             nino = nino,
             docNumber = Some(validDocNumber),
-            dateFrom = None,
-            dateTo = None,
+            fromDate = None,
+            toDate = None,
             onlyOpenItems = Some("true"),
             includeLocks = Some("true"),
             calculateAccruedInterest = Some("true"),
             removePOA = Some("true"),
             customerPaymentInformation = Some("true"),
-            includeChargeEstimate = Some("true")
+            includeEstimatedCharges = Some("true")
           )(fakeGetRequest)
 
           status(result) shouldBe expectedStatus
