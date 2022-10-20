@@ -17,24 +17,8 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.{
-  BooleanValidation,
-  DateFormatValidation,
-  DateRangeValidationV2,
-  DocNumberValidation,
-  NinoValidation
-}
-import api.models.errors.{
-  InvalidCalculateAccruedInterestError,
-  InvalidCustomerPaymentInformationError,
-  InvalidDateFromError,
-  InvalidDateToError,
-  InvalidIncludeLocksError,
-  InvalidIncludeChargeEstimateError,
-  InvalidOnlyOpenItemsError,
-  InvalidRemovePaymentOnAccountError,
-  MtdError
-}
+import api.controllers.requestParsers.validators.validations._
+import api.models.errors._
 import config.AppConfig
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRawData
 
@@ -49,14 +33,14 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
       List(
         NinoValidation.validate(data.nino),
         DocNumberValidation.validate(data.docNumber),
-        DateFormatValidation.validate(data.fromDate, InvalidDateFromError),
-        DateFormatValidation.validate(data.toDate, InvalidDateToError),
+        DateFormatValidation.validate(data.fromDate, FromDateFormatError),
+        DateFormatValidation.validate(data.toDate, ToDateFormatError),
         BooleanValidation.validate(data.onlyOpenItems, InvalidOnlyOpenItemsError),
         BooleanValidation.validate(data.includeLocks, InvalidIncludeLocksError),
         BooleanValidation.validate(data.calculateAccruedInterest, InvalidCalculateAccruedInterestError),
         BooleanValidation.validate(data.removePOA, InvalidRemovePaymentOnAccountError),
         BooleanValidation.validate(data.customerPaymentInformation, InvalidCustomerPaymentInformationError),
-        BooleanValidation.validate(data.includeEstimatedCharges, InvalidIncludeChargeEstimateError)
+        BooleanValidation.validate(data.includeEstimatedCharges, IncludeEstimatedChargesFormatError)
       )
     }
 

@@ -16,19 +16,7 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.models.errors.{
-  InvalidCalculateAccruedInterestError,
-  InvalidCustomerPaymentInformationError,
-  InvalidDateFromError,
-  InvalidDateRangeError,
-  InvalidDateToError,
-  InvalidDocNumberError,
-  InvalidIncludeLocksError,
-  InvalidIncludeChargeEstimateError,
-  InvalidOnlyOpenItemsError,
-  InvalidRemovePaymentOnAccountError,
-  NinoFormatError
-}
+import api.models.errors._
 import mocks.MockAppConfig
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
@@ -62,11 +50,11 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "an invalid date from is supplied" in {
-        validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"))) shouldBe List(InvalidDateFromError)
+        validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"))) shouldBe List(FromDateFormatError)
       }
 
       "an invalid date to is supplied" in {
-        validator.validate(inputDataDocNumber.copy(toDate = Some("invalid"))) shouldBe List(InvalidDateToError)
+        validator.validate(inputDataDocNumber.copy(toDate = Some("invalid"))) shouldBe List(ToDateFormatError)
       }
 
       "an invalid only open items is supplied" in {
@@ -91,12 +79,12 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "an invalid include charge estimate is supplied" in {
-        validator.validate(inputDataDocNumber.copy(includeEstimatedCharges = Some("invalid"))) shouldBe List(InvalidIncludeChargeEstimateError)
+        validator.validate(inputDataDocNumber.copy(includeEstimatedCharges = Some("invalid"))) shouldBe List(IncludeEstimatedChargesFormatError)
       }
 
       "multiple invalid values are supplied" in {
         val input          = inputDataDocNumber.copy(fromDate = Some("invalid"), removePOA = Some("invalid"))
-        val expectedErrors = List(InvalidDateFromError, InvalidRemovePaymentOnAccountError)
+        val expectedErrors = List(FromDateFormatError, InvalidRemovePaymentOnAccountError)
 
         validator.validate(input) shouldBe expectedErrors
       }

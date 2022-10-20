@@ -98,8 +98,8 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
       case BadRequestError | NinoFormatError | InvalidDocNumberError | InvalidIncludeLocksError | InvalidOnlyOpenItemsError |
-          InvalidCalculateAccruedInterestError | InvalidCustomerPaymentInformationError | InvalidDateFromError | InvalidDateToError |
-          InvalidRemovePaymentOnAccountError | InvalidIncludeChargeEstimateError | InvalidDateRangeError | RuleInconsistentQueryParamsError =>
+          InvalidCalculateAccruedInterestError | InvalidCustomerPaymentInformationError | FromDateFormatError | ToDateFormatError |
+          InvalidRemovePaymentOnAccountError | IncludeEstimatedChargesFormatError | InvalidDateRangeError | RuleInconsistentQueryParamsError =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
