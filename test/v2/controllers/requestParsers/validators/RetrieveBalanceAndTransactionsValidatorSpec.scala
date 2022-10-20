@@ -46,7 +46,7 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "an invalid doc number is supplied" in {
-        validator.validate(inputDataDocNumber.copy(docNumber = Some("a" * 13))) shouldBe List(InvalidDocNumberError)
+        validator.validate(inputDataDocNumber.copy(docNumber = Some("a" * 13))) shouldBe List(DocNumberFormatError)
       }
 
       "an invalid date from is supplied" in {
@@ -58,24 +58,24 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "an invalid only open items is supplied" in {
-        validator.validate(inputDataDocNumber.copy(onlyOpenItems = Some("invalid"))) shouldBe List(InvalidOnlyOpenItemsError)
+        validator.validate(inputDataDocNumber.copy(onlyOpenItems = Some("invalid"))) shouldBe List(OnlyOpenItemsFormatError)
       }
 
       "an invalid include locks is supplied" in {
-        validator.validate(inputDataDocNumber.copy(includeLocks = Some("invalid"))) shouldBe List(InvalidIncludeLocksError)
+        validator.validate(inputDataDocNumber.copy(includeLocks = Some("invalid"))) shouldBe List(IncludeLocksFormatError)
       }
 
       "an invalid calculate accrued interest is supplied" in {
-        validator.validate(inputDataDocNumber.copy(calculateAccruedInterest = Some("invalid"))) shouldBe List(InvalidCalculateAccruedInterestError)
+        validator.validate(inputDataDocNumber.copy(calculateAccruedInterest = Some("invalid"))) shouldBe List(CalculateAccruedInterestFormatError)
       }
 
       "an invalid remove POA is supplied" in {
-        validator.validate(inputDataDocNumber.copy(removePOA = Some("invalid"))) shouldBe List(InvalidRemovePaymentOnAccountError)
+        validator.validate(inputDataDocNumber.copy(removePOA = Some("invalid"))) shouldBe List(RemovePaymentOnAccountFormatError)
       }
 
       "an invalid customer payment information is supplied" in {
         validator.validate(inputDataDocNumber.copy(customerPaymentInformation = Some("invalid"))) shouldBe List(
-          InvalidCustomerPaymentInformationError)
+          CustomerPaymentInformationFormatError)
       }
 
       "an invalid include charge estimate is supplied" in {
@@ -84,7 +84,7 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
 
       "multiple invalid values are supplied" in {
         val input          = inputDataDocNumber.copy(fromDate = Some("invalid"), removePOA = Some("invalid"))
-        val expectedErrors = List(FromDateFormatError, InvalidRemovePaymentOnAccountError)
+        val expectedErrors = List(FromDateFormatError, RemovePaymentOnAccountFormatError)
 
         validator.validate(input) shouldBe expectedErrors
       }

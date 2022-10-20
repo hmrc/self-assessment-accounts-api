@@ -195,7 +195,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
       val input = Seq(
         ("AA1123A", Some(validDocNumber), Some(validDateFrom), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, NinoFormatError),
-        ("AA123456A", Some("a" * 13), Some(validDateFrom), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, InvalidDocNumberError),
+        ("AA123456A", Some("a" * 13), Some(validDateFrom), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, DocNumberFormatError),
         ("AA123456A", Some(validDocNumber), Some("invalid"), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, FromDateFormatError),
         ("AA123456A", Some(validDocNumber), Some(validDateFrom), Some("invalid"), None, None, None, None, None, None, BAD_REQUEST, ToDateFormatError),
         (
@@ -210,7 +210,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           None,
           None,
           BAD_REQUEST,
-          InvalidOnlyOpenItemsError),
+          OnlyOpenItemsFormatError),
         (
           "AA123456A",
           Some(validDocNumber),
@@ -223,7 +223,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           None,
           None,
           BAD_REQUEST,
-          InvalidIncludeLocksError),
+          IncludeLocksFormatError),
         (
           "AA123456A",
           Some(validDocNumber),
@@ -236,7 +236,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           None,
           None,
           BAD_REQUEST,
-          InvalidCalculateAccruedInterestError),
+          CalculateAccruedInterestFormatError),
         (
           "AA123456A",
           Some(validDocNumber),
@@ -249,7 +249,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           None,
           None,
           BAD_REQUEST,
-          InvalidRemovePaymentOnAccountError),
+          RemovePaymentOnAccountFormatError),
         (
           "AA123456A",
           Some(validDocNumber),
@@ -262,7 +262,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           Some("invalid"),
           None,
           BAD_REQUEST,
-          InvalidCustomerPaymentInformationError),
+          CustomerPaymentInformationFormatError),
         (
           "AA123456A",
           Some(validDocNumber),
@@ -316,16 +316,16 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_IDNUMBER", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, InvalidDocNumberError),
-        (BAD_REQUEST, "INVALID_ONLY_OPEN_ITEMS", BAD_REQUEST, InvalidOnlyOpenItemsError),
-        (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", BAD_REQUEST, InvalidIncludeLocksError),
-        (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", BAD_REQUEST, InvalidCalculateAccruedInterestError),
-        (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", BAD_REQUEST, InvalidCustomerPaymentInformationError),
+        (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, DocNumberFormatError),
+        (BAD_REQUEST, "INVALID_ONLY_OPEN_ITEMS", BAD_REQUEST, OnlyOpenItemsFormatError),
+        (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", BAD_REQUEST, IncludeLocksFormatError),
+        (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", BAD_REQUEST, CalculateAccruedInterestFormatError),
+        (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", BAD_REQUEST, CustomerPaymentInformationFormatError),
         (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, InvalidDateRangeError),
         (BAD_REQUEST, "INVALID_REQUEST", BAD_REQUEST, RuleInconsistentQueryParamsError),
-        (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", BAD_REQUEST, InvalidRemovePaymentOnAccountError),
+        (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", BAD_REQUEST, RemovePaymentOnAccountFormatError),
         (BAD_REQUEST, "INVALID_INCLUDE_STATISTICAL", BAD_REQUEST, IncludeEstimatedChargesFormatError),
         (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),

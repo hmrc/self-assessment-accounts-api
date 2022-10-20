@@ -35,11 +35,11 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
         DocNumberValidation.validate(data.docNumber),
         DateFormatValidation.validate(data.fromDate, FromDateFormatError),
         DateFormatValidation.validate(data.toDate, ToDateFormatError),
-        BooleanValidation.validate(data.onlyOpenItems, InvalidOnlyOpenItemsError),
-        BooleanValidation.validate(data.includeLocks, InvalidIncludeLocksError),
-        BooleanValidation.validate(data.calculateAccruedInterest, InvalidCalculateAccruedInterestError),
-        BooleanValidation.validate(data.removePOA, InvalidRemovePaymentOnAccountError),
-        BooleanValidation.validate(data.customerPaymentInformation, InvalidCustomerPaymentInformationError),
+        BooleanValidation.validate(data.onlyOpenItems, OnlyOpenItemsFormatError),
+        BooleanValidation.validate(data.includeLocks, IncludeLocksFormatError),
+        BooleanValidation.validate(data.calculateAccruedInterest, CalculateAccruedInterestFormatError),
+        BooleanValidation.validate(data.removePOA, RemovePaymentOnAccountFormatError),
+        BooleanValidation.validate(data.customerPaymentInformation, CustomerPaymentInformationFormatError),
         BooleanValidation.validate(data.includeEstimatedCharges, IncludeEstimatedChargesFormatError)
       )
     }

@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{InvalidDocNumberError}
+import api.models.errors.DocNumberFormatError
 import api.models.utils.JsonErrorValidators
 import support.UnitSpec
 
@@ -41,13 +41,13 @@ class DocNumberValidationSpec extends UnitSpec with JsonErrorValidators {
       "when an invalid doc number is supplied" in {
         val invalidDocNumber = "a" * 13
         val validationResult = DocNumberValidation.validate(invalidDocNumber)
-        validationResult shouldBe List(InvalidDocNumberError)
+        validationResult shouldBe List(DocNumberFormatError)
       }
 
       "when an invalid optional doc number is supplied" in {
         val invalidDocNumber = Some("a" * 13)
         val validationResult = DocNumberValidation.validate(invalidDocNumber)
-        validationResult shouldBe List(InvalidDocNumberError)
+        validationResult shouldBe List(DocNumberFormatError)
       }
     }
   }

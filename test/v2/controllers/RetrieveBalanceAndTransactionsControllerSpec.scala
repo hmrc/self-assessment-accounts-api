@@ -141,16 +141,16 @@ class RetrieveBalanceAndTransactionsControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (InvalidDocNumberError, BAD_REQUEST),
-          (InvalidOnlyOpenItemsError, BAD_REQUEST),
-          (InvalidIncludeLocksError, BAD_REQUEST),
-          (InvalidCalculateAccruedInterestError, BAD_REQUEST),
-          (InvalidCustomerPaymentInformationError, BAD_REQUEST),
+          (DocNumberFormatError, BAD_REQUEST),
+          (OnlyOpenItemsFormatError, BAD_REQUEST),
+          (IncludeLocksFormatError, BAD_REQUEST),
+          (CalculateAccruedInterestFormatError, BAD_REQUEST),
+          (CustomerPaymentInformationFormatError, BAD_REQUEST),
           (FromDateFormatError, BAD_REQUEST),
           (ToDateFormatError, BAD_REQUEST),
           (InvalidDateRangeError, BAD_REQUEST),
           (RuleInconsistentQueryParamsError, BAD_REQUEST),
-          (InvalidRemovePaymentOnAccountError, BAD_REQUEST),
+          (RemovePaymentOnAccountFormatError, BAD_REQUEST),
           (IncludeEstimatedChargesFormatError, BAD_REQUEST)
         )
 
@@ -192,16 +192,16 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
       val input = Seq(
         (NinoFormatError, BAD_REQUEST),
-        (InvalidDocNumberError, BAD_REQUEST),
-        (InvalidOnlyOpenItemsError, BAD_REQUEST),
-        (InvalidIncludeLocksError, BAD_REQUEST),
-        (InvalidCalculateAccruedInterestError, BAD_REQUEST),
-        (InvalidCustomerPaymentInformationError, BAD_REQUEST),
+        (DocNumberFormatError, BAD_REQUEST),
+        (OnlyOpenItemsFormatError, BAD_REQUEST),
+        (IncludeLocksFormatError, BAD_REQUEST),
+        (CalculateAccruedInterestFormatError, BAD_REQUEST),
+        (CustomerPaymentInformationFormatError, BAD_REQUEST),
         (FromDateFormatError, BAD_REQUEST),
         (ToDateFormatError, BAD_REQUEST),
         (InvalidDateRangeError, BAD_REQUEST),
         (RuleInconsistentQueryParamsError, BAD_REQUEST),
-        (InvalidRemovePaymentOnAccountError, BAD_REQUEST),
+        (RemovePaymentOnAccountFormatError, BAD_REQUEST),
         (IncludeEstimatedChargesFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (InternalError, INTERNAL_SERVER_ERROR)

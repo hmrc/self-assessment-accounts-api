@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{InvalidDocNumberError, MtdError}
+import api.models.errors.{DocNumberFormatError, MtdError}
 
 object DocNumberValidation {
 
@@ -27,7 +27,7 @@ object DocNumberValidation {
   }
 
   def validate(docNumber: String): List[MtdError] = {
-    if (docNumber.length > MAX_LENGTH) List(InvalidDocNumberError) else Nil
+    if (docNumber.length > MAX_LENGTH) List(DocNumberFormatError) else Nil
   }
 
 }

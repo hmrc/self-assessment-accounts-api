@@ -187,19 +187,19 @@ object RangeToDateBeforeFromDateError
     )
 // Invalid Errors
 
-object InvalidDocNumberError extends MtdError(code = "INVALID_DOC_NUMBER", message = "The provided docNumber is invalid.")
+object DocNumberFormatError extends MtdError(code = "FORMAT_DOC_NUMBER", message = "The provided docNumber is invalid.")
 
-object InvalidOnlyOpenItemsError extends MtdError(code = "INVALID_ONLY_OPEN_ITEMS", message = "The provided onlyOpenItems is invalid.")
+object OnlyOpenItemsFormatError extends MtdError(code = "FORMAT_ONLY_OPEN_ITEMS", message = "The provided onlyOpenItems is invalid.")
 
-object InvalidIncludeLocksError extends MtdError(code = "INVALID_INCLUDE_LOCKS", message = "The provided includeLocks is invalid.")
+object IncludeLocksFormatError extends MtdError(code = "FORMAT_INCLUDE_LOCKS", message = "The provided includeLocks is invalid.")
 
-object InvalidCalculateAccruedInterestError
-    extends MtdError(code = "INVALID_CALCULATE_ACCRUED_INTEREST", message = "The provided calculateAccruedInterest is invalid.")
+object CalculateAccruedInterestFormatError
+    extends MtdError(code = "FORMAT_CALCULATE_ACCRUED_INTEREST", message = "The provided calculateAccruedInterest is invalid.")
 
-object InvalidCustomerPaymentInformationError
-    extends MtdError(code = "INVALID_CUSTOMER_PAYMENT_INFORMATION", message = "The provided customerPaymentInformation is invalid.")
+object CustomerPaymentInformationFormatError
+    extends MtdError(code = "FORMAT_CUSTOMER_PAYMENT_INFORMATION", message = "The provided customerPaymentInformation is invalid.")
 
-object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", message = "The provided removePOA is invalid.")
+object RemovePaymentOnAccountFormatError extends MtdError(code = "FORMAT_REMOVE_PAYMENT_ON_ACCOUNT", message = "The provided removePOA is invalid.")
 
 object IncludeEstimatedChargesFormatError
     extends MtdError(code = "FORMAT_INCLUDE_ESTIMATED_CHARGES", message = "The provided includeEstimatedCharges is invalid.")
