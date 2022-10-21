@@ -118,7 +118,7 @@
                 "contractAccount": {
                   "type": "string",
                   "description": "The accounting record for a particular charge type.",
-                  "example": " PAYE contract account "
+                  "example": "000404772537"
                 }
 
               },
