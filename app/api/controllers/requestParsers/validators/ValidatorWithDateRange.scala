@@ -17,7 +17,7 @@
 package api.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.validations.{DateFormatValidation, DateRangeValidationV1, MissingParameterValidation, NinoValidation}
-import api.models.errors.{FromDateFormatError, MissingFromDateError, MissingToDateError, MtdError, ToDateFormatError}
+import api.models.errors.{V1_FromDateFormatError, V1_MissingFromDateError, V1_MissingToDateError, MtdError, V1_ToDateFormatError}
 import api.models.request.RawDataWithDateRange
 
 trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
@@ -26,15 +26,15 @@ trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
   private def parameterFormatValidation: T => List[List[MtdError]] = (data: T) => {
     List(
       NinoValidation.validate(data.nino),
-      data.from.map(DateFormatValidation.validate(_, FromDateFormatError)).getOrElse(Nil),
-      data.to.map(DateFormatValidation.validate(_, ToDateFormatError)).getOrElse(Nil)
+      data.from.map(DateFormatValidation.validate(_, V1_FromDateFormatError)).getOrElse(Nil),
+      data.to.map(DateFormatValidation.validate(_, V1_ToDateFormatError)).getOrElse(Nil)
     )
   }
 
   private def parameterRuleValidation: T => List[List[MtdError]] = { data =>
     List(
-      MissingParameterValidation.validate(data.from, MissingFromDateError),
-      MissingParameterValidation.validate(data.to, MissingToDateError),
+      MissingParameterValidation.validate(data.from, V1_MissingFromDateError),
+      MissingParameterValidation.validate(data.to, V1_MissingToDateError),
       (for {
         from <- data.from
         to   <- data.to

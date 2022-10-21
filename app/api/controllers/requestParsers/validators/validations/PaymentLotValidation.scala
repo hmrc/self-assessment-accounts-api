@@ -16,16 +16,23 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{MtdError, PaymentLotFormatError}
+import api.models.errors.{MissingPaymentLotError, MtdError, PaymentLotFormatError}
 
 object PaymentLotValidation {
 
   private val paymentLotRegex = "^[0-9A-Za-z]{1,12}"
 
-  def validate(paymentLot: Option[String]): List[MtdError] = paymentLot.map(validate).getOrElse(NoValidationErrors)
+  def validateFormat(paymentLot: Option[String]): List[MtdError] = paymentLot.map(validateFormat).getOrElse(NoValidationErrors)
 
-  def validate(paymentLot: String): List[MtdError] = {
+  def validateFormat(paymentLot: String): List[MtdError] = {
     if (paymentLot.matches(paymentLotRegex)) NoValidationErrors else List(PaymentLotFormatError)
+  }
+
+  def validateMissing(paymentLot: Option[String], paymentLotItem: Option[String]): List[MtdError] = {
+    (paymentLot, paymentLotItem) match {
+      case (None, Some(_)) => List(MissingPaymentLotError)
+      case _ => Nil
+    }
   }
 
 }

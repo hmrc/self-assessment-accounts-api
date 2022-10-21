@@ -18,7 +18,7 @@ package api.controllers.requestParsers.validators.validations
 
 import java.time.{Duration, LocalDate}
 
-import api.models.errors.{MtdError, RangeToDateBeforeFromDateError, RuleDateRangeInvalidError, RuleFromDateNotSupportedError}
+import api.models.errors.{MtdError, V1_RangeToDateBeforeFromDateError, RuleDateRangeInvalidError, RuleFromDateNotSupportedError}
 
 object DateRangeValidationV1 {
 
@@ -34,7 +34,7 @@ object DateRangeValidationV1 {
   }
 
   private def checkIfToIsBeforeFrom(from: LocalDate, to: LocalDate): List[MtdError] =
-    if (to isBefore from) List(RangeToDateBeforeFromDateError) else Nil
+    if (to isBefore from) List(V1_RangeToDateBeforeFromDateError) else Nil
 
   private def checkIfFromIsTooEarly(from: LocalDate): List[MtdError] = if (from isBefore earliestDate) List(RuleFromDateNotSupportedError) else Nil
 

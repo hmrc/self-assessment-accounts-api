@@ -16,24 +16,25 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{InvalidDateRangeError, MtdError}
+import api.models.errors.{MtdError, V2_MissingFromDateError, V2_MissingToDateError, V2_RangeToDateBeforeFromDateError}
 
 import java.time.LocalDate
 
 object DateRangeValidationV2 {
 
-  def validate(from: Option[String], to: Option[String]): List[MtdError] = {
-    (from, to) match {
-      case (Some(f), Some(t)) => checkIfToIsBeforeFrom(f, t)
+  def validate(fromDate: Option[String], toDate: Option[String]): List[MtdError] = {
+    (fromDate, toDate) match {
+      case (Some(f), Some(t)) => checkIfToDateIsBeforeFromDate(f, t)
+      case (Some(_), None)    => List(V2_MissingToDateError)
+      case (None, Some(_))    => List(V2_MissingFromDateError)
       case (None, None)       => Nil
-      case _                  => List(InvalidDateRangeError)
     }
   }
 
-  private def checkIfToIsBeforeFrom(from: String, to: String): List[MtdError] = {
-    val fmtFrom = LocalDate.parse(from, dateFormat)
-    val fmtTo   = LocalDate.parse(to, dateFormat)
-    if (fmtTo isBefore fmtFrom) List(InvalidDateRangeError) else Nil
+  private def checkIfToDateIsBeforeFromDate(fromDate: String, toDate: String): List[MtdError] = {
+    val fmtFrom = LocalDate.parse(fromDate, dateFormat)
+    val fmtTo   = LocalDate.parse(toDate, dateFormat)
+    if (fmtTo isBefore fmtFrom) List(V2_RangeToDateBeforeFromDateError) else Nil
   }
 
 }

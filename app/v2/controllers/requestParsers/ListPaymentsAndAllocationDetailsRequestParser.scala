@@ -29,8 +29,8 @@ class ListPaymentsAndAllocationDetailsRequestParser @Inject() (val validator: Li
   override protected def requestFor(data: ListPaymentsAndAllocationDetailsRawData): ListPaymentsAndAllocationDetailsRequest =
     ListPaymentsAndAllocationDetailsRequest(
       nino = Nino(data.nino),
-      dateFrom = data.dateFrom,
-      dateTo = data.dateTo,
+      fromDate = data.fromDate,
+      toDate = data.toDate,
       paymentLot = data.paymentLot,
       paymentLotItem = data.paymentLotItem
     )

@@ -16,19 +16,7 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.models.errors.{
-  InvalidCalculateAccruedInterestError,
-  InvalidCustomerPaymentInformationError,
-  InvalidDateFromError,
-  InvalidDateRangeError,
-  InvalidDateToError,
-  InvalidDocNumberError,
-  InvalidIncludeLocksError,
-  InvalidIncludeChargeEstimateError,
-  InvalidOnlyOpenItemsError,
-  InvalidRemovePaymentOnAccountError,
-  NinoFormatError
-}
+import api.models.errors._
 import mocks.MockAppConfig
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
@@ -103,7 +91,19 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
 
       "date from is later than date to" in {
         val input          = inputDataDateRange.copy(dateFrom = Some("2022-12-01"), dateTo = Some("2022-11-01"))
-        val expectedErrors = List(InvalidDateRangeError)
+        val expectedErrors = List(V2_RangeToDateBeforeFromDateError)
+        validator.validate(input) shouldBe expectedErrors
+      }
+
+      "date from is supplied but date to is not" in {
+        val input          = inputDataDateRange.copy(dateFrom = Some("2022-12-01"), dateTo = None)
+        val expectedErrors = List(V2_MissingToDateError)
+        validator.validate(input) shouldBe expectedErrors
+      }
+
+      "date to is supplied but date from is not" in {
+        val input          = inputDataDateRange.copy(dateFrom = None, dateTo = Some("2022-11-01"))
+        val expectedErrors = List(V2_MissingFromDateError)
         validator.validate(input) shouldBe expectedErrors
       }
     }

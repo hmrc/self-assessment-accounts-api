@@ -17,8 +17,8 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.{NinoValidation, PaymentLotItemValidation, PaymentLotValidation, StartEndDateValidation}
-import api.models.errors.MtdError
+import api.controllers.requestParsers.validators.validations._
+import api.models.errors.{MtdError, V2_FromDateFormatError, V2_ToDateFormatError}
 import config.AppConfig
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRawData
 
@@ -26,15 +26,24 @@ import javax.inject.Inject
 
 class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig) extends Validator[ListPaymentsAndAllocationDetailsRawData] {
 
-  private val validationSet = List(parameterValidation)
+  private val validationSet = List(parameterValidation, parameterRuleValidation)
 
   private def parameterValidation: ListPaymentsAndAllocationDetailsRawData => List[List[MtdError]] =
     (data: ListPaymentsAndAllocationDetailsRawData) => {
       List(
         NinoValidation.validate(data.nino),
-        StartEndDateValidation.validate(data.dateFrom, data.dateTo),
-        PaymentLotValidation.validate(data.paymentLot),
+        DateFormatValidation.validate(data.fromDate, V2_FromDateFormatError),
+        DateFormatValidation.validate(data.toDate, V2_ToDateFormatError),
+        PaymentLotValidation.validateFormat(data.paymentLot),
         PaymentLotItemValidation.validate(data.paymentLotItem)
+      )
+    }
+
+  private def parameterRuleValidation: ListPaymentsAndAllocationDetailsRawData => List[List[MtdError]] =
+    (data: ListPaymentsAndAllocationDetailsRawData) => {
+      List(
+        DateRangeValidationV2.validate(data.fromDate, data.toDate),
+        PaymentLotValidation.validateMissing(data.paymentLot, data.paymentLotItem)
       )
     }
 

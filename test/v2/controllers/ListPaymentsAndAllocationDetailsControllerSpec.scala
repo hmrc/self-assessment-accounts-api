@@ -25,9 +25,9 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
+import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures._
 import v2.mocks.requestParsers.MockListPaymentsAndAllocationDetailsRequestParser
 import v2.mocks.services.MockListPaymentsAndAllocationDetailsService
-import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures._
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -107,14 +107,14 @@ class ListPaymentsAndAllocationDetailsControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (DateFromFormatError, BAD_REQUEST),
-          (DateToFormatError, BAD_REQUEST),
-          (RuleDateToBeforeDateFromError, BAD_REQUEST),
-          (RuleDateRangeInvalidError, BAD_REQUEST),
-          (MissingFromDateError, BAD_REQUEST),
-          (MissingToDateError, BAD_REQUEST),
+          (V2_FromDateFormatError, BAD_REQUEST),
+          (V2_ToDateFormatError, BAD_REQUEST),
+          (V2_RangeToDateBeforeFromDateError, BAD_REQUEST),
+          (V2_MissingFromDateError, BAD_REQUEST),
+          (V2_MissingToDateError, BAD_REQUEST),
           (PaymentLotFormatError, BAD_REQUEST),
-          (PaymentLotItemFormatError, BAD_REQUEST)
+          (PaymentLotItemFormatError, BAD_REQUEST),
+          (MissingPaymentLotError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -145,9 +145,9 @@ class ListPaymentsAndAllocationDetailsControllerSpec
           (NinoFormatError, BAD_REQUEST),
           (PaymentLotFormatError, BAD_REQUEST),
           (PaymentLotItemFormatError, BAD_REQUEST),
-          (DateFromFormatError, BAD_REQUEST),
-          (DateToFormatError, BAD_REQUEST),
-          (RuleDateRangeInvalidError, BAD_REQUEST),
+          (V2_FromDateFormatError, BAD_REQUEST),
+          (V2_ToDateFormatError, BAD_REQUEST),
+          (RuleInvalidDateRangeError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )

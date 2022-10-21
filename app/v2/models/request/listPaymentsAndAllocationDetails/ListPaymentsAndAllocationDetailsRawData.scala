@@ -20,8 +20,8 @@ import api.models.request.RawData
 
 case class ListPaymentsAndAllocationDetailsRawData(
     nino: String,
-    dateFrom: Option[String],
-    dateTo: Option[String],
+    fromDate: Option[String],
+    toDate: Option[String],
     paymentLot: Option[String],
     paymentLotItem: Option[String]
 ) extends RawData

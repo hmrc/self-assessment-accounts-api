@@ -17,25 +17,15 @@
 package v2.controllers.requestParsers.validators
 
 import api.models.domain.Nino
-import api.models.errors.{
-  DateFromFormatError,
-  DateToFormatError,
-  MissingFromDateError,
-  MissingToDateError,
-  NinoFormatError,
-  PaymentLotFormatError,
-  PaymentLotItemFormatError,
-  RuleDateRangeInvalidError,
-  RuleDateToBeforeDateFromError
-}
+import api.models.errors._
 import mocks.MockAppConfig
 import support.UnitSpec
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
 
 class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAppConfig {
   val nino: String                   = "AA999999A"
-  val dateFrom: Option[String]       = Some("2021-01-01")
-  val dateTo: Option[String]         = Some("2022-01-01")
+  val fromDate: Option[String]       = Some("2021-01-01")
+  val toDate: Option[String]         = Some("2022-01-01")
   val paymentLot: Option[String]     = Some("081203010024")
   val paymentLotItem: Option[String] = Some("000001")
 
@@ -46,10 +36,10 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
     ListPaymentsAndAllocationDetailsRequest(Nino(nino), None, None, None, None)
 
   val validRequestRawDataWithOptionals: ListPaymentsAndAllocationDetailsRawData =
-    ListPaymentsAndAllocationDetailsRawData(nino, dateFrom, dateTo, paymentLot, paymentLotItem)
+    ListPaymentsAndAllocationDetailsRawData(nino, fromDate, toDate, paymentLot, paymentLotItem)
 
   val validRequestWithOptionals: ListPaymentsAndAllocationDetailsRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), dateFrom, dateTo, paymentLot, paymentLotItem)
+    ListPaymentsAndAllocationDetailsRequest(Nino(nino), fromDate, toDate, paymentLot, paymentLotItem)
 
   private val validator = new ListPaymentsAndAllocationDetailsValidator(mockAppConfig)
 
@@ -69,28 +59,24 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
         validator.validate(validRequestRawDataWithoutOptionals.copy(nino = "nino")) shouldBe List(NinoFormatError)
       }
 
-      "an invalid dateFrom is supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(dateFrom = Some("abc"))) shouldBe List(DateFromFormatError)
+      "an invalid fromDate is supplied" in {
+        validator.validate(validRequestRawDataWithOptionals.copy(fromDate = Some("abc"))) shouldBe List(V2_FromDateFormatError)
       }
 
-      "an invalid dateTo is supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(dateTo = Some("abc"))) shouldBe List(DateToFormatError)
+      "an invalid toDate is supplied" in {
+        validator.validate(validRequestRawDataWithOptionals.copy(toDate = Some("abc"))) shouldBe List(V2_ToDateFormatError)
       }
 
-      "an invalid date range is supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(dateTo = Some("2023-01-01"))) shouldBe List(RuleDateRangeInvalidError)
-      }
-
-      "the dateFrom supplied is after the dateTo supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(dateTo = dateFrom, dateFrom = dateTo)) shouldBe List(RuleDateToBeforeDateFromError)
+      "the fromDate supplied is after the toDate supplied" in {
+        validator.validate(validRequestRawDataWithOptionals.copy(toDate = fromDate, fromDate = toDate)) shouldBe List(V2_RangeToDateBeforeFromDateError)
       }
 
       "a from date is supplied and a to date is not supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(dateTo = None)) shouldBe List(MissingToDateError)
+        validator.validate(validRequestRawDataWithOptionals.copy(toDate = None)) shouldBe List(V2_MissingToDateError)
       }
 
       "a to date is supplied and a from date is not supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(dateFrom = None)) shouldBe List(MissingFromDateError)
+        validator.validate(validRequestRawDataWithOptionals.copy(fromDate = None)) shouldBe List(V2_MissingFromDateError)
       }
 
       "an invalid paymentLot to is supplied" in {
@@ -101,14 +87,18 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
         validator.validate(validRequestRawDataWithOptionals.copy(paymentLotItem = Some("abc123!@£"))) shouldBe List(PaymentLotItemFormatError)
       }
 
+      "a paymentLotItem is supplied but a paymentLot is not supplied" in {
+        validator.validate(validRequestRawDataWithOptionals.copy(paymentLot = None)) shouldBe List(MissingPaymentLotError)
+      }
+
       "multiple invalid values are supplied" in {
         val input = validRequestRawDataWithOptionals.copy(
           nino = "invalid",
-          dateFrom = Some("invalid"),
-          dateTo = Some("invalid"),
+          fromDate = Some("invalid"),
+          toDate = Some("invalid"),
           paymentLot = Some("invalid!"),
           paymentLotItem = Some("invalid!"))
-        val expectedErrors = List(NinoFormatError, DateFromFormatError, DateToFormatError, PaymentLotFormatError, PaymentLotItemFormatError)
+        val expectedErrors = List(NinoFormatError, V2_FromDateFormatError, V2_ToDateFormatError, PaymentLotFormatError, PaymentLotItemFormatError)
 
         validator.validate(input) shouldBe expectedErrors
       }

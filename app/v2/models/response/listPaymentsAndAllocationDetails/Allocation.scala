@@ -29,7 +29,6 @@ case class Allocation(
     chargeDetail: Option[ChargeDetail],
     amount: Option[BigDecimal],
     clearedAmount: Option[BigDecimal],
-    contractAccountCategory: Option[String],
     contractAccount: Option[String]
 )
 
@@ -47,7 +46,6 @@ object Allocation {
       JsPath.readNullable[ChargeDetail] and
       (JsPath \ "amount").readNullable[BigDecimal] and
       (JsPath \ "clearedAmount").readNullable[BigDecimal] and
-      (JsPath \ "contractAccountCategory").readNullable[String] and
       (JsPath \ "contractAccount").readNullable[String]
   )(Allocation.apply _)
 

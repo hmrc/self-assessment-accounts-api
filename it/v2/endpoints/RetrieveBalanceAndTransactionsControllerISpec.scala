@@ -299,20 +299,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           None,
           Some("invalid"),
           BAD_REQUEST,
-          InvalidIncludeChargeEstimateError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some(validDateTo),
-          Some(validDateFrom),
-          None,
-          None,
-          None,
-          None,
-          None,
-          None,
-          BAD_REQUEST,
-          InvalidDateRangeError)
+          InvalidIncludeChargeEstimateError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
