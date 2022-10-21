@@ -24,8 +24,6 @@ case class CodingDetails(returnTaxYear: Option[String], totalLiabilityAmount: Op
 
 object CodingDetails {
 
-  implicit val format: OFormat[CodingDetails] = Json.format[CodingDetails]
-
   implicit val reads: Reads[CodingDetails] =
     (
     (JsPath \ "taxYearReturn").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
