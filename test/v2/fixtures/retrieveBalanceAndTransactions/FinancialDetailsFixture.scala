@@ -26,15 +26,15 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
   val chargeDetailObject: ChargeDetail = ChargeDetail(
     documentId = "123456",
-    mainTransaction = Option("1234"),
-    mainTransactionDescription = Some("Income Tax Estimate"),
-    subTransaction = Some("5678"),
-    subTransactionDescription = Some("PAYE")
+    documentType = Option("1234"),
+    documentTypeDescription = Some("Income Tax Estimate"),
+    chargeType = Some("5678"),
+    chargeTypeDescription = Some("PAYE")
   )
 
   val financialDetailsFullObject: FinancialDetails = FinancialDetails(
     taxYear = taxYear.asMtd,
-    chargeDetail = Some(chargeDetailObject),
+    chargeDetail = chargeDetailObject,
     taxPeriodFrom = Some("2022-01-01"),
     taxPeriodTo = Some("2022-02-01"),
     contractAccount = Some("X"),
@@ -53,21 +53,22 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
        |{
        |      "taxYear": "${taxYear.asDownstream}",
        |      "documentId": "${chargeDetailObject.documentId}",
-       |      "chargeType": "${chargeDetailObject.subTransactionDescription.get}",
-       |      "mainType": "${chargeDetailObject.mainTransactionDescription.get}",
+       |      "chargeType": "${chargeDetailObject.chargeTypeDescription.get}",
+       |      "mainType": "${chargeDetailObject.documentTypeDescription.get}",
        |      "periodKey": "13RL",
        |      "periodKeyDescription": "abcde",
        |      "taxPeriodFrom": "${financialDetailsFullObject.taxPeriodFrom.get}",
        |      "taxPeriodTo": "${financialDetailsFullObject.taxPeriodTo.get}",
-       |      "businessPartner": "6622334455",       
+       |      "businessPartner": "6622334455",
+       |      "contractAccountCategory": "02",
        |      "contractAccount": "${financialDetailsFullObject.contractAccount.get}",
        |      "contractObjectType": "ABCD",
        |      "contractObject": "00000003000000002757",
        |      "sapDocumentNumber": "${financialDetailsFullObject.documentNumber.get}",
        |      "sapDocumentNumberItem": "${financialDetailsFullObject.documentNumberItem.get}",
        |      "chargeReference": "${financialDetailsFullObject.chargeReference.get}",
-       |      "mainTransaction": "${chargeDetailObject.mainTransaction.get}",
-       |      "subTransaction": "${chargeDetailObject.subTransaction.get}",
+       |      "mainTransaction": "${chargeDetailObject.documentType.get}",
+       |      "subTransaction": "${chargeDetailObject.chargeType.get}",
        |      "originalAmount": ${financialDetailsFullObject.originalAmount.get},
        |      "outstandingAmount": ${financialDetailsFullObject.outstandingAmount.get},
        |      "clearedAmount": ${financialDetailsFullObject.clearedAmount.get},
@@ -80,10 +81,10 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
   val mtdChargeDetailJson: JsValue = Json.parse(s"""
       |{
       |"documentId": "${chargeDetailObject.documentId}",
-      |"mainTransaction": "${chargeDetailObject.mainTransaction.get}",
-      |"mainTransactionDescription": "${chargeDetailObject.mainTransactionDescription.get}",
-      |"subTransaction": "${chargeDetailObject.subTransaction.get}",
-      |"subTransactionDescription" : "${chargeDetailObject.subTransactionDescription.get}"
+      |"documentType": "${chargeDetailObject.documentType.get}",
+      |"documentTypeDescription": "${chargeDetailObject.documentTypeDescription.get}",
+      |"chargeType": "${chargeDetailObject.chargeType.get}",
+      |"chargeTypeDescription" : "${chargeDetailObject.chargeTypeDescription.get}"
       |}
       |""".stripMargin)
 

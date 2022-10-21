@@ -19,7 +19,7 @@ package v2.models.response.retrieveBalanceAndTransactions
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{Json, Reads, Writes, __}
 
-case class FinancialDetailsItem(subItem: Option[String],
+case class FinancialDetailsItem(itemId: Option[String],
                                 dueDate: Option[String],
                                 amount: Option[BigDecimal],
                                 clearingDate: Option[String],

@@ -22,7 +22,7 @@ import v2.models.response.retrieveBalanceAndTransactions.FinancialDetailsItem
 trait FinancialDetailsItemFixture {
 
   val financialDetailsItemModel: FinancialDetailsItem = FinancialDetailsItem(
-    subItem = Some("subItem"),
+    itemId = Some("subItem"),
     dueDate = Some("2022-02-02"),
     amount = Some(1.23),
     clearingDate = Some("2021-01-01"),
@@ -44,7 +44,7 @@ trait FinancialDetailsItemFixture {
 
   val financialDetailsItemModelEmpty: FinancialDetailsItem =
     FinancialDetailsItem(
-      subItem = None,
+      itemId = None,
       dueDate = None,
       amount = None,
       clearingDate = None,
@@ -67,7 +67,7 @@ trait FinancialDetailsItemFixture {
   val financialDetailsItemMtdJson: JsValue =
     Json.parse("""
       |{
-      |  "subItem": "subItem",
+      |  "itemId": "subItem",
       |  "dueDate": "2022-02-02",
       |  "amount": 1.23,
       |  "clearingDate": "2021-01-01",

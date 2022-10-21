@@ -16,11 +16,15 @@
 
 package v2.fixtures.retrieveBalanceAndTransactions
 
+import api.models.domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
 import v2.models.response.retrieveBalanceAndTransactions.{BalanceDetails, BalancePerYear}
 
 object BalanceDetailsFixture {
-  val balancePerYearObject: BalancePerYear = BalancePerYear(Some(123.45), Some("2022"))
+
+  private val taxYear: TaxYear = TaxYear("2022")
+
+  val balancePerYearObject: BalancePerYear = BalancePerYear(Some(123.45), Some(taxYear.asMtd))
 
   val balanceDetails: BalanceDetails = BalanceDetails(
     payableAmount = 124.20,
@@ -64,7 +68,7 @@ object BalanceDetailsFixture {
     s"""
        |{
        |   "amount": ${balancePerYearObject.bcdAmount.get},
-       |   "taxYear": "${balancePerYearObject.taxYear.get}"
+       |   "taxYear": "${taxYear.asDownstream}"
        |}
        |""".stripMargin
   )
