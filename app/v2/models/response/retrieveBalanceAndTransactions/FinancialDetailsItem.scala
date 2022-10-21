@@ -36,7 +36,7 @@ case class FinancialDetailsItem(itemId: Option[String],
                                 paymentLot: Option[String],
                                 paymentLotItem: Option[String],
                                 clearingSAPDocument: Option[String],
-                                isChargeEstimate: Boolean)
+                                isChargeEstimate: Option[Boolean])
 
 object FinancialDetailsItem {
   implicit val writes: Writes[FinancialDetailsItem] = Json.writes
@@ -74,11 +74,11 @@ object FinancialDetailsItem {
       (__ \ "paymentLot").readNullable[String] and
       (__ \ "paymentLotItem").readNullable[String] and
       (__ \ "clearingSAPDocument").readNullable[String] and
-      (__ \ "statisticalDocument").readNullable[String].flatMap[Boolean] {
-        case Some(x) if x == "G" => Reads.pure(true)
-        case Some(x) if x == ""  => Reads.pure(false)
-        case Some(x)             => Reads.failed(s"expected '' or 'G' but was `$x`")
-        case None                => Reads.pure(false)
+      (__ \ "statisticalDocument").readNullable[String].flatMap[Option[Boolean]] {
+        case Some(x) if x == "Y" => Reads.pure(Some(true))
+        case Some(x) if x == "N"  => Reads.pure(Some(false))
+        case Some(x)             => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
+        case None                => Reads.pure(None)
       })(FinancialDetailsItem.apply _)
   }
 

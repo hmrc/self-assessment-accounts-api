@@ -22,7 +22,7 @@ import v2.models.response.retrieveBalanceAndTransactions.FinancialDetailsItem
 trait FinancialDetailsItemFixture {
 
   val financialDetailsItemModel: FinancialDetailsItem = FinancialDetailsItem(
-    itemId = Some("subItem"),
+    itemId = Some("001"),
     dueDate = Some("2022-02-02"),
     amount = Some(1.23),
     clearingDate = Some("2021-01-01"),
@@ -39,7 +39,7 @@ trait FinancialDetailsItemFixture {
     paymentLot = Some("paymentLot"),
     paymentLotItem = Some("paymentLotItem"),
     clearingSAPDocument = Some("clearingSAPDocument"),
-    isChargeEstimate = true
+    isChargeEstimate = Some(true)
   )
 
   val financialDetailsItemModelEmpty: FinancialDetailsItem =
@@ -61,13 +61,13 @@ trait FinancialDetailsItemFixture {
       paymentLot = None,
       paymentLotItem = None,
       clearingSAPDocument = None,
-      isChargeEstimate = false
+      isChargeEstimate = None
     )
 
   val financialDetailsItemMtdJson: JsValue =
     Json.parse("""
       |{
-      |  "itemId": "subItem",
+      |  "itemId": "001",
       |  "dueDate": "2022-02-02",
       |  "amount": 1.23,
       |  "clearingDate": "2021-01-01",
@@ -91,7 +91,7 @@ trait FinancialDetailsItemFixture {
   val financialDetailsItemDownstreamJson: JsValue =
     Json.parse("""
         |{
-        |  "subItem": "subItem",
+        |  "subItem": "001",
         |  "dueDate": "2022-02-02",
         |  "amount": 1.23,
         |  "clearingDate": "2021-01-01",
@@ -110,7 +110,7 @@ trait FinancialDetailsItemFixture {
         |  "paymentLotItem": "paymentLotItem",
         |  "clearingSAPDocument": "clearingSAPDocument",
         |  "codingInitiationDate": "2021-01-11",
-        |  "statisticalDocument": "G",
+        |  "statisticalDocument": "Y",
         |  "returnReason": "returnReason"
         |}
         |""".stripMargin)
