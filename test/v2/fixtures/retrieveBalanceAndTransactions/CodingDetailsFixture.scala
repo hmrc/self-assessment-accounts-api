@@ -16,25 +16,28 @@
 
 package v2.fixtures.retrieveBalanceAndTransactions
 
+import api.models.domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
 import v2.models.response.retrieveBalanceAndTransactions.{Coded, CodingDetails}
 
 object CodingDetailsFixture {
 
+  private val taxYear: TaxYear = TaxYear("2022")
+
   val coded: Coded = Coded(charge = Some(123.45), initiationDate = Some("2022-10-13"))
 
   val codingDetails: CodingDetails =
-    CodingDetails(taxYearReturn = Some("2022"), totalLiabilityAmount = Some(123.45), taxYearCoding = Some("2022"), coded = Some(coded))
+    CodingDetails(returnTaxYear = Some(taxYear.asMtd), totalLiabilityAmount = Some(123.45), codingTaxYear = Some(taxYear.asMtd), coded = Some(coded))
 
   val codingDetailsDownstreamResponseJson: JsValue = Json.parse(
     s"""
        |{
-       |   "taxYearReturn": "${codingDetails.taxYearReturn.get}",
-       |   "totalLiabilityAmount": ${codingDetails.totalLiabilityAmount.get},
-       |   "taxYearCoding": "${codingDetails.taxYearCoding.get}",
+       |   "taxYearReturn": "2022",
+       |   "totalLiabilityAmount": 123.45,
+       |   "taxYearCoding": "2022",
        |   "coded": {
        |      "amount": 123.45,
-       |      "initiationDate": "${coded.initiationDate.get}"
+       |      "initiationDate": "2022-10-13"
        |   }
        |}
        |""".stripMargin
@@ -43,12 +46,12 @@ object CodingDetailsFixture {
   val codingDetailsMtdResponseJson: JsValue = Json.parse(
     s"""
        |{
-       |   "taxYearReturn": "${codingDetails.taxYearReturn.get}",
-       |   "totalLiabilityAmount": ${codingDetails.totalLiabilityAmount.get},
-       |   "taxYearCoding": "${codingDetails.taxYearCoding.get}",
+       |   "returnTaxYear": "2021-22",
+       |   "totalLiabilityAmount": 123.45,
+       |   "codingTaxYear": "2021-22",
        |   "coded": {
-       |      "charge": ${coded.charge.get},
-       |      "initiationDate": "${coded.initiationDate.get}"
+       |      "charge": 123.45,
+       |      "initiationDate": "2022-10-13"
        |   }
        |}
        |""".stripMargin

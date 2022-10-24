@@ -151,22 +151,22 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
 
       "converting statisticalDocument to isChargeEstimate" must {
         def json(value: String): JsValue                = Json.parse(s"""{ "statisticalDocument": "$value" }""")
-        def model(value: Boolean): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isChargeEstimate = value)
+        def model(value: Option[Boolean]): FinancialDetailsItem = financialDetailsItemModelEmpty.copy(isChargeEstimate = value)
 
-        "convert G string to true" in {
-          json("G").as[FinancialDetailsItem] shouldBe model(true)
+        "convert Y string to true" in {
+          json("Y").as[FinancialDetailsItem] shouldBe model(Some(true))
         }
 
-        "convert empty string to false" in {
-          json("").as[FinancialDetailsItem] shouldBe model(false)
+        "convert N string to false" in {
+          json("N").as[FinancialDetailsItem] shouldBe model(Some(false))
         }
 
-        "convert absent field to false" in {
-          JsObject.empty.as[FinancialDetailsItem] shouldBe model(false)
-        }
-
-        "convert anything else to an error" in {
+        "convert any other string to an error" in {
           json("X").validate[FinancialDetailsItem] shouldBe a[JsError]
+        }
+
+        "convert absent field to absent field" in {
+          JsObject.empty.as[FinancialDetailsItem] shouldBe model(None)
         }
       }
     }

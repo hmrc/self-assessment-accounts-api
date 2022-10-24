@@ -21,7 +21,7 @@ import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
 case class FinancialDetails(taxYear: String,
-                            chargeDetail: Option[ChargeDetail],
+                            chargeDetail: ChargeDetail,
                             taxPeriodFrom: Option[String],
                             taxPeriodTo: Option[String],
                             contractAccount: Option[String],
@@ -39,7 +39,7 @@ object FinancialDetails {
 
   implicit val reads: Reads[FinancialDetails] = (
     (JsPath \ "taxYear").read[String].map(TaxYear.fromDownstream(_).asMtd) and
-      JsPath.readNullable[ChargeDetail] and
+      JsPath.read[ChargeDetail] and
       (JsPath \ "taxPeriodFrom").readNullable[String] and
       (JsPath \ "taxPeriodTo").readNullable[String] and
       (JsPath \ "contractAccount").readNullable[String] and

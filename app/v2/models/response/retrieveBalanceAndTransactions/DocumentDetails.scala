@@ -89,7 +89,7 @@ case class DocumentDetails(taxYear: Option[String],
                            outstandingAmount: BigDecimal,
                            lastClearing: Option[LastClearing],
                            isChargeEstimate: Boolean,
-                           chargeHasMultipleItems: Boolean,
+                           isCodedOut: Boolean,
                            paymentLot: Option[String],
                            paymentLotItem: Option[String],
                            effectiveDateOfPayment: Option[String],
@@ -107,8 +107,8 @@ object DocumentDetails {
   }
 
   private def informationCode(maybeValue: Option[String]): Boolean = maybeValue match {
-    case Some(i) if i == "i" => true
-    case _                   => false
+    case Some(x)  => true
+    case _        => false
   }
 
   private def replaceWithNoneIfEmpty[A](mayBeA: Option[A])(implicit emptinessChecker: EmptinessChecker[A]): Option[A] =

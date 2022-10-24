@@ -20,10 +20,10 @@ import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
 case class ChargeDetail(documentId: String,
-                        mainTransaction: Option[String],
-                        mainTransactionDescription: Option[String],
-                        subTransaction: Option[String],
-                        subTransactionDescription: Option[String])
+                        documentType: Option[String],
+                        documentTypeDescription: Option[String],
+                        chargeType: Option[String],
+                        chargeTypeDescription: Option[String])
 
 object ChargeDetail {
   implicit val writes: Writes[ChargeDetail] = Json.writes[ChargeDetail]
