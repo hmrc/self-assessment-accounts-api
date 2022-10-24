@@ -16,8 +16,8 @@
             <td><p>Simulates the scenario where no data can be found.</p></td>
         </tr>
         <tr>
-            <td><p>RULE_INVALID_DATE_RANGE</p></td>
-            <td><p>Simulates the scenario where the backend returns a INVALID_DATE_RANGE error.</p></td>
+            <td><p>INVALID_DATE_RANGE</p></td>
+            <td><p>Simulates the scenario where the provided date range is invalid.</p></td>
         </tr>
     </tbody>
 </table>
