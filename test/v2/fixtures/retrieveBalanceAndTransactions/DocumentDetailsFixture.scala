@@ -166,7 +166,7 @@ object DocumentDetailsFixture {
        |  "lastClearingReason": "Incoming Payment",
        |  "lastClearedAmount": 3.99,
        |  "statisticalFlag": true,
-       |  "informationCode": "i",
+       |  "informationCode": "K",
        |  "paymentLot": "AB1023456789",
        |  "paymentLotItem": "000001",
        |  "accruingInterestAmount": 4.99,

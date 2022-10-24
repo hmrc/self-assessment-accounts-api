@@ -51,28 +51,28 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
   val downstreamFinancialDetailsFullJson: JsValue = Json.parse(
     s"""
        |{
-       |      "taxYear": "${taxYear.asDownstream}",
-       |      "documentId": "${chargeDetailObject.documentId}",
-       |      "chargeType": "${chargeDetailObject.chargeTypeDescription.get}",
-       |      "mainType": "${chargeDetailObject.documentTypeDescription.get}",
+       |      "taxYear": "2022",
+       |      "documentId": "123456",
+       |      "chargeType": "PAYE",
+       |      "mainType": "Income Tax Estimate",
        |      "periodKey": "13RL",
        |      "periodKeyDescription": "abcde",
-       |      "taxPeriodFrom": "${financialDetailsFullObject.taxPeriodFrom.get}",
-       |      "taxPeriodTo": "${financialDetailsFullObject.taxPeriodTo.get}",
+       |      "taxPeriodFrom": "2022-01-01",
+       |      "taxPeriodTo": "2022-02-01",
        |      "businessPartner": "6622334455",
        |      "contractAccountCategory": "02",
-       |      "contractAccount": "${financialDetailsFullObject.contractAccount.get}",
+       |      "contractAccount": "X",
        |      "contractObjectType": "ABCD",
        |      "contractObject": "00000003000000002757",
-       |      "sapDocumentNumber": "${financialDetailsFullObject.documentNumber.get}",
-       |      "sapDocumentNumberItem": "${financialDetailsFullObject.documentNumberItem.get}",
-       |      "chargeReference": "${financialDetailsFullObject.chargeReference.get}",
-       |      "mainTransaction": "${chargeDetailObject.documentType.get}",
-       |      "subTransaction": "${chargeDetailObject.chargeType.get}",
-       |      "originalAmount": ${financialDetailsFullObject.originalAmount.get},
-       |      "outstandingAmount": ${financialDetailsFullObject.outstandingAmount.get},
-       |      "clearedAmount": ${financialDetailsFullObject.clearedAmount.get},
-       |      "accruedInterest": ${financialDetailsFullObject.accruedInterest.get},
+       |      "sapDocumentNumber": "1040000872",
+       |      "sapDocumentNumberItem": "XM01",
+       |      "chargeReference": "XM002610011594",
+       |      "mainTransaction": "1234",
+       |      "subTransaction": "5678",
+       |      "originalAmount": 3453.99,
+       |      "outstandingAmount": 452.11,
+       |      "clearedAmount": 3411.01,
+       |      "accruedInterest": 123.78,
        |      "items":  [$financialDetailsItemDownstreamJson]
        |}
        |""".stripMargin
@@ -80,29 +80,29 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
   val mtdChargeDetailJson: JsValue = Json.parse(s"""
       |{
-      |"documentId": "${chargeDetailObject.documentId}",
-      |"documentType": "${chargeDetailObject.documentType.get}",
-      |"documentTypeDescription": "${chargeDetailObject.documentTypeDescription.get}",
-      |"chargeType": "${chargeDetailObject.chargeType.get}",
-      |"chargeTypeDescription" : "${chargeDetailObject.chargeTypeDescription.get}"
+      |"documentId": "123456",
+      |"documentType": "1234",
+      |"documentTypeDescription": "Income Tax Estimate",
+      |"chargeType": "5678",
+      |"chargeTypeDescription" : "PAYE"
       |}
       |""".stripMargin)
 
   val mtdFinancialDetailsFullJson: JsValue = Json.parse(
     s"""
        |  {
-       |      "taxYear":"${taxYear.asMtd}",
+       |      "taxYear":"2021-22",
        |      "chargeDetail": ${mtdChargeDetailJson},
-       |      "taxPeriodFrom": "${financialDetailsFullObject.taxPeriodFrom.get}",
-       |      "taxPeriodTo": "${financialDetailsFullObject.taxPeriodTo.get}",
-       |      "contractAccount":"${financialDetailsFullObject.contractAccount.get}",
-       |      "documentNumber": "${financialDetailsFullObject.documentNumber.get}",
-       |      "documentNumberItem": "${financialDetailsFullObject.documentNumberItem.get}",
-       |      "chargeReference": "${financialDetailsFullObject.chargeReference.get}",
-       |      "originalAmount": ${financialDetailsFullObject.originalAmount.get},
-       |      "outstandingAmount": ${financialDetailsFullObject.outstandingAmount.get},
-       |      "clearedAmount": ${financialDetailsFullObject.clearedAmount.get},
-       |      "accruedInterest": ${financialDetailsFullObject.accruedInterest.get},
+       |      "taxPeriodFrom": "2022-01-01",
+       |      "taxPeriodTo": "2022-02-01",
+       |      "contractAccount": "X",
+       |      "documentNumber": "1040000872",
+       |      "documentNumberItem": "XM01",
+       |      "chargeReference": "XM002610011594",
+       |      "originalAmount": 3453.99,
+       |      "outstandingAmount": 452.11,
+       |      "clearedAmount": 3411.01,
+       |      "accruedInterest": 123.78,
        |      "items": [$financialDetailsItemMtdJson]
        | }
        |""".stripMargin

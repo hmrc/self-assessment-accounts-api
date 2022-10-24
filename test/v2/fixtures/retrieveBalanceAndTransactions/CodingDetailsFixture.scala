@@ -32,12 +32,12 @@ object CodingDetailsFixture {
   val codingDetailsDownstreamResponseJson: JsValue = Json.parse(
     s"""
        |{
-       |   "taxYearReturn": "${taxYear.asDownstream}",
-       |   "totalLiabilityAmount": ${codingDetails.totalLiabilityAmount.get},
-       |   "taxYearCoding": "${taxYear.asDownstream}",
+       |   "taxYearReturn": "2022",
+       |   "totalLiabilityAmount": 123.45,
+       |   "taxYearCoding": "2022",
        |   "coded": {
        |      "amount": 123.45,
-       |      "initiationDate": "${coded.initiationDate.get}"
+       |      "initiationDate": "2022-10-13"
        |   }
        |}
        |""".stripMargin
@@ -46,12 +46,12 @@ object CodingDetailsFixture {
   val codingDetailsMtdResponseJson: JsValue = Json.parse(
     s"""
        |{
-       |   "returnTaxYear": "${codingDetails.returnTaxYear.get}",
-       |   "totalLiabilityAmount": ${codingDetails.totalLiabilityAmount.get},
-       |   "codingTaxYear": "${codingDetails.codingTaxYear.get}",
+       |   "returnTaxYear": "2021-22",
+       |   "totalLiabilityAmount": 123.45,
+       |   "codingTaxYear": "2021-22",
        |   "coded": {
-       |      "charge": ${coded.charge.get},
-       |      "initiationDate": "${coded.initiationDate.get}"
+       |      "charge": 123.45,
+       |      "initiationDate": "2022-10-13"
        |   }
        |}
        |""".stripMargin

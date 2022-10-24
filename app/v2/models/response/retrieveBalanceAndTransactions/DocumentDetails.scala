@@ -107,7 +107,7 @@ object DocumentDetails {
   }
 
   private def informationCode(maybeValue: Option[String]): Boolean = maybeValue match {
-    case Some(i) if i == "i" => true
+    case Some(k) if k == "K" => true
     case _                   => false
   }
 
