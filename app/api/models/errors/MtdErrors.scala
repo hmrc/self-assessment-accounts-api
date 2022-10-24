@@ -55,7 +55,7 @@ object V1_FromDateFormatError
 object V2_FromDateFormatError
     extends MtdError(
       code = "FORMAT_FROM_DATE",
-      message = "The provided fromDate is invalid."
+      message = "The provided fromDate is invalid"
     )
 
 object ValueFormatError
@@ -73,7 +73,7 @@ object V1_ToDateFormatError
 object V2_ToDateFormatError
     extends MtdError(
       code = "FORMAT_TO_DATE",
-      message = "The provided toDate is invalid."
+      message = "The provided toDate is invalid"
     )
 
 object PaymentIdFormatError
@@ -103,19 +103,19 @@ object SourceFormatError
 object PaymentLotFormatError
     extends MtdError(
       code = "FORMAT_PAYMENT_LOT",
-      message = "The provided paymentLot value is invalid."
+      message = "The provided paymentLot value is invalid"
     )
 
 object PaymentLotItemFormatError
     extends MtdError(
       code = "FORMAT_PAYMENT_LOT_ITEM",
-      message = "The provided paymentLotItem value is invalid."
+      message = "The provided paymentLotItem value is invalid"
     )
 
 object MissingPaymentLotError
     extends MtdError(
       code = "MISSING_PAYMENT_LOT",
-      message = "The paymentLotItem has been provided, but the paymentLot is missing."
+      message = "The paymentLotItem has been provided, but the paymentLot is missing"
     )
 
 // Rule Errors
@@ -164,7 +164,7 @@ object RuleDateRangeInvalidError
 object RuleInvalidDateRangeError
     extends MtdError(
       code = "RULE_INVALID_DATE_RANGE",
-      message = "The provided date range is invalid."
+      message = "The provided date range is invalid"
     )
 
 object RuleInconsistentQueryParamsError
@@ -183,7 +183,7 @@ object V1_MissingFromDateError
 object V2_MissingFromDateError
     extends MtdError(
       code = "MISSING_FROM_DATE",
-      message = "The toDate has been provided, but fromDate is missing."
+      message = "The toDate has been provided, but fromDate is missing"
     )
 
 object V1_MissingToDateError
@@ -195,7 +195,7 @@ object V1_MissingToDateError
 object V2_MissingToDateError
     extends MtdError(
       code = "MISSING_TO_DATE",
-      message = "The fromDate has been provided, but toDate is missing."
+      message = "The fromDate has been provided, but toDate is missing"
     )
 
 object V1_RangeToDateBeforeFromDateError
@@ -207,7 +207,7 @@ object V1_RangeToDateBeforeFromDateError
 object V2_RangeToDateBeforeFromDateError
     extends MtdError(
       code = "RANGE_TO_DATE_BEFORE_FROM_DATE",
-      message = "The toDate cannot be earlier than the fromDate."
+      message = "The toDate cannot be earlier than the fromDate"
     )
 // Invalid Errors
 
@@ -232,7 +232,7 @@ object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOV
 object InvalidIncludeChargeEstimateError
     extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
 
-object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The provided date range is invalid.")
+object InvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The provided date range is invalid.")
 
 // Standard Errors
 object NotFoundError
