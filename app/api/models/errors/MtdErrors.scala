@@ -49,7 +49,7 @@ object TaxYearFormatError
 object FromDateFormatError
     extends MtdError(
       code = "FORMAT_FROM_DATE",
-      message = "The provided From date is invalid"
+      message = "The provided fromDate is invalid"
     )
 
 object ValueFormatError
@@ -61,7 +61,7 @@ object ValueFormatError
 object ToDateFormatError
     extends MtdError(
       code = "FORMAT_TO_DATE",
-      message = "The provided To date is invalid"
+      message = "The provided toDate is invalid"
     )
 
 object PaymentIdFormatError
@@ -91,13 +91,13 @@ object SourceFormatError
 object PaymentLotFormatError
     extends MtdError(
       code = "FORMAT_PAYMENT_LOT",
-      message = "The provided paymentLot is invalid."
+      message = "The provided paymentLot value is invalid"
     )
 
 object PaymentLotItemFormatError
     extends MtdError(
       code = "FORMAT_PAYMENT_LOT_ITEM",
-      message = "The provided paymentLotItem is invalid."
+      message = "The provided paymentLotItem value is invalid"
     )
 
 object DateFromFormatError
@@ -171,13 +171,13 @@ object RuleDateToBeforeDateFromError
 object MissingFromDateError
     extends MtdError(
       code = "MISSING_FROM_DATE",
-      message = "The From date parameter is missing"
+      message = "The toDate has been provided, but fromDate is missing"
     )
 
 object MissingToDateError
     extends MtdError(
       code = "MISSING_TO_DATE",
-      message = "The To date parameter is missing"
+      message = "The fromDate has been provided, but toDate is missing"
     )
 
 object RangeToDateBeforeFromDateError
@@ -208,7 +208,7 @@ object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOV
 object InvalidIncludeChargeEstimateError
     extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
 
-object InvalidDateRangeError extends MtdError(code = "INVALID_DATE_RANGE", message = "The provided date range is invalid.")
+object InvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The provided date range is invalid.")
 
 // Standard Errors
 object NotFoundError
@@ -246,6 +246,12 @@ object ServiceUnavailableError
       code = "SERVICE_UNAVAILABLE",
       message = "Internal server error"
     )
+
+object MissingPaymentLotError
+  extends MtdError(
+    code = "MISSING_PAYMENT_LOT",
+    message = "The paymentLotItem has been provided, but the paymentLot is missing"
+  )
 
 // Authorisation Errors
 object UnauthorisedError
