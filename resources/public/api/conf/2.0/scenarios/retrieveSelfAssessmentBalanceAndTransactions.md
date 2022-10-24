@@ -21,8 +21,7 @@
         </tr>
         <tr>
             <td><p>INVALID_DATE_RANGE</p></td>
-            <td><p>	
-Simulates the scenario where the provided date range is invalid.</p></td>
+            <td><p>Simulates the scenario where the provided date range is invalid.</p></td>
         </tr>
     </tbody>
 </table>
