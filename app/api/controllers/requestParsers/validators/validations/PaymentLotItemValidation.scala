@@ -20,11 +20,11 @@ import api.models.errors.{MtdError, PaymentLotItemFormatError}
 
 object PaymentLotItemValidation {
 
-  private val paymentLotItemRegex = "^[0-9A-Za-z]{1,12}"
+  private val paymentLotItemRegex = "^[0-9A-Za-z]{1,6}"
 
-  def validate(paymentLotItem: Option[String]): List[MtdError] = paymentLotItem.map(validate).getOrElse(NoValidationErrors)
+  def validateFormat(paymentLotItem: Option[String]): List[MtdError] = paymentLotItem.map(validateFormat).getOrElse(NoValidationErrors)
 
-  def validate(paymentLotItem: String): List[MtdError] = {
+  def validateFormat(paymentLotItem: String): List[MtdError] = {
     if (paymentLotItem.matches(paymentLotItemRegex)) NoValidationErrors else List(PaymentLotItemFormatError)
   }
 

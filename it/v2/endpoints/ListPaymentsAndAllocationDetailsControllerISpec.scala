@@ -31,8 +31,8 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
 
   private trait Test {
     val nino                           = "AA123456A"
-    val from: Option[String]           = None
-    val to: Option[String]             = None
+    val fromDate: Option[String]       = None
+    val toDate: Option[String]         = None
     val paymentLot: Option[String]     = None
     val paymentLotItem: Option[String] = None
 
@@ -47,7 +47,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
 
-      val queryParams = Seq("from" -> from, "to" -> to, "paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem)
+      val queryParams = Seq("fromDate" -> fromDate, "toDate" -> toDate, "paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem)
         .collect { case (k, Some(v)) => (k, v) }
 
       buildRequest(s"/$nino/payments-and-allocations")
@@ -74,13 +74,13 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
       }
 
       "a valid request with all query parameters is made" in new Test {
-        override val from: Option[String]           = Some("2020-01-01")
-        override val to: Option[String]             = Some("2020-02-01")
+        override val fromDate: Option[String]       = Some("2020-01-01")
+        override val toDate: Option[String]         = Some("2020-02-01")
         override val paymentLot: Option[String]     = Some("SomeLot")
-        override val paymentLotItem: Option[String] = Some("SomeLotItem")
+        override val paymentLotItem: Option[String] = Some("000001")
 
         override def setupStubs(): Unit = {
-          val queryParams = Map("paymentLot" -> "SomeLot", "paymentLotItem" -> "SomeLotItem", "dateFrom" -> "2020-01-01", "dateTo" -> "2020-02-01")
+          val queryParams = Map("paymentLot" -> "SomeLot", "paymentLotItem" -> "000001", "dateFrom" -> "2020-01-01", "dateTo" -> "2020-02-01")
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, queryParams, OK, responseDownstreamJson)
         }
 
@@ -104,8 +104,8 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String                   = requestNino
-          override val from: Option[String]           = requestFromDate
-          override val to: Option[String]             = requestToDate
+          override val fromDate: Option[String]       = requestFromDate
+          override val toDate: Option[String]         = requestToDate
           override val paymentLot: Option[String]     = requestLot
           override val paymentLotItem: Option[String] = requestLotItem
 
@@ -118,14 +118,14 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
 
       val input = Seq(
         ("BAD_NINO", None, None, None, None, BAD_REQUEST, NinoFormatError),
-        ("AA123456A", Some("BAD_DATE"), Some("2020-01-01"), None, None, BAD_REQUEST, DateFromFormatError),
-        ("AA123456A", Some("2020-01-01"), Some("BAD_DATE"), None, None, BAD_REQUEST, DateToFormatError),
-        ("AA123456A", Some("2020-02-01"), Some("2020-01-01"), None, None, BAD_REQUEST, RuleDateToBeforeDateFromError),
-        ("AA123456A", Some("2020-01-01"), Some("2021-01-02"), None, None, BAD_REQUEST, RuleDateRangeInvalidError),
-        ("AA123456A", None, Some("2020-02-01"), None, None, BAD_REQUEST, MissingFromDateError),
-        ("AA123456A", Some("2020-02-01"), None, None, None, BAD_REQUEST, MissingToDateError),
+        ("AA123456A", Some("BAD_DATE"), Some("2020-01-01"), None, None, BAD_REQUEST, V2_FromDateFormatError),
+        ("AA123456A", Some("2020-01-01"), Some("BAD_DATE"), None, None, BAD_REQUEST, V2_ToDateFormatError),
+        ("AA123456A", Some("2020-02-01"), Some("2020-01-01"), None, None, BAD_REQUEST, V2_RangeToDateBeforeFromDateError),
+        ("AA123456A", None, Some("2020-02-01"), None, None, BAD_REQUEST, V2_MissingFromDateError),
+        ("AA123456A", Some("2020-02-01"), None, None, None, BAD_REQUEST, V2_MissingToDateError),
         ("AA123456A", None, None, Some("BAD_LOT"), None, BAD_REQUEST, PaymentLotFormatError),
-        ("AA123456A", None, None, None, Some("BAD_LOT_ITEM"), BAD_REQUEST, PaymentLotItemFormatError)
+        ("AA123456A", None, None, None, Some("BAD_LOT_ITEM"), BAD_REQUEST, PaymentLotItemFormatError),
+        ("AA123456A", None, None, None, Some("000001"), BAD_REQUEST, MissingPaymentLotError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -160,9 +160,9 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         (BAD_REQUEST, "INVALID_PAYMENT_LOT", BAD_REQUEST, PaymentLotFormatError),
         (BAD_REQUEST, "INVALID_PAYMENT_LOT_ITEM", BAD_REQUEST, PaymentLotItemFormatError),
         (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, DateFromFormatError),
-        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, DateToFormatError),
-        (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleDateRangeInvalidError),
+        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, V2_FromDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, V2_ToDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleInvalidDateRangeError),
         (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, InternalError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (UNPROCESSABLE_ENTITY, "PARTIALLY_MIGRATED", INTERNAL_SERVER_ERROR, InternalError),

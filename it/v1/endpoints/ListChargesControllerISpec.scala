@@ -116,11 +116,11 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
 
       val input = Seq(
         ("AA1123A", Some("2018-10-01"), Some("2019-10-01"), BAD_REQUEST, NinoFormatError),
-        ("AA123456A", Some("2018-100-01"), Some("2019-10-01"), BAD_REQUEST, FromDateFormatError),
-        ("AA123456A", Some("2018-10-01"), Some("2019-100-01"), BAD_REQUEST, ToDateFormatError),
-        ("AA123456A", None, Some("2019-10-01"), BAD_REQUEST, MissingFromDateError),
-        ("AA123456A", Some("2018-10-01"), None, BAD_REQUEST, MissingToDateError),
-        ("AA123456A", Some("2018-10-01"), Some("2018-06-01"), BAD_REQUEST, RangeToDateBeforeFromDateError),
+        ("AA123456A", Some("2018-100-01"), Some("2019-10-01"), BAD_REQUEST, V1_FromDateFormatError),
+        ("AA123456A", Some("2018-10-01"), Some("2019-100-01"), BAD_REQUEST, V1_ToDateFormatError),
+        ("AA123456A", None, Some("2019-10-01"), BAD_REQUEST, V1_MissingFromDateError),
+        ("AA123456A", Some("2018-10-01"), None, BAD_REQUEST, V1_MissingToDateError),
+        ("AA123456A", Some("2018-10-01"), Some("2018-06-01"), BAD_REQUEST, V1_RangeToDateBeforeFromDateError),
         ("AA123456A", Some("2018-10-01"), Some("2021-10-01"), BAD_REQUEST, RuleDateRangeInvalidError),
         ("AA123456A", Some("2018-03-01"), Some("2019-10-01"), BAD_REQUEST, RuleFromDateNotSupportedError)
       )
@@ -158,8 +158,8 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
         (BAD_REQUEST, "INVALID_IDNUMBER", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
-        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, V1_FromDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, V1_ToDateFormatError),
         (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (BAD_REQUEST, "INVALID_DOC_NUMBER", INTERNAL_SERVER_ERROR, DownstreamError),

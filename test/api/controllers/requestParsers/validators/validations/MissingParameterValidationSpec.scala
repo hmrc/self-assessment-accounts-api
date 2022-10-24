@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.MissingFromDateError
+import api.models.errors.V1_MissingFromDateError
 import support.UnitSpec
 
 class MissingParameterValidationSpec extends UnitSpec {
@@ -24,12 +24,12 @@ class MissingParameterValidationSpec extends UnitSpec {
   "validate" should {
     "return an empty list" when {
       "passed a non-empty Option" in {
-        MissingParameterValidation.validate(Some("from date"), MissingFromDateError) shouldBe List()
+        MissingParameterValidation.validate(Some("from date"), V1_MissingFromDateError) shouldBe List()
       }
     }
     "return a list containing an error" when {
       "passed an empty Option" in {
-        MissingParameterValidation.validate(None, MissingFromDateError) shouldBe List(MissingFromDateError)
+        MissingParameterValidation.validate(None, V1_MissingFromDateError) shouldBe List(V1_MissingFromDateError)
       }
     }
   }

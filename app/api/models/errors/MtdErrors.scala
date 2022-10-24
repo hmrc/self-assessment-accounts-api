@@ -46,7 +46,13 @@ object TaxYearFormatError
       message = "The format of the supplied taxYear value is invalid"
     )
 
-object FromDateFormatError
+object V1_FromDateFormatError
+    extends MtdError(
+      code = "FORMAT_FROM_DATE",
+      message = "The provided From date is invalid"
+    )
+
+object V2_FromDateFormatError
     extends MtdError(
       code = "FORMAT_FROM_DATE",
       message = "The provided fromDate is invalid"
@@ -58,7 +64,13 @@ object ValueFormatError
       message = "The value must be between 0.00 and 99999999999.99"
     )
 
-object ToDateFormatError
+object V1_ToDateFormatError
+    extends MtdError(
+      code = "FORMAT_TO_DATE",
+      message = "The provided To date is invalid"
+    )
+
+object V2_ToDateFormatError
     extends MtdError(
       code = "FORMAT_TO_DATE",
       message = "The provided toDate is invalid"
@@ -100,16 +112,10 @@ object PaymentLotItemFormatError
       message = "The provided paymentLotItem value is invalid"
     )
 
-object DateFromFormatError
+object MissingPaymentLotError
     extends MtdError(
-      code = "FORMAT_DATE_FROM",
-      message = "The provided dateFrom is invalid"
-    )
-
-object DateToFormatError
-    extends MtdError(
-      code = "FORMAT_DATE_TO",
-      message = "The provided dateTo is invalid"
+      code = "MISSING_PAYMENT_LOT",
+      message = "The paymentLotItem has been provided, but the paymentLot is missing"
     )
 
 // Rule Errors
@@ -155,35 +161,53 @@ object RuleDateRangeInvalidError
       message = "The specified date range is invalid"
     )
 
+object RuleInvalidDateRangeError
+    extends MtdError(
+      code = "RULE_INVALID_DATE_RANGE",
+      message = "The provided date range is invalid"
+    )
+
 object RuleInconsistentQueryParamsError
     extends MtdError(
       code = "RULE_INCONSISTENT_QUERY_PARAMS",
       message = "Provide date range or docNumber when onlyOpen items are false"
     )
 
-object RuleDateToBeforeDateFromError
+// Date Errors
+object V1_MissingFromDateError
     extends MtdError(
-      code = "RULE_DATE_TO_BEFORE_DATE_FROM",
-      message = "The dateTo cannot be earlier than the dateFrom"
+      code = "MISSING_FROM_DATE",
+      message = "The From date parameter is missing"
     )
 
-// Date Errors
-object MissingFromDateError
+object V2_MissingFromDateError
     extends MtdError(
       code = "MISSING_FROM_DATE",
       message = "The toDate has been provided, but fromDate is missing"
     )
 
-object MissingToDateError
+object V1_MissingToDateError
+    extends MtdError(
+      code = "MISSING_TO_DATE",
+      message = "The To date parameter is missing"
+    )
+
+object V2_MissingToDateError
     extends MtdError(
       code = "MISSING_TO_DATE",
       message = "The fromDate has been provided, but toDate is missing"
     )
 
-object RangeToDateBeforeFromDateError
+object V1_RangeToDateBeforeFromDateError
     extends MtdError(
       code = "RANGE_TO_DATE_BEFORE_FROM_DATE",
       message = "The To date must be after the From date"
+    )
+
+object V2_RangeToDateBeforeFromDateError
+    extends MtdError(
+      code = "RANGE_TO_DATE_BEFORE_FROM_DATE",
+      message = "The toDate cannot be earlier than the fromDate"
     )
 // Invalid Errors
 
@@ -246,12 +270,6 @@ object ServiceUnavailableError
       code = "SERVICE_UNAVAILABLE",
       message = "Internal server error"
     )
-
-object MissingPaymentLotError
-  extends MtdError(
-    code = "MISSING_PAYMENT_LOT",
-    message = "The paymentLotItem has been provided, but the paymentLot is missing"
-  )
 
 // Authorisation Errors
 object UnauthorisedError

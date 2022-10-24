@@ -36,8 +36,8 @@ class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClient,
       correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
     val nino           = request.nino.nino
-    val dateFrom       = request.dateFrom
-    val dateTo         = request.dateTo
+    val dateFrom       = request.fromDate
+    val dateTo         = request.toDate
     val paymentLot     = request.paymentLot
     val paymentLotItem = request.paymentLotItem
 
