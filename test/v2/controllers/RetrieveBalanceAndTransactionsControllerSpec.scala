@@ -146,12 +146,13 @@ class RetrieveBalanceAndTransactionsControllerSpec
           (IncludeLocksFormatError, BAD_REQUEST),
           (CalculateAccruedInterestFormatError, BAD_REQUEST),
           (CustomerPaymentInformationFormatError, BAD_REQUEST),
-          (FromDateFormatError, BAD_REQUEST),
-          (ToDateFormatError, BAD_REQUEST),
-          (InvalidDateRangeError, BAD_REQUEST),
-          (RuleInconsistentQueryParamsError, BAD_REQUEST),
+          (V2_FromDateFormatError, BAD_REQUEST),
+          (V2_ToDateFormatError, BAD_REQUEST),
           (RemovePaymentOnAccountFormatError, BAD_REQUEST),
-          (IncludeEstimatedChargesFormatError, BAD_REQUEST)
+          (IncludeEstimatedChargesFormatError, BAD_REQUEST),
+          (V2_MissingToDateError, BAD_REQUEST),
+          (V2_MissingFromDateError, BAD_REQUEST),
+          (V2_RangeToDateBeforeFromDateError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -197,8 +198,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
         (IncludeLocksFormatError, BAD_REQUEST),
         (CalculateAccruedInterestFormatError, BAD_REQUEST),
         (CustomerPaymentInformationFormatError, BAD_REQUEST),
-        (FromDateFormatError, BAD_REQUEST),
-        (ToDateFormatError, BAD_REQUEST),
+        (V2_FromDateFormatError, BAD_REQUEST),
+        (V2_ToDateFormatError, BAD_REQUEST),
         (InvalidDateRangeError, BAD_REQUEST),
         (RuleInconsistentQueryParamsError, BAD_REQUEST),
         (RemovePaymentOnAccountFormatError, BAD_REQUEST),

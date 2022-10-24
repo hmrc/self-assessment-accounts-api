@@ -33,8 +33,8 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
       List(
         NinoValidation.validate(data.nino),
         DocNumberValidation.validate(data.docNumber),
-        DateFormatValidation.validate(data.fromDate, FromDateFormatError),
-        DateFormatValidation.validate(data.toDate, ToDateFormatError),
+        DateFormatValidation.validate(data.fromDate, V2_FromDateFormatError),
+        DateFormatValidation.validate(data.toDate, V2_ToDateFormatError),
         BooleanValidation.validate(data.onlyOpenItems, OnlyOpenItemsFormatError),
         BooleanValidation.validate(data.includeLocks, IncludeLocksFormatError),
         BooleanValidation.validate(data.calculateAccruedInterest, CalculateAccruedInterestFormatError),

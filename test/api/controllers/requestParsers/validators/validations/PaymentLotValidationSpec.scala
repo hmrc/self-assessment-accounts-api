@@ -16,26 +16,25 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.PaymentLotFormatError
+import api.models.errors.{MissingPaymentLotError, PaymentLotFormatError}
 import api.models.utils.JsonErrorValidators
 import support.UnitSpec
 
 class PaymentLotValidationSpec extends UnitSpec with JsonErrorValidators {
 
-  "validate" should {
+  val paymentLot     = "AA123456aa12"
+  val paymentLotItem = "000001"
+
+  "validateFormat" should {
     "return no errors" when {
       "when a valid paymentLot is supplied" in {
-        val validPaymentLot = "AA123456aa12"
-
-        PaymentLotValidation.validate(validPaymentLot) shouldBe List()
+        PaymentLotValidation.validateFormat(paymentLot) shouldBe List()
       }
       "when a valid optional paymentLot is supplied" in {
-        val validPaymentLot = Some("AA123456aa12")
-
-        PaymentLotValidation.validate(validPaymentLot) shouldBe List()
+        PaymentLotValidation.validateFormat(Some(paymentLot)) shouldBe List()
       }
       "when a no paymentLot value is supplied" in {
-        PaymentLotValidation.validate(None) shouldBe List()
+        PaymentLotValidation.validateFormat(None) shouldBe List()
       }
     }
 
@@ -43,7 +42,27 @@ class PaymentLotValidationSpec extends UnitSpec with JsonErrorValidators {
       "when an invalid paymentLot is supplied" in {
         val invalidPaymentLot = "AA123456aa12!*"
 
-        PaymentLotValidation.validate(invalidPaymentLot) shouldBe List(PaymentLotFormatError)
+        PaymentLotValidation.validateFormat(invalidPaymentLot) shouldBe List(PaymentLotFormatError)
+      }
+    }
+  }
+
+  "validateMissing" should {
+    "return no errors" when {
+      "when a paymentLot and paymentLotItem are supplied" in {
+        PaymentLotValidation.validateMissing(Some(paymentLot), Some(paymentLotItem)) shouldBe List()
+      }
+      "when a paymentLot is supplied without a paymentLotItem" in {
+        PaymentLotValidation.validateMissing(Some(paymentLot), None) shouldBe List()
+      }
+      "when neither a paymentLot or paymentLotItem are supplied" in {
+        PaymentLotValidation.validateMissing(None, None) shouldBe List()
+      }
+    }
+
+    "return an error" when {
+      "when a paymentLotItem is supplied without a paymentLot" in {
+        PaymentLotValidation.validateMissing(None, Some(paymentLotItem)) shouldBe List(MissingPaymentLotError)
       }
     }
   }

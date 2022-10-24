@@ -49,9 +49,9 @@ class ListTransactionsRequestParserSpec extends UnitSpec {
       }
       "the validator returns multiple errors" in new Test {
         private val inputData = ListTransactionsRawRequest(nino, None, None)
-        MockListTransactionsValidator.validate(inputData).returns(List(MissingFromDateError, MissingToDateError))
+        MockListTransactionsValidator.validate(inputData).returns(List(V1_MissingFromDateError, V1_MissingToDateError))
         parser.parseRequest(inputData) shouldBe Left(
-          ErrorWrapper(correlationId, BadRequestError, Some(Seq(MissingFromDateError, MissingToDateError))))
+          ErrorWrapper(correlationId, BadRequestError, Some(Seq(V1_MissingFromDateError, V1_MissingToDateError))))
       }
     }
   }

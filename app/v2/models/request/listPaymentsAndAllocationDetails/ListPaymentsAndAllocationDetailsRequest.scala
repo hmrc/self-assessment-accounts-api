@@ -20,8 +20,8 @@ import api.models.domain.Nino
 
 case class ListPaymentsAndAllocationDetailsRequest(
     nino: Nino,
-    dateFrom: Option[String],
-    dateTo: Option[String],
+    fromDate: Option[String],
+    toDate: Option[String],
     paymentLot: Option[String],
     paymentLotItem: Option[String]
 )
