@@ -49,13 +49,9 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
     "converting informationCode to isCodedOut" must {
       def json(informationCode: String) = documentDetailsDownstreamResponseMinimalJson.update("informationCode", JsString(informationCode))
 
-      "convert 'K' to true" in {
-        json("K").as[DocumentDetails] shouldBe
-          documentDetailsMinimal.copy(isCodedOut = true)
-      }
-      "convert another value to false" in {
+      "convert any non-empty string value to true" in {
         json("x").as[DocumentDetails] shouldBe
-          documentDetailsMinimal.copy(isCodedOut = false)
+          documentDetailsMinimal.copy(isCodedOut = true)
       }
 
       "convert an absent field to false" in {

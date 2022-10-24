@@ -107,8 +107,8 @@ object DocumentDetails {
   }
 
   private def informationCode(maybeValue: Option[String]): Boolean = maybeValue match {
-    case Some(k) if k == "K" => true
-    case _                   => false
+    case Some(x)  => true
+    case _        => false
   }
 
   private def replaceWithNoneIfEmpty[A](mayBeA: Option[A])(implicit emptinessChecker: EmptinessChecker[A]): Option[A] =
