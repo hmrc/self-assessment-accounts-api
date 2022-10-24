@@ -36,14 +36,18 @@
           "taxYear": {
             "description": "The tax year for the appropriate balance charge debit.",
             "type": "string",
-            "example": "2018-04-05"
+            "example": "2018-19"
           },
           "bcdAmount": {
             "description": "The balancing charge debit amount is the balancing payment due by the taxpayer calculated when the return is captured.\r\nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places.",
             "type": "number",
             "example": "5009.99"
           }
-        }
+        },
+        "required":[
+          "bcdAmount",
+          "taxYear"
+        ]
       }
     },
     "earliestPaymentDateOverdue": {
@@ -99,6 +103,7 @@
   },
   "required": [
     "payableAmount",
+    "bcdBalancePerYear",
     "pendingChargeDueAmount",
     "overdueAmount",
     "totalBalance"

@@ -7,12 +7,15 @@ is:
   - errors.invalidIncludeLocks
   - errors.invalidCalculateAccruedInterest
   - errors.invalidCustomerPaymentInformation
-  - errors.invalidDateFrom
-  - errors.invalidDateTo
+  - errors.formatFromDate
+  - errors.formatToDate
   - errors.invalidRemovePaymentOnAccount
   - errors.invalidIncludeChargeEstimate
   - errors.invalidDateRange
   - errors.ruleInconsistentQueryParams
+  - errors.missingToDate
+  - errors.missingFromDate
+  - errors.rangeToDateBeforeFromDate
   - errors.clientOrAgentNotAuthorised
   - errors.notFound
 displayName: "Retrieve Self Assessment Balance and Transactions [test only]"
@@ -22,29 +25,29 @@ description: This endpoint enables you to retrieve the overall liability broken 
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 queryParameters:
   docNumber:
-    description: The docNumber is a unique number per tax grouping in the Account display. (When onlyOpenItems has been set to false, either the date range (dateFrom and dateTo) or doc number should be supplied.)
+    description: The docNumber is a unique number per tax grouping in the Account display. (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) or doc number should be supplied.)
     type: string
     example: "3060013199"
     required: false
-  dateFrom:
-    description: Start date range to return balances and transactions. (When onlyOpenItems has been set to false, either the date range (dateFrom and dateTo) OR docNumber should be supplied.)
+  fromDate:
+    description: The inclusive start date to return balances and transactions. (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) OR docNumber should be supplied.)
     type: string
     example: "2023-12-12"
     required: false
-  dateTo:
-    description: End date range to return balances and transactions. (When onlyOpenItems has been set to false, either the date range (dateFrom and dateTo) OR docNumber should be supplied.)
+  toDate:
+    description: The inclusive end date to return balances and transactions. (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) OR docNumber should be supplied.)
     type: string
     example: "2024-12-12"
     required: false
   onlyOpenItems:
-    description: Limits the extraction to unpaid or not reversed charges. (When onlyOpenItems has been set to false, either the date range (dateFrom and dateTo) OR docNumber should be supplied.). Defaults to false
+    description: Limits the extraction to unpaid or not reversed charges. (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) OR docNumber should be supplied.) Defaults to false
     type: boolean
     example: false
     required: false
   includeLocks:
-    description: "Include additional information related to claim and debt management.Defaults to false"
+    description: Include additional information related to claim and debt management. Defaults to false
     type: boolean
-    example: false
+    example: true
     required: false
   calculateAccruedInterest:
     description: "Calculate accrued interest. Accruing interest is the amount of interest calculated
@@ -64,10 +67,10 @@ queryParameters:
     type: boolean
     example: false
     required: false
-  includeChargeEstimate:
-    description: Include statistical (estimated) values for monthly payments.Defaults to false.
+  includeEstimatedCharges:
+    description: Include statistical (estimated) values for monthly payments. Defaults to false.
     type: boolean
-    example: false
+    example: true
     required: false
 responses:
   200:

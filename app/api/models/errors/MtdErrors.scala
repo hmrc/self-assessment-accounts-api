@@ -158,7 +158,7 @@ object RuleDateRangeInvalidError
 object RuleInconsistentQueryParamsError
     extends MtdError(
       code = "RULE_INCONSISTENT_QUERY_PARAMS",
-      message = "Provide date range or docNumber when onlyOpen items are false"
+      message = "Provide date range or docNumber when onlyOpenItems is false"
     )
 
 object RuleDateToBeforeDateFromError
@@ -171,13 +171,13 @@ object RuleDateToBeforeDateFromError
 object MissingFromDateError
     extends MtdError(
       code = "MISSING_FROM_DATE",
-      message = "The toDate has been provided, but fromDate is missing"
+      message = "The From date parameter is missing"
     )
 
 object MissingToDateError
     extends MtdError(
       code = "MISSING_TO_DATE",
-      message = "The fromDate has been provided, but toDate is missing"
+      message = "The To date parameter is missing"
     )
 
 object RangeToDateBeforeFromDateError
@@ -187,28 +187,28 @@ object RangeToDateBeforeFromDateError
     )
 // Invalid Errors
 
-object InvalidDocNumberError extends MtdError(code = "INVALID_DOC_NUMBER", message = "The provided docNumber is invalid.")
+object InvalidDocNumberError extends MtdError(code = "FORMAT_DOC_NUMBER", message = "The provided document number is invalid")
 
-object InvalidOnlyOpenItemsError extends MtdError(code = "INVALID_ONLY_OPEN_ITEMS", message = "The provided onlyOpenItems is invalid.")
+object InvalidOnlyOpenItemsError extends MtdError(code = "FORMAT_ONLY_OPEN_ITEMS", message = "The provided onlyOpenItem is invalid")
 
-object InvalidIncludeLocksError extends MtdError(code = "INVALID_INCLUDE_LOCKS", message = "The provided includeLocks is invalid.")
+object InvalidIncludeLocksError extends MtdError(code = "FORMAT_INCLUDE_LOCKS", message = "The provided includeLock is invalid")
 
 object InvalidCalculateAccruedInterestError
-    extends MtdError(code = "INVALID_CALCULATE_ACCRUED_INTEREST", message = "The provided calculateAccruedInterest is invalid.")
+    extends MtdError(code = "FORMAT_CALCULATE_ACCRUED_INTEREST", message = "The provided calculation of accrued interest is invalid")
 
 object InvalidCustomerPaymentInformationError
-    extends MtdError(code = "INVALID_CUSTOMER_PAYMENT_INFORMATION", message = "The provided customerPaymentInformation is invalid.")
+    extends MtdError(code = "FORMAT_CUSTOMER_PAYMENT_INFORMATION", message = "The provided customer Payment Information is invalid")
 
-object InvalidDateFromError extends MtdError(code = "INVALID_DATE_FROM", message = "The provided dateFrom is invalid.")
+object InvalidDateFromError extends MtdError(code = "FORMAT_FROM_DATE", message = "The provided fromDate is invalid")
 
-object InvalidDateToError extends MtdError(code = "INVALID_DATE_TO", message = "The provided dateTo is invalid.")
+object InvalidDateToError extends MtdError(code = "FORMAT_TO_DATE", message = "The provided toDate is invalid")
 
-object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", message = "The provided removePOA is invalid.")
+object InvalidRemovePaymentOnAccountError extends MtdError(code = "FORMAT_REMOVE_PAYMENT_ON_ACCOUNT", message = "The provided removePOA is invalid")
 
 object InvalidIncludeChargeEstimateError
-    extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
+    extends MtdError(code = "FORMAT_INCLUDE_ESTIMATED_CHARGES", message = "The provided includeEstimatedCharges is invalid")
 
-object InvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The provided date range is invalid.")
+object InvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The provided date range is invalid")
 
 // Standard Errors
 object NotFoundError

@@ -28,9 +28,9 @@
   },
   "codingDetails": [
     {
-      "taxYearReturn": "2020-21",
+      "returnTaxYear": "2020-21",
       "totalLiabilityAmount": 5009.99,
-      "taxYearCoding": "2020-21",
+      "codingTaxYear": "2020-21",
       "coded": {
         "charge": 5009.99,
         "initiationDate": "2021-04-05"
@@ -54,7 +54,7 @@
       "lastClearedAmount": 5009.99
     },
     "isChargeEstimate": true,
-    "chargeHasMultipleItems": true,
+    "isCodedOut": true,
     "paymentLot": "AB1023456789",
     "paymentLotItem": "000001",
     "effectiveDateOfPayment": "2021-04-05",
@@ -98,11 +98,11 @@
       "accruedInterest": 10000,
       "items": [
         {
-          "subItem": "001",
+          "itemId": "001",
           "dueDate": "2018-08-13",
           "amount": 10000,
           "clearingDate": "2018-08-13",
-          "clearingReason": "01",
+          "clearingReason": "Outgoing Payment",
           "outgoingPaymentMethod": "Payable Order Repayment",
           "isChargeOnHold": false,
           "isEstimatedChargeOnHold": false,

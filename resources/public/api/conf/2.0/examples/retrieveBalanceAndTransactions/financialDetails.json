@@ -2,7 +2,8 @@
   "financialDetails": [
     {
       "taxYear": "2016-17",
-      "chargeDetail": {
+      "chargeDetail":
+      {
         "documentId": "12345678901234568",
         "documentType": "1234",
         "documentTypeDescription": "Income Tax Estimate",
