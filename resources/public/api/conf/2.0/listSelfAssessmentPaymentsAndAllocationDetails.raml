@@ -20,12 +20,12 @@ description: This endpoint enables you to list the payments and allocation detai
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
 queryParameters:
   fromDate:
-    description: "The inclusive start date of the period to filter payments."
+    description: "The inclusive start date of the period to filter payments. The maximum date range between fromDate and toDate should not exceed 732 days."
     type: string
     example: "2019-01-02"
     required: false
   toDate:
-    description: "The inclusive end date of the period to filter payments."
+    description: "The inclusive end date of the period to filter payments. The maximum date range between fromDate and toDate should not exceed 732 days."
     type: string
     example: "2020-01-02"
     required: false
