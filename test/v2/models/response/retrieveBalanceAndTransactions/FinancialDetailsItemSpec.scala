@@ -157,6 +157,10 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
           json("Y").as[FinancialDetailsItem] shouldBe model(Some(true))
         }
 
+        "convert G string to true" in {
+          json("G").as[FinancialDetailsItem] shouldBe model(Some(true))
+        }
+
         "convert N string to false" in {
           json("N").as[FinancialDetailsItem] shouldBe model(Some(false))
         }

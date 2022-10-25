@@ -75,10 +75,10 @@ object FinancialDetailsItem {
       (__ \ "paymentLotItem").readNullable[String] and
       (__ \ "clearingSAPDocument").readNullable[String] and
       (__ \ "statisticalDocument").readNullable[String].flatMap[Option[Boolean]] {
-        case Some(x) if x == "Y" => Reads.pure(Some(true))
-        case Some(x) if x == "N"  => Reads.pure(Some(false))
-        case Some(x)             => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
-        case None                => Reads.pure(None)
+        case Some(x) if x == "Y" || x == "G" => Reads.pure(Some(true))
+        case Some(x) if x == "N"             => Reads.pure(Some(false))
+        case Some(x)                         => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
+        case None                            => Reads.pure(None)
       })(FinancialDetailsItem.apply _)
   }
 
