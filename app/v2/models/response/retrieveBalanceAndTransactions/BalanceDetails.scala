@@ -21,15 +21,9 @@ import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 
-case class BalancePerYear(bcdAmount: Option[BigDecimal], taxYear: Option[String])
+case class BalancePerYear(bcdAmount: BigDecimal, taxYear: String)
 
 object BalancePerYear {
-
-  implicit val reads: Reads[BalancePerYear] =
-    (
-      (JsPath \ "amount").readNullable[BigDecimal] and
-        (JsPath \ "taxYear").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd))
-    )(BalancePerYear.apply _)
 
   implicit val writes: OWrites[BalancePerYear] =
     Json.writes[BalancePerYear]
@@ -41,7 +35,7 @@ case class BalanceDetails(payableAmount: BigDecimal,
                           pendingChargeDueAmount: BigDecimal,
                           pendingChargeDueDate: Option[String],
                           overdueAmount: BigDecimal,
-                          bcdBalancePerYear: Option[Seq[BalancePerYear]],
+                          bcdBalancePerYear: Seq[BalancePerYear],
                           earliestPaymentDateOverdue: Option[String],
                           totalBalance: BigDecimal,
                           amountCodedOut: Option[BigDecimal],
@@ -55,25 +49,40 @@ case class BalanceDetails(payableAmount: BigDecimal,
 
 object BalanceDetails {
 
-  implicit val reads: Reads[BalanceDetails] =
-    (
-      (JsPath \ "balanceDueWithin30Days").read[BigDecimal] and
-        (JsPath \ "nextPaymentDateForChargesDueIn30Days").readNullable[String] and
-        (JsPath \ "balanceNotDueIn30Days").read[BigDecimal] and
-        (JsPath \ "nextPaymentDateBalanceNotDue").readNullable[String] and
-        (JsPath \ "overDueAmount").read[BigDecimal] and
-        (JsPath \ "bcdBalancePerYear").readNullable[Seq[BalancePerYear]] and
-        (JsPath \ "earliestPaymentDateOverDue").readNullable[String] and
-        (JsPath \ "totalBalance").read[BigDecimal] and
-        (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
-        (JsPath \ "totalBCDBalance").readNullable[BigDecimal] and
-        (JsPath \ "unallocatedCredit").readNullable[BigDecimal] and
-        (JsPath \ "allocatedCredit").readNullable[BigDecimal] and
-        (JsPath \ "totalCredit").readNullable[BigDecimal] and
-        (JsPath \ "firstPendingAmountRequested").readNullable[BigDecimal] and
-        (JsPath \ "secondPendingAmountRequested").readNullable[BigDecimal] and
-        (JsPath \ "availableCredit").readNullable[BigDecimal]
-    )(BalanceDetails.apply _)
+  // Downstream fields 'should' both be present but this is not in the spec -
+  // so use this to enable safe transformation to mandatory MTD fields
+  private case class DowntreamBalancePerYear(amount: Option[BigDecimal], taxYear: Option[String])
+
+  private object DowntreamBalancePerYear {
+    implicit val reads: Reads[DowntreamBalancePerYear] = Json.reads
+
+    def asMtd: PartialFunction[DowntreamBalancePerYear, BalancePerYear] = { case DowntreamBalancePerYear(Some(amount), Some(taxYear)) =>
+      BalancePerYear(amount, TaxYear.fromDownstream(taxYear).asMtd)
+    }
+
+  }
+
+  implicit val reads: Reads[BalanceDetails] = (
+    (JsPath \ "balanceDueWithin30Days").read[BigDecimal] and
+      (JsPath \ "nextPaymentDateForChargesDueIn30Days").readNullable[String] and
+      (JsPath \ "balanceNotDueIn30Days").read[BigDecimal] and
+      (JsPath \ "nextPaymentDateBalanceNotDue").readNullable[String] and
+      (JsPath \ "overDueAmount").read[BigDecimal] and
+      (JsPath \ "bcdBalancePerYear").readNullable[Seq[DowntreamBalancePerYear]].map {
+        case Some(bs) => bs.collect(DowntreamBalancePerYear.asMtd)
+        case None     => Nil
+      } and
+      (JsPath \ "earliestPaymentDateOverDue").readNullable[String] and
+      (JsPath \ "totalBalance").read[BigDecimal] and
+      (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
+      (JsPath \ "totalBCDBalance").readNullable[BigDecimal] and
+      (JsPath \ "unallocatedCredit").readNullable[BigDecimal] and
+      (JsPath \ "allocatedCredit").readNullable[BigDecimal] and
+      (JsPath \ "totalCredit").readNullable[BigDecimal] and
+      (JsPath \ "firstPendingAmountRequested").readNullable[BigDecimal] and
+      (JsPath \ "secondPendingAmountRequested").readNullable[BigDecimal] and
+      (JsPath \ "availableCredit").readNullable[BigDecimal]
+  )(BalanceDetails.apply _)
 
   implicit val writes: OWrites[BalanceDetails] = Json.writes[BalanceDetails]
 }

@@ -22,15 +22,6 @@ import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture._
 
 class BalancePerYearSpec extends UnitSpec {
 
-  "reads" should {
-    "return a valid model" when {
-      "valid JSON is supplied" in {
-        downstreamDetailSingleYearJson
-          .as[BalancePerYear] shouldBe balancePerYearObject
-      }
-    }
-  }
-
   "writes" when {
     "passed a valid model" should {
       "return valid JSON " in {
