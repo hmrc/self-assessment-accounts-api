@@ -103,7 +103,7 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
           "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> CustomerPaymentInformationFormatError,
           "INVALID_DATE_FROM"                    -> V2_FromDateFormatError,
           "INVALID_DATE_TO"                      -> V2_ToDateFormatError,
-          "INVALID_DATE_RANGE"                   -> InvalidDateRangeError,
+          "INVALID_DATE_RANGE"                   -> RuleInvalidDateRangeError,
           "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
           "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> RemovePaymentOnAccountFormatError,
           "INVALID_INCLUDE_STATISTICAL"          -> IncludeEstimatedChargesFormatError,

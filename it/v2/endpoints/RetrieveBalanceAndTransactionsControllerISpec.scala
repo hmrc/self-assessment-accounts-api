@@ -245,7 +245,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", BAD_REQUEST, CustomerPaymentInformationFormatError),
         (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, V2_FromDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, V2_ToDateFormatError),
-        (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, InvalidDateRangeError),
+        (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleInvalidDateRangeError),
         (BAD_REQUEST, "INVALID_REQUEST", BAD_REQUEST, RuleInconsistentQueryParamsError),
         (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", BAD_REQUEST, RemovePaymentOnAccountFormatError),
         (BAD_REQUEST, "INVALID_INCLUDE_STATISTICAL", BAD_REQUEST, IncludeEstimatedChargesFormatError),

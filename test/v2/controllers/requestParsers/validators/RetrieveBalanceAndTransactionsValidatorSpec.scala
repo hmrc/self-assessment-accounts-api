@@ -66,10 +66,10 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
           List(CustomerPaymentInformationFormatError)
       }
 
-      "an invalid date from is supplied" in {
+      "an invalid from date is supplied" in {
         validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"))) shouldBe List(V2_FromDateFormatError)
       }
-      "an invalid date to is supplied" in {
+      "an invalid to date is supplied" in {
         validator.validate(inputDataDocNumber.copy(toDate = Some("invalid"))) shouldBe List(V2_ToDateFormatError)
       }
 
@@ -81,15 +81,15 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
         validator.validate(inputDataDocNumber.copy(includeEstimatedCharges = Some("invalid"))) shouldBe List(IncludeEstimatedChargesFormatError)
       }
 
-      "date to is supplied but date from is not" in {
+      "to date is supplied but from date is not" in {
         validator.validate(inputDataDateRange.copy(fromDate = None, toDate = Some("2022-11-01"))) shouldBe List(V2_MissingFromDateError)
       }
 
-      "date from is supplied but date to is not" in {
+      "from date is supplied but to date is not" in {
         validator.validate(inputDataDateRange.copy(fromDate = Some("2022-12-01"), toDate = None)) shouldBe List(V2_MissingToDateError)
       }
 
-      "date from is later than date to" in {
+      "from date is later than to date" in {
         validator.validate(inputDataDateRange.copy(fromDate = Some("2022-12-01"), toDate = Some("2022-11-01"))) shouldBe
           List(V2_RangeToDateBeforeFromDateError)
       }

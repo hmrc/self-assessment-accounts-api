@@ -111,7 +111,7 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
             V2_ToDateFormatError,
             RemovePaymentOnAccountFormatError,
             IncludeEstimatedChargesFormatError,
-            InvalidDateRangeError,
+            RuleInvalidDateRangeError,
             RuleInconsistentQueryParamsError,
             V2_MissingToDateError,
             V2_MissingFromDateError,

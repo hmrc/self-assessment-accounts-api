@@ -200,7 +200,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
         (CustomerPaymentInformationFormatError, BAD_REQUEST),
         (V2_FromDateFormatError, BAD_REQUEST),
         (V2_ToDateFormatError, BAD_REQUEST),
-        (InvalidDateRangeError, BAD_REQUEST),
+        (RuleInvalidDateRangeError, BAD_REQUEST),
         (RuleInconsistentQueryParamsError, BAD_REQUEST),
         (RemovePaymentOnAccountFormatError, BAD_REQUEST),
         (IncludeEstimatedChargesFormatError, BAD_REQUEST),

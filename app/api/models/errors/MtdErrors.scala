@@ -228,8 +228,6 @@ object RemovePaymentOnAccountFormatError extends MtdError(code = "FORMAT_REMOVE_
 object IncludeEstimatedChargesFormatError
     extends MtdError(code = "FORMAT_INCLUDE_ESTIMATED_CHARGES", message = "The provided includeEstimatedCharges is invalid")
 
-object InvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The provided date range is invalid")
-
 // Standard Errors
 object NotFoundError
     extends MtdError(

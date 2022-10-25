@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{BadRequestError, ErrorWrapper, InvalidDateRangeError, NinoFormatError}
+import api.models.errors.{BadRequestError, ErrorWrapper, RuleInvalidDateRangeError, NinoFormatError}
 import support.UnitSpec
 import v2.mocks.validators.MockListPaymentsAndAllocationDetailsValidator
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
@@ -76,10 +76,10 @@ class ListPaymentsAndAllocationDetailsRequestParserSpec extends UnitSpec {
       "multiple validation errors occurs" in new Test {
         MockListPaymentsAndAllocationDetailsValidator
           .validate(validRequestRawDataWithOptionals)
-          .returns(List(NinoFormatError, InvalidDateRangeError))
+          .returns(List(NinoFormatError, RuleInvalidDateRangeError))
 
         parser.parseRequest(validRequestRawDataWithOptionals) shouldBe
-          Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, InvalidDateRangeError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, RuleInvalidDateRangeError))))
       }
     }
   }
