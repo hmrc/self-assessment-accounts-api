@@ -106,13 +106,10 @@ object DocumentDetails {
       Some(ty.asMtd)
   }
 
-  private def informationCode(maybeValue: Option[String]): Boolean = maybeValue match {
-    case Some(x)  => true
-    case _        => false
-  }
+  val informationCode: Option[String] => Boolean = _.exists(_.nonEmpty)
 
-  private def replaceWithNoneIfEmpty[A](mayBeA: Option[A])(implicit emptinessChecker: EmptinessChecker[A]): Option[A] =
-    mayBeA.flatMap { a =>
+  private def replaceWithNoneIfEmpty[A](maybeA: Option[A])(implicit emptinessChecker: EmptinessChecker[A]): Option[A] =
+    maybeA.flatMap { a =>
       if (emptinessChecker.findEmptyPaths(a) == EmptyPathsResult.CompletelyEmpty) None else Some(a)
     }
 

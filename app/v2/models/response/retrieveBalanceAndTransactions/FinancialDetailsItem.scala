@@ -17,7 +17,7 @@
 package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{Json, Reads, Writes, __}
+import play.api.libs.json._
 
 case class FinancialDetailsItem(itemId: Option[String],
                                 dueDate: Option[String],
@@ -25,10 +25,7 @@ case class FinancialDetailsItem(itemId: Option[String],
                                 clearingDate: Option[String],
                                 clearingReason: Option[String],
                                 outgoingPaymentMethod: Option[String],
-                                isChargeOnHold: Boolean,
-                                isEstimatedChargeOnHold: Boolean,
-                                isInterestAccrualOnHold: Boolean,
-                                isInterestChargeOnHold: Boolean,
+                                locks: Option[FinancialDetailsItemLocks],
                                 isReturn: Option[Boolean],
                                 paymentReference: Option[String],
                                 paymentAmount: Option[BigDecimal],
@@ -41,7 +38,9 @@ case class FinancialDetailsItem(itemId: Option[String],
 object FinancialDetailsItem {
   implicit val writes: Writes[FinancialDetailsItem] = Json.writes
 
-  implicit val reads: Reads[FinancialDetailsItem] = {
+  case class ReadLocks(value: Boolean)
+
+  implicit def reads(implicit readLocks: ReadLocks): Reads[FinancialDetailsItem] = {
     val clearingReasonConverter: Option[String] => Option[String] =
       convertToMtd(
         Map(
@@ -55,18 +54,13 @@ object FinancialDetailsItem {
     val paymentMethodConverter: Option[String] => Option[String] =
       convertToMtd(Map("A" -> "Repayment to Card", "P" -> "Payable Order Repayment", "R" -> "BACS Payment out"))
 
-    val stringToBooleanConverter: Option[String] => Boolean = _.exists(_.nonEmpty)
-
     ((__ \ "subItem").readNullable[String] and
       (__ \ "dueDate").readNullable[String] and
       (__ \ "amount").readNullable[BigDecimal] and
       (__ \ "clearingDate").readNullable[String] and
       (__ \ "clearingReason").readNullable[String].map(clearingReasonConverter) and
       (__ \ "outgoingPaymentMethod").readNullable[String].map(paymentMethodConverter) and
-      (__ \ "paymentLock").readNullable[String].map(stringToBooleanConverter) and
-      (__ \ "clearingLock").readNullable[String].map(stringToBooleanConverter) and
-      (__ \ "interestLock").readNullable[String].map(stringToBooleanConverter) and
-      (__ \ "dunningLock").readNullable[String].map(stringToBooleanConverter) and
+      (if (readLocks.value) __.read[FinancialDetailsItemLocks].map(Some(_)) else Reads.pure(None)) and
       (__ \ "returnFlag").readNullable[Boolean] and
       (__ \ "paymentReference").readNullable[String] and
       (__ \ "paymentAmount").readNullable[BigDecimal] and

@@ -25,7 +25,7 @@ class BalancePerYearSpec extends UnitSpec {
   "writes" when {
     "passed a valid model" should {
       "return valid JSON " in {
-        Json.toJson(balancePerYearObject) shouldBe mtdDetailSingleYearJson
+        Json.toJson(balancePerYear) shouldBe mtdDetailSingleYearJson
       }
     }
   }

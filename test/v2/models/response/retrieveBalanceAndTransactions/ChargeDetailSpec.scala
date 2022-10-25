@@ -25,7 +25,7 @@ class ChargeDetailSpec extends UnitSpec {
   "reads" should {
     "return a valid model with properties" when {
       "valid JSON with all properties is supplied" in {
-        downstreamFinancialDetailsFullJson.as[ChargeDetail] shouldBe chargeDetailObject
+        downstreamFinancialDetailsFullJson.as[ChargeDetail] shouldBe chargeDetail
       }
 
     }
@@ -35,7 +35,7 @@ class ChargeDetailSpec extends UnitSpec {
   "writes" should {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
-        Json.toJson(chargeDetailObject) shouldBe mtdChargeDetailJson
+        Json.toJson(chargeDetail) shouldBe mtdChargeDetailJson
       }
 
     }

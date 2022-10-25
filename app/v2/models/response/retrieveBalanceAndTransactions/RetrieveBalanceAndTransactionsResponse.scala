@@ -26,6 +26,9 @@ case class RetrieveBalanceAndTransactionsResponse(
 )
 
 object RetrieveBalanceAndTransactionsResponse {
-  implicit val reads: Reads[RetrieveBalanceAndTransactionsResponse]    = Json.reads[RetrieveBalanceAndTransactionsResponse]
+
+  implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
+    Json.reads[RetrieveBalanceAndTransactionsResponse]
+
   implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
 }

@@ -54,6 +54,11 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
           documentDetailsMinimal.copy(isCodedOut = true)
       }
 
+      "convert any empty string value to false" in {
+        json("").as[DocumentDetails] shouldBe
+          documentDetailsMinimal.copy(isCodedOut = false)
+      }
+
       "convert an absent field to false" in {
         documentDetailsDownstreamResponseMinimalJson.removeProperty("informationCode").as[DocumentDetails] shouldBe
           documentDetailsMinimal.copy(isCodedOut = false)

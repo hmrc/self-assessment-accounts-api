@@ -118,7 +118,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
         val response: WSResponse = await(request.get)
         response.status shouldBe OK
-        response.json shouldBe mtdResponseJson
+        response.json shouldBe mtdResponseWithoutLocksJson
         response.header("Content-Type") shouldBe Some("application/json")
       }
 

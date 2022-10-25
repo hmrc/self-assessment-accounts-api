@@ -16,22 +16,19 @@
 
 package v2.fixtures.retrieveBalanceAndTransactions
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v2.models.response.retrieveBalanceAndTransactions.FinancialDetailsItem
 
-trait FinancialDetailsItemFixture {
+trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
 
-  val financialDetailsItemModel: FinancialDetailsItem = FinancialDetailsItem(
+  val financialDetailsItem: FinancialDetailsItem = FinancialDetailsItem(
     itemId = Some("001"),
     dueDate = Some("2022-02-02"),
     amount = Some(1.23),
     clearingDate = Some("2021-01-01"),
     clearingReason = Some("Incoming Payment"),
     outgoingPaymentMethod = Some("Repayment to Card"),
-    isChargeOnHold = true,
-    isEstimatedChargeOnHold = true,
-    isInterestAccrualOnHold = true,
-    isInterestChargeOnHold = true,
+    locks = Some(financialDetailsItemLocks),
     isReturn = Some(true),
     paymentReference = Some("paymentReference"),
     paymentAmount = Some(2.23),
@@ -42,7 +39,9 @@ trait FinancialDetailsItemFixture {
     isChargeEstimate = Some(true)
   )
 
-  val financialDetailsItemModelEmpty: FinancialDetailsItem =
+  val financialDetailsItemWithoutLocks: FinancialDetailsItem = financialDetailsItem.copy(locks = None)
+
+  val financialDetailsItemEmpty: FinancialDetailsItem =
     FinancialDetailsItem(
       itemId = None,
       dueDate = None,
@@ -50,10 +49,7 @@ trait FinancialDetailsItemFixture {
       clearingDate = None,
       clearingReason = None,
       outgoingPaymentMethod = None,
-      isChargeOnHold = false,
-      isEstimatedChargeOnHold = false,
-      isInterestAccrualOnHold = false,
-      isInterestChargeOnHold = false,
+      locks = None,
       isReturn = None,
       paymentReference = None,
       paymentAmount = None,
@@ -64,29 +60,28 @@ trait FinancialDetailsItemFixture {
       isChargeEstimate = None
     )
 
+  val financialDetailsItemWithoutLocksMtdJson: JsValue =
+    Json.parse(s"""
+         |{
+         |  "itemId": "001",
+         |  "dueDate": "2022-02-02",
+         |  "amount": 1.23,
+         |  "clearingDate": "2021-01-01",
+         |  "clearingReason": "Incoming Payment",
+         |  "outgoingPaymentMethod": "Repayment to Card",
+         |  "isReturn": true,
+         |  "paymentReference": "paymentReference",
+         |  "paymentAmount": 2.23,
+         |  "paymentMethod": "paymentMethod",
+         |  "paymentLot": "paymentLot",
+         |  "paymentLotItem": "paymentLotItem",
+         |  "clearingSAPDocument": "clearingSAPDocument",
+         |  "isChargeEstimate": true
+         |}
+         |""".stripMargin)
+
   val financialDetailsItemMtdJson: JsValue =
-    Json.parse("""
-      |{
-      |  "itemId": "001",
-      |  "dueDate": "2022-02-02",
-      |  "amount": 1.23,
-      |  "clearingDate": "2021-01-01",
-      |  "clearingReason": "Incoming Payment",
-      |  "outgoingPaymentMethod": "Repayment to Card",
-      |  "isChargeOnHold": true,
-      |  "isEstimatedChargeOnHold": true,
-      |  "isInterestAccrualOnHold": true,
-      |  "isInterestChargeOnHold": true,
-      |  "isReturn": true,
-      |  "paymentReference": "paymentReference",         
-      |  "paymentAmount": 2.23,
-      |  "paymentMethod": "paymentMethod",
-      |  "paymentLot": "paymentLot",
-      |  "paymentLotItem": "paymentLotItem",
-      |  "clearingSAPDocument": "clearingSAPDocument",
-      |  "isChargeEstimate": true
-      |}
-      |""".stripMargin)
+    financialDetailsItemWithoutLocksMtdJson.as[JsObject] ++ Json.obj("locks" -> financialDetailsItemLocksMtdJson)
 
   val financialDetailsItemDownstreamJson: JsValue =
     Json.parse("""

@@ -22,7 +22,7 @@ import api.connectors.httpparsers.StandardIfsHttpParser.reads
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
-import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
+import v2.models.response.retrieveBalanceAndTransactions.{FinancialDetailsItem, RetrieveBalanceAndTransactionsResponse}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -56,7 +56,10 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
 
     val queryParams = booleanQueryParams ++ optionalQueryParams
 
-    get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
+    // So that we don't read locks into result unless we've asked for them
+    implicit val jsonReadLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(request.includeLocks)
+
+    get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"), queryParams)
   }
 
 }

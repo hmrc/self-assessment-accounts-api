@@ -24,7 +24,7 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
   private val taxYear: TaxYear = TaxYear("2022")
 
-  val chargeDetailObject: ChargeDetail = ChargeDetail(
+  val chargeDetail: ChargeDetail = ChargeDetail(
     documentId = "123456",
     documentType = Option("1234"),
     documentTypeDescription = Some("Income Tax Estimate"),
@@ -32,9 +32,13 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
     chargeTypeDescription = Some("PAYE")
   )
 
-  val financialDetailsFullObject: FinancialDetails = FinancialDetails(
+  val financialDetailsFull: FinancialDetails = financialDetailsWith(Seq(financialDetailsItem))
+
+  val financialDetailsWithoutLocks: FinancialDetails = financialDetailsWith(Seq(financialDetailsItemWithoutLocks))
+
+  private def financialDetailsWith(items: Seq[FinancialDetailsItem]): FinancialDetails = FinancialDetails(
     taxYear = taxYear.asMtd,
-    chargeDetail = chargeDetailObject,
+    chargeDetail = chargeDetail,
     taxPeriodFrom = Some("2022-01-01"),
     taxPeriodTo = Some("2022-02-01"),
     contractAccount = Some("X"),
@@ -45,7 +49,7 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
     outstandingAmount = Some(452.11),
     clearedAmount = Some(3411.01),
     accruedInterest = Some(123.78),
-    items = Seq[FinancialDetailsItem](financialDetailsItemModel)
+    items = items
   )
 
   val downstreamFinancialDetailsFullJson: JsValue = Json.parse(
@@ -88,11 +92,15 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
       |}
       |""".stripMargin)
 
-  val mtdFinancialDetailsFullJson: JsValue = Json.parse(
+  val mtdFinancialDetailsFullJson: JsValue = mtdFinancialDetailsWith(financialDetailsItemMtdJson)
+
+  val mtdFinancialDetailsWithoutLocksJson: JsValue = mtdFinancialDetailsWith(financialDetailsItemWithoutLocksMtdJson)
+
+  private def  mtdFinancialDetailsWith(items: JsValue): JsValue = Json.parse(
     s"""
        |  {
        |      "taxYear":"2021-22",
-       |      "chargeDetail": ${mtdChargeDetailJson},
+       |      "chargeDetail": $mtdChargeDetailJson,
        |      "taxPeriodFrom": "2022-01-01",
        |      "taxPeriodTo": "2022-02-01",
        |      "contractAccount": "X",
@@ -103,9 +111,8 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
        |      "outstandingAmount": 452.11,
        |      "clearedAmount": 3411.01,
        |      "accruedInterest": 123.78,
-       |      "items": [$financialDetailsItemMtdJson]
+       |      "items": [$items]
        | }
-       |""".stripMargin
-  )
+       |""".stripMargin)
 
 }
