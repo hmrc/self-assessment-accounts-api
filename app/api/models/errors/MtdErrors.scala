@@ -35,16 +35,16 @@ object MtdErrorWithCustomMessage {
 // Format Errors
 
 object NinoFormatError
-  extends MtdError(
-    code = "FORMAT_NINO",
-    message = "The format of the supplied nino value is invalid"
-  )
+    extends MtdError(
+      code = "FORMAT_NINO",
+      message = "The format of the supplied nino value is invalid"
+    )
 
 object TaxYearFormatError
-  extends MtdError(
-    code = "FORMAT_TAX_YEAR",
-    message = "The format of the supplied taxYear value is invalid"
-  )
+    extends MtdError(
+      code = "FORMAT_TAX_YEAR",
+      message = "The format of the supplied taxYear value is invalid"
+    )
 
 object V1_FromDateFormatError
     extends MtdError(
@@ -59,10 +59,10 @@ object V2_FromDateFormatError
     )
 
 object ValueFormatError
-  extends MtdError(
-    code = "FORMAT_VALUE",
-    message = "The value must be between 0.00 and 99999999999.99"
-  )
+    extends MtdError(
+      code = "FORMAT_VALUE",
+      message = "The value must be between 0.00 and 99999999999.99"
+    )
 
 object V1_ToDateFormatError
     extends MtdError(
@@ -77,40 +77,40 @@ object V2_ToDateFormatError
     )
 
 object PaymentIdFormatError
-  extends MtdError(
-    code = "FORMAT_PAYMENT_ID",
-    message = "The provided payment ID is invalid"
-  )
+    extends MtdError(
+      code = "FORMAT_PAYMENT_ID",
+      message = "The provided payment ID is invalid"
+    )
 
 object TransactionIdFormatError
-  extends MtdError(
-    code = "FORMAT_TRANSACTION_ID",
-    message = "The provided transaction ID is invalid"
-  )
+    extends MtdError(
+      code = "FORMAT_TRANSACTION_ID",
+      message = "The provided transaction ID is invalid"
+    )
 
 object IdFormatError
-  extends MtdError(
-    code = "FORMAT_ID",
-    message = "The format of the ID is invalid"
-  )
+    extends MtdError(
+      code = "FORMAT_ID",
+      message = "The format of the ID is invalid"
+    )
 
 object SourceFormatError
-  extends MtdError(
-    code = "FORMAT_SOURCE",
-    message = "The format of the supplied source is not valid"
-  )
+    extends MtdError(
+      code = "FORMAT_SOURCE",
+      message = "The format of the supplied source is not valid"
+    )
 
 object PaymentLotFormatError
-  extends MtdError(
-    code = "FORMAT_PAYMENT_LOT",
-    message = "The provided paymentLot value is invalid"
-  )
+    extends MtdError(
+      code = "FORMAT_PAYMENT_LOT",
+      message = "The provided paymentLot value is invalid"
+    )
 
 object PaymentLotItemFormatError
-  extends MtdError(
-    code = "FORMAT_PAYMENT_LOT_ITEM",
-    message = "The provided paymentLotItem value is invalid"
-  )
+    extends MtdError(
+      code = "FORMAT_PAYMENT_LOT_ITEM",
+      message = "The provided paymentLotItem value is invalid"
+    )
 
 object MissingPaymentLotError
     extends MtdError(
@@ -120,46 +120,46 @@ object MissingPaymentLotError
 
 // Rule Errors
 object RuleTaxYearNotSupportedError
-  extends MtdError(
-    code = "RULE_TAX_YEAR_NOT_SUPPORTED",
-    message = "The specified taxYear is not supported. The taxYear specified is before the minimum tax year value"
-  )
+    extends MtdError(
+      code = "RULE_TAX_YEAR_NOT_SUPPORTED",
+      message = "The specified taxYear is not supported. The taxYear specified is before the minimum tax year value"
+    )
 
 object RuleIncorrectOrEmptyBodyError
-  extends MtdError(
-    code = "RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED",
-    message = "An empty or non-matching body was submitted"
-  )
+    extends MtdError(
+      code = "RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED",
+      message = "An empty or non-matching body was submitted"
+    )
 
 object RuleTaxYearRangeInvalidError
-  extends MtdError(
-    code = "RULE_TAX_YEAR_RANGE_INVALID",
-    message = "A taxYear range of one year is required"
-  )
+    extends MtdError(
+      code = "RULE_TAX_YEAR_RANGE_INVALID",
+      message = "A taxYear range of one year is required"
+    )
 
 object RuleTaxYearNotEndedError
-  extends MtdError(
-    code = "RULE_TAX_YEAR_NOT_ENDED",
-    message = "Tax year not ended"
-  )
+    extends MtdError(
+      code = "RULE_TAX_YEAR_NOT_ENDED",
+      message = "Tax year not ended"
+    )
 
 object RuleDuplicateIdError
-  extends MtdError(
-    code = "RULE_DUPLICATE_ID_NOT_ALLOWED",
-    message = "Duplicate IDs are not allowed"
-  )
+    extends MtdError(
+      code = "RULE_DUPLICATE_ID_NOT_ALLOWED",
+      message = "Duplicate IDs are not allowed"
+    )
 
 object RuleFromDateNotSupportedError
-  extends MtdError(
-    code = "RULE_FROM_DATE_NOT_SUPPORTED",
-    message = "The specified from date is not supported as too early"
-  )
+    extends MtdError(
+      code = "RULE_FROM_DATE_NOT_SUPPORTED",
+      message = "The specified from date is not supported as too early"
+    )
 
 object RuleDateRangeInvalidError
-  extends MtdError(
-    code = "RULE_DATE_RANGE_INVALID",
-    message = "The specified date range is invalid"
-  )
+    extends MtdError(
+      code = "RULE_DATE_RANGE_INVALID",
+      message = "The specified date range is invalid"
+    )
 
 object RuleInvalidDateRangeError
     extends MtdError(
@@ -168,10 +168,10 @@ object RuleInvalidDateRangeError
     )
 
 object RuleInconsistentQueryParamsError
-  extends MtdError(
-    code = "RULE_INCONSISTENT_QUERY_PARAMS",
-    message = "Provide date range or docNumber when onlyOpen items are false"
-  )
+    extends MtdError(
+      code = "RULE_INCONSISTENT_QUERY_PARAMS",
+      message = "Provide date range or docNumber when onlyOpen items are false"
+    )
 
 // Date Errors
 object V1_MissingFromDateError
@@ -218,10 +218,10 @@ object InvalidOnlyOpenItemsError extends MtdError(code = "INVALID_ONLY_OPEN_ITEM
 object InvalidIncludeLocksError extends MtdError(code = "INVALID_INCLUDE_LOCKS", message = "The provided includeLocks is invalid.")
 
 object InvalidCalculateAccruedInterestError
-  extends MtdError(code = "INVALID_CALCULATE_ACCRUED_INTEREST", message = "The provided calculateAccruedInterest is invalid.")
+    extends MtdError(code = "INVALID_CALCULATE_ACCRUED_INTEREST", message = "The provided calculateAccruedInterest is invalid.")
 
 object InvalidCustomerPaymentInformationError
-  extends MtdError(code = "INVALID_CUSTOMER_PAYMENT_INFORMATION", message = "The provided customerPaymentInformation is invalid.")
+    extends MtdError(code = "INVALID_CUSTOMER_PAYMENT_INFORMATION", message = "The provided customerPaymentInformation is invalid.")
 
 object InvalidDateFromError extends MtdError(code = "INVALID_DATE_FROM", message = "The provided dateFrom is invalid.")
 
@@ -230,77 +230,77 @@ object InvalidDateToError extends MtdError(code = "INVALID_DATE_TO", message = "
 object InvalidRemovePaymentOnAccountError extends MtdError(code = "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", message = "The provided removePOA is invalid.")
 
 object InvalidIncludeChargeEstimateError
-  extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
+    extends MtdError(code = "INVALID_INCLUDE_CHARGE_ESTIMATE", message = "The provided includeChargeEstimate is invalid.")
 
 object InvalidDateRangeError extends MtdError(code = "RULE_INVALID_DATE_RANGE", message = "The provided date range is invalid.")
 
 // Standard Errors
 object NotFoundError
-  extends MtdError(
-    code = "MATCHING_RESOURCE_NOT_FOUND",
-    message = "Matching resource not found"
-  )
+    extends MtdError(
+      code = "MATCHING_RESOURCE_NOT_FOUND",
+      message = "Matching resource not found"
+    )
 
 object CodingOutNotFoundError
-  extends MtdError(
-    code = "MATCHING_RESOURCE_NOT_FOUND",
-    message = "Coding out amounts could not be found for the supplied nino and taxYear"
-  )
+    extends MtdError(
+      code = "MATCHING_RESOURCE_NOT_FOUND",
+      message = "Coding out amounts could not be found for the supplied nino and taxYear"
+    )
 
 object NoTransactionDetailsFoundError
-  extends MtdError(
-    code = "NO_DETAILS_FOUND",
-    message = "No transaction details found"
-  )
+    extends MtdError(
+      code = "NO_DETAILS_FOUND",
+      message = "No transaction details found"
+    )
 
 object BadRequestError
-  extends MtdError(
-    code = "INVALID_REQUEST",
-    message = "Invalid request"
-  )
+    extends MtdError(
+      code = "INVALID_REQUEST",
+      message = "Invalid request"
+    )
 
 object BVRError
-  extends MtdError(
-    code = "BUSINESS_ERROR",
-    message = "Business validation error"
-  )
+    extends MtdError(
+      code = "BUSINESS_ERROR",
+      message = "Business validation error"
+    )
 
 object ServiceUnavailableError
-  extends MtdError(
-    code = "SERVICE_UNAVAILABLE",
-    message = "Internal server error"
-  )
+    extends MtdError(
+      code = "SERVICE_UNAVAILABLE",
+      message = "Internal server error"
+    )
 
 // Authorisation Errors
 object UnauthorisedError
-  extends MtdError(
-    code = "CLIENT_OR_AGENT_NOT_AUTHORISED",
-    message = "The client and/or agent is not authorised"
-  )
+    extends MtdError(
+      code = "CLIENT_OR_AGENT_NOT_AUTHORISED",
+      message = "The client and/or agent is not authorised"
+    )
 
 object InvalidBearerTokenError
-  extends MtdError(
-    code = "UNAUTHORIZED",
-    message = "Bearer token is missing or not authorized"
-  )
+    extends MtdError(
+      code = "UNAUTHORIZED",
+      message = "Bearer token is missing or not authorized"
+    )
 
 // Accept header Errors
 object InvalidAcceptHeaderError
-  extends MtdError(
-    code = "ACCEPT_HEADER_INVALID",
-    message = "The accept header is missing or invalid"
-  )
+    extends MtdError(
+      code = "ACCEPT_HEADER_INVALID",
+      message = "The accept header is missing or invalid"
+    )
 
 object UnsupportedVersionError
-  extends MtdError(
-    code = "NOT_FOUND",
-    message = "The requested resource could not be found"
-  )
+    extends MtdError(
+      code = "NOT_FOUND",
+      message = "The requested resource could not be found"
+    )
 
 object InvalidBodyTypeError
-  extends MtdError(
-    code = "INVALID_BODY_TYPE",
-    message = "Expecting text/json or application/json body"
-  )
+    extends MtdError(
+      code = "INVALID_BODY_TYPE",
+      message = "Expecting text/json or application/json body"
+    )
 
 object InternalError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred")
