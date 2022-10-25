@@ -184,13 +184,13 @@ class ListChargesControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (FromDateFormatError, BAD_REQUEST),
-          (ToDateFormatError, BAD_REQUEST),
-          (MissingFromDateError, BAD_REQUEST),
-          (MissingToDateError, BAD_REQUEST),
+          (V1_FromDateFormatError, BAD_REQUEST),
+          (V1_ToDateFormatError, BAD_REQUEST),
+          (V1_MissingFromDateError, BAD_REQUEST),
+          (V1_MissingToDateError, BAD_REQUEST),
           (RuleDateRangeInvalidError, BAD_REQUEST),
           (RuleFromDateNotSupportedError, BAD_REQUEST),
-          (RangeToDateBeforeFromDateError, BAD_REQUEST),
+          (V1_RangeToDateBeforeFromDateError, BAD_REQUEST),
           (DownstreamError, INTERNAL_SERVER_ERROR)
         )
 
@@ -222,8 +222,8 @@ class ListChargesControllerSpec
 
         val input = Seq(
           (NinoFormatError, BAD_REQUEST),
-          (FromDateFormatError, BAD_REQUEST),
-          (ToDateFormatError, BAD_REQUEST),
+          (V1_FromDateFormatError, BAD_REQUEST),
+          (V1_ToDateFormatError, BAD_REQUEST),
           (RuleDateRangeInvalidError, BAD_REQUEST),
           (NotFoundError, NOT_FOUND),
           (DownstreamError, INTERNAL_SERVER_ERROR)

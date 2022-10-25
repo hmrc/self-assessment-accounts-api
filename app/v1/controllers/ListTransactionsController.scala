@@ -116,8 +116,8 @@ class ListTransactionsController @Inject() (val authService: EnrolmentsAuthServi
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | FromDateFormatError | MissingFromDateError | ToDateFormatError | MissingToDateError |
-          RangeToDateBeforeFromDateError | RuleFromDateNotSupportedError | RuleDateRangeInvalidError =>
+      case BadRequestError | NinoFormatError | V1_FromDateFormatError | V1_MissingFromDateError | V1_ToDateFormatError | V1_MissingToDateError |
+           V1_RangeToDateBeforeFromDateError | RuleFromDateNotSupportedError | RuleDateRangeInvalidError =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

@@ -18,14 +18,7 @@ package v2.models.response.retrieveBalanceAndTransactions
 
 import play.api.libs.json.{JsString, Json}
 import support.UnitSpec
-import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{
-  documentDetails,
-  documentDetailsMinimal,
-  documentDetailsDownstreamResponseJson,
-  documentDetailsDownstreamResponseMinimalJson,
-  documentDetailsMtdResponseJson,
-  newDownstreamDocumentDetailsJson
-}
+import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture._
 import v2.models.utils.JsonErrorValidators
 
 class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
@@ -53,21 +46,17 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
       }
     }
 
-    "converting informationCode to chargeHasMultipleItems" must {
+    "converting informationCode to isCodedOut" must {
       def json(informationCode: String) = documentDetailsDownstreamResponseMinimalJson.update("informationCode", JsString(informationCode))
 
-      "convert 'i' to true" in {
-        json("i").as[DocumentDetails] shouldBe
-          documentDetailsMinimal.copy(chargeHasMultipleItems = true)
-      }
-      "convert another value to false" in {
+      "convert any non-empty string value to true" in {
         json("x").as[DocumentDetails] shouldBe
-          documentDetailsMinimal.copy(chargeHasMultipleItems = false)
+          documentDetailsMinimal.copy(isCodedOut = true)
       }
 
       "convert an absent field to false" in {
         documentDetailsDownstreamResponseMinimalJson.removeProperty("informationCode").as[DocumentDetails] shouldBe
-          documentDetailsMinimal.copy(chargeHasMultipleItems = false)
+          documentDetailsMinimal.copy(isCodedOut = false)
       }
     }
   }

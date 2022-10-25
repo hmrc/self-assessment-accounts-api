@@ -32,7 +32,6 @@ object AllocationFixtures {
     chargeDetail = Some(chargeDetailObject),
     amount = Some(12345678912.02),
     clearedAmount = Some(345678912.02),
-    contractAccountCategory = Some("02"),
     contractAccount = Some("ABC")
   )
 
@@ -48,7 +47,6 @@ object AllocationFixtures {
        |    "chargeDetail": $chargeDetailMtdJson,
        |    "amount": 12345678912.02,
        |    "clearedAmount": 345678912.02,
-       |    "contractAccountCategory": "02",
        |    "contractAccount": "ABC"
        |}
        |""".stripMargin

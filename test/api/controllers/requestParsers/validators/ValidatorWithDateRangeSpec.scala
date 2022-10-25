@@ -17,14 +17,14 @@
 package api.controllers.requestParsers.validators
 
 import api.models.errors.{
-  FromDateFormatError,
-  MissingFromDateError,
-  MissingToDateError,
+  V1_FromDateFormatError,
+  V1_MissingFromDateError,
+  V1_MissingToDateError,
   NinoFormatError,
-  RangeToDateBeforeFromDateError,
+  V1_RangeToDateBeforeFromDateError,
   RuleDateRangeInvalidError,
   RuleFromDateNotSupportedError,
-  ToDateFormatError
+  V1_ToDateFormatError
 }
 import api.models.request.RawDataWithDateRange
 import support.UnitSpec
@@ -53,23 +53,23 @@ class ValidatorWithDateRangeSpec extends UnitSpec {
       }
       "passed an invalid from date format" in {
         val input = TestRawDataWithDateRange("AA999999A", Some("2019-022-01"), Some("2019-02-02"))
-        validator.validate(input) shouldBe List(FromDateFormatError)
+        validator.validate(input) shouldBe List(V1_FromDateFormatError)
       }
       "passed an invalid to date format" in {
         val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-01"), Some("2019-022-02"))
-        validator.validate(input) shouldBe List(ToDateFormatError)
+        validator.validate(input) shouldBe List(V1_ToDateFormatError)
       }
       "passed a missing from date" in {
         val input = TestRawDataWithDateRange("AA999999A", None, Some("2019-02-02"))
-        validator.validate(input) shouldBe List(MissingFromDateError)
+        validator.validate(input) shouldBe List(V1_MissingFromDateError)
       }
       "passed a missing to date" in {
         val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-01"), None)
-        validator.validate(input) shouldBe List(MissingToDateError)
+        validator.validate(input) shouldBe List(V1_MissingToDateError)
       }
       "passed a to date before the from date" in {
         val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2019-02-01"))
-        validator.validate(input) shouldBe List(RangeToDateBeforeFromDateError)
+        validator.validate(input) shouldBe List(V1_RangeToDateBeforeFromDateError)
       }
       "passed a date range which is too large" in {
         val input = TestRawDataWithDateRange("AA999999A", Some("2019-02-02"), Some("2021-02-03"))
@@ -83,7 +83,7 @@ class ValidatorWithDateRangeSpec extends UnitSpec {
     "return multiple errors" when {
       "multiple parameters are missing" in {
         val input = TestRawDataWithDateRange("AA999999A", None, None)
-        validator.validate(input) shouldBe List(MissingFromDateError, MissingToDateError)
+        validator.validate(input) shouldBe List(V1_MissingFromDateError, V1_MissingToDateError)
       }
       "multiple invalid parameters are provided" in {
         val input = TestRawDataWithDateRange("AA999999A", Some("2017-02-02"), Some("2021-02-03"))

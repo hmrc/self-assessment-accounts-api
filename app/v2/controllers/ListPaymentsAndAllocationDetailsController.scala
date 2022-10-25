@@ -45,8 +45,8 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
     EndpointLogContext(controllerName = "ListPaymentsAndAllocationDetailsController", endpointName = "listPaymentsAndAllocationDetails")
 
   def listPayments(nino: String,
-                   from: Option[String],
-                   to: Option[String],
+                   fromDate: Option[String],
+                   toDate: Option[String],
                    paymentLot: Option[String],
                    paymentLotItem: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
@@ -55,8 +55,14 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
           s"with CorrelationId: $correlationId")
 
-      val rawData =
-        ListPaymentsAndAllocationDetailsRawData(nino = nino, dateFrom = from, dateTo = to, paymentLot = paymentLot, paymentLotItem = paymentLotItem)
+      val rawData = ListPaymentsAndAllocationDetailsRawData(
+        nino = nino,
+        fromDate = fromDate,
+        toDate = toDate,
+        paymentLot = paymentLot,
+        paymentLotItem = paymentLotItem
+      )
+
       val result =
         for {
           parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
@@ -88,14 +94,15 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
           if errorWrapper.containsAnyOf(
             BadRequestError,
             NinoFormatError,
-            DateFromFormatError,
-            DateToFormatError,
-            MissingFromDateError,
-            MissingToDateError,
-            RuleDateToBeforeDateFromError,
-            RuleDateRangeInvalidError,
+            V2_FromDateFormatError,
+            V2_ToDateFormatError,
+            V2_MissingFromDateError,
+            V2_MissingToDateError,
+            V2_RangeToDateBeforeFromDateError,
+            RuleInvalidDateRangeError,
             PaymentLotFormatError,
-            PaymentLotItemFormatError
+            PaymentLotItemFormatError,
+            MissingPaymentLotError
           ) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))

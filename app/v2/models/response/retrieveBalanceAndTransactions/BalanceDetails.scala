@@ -16,6 +16,7 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
+import api.models.domain.TaxYear
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
@@ -27,7 +28,7 @@ object BalancePerYear {
   implicit val reads: Reads[BalancePerYear] =
     (
       (JsPath \ "amount").readNullable[BigDecimal] and
-        (JsPath \ "taxYear").readNullable[String]
+        (JsPath \ "taxYear").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd))
     )(BalancePerYear.apply _)
 
   implicit val writes: OWrites[BalancePerYear] =
