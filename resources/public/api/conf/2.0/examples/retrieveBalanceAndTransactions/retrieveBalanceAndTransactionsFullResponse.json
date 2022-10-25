@@ -104,10 +104,12 @@
           "clearingDate": "2018-08-13",
           "clearingReason": "Outgoing Payment",
           "outgoingPaymentMethod": "Payable Order Repayment",
-          "isChargeOnHold": false,
-          "isEstimatedChargeOnHold": false,
-          "isInterestAccrualOnHold": false,
-          "isInterestChargeOnHold": false,
+          "locks": {
+            "isChargeOnHold": false,
+            "isEstimatedChargeOnHold": false,
+            "isInterestAccrualOnHold": false,
+            "isInterestChargeOnHold": false
+          },
           "isReturn": true,
           "paymentReference": "Ab12453535",
           "paymentAmount": 10000,
