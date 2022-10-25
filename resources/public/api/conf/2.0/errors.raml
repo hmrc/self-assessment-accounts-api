@@ -12,7 +12,7 @@ traits:
             type: types.errorResponse
             examples:
               notFound:
-                description: The supplied income source could not be found.
+                description: Matching resource not found.
                 value:
                   code: MATCHING_RESOURCE_NOT_FOUND
   notFoundTransactionDetails:
@@ -100,7 +100,7 @@ traits:
             type: types.errorResponse
             examples:
               invalidDateFrom:
-                description: The format of dateFrom is not valid. .
+                description: The format of dateFrom is not valid.
                 value:
                   code: INVALID_DATE_FROM
   invalidDateTo:
@@ -122,7 +122,7 @@ traits:
             type: types.errorResponse
             examples:
               missingFromDate:
-                description: The toDate has been provided, but fromDate is missing.
+                description: The From date parameter is missing
                 value:
                   code: MISSING_FROM_DATE
   missingToDate:
@@ -133,7 +133,7 @@ traits:
             type: types.errorResponse
             examples:
               missingToDate:
-                description: The fromDate has been provided, but toDate is missing.
+                description: The To date parameter is missing.
                 value:
                   code: MISSING_TO_DATE
   rangeToDateBeforeFromDate:
@@ -144,7 +144,7 @@ traits:
             type: types.errorResponse
             examples:
               rangeToDateBeforeFromDate:
-                description: The To date is before the From date.
+                description: The To date must be after the From date.
                 value:
                   code: RANGE_TO_DATE_BEFORE_FROM_DATE
   ruleDateRangeInvalid:
@@ -155,9 +155,9 @@ traits:
             type: types.errorResponse
             examples:
               ruleDateRangeInvalid:
-                description: The date range is longer than 732 days.
+                description: The provided date range is not valid.
                 value:
-                  code: RULE_DATE_RANGE_INVALID
+                  code: RULE_INVALID_DATE_RANGE
   invalidDateRange:
     responses:
       400:
@@ -555,7 +555,7 @@ traits:
               invalidDocNUmber:
                 description: The format of docNumber is not valid.
                 value:
-                  code: INVALID_DOC_NUMBER
+                  code: FORMAT_DOC_NUMBER
   invalidOnlyOpenItems:
     responses:
       400:
@@ -566,7 +566,7 @@ traits:
               invalidOnlyOpenItems:
                 description: The format of onlyOpenItem is not valid.
                 value:
-                  code: INVALID_ONLY_OPEN_ITEMS
+                  code: FORMAT_ONLY_OPEN_ITEMS
   invalidIncludeLocks:
     responses:
       400:
@@ -577,7 +577,7 @@ traits:
               invalidIncludeLocks:
                 description: The format of includeLocks is not valid.
                 value:
-                  code: INVALID_INCLUDE_LOCKS
+                  code: FORMAT_INCLUDE_LOCKS
   invalidCalculateAccruedInterest:
     responses:
       400:
@@ -588,7 +588,7 @@ traits:
               invalidCalculateAccruedInterest:
                 description: The format for calculatingAccruedInterest is not valid.
                 value:
-                  code: INVALID_CALCULATE_ACCRUED_INTEREST
+                  code: FORMAT_CALCULATE_ACCRUED_INTEREST
   invalidCustomerPaymentInformation:
     responses:
       400:
@@ -599,7 +599,7 @@ traits:
               invalidCustomerPaymentInformation:
                 description: The format of customerPaymentInformation is not valid.
                 value:
-                  code: INVALID_CUSTOMER_PAYMENT_INFORMATION
+                  code: FORMAT_CUSTOMER_PAYMENT_INFORMATION
   invalidRemovePaymentOnAccount:
     responses:
       400:
@@ -610,7 +610,7 @@ traits:
               invalidRemovePaymentOnAccount:
                 description: The format of removePOA is not valid.
                 value:
-                  code: INVALID_REMOVE_PAYMENT_ON_ACCOUNT
+                  code: FORMAT_REMOVE_PAYMENT_ON_ACCOUNT
   invalidIncludeChargeEstimate:
     responses:
       400:
@@ -619,9 +619,9 @@ traits:
             type: types.errorResponse
             examples:
               invalidIncludeChargeEstimate:
-                description: The format of includeChargeEstimate is not valid
+                description: The format of includeEstimatedCharges is not valid
                 value:
-                  code: INVALID_INCLUDE_CHARGE_ESTIMATE
+                  code: FORMAT_INCLUDE_ESTIMATED_CHARGES
   ruleInconsistentQueryParams:
     responses:
       400:
@@ -630,6 +630,6 @@ traits:
             type: types.errorResponse
             examples:
               ruleInconsistentQueryParams:
-                description: Provide date range or docNumber when only openItems are false.
+                description: Provide date range or docNumber when only openItems is false.
                 value:
                   code: RULE_INCONSISTENT_QUERY_PARAMS

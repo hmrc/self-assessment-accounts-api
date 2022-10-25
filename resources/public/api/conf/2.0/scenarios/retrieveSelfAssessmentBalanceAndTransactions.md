@@ -17,7 +17,11 @@
         </tr>
         <tr>
             <td><p>INCONSISTENT_QUERY_PARAMS</p></td>
-            <td><p>Simulates the scenario where the request is invalid due to both date range and docNumber being provided when onlyOpenItems is false.</p></td>
+            <td><p>Simulates the scenario where the query parameters are inconsistent.</p></td>
+        </tr>
+        <tr>
+            <td><p>INVALID_DATE_RANGE</p></td>
+            <td><p>Simulates the scenario where the provided date range is invalid.</p></td>
         </tr>
     </tbody>
 </table>

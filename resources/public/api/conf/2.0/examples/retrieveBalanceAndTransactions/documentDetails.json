@@ -15,14 +15,14 @@
     "lastClearedAmount": 5009.99
   },
   "isChargeEstimate": true,
-  "chargeHasMultipleItems": true,
+  "isCodedOut": true,
   "paymentLot": "AB1023456789",
   "paymentLotItem": "000001",
   "effectiveDateOfPayment": "2021-04-05",
   "latePaymentInterest": {
     "latePaymentInterestId": "1234567890123456",
     "accruingInterestAmount": 5009.99,
-    "interestRate": 5.99,
+    "interestRate": 1.23,
     "interestStartDate": "2020-04-01",
     "interestEndDate": "2020-04-05",
     "interestAmount": 5009.99,
@@ -31,8 +31,8 @@
   },
   "amountCodedOut": 5009.99,
   "reducedCharge": {
-    "chargeType": "AA",
-    "documentNumber": "1234567890123456",
+    "chargeType": "???",
+    "documentNumber": "???",
     "amendmentDate": "2018-04-05",
     "taxYear": "2017-18"
   }
