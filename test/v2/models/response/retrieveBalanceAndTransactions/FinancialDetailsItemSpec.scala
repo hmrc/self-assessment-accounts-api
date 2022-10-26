@@ -66,26 +66,6 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
         // Exclude locks so we can more easily compare just the field of interest...
         implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
 
-        "converting clearingReason" must {
-          def json(value: String): JsValue = Json.parse(s"""{ "clearingReason": "$value" }""")
-
-          def model(value: Option[String]): FinancialDetailsItem = financialDetailsItemEmpty.copy(clearingReason = value)
-
-          "convert if present and a mapping is defined" when {
-            def doTest(downstreamValue: String, mtdValue: String): Unit =
-              s"downstream value is $downstreamValue" in {
-                json(downstreamValue).as[FinancialDetailsItem] shouldBe model(Some(mtdValue))
-              }
-
-            Seq("01" -> "Incoming Payment", "02" -> "Outgoing Payment", "05" -> "Reversal", "06" -> "Manual Clearing", "08" -> "Automatic Clearing")
-              .foreach((doTest _).tupled)
-          }
-
-          "leave absent if present and no mapping is defined" in {
-            json("UNKNOWN").as[FinancialDetailsItem] shouldBe model(None)
-          }
-        }
-
         "converting outgoingPaymentMethod" must {
           def json(value: String): JsValue = Json.parse(s"""{ "outgoingPaymentMethod": "$value" }""")
 

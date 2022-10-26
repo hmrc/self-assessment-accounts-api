@@ -41,15 +41,6 @@ object FinancialDetailsItem {
   case class ReadLocks(value: Boolean)
 
   implicit def reads(implicit readLocks: ReadLocks): Reads[FinancialDetailsItem] = {
-    val clearingReasonConverter: Option[String] => Option[String] =
-      convertToMtd(
-        Map(
-          "01" -> "Incoming Payment",
-          "02" -> "Outgoing Payment",
-          "05" -> "Reversal",
-          "06" -> "Manual Clearing",
-          "08" -> "Automatic Clearing"
-        ))
 
     val paymentMethodConverter: Option[String] => Option[String] =
       convertToMtd(Map("A" -> "Repayment to Card", "P" -> "Payable Order Repayment", "R" -> "BACS Payment out"))
@@ -58,7 +49,7 @@ object FinancialDetailsItem {
       (__ \ "dueDate").readNullable[String] and
       (__ \ "amount").readNullable[BigDecimal] and
       (__ \ "clearingDate").readNullable[String] and
-      (__ \ "clearingReason").readNullable[String].map(clearingReasonConverter) and
+      (__ \ "clearingReason").readNullable[String] and
       (__ \ "outgoingPaymentMethod").readNullable[String].map(paymentMethodConverter) and
       (if (readLocks.value) __.read[FinancialDetailsItemLocks].map(Some(_)) else Reads.pure(None)) and
       (__ \ "returnFlag").readNullable[Boolean] and

@@ -90,7 +90,7 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
         |  "dueDate": "2022-02-02",
         |  "amount": 1.23,
         |  "clearingDate": "2021-01-01",
-        |  "clearingReason": "01",
+        |  "clearingReason": "Incoming Payment",
         |  "outgoingPaymentMethod": "A",
         |  "paymentLock": "K",
         |  "clearingLock": "0",
