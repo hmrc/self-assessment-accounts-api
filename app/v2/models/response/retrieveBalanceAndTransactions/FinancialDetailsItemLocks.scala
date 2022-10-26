@@ -30,12 +30,13 @@ object FinancialDetailsItemLocks {
   implicit val writes: Writes[FinancialDetailsItemLocks] = Json.writes
 
   implicit val reads: Reads[FinancialDetailsItemLocks] = {
-    val stringToBooleanConverter: Option[String] => Boolean = _.exists(_.nonEmpty)
+    def bool(fieldName: String): Reads[Boolean] =
+      (__ \ fieldName).readNullable[String].map(_.exists(_.nonEmpty))
 
-    ((__ \ "paymentLock").readNullable[String].map(stringToBooleanConverter) and
-      (__ \ "clearingLock").readNullable[String].map(stringToBooleanConverter) and
-      (__ \ "interestLock").readNullable[String].map(stringToBooleanConverter) and
-      (__ \ "dunningLock").readNullable[String].map(stringToBooleanConverter))(FinancialDetailsItemLocks.apply _)
+    (bool("paymentLock") and
+      bool("clearingLock") and
+      bool("interestLock") and
+      bool("dunningLock"))(FinancialDetailsItemLocks.apply _)
   }
 
 }

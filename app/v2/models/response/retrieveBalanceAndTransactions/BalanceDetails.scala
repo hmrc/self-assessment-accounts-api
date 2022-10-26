@@ -51,12 +51,12 @@ object BalanceDetails {
 
   // Downstream fields 'should' both be present but this is not in the spec -
   // so use this to enable safe transformation to mandatory MTD fields
-  private case class DowntreamBalancePerYear(amount: Option[BigDecimal], taxYear: Option[String])
+  private case class DownstreamBalancePerYear(amount: Option[BigDecimal], taxYear: Option[String])
 
-  private object DowntreamBalancePerYear {
-    implicit val reads: Reads[DowntreamBalancePerYear] = Json.reads
+  private object DownstreamBalancePerYear {
+    implicit val reads: Reads[DownstreamBalancePerYear] = Json.reads
 
-    def asMtd: PartialFunction[DowntreamBalancePerYear, BalancePerYear] = { case DowntreamBalancePerYear(Some(amount), Some(taxYear)) =>
+    def asMtd: PartialFunction[DownstreamBalancePerYear, BalancePerYear] = { case DownstreamBalancePerYear(Some(amount), Some(taxYear)) =>
       BalancePerYear(amount, TaxYear.fromDownstream(taxYear).asMtd)
     }
 
@@ -68,8 +68,8 @@ object BalanceDetails {
       (JsPath \ "balanceNotDueIn30Days").read[BigDecimal] and
       (JsPath \ "nextPaymentDateBalanceNotDue").readNullable[String] and
       (JsPath \ "overDueAmount").read[BigDecimal] and
-      (JsPath \ "bcdBalancePerYear").readNullable[Seq[DowntreamBalancePerYear]].map {
-        case Some(bs) => bs.collect(DowntreamBalancePerYear.asMtd)
+      (JsPath \ "bcdBalancePerYear").readNullable[Seq[DownstreamBalancePerYear]].map {
+        case Some(bs) => bs.collect(DownstreamBalancePerYear.asMtd)
         case None     => Nil
       } and
       (JsPath \ "earliestPaymentDateOverDue").readNullable[String] and
