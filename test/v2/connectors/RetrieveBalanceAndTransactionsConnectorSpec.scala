@@ -89,10 +89,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, response))
 
       MockHttpClient
-        .parameterGet(
+        .get(
           s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-          queryParams,
           dummyIfsHeaderCarrierConfig,
+          parameters = queryParams,
           requiredIfsHeaders,
           Seq("AnotherHeader" -> "HeaderValue")
         )

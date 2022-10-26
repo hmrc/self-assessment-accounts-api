@@ -54,10 +54,10 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, response))
 
       MockHttpClient
-        .parameterGet(
+        .get(
           s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
-          queryParams,
           dummyDesHeaderCarrierConfig,
+          parameters = queryParams,
           requiredDesHeaders,
           Seq("AnotherHeader" -> "HeaderValue")
         )
