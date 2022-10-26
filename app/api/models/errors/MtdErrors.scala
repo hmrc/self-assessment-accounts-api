@@ -170,7 +170,7 @@ object RuleInvalidDateRangeError
 object RuleInconsistentQueryParamsError
     extends MtdError(
       code = "RULE_INCONSISTENT_QUERY_PARAMS",
-      message = "Provide date range or docNumber when onlyOpen items are false"
+      message = "Provide date range or docNumber when onlyOpenItems is false"
     )
 
 // Date Errors

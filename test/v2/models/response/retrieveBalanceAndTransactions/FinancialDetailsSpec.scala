@@ -19,14 +19,16 @@ package v2.models.response.retrieveBalanceAndTransactions
 import play.api.libs.json.Json
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture._
-import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFullObject
+import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFull
 
 class FinancialDetailsSpec extends UnitSpec {
+
+  implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
 
   "reads" should {
     "return a valid model with all properties" when {
       "valid JSON with all properties is supplied " in {
-        downstreamFinancialDetailsFullJson.as[FinancialDetails] shouldBe financialDetailsFullObject
+        downstreamFinancialDetailsFullJson.as[FinancialDetails] shouldBe financialDetailsFull
       }
     }
   }
@@ -34,7 +36,7 @@ class FinancialDetailsSpec extends UnitSpec {
   "writes" when {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
-        Json.toJson(financialDetailsFullObject) shouldBe mtdFinancialDetailsFullJson
+        Json.toJson(financialDetailsFull) shouldBe mtdFinancialDetailsFullJson
       }
     }
   }

@@ -29,6 +29,55 @@ class BalanceDetailsSpec extends UnitSpec {
           .as[BalanceDetails] shouldBe balanceDetails
       }
     }
+
+    "filter out bcdBalancePerYear entries that have no amount or no taxYear" in {
+      val balanceDetails = Json
+        .parse(s"""
+           |{ 
+           |    "balanceDueWithin30Days": 123,
+           |    "balanceNotDueIn30Days": 123,
+           |    "totalBalance": 123,
+           |    "overDueAmount": 123,
+           |    "bcdBalancePerYear": [
+           |      {
+           |       "amount": 1,
+           |       "taxYear": "2021"
+           |      },      
+           |      {
+           |       "taxYear": "2022"
+           |      },
+           |      {
+           |       "amount": 3
+           |      },
+           |      {
+           |       "amount": 4,
+           |       "taxYear": "2024"
+           |      }
+           |    ]
+           |  }
+           |""".stripMargin)
+        .as[BalanceDetails]
+
+      balanceDetails.bcdBalancePerYear shouldBe Seq(
+        BalancePerYear(bcdAmount = 1, taxYear = "2020-21"),
+        BalancePerYear(bcdAmount = 4, taxYear = "2023-24")
+      )
+    }
+
+    "convert an absent bcdBalancePerYear to empty sequence" in {
+      val balanceDetails = Json
+        .parse(s"""
+           |{
+           |    "balanceDueWithin30Days": 123,
+           |    "balanceNotDueIn30Days": 123,
+           |    "totalBalance": 123,
+           |    "overDueAmount": 123
+           |}
+           |""".stripMargin)
+        .as[BalanceDetails]
+
+      balanceDetails.bcdBalancePerYear shouldBe Nil
+    }
   }
 
   "writes" when {

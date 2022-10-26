@@ -22,7 +22,7 @@ import mocks.MockAppConfig
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
 import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDetails
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
-import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFullObject
+import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFull
 import v2.mocks.MockHttpClient
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions._
@@ -47,7 +47,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       balanceDetails = balanceDetails,
       codingDetails = Some(Seq(codingDetails)),
       documentDetails = Some(Seq(documentDetails)),
-      financialDetails = Some(Seq(financialDetailsFullObject))
+      financialDetails = Some(Seq(financialDetailsFull))
     )
 
   private val validRequest: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
@@ -89,10 +89,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, response))
 
       MockHttpClient
-        .parameterGet(
+        .get(
           s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-          queryParams,
           dummyIfsHeaderCarrierConfig,
+          parameters = queryParams,
           requiredIfsHeaders,
           Seq("AnotherHeader" -> "HeaderValue")
         )

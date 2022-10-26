@@ -24,7 +24,7 @@ object BalanceDetailsFixture {
 
   private val taxYear: TaxYear = TaxYear("2022")
 
-  val balancePerYearObject: BalancePerYear = BalancePerYear(Some(123.45), Some(taxYear.asMtd))
+  val balancePerYear: BalancePerYear = BalancePerYear(123.45, taxYear.asMtd)
 
   val balanceDetails: BalanceDetails = BalanceDetails(
     payableAmount = 124.20,
@@ -32,7 +32,7 @@ object BalanceDetailsFixture {
     pendingChargeDueAmount = 0.12,
     pendingChargeDueDate = Some("2022-01-01"),
     overdueAmount = 12.65,
-    bcdBalancePerYear = Some(Seq(balancePerYearObject)),
+    bcdBalancePerYear = Seq(balancePerYear),
     earliestPaymentDateOverdue = Some("2022-05-05"),
     totalBalance = 1263.12,
     amountCodedOut = Some(12.12),
@@ -51,7 +51,7 @@ object BalanceDetailsFixture {
     pendingChargeDueAmount = 0.12,
     pendingChargeDueDate = None,
     overdueAmount = 12.65,
-    bcdBalancePerYear = None,
+    bcdBalancePerYear = Nil,
     earliestPaymentDateOverdue = None,
     totalBalance = 1263.12,
     amountCodedOut = None,

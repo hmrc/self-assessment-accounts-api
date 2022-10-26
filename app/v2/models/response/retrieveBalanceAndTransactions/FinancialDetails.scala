@@ -37,7 +37,7 @@ case class FinancialDetails(taxYear: String,
 object FinancialDetails {
   implicit val writes: Writes[FinancialDetails] = Json.writes[FinancialDetails]
 
-  implicit val reads: Reads[FinancialDetails] = (
+  implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[FinancialDetails] = (
     (JsPath \ "taxYear").read[String].map(TaxYear.fromDownstream(_).asMtd) and
       JsPath.read[ChargeDetail] and
       (JsPath \ "taxPeriodFrom").readNullable[String] and

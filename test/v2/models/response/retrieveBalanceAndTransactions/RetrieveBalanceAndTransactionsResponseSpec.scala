@@ -23,22 +23,35 @@ import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture._
 class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
   "RetrieveBalanceAndTransactionsResponse.reads" when {
-    "passed a valid JSON document" should {
-      "return a fully populated object" in {
-        val result = downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse]
-        result shouldBe response
-      }
-      "return a minimally populated object" in {
-        val result = minimalDownstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse]
-        result shouldBe minimalResponse
+    "locks are included" when {
+      implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
+
+      "passed a valid JSON document" should {
+        "return a fully populated object" in {
+          downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe response
+        }
+
+        "return a minimally populated object" in {
+          minimalDownstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe minimalResponse
+        }
       }
     }
+
+    "locks are included" should {
+      implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
+
+      "exclude locks" should {
+        "return the object without locks" in {
+          downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseWithoutLocks
+        }
+      }
+    }
+
   }
 
   "RetrieveBalanceAndTransactionsResponse.writes" should {
     "produce the expected JSON" in {
-      val result = Json.toJson(response)
-      result shouldBe mtdResponseJson
+      Json.toJson(response) shouldBe mtdResponseJson
     }
   }
 

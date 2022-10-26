@@ -66,10 +66,10 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
         val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
         MockHttpClient
-          .parameterGet(
+          .get(
             s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-            Seq("docNumber" -> transactionId),
             dummyDesHeaderCarrierConfig,
+            parameters = Seq("docNumber" -> transactionId),
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
           )

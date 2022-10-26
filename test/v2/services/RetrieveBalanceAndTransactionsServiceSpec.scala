@@ -24,7 +24,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
 import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDetails
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
-import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFullObject
+import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFull
 import v2.mocks.connectors.MockRetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions._
@@ -63,7 +63,7 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
       balanceDetails = balanceDetails,
       codingDetails = Some(Seq(codingDetails)),
       documentDetails = Some(Seq(documentDetails)),
-      financialDetails = Some(Seq(financialDetailsFullObject))
+      financialDetails = Some(Seq(financialDetailsFull))
     )
 
   "RetrieveBalanceAndTransactionsService" should {
