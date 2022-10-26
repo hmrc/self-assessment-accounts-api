@@ -16,18 +16,19 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{InvalidDocNumberError, MtdError}
+import api.models.errors.{DocNumberFormatError, MtdError}
 
 object DocNumberValidation {
 
   val MAX_LENGTH = 12
 
-  def validate(docNumber: Option[String]): List[MtdError] = {
-    docNumber.map(validate).getOrElse(Nil)
-  }
+  def validate(docNumber: Option[String]): List[MtdError] =
+    docNumber
+      .map { docNumber =>
+        val invalid = docNumber.isEmpty || docNumber.length > MAX_LENGTH
 
-  def validate(docNumber: String): List[MtdError] = {
-    if (docNumber.length > MAX_LENGTH) List(InvalidDocNumberError) else Nil
-  }
+        if (invalid) List(DocNumberFormatError) else Nil
+      }
+      .getOrElse(Nil)
 
 }

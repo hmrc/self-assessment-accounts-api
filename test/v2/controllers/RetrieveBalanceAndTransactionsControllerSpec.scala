@@ -29,7 +29,7 @@ import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import uk.gov.hmrc.http.HeaderCarrier
-import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture.{inputDataEverythingTrue, requestEverythingTrue, validDocNumber, validNino}
+import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
 import v2.mocks.requestParsers.MockRetrieveBalanceAndTransactionsRequestParser
 import v2.mocks.services.MockRetrieveBalanceAndTransactionsService
@@ -94,14 +94,14 @@ class RetrieveBalanceAndTransactionsControllerSpec
         val result: Future[Result] = controller.retrieveBalanceAndTransactions(
           nino = nino,
           docNumber = Some(validDocNumber),
-          dateFrom = None,
-          dateTo = None,
+          fromDate = None,
+          toDate = None,
           onlyOpenItems = Some("true"),
           includeLocks = Some("true"),
           calculateAccruedInterest = Some("true"),
           removePOA = Some("true"),
           customerPaymentInformation = Some("true"),
-          includeChargeEstimate = Some("true")
+          includeEstimatedCharges = Some("true")
         )(fakeGetRequest)
 
         status(result) shouldBe OK
@@ -122,14 +122,14 @@ class RetrieveBalanceAndTransactionsControllerSpec
             val result: Future[Result] = controller.retrieveBalanceAndTransactions(
               nino = nino,
               docNumber = Some(validDocNumber),
-              dateFrom = None,
-              dateTo = None,
+              fromDate = None,
+              toDate = None,
               onlyOpenItems = Some("true"),
               includeLocks = Some("true"),
               calculateAccruedInterest = Some("true"),
               removePOA = Some("true"),
               customerPaymentInformation = Some("true"),
-              includeChargeEstimate = Some("true")
+              includeEstimatedCharges = Some("true")
             )(fakeGetRequest)
 
             status(result) shouldBe expectedStatus
@@ -141,17 +141,18 @@ class RetrieveBalanceAndTransactionsControllerSpec
         val input = Seq(
           (BadRequestError, BAD_REQUEST),
           (NinoFormatError, BAD_REQUEST),
-          (InvalidDocNumberError, BAD_REQUEST),
-          (InvalidOnlyOpenItemsError, BAD_REQUEST),
-          (InvalidIncludeLocksError, BAD_REQUEST),
-          (InvalidCalculateAccruedInterestError, BAD_REQUEST),
-          (InvalidCustomerPaymentInformationError, BAD_REQUEST),
-          (InvalidDateFromError, BAD_REQUEST),
-          (InvalidDateToError, BAD_REQUEST),
-          (InvalidDateRangeError, BAD_REQUEST),
-          (RuleInconsistentQueryParamsError, BAD_REQUEST),
-          (InvalidRemovePaymentOnAccountError, BAD_REQUEST),
-          (InvalidIncludeChargeEstimateError, BAD_REQUEST)
+          (DocNumberFormatError, BAD_REQUEST),
+          (OnlyOpenItemsFormatError, BAD_REQUEST),
+          (IncludeLocksFormatError, BAD_REQUEST),
+          (CalculateAccruedInterestFormatError, BAD_REQUEST),
+          (CustomerPaymentInformationFormatError, BAD_REQUEST),
+          (V2_FromDateFormatError, BAD_REQUEST),
+          (V2_ToDateFormatError, BAD_REQUEST),
+          (RemovePaymentOnAccountFormatError, BAD_REQUEST),
+          (IncludeEstimatedChargesFormatError, BAD_REQUEST),
+          (V2_MissingToDateError, BAD_REQUEST),
+          (V2_MissingFromDateError, BAD_REQUEST),
+          (V2_RangeToDateBeforeFromDateError, BAD_REQUEST)
         )
 
         input.foreach(args => (errorsFromParserTester _).tupled(args))
@@ -173,14 +174,14 @@ class RetrieveBalanceAndTransactionsControllerSpec
           val result: Future[Result] = controller.retrieveBalanceAndTransactions(
             nino = nino,
             docNumber = Some(validDocNumber),
-            dateFrom = None,
-            dateTo = None,
+            fromDate = None,
+            toDate = None,
             onlyOpenItems = Some("true"),
             includeLocks = Some("true"),
             calculateAccruedInterest = Some("true"),
             removePOA = Some("true"),
             customerPaymentInformation = Some("true"),
-            includeChargeEstimate = Some("true")
+            includeEstimatedCharges = Some("true")
           )(fakeGetRequest)
 
           status(result) shouldBe expectedStatus
@@ -192,17 +193,17 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
       val input = Seq(
         (NinoFormatError, BAD_REQUEST),
-        (InvalidDocNumberError, BAD_REQUEST),
-        (InvalidOnlyOpenItemsError, BAD_REQUEST),
-        (InvalidIncludeLocksError, BAD_REQUEST),
-        (InvalidCalculateAccruedInterestError, BAD_REQUEST),
-        (InvalidCustomerPaymentInformationError, BAD_REQUEST),
-        (InvalidDateFromError, BAD_REQUEST),
-        (InvalidDateToError, BAD_REQUEST),
-        (InvalidDateRangeError, BAD_REQUEST),
+        (DocNumberFormatError, BAD_REQUEST),
+        (OnlyOpenItemsFormatError, BAD_REQUEST),
+        (IncludeLocksFormatError, BAD_REQUEST),
+        (CalculateAccruedInterestFormatError, BAD_REQUEST),
+        (CustomerPaymentInformationFormatError, BAD_REQUEST),
+        (V2_FromDateFormatError, BAD_REQUEST),
+        (V2_ToDateFormatError, BAD_REQUEST),
+        (RuleInvalidDateRangeError, BAD_REQUEST),
         (RuleInconsistentQueryParamsError, BAD_REQUEST),
-        (InvalidRemovePaymentOnAccountError, BAD_REQUEST),
-        (InvalidIncludeChargeEstimateError, BAD_REQUEST),
+        (RemovePaymentOnAccountFormatError, BAD_REQUEST),
+        (IncludeEstimatedChargesFormatError, BAD_REQUEST),
         (NotFoundError, NOT_FOUND),
         (InternalError, INTERNAL_SERVER_ERROR)
       )

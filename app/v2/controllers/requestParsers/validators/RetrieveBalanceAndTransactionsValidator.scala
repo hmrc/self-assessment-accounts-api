@@ -17,24 +17,8 @@
 package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import api.controllers.requestParsers.validators.validations.{
-  BooleanValidation,
-  DateFormatValidation,
-  DateRangeValidationV2,
-  DocNumberValidation,
-  NinoValidation
-}
-import api.models.errors.{
-  InvalidCalculateAccruedInterestError,
-  InvalidCustomerPaymentInformationError,
-  InvalidDateFromError,
-  InvalidDateToError,
-  InvalidIncludeLocksError,
-  InvalidIncludeChargeEstimateError,
-  InvalidOnlyOpenItemsError,
-  InvalidRemovePaymentOnAccountError,
-  MtdError
-}
+import api.controllers.requestParsers.validators.validations._
+import api.models.errors._
 import config.AppConfig
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRawData
 
@@ -49,21 +33,21 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
       List(
         NinoValidation.validate(data.nino),
         DocNumberValidation.validate(data.docNumber),
-        DateFormatValidation.validate(data.dateFrom, InvalidDateFromError),
-        DateFormatValidation.validate(data.dateTo, InvalidDateToError),
-        BooleanValidation.validate(data.onlyOpenItems, InvalidOnlyOpenItemsError),
-        BooleanValidation.validate(data.includeLocks, InvalidIncludeLocksError),
-        BooleanValidation.validate(data.calculateAccruedInterest, InvalidCalculateAccruedInterestError),
-        BooleanValidation.validate(data.removePOA, InvalidRemovePaymentOnAccountError),
-        BooleanValidation.validate(data.customerPaymentInformation, InvalidCustomerPaymentInformationError),
-        BooleanValidation.validate(data.includeChargeEstimate, InvalidIncludeChargeEstimateError)
+        DateFormatValidation.validate(data.fromDate, V2_FromDateFormatError),
+        DateFormatValidation.validate(data.toDate, V2_ToDateFormatError),
+        BooleanValidation.validate(data.onlyOpenItems, OnlyOpenItemsFormatError),
+        BooleanValidation.validate(data.includeLocks, IncludeLocksFormatError),
+        BooleanValidation.validate(data.calculateAccruedInterest, CalculateAccruedInterestFormatError),
+        BooleanValidation.validate(data.removePOA, RemovePaymentOnAccountFormatError),
+        BooleanValidation.validate(data.customerPaymentInformation, CustomerPaymentInformationFormatError),
+        BooleanValidation.validate(data.includeEstimatedCharges, IncludeEstimatedChargesFormatError)
       )
     }
 
   private def parameterRuleValidation: RetrieveBalanceAndTransactionsRawData => List[List[MtdError]] =
     (data: RetrieveBalanceAndTransactionsRawData) => {
       List(
-        DateRangeValidationV2.validate(data.dateFrom, data.dateTo)
+        DateRangeValidationV2.validate(data.fromDate, data.toDate)
       )
     }
 

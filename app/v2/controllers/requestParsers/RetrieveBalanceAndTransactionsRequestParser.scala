@@ -30,14 +30,14 @@ class RetrieveBalanceAndTransactionsRequestParser @Inject() (val validator: Retr
     RetrieveBalanceAndTransactionsRequest(
       nino = Nino(data.nino),
       docNumber = data.docNumber,
-      dateFrom = data.dateFrom,
-      dateTo = data.dateTo,
+      fromDate = data.fromDate,
+      toDate = data.toDate,
       onlyOpenItems = toBool(data.onlyOpenItems),
       includeLocks = toBool(data.includeLocks),
       calculateAccruedInterest = toBool(data.calculateAccruedInterest),
       removePOA = toBool(data.removePOA),
       customerPaymentInformation = toBool(data.customerPaymentInformation),
-      includeChargeEstimate = toBool(data.includeChargeEstimate)
+      includeEstimatedCharges = toBool(data.includeEstimatedCharges)
     )
 
   private def toBool(param: Option[String]): Boolean = param.exists(_.toBoolean)

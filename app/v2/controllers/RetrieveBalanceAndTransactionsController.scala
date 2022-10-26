@@ -47,14 +47,14 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
 
   def retrieveBalanceAndTransactions(nino: String,
                                      docNumber: Option[String],
-                                     dateFrom: Option[String],
-                                     dateTo: Option[String],
+                                     fromDate: Option[String],
+                                     toDate: Option[String],
                                      onlyOpenItems: Option[String],
                                      includeLocks: Option[String],
                                      calculateAccruedInterest: Option[String],
                                      removePOA: Option[String],
                                      customerPaymentInformation: Option[String],
-                                     includeChargeEstimate: Option[String]): Action[AnyContent] =
+                                     includeEstimatedCharges: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " + s"with correlationId: $correlationId")
@@ -62,14 +62,14 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
       val rawRequest = RetrieveBalanceAndTransactionsRawData(
         nino,
         docNumber: Option[String],
-        dateFrom: Option[String],
-        dateTo: Option[String],
+        fromDate: Option[String],
+        toDate: Option[String],
         onlyOpenItems: Option[String],
         includeLocks: Option[String],
         calculateAccruedInterest: Option[String],
         removePOA: Option[String],
         customerPaymentInformation: Option[String],
-        includeChargeEstimate: Option[String]
+        includeEstimatedCharges: Option[String]
       )
 
       val result = for {
@@ -96,10 +96,27 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
     }
 
   private def errorResult(errorWrapper: ErrorWrapper) = {
+
     errorWrapper.error match {
-      case BadRequestError | NinoFormatError | InvalidDocNumberError | InvalidIncludeLocksError | InvalidOnlyOpenItemsError |
-          InvalidCalculateAccruedInterestError | InvalidCustomerPaymentInformationError | InvalidDateFromError | InvalidDateToError |
-          InvalidRemovePaymentOnAccountError | InvalidIncludeChargeEstimateError | InvalidDateRangeError | RuleInconsistentQueryParamsError =>
+      case _
+          if errorWrapper.containsAnyOf(
+            BadRequestError,
+            NinoFormatError,
+            DocNumberFormatError,
+            IncludeLocksFormatError,
+            OnlyOpenItemsFormatError,
+            CalculateAccruedInterestFormatError,
+            CustomerPaymentInformationFormatError,
+            V2_FromDateFormatError,
+            V2_ToDateFormatError,
+            RemovePaymentOnAccountFormatError,
+            IncludeEstimatedChargesFormatError,
+            RuleInvalidDateRangeError,
+            RuleInconsistentQueryParamsError,
+            V2_MissingToDateError,
+            V2_MissingFromDateError,
+            V2_RangeToDateBeforeFromDateError
+          ) =>
         BadRequest(Json.toJson(errorWrapper))
       case NotFoundError   => NotFound(Json.toJson(errorWrapper))
       case DownstreamError => InternalServerError(Json.toJson(errorWrapper))

@@ -16,7 +16,7 @@
 
 package v2.controllers.requestParsers
 
-import api.models.errors.{BadRequestError, ErrorWrapper, InvalidDocNumberError, NinoFormatError}
+import api.models.errors.{BadRequestError, ErrorWrapper, DocNumberFormatError, NinoFormatError}
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.mocks.validators.MockRetrieveBalanceAndTransactionsValidator
@@ -68,10 +68,10 @@ class RetrieveBalanceAndTransactionsRequestParserSpec extends UnitSpec {
       "multiple validation errors occurs" in new Test {
         MockRetrieveBalanceAndTransactionsValidator
           .validate(inputDataDocNumber)
-          .returns(List(NinoFormatError, InvalidDocNumberError))
+          .returns(List(NinoFormatError, DocNumberFormatError))
 
         parser.parseRequest(inputDataDocNumber) shouldBe
-          Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, InvalidDocNumberError))))
+          Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, DocNumberFormatError))))
       }
     }
   }

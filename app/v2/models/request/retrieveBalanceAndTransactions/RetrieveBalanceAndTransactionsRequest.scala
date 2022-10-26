@@ -21,12 +21,12 @@ import api.models.domain.Nino
 case class RetrieveBalanceAndTransactionsRequest(
     nino: Nino,
     docNumber: Option[String],
-    dateFrom: Option[String],
-    dateTo: Option[String],
+    fromDate: Option[String],
+    toDate: Option[String],
     onlyOpenItems: Boolean,
     includeLocks: Boolean,
     calculateAccruedInterest: Boolean,
     removePOA: Boolean,
     customerPaymentInformation: Boolean,
-    includeChargeEstimate: Boolean
+    includeEstimatedCharges: Boolean
 )

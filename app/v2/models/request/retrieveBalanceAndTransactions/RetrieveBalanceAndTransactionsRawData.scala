@@ -21,12 +21,12 @@ import api.models.request.RawData
 case class RetrieveBalanceAndTransactionsRawData(
     nino: String,
     docNumber: Option[String],
-    dateFrom: Option[String],
-    dateTo: Option[String],
+    fromDate: Option[String],
+    toDate: Option[String],
     onlyOpenItems: Option[String],
     includeLocks: Option[String],
     calculateAccruedInterest: Option[String],
     removePOA: Option[String],
     customerPaymentInformation: Option[String],
-    includeChargeEstimate: Option[String]
+    includeEstimatedCharges: Option[String]
 ) extends RawData

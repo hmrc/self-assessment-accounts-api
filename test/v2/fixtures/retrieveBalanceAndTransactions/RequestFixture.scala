@@ -22,98 +22,98 @@ import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTrans
 object RequestFixture {
   val validNino: String      = "AA123456B"
   val validDocNumber: String = "1234"
-  val validDateFrom: String  = "2022-08-15"
-  val validDateTo: String    = "2022-09-15"
+  val validFromDate: String  = "2022-08-15"
+  val validToDate: String    = "2022-09-15"
 
   val inputDataDocNumber: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
     nino = validNino,
     docNumber = Some(validDocNumber),
-    dateFrom = None,
-    dateTo = None,
+    fromDate = None,
+    toDate = None,
     onlyOpenItems = None,
     includeLocks = None,
     calculateAccruedInterest = None,
     removePOA = None,
     customerPaymentInformation = None,
-    includeChargeEstimate = None
+    includeEstimatedCharges = None
   )
 
   val inputDataDateRange: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
     nino = validNino,
     docNumber = None,
-    dateFrom = Some(validDateFrom),
-    dateTo = Some(validDateTo),
+    fromDate = Some(validFromDate),
+    toDate = Some(validToDate),
     onlyOpenItems = None,
     includeLocks = None,
     calculateAccruedInterest = None,
     removePOA = None,
     customerPaymentInformation = None,
-    includeChargeEstimate = None
+    includeEstimatedCharges = None
   )
 
   val inputDataEverythingTrue: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
     nino = validNino,
     docNumber = Some(validDocNumber),
-    dateFrom = None,
-    dateTo = None,
+    fromDate = None,
+    toDate = None,
     onlyOpenItems = Some("true"),
     includeLocks = Some("true"),
     calculateAccruedInterest = Some("true"),
     removePOA = Some("true"),
     customerPaymentInformation = Some("true"),
-    includeChargeEstimate = Some("true")
+    includeEstimatedCharges = Some("true")
   )
 
   val inputDataEverythingFalse: RetrieveBalanceAndTransactionsRawData = RetrieveBalanceAndTransactionsRawData(
     nino = validNino,
     docNumber = Some(validDocNumber),
-    dateFrom = None,
-    dateTo = None,
+    fromDate = None,
+    toDate = None,
     onlyOpenItems = Some("false"),
     includeLocks = Some("false"),
     calculateAccruedInterest = Some("false"),
     removePOA = Some("false"),
     customerPaymentInformation = Some("false"),
-    includeChargeEstimate = Some("false")
+    includeEstimatedCharges = Some("false")
   )
 
   val requestDocNumber: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
     nino = Nino(validNino),
     docNumber = Some(validDocNumber),
-    dateFrom = None,
-    dateTo = None,
+    fromDate = None,
+    toDate = None,
     onlyOpenItems = false,
     includeLocks = false,
     calculateAccruedInterest = false,
     removePOA = false,
     customerPaymentInformation = false,
-    includeChargeEstimate = false
+    includeEstimatedCharges = false
   )
 
   val requestDateRange: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
     nino = Nino(validNino),
     docNumber = None,
-    dateFrom = Some(validDateFrom),
-    dateTo = Some(validDateTo),
+    fromDate = Some(validFromDate),
+    toDate = Some(validToDate),
     onlyOpenItems = false,
     includeLocks = false,
     calculateAccruedInterest = false,
     removePOA = false,
     customerPaymentInformation = false,
-    includeChargeEstimate = false
+    includeEstimatedCharges = false
   )
 
   val requestEverythingTrue: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
     nino = Nino(validNino),
     docNumber = Some(validDocNumber),
-    dateFrom = None,
-    dateTo = None,
+    fromDate = None,
+    toDate = None,
     onlyOpenItems = true,
     includeLocks = true,
     calculateAccruedInterest = true,
     removePOA = true,
     customerPaymentInformation = true,
-    includeChargeEstimate = true
+    includeEstimatedCharges = true
   )
 
 }

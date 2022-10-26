@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{InvalidDocNumberError}
+import api.models.errors.DocNumberFormatError
 import api.models.utils.JsonErrorValidators
 import support.UnitSpec
 
@@ -24,30 +24,26 @@ class DocNumberValidationSpec extends UnitSpec with JsonErrorValidators {
 
   "validate" should {
     "return no errors" when {
-      "when a valid doc number is supplied" in {
-        val validDocNumber   = "1234"
-        val validationResult = DocNumberValidation.validate(validDocNumber)
-        validationResult shouldBe Nil
+      "no value is submitted" in {
+        DocNumberValidation.validate(None) shouldBe empty
       }
 
-      "when a valid optional doc number is supplied" in {
-        val validDocNumber   = Some("1234")
-        val validationResult = DocNumberValidation.validate(validDocNumber)
-        validationResult shouldBe Nil
+      "when a value of minimum length is supplied" in {
+        DocNumberValidation.validate(Some("a")) shouldBe empty
+      }
+
+      "when a value of maximum length is supplied" in {
+        DocNumberValidation.validate(Some("a" * 12)) shouldBe empty
       }
     }
 
     "return an error" when {
-      "when an invalid doc number is supplied" in {
-        val invalidDocNumber = "a" * 13
-        val validationResult = DocNumberValidation.validate(invalidDocNumber)
-        validationResult shouldBe List(InvalidDocNumberError)
+      "when a empty value is supplied" in {
+        DocNumberValidation.validate(Some("")) shouldBe List(DocNumberFormatError)
       }
 
-      "when an invalid optional doc number is supplied" in {
-        val invalidDocNumber = Some("a" * 13)
-        val validationResult = DocNumberValidation.validate(invalidDocNumber)
-        validationResult shouldBe List(InvalidDocNumberError)
+      "when a value that is too long is supplied" in {
+        DocNumberValidation.validate(Some("a" * 13)) shouldBe List(DocNumberFormatError)
       }
     }
   }

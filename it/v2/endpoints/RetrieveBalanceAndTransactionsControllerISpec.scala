@@ -35,37 +35,37 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
     val nino: String                               = "AA123456A"
     val docNumber: Option[String]                  = Some("1234")
-    val dateFrom: Option[String]                   = Some("2022-08-15")
-    val dateTo: Option[String]                     = Some("2022-09-15")
+    val fromDate: Option[String]                   = Some("2022-08-15")
+    val toDate: Option[String]                     = Some("2022-09-15")
     val onlyOpenItems: Option[String]              = Some("true")
     val includeLocks: Option[String]               = Some("true")
     val calculateAccruedInterest: Option[String]   = Some("true")
     val removePOA: Option[String]                  = Some("true")
     val customerPaymentInformation: Option[String] = Some("true")
-    val includeChargeEstimate: Option[String]      = Some("true")
+    val includeEstimatedCharges: Option[String]    = Some("true")
 
     def uri: String           = s"/$nino/balance-and-transactions"
     def downstreamUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
-    def queryParams: Seq[(String, String)] =
-      Seq(
-        "docNumber"                  -> docNumber,
-        "dateFrom"                   -> dateFrom,
-        "dateTo"                     -> dateTo,
-        "onlyOpenItems"              -> onlyOpenItems,
-        "includeLocks"               -> includeLocks,
-        "calculateAccruedInterest"   -> calculateAccruedInterest,
-        "removePOA"                  -> removePOA,
-        "customerPaymentInformation" -> customerPaymentInformation,
-        "includeChargeEstimate"      -> includeChargeEstimate
-      )
-        .collect { case (k, Some(v)) =>
-          (k, v)
-        }
-
     def setupStubs(): StubMapping
 
-    def request(queryParams: Seq[(String, String)]): WSRequest = {
+    def request: WSRequest = {
+      val queryParams =
+        Seq(
+          "docNumber"                  -> docNumber,
+          "fromDate"                   -> fromDate,
+          "toDate"                     -> toDate,
+          "onlyOpenItems"              -> onlyOpenItems,
+          "includeLocks"               -> includeLocks,
+          "calculateAccruedInterest"   -> calculateAccruedInterest,
+          "removePOA"                  -> removePOA,
+          "customerPaymentInformation" -> customerPaymentInformation,
+          "includeEstimatedCharges"    -> includeEstimatedCharges
+        )
+          .collect { case (k, Some(v)) =>
+            (k, v)
+          }
+
       setupStubs()
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
@@ -85,14 +85,14 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
     def ifsQueryParams: Map[String, String] = Map(
       "docNumber"                  -> docNumber,
-      "dateFrom"                   -> dateFrom,
-      "dateTo"                     -> dateTo,
+      "dateFrom"                   -> fromDate,
+      "dateTo"                     -> toDate,
       "onlyOpenItems"              -> onlyOpenItems,
       "includeLocks"               -> includeLocks,
       "calculateAccruedInterest"   -> calculateAccruedInterest,
       "removePOA"                  -> removePOA,
       "customerPaymentInformation" -> customerPaymentInformation,
-      "includeChargeEstimate"      -> includeChargeEstimate
+      "includeStatistical"         -> includeEstimatedCharges
     ).collect { case (k, Some(v)) =>
       (k, v)
     }
@@ -101,14 +101,14 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
   "Calling the 'retrieve a charge history' endpoint" should {
     "return a 200 status code" when {
-      "any valid request is made with doc number, dateFrom, dateTo and all flag params as false" in new Test {
+      "any valid request is made with doc number, fromDate, toDate and all flag params as false" in new Test {
 
         override val onlyOpenItems: Option[String]              = Some("false")
         override val includeLocks: Option[String]               = Some("false")
         override val calculateAccruedInterest: Option[String]   = Some("false")
         override val removePOA: Option[String]                  = Some("false")
         override val customerPaymentInformation: Option[String] = Some("false")
-        override val includeChargeEstimate: Option[String]      = Some("false")
+        override val includeEstimatedCharges: Option[String]    = Some("false")
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -116,7 +116,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request(queryParams).get)
+        val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
@@ -124,8 +124,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
       "any valid request is made with only doc number and all flag params as true" in new Test {
 
-        override val dateFrom: Option[String] = None
-        override val dateTo: Option[String]   = None
+        override val fromDate: Option[String] = None
+        override val toDate: Option[String]   = None
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -133,13 +133,13 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request(queryParams).get)
+        val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "any valid request is made with no doc number, but with dateFrom, dateTo and all flag params as true" in new Test {
+      "any valid request is made with no doc number, but with fromDate, toDate and all flag params as true" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -147,7 +147,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request(queryParams).get)
+        val response: WSResponse = await(request.get)
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
@@ -158,149 +158,60 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
       def validationErrorTest(requestNino: String,
                               requestDocNumber: Option[String],
-                              requestDateFrom: Option[String],
-                              requestDateTo: Option[String],
+                              requestFromDate: Option[String],
+                              requestToDate: Option[String],
                               requestOnlyOpenItems: Option[String],
                               requestIncludeLocks: Option[String],
                               requestCalculateAccruedInterest: Option[String],
                               requestRemovePOA: Option[String],
                               requestCustomerPaymentInformation: Option[String],
-                              requestIncludeChargeEstimate: Option[String],
+                              requestIncludeEstimatedCharges: Option[String],
                               expectedStatus: Int,
                               expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String                               = requestNino
           override val docNumber: Option[String]                  = requestDocNumber
-          override val dateFrom: Option[String]                   = requestDateFrom
-          override val dateTo: Option[String]                     = requestDateTo
+          override val fromDate: Option[String]                   = requestFromDate
+          override val toDate: Option[String]                     = requestToDate
           override val onlyOpenItems: Option[String]              = requestOnlyOpenItems
           override val includeLocks: Option[String]               = requestIncludeLocks
           override val calculateAccruedInterest: Option[String]   = requestCalculateAccruedInterest
           override val removePOA: Option[String]                  = requestRemovePOA
           override val customerPaymentInformation: Option[String] = requestCustomerPaymentInformation
-          override val includeChargeEstimate: Option[String]      = requestIncludeChargeEstimate
+          override val includeEstimatedCharges: Option[String]    = requestIncludeEstimatedCharges
 
           override def setupStubs(): StubMapping = {
             AuthStub.authorised()
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request(queryParams).get)
+          val response: WSResponse = await(request.get)
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
         }
       }
 
+      // format: off
       val input = Seq(
-        ("AA1123A", Some(validDocNumber), Some(validDateFrom), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, NinoFormatError),
-        ("AA123456A", Some("a" * 13), Some(validDateFrom), Some(validDateTo), None, None, None, None, None, None, BAD_REQUEST, InvalidDocNumberError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some("invalid"),
-          Some(validDateTo),
-          None,
-          None,
-          None,
-          None,
-          None,
-          None,
-          BAD_REQUEST,
-          InvalidDateFromError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some(validDateFrom),
-          Some("invalid"),
-          None,
-          None,
-          None,
-          None,
-          None,
-          None,
-          BAD_REQUEST,
-          InvalidDateToError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
-          Some("invalid"),
-          None,
-          None,
-          None,
-          None,
-          None,
-          BAD_REQUEST,
-          InvalidOnlyOpenItemsError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
-          None,
-          Some("invalid"),
-          None,
-          None,
-          None,
-          None,
-          BAD_REQUEST,
-          InvalidIncludeLocksError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
-          None,
-          None,
-          Some("invalid"),
-          None,
-          None,
-          None,
-          BAD_REQUEST,
-          InvalidCalculateAccruedInterestError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some(validDateTo),
-          Some(validDateFrom),
-          None,
-          None,
-          None,
-          Some("invalid"),
-          None,
-          None,
-          BAD_REQUEST,
-          InvalidRemovePaymentOnAccountError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
-          None,
-          None,
-          None,
-          None,
-          Some("invalid"),
-          None,
-          BAD_REQUEST,
-          InvalidCustomerPaymentInformationError),
-        (
-          "AA123456A",
-          Some(validDocNumber),
-          Some(validDateFrom),
-          Some(validDateTo),
-          None,
-          None,
-          None,
-          None,
-          None,
-          Some("invalid"),
-          BAD_REQUEST,
-          InvalidIncludeChargeEstimateError)
+        ("AA1123A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, NinoFormatError),
+        ("AA123456A", Some("a" * 13), Some(validFromDate), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, DocNumberFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), Some("invalid"), None, None, None, None, None, BAD_REQUEST, OnlyOpenItemsFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, Some("invalid"), None, None, None, None, BAD_REQUEST, IncludeLocksFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, Some("invalid"), None, None, None, BAD_REQUEST, CalculateAccruedInterestFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, Some("invalid"), None, BAD_REQUEST, CustomerPaymentInformationFormatError),
+        ("AA123456A", Some(validDocNumber), Some("invalid"), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, V2_FromDateFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some("invalid"), None, None, None, None, None, None, BAD_REQUEST, V2_ToDateFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, Some("invalid"), None, None, BAD_REQUEST, RemovePaymentOnAccountFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, None, Some("invalid"), BAD_REQUEST, IncludeEstimatedChargesFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, V2_RangeToDateBeforeFromDateError),
+        ("AA123456A", Some(validDocNumber), Some(validToDate), None, None, None, None, None, None, None, BAD_REQUEST, V2_MissingToDateError),
+        ("AA123456A", Some(validDocNumber), None, Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, V2_MissingFromDateError)
+
       )
+      // format: on
+
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
 
@@ -315,7 +226,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request(queryParams).get)
+          val response: WSResponse = await(request.get)
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -327,10 +238,17 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
         (BAD_REQUEST, "INVALID_IDNUMBER", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, InvalidDocNumberError),
-        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, InvalidDateFromError),
-        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, InvalidDateToError),
-        (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, InvalidDateRangeError),
+        (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, DocNumberFormatError),
+        (BAD_REQUEST, "INVALID_ONLY_OPEN_ITEMS", BAD_REQUEST, OnlyOpenItemsFormatError),
+        (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", BAD_REQUEST, IncludeLocksFormatError),
+        (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", BAD_REQUEST, CalculateAccruedInterestFormatError),
+        (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", BAD_REQUEST, CustomerPaymentInformationFormatError),
+        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, V2_FromDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, V2_ToDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleInvalidDateRangeError),
+        (BAD_REQUEST, "INVALID_REQUEST", BAD_REQUEST, RuleInconsistentQueryParamsError),
+        (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", BAD_REQUEST, RemovePaymentOnAccountFormatError),
+        (BAD_REQUEST, "INVALID_INCLUDE_STATISTICAL", BAD_REQUEST, IncludeEstimatedChargesFormatError),
         (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),

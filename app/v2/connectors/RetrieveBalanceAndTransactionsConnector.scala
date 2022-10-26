@@ -35,41 +35,28 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
 
-    val nino                       = request.nino.nino
-    val docNumber                  = request.docNumber
-    val dateFrom                   = request.dateFrom
-    val dateTo                     = request.dateTo
-    val onlyOpenItems              = request.onlyOpenItems
-    val includeLocks               = request.includeLocks
-    val calculateAccruedInterest   = request.calculateAccruedInterest
-    val removePOA                  = request.removePOA
-    val customerPaymentInformation = request.customerPaymentInformation
-    val includeChargeEstimate      = request.includeChargeEstimate
+    import request._
 
     val booleanQueryParams: Seq[(String, String)] =
       Seq(
-        "onlyOpenItems"              -> onlyOpenItems.toString,
-        "includeLocks"               -> includeLocks.toString,
-        "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
-        "removePOA"                  -> removePOA.toString,
-        "customerPaymentInformation" -> customerPaymentInformation.toString,
-        "includeChargeEstimate"      -> includeChargeEstimate.toString
-      )
-
-    def getIfExists(option: Option[String], name: String): Seq[(String, String)] = option match {
-      case Some(x) => Seq(name -> x)
-      case _       => Seq()
-    }
+        "onlyOpenItems"              -> onlyOpenItems,
+        "includeLocks"               -> includeLocks,
+        "calculateAccruedInterest"   -> calculateAccruedInterest,
+        "removePOA"                  -> removePOA,
+        "customerPaymentInformation" -> customerPaymentInformation,
+        "includeStatistical"         -> includeEstimatedCharges
+      ).map { case (k, v) => k -> v.toString }
 
     val optionalQueryParams: Seq[(String, String)] =
-      getIfExists(docNumber, "docNumber") ++
-        getIfExists(dateFrom, "dateFrom") ++
-        getIfExists(dateTo, "dateTo")
+      Seq(
+        "docNumber" -> docNumber,
+        "dateFrom"  -> fromDate,
+        "dateTo"    -> toDate
+      ).collect { case (k, Some(v)) => k -> v }
 
-    val queryParams = booleanQueryParams ++
-      optionalQueryParams
+    val queryParams = booleanQueryParams ++ optionalQueryParams
 
-    get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/$nino/ITSA"), queryParams)
+    get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
   }
 
 }

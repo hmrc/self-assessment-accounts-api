@@ -46,65 +46,57 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "an invalid doc number is supplied" in {
-        validator.validate(inputDataDocNumber.copy(docNumber = Some("a" * 13))) shouldBe List(InvalidDocNumberError)
-      }
-
-      "an invalid date from is supplied" in {
-        validator.validate(inputDataDocNumber.copy(dateFrom = Some("invalid"))) shouldBe List(InvalidDateFromError)
-      }
-
-      "an invalid date to is supplied" in {
-        validator.validate(inputDataDocNumber.copy(dateTo = Some("invalid"))) shouldBe List(InvalidDateToError)
+        validator.validate(inputDataDocNumber.copy(docNumber = Some("a" * 13))) shouldBe List(DocNumberFormatError)
       }
 
       "an invalid only open items is supplied" in {
-        validator.validate(inputDataDocNumber.copy(onlyOpenItems = Some("invalid"))) shouldBe List(InvalidOnlyOpenItemsError)
+        validator.validate(inputDataDocNumber.copy(onlyOpenItems = Some("invalid"))) shouldBe List(OnlyOpenItemsFormatError)
       }
 
       "an invalid include locks is supplied" in {
-        validator.validate(inputDataDocNumber.copy(includeLocks = Some("invalid"))) shouldBe List(InvalidIncludeLocksError)
+        validator.validate(inputDataDocNumber.copy(includeLocks = Some("invalid"))) shouldBe List(IncludeLocksFormatError)
       }
 
       "an invalid calculate accrued interest is supplied" in {
-        validator.validate(inputDataDocNumber.copy(calculateAccruedInterest = Some("invalid"))) shouldBe List(InvalidCalculateAccruedInterestError)
-      }
-
-      "an invalid remove POA is supplied" in {
-        validator.validate(inputDataDocNumber.copy(removePOA = Some("invalid"))) shouldBe List(InvalidRemovePaymentOnAccountError)
+        validator.validate(inputDataDocNumber.copy(calculateAccruedInterest = Some("invalid"))) shouldBe List(CalculateAccruedInterestFormatError)
       }
 
       "an invalid customer payment information is supplied" in {
-        validator.validate(inputDataDocNumber.copy(customerPaymentInformation = Some("invalid"))) shouldBe List(
-          InvalidCustomerPaymentInformationError)
+        validator.validate(inputDataDocNumber.copy(customerPaymentInformation = Some("invalid"))) shouldBe
+          List(CustomerPaymentInformationFormatError)
+      }
+
+      "an invalid from date is supplied" in {
+        validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"))) shouldBe List(V2_FromDateFormatError)
+      }
+      "an invalid to date is supplied" in {
+        validator.validate(inputDataDocNumber.copy(toDate = Some("invalid"))) shouldBe List(V2_ToDateFormatError)
+      }
+
+      "an invalid remove POA is supplied" in {
+        validator.validate(inputDataDocNumber.copy(removePOA = Some("invalid"))) shouldBe List(RemovePaymentOnAccountFormatError)
       }
 
       "an invalid include charge estimate is supplied" in {
-        validator.validate(inputDataDocNumber.copy(includeChargeEstimate = Some("invalid"))) shouldBe List(InvalidIncludeChargeEstimateError)
+        validator.validate(inputDataDocNumber.copy(includeEstimatedCharges = Some("invalid"))) shouldBe List(IncludeEstimatedChargesFormatError)
+      }
+
+      "to date is supplied but from date is not" in {
+        validator.validate(inputDataDateRange.copy(fromDate = None, toDate = Some("2022-11-01"))) shouldBe List(V2_MissingFromDateError)
+      }
+
+      "from date is supplied but to date is not" in {
+        validator.validate(inputDataDateRange.copy(fromDate = Some("2022-12-01"), toDate = None)) shouldBe List(V2_MissingToDateError)
+      }
+
+      "from date is later than to date" in {
+        validator.validate(inputDataDateRange.copy(fromDate = Some("2022-12-01"), toDate = Some("2022-11-01"))) shouldBe
+          List(V2_RangeToDateBeforeFromDateError)
       }
 
       "multiple invalid values are supplied" in {
-        val input          = inputDataDocNumber.copy(dateFrom = Some("invalid"), removePOA = Some("invalid"))
-        val expectedErrors = List(InvalidDateFromError, InvalidRemovePaymentOnAccountError)
-
-        validator.validate(input) shouldBe expectedErrors
-      }
-
-      "date from is later than date to" in {
-        val input          = inputDataDateRange.copy(dateFrom = Some("2022-12-01"), dateTo = Some("2022-11-01"))
-        val expectedErrors = List(V2_RangeToDateBeforeFromDateError)
-        validator.validate(input) shouldBe expectedErrors
-      }
-
-      "date from is supplied but date to is not" in {
-        val input          = inputDataDateRange.copy(dateFrom = Some("2022-12-01"), dateTo = None)
-        val expectedErrors = List(V2_MissingToDateError)
-        validator.validate(input) shouldBe expectedErrors
-      }
-
-      "date to is supplied but date from is not" in {
-        val input          = inputDataDateRange.copy(dateFrom = None, dateTo = Some("2022-11-01"))
-        val expectedErrors = List(V2_MissingFromDateError)
-        validator.validate(input) shouldBe expectedErrors
+        validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"), removePOA = Some("invalid"))) shouldBe
+          List(V2_FromDateFormatError, RemovePaymentOnAccountFormatError)
       }
     }
   }
