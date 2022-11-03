@@ -17,7 +17,6 @@
 package routing
 
 import com.typesafe.config.ConfigFactory
-import definition.Versions
 import mocks.MockAppConfig
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
@@ -42,7 +41,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
             val versionRoutingMap: VersionRoutingMapImpl =
               VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, mockAppConfig)
 
-            versionRoutingMap.map(Versions.VERSION_1) shouldBe routes
+            versionRoutingMap.map(Version1) shouldBe routes
           }
         }
       }
@@ -55,7 +54,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
              |version-2.enabled = true
              |""".stripMargin))))
         val versionRoutingMap: VersionRoutingMapImpl = VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, mockAppConfig)
-        versionRoutingMap.map(Versions.VERSION_2) shouldBe v2Routes
+        versionRoutingMap.map(Version2) shouldBe v2Routes
       }
     }
   }

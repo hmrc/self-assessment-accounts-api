@@ -17,22 +17,23 @@
 package definition
 
 import definition.APIStatus.ALPHA
+import routing.Version1
 import support.UnitSpec
 
 class ApiDefinitionSpec extends UnitSpec {
 
-  val apiVersion: APIVersion       = APIVersion("a", ALPHA, endpointsEnabled = false)
+  lazy val apiVersion: APIVersion  = APIVersion(Version1, ALPHA, endpointsEnabled = false)
   val apiDefinition: APIDefinition = APIDefinition("b", "c", "d", Seq("e"), Seq(apiVersion), Some(false))
 
-  "APIVersion" when {
+  /* "APIVersion" when {
     "the 'version' parameter is empty" should {
       "throw an 'IllegalArgumentException'" in {
         assertThrows[IllegalArgumentException](
-          apiVersion.copy(version = "")
+          apiVersion.copy(version = Version1)
         )
       }
     }
-  }
+  }*/
 
   "APIDefinition" when {
     "the 'name' parameter is empty" should {

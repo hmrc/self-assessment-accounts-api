@@ -19,7 +19,7 @@ package definition
 import play.api.http.HeaderNames.ACCEPT
 import play.api.mvc.RequestHeader
 
-object Versions {
+object Versionsx {
   val VERSION_1 = "1.0"
   val VERSION_2 = "2.0"
 

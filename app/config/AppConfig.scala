@@ -17,8 +17,10 @@
 package config
 
 import com.typesafe.config.Config
+
 import javax.inject.{Inject, Singleton}
 import play.api.{ConfigLoader, Configuration}
+import routing.Version
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 trait AppConfig {
@@ -39,9 +41,9 @@ trait AppConfig {
 
   def minimumPermittedTaxYear: Int
 
-  def apiStatus(version: String): String
+  def apiStatus(version: Version): String
   def featureSwitch: Option[Configuration]
-  def endpointsEnabled(version: String): Boolean
+  def endpointsEnabled(version: Version): Boolean
 
   def confidenceLevelConfig: ConfidenceLevelConfig
 }
@@ -66,10 +68,10 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
 
   // API Config
-  val apiGatewayContext: String                  = config.getString("api.gateway.context")
-  def apiStatus(version: String): String         = config.getString(s"api.$version.status")
-  def featureSwitch: Option[Configuration]       = configuration.getOptional[Configuration](s"feature-switch")
-  def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+  val apiGatewayContext: String                   = config.getString("api.gateway.context")
+  def apiStatus(version: Version): String         = config.getString(s"api.${version.name}.status")
+  def featureSwitch: Option[Configuration]        = configuration.getOptional[Configuration](s"feature-switch")
+  def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
   val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
 }

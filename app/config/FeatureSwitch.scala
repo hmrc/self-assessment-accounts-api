@@ -17,10 +17,9 @@
 package config
 
 import play.api.Configuration
+import routing.Version
 
 case class FeatureSwitch(value: Option[Configuration]) {
-
-  private val versionRegex = """(\d)\.\d""".r
 
   def isCodingOutEnabled: Boolean = {
     value match {
@@ -29,20 +28,26 @@ case class FeatureSwitch(value: Option[Configuration]) {
     }
   }
 
-  def isVersionEnabled(version: String): Boolean = {
-    val versionNoIfPresent: Option[String] =
-      version match {
-        case versionRegex(v) => Some(v)
-        case _               => None
-      }
+  def isVersionEnabled(version: Version): Boolean =
+    (for {
+      config  <- value
+      enabled <- config.getOptional[Boolean](s"version-${version.configName}.enabled")
+    } yield enabled).getOrElse(false)
 
-    val enabled = for {
-      versionNo <- versionNoIfPresent
-      config    <- value
-      enabled   <- config.getOptional[Boolean](s"version-$versionNo.enabled")
-    } yield enabled
+  /*  def isVersionEnabled(version: String): Boolean = {
+      val versionNoIfPresent: Option[String] =
+        version match {
+          case versionRegex(v) => Some(v)
+          case _               => None
+        }
 
-    enabled.getOrElse(false)
-  }
+      val enabled = for {
+        versionNo <- versionNoIfPresent
+        config    <- value
+        enabled   <- config.getOptional[Boolean](s"version-$versionNo.enabled")
+      } yield enabled
+
+      enabled.getOrElse(false)
+    }*/
 
 }

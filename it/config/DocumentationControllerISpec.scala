@@ -16,10 +16,10 @@
 
 package config
 
-import definition.Versions.{VERSION_1, VERSION_2}
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
+import routing.{Version1, Version2}
 import support.IntegrationBaseSpec
 
 class DocumentationControllerISpec extends IntegrationBaseSpec {
@@ -70,7 +70,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "a documentation request" must {
-    Seq(VERSION_1, VERSION_2).foreach { version =>
+    Seq(Version1, Version2).foreach { version =>
       s"return the documentation for $version" in {
         val response: WSResponse = await(buildRequest(s"/api/conf/$version/application.raml").get())
         response.status shouldBe Status.OK

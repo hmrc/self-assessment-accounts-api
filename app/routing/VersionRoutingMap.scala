@@ -18,7 +18,6 @@ package routing
 
 import com.google.inject.ImplementedBy
 import config.{AppConfig, FeatureSwitch}
-import definition.Versions.{VERSION_1, VERSION_2}
 
 import javax.inject.Inject
 import play.api.routing.Router
@@ -31,9 +30,9 @@ import utils.Logging
 trait VersionRoutingMap {
   val defaultRouter: Router
 
-  val map: Map[String, Router]
+  val map: Map[Version, Router]
 
-  final def versionRouter(version: String): Option[Router] = map.get(version)
+  final def versionRouter(version: Version): Option[Router] = map.get(version)
 }
 
 // Add routes corresponding to available versions...
@@ -50,11 +49,11 @@ case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
 
   if (isCodingOutEnabled) logger.info("Coding Out feature switch is enabled") else logger.info("Coding Out feature switch is disabled")
 
-  val map: Map[String, Router] = Map(
-    VERSION_1 -> {
+  val map: Map[Version, Router] = Map(
+    Version1 -> {
       if (isCodingOutEnabled) v1WithCodingOutRoutes else v1Routes
     },
-    VERSION_2 -> v2Routes
+    Version2 -> v2Routes
   )
 
 }
