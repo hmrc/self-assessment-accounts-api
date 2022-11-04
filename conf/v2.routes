@@ -4,4 +4,3 @@ GET        /:nino/balance-and-transactions                 v2.controllers.Retrie
 GET        /:nino/payments-and-allocations                 v2.controllers.ListPaymentsAndAllocationDetailsController.listPayments(nino: String, fromDate: Option[String], toDate: Option[String], paymentLot: Option[String], paymentLotItem: Option[String])
 
 
-# Coding Out Endpoints

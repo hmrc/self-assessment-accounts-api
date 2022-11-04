@@ -23,9 +23,6 @@ import javax.inject.Inject
 import play.api.routing.Router
 import utils.Logging
 
-// So that we can have API-independent implementations of
-// VersionRoutingRequestHandler and VersionRoutingRequestHandlerSpec
-// implement this for the specific API...
 @ImplementedBy(classOf[VersionRoutingMapImpl])
 trait VersionRoutingMap {
   val defaultRouter: Router
@@ -35,7 +32,6 @@ trait VersionRoutingMap {
   final def versionRouter(version: Version): Option[Router] = map.get(version)
 }
 
-// Add routes corresponding to available versions...
 case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
                                             v1Routes: v1.Routes,
                                             v2Routes: v2.Routes,

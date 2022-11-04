@@ -30,7 +30,7 @@ import play.api.routing.Router
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import support.UnitSpec
-import api.models.errors.{InvalidAcceptHeaderError, NotFoundError, UnsupportedVersionError}
+import api.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
 
 class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockAppConfig with GuiceOneAppPerSuite {
   test =>
@@ -164,7 +164,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
       inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
         val result = a.apply(request)
         status(result) shouldBe NOT_FOUND
-        contentAsJson(result) shouldBe Json.toJson(NotFoundError) // UnsupportedVersionError
+        contentAsJson(result) shouldBe Json.toJson(UnsupportedVersionError) // UnsupportedVersionError
       }
     }
   }

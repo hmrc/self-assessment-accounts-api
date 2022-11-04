@@ -34,20 +34,4 @@ case class FeatureSwitch(value: Option[Configuration]) {
       enabled <- config.getOptional[Boolean](s"version-${version.configName}.enabled")
     } yield enabled).getOrElse(false)
 
-  /*  def isVersionEnabled(version: String): Boolean = {
-      val versionNoIfPresent: Option[String] =
-        version match {
-          case versionRegex(v) => Some(v)
-          case _               => None
-        }
-
-      val enabled = for {
-        versionNo <- versionNoIfPresent
-        config    <- value
-        enabled   <- config.getOptional[Boolean](s"version-$versionNo.enabled")
-      } yield enabled
-
-      enabled.getOrElse(false)
-    }*/
-
 }
