@@ -17,6 +17,7 @@
 package routing
 
 import akka.actor.ActorSystem
+import api.models.errors.{InvalidAcceptHeaderError, NotFoundError, UnsupportedVersionError}
 import com.typesafe.config.{Config, ConfigFactory}
 import mocks.MockAppConfig
 import org.scalatest.Inside
@@ -25,12 +26,11 @@ import play.api.Configuration
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.{HttpConfiguration, HttpErrorHandler, HttpFilters}
 import play.api.libs.json.Json
-import play.api.mvc.{EssentialAction, _}
+import play.api.mvc._
 import play.api.routing.Router
 import play.api.test.FakeRequest
 import play.api.test.Helpers._
 import support.UnitSpec
-import api.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
 
 class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockAppConfig with GuiceOneAppPerSuite {
   test =>
@@ -48,13 +48,18 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     DefaultHandler
   }
 
+  private val v1Router = Router.from { case GET(p"/oldResource") =>
+    V1Handler
+  }
+
   private val v2Router = Router.from { case GET(p"/resource") =>
     V2Handler
   }
 
   private val routingMap = new VersionRoutingMap {
-    override val defaultRouter: Router     = test.defaultRouter
-    override val map: Map[Version, Router] = Map(Version2 -> v2Router)
+    override val defaultRouter: Router = test.defaultRouter
+
+    override val map: Map[Version, Router] = Map(Version2 -> v2Router, Version1 -> v1Router)
   }
 
   private val confWithAllEnabled: Config = ConfigFactory.parseString("""
@@ -63,6 +68,11 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
   private val confWithV2Disabled: Config = ConfigFactory.parseString("""
                                                                        |version-2.enabled = false
+    """.stripMargin)
+
+  private val confWithV1DisabledV2Enabled: Config = ConfigFactory.parseString("""
+                                                                       |version-1.enabled = false
+                                                                       |version-2.enabled = true
     """.stripMargin)
 
   class Test(implicit acceptHeader: Option[String], conf: Config) {
@@ -86,7 +96,6 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
   "Routing requests with no version" should {
     implicit val acceptHeader: None.type = None
-
     handleWithDefaultRoutes()
   }
 
@@ -156,7 +165,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   }
 
   "Routing requests with an incorrect URL" should {
-    implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.3.0+json")
+    implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
     implicit val useConf: Config              = confWithAllEnabled
 
     "return 404 with a NotFoundError" in new Test {
@@ -164,7 +173,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
       inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
         val result = a.apply(request)
         status(result) shouldBe NOT_FOUND
-        contentAsJson(result) shouldBe Json.toJson(UnsupportedVersionError) // UnsupportedVersionError
+        contentAsJson(result) shouldBe Json.toJson(NotFoundError)
       }
     }
   }
@@ -199,6 +208,17 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
           status(result) shouldBe NOT_FOUND
           contentAsJson(result) shouldBe Json.toJson(UnsupportedVersionError)
         }
+      }
+    }
+  }
+
+  "Routing requests with route does not exist for the V2" should {
+    implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
+
+    "the V1 has a route, but V1 is not enabled" must {
+      implicit val useConf: Config = confWithV1DisabledV2Enabled
+      "be handled by V1Handler" in new Test {
+        requestHandler.routeRequest(buildRequest("/oldResource")) shouldBe Some(V1Handler)
       }
     }
   }
