@@ -59,11 +59,6 @@ class FeatureSwitchSpec extends UnitSpec {
         featureSwitch.isVersionEnabled(anyVersion) shouldBe true
       }
 
-      "return false for non-version strings" in {
-        // featureSwitch.isVersionEnabled(Version3) shouldBe false
-        // featureSwitch.isVersionEnabled("2x") shouldBe false
-        // featureSwitch.isVersionEnabled("2.x") shouldBe false
-      }
     }
   }
 

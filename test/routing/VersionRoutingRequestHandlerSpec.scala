@@ -214,6 +214,12 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
   "Routing requests with route does not exist for the V2" should {
     implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
+    "the V1 has a route and V1 is enabled" must {
+      implicit val useConf: Config = confWithAllEnabled
+      "be handled by V1Handler" in new Test {
+        requestHandler.routeRequest(buildRequest("/oldResource")) shouldBe Some(V1Handler)
+      }
+    }
 
     "the V1 has a route, but V1 is not enabled" must {
       implicit val useConf: Config = confWithV1DisabledV2Enabled
