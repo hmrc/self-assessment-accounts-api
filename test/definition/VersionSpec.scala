@@ -18,20 +18,23 @@ package definition
 
 import play.api.http.HeaderNames.ACCEPT
 import play.api.test.FakeRequest
+import routing.{InvalidHeader, Version2, VersionNotFound, Versions}
 import support.UnitSpec
-import Versions._
 
 class VersionSpec extends UnitSpec {
 
   "Versions" when {
-    "retrieved from a request header" should {
-      Seq(
-        ("application/vnd.hmrc.1.0+json", VERSION_1),
-        ("application/vnd.hmrc.2.0+json", VERSION_2)
-      ).foreach { case (header, version) =>
-        s"return correct version $version" in {
-          Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, header))) shouldBe Some(version)
-        }
+    "retrieved from a request header" must {
+      "return an error if the version is unsupported" in {
+        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.3.0+json"))) shouldBe Left(VersionNotFound)
+      }
+
+      "return an error if the Accept header value is invalid" in {
+        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/XYZ.2.0+json"))) shouldBe Left(InvalidHeader)
+      }
+
+      "return the specified version" in {
+        Versions.getFromRequest(FakeRequest().withHeaders((ACCEPT, "application/vnd.hmrc.2.0+json"))) shouldBe Right(Version2)
       }
     }
   }

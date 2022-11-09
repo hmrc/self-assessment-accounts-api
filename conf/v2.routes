@@ -4,7 +4,3 @@ GET        /:nino/balance-and-transactions                 v2.controllers.Retrie
 GET        /:nino/payments-and-allocations                 v2.controllers.ListPaymentsAndAllocationDetailsController.listPayments(nino: String, fromDate: Option[String], toDate: Option[String], paymentLot: Option[String], paymentLotItem: Option[String])
 
 
-# Coding Out Endpoints
-PUT        /:nino/:taxYear/collection/tax-code             v2.controllers.CreateOrAmendCodingOutController.createOrAmendCodingOut(nino, taxYear)
-GET        /:nino/:taxYear/collection/tax-code             v2.controllers.RetrieveCodingOutController.retrieveCodingOut(nino: String, taxYear: String, source: Option[String])
-DELETE     /:nino/:taxYear/collection/tax-code             v2.controllers.DeleteCodingOutController.handleRequest(nino: String, taxYear: String)

@@ -20,6 +20,7 @@ import config.{AppConfig, ConfidenceLevelConfig}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.Configuration
+import routing.Version
 
 trait MockAppConfig extends MockFactory {
 
@@ -45,10 +46,10 @@ trait MockAppConfig extends MockFactory {
     def minimumPermittedTaxYear: CallHandler[Int] = (mockAppConfig.minimumPermittedTaxYear _).expects()
 
     // API Config
-    def featureSwitch: CallHandler[Option[Configuration]]       = (mockAppConfig.featureSwitch _: () => Option[Configuration]).expects()
-    def apiGatewayContext: CallHandler[String]                  = (mockAppConfig.apiGatewayContext _: () => String).expects()
-    def apiStatus(status: String): CallHandler[String]          = (mockAppConfig.apiStatus: String => String).expects(status)
-    def endpointsEnabled(version: String): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: String => Boolean).expects(version)
+    def featureSwitch: CallHandler[Option[Configuration]]        = (mockAppConfig.featureSwitch _: () => Option[Configuration]).expects()
+    def apiGatewayContext: CallHandler[String]                   = (mockAppConfig.apiGatewayContext _: () => String).expects()
+    def apiStatus(status: Version): CallHandler[String]          = (mockAppConfig.apiStatus: Version => String).expects(status)
+    def endpointsEnabled(version: Version): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: Version => Boolean).expects(version)
 
     def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] =
       (mockAppConfig.confidenceLevelConfig _: () => ConfidenceLevelConfig).expects()

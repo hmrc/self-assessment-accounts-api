@@ -19,8 +19,8 @@ package definition
 import api.mocks.MockHttpClient
 import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
-import definition.Versions.{VERSION_1, VERSION_2}
 import mocks.MockAppConfig
+import routing.{Version1, Version2}
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
@@ -37,10 +37,10 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     "called" should {
       "return a valid Definition case class" in new Test {
         MockAppConfig.featureSwitch returns None
-        MockAppConfig.apiStatus(VERSION_1) returns "ALPHA"
-        MockAppConfig.apiStatus(VERSION_2) returns "BETA"
-        MockAppConfig.endpointsEnabled(VERSION_1) returns false anyNumberOfTimes ()
-        MockAppConfig.endpointsEnabled(VERSION_2) returns true anyNumberOfTimes ()
+        MockAppConfig.apiStatus(Version1) returns "ALPHA"
+        MockAppConfig.apiStatus(Version2) returns "BETA"
+        MockAppConfig.endpointsEnabled(Version1) returns false anyNumberOfTimes ()
+        MockAppConfig.endpointsEnabled(Version2) returns true anyNumberOfTimes ()
 
         MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
           definitionEnabled = true,
@@ -72,12 +72,12 @@ class ApiDefinitionFactorySpec extends UnitSpec {
               categories = Seq("INCOME_TAX_MTD"),
               versions = Seq(
                 APIVersion(
-                  version = VERSION_1,
+                  version = Version1,
                   status = ALPHA,
                   endpointsEnabled = false
                 ),
                 APIVersion(
-                  version = VERSION_2,
+                  version = Version2,
                   status = BETA,
                   endpointsEnabled = true
                 )
@@ -106,8 +106,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       Seq(
-        (VERSION_1, ALPHA),
-        (VERSION_2, BETA)
+        (Version1, ALPHA),
+        (Version2, BETA)
       ).foreach { case (version, status) =>
         s"return the correct $status for $version " in new Test {
           MockAppConfig.apiStatus(version) returns status.toString
@@ -117,7 +117,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
-      Seq(VERSION_1, VERSION_2).foreach { version =>
+      Seq(Version1, Version2).foreach { version =>
         s"default to alpha for $version " in new Test {
           MockAppConfig.apiStatus(version) returns "ALPHO"
           apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
