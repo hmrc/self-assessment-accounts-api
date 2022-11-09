@@ -48,8 +48,9 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     DefaultHandler
   }
 
-  private val v1Router = Router.from { case GET(p"/oldResource") =>
-    V1Handler
+  private val v1Router = Router.from {
+    case GET(p"/oldResource")           => V1Handler
+    case GET(p"/x/collection/tax-code") => V1Handler
   }
 
   private val v2Router = Router.from { case GET(p"/resource") =>
@@ -67,12 +68,11 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     """.stripMargin)
 
   private val confWithV2Disabled: Config = ConfigFactory.parseString("""
-                                                                       |version-2.enabled = false
+                                                                       |version-1.enabled = true
     """.stripMargin)
 
   private val confWithV1DisabledV2Enabled: Config = ConfigFactory.parseString("""
-                                                                       |version-1.enabled = false
-                                                                       |version-2.enabled = true
+   version-2.enabled = true
     """.stripMargin)
 
   class Test(implicit acceptHeader: Option[String], conf: Config) {
@@ -83,7 +83,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
     MockAppConfig.featureSwitch.returns(Some(Configuration(conf)))
 
-    val requestHandler: VersionRoutingRequestHandler =
+    lazy val requestHandler: VersionRoutingRequestHandler =
       new VersionRoutingRequestHandler(routingMap, errorHandler, httpConfiguration, mockAppConfig, filters, action)
 
     def buildRequest(path: String): RequestHeader =
@@ -139,6 +139,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
     withClue("request ends with a trailing slash...") {
       new Test {
+
         requestHandler.routeRequest(buildRequest(s"$path/")) shouldBe Some(handler)
       }
     }
@@ -168,7 +169,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
     implicit val useConf: Config              = confWithAllEnabled
 
-    "return 404 with a NotFoundError" in new Test {
+    "return 404 with a UnsupportedVersionError" in new Test {
       val request: RequestHeader = buildRequest("/missing_resource")
       inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
         val result = a.apply(request)
@@ -212,19 +213,44 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     }
   }
 
-  "Routing requests with route does not exist for the V2" should {
+  "Routing requests with route that does not exist for V1, but exists in V1" should {
     implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
-    "the V1 has a route and V1 is enabled" must {
+    "neither does the route exist in the V1 handler" must {
       implicit val useConf: Config = confWithAllEnabled
-      "be handled by V1Handler" in new Test {
-        requestHandler.routeRequest(buildRequest("/oldResource")) shouldBe Some(V1Handler)
+      "return a 404 error" in new Test {
+        val request: RequestHeader = buildRequest("/missing_resource")
+        inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
+          val result = a.apply(request)
+          status(result) shouldBe NOT_FOUND
+          contentAsJson(result) shouldBe Json.toJson(NotFoundError)
+        }
       }
     }
 
-    "the V1 has a route, but V1 is not enabled" must {
-      implicit val useConf: Config = confWithV1DisabledV2Enabled
-      "be handled by V1Handler" in new Test {
-        requestHandler.routeRequest(buildRequest("/oldResource")) shouldBe Some(V1Handler)
+    "Routing requests with route that does not exist for V1 or V2" should {
+      implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
+      "the V1 has a route, but the requested route does not match the V2 allowed routes" must {
+        implicit val useConf: Config = confWithV1DisabledV2Enabled
+
+        "return a 404 error" in new Test {
+          val request = buildRequest("/oldResource")
+
+          inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
+            val result = a.apply(request)
+
+            status(result) shouldBe NOT_FOUND
+            contentAsJson(result) shouldBe Json.toJson(NotFoundError)
+          }
+        }
+      }
+    }
+
+    "Routing requests with route that does not exist for V2, but exists in V1" should {
+      implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
+      "the V1 has a route, but the requested route matches the V2 allowed routes" must {
+
+        handleWithVersionRoutes("/x/collection/tax-code", V1Handler, confWithV1DisabledV2Enabled)
+
       }
     }
   }
