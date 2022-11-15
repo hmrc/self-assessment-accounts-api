@@ -17,21 +17,18 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
-
-import javax.inject.{Inject, Singleton}
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.DeleteCodingOutParser
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.services.DeleteCodingOutService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -98,16 +95,6 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
         result
       }.merge
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
-      case NinoFormatError | BadRequestError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError =>
-        BadRequest(Json.toJson(errorWrapper))
-      case DownstreamError        => InternalServerError(Json.toJson(errorWrapper))
-      case CodingOutNotFoundError => NotFound(Json.toJson(errorWrapper))
-      case _                      => unhandledError(errorWrapper)
-    }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent(auditType = "DeleteCodingOutUnderpayments", transactionName = "delete-coding-out-underpayments", detail = details)

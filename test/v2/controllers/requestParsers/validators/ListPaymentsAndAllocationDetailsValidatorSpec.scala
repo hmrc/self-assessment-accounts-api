@@ -60,23 +60,23 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
       }
 
       "an invalid fromDate is supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(fromDate = Some("abc"))) shouldBe List(V2_FromDateFormatError)
+        validator.validate(validRequestRawDataWithOptionals.copy(fromDate = Some("abc"))) shouldBe List(FromDateFormatError)
       }
 
       "an invalid toDate is supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(toDate = Some("abc"))) shouldBe List(V2_ToDateFormatError)
+        validator.validate(validRequestRawDataWithOptionals.copy(toDate = Some("abc"))) shouldBe List(ToDateFormatError)
       }
 
       "the fromDate supplied is after the toDate supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(toDate = fromDate, fromDate = toDate)) shouldBe List(V2_RangeToDateBeforeFromDateError)
+        validator.validate(validRequestRawDataWithOptionals.copy(toDate = fromDate, fromDate = toDate)) shouldBe List(RangeToDateBeforeFromDateError)
       }
 
       "a from date is supplied and a to date is not supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(toDate = None)) shouldBe List(V2_MissingToDateError)
+        validator.validate(validRequestRawDataWithOptionals.copy(toDate = None)) shouldBe List(RuleMissingToDateError)
       }
 
       "a to date is supplied and a from date is not supplied" in {
-        validator.validate(validRequestRawDataWithOptionals.copy(fromDate = None)) shouldBe List(V2_MissingFromDateError)
+        validator.validate(validRequestRawDataWithOptionals.copy(fromDate = None)) shouldBe List(MissingFromDateError)
       }
 
       "an invalid paymentLot to is supplied" in {
@@ -98,7 +98,7 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
           toDate = Some("invalid"),
           paymentLot = Some("invalid!"),
           paymentLotItem = Some("invalid!"))
-        val expectedErrors = List(NinoFormatError, V2_FromDateFormatError, V2_ToDateFormatError, PaymentLotFormatError, PaymentLotItemFormatError)
+        val expectedErrors = List(NinoFormatError, FromDateFormatError, ToDateFormatError, PaymentLotFormatError, PaymentLotItemFormatError)
 
         validator.validate(input) shouldBe expectedErrors
       }

@@ -201,13 +201,13 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, Some("invalid"), None, None, None, None, BAD_REQUEST, IncludeLocksFormatError),
         ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, Some("invalid"), None, None, None, BAD_REQUEST, CalculateAccruedInterestFormatError),
         ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, Some("invalid"), None, BAD_REQUEST, CustomerPaymentInformationFormatError),
-        ("AA123456A", Some(validDocNumber), Some("invalid"), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, V2_FromDateFormatError),
-        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some("invalid"), None, None, None, None, None, None, BAD_REQUEST, V2_ToDateFormatError),
+        ("AA123456A", Some(validDocNumber), Some("invalid"), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, FromDateFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some("invalid"), None, None, None, None, None, None, BAD_REQUEST, ToDateFormatError),
         ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, Some("invalid"), None, None, BAD_REQUEST, RemovePaymentOnAccountFormatError),
         ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, None, Some("invalid"), BAD_REQUEST, IncludeEstimatedChargesFormatError),
-        ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, V2_RangeToDateBeforeFromDateError),
-        ("AA123456A", Some(validDocNumber), Some(validToDate), None, None, None, None, None, None, None, BAD_REQUEST, V2_MissingToDateError),
-        ("AA123456A", Some(validDocNumber), None, Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, V2_MissingFromDateError)
+        ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, RangeToDateBeforeFromDateError),
+        ("AA123456A", Some(validDocNumber), Some(validToDate), None, None, None, None, None, None, None, BAD_REQUEST, RuleMissingToDateError),
+        ("AA123456A", Some(validDocNumber), None, Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, MissingFromDateError)
 
       )
       // format: on
@@ -243,8 +243,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", BAD_REQUEST, IncludeLocksFormatError),
         (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", BAD_REQUEST, CalculateAccruedInterestFormatError),
         (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", BAD_REQUEST, CustomerPaymentInformationFormatError),
-        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, V2_FromDateFormatError),
-        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, V2_ToDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleInvalidDateRangeError),
         (BAD_REQUEST, "INVALID_REQUEST", BAD_REQUEST, RuleInconsistentQueryParamsError),
         (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", BAD_REQUEST, RemovePaymentOnAccountFormatError),

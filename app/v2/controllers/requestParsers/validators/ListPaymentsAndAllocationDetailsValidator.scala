@@ -18,7 +18,7 @@ package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
-import api.models.errors.{MtdError, V2_FromDateFormatError, V2_ToDateFormatError}
+import api.models.errors.{MtdError, FromDateFormatError, ToDateFormatError}
 import config.AppConfig
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRawData
 
@@ -32,8 +32,8 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
     (data: ListPaymentsAndAllocationDetailsRawData) => {
       List(
         NinoValidation.validate(data.nino),
-        DateFormatValidation.validate(data.fromDate, V2_FromDateFormatError),
-        DateFormatValidation.validate(data.toDate, V2_ToDateFormatError),
+        DateFormatValidation.validate(data.fromDate, FromDateFormatError),
+        DateFormatValidation.validate(data.toDate, ToDateFormatError),
         PaymentLotValidation.validateFormat(data.paymentLot),
         PaymentLotItemValidation.validateFormat(data.paymentLotItem)
       )

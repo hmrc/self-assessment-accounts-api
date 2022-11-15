@@ -17,10 +17,12 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -28,14 +30,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveAllocationsRequestParser
-import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsHateoasData
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.services.RetrieveAllocationsService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -111,15 +110,6 @@ class RetrieveAllocationsController @Inject() (val authService: EnrolmentsAuthSe
         result
       }.merge
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
-      case BadRequestError | NinoFormatError | PaymentIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError                                            => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError                                          => InternalServerError(Json.toJson(errorWrapper))
-      case _                                                        => unhandledError(errorWrapper)
-    }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 

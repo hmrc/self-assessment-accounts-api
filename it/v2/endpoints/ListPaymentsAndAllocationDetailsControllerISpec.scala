@@ -118,11 +118,11 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
 
       val input = Seq(
         ("BAD_NINO", None, None, None, None, BAD_REQUEST, NinoFormatError),
-        ("AA123456A", Some("BAD_DATE"), Some("2020-01-01"), None, None, BAD_REQUEST, V2_FromDateFormatError),
-        ("AA123456A", Some("2020-01-01"), Some("BAD_DATE"), None, None, BAD_REQUEST, V2_ToDateFormatError),
-        ("AA123456A", Some("2020-02-01"), Some("2020-01-01"), None, None, BAD_REQUEST, V2_RangeToDateBeforeFromDateError),
-        ("AA123456A", None, Some("2020-02-01"), None, None, BAD_REQUEST, V2_MissingFromDateError),
-        ("AA123456A", Some("2020-02-01"), None, None, None, BAD_REQUEST, V2_MissingToDateError),
+        ("AA123456A", Some("BAD_DATE"), Some("2020-01-01"), None, None, BAD_REQUEST, FromDateFormatError),
+        ("AA123456A", Some("2020-01-01"), Some("BAD_DATE"), None, None, BAD_REQUEST, ToDateFormatError),
+        ("AA123456A", Some("2020-02-01"), Some("2020-01-01"), None, None, BAD_REQUEST, RangeToDateBeforeFromDateError),
+        ("AA123456A", None, Some("2020-02-01"), None, None, BAD_REQUEST, MissingFromDateError),
+        ("AA123456A", Some("2020-02-01"), None, None, None, BAD_REQUEST, RuleMissingToDateError),
         ("AA123456A", None, None, Some("BAD_LOT"), None, BAD_REQUEST, PaymentLotFormatError),
         ("AA123456A", None, None, None, Some("BAD_LOT_ITEM"), BAD_REQUEST, PaymentLotItemFormatError),
         ("AA123456A", None, None, None, Some("000001"), BAD_REQUEST, MissingPaymentLotError)
@@ -153,22 +153,22 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
       }
 
       val input = Seq(
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, StandardDownstreamError),
         (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
-        (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+        (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
         (BAD_REQUEST, "INVALID_PAYMENT_LOT", BAD_REQUEST, PaymentLotFormatError),
         (BAD_REQUEST, "INVALID_PAYMENT_LOT_ITEM", BAD_REQUEST, PaymentLotItemFormatError),
-        (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, V2_FromDateFormatError),
-        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, V2_ToDateFormatError),
+        (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+        (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
+        (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleInvalidDateRangeError),
-        (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, InternalError),
+        (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, StandardDownstreamError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-        (UNPROCESSABLE_ENTITY, "PARTIALLY_MIGRATED", INTERNAL_SERVER_ERROR, InternalError),
-        (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
+        (UNPROCESSABLE_ENTITY, "PARTIALLY_MIGRATED", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+        (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, StandardDownstreamError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, StandardDownstreamError)
       )
 
       input.foreach(args => (serviceErrorTest _).tupled(args))

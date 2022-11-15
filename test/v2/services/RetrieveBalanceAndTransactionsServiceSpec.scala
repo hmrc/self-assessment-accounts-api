@@ -92,25 +92,25 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
 
       val errors: Seq[(String, MtdError)] =
         Seq(
-          "INVALID_CORRELATIONID"                -> InternalError,
-          "INVALID_IDTYPE"                       -> InternalError,
+          "INVALID_CORRELATIONID"                -> StandardDownstreamError,
+          "INVALID_IDTYPE"                       -> StandardDownstreamError,
           "INVALID_IDNUMBER"                     -> NinoFormatError,
-          "INVALID_REGIME_TYPE"                  -> InternalError,
+          "INVALID_REGIME_TYPE"                  -> StandardDownstreamError,
           "INVALID_DOC_NUMBER"                   -> DocNumberFormatError,
           "INVALID_ONLY_OPEN_ITEMS"              -> OnlyOpenItemsFormatError,
           "INVALID_INCLUDE_LOCKS"                -> IncludeLocksFormatError,
           "INVALID_CALCULATE_ACCRUED_INTEREST"   -> CalculateAccruedInterestFormatError,
           "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> CustomerPaymentInformationFormatError,
-          "INVALID_DATE_FROM"                    -> V2_FromDateFormatError,
-          "INVALID_DATE_TO"                      -> V2_ToDateFormatError,
+          "INVALID_DATE_FROM"                    -> FromDateFormatError,
+          "INVALID_DATE_TO"                      -> ToDateFormatError,
           "INVALID_DATE_RANGE"                   -> RuleInvalidDateRangeError,
           "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
           "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> RemovePaymentOnAccountFormatError,
           "INVALID_INCLUDE_STATISTICAL"          -> IncludeEstimatedChargesFormatError,
-          "REQUEST_NOT_PROCESSED"                -> InternalError,
+          "REQUEST_NOT_PROCESSED"                -> StandardDownstreamError,
           "NO_DATA_FOUND"                        -> NotFoundError,
-          "SERVER_ERROR"                         -> InternalError,
-          "SERVICE_UNAVAILABLE"                  -> InternalError
+          "SERVER_ERROR"                         -> StandardDownstreamError,
+          "SERVICE_UNAVAILABLE"                  -> StandardDownstreamError
         )
 
       errors.foreach(args => (serviceError _).tupled(args))

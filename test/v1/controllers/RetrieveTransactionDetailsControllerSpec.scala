@@ -200,7 +200,7 @@ class RetrieveTransactionDetailsControllerSpec
     "return the correct errors" when {
       "parser errors occur" must {
         def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+          s"the parser returns ${error.code}" in new Test {
 
             MockRetrieveTransactionDetailsRequestParser
               .parse(rawRequest)
@@ -228,7 +228,7 @@ class RetrieveTransactionDetailsControllerSpec
 
     "service errors occur" must {
       def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-        s"a $mtdError error is returned from the service" in new Test {
+        s"the service returns $mtdError" in new Test {
 
           MockRetrieveTransactionDetailsRequestParser
             .parse(rawRequest)

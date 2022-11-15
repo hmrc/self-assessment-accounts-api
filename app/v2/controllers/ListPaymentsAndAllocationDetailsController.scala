@@ -17,7 +17,6 @@
 package v2.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import play.api.libs.json.Json
@@ -87,28 +86,5 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
         result
       }.merge
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
-      case err
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            V2_FromDateFormatError,
-            V2_ToDateFormatError,
-            V2_MissingFromDateError,
-            V2_MissingToDateError,
-            V2_RangeToDateBeforeFromDateError,
-            RuleInvalidDateRangeError,
-            PaymentLotFormatError,
-            PaymentLotItemFormatError,
-            MissingPaymentLotError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
-    }
-  }
 
 }

@@ -17,10 +17,12 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import play.api.http.MimeTypes
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
@@ -28,14 +30,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.ListChargesRequestParser
-import api.hateoas.HateoasFactory
-import api.models.errors._
 import v1.models.request.listCharges.ListChargesRawRequest
 import v1.models.response.listCharges.ListChargesHateoasData
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import v1.services.ListChargesService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -111,17 +110,6 @@ class ListChargesController @Inject() (val authService: EnrolmentsAuthService,
         result
       }.merge
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
-      case BadRequestError | NinoFormatError | V1_FromDateFormatError | V1_MissingFromDateError | V1_ToDateFormatError | V1_MissingToDateError |
-           V1_RangeToDateBeforeFromDateError | RuleFromDateNotSupportedError | RuleDateRangeInvalidError =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
-    }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
 
