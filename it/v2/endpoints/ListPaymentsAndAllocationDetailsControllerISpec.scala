@@ -69,7 +69,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         val response: WSResponse = await(request.get)
 
         response.status shouldBe OK
-        response.json shouldBe responseMtdJson
+        response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
@@ -87,7 +87,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         val response: WSResponse = await(request.get)
 
         response.status shouldBe OK
-        response.json shouldBe responseMtdJson
+        response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }

@@ -16,24 +16,21 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.hateoas.{HateoasWrapper, Link}
-import play.api.libs.json.Json
-import play.api.mvc.Result
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.ListPaymentsFixture._
-import v1.mocks.requestParsers.MockListPaymentsRequestParser
-import v1.mocks.services.MockListPaymentsService
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
 import api.models.hateoas.Method.GET
 import api.models.hateoas.RelType.{LIST_TRANSACTIONS, RETRIEVE_PAYMENT_ALLOCATIONS, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
+import v1.fixtures.ListPaymentsFixture._
+import v1.mocks.requestParsers.MockListPaymentsRequestParser
+import v1.mocks.services.MockListPaymentsService
 import v1.models.request.listPayments._
 import v1.models.response.listPayments.{ListPaymentsHateoasData, ListPaymentsResponse}
 
@@ -42,54 +39,17 @@ import scala.concurrent.Future
 
 class ListPaymentsControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockListPaymentsRequestParser
     with MockListPaymentsService
     with MockHateoasFactory
-    with HateoasLinks
-    with MockAuditService
-    with MockIdGenerator {
+    with HateoasLinks {
 
-  private val nino          = "AA123456A"
-  private val from          = "2018-10-01"
-  private val to            = "2019-10-01"
-  private val correlationId = "X-123"
+  private val from = "2018-10-01"
+  private val to   = "2019-10-01"
+
   private val rawRequest    = ListPaymentsRawRequest(nino, Some(from), Some(to))
   private val parsedRequest = ListPaymentsParsedRequest(Nino(nino), from, to)
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new ListPaymentsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockListPaymentsRequestParser,
-      service = mockService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "listSelfAssessmentPayments",
-      transactionName = "list-self-assessment-payments",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino),
-        requestBody = None,
-        auditResponse = auditResponse,
-        `X-CorrelationId` = correlationId
-      )
-    )
 
   private val paymentHateoasLink1 =
     Link(
@@ -126,99 +86,84 @@ class ListPaymentsControllerSpec
 
   "retrieveList" should {
     "return a valid payments response" when {
-      "a request sent has valid details" in new Test {
+      "a request sent has valid details" in new RunControllerTest {
 
-        MockListPaymentsRequestParser
-          .parse(rawRequest)
-          .returns(Right(parsedRequest))
+        protected def setupMocks(): Unit = {
+          MockListPaymentsRequestParser
+            .parse(rawRequest)
+            .returns(Right(parsedRequest))
 
-        MockListPaymentsService
-          .listPayments(parsedRequest)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponseObj))))
+          MockListPaymentsService
+            .listPayments(parsedRequest)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponseObj))))
 
-        MockHateoasFactory
-          .wrapList(mtdResponseObj, ListPaymentsHateoasData(nino, from, to))
-          .returns(HateoasWrapper(hateoasResponse, Seq(listPaymentsHateoasLink, transactionsHateoasLink)))
+          MockHateoasFactory
+            .wrapList(mtdResponseObj, ListPaymentsHateoasData(nino, from, to))
+            .returns(HateoasWrapper(hateoasResponse, Seq(listPaymentsHateoasLink, transactionsHateoasLink)))
+        }
 
-        val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new RunControllerTest {
 
-            MockListPaymentsRequestParser
-              .parse(rawRequest)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
+        protected def setupMocks(): Unit = {
+          MockListPaymentsRequestParser
+            .parse(rawRequest)
+            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
         }
 
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (V1_FromDateFormatError, BAD_REQUEST),
-          (V1_ToDateFormatError, BAD_REQUEST),
-          (V1_MissingFromDateError, BAD_REQUEST),
-          (V1_MissingToDateError, BAD_REQUEST),
-          (RuleDateRangeInvalidError, BAD_REQUEST),
-          (RuleFromDateNotSupportedError, BAD_REQUEST),
-          (V1_RangeToDateBeforeFromDateError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new RunControllerTest {
 
-            MockListPaymentsRequestParser
-              .parse(rawRequest)
-              .returns(Right(parsedRequest))
+        protected def setupMocks(): Unit = {
+          MockListPaymentsRequestParser
+            .parse(rawRequest)
+            .returns(Right(parsedRequest))
 
-            MockListPaymentsService
-              .listPayments(parsedRequest)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
+          MockListPaymentsService
+            .listPayments(parsedRequest)
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, V1_FromDateFormatError))))
         }
 
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (V1_FromDateFormatError, BAD_REQUEST),
-          (V1_ToDateFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(V1_FromDateFormatError)
       }
     }
+  }
+
+  private trait RunControllerTest extends RunTest with AuditEventChecking {
+
+    val controller = new ListPaymentsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockListPaymentsRequestParser,
+      service = mockService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.listPayments(nino, Some(from), Some(to))(fakeGetRequest)
+
+    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "listSelfAssessmentPayments",
+        transactionName = "list-self-assessment-payments",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino),
+          requestBody = maybeRequestBody,
+          auditResponse = auditResponse,
+          `X-CorrelationId` = correlationId
+        )
+      )
+
   }
 
 }

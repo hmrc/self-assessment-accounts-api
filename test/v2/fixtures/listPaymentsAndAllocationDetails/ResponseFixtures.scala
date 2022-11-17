@@ -26,7 +26,7 @@ object ResponseFixtures {
     payments = List(paymentObject)
   )
 
-  val responseMtdJson: JsValue = Json.parse(
+  val mtdResponseJson: JsValue = Json.parse(
     s"""
        |{
        |    "payments": [

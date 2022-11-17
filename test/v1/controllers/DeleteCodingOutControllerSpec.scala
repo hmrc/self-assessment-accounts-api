@@ -16,18 +16,15 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.mocks.MockIdGenerator
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import play.api.libs.json.Json
-import play.api.mvc.Result
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockDeleteCodingOutParser
-import v1.mocks.services.MockDeleteCodingOutService
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
+import v1.mocks.requestParsers.MockDeleteCodingOutParser
+import v1.mocks.services.MockDeleteCodingOutService
 import v1.models.request.deleteCodingOut._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -35,19 +32,62 @@ import scala.concurrent.Future
 
 class DeleteCodingOutControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockDeleteCodingOutService
-    with MockDeleteCodingOutParser
-    with MockIdGenerator
-    with MockAuditService {
+    with MockDeleteCodingOutParser {
 
-  private val nino          = "AA123456A"
-  private val taxYear       = "2019-20"
-  private val correlationId = "X-123"
+  private val taxYear = "2019-20"
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
+  private val rawData     = DeleteCodingOutRawRequest(nino, taxYear)
+  private val requestData = DeleteCodingOutParsedRequest(Nino(nino), taxYear)
+
+  "handleRequest" should {
+    "return NoContent" when {
+      "the request is valid" in new RunControllerTest {
+
+        protected def setupMocks(): Unit = {
+          MockDeleteCodingOutParser
+            .parse(rawData)
+            .returns(Right(requestData))
+
+          MockDeleteCodingOutService
+            .delete(requestData)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+        }
+
+        runOkTestWithAudit(expectedStatus = NO_CONTENT, maybeExpectedResponseBody = None)
+      }
+    }
+    "return the error as per spec" when {
+      "the parser validation fails" in new RunControllerTest {
+
+        protected def setupMocks(): Unit = {
+          MockDeleteCodingOutParser
+            .parse(rawData)
+            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+        }
+
+        runErrorTestWithAudit(NinoFormatError)
+      }
+
+      "the service returns an error" in new RunControllerTest {
+
+        protected def setupMocks(): Unit = {
+          MockDeleteCodingOutParser
+            .parse(rawData)
+            .returns(Right(requestData))
+
+          MockDeleteCodingOutService
+            .delete(requestData)
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, CodingOutNotFoundError))))
+        }
+
+        runErrorTestWithAudit(CodingOutNotFoundError)
+      }
+    }
+  }
+
+  private trait RunControllerTest extends RunTest with AuditEventChecking {
 
     val controller = new DeleteCodingOutController(
       authService = mockEnrolmentsAuthService,
@@ -59,116 +99,22 @@ class DeleteCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
+    protected def callController(): Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "DeleteCodingOutUnderpayments",
-      transactionName = "delete-coding-out-underpayments",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino, "taxYear" -> taxYear),
-        requestBody = None,
-        `X-CorrelationId` = correlationId,
-        auditResponse = auditResponse
+    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "DeleteCodingOutUnderpayments",
+        transactionName = "delete-coding-out-underpayments",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          requestBody = maybeRequestBody,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
       )
-    )
 
-  private val rawData     = DeleteCodingOutRawRequest(nino, taxYear)
-  private val requestData = DeleteCodingOutParsedRequest(Nino(nino), taxYear)
-
-  "handleRequest" should {
-    "return NoContent" when {
-      "the request received is valid" in new Test {
-
-        MockDeleteCodingOutParser
-          .parse(rawData)
-          .returns(Right(requestData))
-
-        MockDeleteCodingOutService
-          .delete(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
-
-        val result: Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)
-
-        status(result) shouldBe NO_CONTENT
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(NO_CONTENT, None, None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-
-      }
-    }
-    "return the error as per spec" when {
-      "parser errors occur" should {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
-
-            MockDeleteCodingOutParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
-      }
-
-      "service errors occur" should {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
-
-            MockDeleteCodingOutParser
-              .parse(rawData)
-              .returns(Right(requestData))
-
-            MockDeleteCodingOutService
-              .delete(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (CodingOutNotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
-      }
-    }
   }
 
 }

@@ -116,7 +116,7 @@ object ListPaymentsFixture {
       |}
       |""".stripMargin
 
-  val mtdResponse: JsValue = Json.parse(s"""
+  val mtdResponseJson: JsValue = Json.parse(s"""
       |{
       |	"payments": [{
       |		"paymentId": "123456789012-123456",

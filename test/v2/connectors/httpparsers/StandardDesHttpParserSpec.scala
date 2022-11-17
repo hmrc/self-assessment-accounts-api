@@ -16,13 +16,13 @@
 
 package v2.connectors.httpparsers
 
+import api.connectors.DownstreamOutcome
+import api.models.errors._
+import api.models.outcomes.ResponseWrapper
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import api.connectors.DownstreamOutcome
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 
 class StandardDesHttpParserSpec extends UnitSpec with HttpParserSpec {
 
@@ -221,7 +221,8 @@ class StandardDesHttpParserSpec extends UnitSpec with HttpParserSpec {
         val httpResponse = HttpResponse(BAD_REQUEST, singleBvrJson.toString(), Map("CorrelationId" -> Seq(correlationId)))
 
         httpReads.read(method, url, httpResponse) shouldBe
-          Left(ResponseWrapper(correlationId, OutboundError(BVRError, Some(Seq(MtdError("BVR1", ""), MtdError("BVR2", ""))))))
+          Left(
+            ResponseWrapper(correlationId, OutboundError(BVRError, Some(Seq(MtdError("BVR1", "", BAD_REQUEST), MtdError("BVR2", "", BAD_REQUEST))))))
       }
     }
   }

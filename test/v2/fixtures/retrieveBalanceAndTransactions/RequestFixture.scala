@@ -16,11 +16,11 @@
 
 package v2.fixtures.retrieveBalanceAndTransactions
 
+import api.controllers.ControllerTestRunner.validNino
 import api.models.domain.Nino
 import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest}
 
 object RequestFixture {
-  val validNino: String      = "AA123456B"
   val validDocNumber: String = "1234"
   val validFromDate: String  = "2022-08-15"
   val validToDate: String    = "2022-09-15"
