@@ -28,12 +28,12 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit
       hc: HeaderCarrier,

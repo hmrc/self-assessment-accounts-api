@@ -28,13 +28,13 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveTransactionDetailsService @Inject() (val connector: RetrieveTransactionDetailsConnector)
-    extends DesResponseMappingSupport
+    extends DownstreamResponseMappingSupport
     with Logging {
 
   def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(implicit
