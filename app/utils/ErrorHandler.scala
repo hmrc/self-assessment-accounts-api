@@ -59,7 +59,7 @@ class ErrorHandler @Inject() (config: Configuration, auditConnector: AuditConnec
 
       case _ =>
         val errorCode = statusCode match {
-          case UNAUTHORIZED => UnauthorisedError
+          case UNAUTHORIZED => UnauthorisedErrorWith401
           case METHOD_NOT_ALLOWED => InvalidHttpMethodError
           case UNSUPPORTED_MEDIA_TYPE => InvalidBodyTypeError
           case _ => MtdError("INVALID_REQUEST", message, BAD_REQUEST)
@@ -68,13 +68,13 @@ class ErrorHandler @Inject() (config: Configuration, auditConnector: AuditConnec
         auditConnector.sendEvent(
           dataEvent(
             eventType = "ClientError",
-            transactionName = s"A client error occurred, status: $statusCode",
+            transactionName = s"A client error occurred, status: ${errorCode.httpStatus}",
             request = request,
             detail = Map.empty
           )
         )
 
-        Future.successful(Status(statusCode)(Json.toJson(errorCode)))
+        Future.successful(Status(errorCode.httpStatus)(Json.toJson(errorCode)))
     }
   }
 
