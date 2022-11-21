@@ -28,12 +28,12 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(implicit
       hc: HeaderCarrier,

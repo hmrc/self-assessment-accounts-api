@@ -28,12 +28,12 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.listTransactions.ListTransactionsParsedRequest
 import v1.models.response.listTransaction.{ListTransactionsResponse, TransactionItem}
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListTransactionsService @Inject() (val connector: ListTransactionsConnector) extends DesResponseMappingSupport with Logging {
+class ListTransactionsService @Inject() (val connector: ListTransactionsConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def listTransactions(request: ListTransactionsParsedRequest)(implicit
       hc: HeaderCarrier,

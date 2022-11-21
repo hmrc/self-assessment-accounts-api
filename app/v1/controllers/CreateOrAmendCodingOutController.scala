@@ -17,6 +17,10 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.{JsValue, Json}
@@ -25,10 +29,6 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.CreateOrAmendCodingOutParser
-import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
 import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutResponse.LinksFactory
@@ -87,12 +87,7 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
         }
 
       result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
+        val result = errorResult(errorWrapper)
 
         auditSubmission(
           GenericAuditDetail(
@@ -107,29 +102,6 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
         result
       }.merge
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            NinoFormatError,
-            BadRequestError,
-            TaxYearFormatError,
-            RuleTaxYearNotSupportedError,
-            RuleTaxYearRangeInvalidError,
-            RuleTaxYearNotEndedError,
-            RuleDuplicateIdError,
-            ValueFormatError,
-            IdFormatError,
-            RuleIncorrectOrEmptyBodyError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
-    }
-  }
 
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
     val event = AuditEvent(auditType = "CreateAmendCodingOutUnderpayment", transactionName = "create-amend-coding-out-underpayment", detail = details)

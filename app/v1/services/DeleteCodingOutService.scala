@@ -27,12 +27,12 @@ import v1.connectors.DeleteCodingOutConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends DesResponseMappingSupport with Logging {
+class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
       hc: HeaderCarrier,

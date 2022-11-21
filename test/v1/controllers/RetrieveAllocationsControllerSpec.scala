@@ -16,21 +16,17 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.hateoas.Method.GET
 import api.models.hateoas.RelType.{RETRIEVE_CHARGE_HISTORY, RETRIEVE_TRANSACTION_DETAILS, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 import v1.mocks.requestParsers.MockRetrieveAllocationsRequestParser
 import v1.mocks.services.MockRetrieveAllocationsService
@@ -43,20 +39,14 @@ import scala.concurrent.Future
 
 class RetrieveAllocationsControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveAllocationsService
     with MockHateoasFactory
-    with MockRetrieveAllocationsRequestParser
-    with HateoasLinks
-    with MockAuditService
-    with MockIdGenerator {
+    with MockRetrieveAllocationsRequestParser {
 
-  private val nino           = "AA123456A"
   private val paymentId      = "aLot-anItem"
   private val paymentLot     = "aLot"
   private val paymentLotItem = "anItem"
-  private val correlationId  = "X-123"
 
   private val rawRequest: RetrieveAllocationsRawRequest =
     RetrieveAllocationsRawRequest(
@@ -93,7 +83,7 @@ class RetrieveAllocationsControllerSpec
     )
 
   private val retrieveAllocationsResponse = RetrieveAllocationsResponseFixture.paymentDetails
-  private val mtdResponse                 = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas
+  private val mtdResponseJson             = RetrieveAllocationsResponseFixture.mtdJsonWithHateoas
 
   private val hateoasResponse =
     retrieveAllocationsResponse.copy(
@@ -115,43 +105,9 @@ class RetrieveAllocationsControllerSpec
       )
     )
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] =
-    AuditEvent(
-      auditType = "retrieveASelfAssessmentPaymentsAllocationDetails",
-      transactionName = "retrieve-a-self-assessment-payments-allocation-details",
-      detail = GenericAuditDetail(
-        userType = "Individual",
-        agentReferenceNumber = None,
-        params = Map("nino" -> nino),
-        requestBody = None,
-        auditResponse = auditResponse,
-        `X-CorrelationId` = correlationId
-      )
-    )
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new RetrieveAllocationsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveAllocationsRequestParser,
-      service = mockRetrieveAllocationsService,
-      hateoasFactory = mockHateoasFactory,
-      auditService = mockAuditService,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
   "retrieveAllocations" should {
     "return OK" when {
-      "happy path" in new Test {
-
+      "the request is valid" in new Test {
         MockRetrieveAllocationsRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
@@ -164,78 +120,62 @@ class RetrieveAllocationsControllerSpec
           .wrapList(retrieveAllocationsResponse, RetrieveAllocationsHateoasData(nino, paymentId))
           .returns(HateoasWrapper(hateoasResponse, Seq(paymentAllocationsLink)))
 
-        val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockRetrieveAllocationsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            MockRetrieveAllocationsRequestParser
-              .parse(rawRequest)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (PaymentIdFormatError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockRetrieveAllocationsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-            MockRetrieveAllocationsRequestParser
-              .parse(rawRequest)
-              .returns(Right(parsedRequest))
+        MockRetrieveAllocationsService
+          .retrieveAllocations(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, PaymentIdFormatError))))
 
-            MockRetrieveAllocationsService
-              .retrieveAllocations(parsedRequest)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (PaymentIdFormatError, BAD_REQUEST),
-          (NotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTestWithAudit(PaymentIdFormatError)
       }
     }
+  }
+
+  private trait Test extends ControllerTest with AuditEventChecking {
+
+    val controller = new RetrieveAllocationsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockRetrieveAllocationsRequestParser,
+      service = mockRetrieveAllocationsService,
+      hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.retrieveAllocations(nino, paymentId)(fakeGetRequest)
+
+    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "retrieveASelfAssessmentPaymentsAllocationDetails",
+        transactionName = "retrieve-a-self-assessment-payments-allocation-details",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino),
+          requestBody = maybeRequestBody,
+          auditResponse = auditResponse,
+          `X-CorrelationId` = correlationId
+        )
+      )
+
   }
 
 }

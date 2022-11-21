@@ -16,45 +16,36 @@
 
 package api.models.errors
 
+import api.models.audit.AuditError
 import play.api.libs.json.Json
 import support.UnitSpec
-import api.models.audit.AuditError
 
 class ErrorWrapperSpec extends UnitSpec {
 
-  val correlationId: String = "X-123"
+  private val correlationId = "X-123"
+
+  private val ninoFormatJson = Json.parse(
+    s"""
+       |{
+       |   "code": "${NinoFormatError.code}",
+       |   "message": "${NinoFormatError.message}"
+       |}
+      """.stripMargin
+  )
 
   "Rendering a error response with one error" should {
     val error = ErrorWrapper(correlationId, NinoFormatError, Some(Seq.empty))
 
-    val json = Json.parse(
-      """
-        |{
-        |   "code": "FORMAT_NINO",
-        |   "message": "The format of the supplied nino value is invalid"
-        |}
-      """.stripMargin
-    )
-
     "generate the correct JSON" in {
-      Json.toJson(error) shouldBe json
+      Json.toJson(error) shouldBe ninoFormatJson
     }
   }
 
   "Rendering a error response with one error and an empty sequence of errors" should {
     val error = ErrorWrapper(correlationId, NinoFormatError, Some(Seq.empty))
 
-    val json = Json.parse(
-      """
-        |{
-        |   "code": "FORMAT_NINO",
-        |   "message": "The format of the supplied nino value is invalid"
-        |}
-      """.stripMargin
-    )
-
     "generate the correct JSON" in {
-      Json.toJson(error) shouldBe json
+      Json.toJson(error) shouldBe ninoFormatJson
     }
   }
 
@@ -70,18 +61,18 @@ class ErrorWrapperSpec extends UnitSpec {
       ))
 
     val json = Json.parse(
-      """
+      s"""
         |{
-        |   "code": "INVALID_REQUEST",
-        |   "message": "Invalid request",
+        |   "code": "${BadRequestError.code}",
+        |   "message": "${BadRequestError.message}",
         |   "errors": [
         |       {
-        |         "code": "FORMAT_NINO",
-        |         "message": "The format of the supplied nino value is invalid"
+        |         "code": "${NinoFormatError.code}",
+        |         "message": "${NinoFormatError.message}"
         |       },
         |       {
-        |         "code": "FORMAT_TAX_YEAR",
-        |         "message": "The format of the supplied taxYear value is invalid"
+        |         "code": "${TaxYearFormatError.code}",
+        |         "message": "${TaxYearFormatError.message}"
         |       }
         |   ]
         |}

@@ -16,10 +16,11 @@
 
 package utils
 
+import api.models.errors._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.http.Status
-import play.api.http.Status.UNSUPPORTED_MEDIA_TYPE
+import play.api.http.Status.{BAD_REQUEST, UNSUPPORTED_MEDIA_TYPE}
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContentAsEmpty, RequestHeader}
 import play.api.test.FakeRequest
@@ -31,7 +32,6 @@ import uk.gov.hmrc.play.audit.http.connector.AuditConnector
 import uk.gov.hmrc.play.audit.http.connector.AuditResult.Success
 import uk.gov.hmrc.play.audit.model.DataEvent
 import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
-import api.models.errors._
 
 import java.time.Instant
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -124,7 +124,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
         private val result = handler.onClientError(requestHeader, METHOD_NOT_ALLOWED, "test")
         status(result) shouldBe METHOD_NOT_ALLOWED
 
-        contentAsJson(result) shouldBe Json.toJson(MtdError("INVALID_REQUEST", "test"))
+        contentAsJson(result) shouldBe Json.toJson(InvalidHttpMethodError)
       }
     }
   }
@@ -143,6 +143,7 @@ class ErrorHandlerSpec extends UnitSpec with GuiceOneAppPerSuite {
     "return 401 with error body" when {
       "AuthorisationException thrown" in new Test() {
         private val result = handler.onServerError(requestHeader, new InsufficientEnrolments("test") with NoStackTrace)
+        // TODO This really should be FORBIDDEN (403), but would need to be changed across all the APIs at once (if at all).
         status(result) shouldBe UNAUTHORIZED
 
         contentAsJson(result) shouldBe Json.toJson(UnauthorisedError)

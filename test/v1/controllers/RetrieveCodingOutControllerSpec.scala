@@ -16,19 +16,15 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v1.mocks.requestParsers.MockRetrieveCodingOutRequestParser
 import v1.mocks.services.MockRetrieveCodingOutService
@@ -40,17 +36,13 @@ import scala.concurrent.Future
 
 class RetrieveCodingOutControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveCodingOutService
     with MockHateoasFactory
-    with MockRetrieveCodingOutRequestParser
-    with MockIdGenerator {
+    with MockRetrieveCodingOutRequestParser {
 
-  private val nino          = "AA123456A"
-  private val taxYear       = "2021-22"
-  private val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-  private val source        = "hmrcHeld"
+  private val taxYear = "2021-22"
+  private val source  = "hmrcHeld"
 
   private val rawData = RetrieveCodingOutRawRequest(
     nino = nino,
@@ -120,30 +112,11 @@ class RetrieveCodingOutControllerSpec
       Some(unmatchedCustomerSubmissionsObject)
     )
 
-  private val mtdResponse = mtdResponseWithHateoas(nino, taxYear, source)
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new RetrieveCodingOutController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveCodingOutRequestParser,
-      service = mockRetrieveCodingOutService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
+  private val mtdResponseJson = mtdResponseWithHateoas(nino, taxYear, source)
 
   "RetrieveCodingOutController" should {
     "return OK" when {
       "happy path" in new Test {
-
         MockRetrieveCodingOutRequestParser
           .parse(rawData)
           .returns(Right(requestData))
@@ -163,75 +136,46 @@ class RetrieveCodingOutControllerSpec
                 deleteCodingOutLink
               )))
 
-        val result: Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponse
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockRetrieveCodingOutRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            MockRetrieveCodingOutRequestParser
-              .parse(rawData)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (RuleTaxYearRangeInvalidError, BAD_REQUEST),
-          (SourceFormatError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTest(NinoFormatError)
       }
 
-      "service errors occur" must {
-        def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-          s"a $mtdError error is returned from the service" in new Test {
+      "the service returns an error" in new Test {
+        MockRetrieveCodingOutRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-            MockRetrieveCodingOutRequestParser
-              .parse(rawData)
-              .returns(Right(requestData))
+        MockRetrieveCodingOutService
+          .retrieveCodingOut(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, CodingOutNotFoundError))))
 
-            MockRetrieveCodingOutService
-              .retrieveCodingOut(requestData)
-              .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-            val result: Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(mtdError)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TaxYearFormatError, BAD_REQUEST),
-          (SourceFormatError, BAD_REQUEST),
-          (RuleTaxYearNotSupportedError, BAD_REQUEST),
-          (CodingOutNotFoundError, NOT_FOUND),
-          (DownstreamError, INTERNAL_SERVER_ERROR)
-        )
-
-        input.foreach(args => (serviceErrors _).tupled(args))
+        runErrorTest(CodingOutNotFoundError)
       }
     }
+  }
+
+  private trait Test extends ControllerTest {
+
+    val controller = new RetrieveCodingOutController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      requestParser = mockRetrieveCodingOutRequestParser,
+      service = mockRetrieveCodingOutService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
+
+    protected def callController(): Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)
   }
 
 }

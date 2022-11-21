@@ -82,18 +82,18 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       val errors: Seq[(String, MtdError)] =
         Seq(
           "INVALID_CORRELATIONID" -> InternalError,
-          "INVALID_IDTYPE"        -> InternalError,
-          "INVALID_IDVALUE"       -> NinoFormatError,
-          "INVALID_REGIME_TYPE"   -> InternalError,
-          "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
-          "INVALID_DATE_FROM"     -> InternalError,
-          "INVALID_DATE_TO"       -> InternalError,
-          "INVALID_DATE_RANGE"    -> InternalError,
-          "INVALID_REQUEST"       -> InternalError,
+          "INVALID_IDTYPE" -> InternalError,
+          "INVALID_IDVALUE" -> NinoFormatError,
+          "INVALID_REGIME_TYPE" -> InternalError,
+          "INVALID_DOC_NUMBER" -> TransactionIdFormatError,
+          "INVALID_DATE_FROM" -> InternalError,
+          "INVALID_DATE_TO" -> InternalError,
+          "INVALID_DATE_RANGE" -> InternalError,
+          "INVALID_REQUEST" -> InternalError,
           "REQUEST_NOT_PROCESSED" -> InternalError,
-          "NO_DATA_FOUND"         -> NotFoundError,
-          "SERVER_ERROR"          -> InternalError,
-          "SERVICE_UNAVAILABLE"   -> InternalError
+          "NO_DATA_FOUND" -> NotFoundError,
+          "SERVER_ERROR" -> InternalError,
+          "SERVICE_UNAVAILABLE" -> InternalError
         )
 
       errors.foreach(args => (serviceError _).tupled(args))

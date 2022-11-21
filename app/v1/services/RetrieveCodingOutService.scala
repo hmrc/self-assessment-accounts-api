@@ -27,13 +27,13 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit currentDate: CurrentDate)
-    extends DesResponseMappingSupport
+    extends DownstreamResponseMappingSupport
     with Logging {
 
   def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(implicit

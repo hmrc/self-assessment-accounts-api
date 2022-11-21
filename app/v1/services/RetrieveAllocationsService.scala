@@ -29,12 +29,12 @@ import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAllocationsService @Inject() (connector: RetrieveAllocationsConnector) extends DesResponseMappingSupport with Logging {
+class RetrieveAllocationsService @Inject() (connector: RetrieveAllocationsConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(implicit
       hc: HeaderCarrier,

@@ -16,19 +16,10 @@
 
 package v2.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
-import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.errors._
-import api.models.hateoas.Link
-import api.models.hateoas.Method.GET
-import api.models.hateoas.RelType.SELF
 import api.models.outcomes.ResponseWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import uk.gov.hmrc.http.HeaderCarrier
 import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
 import v2.mocks.requestParsers.MockRetrieveBalanceAndTransactionsRequestParser
@@ -40,30 +31,52 @@ import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveBalanceAndTransactionsService
-    with MockHateoasFactory
-    with MockRetrieveBalanceAndTransactionsRequestParser
-    with HateoasLinks
-    with MockIdGenerator {
+    with MockRetrieveBalanceAndTransactionsRequestParser {
 
-  private val nino          = validNino
-  private val correlationId = "X-123"
-
-  private val rawRequest: RetrieveBalanceAndTransactionsRawData = inputDataEverythingTrue
-
+  private val rawRequest: RetrieveBalanceAndTransactionsRawData    = inputDataEverythingTrue
   private val parsedRequest: RetrieveBalanceAndTransactionsRequest = requestEverythingTrue
 
-  val BalanceAndTransactionsLink: Link =
-    Link(
-      href = s"/accounts/self-assessment/$nino/balance-and-transactions",
-      method = GET,
-      rel = SELF
-    )
+  "retrieveBalanceAndTransactions" should {
+    "return OK" when {
+      "the request is valid" in new Test {
+        MockRetrieveBalanceAndTransactionsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
+        MockRetrieveBalanceAndTransactionsService
+          .retrieveBalanceAndTransactions(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
+      }
+    }
+
+    "return the error as per spec" when {
+      "the parser validation fails" in new Test {
+        MockRetrieveBalanceAndTransactionsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+
+        runErrorTest(NinoFormatError)
+      }
+
+      "the service returns an error" in new Test {
+        MockRetrieveBalanceAndTransactionsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
+
+        MockRetrieveBalanceAndTransactionsService
+          .retrieveBalanceAndTransactions(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, DocNumberFormatError))))
+
+        runErrorTest(DocNumberFormatError)
+      }
+    }
+  }
+
+  trait Test extends ControllerTest {
 
     val controller = new RetrieveBalanceAndTransactionsController(
       authService = mockEnrolmentsAuthService,
@@ -74,141 +87,19 @@ class RetrieveBalanceAndTransactionsControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
-  "retrieveBalanceAndTransactions" should {
-    "return OK" when {
-      "happy path" in new Test {
-
-        MockRetrieveBalanceAndTransactionsRequestParser
-          .parse(rawRequest)
-          .returns(Right(parsedRequest))
-
-        MockRetrieveBalanceAndTransactionsService
-          .retrieveBalanceAndTransactions(parsedRequest)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
-
-        val result: Future[Result] = controller.retrieveBalanceAndTransactions(
-          nino = nino,
-          docNumber = Some(validDocNumber),
-          fromDate = None,
-          toDate = None,
-          onlyOpenItems = Some("true"),
-          includeLocks = Some("true"),
-          calculateAccruedInterest = Some("true"),
-          removePOA = Some("true"),
-          customerPaymentInformation = Some("true"),
-          includeEstimatedCharges = Some("true")
-        )(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdResponseJson
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-      }
-    }
-
-    "return the error as per spec" when {
-      "parser errors occur" should {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
-
-            MockRetrieveBalanceAndTransactionsRequestParser
-              .parse(rawRequest)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
-
-            val result: Future[Result] = controller.retrieveBalanceAndTransactions(
-              nino = nino,
-              docNumber = Some(validDocNumber),
-              fromDate = None,
-              toDate = None,
-              onlyOpenItems = Some("true"),
-              includeLocks = Some("true"),
-              calculateAccruedInterest = Some("true"),
-              removePOA = Some("true"),
-              customerPaymentInformation = Some("true"),
-              includeEstimatedCharges = Some("true")
-            )(fakeGetRequest)
-
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
-          }
-        }
-
-        val input = Seq(
-          (BadRequestError, BAD_REQUEST),
-          (NinoFormatError, BAD_REQUEST),
-          (DocNumberFormatError, BAD_REQUEST),
-          (OnlyOpenItemsFormatError, BAD_REQUEST),
-          (IncludeLocksFormatError, BAD_REQUEST),
-          (CalculateAccruedInterestFormatError, BAD_REQUEST),
-          (CustomerPaymentInformationFormatError, BAD_REQUEST),
-          (V2_FromDateFormatError, BAD_REQUEST),
-          (V2_ToDateFormatError, BAD_REQUEST),
-          (RemovePaymentOnAccountFormatError, BAD_REQUEST),
-          (IncludeEstimatedChargesFormatError, BAD_REQUEST),
-          (V2_MissingToDateError, BAD_REQUEST),
-          (V2_MissingFromDateError, BAD_REQUEST),
-          (V2_RangeToDateBeforeFromDateError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
-      }
-    }
-
-    "service errors occur" must {
-      def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-        s"a $mtdError error is returned from the service" in new Test {
-
-          MockRetrieveBalanceAndTransactionsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockRetrieveBalanceAndTransactionsService
-            .retrieveBalanceAndTransactions(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
-
-          val result: Future[Result] = controller.retrieveBalanceAndTransactions(
-            nino = nino,
-            docNumber = Some(validDocNumber),
-            fromDate = None,
-            toDate = None,
-            onlyOpenItems = Some("true"),
-            includeLocks = Some("true"),
-            calculateAccruedInterest = Some("true"),
-            removePOA = Some("true"),
-            customerPaymentInformation = Some("true"),
-            includeEstimatedCharges = Some("true")
-          )(fakeGetRequest)
-
-          status(result) shouldBe expectedStatus
-          contentAsJson(result) shouldBe Json.toJson(mtdError)
-          header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        }
-      }
-
-      val input = Seq(
-        (NinoFormatError, BAD_REQUEST),
-        (DocNumberFormatError, BAD_REQUEST),
-        (OnlyOpenItemsFormatError, BAD_REQUEST),
-        (IncludeLocksFormatError, BAD_REQUEST),
-        (CalculateAccruedInterestFormatError, BAD_REQUEST),
-        (CustomerPaymentInformationFormatError, BAD_REQUEST),
-        (V2_FromDateFormatError, BAD_REQUEST),
-        (V2_ToDateFormatError, BAD_REQUEST),
-        (RuleInvalidDateRangeError, BAD_REQUEST),
-        (RuleInconsistentQueryParamsError, BAD_REQUEST),
-        (RemovePaymentOnAccountFormatError, BAD_REQUEST),
-        (IncludeEstimatedChargesFormatError, BAD_REQUEST),
-        (NotFoundError, NOT_FOUND),
-        (InternalError, INTERNAL_SERVER_ERROR)
-      )
-
-      input.foreach(args => (serviceErrors _).tupled(args))
+    protected def callController(): Future[Result] = {
+      controller.retrieveBalanceAndTransactions(
+        nino = nino,
+        docNumber = Some(validDocNumber),
+        fromDate = None,
+        toDate = None,
+        onlyOpenItems = Some("true"),
+        includeLocks = Some("true"),
+        calculateAccruedInterest = Some("true"),
+        removePOA = Some("true"),
+        customerPaymentInformation = Some("true"),
+        includeEstimatedCharges = Some("true")
+      )(fakeGetRequest)
     }
 
   }

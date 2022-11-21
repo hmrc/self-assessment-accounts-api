@@ -14,29 +14,31 @@
  * limitations under the License.
  */
 
-package v1.support
+package v1.mocks.support
 
-import support.UnitSpec
-import utils.Logging
 import api.controllers.EndpointLogContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import play.api.http.Status.BAD_REQUEST
+import support.UnitSpec
+import utils.Logging
 import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, TransactionItem}
+import v1.support.DownstreamResponseMappingSupport
 
-class DesResponseMappingSupportSpec extends UnitSpec {
+class DownstreamResponseMappingSupportSpec extends UnitSpec {
 
   implicit val logContext: EndpointLogContext         = EndpointLogContext("ctrl", "ep")
-  val mapping: DesResponseMappingSupport with Logging = new DesResponseMappingSupport with Logging {}
+  val mapping: DownstreamResponseMappingSupport with Logging = new DownstreamResponseMappingSupport with Logging {}
 
   val correlationId: String = "someCorrelationId"
 
-  object Error1 extends MtdError("msg", "code1")
+  object Error1 extends MtdError("msg", "code1", BAD_REQUEST)
 
-  object Error2 extends MtdError("msg", "code2")
+  object Error2 extends MtdError("msg", "code2", BAD_REQUEST)
 
-  object ErrorBvrMain extends MtdError("msg", "bvrMain")
+  object ErrorBvrMain extends MtdError("msg", "bvrMain", BAD_REQUEST)
 
-  object ErrorBvr extends MtdError("msg", "bvr")
+  object ErrorBvr extends MtdError("msg", "bvr", BAD_REQUEST)
 
   val errorCodeMap: PartialFunction[String, MtdError] = {
     case "ERR1" => Error1

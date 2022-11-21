@@ -67,10 +67,10 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "an invalid from date is supplied" in {
-        validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"))) shouldBe List(V2_FromDateFormatError)
+        validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"))) shouldBe List(FromDateFormatError)
       }
       "an invalid to date is supplied" in {
-        validator.validate(inputDataDocNumber.copy(toDate = Some("invalid"))) shouldBe List(V2_ToDateFormatError)
+        validator.validate(inputDataDocNumber.copy(toDate = Some("invalid"))) shouldBe List(ToDateFormatError)
       }
 
       "an invalid remove POA is supplied" in {
@@ -82,21 +82,21 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       }
 
       "to date is supplied but from date is not" in {
-        validator.validate(inputDataDateRange.copy(fromDate = None, toDate = Some("2022-11-01"))) shouldBe List(V2_MissingFromDateError)
+        validator.validate(inputDataDateRange.copy(fromDate = None, toDate = Some("2022-11-01"))) shouldBe List(MissingFromDateError)
       }
 
       "from date is supplied but to date is not" in {
-        validator.validate(inputDataDateRange.copy(fromDate = Some("2022-12-01"), toDate = None)) shouldBe List(V2_MissingToDateError)
+        validator.validate(inputDataDateRange.copy(fromDate = Some("2022-12-01"), toDate = None)) shouldBe List(RuleMissingToDateError)
       }
 
       "from date is later than to date" in {
         validator.validate(inputDataDateRange.copy(fromDate = Some("2022-12-01"), toDate = Some("2022-11-01"))) shouldBe
-          List(V2_RangeToDateBeforeFromDateError)
+          List(RangeToDateBeforeFromDateError)
       }
 
       "multiple invalid values are supplied" in {
         validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"), removePOA = Some("invalid"))) shouldBe
-          List(V2_FromDateFormatError, RemovePaymentOnAccountFormatError)
+          List(FromDateFormatError, RemovePaymentOnAccountFormatError)
       }
     }
   }

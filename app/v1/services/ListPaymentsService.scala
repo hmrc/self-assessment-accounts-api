@@ -28,12 +28,12 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector) extends DesResponseMappingSupport with Logging {
+class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def list(request: ListPaymentsParsedRequest)(implicit
       hc: HeaderCarrier,

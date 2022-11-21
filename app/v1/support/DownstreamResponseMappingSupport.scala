@@ -17,15 +17,15 @@
 package v1.support
 
 import api.controllers.EndpointLogContext
-import utils.{CurrentDate, Logging}
 import api.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.support.ResponseMappingSupport
+import utils.{CurrentDate, Logging}
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
-trait DesResponseMappingSupport extends ResponseMappingSupport {
+trait DownstreamResponseMappingSupport extends ResponseMappingSupport {
   self: Logging =>
 
   final def validateTransactionDetailsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {

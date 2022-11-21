@@ -17,22 +17,21 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.errors._
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveCodingOutRequestParser
-import api.hateoas.HateoasFactory
-import api.models.errors._
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutHateoasData
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import v1.services.RetrieveCodingOutService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -84,25 +83,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
             .as(MimeTypes.JSON)
         }
 
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-
-        result
-      }.merge
+      result.leftMap(errorResult).merge
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TaxYearFormatError | RuleTaxYearNotSupportedError | RuleTaxYearRangeInvalidError | SourceFormatError =>
-        BadRequest(Json.toJson(errorWrapper))
-      case CodingOutNotFoundError => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError        => InternalServerError(Json.toJson(errorWrapper))
-      case _                      => unhandledError(errorWrapper)
-    }
-  }
 
 }

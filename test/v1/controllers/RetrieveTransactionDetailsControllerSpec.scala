@@ -16,51 +16,36 @@
 
 package v1.controllers
 
-import api.controllers.ControllerBaseSpec
-import api.hateoas.HateoasLinks
-import api.mocks.MockIdGenerator
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
-import api.mocks.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.hateoas.{HateoasWrapper, Link}
-import mocks.MockAppConfig
-import play.api.libs.json.Json
-import play.api.mvc.Result
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.requestParsers.MockRetrieveTransactionDetailsRequestParser
-import v1.mocks.services.MockRetrieveTransactionDetailsService
-import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
 import api.models.hateoas.Method.GET
 import api.models.hateoas.RelType.{RETRIEVE_PAYMENT_ALLOCATIONS, SELF}
+import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import play.api.libs.json.{JsValue, Json}
+import play.api.mvc.Result
+import v1.mocks.requestParsers.MockRetrieveTransactionDetailsRequestParser
+import v1.mocks.services.MockRetrieveTransactionDetailsService
 import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
-import v1.models.response.retrieveTransactionDetails.{
-  RetrieveTransactionDetailsHateoasData,
-  RetrieveTransactionDetailsResponse,
-  SubItem,
-  TransactionItem
-}
+import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsHateoasData, RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveTransactionDetailsControllerSpec
     extends ControllerBaseSpec
-    with MockEnrolmentsAuthService
-    with MockMtdIdLookupService
+    with ControllerTestRunner
     with MockRetrieveTransactionDetailsRequestParser
     with MockRetrieveTransactionDetailsService
     with MockHateoasFactory
-    with MockAppConfig
-    with HateoasLinks
-    with MockAuditService
-    with MockIdGenerator {
+    with MockAppConfig {
 
-  private val nino          = "AA123456A"
   private val transactionId = "11111"
   private val paymentId     = "081203010024-000001"
-  private val correlationId = "X-123"
 
   private val rawRequest    = RetrieveTransactionDetailsRawRequest(nino, transactionId)
   private val parsedRequest = RetrieveTransactionDetailsParsedRequest(Nino(nino), transactionId)
@@ -106,7 +91,7 @@ class RetrieveTransactionDetailsControllerSpec
 
   private val hateoasResponse = RetrieveTransactionDetailsResponse(Seq(paymentTransaction))
 
-  private val mtdJson = Json.parse(
+  private val mtdResponseJson = Json.parse(
     """
       |{
       |	"transactionItems": [{
@@ -138,42 +123,9 @@ class RetrieveTransactionDetailsControllerSpec
     """.stripMargin
   )
 
-  def event(auditResponse: AuditResponse): AuditEvent[GenericAuditDetail] = AuditEvent(
-    auditType = "retrieveASelfAssessmentTransactionsDetail",
-    transactionName = "retrieve-a-self-assessment-transactions-detail",
-    detail = GenericAuditDetail(
-      userType = "Individual",
-      agentReferenceNumber = None,
-      params = Map("nino" -> nino),
-      requestBody = None,
-      auditResponse = auditResponse,
-      `X-CorrelationId` = correlationId
-    )
-  )
-
-  trait Test {
-    val hc: HeaderCarrier = HeaderCarrier()
-
-    val controller = new RetrieveTransactionDetailsController(
-      authService = mockEnrolmentsAuthService,
-      lookupService = mockMtdIdLookupService,
-      auditService = mockAuditService,
-      requestParser = mockRetrieveTransactionDetailsRequestParser,
-      service = mockRetrieveTransactionDetailsService,
-      hateoasFactory = mockHateoasFactory,
-      cc = cc,
-      idGenerator = mockIdGenerator
-    )
-
-    MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
-    MockedEnrolmentsAuthService.authoriseUser()
-    MockIdGenerator.generateCorrelationId.returns(correlationId)
-  }
-
   "retrieveTransactionDetails" should {
     "return a valid transactions response" when {
-      "a request sent has valid details" in new Test {
-
+      "the request is valid" in new Test {
         MockRetrieveTransactionDetailsRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
@@ -186,77 +138,62 @@ class RetrieveTransactionDetailsControllerSpec
           .wrap(mtdResponse, RetrieveTransactionDetailsHateoasData(nino, transactionId, Some(paymentId)))
           .returns(HateoasWrapper(hateoasResponse, Seq(transactionsHateoasLink, paymentAllocationHateoasLink)))
 
-        val result: Future[Result] = controller.retrieveTransactionDetails(nino, transactionId)(fakeGetRequest)
-
-        status(result) shouldBe OK
-        contentAsJson(result) shouldBe mtdJson
-        header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-        val auditResponse: AuditResponse = AuditResponse(OK, None, None)
-        MockedAuditService.verifyAuditEvent(event(auditResponse)).once
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the correct errors" when {
-      "parser errors occur" must {
-        def errorsFromParserTester(error: MtdError, expectedStatus: Int): Unit = {
-          s"a ${error.code} error is returned from the parser" in new Test {
+      "the parser validation fails" in new Test {
+        MockRetrieveTransactionDetailsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-            MockRetrieveTransactionDetailsRequestParser
-              .parse(rawRequest)
-              .returns(Left(ErrorWrapper(correlationId, error, None)))
+        runErrorTestWithAudit(NinoFormatError)
+      }
 
-            val result: Future[Result] = controller.retrieveTransactionDetails(nino, transactionId)(fakeGetRequest)
+      "the service returns an error" in new Test {
+        MockRetrieveTransactionDetailsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-            status(result) shouldBe expectedStatus
-            contentAsJson(result) shouldBe Json.toJson(error)
-            header("X-CorrelationId", result) shouldBe Some(correlationId)
+        MockRetrieveTransactionDetailsService
+          .retrieveTransactionDetails(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, NoTransactionDetailsFoundError))))
 
-            val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(error.code))), None)
-            MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-          }
-        }
-
-        val input = Seq(
-          (NinoFormatError, BAD_REQUEST),
-          (TransactionIdFormatError, BAD_REQUEST)
-        )
-
-        input.foreach(args => (errorsFromParserTester _).tupled(args))
+        runErrorTestWithAudit(NoTransactionDetailsFoundError)
       }
     }
+  }
 
-    "service errors occur" must {
-      def serviceErrors(mtdError: MtdError, expectedStatus: Int): Unit = {
-        s"a $mtdError error is returned from the service" in new Test {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
-          MockRetrieveTransactionDetailsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
+    val controller = new RetrieveTransactionDetailsController(
+      authService = mockEnrolmentsAuthService,
+      lookupService = mockMtdIdLookupService,
+      auditService = mockAuditService,
+      requestParser = mockRetrieveTransactionDetailsRequestParser,
+      service = mockRetrieveTransactionDetailsService,
+      hateoasFactory = mockHateoasFactory,
+      cc = cc,
+      idGenerator = mockIdGenerator
+    )
 
-          MockRetrieveTransactionDetailsService
-            .retrieveTransactionDetails(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, mtdError))))
+    protected def callController(): Future[Result] = controller.retrieveTransactionDetails(nino, transactionId)(fakeGetRequest)
 
-          val result: Future[Result] = controller.retrieveTransactionDetails(nino, transactionId)(fakeGetRequest)
-
-          status(result) shouldBe expectedStatus
-          contentAsJson(result) shouldBe Json.toJson(mtdError)
-          header("X-CorrelationId", result) shouldBe Some(correlationId)
-
-          val auditResponse: AuditResponse = AuditResponse(expectedStatus, Some(Seq(AuditError(mtdError.code))), None)
-          MockedAuditService.verifyAuditEvent(event(auditResponse)).once
-        }
-      }
-
-      val input = Seq(
-        (NotFoundError, NOT_FOUND),
-        (NoTransactionDetailsFoundError, NOT_FOUND),
-        (DownstreamError, INTERNAL_SERVER_ERROR)
+    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "retrieveASelfAssessmentTransactionsDetail",
+        transactionName = "retrieve-a-self-assessment-transactions-detail",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          params = Map("nino" -> nino),
+          requestBody = maybeRequestBody,
+          auditResponse = auditResponse,
+          `X-CorrelationId` = correlationId
+        )
       )
 
-      input.foreach(args => (serviceErrors _).tupled(args))
-    }
   }
 
 }

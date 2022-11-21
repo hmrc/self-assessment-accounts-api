@@ -17,7 +17,6 @@
 package v2.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
@@ -85,43 +84,7 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
           .withApiHeaders(serviceResponse.correlationId)
       }
 
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-        result
-      }.merge
+      result.leftMap(errorResult).merge
     }
-
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-
-    errorWrapper.error match {
-      case _
-          if errorWrapper.containsAnyOf(
-            BadRequestError,
-            NinoFormatError,
-            DocNumberFormatError,
-            IncludeLocksFormatError,
-            OnlyOpenItemsFormatError,
-            CalculateAccruedInterestFormatError,
-            CustomerPaymentInformationFormatError,
-            V2_FromDateFormatError,
-            V2_ToDateFormatError,
-            RemovePaymentOnAccountFormatError,
-            IncludeEstimatedChargesFormatError,
-            RuleInvalidDateRangeError,
-            RuleInconsistentQueryParamsError,
-            V2_MissingToDateError,
-            V2_MissingFromDateError,
-            V2_RangeToDateBeforeFromDateError
-          ) =>
-        BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError   => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError => InternalServerError(Json.toJson(errorWrapper))
-      case _               => unhandledError(errorWrapper)
-    }
-  }
 
 }

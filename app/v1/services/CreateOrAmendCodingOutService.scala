@@ -25,13 +25,13 @@ import v1.connectors.CreateOrAmendCodingOutConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.createOrAmendCodingOut._
-import v1.support.DesResponseMappingSupport
+import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOutConnector) extends DesResponseMappingSupport with Logging {
+class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOutConnector) extends DownstreamResponseMappingSupport with Logging {
 
   def amend(request: CreateOrAmendCodingOutParsedRequest)(implicit
       hc: HeaderCarrier,

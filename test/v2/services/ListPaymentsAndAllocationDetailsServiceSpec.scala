@@ -63,21 +63,21 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
         }
 
       val errors: Seq[(String, MtdError)] = Seq(
-        "INVALID_CORRELATIONID"    -> InternalError,
-        "INVALID_IDVALUE"          -> NinoFormatError,
-        "INVALID_IDTYPE"           -> InternalError,
-        "INVALID_REGIME_TYPE"      -> InternalError,
-        "INVALID_PAYMENT_LOT"      -> PaymentLotFormatError,
+        "INVALID_CORRELATIONID" -> InternalError,
+        "INVALID_IDVALUE" -> NinoFormatError,
+        "INVALID_IDTYPE" -> InternalError,
+        "INVALID_REGIME_TYPE" -> InternalError,
+        "INVALID_PAYMENT_LOT" -> PaymentLotFormatError,
         "INVALID_PAYMENT_LOT_ITEM" -> PaymentLotItemFormatError,
-        "INVALID_CLEARING_DOC"     -> InternalError,
-        "INVALID_DATE_FROM"        -> V2_FromDateFormatError,
-        "INVALID_DATE_TO"          -> V2_ToDateFormatError,
-        "INVALID_DATE_RANGE"       -> RuleInvalidDateRangeError,
-        "REQUEST_NOT_PROCESSED"    -> InternalError,
-        "NO_DATA_FOUND"            -> NotFoundError,
-        "PARTIALLY_MIGRATED"       -> InternalError,
-        "SERVER_ERROR"             -> InternalError,
-        "SERVICE_UNAVAILABLE"      -> InternalError
+        "INVALID_CLEARING_DOC" -> InternalError,
+        "INVALID_DATE_FROM" -> FromDateFormatError,
+        "INVALID_DATE_TO" -> ToDateFormatError,
+        "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
+        "REQUEST_NOT_PROCESSED" -> InternalError,
+        "NO_DATA_FOUND" -> NotFoundError,
+        "PARTIALLY_MIGRATED" -> InternalError,
+        "SERVER_ERROR" -> InternalError,
+        "SERVICE_UNAVAILABLE" -> InternalError
       )
 
       errors.foreach(args => (serviceError _).tupled(args))

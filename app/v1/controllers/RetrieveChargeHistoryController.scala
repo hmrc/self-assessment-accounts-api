@@ -17,10 +17,12 @@
 package v1.controllers
 
 import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.hateoas.HateoasFactory
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.errors._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import cats.data.EitherT
 import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import play.mvc.Http.MimeTypes
@@ -28,14 +30,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveChargeHistoryRequestParser
-import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import v1.services.RetrieveChargeHistoryService
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -95,18 +94,14 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
         }
 
       result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
+        val result = errorResult(errorWrapper)
 
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
             params = Map("nino" -> nino),
             requestBody = None,
-            `X-CorrelationId` = resCorrelationId,
+            `X-CorrelationId` = errorWrapper.correlationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )
@@ -115,17 +110,7 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
       }.merge
     }
 
-  private def errorResult(errorWrapper: ErrorWrapper) = {
-    errorWrapper.error match {
-      case BadRequestError | NinoFormatError | TransactionIdFormatError => BadRequest(Json.toJson(errorWrapper))
-      case NotFoundError                                                => NotFound(Json.toJson(errorWrapper))
-      case DownstreamError                                              => InternalServerError(Json.toJson(errorWrapper))
-      case _                                                            => unhandledError(errorWrapper)
-    }
-  }
-
   private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-
     val event = AuditEvent(
       auditType = "retrieveASelfAssessmentChargesHistory",
       transactionName = "retrieve-a-self-assessment-charges-history",

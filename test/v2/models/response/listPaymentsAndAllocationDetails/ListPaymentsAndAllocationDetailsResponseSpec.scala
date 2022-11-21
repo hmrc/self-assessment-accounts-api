@@ -18,7 +18,7 @@ package v2.models.response.listPaymentsAndAllocationDetails
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.{responseDownstreamJson, responseMtdJson, responseObject}
+import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.{responseDownstreamJson, mtdResponseJson, responseObject}
 
 class ListPaymentsAndAllocationDetailsResponseSpec extends UnitSpec {
 
@@ -33,7 +33,7 @@ class ListPaymentsAndAllocationDetailsResponseSpec extends UnitSpec {
   "writes" should {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
-        Json.toJson(responseObject) shouldBe responseMtdJson
+        Json.toJson(responseObject) shouldBe mtdResponseJson
       }
     }
   }
