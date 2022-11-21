@@ -76,62 +76,53 @@ class RetrieveChargeHistoryControllerSpec
 
   "retrieveChargeHistory" should {
     "return OK" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockRetrieveChargeHistoryRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveChargeHistoryRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
+        MockRetrieveChargeHistoryService
+          .retrieveChargeHistory(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))))
 
-          MockRetrieveChargeHistoryService
-            .retrieveChargeHistory(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))))
-
-          MockHateoasFactory
-            .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, transactionId))
-            .returns(
-              HateoasWrapper(
-                retrieveChargeHistoryResponse,
-                Seq(
-                  chargeHistoryLink,
-                  transactionDetailsLink
-                )))
-        }
+        MockHateoasFactory
+          .wrap(retrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData(nino, transactionId))
+          .returns(
+            HateoasWrapper(
+              retrieveChargeHistoryResponse,
+              Seq(
+                chargeHistoryLink,
+                transactionDetailsLink
+              )))
 
         runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockRetrieveChargeHistoryRequestParser
-            .parse(rawRequest)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockRetrieveChargeHistoryRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTestWithAudit(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockRetrieveChargeHistoryRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveChargeHistoryRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockRetrieveChargeHistoryService
-            .retrieveChargeHistory(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, TransactionIdFormatError))))
-        }
+        MockRetrieveChargeHistoryService
+          .retrieveChargeHistory(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, TransactionIdFormatError))))
 
         runErrorTestWithAudit(TransactionIdFormatError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new RetrieveChargeHistoryController(
       authService = mockEnrolmentsAuthService,

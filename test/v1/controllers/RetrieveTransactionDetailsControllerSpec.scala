@@ -31,12 +31,7 @@ import play.api.mvc.Result
 import v1.mocks.requestParsers.MockRetrieveTransactionDetailsRequestParser
 import v1.mocks.services.MockRetrieveTransactionDetailsService
 import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
-import v1.models.response.retrieveTransactionDetails.{
-  RetrieveTransactionDetailsHateoasData,
-  RetrieveTransactionDetailsResponse,
-  SubItem,
-  TransactionItem
-}
+import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsHateoasData, RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -130,56 +125,47 @@ class RetrieveTransactionDetailsControllerSpec
 
   "retrieveTransactionDetails" should {
     "return a valid transactions response" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockRetrieveTransactionDetailsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveTransactionDetailsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
+        MockRetrieveTransactionDetailsService
+          .retrieveTransactionDetails(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponse))))
 
-          MockRetrieveTransactionDetailsService
-            .retrieveTransactionDetails(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponse))))
-
-          MockHateoasFactory
-            .wrap(mtdResponse, RetrieveTransactionDetailsHateoasData(nino, transactionId, Some(paymentId)))
-            .returns(HateoasWrapper(hateoasResponse, Seq(transactionsHateoasLink, paymentAllocationHateoasLink)))
-        }
+        MockHateoasFactory
+          .wrap(mtdResponse, RetrieveTransactionDetailsHateoasData(nino, transactionId, Some(paymentId)))
+          .returns(HateoasWrapper(hateoasResponse, Seq(transactionsHateoasLink, paymentAllocationHateoasLink)))
 
         runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the correct errors" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockRetrieveTransactionDetailsRequestParser
-            .parse(rawRequest)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockRetrieveTransactionDetailsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTestWithAudit(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockRetrieveTransactionDetailsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveTransactionDetailsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockRetrieveTransactionDetailsService
-            .retrieveTransactionDetails(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, NoTransactionDetailsFoundError))))
-        }
+        MockRetrieveTransactionDetailsService
+          .retrieveTransactionDetails(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, NoTransactionDetailsFoundError))))
 
         runErrorTestWithAudit(NoTransactionDetailsFoundError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new RetrieveTransactionDetailsController(
       authService = mockEnrolmentsAuthService,

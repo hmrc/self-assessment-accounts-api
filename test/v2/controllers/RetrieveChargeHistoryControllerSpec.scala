@@ -68,43 +68,37 @@ class RetrieveChargeHistoryControllerSpec
 
   "retrieveChargeHistory" should {
     "return OK" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockRetrieveChargeHistoryRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveChargeHistoryRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
+        MockRetrieveChargeHistoryService
+          .retrieveChargeHistory(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-          MockRetrieveChargeHistoryService
-            .retrieveChargeHistory(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
-
-          MockHateoasFactory
-            .wrap(response, RetrieveChargeHistoryHateoasData(nino, transactionId))
-            .returns(
-              HateoasWrapper(
-                response,
-                Seq(
-                  chargeHistoryLink,
-                  transactionDetailsLink
-                )))
-        }
+        MockHateoasFactory
+          .wrap(response, RetrieveChargeHistoryHateoasData(nino, transactionId))
+          .returns(
+            HateoasWrapper(
+              response,
+              Seq(
+                chargeHistoryLink,
+                transactionDetailsLink
+              )))
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdMultipleResponseWithHateoas(nino, transactionId)))
       }
     }
     "return the error as per spec" when {
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockRetrieveChargeHistoryRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveChargeHistoryRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockRetrieveChargeHistoryService
-            .retrieveChargeHistory(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
-        }
+        MockRetrieveChargeHistoryService
+          .retrieveChargeHistory(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
 
         runErrorTest(NinoFormatError)
       }
@@ -112,7 +106,7 @@ class RetrieveChargeHistoryControllerSpec
 
   }
 
-  private trait RunControllerTest extends RunTest {
+  private trait Test extends ControllerTest {
 
     private val controller = new RetrieveChargeHistoryController(
       authService = mockEnrolmentsAuthService,

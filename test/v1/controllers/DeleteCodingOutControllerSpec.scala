@@ -43,51 +43,42 @@ class DeleteCodingOutControllerSpec
 
   "handleRequest" should {
     "return NoContent" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockDeleteCodingOutParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-        protected def setupMocks(): Unit = {
-          MockDeleteCodingOutParser
-            .parse(rawData)
-            .returns(Right(requestData))
-
-          MockDeleteCodingOutService
-            .delete(requestData)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
-        }
+        MockDeleteCodingOutService
+          .delete(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         runOkTestWithAudit(expectedStatus = NO_CONTENT, maybeExpectedResponseBody = None)
       }
     }
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockDeleteCodingOutParser
-            .parse(rawData)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockDeleteCodingOutParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTestWithAudit(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockDeleteCodingOutParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-        protected def setupMocks(): Unit = {
-          MockDeleteCodingOutParser
-            .parse(rawData)
-            .returns(Right(requestData))
-
-          MockDeleteCodingOutService
-            .delete(requestData)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, CodingOutNotFoundError))))
-        }
+        MockDeleteCodingOutService
+          .delete(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, CodingOutNotFoundError))))
 
         runErrorTestWithAudit(CodingOutNotFoundError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new DeleteCodingOutController(
       authService = mockEnrolmentsAuthService,

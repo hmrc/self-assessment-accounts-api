@@ -45,5 +45,7 @@ trait BaseController { self: Logging =>
 
       result.copy(header = result.header.copy(headers = result.header.headers ++ newHeaders))
     }
+
   }
+
 }

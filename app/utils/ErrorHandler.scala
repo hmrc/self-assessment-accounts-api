@@ -59,9 +59,10 @@ class ErrorHandler @Inject() (config: Configuration, auditConnector: AuditConnec
 
       case _ =>
         val errorCode = statusCode match {
-          case UNAUTHORIZED           => UnauthorisedError
+          case UNAUTHORIZED => UnauthorisedError
+          case METHOD_NOT_ALLOWED => InvalidHttpMethodError
           case UNSUPPORTED_MEDIA_TYPE => InvalidBodyTypeError
-          case _                      => MtdError("INVALID_REQUEST", message, statusCode)
+          case _ => MtdError("INVALID_REQUEST", message, BAD_REQUEST)
         }
 
         auditConnector.sendEvent(
@@ -87,16 +88,16 @@ class ErrorHandler @Inject() (config: Configuration, auditConnector: AuditConnec
       ex
     )
 
-    val (status, errorCode, eventType) = ex match {
-      case _: NotFoundException      => (NOT_FOUND, NotFoundError, "ResourceNotFound")
-      case _: AuthorisationException => (UNAUTHORIZED, UnauthorisedError, "ClientError")
-      case _: JsValidationException  => (BAD_REQUEST, BadRequestError, "ServerValidationError")
-      case e: HttpException          => (e.responseCode, BadRequestError, "ServerValidationError")
+    val (errorCode, eventType) = ex match {
+      case _: NotFoundException => (NotFoundError, "ResourceNotFound")
+      case _: AuthorisationException => (UnauthorisedErrorWith401, "ClientError")
+      case _: JsValidationException => (BadRequestError, "ServerValidationError")
+      case e: HttpException => (BadRequestError, "ServerValidationError")
       case e: UpstreamErrorResponse if UpstreamErrorResponse.Upstream4xxResponse.unapply(e).isDefined =>
-        (e.reportAs, BadRequestError, "ServerValidationError")
+        (BadRequestError, "ServerValidationError")
       case e: UpstreamErrorResponse if UpstreamErrorResponse.Upstream5xxResponse.unapply(e).isDefined =>
-        (e.reportAs, DownstreamError, "ServerInternalError")
-      case _ => (INTERNAL_SERVER_ERROR, DownstreamError, "ServerInternalError")
+        (DownstreamError, "ServerInternalError")
+      case _ => (DownstreamError, "ServerInternalError")
     }
 
     auditConnector.sendEvent(
@@ -108,7 +109,7 @@ class ErrorHandler @Inject() (config: Configuration, auditConnector: AuditConnec
       )
     )
 
-    Future.successful(Status(status)(Json.toJson(errorCode)))
+    Future.successful(Status(errorCode.httpStatus)(Json.toJson(errorCode)))
   }
 
   private def versionIfSpecified(request: RequestHeader): String = routing.Versions.getFromRequest(request).map(_.name).getOrElse("<unspecified>")

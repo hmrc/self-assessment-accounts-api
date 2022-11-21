@@ -72,14 +72,7 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
           .withApiHeaders(serviceResponse.correlationId)
       }
 
-      result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
-        result
-      }.merge
+      result.leftMap(errorResult).merge
     }
 
 }

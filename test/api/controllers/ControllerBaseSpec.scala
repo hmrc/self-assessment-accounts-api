@@ -48,7 +48,7 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
   protected val nino: String  = validNino
   protected val correlationId = "X-123"
 
-  trait RunTest {
+  trait ControllerTest {
     protected val hc: HeaderCarrier = HeaderCarrier()
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
@@ -56,7 +56,6 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
     MockIdGenerator.generateCorrelationId.returns(correlationId)
 
     protected def runOkTest(expectedStatus: Int, maybeExpectedResponseBody: Option[JsValue] = None): Unit = {
-      setupMocks()
       val result: Future[Result] = callController()
 
       status(result) shouldBe expectedStatus
@@ -66,7 +65,6 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
     }
 
     protected def runErrorTest(expectedError: MtdError): Unit = {
-      setupMocks()
       val result: Future[Result] = callController()
 
       status(result) shouldBe expectedError.httpStatus
@@ -75,11 +73,11 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
       contentAsJson(result) shouldBe Json.toJson(expectedError)
     }
 
-    protected def setupMocks(): Unit
     protected def callController(): Future[Result]
   }
 
-  trait AuditEventChecking extends MockAuditService { _: RunTest =>
+  trait AuditEventChecking extends MockAuditService {
+    _: ControllerTest =>
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail]
 

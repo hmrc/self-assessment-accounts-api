@@ -86,56 +86,47 @@ class ListPaymentsControllerSpec
 
   "retrieveList" should {
     "return a valid payments response" when {
-      "a request sent has valid details" in new RunControllerTest {
+      "a request sent has valid details" in new Test {
+        MockListPaymentsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockListPaymentsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
+        MockListPaymentsService
+          .listPayments(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponseObj))))
 
-          MockListPaymentsService
-            .listPayments(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, mtdResponseObj))))
-
-          MockHateoasFactory
-            .wrapList(mtdResponseObj, ListPaymentsHateoasData(nino, from, to))
-            .returns(HateoasWrapper(hateoasResponse, Seq(listPaymentsHateoasLink, transactionsHateoasLink)))
-        }
+        MockHateoasFactory
+          .wrapList(mtdResponseObj, ListPaymentsHateoasData(nino, from, to))
+          .returns(HateoasWrapper(hateoasResponse, Seq(listPaymentsHateoasLink, transactionsHateoasLink)))
 
         runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockListPaymentsRequestParser
-            .parse(rawRequest)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockListPaymentsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTestWithAudit(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockListPaymentsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockListPaymentsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockListPaymentsService
-            .listPayments(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, V1_FromDateFormatError))))
-        }
+        MockListPaymentsService
+          .listPayments(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, V1_FromDateFormatError))))
 
         runErrorTestWithAudit(V1_FromDateFormatError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new ListPaymentsController(
       authService = mockEnrolmentsAuthService,

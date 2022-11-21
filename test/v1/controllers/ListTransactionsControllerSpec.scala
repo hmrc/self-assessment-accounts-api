@@ -103,56 +103,47 @@ class ListTransactionsControllerSpec
 
   "listTransactions" should {
     "return a valid transactions response" when {
-      "the request is valid" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockListTransactionsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockListTransactionsService
-            .listTransactions(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, listTransactionsResponse))))
-
-          MockHateoasFactory
-            .wrapList(listTransactionsResponse, ListTransactionsHateoasData(nino, from, to))
-            .returns(HateoasWrapper(hateoasResponse, Seq(listTransactionsHateoasLink, listChargesHateoasLink, listPaymentsHateoasLink)))
-        }
-
-        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(listTransactionsMtdResponseWithHateoas))
-      }
-    }
-
-    "return the correct errors" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockListTransactionsRequestParser
-            .parse(rawRequest)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
-
-        runErrorTestWithAudit(NinoFormatError)
-      }
-    }
-
-    "the service returns an error" in new RunControllerTest {
-
-      protected def setupMocks(): Unit = {
+      "the request is valid" in new Test {
         MockListTransactionsRequestParser
           .parse(rawRequest)
           .returns(Right(parsedRequest))
 
         MockListTransactionsService
           .listTransactions(parsedRequest)
-          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleDateRangeInvalidError))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, listTransactionsResponse))))
+
+        MockHateoasFactory
+          .wrapList(listTransactionsResponse, ListTransactionsHateoasData(nino, from, to))
+          .returns(HateoasWrapper(hateoasResponse, Seq(listTransactionsHateoasLink, listChargesHateoasLink, listPaymentsHateoasLink)))
+
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(listTransactionsMtdResponseWithHateoas))
       }
+    }
+
+    "return the correct errors" when {
+      "the parser validation fails" in new Test {
+        MockListTransactionsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+
+        runErrorTestWithAudit(NinoFormatError)
+      }
+    }
+
+    "the service returns an error" in new Test {
+      MockListTransactionsRequestParser
+        .parse(rawRequest)
+        .returns(Right(parsedRequest))
+
+      MockListTransactionsService
+        .listTransactions(parsedRequest)
+        .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleDateRangeInvalidError))))
 
       runErrorTestWithAudit(RuleDateRangeInvalidError)
     }
   }
 
-  private trait RunControllerTest extends RunTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new ListTransactionsController(
       authService = mockEnrolmentsAuthService,

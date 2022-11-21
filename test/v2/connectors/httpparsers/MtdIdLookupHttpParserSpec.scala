@@ -16,14 +16,14 @@
 
 package v2.connectors.httpparsers
 
+import api.connectors.MtdIdLookupOutcome
+import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
+import api.models.errors.{InternalError, InvalidBearerTokenError, NinoFormatError}
 import play.api.libs.json.Writes.StringWrites
 import play.api.libs.json.{JsObject, Json}
 import play.api.test.Helpers.{FORBIDDEN, INTERNAL_SERVER_ERROR, OK, UNAUTHORIZED}
 import support.UnitSpec
 import uk.gov.hmrc.http.HttpResponse
-import api.connectors.MtdIdLookupOutcome
-import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
-import api.models.errors.{StandardDownstreamError, InvalidBearerTokenError, NinoFormatError}
 
 class MtdIdLookupHttpParserSpec extends UnitSpec {
 
@@ -49,21 +49,21 @@ class MtdIdLookupHttpParserSpec extends UnitSpec {
         val response                   = HttpResponse(OK, invalidJson.toString())
         val result: MtdIdLookupOutcome = mtdIdLookupHttpReads.read(method, url, response)
 
-        result shouldBe Left(StandardDownstreamError)
+        result shouldBe Left(InternalError)
       }
 
       "backend doesn't return any data" in {
         val response                   = HttpResponse(OK, "")
         val result: MtdIdLookupOutcome = mtdIdLookupHttpReads.read(method, url, response)
 
-        result shouldBe Left(StandardDownstreamError)
+        result shouldBe Left(InternalError)
       }
 
       "the json cannot be read" in {
         val response                   = HttpResponse(OK, None.orNull)
         val result: MtdIdLookupOutcome = mtdIdLookupHttpReads.read(method, url, response)
 
-        result shouldBe Left(StandardDownstreamError)
+        result shouldBe Left(InternalError)
       }
     }
 
@@ -90,7 +90,7 @@ class MtdIdLookupHttpParserSpec extends UnitSpec {
         val response                   = HttpResponse(INTERNAL_SERVER_ERROR, "")
         val result: MtdIdLookupOutcome = mtdIdLookupHttpReads.read(method, url, response)
 
-        result shouldBe Left(StandardDownstreamError)
+        result shouldBe Left(InternalError)
       }
     }
   }

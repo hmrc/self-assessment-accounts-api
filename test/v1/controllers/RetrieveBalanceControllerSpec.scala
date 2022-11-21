@@ -63,56 +63,47 @@ class RetrieveBalanceControllerSpec
 
   "retrieveBalance" should {
     "return OK" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockRetrieveBalanceRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveBalanceRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
+        MockRetrieveBalanceService
+          .retrieveBalance(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBalanceResponse))))
 
-          MockRetrieveBalanceService
-            .retrieveBalance(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBalanceResponse))))
-
-          MockHateoasFactory
-            .wrap(retrieveBalanceResponse, RetrieveBalanceHateoasData(nino))
-            .returns(HateoasWrapper(retrieveBalanceResponse, Seq(balanceLink)))
-        }
+        MockHateoasFactory
+          .wrap(retrieveBalanceResponse, RetrieveBalanceHateoasData(nino))
+          .returns(HateoasWrapper(retrieveBalanceResponse, Seq(balanceLink)))
 
         runOkTestWithAudit(expectedStatus = OK, maybeAuditRequestBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockRetrieveBalanceRequestParser
-            .parse(rawRequest)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockRetrieveBalanceRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTestWithAudit(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockRetrieveBalanceRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveBalanceRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockRetrieveBalanceService
-            .retrieveBalance(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
-        }
+        MockRetrieveBalanceService
+          .retrieveBalance(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
 
         runErrorTestWithAudit(NinoFormatError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new RetrieveBalanceController(
       authService = mockEnrolmentsAuthService,

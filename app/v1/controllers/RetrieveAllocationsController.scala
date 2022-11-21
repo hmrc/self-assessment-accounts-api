@@ -91,18 +91,14 @@ class RetrieveAllocationsController @Inject() (val authService: EnrolmentsAuthSe
         }
 
       result.leftMap { errorWrapper =>
-        val resCorrelationId = errorWrapper.correlationId
-        val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-        logger.warn(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Error response received with CorrelationId: $resCorrelationId")
+        val result = errorResult(errorWrapper)
 
         auditSubmission(
           GenericAuditDetail(
             userDetails = request.userDetails,
             params = Map("nino" -> nino),
             requestBody = None,
-            `X-CorrelationId` = resCorrelationId,
+            `X-CorrelationId` = errorWrapper.correlationId,
             auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
           )
         )

@@ -113,55 +113,46 @@ class CreateOrAmendCodingOutControllerSpec
 
   "handleRequest" should {
     "return OK" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockCreateOrAmendCodingOutRequestParser
+          .parseRequest(rawData)
+          .returns(Right(requestData))
 
-        protected def setupMocks(): Unit = {
-          MockCreateOrAmendCodingOutRequestParser
-            .parseRequest(rawData)
-            .returns(Right(requestData))
+        MockCreateOrAmendCodingOutService
+          .amend(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-          MockCreateOrAmendCodingOutService
-            .amend(requestData)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
-
-          MockHateoasFactory
-            .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
-            .returns(HateoasWrapper((), testHateoasLinks))
-        }
+        MockHateoasFactory
+          .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .returns(HateoasWrapper((), testHateoasLinks))
 
         runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockCreateOrAmendCodingOutRequestParser
-            .parseRequest(rawData)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockCreateOrAmendCodingOutRequestParser
+          .parseRequest(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTestWithAudit(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockCreateOrAmendCodingOutRequestParser
+          .parseRequest(rawData)
+          .returns(Right(requestData))
 
-        protected def setupMocks(): Unit = {
-          MockCreateOrAmendCodingOutRequestParser
-            .parseRequest(rawData)
-            .returns(Right(requestData))
-
-          MockCreateOrAmendCodingOutService
-            .amend(requestData)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
-        }
+        MockCreateOrAmendCodingOutService
+          .amend(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
 
         runErrorTestWithAudit(RuleTaxYearNotEndedError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,

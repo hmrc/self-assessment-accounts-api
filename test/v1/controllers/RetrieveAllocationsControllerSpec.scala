@@ -107,56 +107,47 @@ class RetrieveAllocationsControllerSpec
 
   "retrieveAllocations" should {
     "return OK" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockRetrieveAllocationsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveAllocationsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
+        MockRetrieveAllocationsService
+          .retrieveAllocations(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))))
 
-          MockRetrieveAllocationsService
-            .retrieveAllocations(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveAllocationsResponse))))
-
-          MockHateoasFactory
-            .wrapList(retrieveAllocationsResponse, RetrieveAllocationsHateoasData(nino, paymentId))
-            .returns(HateoasWrapper(hateoasResponse, Seq(paymentAllocationsLink)))
-        }
+        MockHateoasFactory
+          .wrapList(retrieveAllocationsResponse, RetrieveAllocationsHateoasData(nino, paymentId))
+          .returns(HateoasWrapper(hateoasResponse, Seq(paymentAllocationsLink)))
 
         runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockRetrieveAllocationsRequestParser
-            .parse(rawRequest)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockRetrieveAllocationsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTestWithAudit(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockRetrieveAllocationsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveAllocationsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockRetrieveAllocationsService
-            .retrieveAllocations(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, PaymentIdFormatError))))
-        }
+        MockRetrieveAllocationsService
+          .retrieveAllocations(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, PaymentIdFormatError))))
 
         runErrorTestWithAudit(PaymentIdFormatError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking {
 
     val controller = new RetrieveAllocationsController(
       authService = mockEnrolmentsAuthService,

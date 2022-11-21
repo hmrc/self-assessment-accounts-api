@@ -42,52 +42,43 @@ class ListPaymentsAndAllocationDetailsControllerSpec
 
   "retrieveList" should {
     "return a payments and allocation details response" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockListPaymentsAndAllocationDetailsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockListPaymentsAndAllocationDetailsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockListPaymentsAndAllocationDetailsService
-            .listPaymentsAndAllocationDetails(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObject))))
-        }
+        MockListPaymentsAndAllocationDetailsService
+          .listPaymentsAndAllocationDetails(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObject))))
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockListPaymentsAndAllocationDetailsRequestParser
-            .parse(rawRequest)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockListPaymentsAndAllocationDetailsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTest(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockListPaymentsAndAllocationDetailsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockListPaymentsAndAllocationDetailsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockListPaymentsAndAllocationDetailsService
-            .listPaymentsAndAllocationDetails(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, PaymentLotFormatError))))
-        }
+        MockListPaymentsAndAllocationDetailsService
+          .listPaymentsAndAllocationDetails(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, PaymentLotFormatError))))
 
         runErrorTest(PaymentLotFormatError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest {
+  private trait Test extends ControllerTest {
 
     private val controller = new ListPaymentsAndAllocationDetailsController(
       authService = mockEnrolmentsAuthService,

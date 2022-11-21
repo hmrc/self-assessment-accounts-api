@@ -116,63 +116,54 @@ class RetrieveCodingOutControllerSpec
 
   "RetrieveCodingOutController" should {
     "return OK" when {
-      "happy path" in new RunControllerTest {
+      "happy path" in new Test {
+        MockRetrieveCodingOutRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveCodingOutRequestParser
-            .parse(rawData)
-            .returns(Right(requestData))
+        MockRetrieveCodingOutService
+          .retrieveCodingOut(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))))
 
-          MockRetrieveCodingOutService
-            .retrieveCodingOut(requestData)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))))
-
-          MockHateoasFactory
-            .wrap(retrieveCodingOutResponse, RetrieveCodingOutHateoasData(nino, taxYear))
-            .returns(
-              HateoasWrapper(
-                retrieveCodingOutResponse,
-                Seq(
-                  createOrAmendCodingOutLink,
-                  retrieveCodingOutLink,
-                  deleteCodingOutLink
-                )))
-        }
+        MockHateoasFactory
+          .wrap(retrieveCodingOutResponse, RetrieveCodingOutHateoasData(nino, taxYear))
+          .returns(
+            HateoasWrapper(
+              retrieveCodingOutResponse,
+              Seq(
+                createOrAmendCodingOutLink,
+                retrieveCodingOutLink,
+                deleteCodingOutLink
+              )))
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockRetrieveCodingOutRequestParser
-            .parse(rawData)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockRetrieveCodingOutRequestParser
+          .parse(rawData)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTest(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockRetrieveCodingOutRequestParser
+          .parse(rawData)
+          .returns(Right(requestData))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveCodingOutRequestParser
-            .parse(rawData)
-            .returns(Right(requestData))
-
-          MockRetrieveCodingOutService
-            .retrieveCodingOut(requestData)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, CodingOutNotFoundError))))
-        }
+        MockRetrieveCodingOutService
+          .retrieveCodingOut(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, CodingOutNotFoundError))))
 
         runErrorTest(CodingOutNotFoundError)
       }
     }
   }
 
-  private trait RunControllerTest extends RunTest {
+  private trait Test extends ControllerTest {
 
     val controller = new RetrieveCodingOutController(
       authService = mockEnrolmentsAuthService,

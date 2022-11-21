@@ -40,52 +40,43 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
   "retrieveBalanceAndTransactions" should {
     "return OK" when {
-      "the request is valid" in new RunControllerTest {
+      "the request is valid" in new Test {
+        MockRetrieveBalanceAndTransactionsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveBalanceAndTransactionsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockRetrieveBalanceAndTransactionsService
-            .retrieveBalanceAndTransactions(parsedRequest)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
-        }
+        MockRetrieveBalanceAndTransactionsService
+          .retrieveBalanceAndTransactions(parsedRequest)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
     "return the error as per spec" when {
-      "the parser validation fails" in new RunControllerTest {
-
-        protected def setupMocks(): Unit = {
-          MockRetrieveBalanceAndTransactionsRequestParser
-            .parse(rawRequest)
-            .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
-        }
+      "the parser validation fails" in new Test {
+        MockRetrieveBalanceAndTransactionsRequestParser
+          .parse(rawRequest)
+          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
         runErrorTest(NinoFormatError)
       }
 
-      "the service returns an error" in new RunControllerTest {
+      "the service returns an error" in new Test {
+        MockRetrieveBalanceAndTransactionsRequestParser
+          .parse(rawRequest)
+          .returns(Right(parsedRequest))
 
-        protected def setupMocks(): Unit = {
-          MockRetrieveBalanceAndTransactionsRequestParser
-            .parse(rawRequest)
-            .returns(Right(parsedRequest))
-
-          MockRetrieveBalanceAndTransactionsService
-            .retrieveBalanceAndTransactions(parsedRequest)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, DocNumberFormatError))))
-        }
+        MockRetrieveBalanceAndTransactionsService
+          .retrieveBalanceAndTransactions(parsedRequest)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, DocNumberFormatError))))
 
         runErrorTest(DocNumberFormatError)
       }
     }
   }
 
-  trait RunControllerTest extends RunTest {
+  trait Test extends ControllerTest {
 
     val controller = new RetrieveBalanceAndTransactionsController(
       authService = mockEnrolmentsAuthService,
