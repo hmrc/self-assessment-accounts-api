@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.services.RetrieveCodingOutService
@@ -37,8 +36,8 @@ trait MockRetrieveCodingOutService extends MockFactory {
     def retrieveCodingOut(
         request: RetrieveCodingOutParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]]] = {
       (mockRetrieveCodingOutService
-        .retrieveCodingOut(_: RetrieveCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(request, *, *, *, *)
+        .retrieveCodingOut(_: RetrieveCodingOutParsedRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(request, *, *)
     }
 
   }

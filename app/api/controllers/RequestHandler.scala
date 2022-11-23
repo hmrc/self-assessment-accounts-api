@@ -18,8 +18,9 @@ package api.controllers
 
 import api.controllers.requestParsers.RequestParser
 import api.models.errors.{DownstreamError, ErrorWrapper}
+import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
-import api.services.{BaseService, ServiceComponent}
+import api.services.ServiceComponent
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.Json
@@ -31,7 +32,7 @@ import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextImplicits {
-  self: Logging with ServiceComponent[Input, Output] with ResultCreatorComponent[InputRaw, Output] with CommonErrorHandlingComponent =>
+  self: Logging with ServiceComponent[Input, Output] with ResultCreatorComponent[InputRaw, Output] with ErrorHandlingComponent =>
 
   val parser: RequestParser[InputRaw, Input]
 
@@ -49,6 +50,7 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
 
       result.copy(header = result.header.copy(headers = result.header.headers ++ newHeaders))
     }
+
   }
 
   protected def unhandledError(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
@@ -58,8 +60,7 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
     InternalServerError(Json.toJson(DownstreamError))
   }
 
-  def handleRequest(rawData: InputRaw)(implicit
-                                       ctx: RequestContext): Future[Result] = {
+  def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext): Future[Result] = {
 
     logger.info(
       message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +
@@ -68,7 +69,7 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
     val result =
       for {
         parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-        serviceResponse <- EitherT(service.doService(parsedRequest))
+        serviceResponse <- EitherT(service(parsedRequest))
       } yield {
         logger.info(
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
@@ -92,34 +93,39 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
 
   private def errorResult(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result =
     errorResultPF
-      .orElse(commonErrorHandling.errorResultPF)
-      .applyOrElse(errorWrapper, unhandledError)
+      .orElse(errorHandling.errorResultPF)
+      .applyOrElse(errorWrapper, unhandledError) // FIXME do here rather than in BaseController (which will be unused)
 
   protected def errorResultPF(implicit @nowarn endpointLogContext: EndpointLogContext): PartialFunction[ErrorWrapper, Result] =
     PartialFunction.empty
+
 }
 
 object RequestHandler {
 
-  def apply[InputRaw <: RawData, Input, Output](
-      parser0: RequestParser[InputRaw, Input],
-      service0: BaseService[Input, Output],
-      errorHandling0: PartialFunction[ErrorWrapper, Result],
-      resultsCreator0: ResultCreator[InputRaw, Output],
-      commonErrorHandling0: CommonErrorHandling)(implicit ec0: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
-    new RequestHandler[InputRaw, Input, Output] with ResultCreatorComponent[InputRaw, Output] with ServiceComponent[Input, Output]
-    with CommonErrorHandlingComponent with Logging {
+  def apply[InputRaw <: RawData, Input, Output](parser0: RequestParser[InputRaw, Input],
+                                                service0: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
+                                                errorHandling0: PartialFunction[ErrorWrapper, Result],
+                                                resultsCreator0: ResultCreator[InputRaw, Output],
+                                                commonErrorHandling0: ErrorHandling)(implicit
+                                                                                     ec0: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
+    new RequestHandler[InputRaw, Input, Output]
+      with ResultCreatorComponent[InputRaw, Output]
+      with ServiceComponent[Input, Output]
+      with ErrorHandlingComponent
+      with Logging {
 
       override def resultCreator: ResultCreator[InputRaw, Output] = resultsCreator0
 
       override protected def errorResultPF(implicit endpointLogContext: EndpointLogContext): PartialFunction[ErrorWrapper, Result] =
         errorHandling0
 
-      override def commonErrorHandling: CommonErrorHandling = commonErrorHandling0
+      override def errorHandling: ErrorHandling = commonErrorHandling0
 
-      override val parser: RequestParser[InputRaw, Input] = parser0
-      override val service: BaseService[Input, Output]    = service0
+      override val parser: RequestParser[InputRaw, Input]                                  = parser0
+      override val service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]] = service0
 
       override implicit val ec: ExecutionContext = ec0
     }
+
 }

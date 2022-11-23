@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
 import v1.services.CreateOrAmendCodingOutService
 
@@ -35,8 +34,8 @@ trait MockCreateOrAmendCodingOutService extends MockFactory {
 
     def amend(request: CreateOrAmendCodingOutParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockCreateOrAmendCodingOutService
-        .amend(_: CreateOrAmendCodingOutParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(request, *, *, *, *)
+        .amend(_: CreateOrAmendCodingOutParsedRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(request,  *, *)
     }
 
   }

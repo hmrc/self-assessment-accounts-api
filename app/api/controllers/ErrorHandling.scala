@@ -17,19 +17,16 @@
 package api.controllers
 
 import api.models.errors.ErrorWrapper
+import com.google.inject.ImplementedBy
 import play.api.mvc.Result
 
-trait CommonErrorHandlingComponent {
-  def commonErrorHandling: CommonErrorHandling
+trait ErrorHandlingComponent {
+  def errorHandling: ErrorHandling
 }
 
-trait ApiCommonErrorHandlingComponent extends CommonErrorHandlingComponent {
-  override val commonErrorHandling: CommonErrorHandling = ApiCommonErrorHandling
-}
-
-/**
-  * Defines default error handling that can be used across all endpoints
+/** Defines the error handling that can be used across all endpoints
   */
-trait CommonErrorHandling {
+@ImplementedBy(classOf[DefaultErrorHandling])
+trait ErrorHandling {
   def errorResultPF: PartialFunction[ErrorWrapper, Result]
 }

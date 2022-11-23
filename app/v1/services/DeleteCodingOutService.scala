@@ -16,29 +16,26 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import cats.data.EitherT
-import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import v1.connectors.DeleteCodingOutConnector
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
+import cats.data.EitherT
+import cats.implicits._
+import utils.Logging
+import v1.connectors.DeleteCodingOutConnector
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends BaseService with DownstreamResponseMappingSupport with Logging {
 
   def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.deleteCodingOut(request)).leftMap(mapDownstreamErrors(desErrorMap))

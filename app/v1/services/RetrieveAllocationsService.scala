@@ -16,31 +16,28 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import cats.data.EitherT
-import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import v1.connectors.RetrieveAllocationsConnector
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
+import cats.data.EitherT
+import cats.implicits._
+import utils.Logging
+import v1.connectors.RetrieveAllocationsConnector
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail
 import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAllocationsService @Inject() (connector: RetrieveAllocationsConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveAllocationsService @Inject() (connector: RetrieveAllocationsConnector) extends BaseService with  DownstreamResponseMappingSupport with Logging {
 
   def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse[AllocationDetail]]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAllocationsResponse[AllocationDetail]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveAllocations(request)).leftMap(mapDownstreamErrors(desErrorMap))

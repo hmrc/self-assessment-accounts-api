@@ -17,10 +17,13 @@
 package api.controllers
 
 import api.controllers.requestParsers.RequestParser
+import api.hateoas.{HateoasFactory, HateoasLinksFactory}
 import api.models.errors.ErrorWrapper
+import api.models.hateoas.HateoasData
 import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
-import api.services.BaseService
+import play.api.http.Status
+import play.api.libs.json.OWrites
 import play.api.mvc.Result
 
 import javax.inject.{Inject, Singleton}
@@ -30,23 +33,32 @@ import scala.concurrent.{ExecutionContext, Future}
 // - auditing
 // - nrs
 // - logging context (requires class to automate - ok for mix-in but not for builder usage)
-// - test generically(!) for various scenarios
 
 trait ParserOnlyBuilder[InputRaw <: RawData, Input] {
-  def withService[Output](service: BaseService[Input, Output]): RequestHandlerBuilder[InputRaw, Input, Output]
 
-  def withService[Output](
-      serviceFunction: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output]
+  def withService[Output](service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output]
+
 }
 
 trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
   def withResultCreator(resultCreator: ResultCreator[InputRaw, Output]): RequestHandlerBuilder[InputRaw, Input, Output]
+
+  /** Shorthand for
+    * {{{
+    * withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, data, successStatus))
+    * }}}
+    */
+  def withHateoasWrapping[HData <: HateoasData](hateoasFactory: HateoasFactory, data: HData, successStatus: Int = Status.OK)(implicit
+      linksFactory: HateoasLinksFactory[Output, HData],
+      writes: OWrites[Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
+    withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, data, successStatus))
+
   def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output]
   def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output]
 }
 
 @Singleton
-final class RequestHandlerFactory @Inject()(commonErrorHandling: CommonErrorHandling) {
+final class RequestHandlerFactory @Inject() (commonErrorHandling: ErrorHandling = DefaultErrorHandling) {
 
   def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): ParserOnlyBuilder[InputRaw, Input] =
     ParserOnlyBuilderImpl(parser)
@@ -54,25 +66,15 @@ final class RequestHandlerFactory @Inject()(commonErrorHandling: CommonErrorHand
   private case class ParserOnlyBuilderImpl[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input])
       extends ParserOnlyBuilder[InputRaw, Input] {
 
-    def withService[Output](service: BaseService[Input, Output]): RequestHandlerBuilderImpl[InputRaw, Input, Output] =
-      RequestHandlerBuilderImpl(parser, service)
-
     def withService[Output](
-        serviceFunction: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output] = {
-      val service = new BaseService[Input, Output] {
-        override def doService(request: Input)(implicit ctx: RequestContext,
-                                               ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Output]]] = {
-          serviceFunction(request)
-        }
-      }
+        serviceFunction: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output] =
+      RequestHandlerBuilderImpl(parser, serviceFunction)
 
-      RequestHandlerBuilderImpl(parser, service)
-    }
   }
 
   private case class RequestHandlerBuilderImpl[InputRaw <: RawData, Input, Output](
       parser: RequestParser[InputRaw, Input],
-      service: BaseService[Input, Output],
+      service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
       errorHandling: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
       resultCreator: ResultCreator[InputRaw, Output] = ResultCreator.noContent[InputRaw, Output])
       extends RequestHandlerBuilder[InputRaw, Input, Output] {
@@ -85,5 +87,7 @@ final class RequestHandlerFactory @Inject()(commonErrorHandling: CommonErrorHand
 
     def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
       RequestHandler(parser, service, errorHandling, resultCreator, commonErrorHandling)
+
   }
+
 }

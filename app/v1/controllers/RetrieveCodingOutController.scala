@@ -16,15 +16,10 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import play.mvc.Http.MimeTypes
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveCodingOutRequestParser
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
@@ -32,7 +27,7 @@ import v1.models.response.retrieveCodingOut.RetrieveCodingOutHateoasData
 import v1.services.RetrieveCodingOutService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthService,
@@ -41,7 +36,8 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              service: RetrieveCodingOutService,
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
-                                             val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                             idGenerator: IdGenerator,
+                                             requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -54,10 +50,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
 
   def retrieveCodingOut(nino: String, taxYear: String, source: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData: RetrieveCodingOutRawRequest = RetrieveCodingOutRawRequest(
         nino = nino,
@@ -65,25 +58,15 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
         source = source
       )
 
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.retrieveCodingOut(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, RetrieveCodingOutHateoasData(nino, taxYear))
-              .asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+      val requestHandler =
+        requestHandlerFactory
+          .withParser(requestParser)
+          .withService(service.retrieveCodingOut(_))
+          .withHateoasWrapping(hateoasFactory, RetrieveCodingOutHateoasData(nino, taxYear))
+          .createRequestHandler
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
+      requestHandler.handleRequest(rawData)
 
-      result.leftMap(errorResult).merge
     }
 
 }

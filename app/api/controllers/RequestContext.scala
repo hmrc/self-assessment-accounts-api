@@ -23,16 +23,21 @@ case class RequestContext(hc: HeaderCarrier, correlationId: String, endpointLogC
 
 object RequestContext {
 
+  implicit def fromParts(implicit hc: HeaderCarrier, correlationId: String, endpointLogContext: EndpointLogContext): RequestContext =
+    RequestContext(hc, correlationId, endpointLogContext)
+
   def from(idGenerator: IdGenerator, endpointLogContext: EndpointLogContext)(implicit hc: HeaderCarrier): RequestContext =
     RequestContext(hc, idGenerator.generateCorrelationId, endpointLogContext)
+
 }
 
 trait RequestContextImplicits {
+  // FIXME move to where used...
 
   implicit def toHeaderCarrier(implicit ctx: RequestContext): HeaderCarrier = ctx.hc
 
   implicit def toCorrelationId(implicit ctx: RequestContext): String = ctx.correlationId
 
-  implicit def toendpointLogContext(implicit ctx: RequestContext): EndpointLogContext = ctx.endpointLogContext
+  implicit def toEndpointLogContext(implicit ctx: RequestContext): EndpointLogContext = ctx.endpointLogContext
 
 }

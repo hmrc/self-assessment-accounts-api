@@ -22,7 +22,9 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Status
 import utils.Logging
 
-trait BaseController { self: Logging =>
+trait BaseController  { self: Logging =>
+
+  implicit def toEndpointLogContext(implicit ctx: RequestContext): EndpointLogContext = ctx.endpointLogContext
 
   protected def errorResult(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
     val resCorrelationId = errorWrapper.correlationId

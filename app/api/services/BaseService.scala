@@ -16,17 +16,22 @@
 
 package api.services
 
-import api.controllers.{RequestContext, RequestContextImplicits}
+import api.controllers.{EndpointLogContext, RequestContext}
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.HeaderCarrier
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 trait ServiceComponent[Input, Output] {
-  def service: BaseService[Input, Output]
+  def service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]
 }
 
-trait BaseService[Input, Output] extends RequestContextImplicits {
+trait BaseService {
 
-  def doService(request: Input)(implicit ctx: RequestContext, ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Output]]]
+  implicit def toHeaderCarrier(implicit ctx: RequestContext): HeaderCarrier = ctx.hc
+
+  implicit def toCorrelationId(implicit ctx: RequestContext): String = ctx.correlationId
+
+  implicit def toEndpointLogContext(implicit ctx: RequestContext): EndpointLogContext = ctx.endpointLogContext
 }

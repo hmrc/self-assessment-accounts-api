@@ -16,11 +16,11 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
 import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
@@ -32,14 +32,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanceAndTransactionsConnector)
-    extends DownstreamResponseMappingSupport
+    extends BaseService
+    with DownstreamResponseMappingSupport
     with Logging {
 
   def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
 
     val result = EitherT(connector.retrieveBalanceAndTransactions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
@@ -48,25 +47,25 @@ class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanc
 
   val downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDTYPE" -> InternalError,
-      "INVALID_IDNUMBER" -> NinoFormatError,
-      "INVALID_REGIME_TYPE" -> InternalError,
-      "INVALID_DOC_NUMBER" -> DocNumberFormatError,
-      "INVALID_ONLY_OPEN_ITEMS" -> OnlyOpenItemsFormatError,
-      "INVALID_INCLUDE_LOCKS" -> IncludeLocksFormatError,
-      "INVALID_CALCULATE_ACCRUED_INTEREST" -> CalculateAccruedInterestFormatError,
+      "INVALID_CORRELATIONID"                -> InternalError,
+      "INVALID_IDTYPE"                       -> InternalError,
+      "INVALID_IDNUMBER"                     -> NinoFormatError,
+      "INVALID_REGIME_TYPE"                  -> InternalError,
+      "INVALID_DOC_NUMBER"                   -> DocNumberFormatError,
+      "INVALID_ONLY_OPEN_ITEMS"              -> OnlyOpenItemsFormatError,
+      "INVALID_INCLUDE_LOCKS"                -> IncludeLocksFormatError,
+      "INVALID_CALCULATE_ACCRUED_INTEREST"   -> CalculateAccruedInterestFormatError,
       "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> CustomerPaymentInformationFormatError,
-      "INVALID_DATE_FROM" -> FromDateFormatError,
-      "INVALID_DATE_TO" -> ToDateFormatError,
-      "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
-      "INVALID_REQUEST" -> RuleInconsistentQueryParamsError,
-      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> RemovePaymentOnAccountFormatError,
-      "INVALID_INCLUDE_STATISTICAL" -> IncludeEstimatedChargesFormatError,
-      "REQUEST_NOT_PROCESSED" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "INVALID_DATE_FROM"                    -> FromDateFormatError,
+      "INVALID_DATE_TO"                      -> ToDateFormatError,
+      "INVALID_DATE_RANGE"                   -> RuleInvalidDateRangeError,
+      "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
+      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> RemovePaymentOnAccountFormatError,
+      "INVALID_INCLUDE_STATISTICAL"          -> IncludeEstimatedChargesFormatError,
+      "REQUEST_NOT_PROCESSED"                -> InternalError,
+      "NO_DATA_FOUND"                        -> NotFoundError,
+      "SERVER_ERROR"                         -> InternalError,
+      "SERVICE_UNAVAILABLE"                  -> InternalError
     )
 
 }
