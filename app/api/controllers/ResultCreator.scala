@@ -43,7 +43,7 @@ object ResultCreator {
       Results.NoContent
     }
 
-  def simple[InputRaw <: RawData, Output](successStatus: Int = Status.OK)(implicit ws: OWrites[Output]): ResultCreator[InputRaw, Output] =
+  def json[InputRaw <: RawData, Output](successStatus: Int = Status.OK)(implicit ws: Writes[Output]): ResultCreator[InputRaw, Output] =
     (_: InputRaw, output: Output) => {
       Results.Status(successStatus)(Json.toJson(output))
     }

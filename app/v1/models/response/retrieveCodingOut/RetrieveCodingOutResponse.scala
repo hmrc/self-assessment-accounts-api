@@ -16,11 +16,10 @@
 
 package v1.models.response.retrieveCodingOut
 
-import api.models.hateoas.{HateoasData, HateoasDataBuilder, Link}
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
+import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.json.{Json, OFormat}
-import api.hateoas.{HateoasLinks, HateoasLinksFactory}
-import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
 
 case class RetrieveCodingOutResponse(taxCodeComponents: Option[TaxCodeComponentsObject],
                                      unmatchedCustomerSubmissions: Option[UnmatchedCustomerSubmissionsObject])
@@ -46,15 +45,3 @@ object RetrieveCodingOutResponse extends HateoasLinks {
 
 case class RetrieveCodingOutHateoasData(nino: String, taxYear: String) extends HateoasData
 
-object RetrieveCodingOutHateoasData {
-
-  implicit object DataBuilder extends HateoasDataBuilder[RetrieveCodingOutRawRequest, RetrieveCodingOutResponse, RetrieveCodingOutHateoasData] {
-
-    override def dataFor(raw: RetrieveCodingOutRawRequest, output: RetrieveCodingOutResponse): RetrieveCodingOutHateoasData = {
-      import raw._
-      RetrieveCodingOutHateoasData(nino, taxYear)
-    }
-
-  }
-
-}
