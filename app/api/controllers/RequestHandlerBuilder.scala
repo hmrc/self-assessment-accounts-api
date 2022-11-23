@@ -19,11 +19,11 @@ package api.controllers
 import api.controllers.requestParsers.RequestParser
 import api.hateoas.{HateoasFactory, HateoasLinksFactory}
 import api.models.errors.ErrorWrapper
-import api.models.hateoas.HateoasData
+import api.models.hateoas.{HateoasData, HateoasWrapper}
 import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
 import play.api.http.Status
-import play.api.libs.json.OWrites
+import play.api.libs.json.Writes
 import play.api.mvc.Result
 
 import javax.inject.{Inject, Singleton}
@@ -50,7 +50,7 @@ trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
     */
   def withHateoasWrapping[HData <: HateoasData](hateoasFactory: HateoasFactory, data: HData, successStatus: Int = Status.OK)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
-      writes: OWrites[Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
+      writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
     withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, data, successStatus))
 
   def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output]

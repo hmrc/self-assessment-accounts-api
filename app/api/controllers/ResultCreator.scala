@@ -21,7 +21,7 @@ import api.models.hateoas.{HateoasData, HateoasDataBuilder, HateoasWrapper}
 import api.models.request.RawData
 import cats.Functor
 import play.api.http.Status
-import play.api.libs.json.{Json, OWrites, Writes}
+import play.api.libs.json.{Json, Writes}
 import play.api.mvc.{Result, Results}
 
 import scala.language.higherKinds
@@ -51,7 +51,7 @@ object ResultCreator {
   def hateoasWrapping[InputRaw <: RawData, Output, HData <: HateoasData](hateoasFactory: HateoasFactory, successStatus: Int = Status.OK)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
       hateoasDataBuilder: HateoasDataBuilder[InputRaw, Output, HData],
-      writes: OWrites[Output]): ResultCreator[InputRaw, Output] =
+      writes: Writes[HateoasWrapper[Output]]): ResultCreator[InputRaw, Output] =
     (raw: InputRaw, output: Output) => {
       val data: HData = hateoasDataBuilder.dataFor(raw, output)
       val wrapped     = hateoasFactory.wrap(output, data)
@@ -63,7 +63,7 @@ object ResultCreator {
                                                                               data: HData,
                                                                               successStatus: Int = Status.OK)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
-      writes: OWrites[Output]): ResultCreator[InputRaw, Output] =
+      writes: Writes[HateoasWrapper[Output]]): ResultCreator[InputRaw, Output] =
     (raw: InputRaw, output: Output) => {
       val wrapped = hateoasFactory.wrap(output, data)
 
