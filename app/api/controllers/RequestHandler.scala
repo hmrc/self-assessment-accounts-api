@@ -17,6 +17,7 @@
 package api.controllers
 
 import api.controllers.requestParsers.RequestParser
+import api.models.audit.{AuditHandler, AuditHandlerComponent}
 import api.models.errors.{DownstreamError, ErrorWrapper}
 import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
@@ -32,7 +33,11 @@ import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextImplicits {
-  self: Logging with ServiceComponent[Input, Output] with ResultCreatorComponent[InputRaw, Output] with ErrorHandlingComponent =>
+  self: Logging
+    with ServiceComponent[Input, Output]
+    with ResultCreatorComponent[InputRaw, Output]
+    with ErrorHandlingComponent
+    with AuditHandlerComponent[InputRaw] =>
 
   val parser: RequestParser[InputRaw, Input]
 
@@ -60,7 +65,7 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
     InternalServerError(Json.toJson(DownstreamError))
   }
 
-  def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext): Future[Result] = {
+  def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext, request: UserRequest[_]): Future[Result] = {
 
     logger.info(
       message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +
@@ -75,11 +80,17 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-        resultCreator
+        val resultWrapper = resultCreator
           .createResult(rawData, serviceResponse.responseData)
-          .withApiHeaders(serviceResponse.correlationId)
+
+        auditEventCreator.foreach { creator =>
+          creator.performAudit(rawData, request.userDetails, resultWrapper.httpStatus, Right(resultWrapper.body))
+        }
+
+        resultWrapper.toResult.withApiHeaders(serviceResponse.correlationId)
       }
 
+    // FIXME move to separate method to do the mapping (and error logging) moved over from BaseController
     result.leftMap { errorWrapper =>
       val resCorrelationId = errorWrapper.correlationId
       val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
@@ -87,6 +98,11 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
       logger.warn(
         s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
           s"Error response received with CorrelationId: $resCorrelationId")
+
+      auditEventCreator.foreach { creator =>
+        creator.performAudit(rawData, request.userDetails, result.header.status, Left(errorWrapper))
+      }
+
       result
     }.merge
   }
@@ -94,7 +110,7 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
   private def errorResult(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result =
     errorResultPF
       .orElse(errorHandling.errorResultPF)
-      .applyOrElse(errorWrapper, unhandledError) // FIXME do here rather than in BaseController (which will be unused)
+      .applyOrElse(errorWrapper, unhandledError)
 
   protected def errorResultPF(implicit @nowarn endpointLogContext: EndpointLogContext): PartialFunction[ErrorWrapper, Result] =
     PartialFunction.empty
@@ -103,27 +119,31 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
 
 object RequestHandler {
 
-  def apply[InputRaw <: RawData, Input, Output](parser0: RequestParser[InputRaw, Input],
-                                                service0: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
-                                                errorHandling0: PartialFunction[ErrorWrapper, Result],
-                                                resultsCreator0: ResultCreator[InputRaw, Output],
-                                                commonErrorHandling0: ErrorHandling)(implicit
-                                                                                     ec0: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
+  def apply[InputRaw <: RawData, Input, Output](_parser: RequestParser[InputRaw, Input],
+                                                _service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
+                                                _errorHandling: PartialFunction[ErrorWrapper, Result],
+                                                _resultsCreator: ResultCreator[InputRaw, Output],
+                                                _auditEventCreator: Option[AuditHandler[InputRaw]],
+                                                _commonErrorHandling: ErrorHandling)(implicit
+      ec0: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
     new RequestHandler[InputRaw, Input, Output]
       with ResultCreatorComponent[InputRaw, Output]
       with ServiceComponent[Input, Output]
       with ErrorHandlingComponent
+      with AuditHandlerComponent[InputRaw]
       with Logging {
 
-      override def resultCreator: ResultCreator[InputRaw, Output] = resultsCreator0
+      override def auditEventCreator: Option[AuditHandler[InputRaw]] = _auditEventCreator
+
+      override def resultCreator: ResultCreator[InputRaw, Output] = _resultsCreator
 
       override protected def errorResultPF(implicit endpointLogContext: EndpointLogContext): PartialFunction[ErrorWrapper, Result] =
-        errorHandling0
+        _errorHandling
 
-      override def errorHandling: ErrorHandling = commonErrorHandling0
+      override def errorHandling: ErrorHandling = _commonErrorHandling
 
-      override val parser: RequestParser[InputRaw, Input]                                  = parser0
-      override val service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]] = service0
+      override val parser: RequestParser[InputRaw, Input]                                  = _parser
+      override val service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]] = _service
 
       override implicit val ec: ExecutionContext = ec0
     }

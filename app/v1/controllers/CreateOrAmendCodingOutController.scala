@@ -16,17 +16,11 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.CreateOrAmendCodingOutParser
 import v1.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
@@ -35,7 +29,7 @@ import v1.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutResponse.
 import v1.services.CreateOrAmendCodingOutService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAuthService,
@@ -45,7 +39,8 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
                                                   hateoasFactory: HateoasFactory,
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
-                                                  val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                                  idGenerator: IdGenerator,
+                                                  requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -55,57 +50,65 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
 
   def createOrAmendCodingOut(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(message = s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-        s"with correlationId : $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = CreateOrAmendCodingOutRawRequest(nino, taxYear, request.body)
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.amend(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory.wrap(serviceResponse.responseData, CreateOrAmendCodingOutHateoasData(nino, taxYear)).asRight[ErrorWrapper]
-          )
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "taxYear" -> taxYear),
-              requestBody = Some(request.body),
-              `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
-            )
-          )
+      val requestHandler =
+        requestHandlerFactory
+          .withParser(parser)
+          .withService(service.amend(_))
+          .withHateoasWrapping(hateoasFactory, CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .createRequestHandler
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-        }
+      requestHandler.handleRequest(rawData)
 
-      result.leftMap { errorWrapper =>
-        val result = errorResult(errorWrapper)
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            requestBody = Some(request.body),
-            `X-CorrelationId` = correlationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
-        result
-      }.merge
+//      val result =
+//        for {
+//          parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
+//          serviceResponse <- EitherT(service.amend(parsedRequest))
+//          vendorResponse <- EitherT.fromEither[Future](
+//            hateoasFactory.wrap(serviceResponse.responseData, CreateOrAmendCodingOutHateoasData(nino, taxYear)).asRight[ErrorWrapper]
+//          )
+//        } yield {
+//          logger.info(
+//            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+//              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
+//
+//          auditSubmission(
+//            GenericAuditDetail(
+//              userDetails = request.userDetails,
+//              params = Map("nino" -> nino, "taxYear" -> taxYear),
+//              requestBody = Some(request.body),
+//              `X-CorrelationId` = serviceResponse.correlationId,
+//              auditResponse = AuditResponse(httpStatus = OK, response = Right(Some(Json.toJson(vendorResponse))))
+//            )
+//          )
+//
+//          Ok(Json.toJson(vendorResponse))
+//            .withApiHeaders(serviceResponse.correlationId)
+//        }
+//
+//      result.leftMap { errorWrapper =>
+//        val result = errorResult(errorWrapper)
+//
+//        auditSubmission(
+//          GenericAuditDetail(
+//            userDetails = request.userDetails,
+//            params = Map("nino" -> nino, "taxYear" -> taxYear),
+//            requestBody = Some(request.body),
+//            `X-CorrelationId` = correlationId,
+//            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
+//          )
+//        )
+//
+//        result
+//      }.merge
     }
 
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent(auditType = "CreateAmendCodingOutUnderpayment", transactionName = "create-amend-coding-out-underpayment", detail = details)
-    auditService.auditEvent(event)
-  }
+//  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
+//    val event = AuditEvent(auditType = "CreateAmendCodingOutUnderpayment", transactionName = "create-amend-coding-out-underpayment", detail = details)
+//    auditService.auditEvent(event)
+//  }
 
 }

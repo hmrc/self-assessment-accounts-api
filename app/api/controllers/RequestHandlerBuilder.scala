@@ -18,6 +18,7 @@ package api.controllers
 
 import api.controllers.requestParsers.RequestParser
 import api.hateoas.{HateoasFactory, HateoasLinksFactory}
+import api.models.audit.AuditHandler
 import api.models.errors.ErrorWrapper
 import api.models.hateoas.{HateoasData, HateoasWrapper}
 import api.models.outcomes.ResponseWrapper
@@ -53,6 +54,8 @@ trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
       writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
     withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, data, successStatus))
 
+  def withAuditHandler(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output]
+
   def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output]
   def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output]
 }
@@ -76,8 +79,9 @@ final class RequestHandlerFactory @Inject() (commonErrorHandling: ErrorHandling 
       parser: RequestParser[InputRaw, Input],
       service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
       errorHandling: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
-      resultCreator: ResultCreator[InputRaw, Output] = ResultCreator.noContent[InputRaw, Output])
-      extends RequestHandlerBuilder[InputRaw, Input, Output] {
+      resultCreator: ResultCreator[InputRaw, Output] = ResultCreator.noContent[InputRaw, Output],
+      auditHandler: Option[AuditHandler[InputRaw]] = None
+  ) extends RequestHandlerBuilder[InputRaw, Input, Output] {
 
     def withResultCreator(resultCreator: ResultCreator[InputRaw, Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(resultCreator = resultCreator)
@@ -85,8 +89,11 @@ final class RequestHandlerFactory @Inject() (commonErrorHandling: ErrorHandling 
     def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(errorHandling = errorHandling)
 
+    def withAuditHandler(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output] =
+      copy(auditHandler = Some(auditHandler))
+
     def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
-      RequestHandler(parser, service, errorHandling, resultCreator, commonErrorHandling)
+      RequestHandler(parser, service, errorHandling, resultCreator, auditHandler, commonErrorHandling)
 
   }
 
