@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package api.models.hateoas
+package api.controllers
 
-import api.models.request.RawData
+import api.models.errors.ErrorWrapper
+import play.api.mvc.Result
 
-/** Marker trait that represents data to be used as parameters to the links that are to be returned for a particular endpoint. This data may be
-  * identifiers (e.g. nino and/or other resource id) to embed in links, or data from the response that determines whether or not a particular link
-  * should be returned in certain scenarios.
+trait CommonErrorHandlingComponent {
+  def commonErrorHandling: CommonErrorHandling
+}
+
+trait ApiCommonErrorHandlingComponent extends CommonErrorHandlingComponent {
+  override val commonErrorHandling: CommonErrorHandling = ApiCommonErrorHandling
+}
+
+/**
+  * Defines default error handling that can be used across all endpoints
   */
-trait HateoasData
-
-trait HateoasDataBuilder[Raw <: RawData, Output, Data <: HateoasData] {
-  def dataFor(raw: Raw, output: Output): Data
+trait CommonErrorHandling {
+  def errorResultPF: PartialFunction[ErrorWrapper, Result]
 }

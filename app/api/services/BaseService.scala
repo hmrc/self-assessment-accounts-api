@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package api.models.hateoas
+package api.services
 
-import api.models.request.RawData
+import api.controllers.{RequestContext, RequestContextImplicits}
+import api.models.errors.ErrorWrapper
+import api.models.outcomes.ResponseWrapper
 
-/** Marker trait that represents data to be used as parameters to the links that are to be returned for a particular endpoint. This data may be
-  * identifiers (e.g. nino and/or other resource id) to embed in links, or data from the response that determines whether or not a particular link
-  * should be returned in certain scenarios.
-  */
-trait HateoasData
+import scala.concurrent.{ExecutionContext, Future}
 
-trait HateoasDataBuilder[Raw <: RawData, Output, Data <: HateoasData] {
-  def dataFor(raw: Raw, output: Output): Data
+trait ServiceComponent[Input, Output] {
+  def service: BaseService[Input, Output]
+}
+
+trait BaseService[Input, Output] extends RequestContextImplicits {
+
+  def doService(request: Input)(implicit ctx: RequestContext, ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Output]]]
 }

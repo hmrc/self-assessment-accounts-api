@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package api.models.hateoas
+package api.controllers
 
-import api.models.request.RawData
+import api.models.errors.ErrorWrapper
+import play.api.libs.json.Json
+import play.api.mvc.Result
+import play.api.mvc.Results.Status
 
-/** Marker trait that represents data to be used as parameters to the links that are to be returned for a particular endpoint. This data may be
-  * identifiers (e.g. nino and/or other resource id) to embed in links, or data from the response that determines whether or not a particular link
-  * should be returned in certain scenarios.
-  */
-trait HateoasData
+object ApiCommonErrorHandling extends CommonErrorHandling {
 
-trait HateoasDataBuilder[Raw <: RawData, Output, Data <: HateoasData] {
-  def dataFor(raw: Raw, output: Output): Data
+  override def errorResultPF: PartialFunction[ErrorWrapper, Result] = { case errorWrapper: ErrorWrapper =>
+    Status(errorWrapper.error.httpStatus)(Json.toJson(errorWrapper))
+  }
+
 }
