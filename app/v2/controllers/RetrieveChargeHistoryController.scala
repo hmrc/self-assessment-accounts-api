@@ -37,8 +37,7 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
                                                  hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
                                                  idGenerator: IdGenerator,
-                                                 requestHandlerFactory: RequestHandlerFactory
-                                                 )(implicit ec: ExecutionContext)
+                                                 requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -56,7 +55,7 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
         requestHandlerFactory
           .withParser(requestParser)
           .withService(service.retrieveChargeHistory(_))
-          .withHateoasWrapping(hateoasFactory, RetrieveChargeHistoryHateoasData(nino, transactionId))
+          .withHateoasWrapping(hateoasFactory)(_ => RetrieveChargeHistoryHateoasData(nino, transactionId))
           .createRequestHandler
 
       requestHandler.handleRequest(rawRequest)

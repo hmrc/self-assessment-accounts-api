@@ -58,7 +58,7 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
         requestHandlerFactory
           .withParser(parser)
           .withService(service.amend(_))
-          .withHateoasWrapping(hateoasFactory, CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .withHateoasWrapping(hateoasFactory)(_ => CreateOrAmendCodingOutHateoasData(nino, taxYear))
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)

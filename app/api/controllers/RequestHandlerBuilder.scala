@@ -46,13 +46,13 @@ trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
 
   /** Shorthand for
     * {{{
-    * withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, data, successStatus))
+    * withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, successStatus)(data))
     * }}}
     */
-  def withHateoasWrapping[HData <: HateoasData](hateoasFactory: HateoasFactory, data: HData, successStatus: Int = Status.OK)(implicit
+  def withHateoasWrapping[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: Output => HData, successStatus: Int = Status.OK)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
       writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
-    withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, data, successStatus))
+    withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, successStatus)(data))
 
   def withAuditHandler(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output]
 

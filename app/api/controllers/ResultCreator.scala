@@ -67,13 +67,12 @@ object ResultCreator {
       ResultWrapper(successStatus, Some(Json.toJson(wrapped)))
     }
 
-  def hateoasWrappingUsing[InputRaw <: RawData, Output, HData <: HateoasData](hateoasFactory: HateoasFactory,
-                                                                              data: HData,
-                                                                              successStatus: Int = Status.OK)(implicit
+  def hateoasWrappingUsing[InputRaw <: RawData, Output, HData <: HateoasData](hateoasFactory: HateoasFactory, successStatus: Int = Status.OK)(
+      data: Output => HData)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
       writes: Writes[HateoasWrapper[Output]]): ResultCreator[InputRaw, Output] =
-    (raw: InputRaw, output: Output) => {
-      val wrapped = hateoasFactory.wrap(output, data)
+    (_: InputRaw, output: Output) => {
+      val wrapped = hateoasFactory.wrap(output, data(output))
 
       ResultWrapper(successStatus, Some(Json.toJson(wrapped)))
     }
@@ -91,12 +90,12 @@ object ResultCreator {
     }
 
   def hateoasListWrappingUsing[InputRaw <: RawData, Output[_]: Functor, I, HData <: HateoasData](hateoasFactory: HateoasFactory,
-                                                                                                 data: HData,
-                                                                                                 successStatus: Int = Status.OK)(implicit
+                                                                                                 successStatus: Int = Status.OK)(
+      data: Output[I] => HData)(implicit
       linksFactory: HateoasListLinksFactory[Output, I, HData],
       writes: Writes[HateoasWrapper[Output[HateoasWrapper[I]]]]): ResultCreator[InputRaw, Output[I]] =
     (raw: InputRaw, output: Output[I]) => {
-      val wrapped = hateoasFactory.wrapList(output, data)
+      val wrapped = hateoasFactory.wrapList(output, data(output))
 
       ResultWrapper(successStatus, Some(Json.toJson(wrapped)))
     }
