@@ -63,7 +63,7 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
         requestHandlerFactory
           .withParser(requestParser)
           .withService(service.listPaymentsAndAllocationDetails(_))
-          .withResultCreator(ResultCreator.json())
+          .withPlainJsonResult()
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)

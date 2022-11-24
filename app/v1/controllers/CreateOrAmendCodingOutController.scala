@@ -18,6 +18,7 @@ package v1.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
+import api.models.audit.AuditHandler
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
@@ -58,7 +59,10 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
         requestHandlerFactory
           .withParser(parser)
           .withService(service.amend(_))
-          .withHateoasWrapping(hateoasFactory)(_ => CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .withHateoasResult(hateoasFactory)(_ => CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .withAuditing(AuditHandler(auditService,auditType = "CreateAmendCodingOutUnderpayment", transactionName = "create-amend-coding-out-underpayment", Some(request.body)) { _ =>
+            Map("nino" -> nino, "taxYear" -> taxYear)
+          })
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)

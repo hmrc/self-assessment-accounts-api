@@ -24,7 +24,7 @@ import api.models.request.RawData
 import api.services.ServiceComponent
 import cats.data.EitherT
 import cats.implicits._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
 import utils.Logging
@@ -67,6 +67,11 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
 
   def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext, request: UserRequest[_]): Future[Result] = {
 
+    def auditIfRequired(httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]]): Unit =
+      auditEventCreator.foreach { creator =>
+        creator.performAudit(rawData, request.userDetails, httpStatus, response)
+      }
+
     logger.info(
       message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +
         s"with correlationId : ${ctx.correlationId}")
@@ -83,9 +88,7 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
         val resultWrapper = resultCreator
           .createResult(rawData, serviceResponse.responseData)
 
-        auditEventCreator.foreach { creator =>
-          creator.performAudit(rawData, request.userDetails, resultWrapper.httpStatus, Right(resultWrapper.body))
-        }
+        auditIfRequired(resultWrapper.httpStatus, Right(resultWrapper.body))
 
         resultWrapper.toResult.withApiHeaders(serviceResponse.correlationId)
       }
@@ -99,9 +102,7 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
         s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
           s"Error response received with CorrelationId: $resCorrelationId")
 
-      auditEventCreator.foreach { creator =>
-        creator.performAudit(rawData, request.userDetails, result.header.status, Left(errorWrapper))
-      }
+      auditIfRequired(result.header.status, Left(errorWrapper))
 
       result
     }.merge

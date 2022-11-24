@@ -42,19 +42,36 @@ trait ParserOnlyBuilder[InputRaw <: RawData, Input] {
 }
 
 trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
-  def withResultCreator(resultCreator: ResultCreator[InputRaw, Output]): RequestHandlerBuilder[InputRaw, Input, Output]
+
+  /** Shorthand for
+    * {{{
+    * withResultCreator(ResultCreator.json(successStatus))
+    * }}}
+    */
+  def withPlainJsonResult(successStatus: Int = Status.OK)(implicit ws: Writes[Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
+    withResultCreator(ResultCreator.json(successStatus))
+
+  /** Shorthand for
+    * {{{
+    * withResultCreator(ResultCreator.noContent)
+    * }}}
+    */
+  def withNoContentResult(successStatus: Int = Status.OK): RequestHandlerBuilder[InputRaw, Input, Output] =
+    withResultCreator(ResultCreator.noContent)
 
   /** Shorthand for
     * {{{
     * withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, successStatus)(data))
     * }}}
     */
-  def withHateoasWrapping[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: Output => HData, successStatus: Int = Status.OK)(implicit
+  def withHateoasResult[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: Output => HData, successStatus: Int = Status.OK)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
       writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
     withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, successStatus)(data))
 
-  def withAuditHandler(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output]
+  def withResultCreator(resultCreator: ResultCreator[InputRaw, Output]): RequestHandlerBuilder[InputRaw, Input, Output]
+
+  def withAuditing(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output]
 
   def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output]
   def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output]
@@ -89,7 +106,7 @@ final class RequestHandlerFactory @Inject() (commonErrorHandling: ErrorHandling 
     def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(errorHandling = errorHandling)
 
-    def withAuditHandler(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output] =
+    def withAuditing(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(auditHandler = Some(auditHandler))
 
     def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
