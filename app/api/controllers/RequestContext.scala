@@ -32,7 +32,6 @@ object RequestContext {
 }
 
 trait RequestContextImplicits {
-  // FIXME move to where used...
 
   implicit def toHeaderCarrier(implicit ctx: RequestContext): HeaderCarrier = ctx.hc
 
@@ -41,3 +40,5 @@ trait RequestContextImplicits {
   implicit def toEndpointLogContext(implicit ctx: RequestContext): EndpointLogContext = ctx.endpointLogContext
 
 }
+
+object RequestContextImplicits extends RequestContextImplicits

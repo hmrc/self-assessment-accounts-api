@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner, RequestHandlerFactory}
 import api.mocks.hateoas.MockHateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
@@ -175,7 +175,8 @@ class RetrieveTransactionDetailsControllerSpec
       service = mockRetrieveTransactionDetailsService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      new RequestHandlerFactory
     )
 
     protected def callController(): Future[Result] = controller.retrieveTransactionDetails(nino, transactionId)(fakeGetRequest)

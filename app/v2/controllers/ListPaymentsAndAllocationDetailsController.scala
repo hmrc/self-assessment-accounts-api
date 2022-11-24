@@ -33,7 +33,7 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                                                             requestParser: ListPaymentsAndAllocationDetailsRequestParser,
                                                             service: ListPaymentsAndAllocationDetailsService,
                                                             cc: ControllerComponents,
-                                                              idGenerator: IdGenerator,
+                                                            idGenerator: IdGenerator,
                                                             requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
@@ -49,7 +49,6 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                    paymentLotItem: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
-
 
       val rawData = ListPaymentsAndAllocationDetailsRawData(
         nino = nino,

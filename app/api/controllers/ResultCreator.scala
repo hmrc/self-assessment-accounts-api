@@ -29,7 +29,7 @@ import scala.language.higherKinds
 
 case class ResultWrapper(httpStatus: Int, body: Option[JsValue]) {
 
-  def toResult: Result = {
+  def asResult: Result = {
     body match {
       case Some(b) => Results.Status(httpStatus)(b)
       case None    => Result(header = ResponseHeader(httpStatus), body = HttpEntity.NoEntity)

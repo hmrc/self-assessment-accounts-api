@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext, RequestHandlerFactory}
 import api.hateoas.HateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
@@ -45,7 +45,8 @@ class ListChargesController @Inject() (val authService: EnrolmentsAuthService,
                                        hateoasFactory: HateoasFactory,
                                        auditService: AuditService,
                                        cc: ControllerComponents,
-                                       val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                       idGenerator: IdGenerator,
+                                       requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -55,6 +56,21 @@ class ListChargesController @Inject() (val authService: EnrolmentsAuthService,
 
   def listCharges(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
+//      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+//
+//      val rawData = ListChargesRawRequest(nino, from, to)
+//
+//      val requestHandler =
+//        requestHandlerFactory
+//          .withParser(requestParser)
+//          .withService(service.list(_))
+//          .withResultCreator(ResultCreator.hateoasListWrappingUsing(hateoasFactory)(_ => ListChargesHateoasData(nino, parsedRequest.from, parsedRequest.to)))
+//          .withAuditing(AuditHandler(auditService, auditType = "listSelfAssessmentCharges", transactionName = "list-self-assessment-charges", None)(
+//            _ => Map("nino" -> nino)))
+//          .createRequestHandler
+//
+//      requestHandler.handleRequest(rawData)
+
       implicit val correlationId: String = idGenerator.generateCorrelationId
       logger.info(
         s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +

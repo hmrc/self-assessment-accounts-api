@@ -33,7 +33,7 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
                                                           requestParser: RetrieveBalanceAndTransactionsRequestParser,
                                                           service: RetrieveBalanceAndTransactionsService,
                                                           cc: ControllerComponents,
-                                                          val idGenerator: IdGenerator,
+                                                          idGenerator: IdGenerator,
                                                           requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
@@ -67,7 +67,6 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
         customerPaymentInformation: Option[String],
         includeEstimatedCharges: Option[String]
       )
-
 
       val requestHandler =
         requestHandlerFactory

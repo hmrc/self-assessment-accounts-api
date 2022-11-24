@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers.{AuthorisedController, BaseController, EndpointLogContext, RequestHandlerFactory}
 import api.hateoas.HateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors._
@@ -45,7 +45,8 @@ class ListTransactionsController @Inject() (val authService: EnrolmentsAuthServi
                                             hateoasFactory: HateoasFactory,
                                             auditService: AuditService,
                                             cc: ControllerComponents,
-                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                            idGenerator: IdGenerator,
+                                            requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {

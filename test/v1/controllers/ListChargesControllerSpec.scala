@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner, RequestHandlerFactory}
 import api.mocks.hateoas.MockHateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
@@ -144,7 +144,8 @@ class ListChargesControllerSpec
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator
+      idGenerator = mockIdGenerator,
+      new RequestHandlerFactory
     )
 
     protected def callController(): Future[Result] = controller.listCharges(nino, Some(from), Some(to))(fakeGetRequest)

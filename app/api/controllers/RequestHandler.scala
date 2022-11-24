@@ -17,7 +17,6 @@
 package api.controllers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.audit.{AuditHandler, AuditHandlerComponent}
 import api.models.errors.{DownstreamError, ErrorWrapper}
 import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
@@ -88,19 +87,15 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
         val resultWrapper = resultCreator
           .createResult(rawData, serviceResponse.responseData)
 
-        auditIfRequired(resultWrapper.httpStatus, Right(resultWrapper.body))
+        val result = resultWrapper.asResult.withApiHeaders(serviceResponse.correlationId)
 
-        resultWrapper.toResult.withApiHeaders(serviceResponse.correlationId)
+        auditIfRequired(result.header.status, Right(resultWrapper.body))
+
+        result
       }
 
-    // FIXME move to separate method to do the mapping (and error logging) moved over from BaseController
     result.leftMap { errorWrapper =>
-      val resCorrelationId = errorWrapper.correlationId
-      val result           = errorResult(errorWrapper).withApiHeaders(resCorrelationId)
-
-      logger.warn(
-        s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
-          s"Error response received with CorrelationId: $resCorrelationId")
+      val result = errorResult(errorWrapper)
 
       auditIfRequired(result.header.status, Left(errorWrapper))
 
@@ -108,10 +103,19 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
     }.merge
   }
 
-  private def errorResult(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result =
-    errorResultPF
+  private def errorResult(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
+    val resCorrelationId = errorWrapper.correlationId
+
+    logger.warn(
+      s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+        s"Error response received with CorrelationId: $resCorrelationId")
+
+    val errorResult = errorResultPF
       .orElse(errorHandling.errorResultPF)
       .applyOrElse(errorWrapper, unhandledError)
+
+    errorResult.withApiHeaders(resCorrelationId)
+  }
 
   protected def errorResultPF(implicit @nowarn endpointLogContext: EndpointLogContext): PartialFunction[ErrorWrapper, Result] =
     PartialFunction.empty

@@ -18,7 +18,6 @@ package api.controllers
 
 import api.controllers.requestParsers.RequestParser
 import api.hateoas.{HateoasFactory, HateoasLinksFactory}
-import api.models.audit.AuditHandler
 import api.models.errors.ErrorWrapper
 import api.models.hateoas.{HateoasData, HateoasWrapper}
 import api.models.outcomes.ResponseWrapper
@@ -31,7 +30,6 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 // FIXME need to handle:
-// - auditing
 // - nrs
 // - logging context (requires class to automate - ok for mix-in but not for builder usage)
 
