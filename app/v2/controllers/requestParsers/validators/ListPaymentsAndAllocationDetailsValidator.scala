@@ -18,7 +18,7 @@ package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
-import api.models.errors.{MtdError, FromDateFormatError, ToDateFormatError}
+import api.models.errors.{FromDateFormatError, MtdError, ToDateFormatError}
 import config.AppConfig
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRawData
 
@@ -35,7 +35,8 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
         DateFormatValidation.validate(data.fromDate, FromDateFormatError),
         DateFormatValidation.validate(data.toDate, ToDateFormatError),
         PaymentLotValidation.validateFormat(data.paymentLot),
-        PaymentLotItemValidation.validateFormat(data.paymentLotItem)
+        PaymentLotItemValidation.validateFormat(data.paymentLotItem),
+        PaymentLotItemValidation.validateMissing(data.paymentLotItem, data.paymentLot)
       )
     }
 

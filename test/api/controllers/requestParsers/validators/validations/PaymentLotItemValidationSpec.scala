@@ -16,11 +16,14 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.PaymentLotItemFormatError
+import api.models.errors.{MissingPaymentLotItemError, PaymentLotItemFormatError}
 import api.models.utils.JsonErrorValidators
 import support.UnitSpec
 
 class PaymentLotItemValidationSpec extends UnitSpec with JsonErrorValidators {
+
+  val paymentLot = "AA123456aa12"
+  val paymentLotItem = "000001"
 
   "validateFormat" should {
     "return no errors" when {
@@ -48,4 +51,24 @@ class PaymentLotItemValidationSpec extends UnitSpec with JsonErrorValidators {
     }
   }
 
+  "validateMissing" should {
+    "return no errors" when {
+      "when a paymentLot and paymentLotItem are supplied" in {
+        PaymentLotItemValidation.validateMissing(Some(paymentLot), Some(paymentLotItem)) shouldBe List()
+      }
+      "when a paymentLot is supplied without a paymentLotItem" in {
+        PaymentLotItemValidation.validateMissing(Some(paymentLot), None) shouldBe List()
+      }
+      "when neither a paymentLot or paymentLotItem are supplied" in {
+        PaymentLotItemValidation.validateMissing(None, None) shouldBe List()
+      }
+    }
+
+    "return an error" when {
+      "when a paymentLot is supplied without a paymentLotItem" in {
+        PaymentLotItemValidation.validateMissing(None, Some(paymentLot)) shouldBe List(MissingPaymentLotItemError)
+      }
+    }
+
+  }
 }

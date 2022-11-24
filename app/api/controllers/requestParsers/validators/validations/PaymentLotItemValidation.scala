@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{MtdError, PaymentLotItemFormatError}
+import api.models.errors.{MtdError, PaymentLotItemFormatError, MissingPaymentLotItemError}
 
 object PaymentLotItemValidation {
 
@@ -28,4 +28,10 @@ object PaymentLotItemValidation {
     if (paymentLotItem.matches(paymentLotItemRegex)) NoValidationErrors else List(PaymentLotItemFormatError)
   }
 
+  def validateMissing(paymentLotItem: Option[String], paymentLot: Option[String]): List[MtdError] = {
+    (paymentLotItem, paymentLot) match {
+      case (None, Some(_)) => List(MissingPaymentLotItemError)
+      case _ => Nil
+    }
+  }
 }
