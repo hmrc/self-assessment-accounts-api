@@ -33,12 +33,17 @@ trait MockAppConfig extends MockFactory {
     def desEnvironment: CallHandler[String]                     = (mockAppConfig.desEnv _).expects()
     def desEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.desEnvironmentHeaders _).expects()
 
-    // IFS Config
-    def ifsBaseUrl: CallHandler[String]                         = (mockAppConfig.ifsBaseUrl _: () => String).expects()
-    def ifsToken: CallHandler[String]                           = (mockAppConfig.ifsToken _).expects()
-    def ifsEnvironment: CallHandler[String]                     = (mockAppConfig.ifsEnv _).expects()
-    def ifsEnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.ifsEnvironmentHeaders _).expects()
+    // IFS2 Config
+    def ifs1BaseUrl: CallHandler[String]                         = (mockAppConfig.ifs1BaseUrl _: () => String).expects()
+    def ifs1Token: CallHandler[String]                           = (mockAppConfig.ifs1Token _).expects()
+    def ifs1Environment: CallHandler[String]                     = (mockAppConfig.ifs1Env _).expects()
+    def ifs1EnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.ifs1EnvironmentHeaders _).expects()
 
+    // IFS2 Config
+    def ifs2BaseUrl: CallHandler[String] = (mockAppConfig.ifs2BaseUrl _: () => String).expects()
+    def ifs2Token: CallHandler[String] = (mockAppConfig.ifs2Token _).expects()
+    def ifs2Environment: CallHandler[String] = (mockAppConfig.ifs2Env _).expects()
+    def ifs2EnvironmentHeaders: CallHandler[Option[Seq[String]]] = (mockAppConfig.ifs2EnvironmentHeaders _).expects()
     // MTD IF Lookup Config
     def mtdIdBaseUrl: CallHandler[String] = (mockAppConfig.mtdIdBaseUrl _: () => String).expects()
 

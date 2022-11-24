@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.Ifs1Uri
 import api.connectors.httpparsers.StandardDesHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -37,7 +37,7 @@ class DeleteCodingOutConnector @Inject() (val http: HttpClient, val appConfig: A
     val nino    = request.nino.nino
     val taxYear = request.taxYear
 
-    delete(IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"))
+    delete(Ifs1Uri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"))
   }
 
 }

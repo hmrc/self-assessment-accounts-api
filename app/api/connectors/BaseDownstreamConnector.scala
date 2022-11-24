@@ -16,7 +16,7 @@
 
 package api.connectors
 
-import api.connectors.DownstreamUri.{DesUri, IfsUri}
+import api.connectors.DownstreamUri.{DesUri, Ifs2Uri, Ifs1Uri}
 import config.AppConfig
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
@@ -41,17 +41,30 @@ trait BaseDownstreamConnector extends Logging {
         hc.headers(additionalHeaders ++ appConfig.desEnvironmentHeaders.getOrElse(Seq.empty))
     )
 
-  private def ifsHeaderCarrier(additionalHeaders: Seq[String])(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
+  private def ifs1HeaderCarrier(additionalHeaders: Seq[String])(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
     HeaderCarrier(
       extraHeaders = hc.extraHeaders ++
         // Contract headers
         Seq(
-          "Authorization" -> s"Bearer ${appConfig.ifsToken}",
-          "Environment"   -> appConfig.ifsEnv,
+          "Authorization" -> s"Bearer ${appConfig.ifs1Token}",
+          "Environment"   -> appConfig.ifs1Env,
           "CorrelationId" -> correlationId
         ) ++
         // Other headers (i.e Gov-Test-Scenario, Content-Type)
-        hc.headers(additionalHeaders ++ appConfig.ifsEnvironmentHeaders.getOrElse(Seq.empty))
+        hc.headers(additionalHeaders ++ appConfig.ifs1EnvironmentHeaders.getOrElse(Seq.empty))
+    )
+
+  private def ifs2HeaderCarrier(additionalHeaders: Seq[String])(implicit hc: HeaderCarrier, correlationId: String): HeaderCarrier =
+    HeaderCarrier(
+      extraHeaders = hc.extraHeaders ++
+        // Contract headers
+        Seq(
+          "Authorization" -> s"Bearer ${appConfig.ifs2Token}",
+          "Environment"   -> appConfig.ifs2Env,
+          "CorrelationId" -> correlationId
+        ) ++
+        // Other headers (i.e Gov-Test-Scenario, Content-Type)
+        hc.headers(additionalHeaders ++ appConfig.ifs2EnvironmentHeaders.getOrElse(Seq.empty))
     )
 
   def post[Body: Writes, Resp](body: Body, uri: DownstreamUri[Resp])(implicit
@@ -120,7 +133,8 @@ trait BaseDownstreamConnector extends Logging {
 
   private def getBackendUri[Resp](uri: DownstreamUri[Resp]): String = uri match {
     case DesUri(value) => s"${appConfig.desBaseUrl}/$value"
-    case IfsUri(value) => s"${appConfig.ifsBaseUrl}/$value"
+    case Ifs1Uri(value) => s"${appConfig.ifs1BaseUrl}/$value"
+    case Ifs2Uri(value) => s"${appConfig.ifs2BaseUrl}/$value"
   }
 
   private def getBackendHeaders[Resp](uri: DownstreamUri[Resp],
@@ -129,7 +143,8 @@ trait BaseDownstreamConnector extends Logging {
                                       additionalHeaders: Seq[String] = Seq.empty): HeaderCarrier =
     uri match {
       case DesUri(_) => desHeaderCarrier(additionalHeaders)(hc, correlationId)
-      case IfsUri(_) => ifsHeaderCarrier(additionalHeaders)(hc, correlationId)
+      case Ifs1Uri(_) => ifs1HeaderCarrier(additionalHeaders)(hc, correlationId)
+      case Ifs2Uri(_) => ifs2HeaderCarrier(additionalHeaders)(hc, correlationId)
     }
 
 }

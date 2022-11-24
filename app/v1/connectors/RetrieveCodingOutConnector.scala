@@ -21,7 +21,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.Ifs1Uri
 import api.connectors.httpparsers.StandardDesHttpParser.reads
 import api.models.domain.MtdSource
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
@@ -44,13 +44,13 @@ class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig:
     val baseUrl = s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 
     if (source.isEmpty) {
-      get(IfsUri[RetrieveCodingOutResponse](baseUrl))
+      get(Ifs1Uri[RetrieveCodingOutResponse](baseUrl))
     } else {
       val queryParams = Seq("view" -> source).collect { case (key, Some(value)) =>
         key -> MtdSource.parser(value).toDownstreamSource
       }
       get(
-        IfsUri[RetrieveCodingOutResponse](baseUrl),
+        Ifs1Uri[RetrieveCodingOutResponse](baseUrl),
         queryParams
       )
     }

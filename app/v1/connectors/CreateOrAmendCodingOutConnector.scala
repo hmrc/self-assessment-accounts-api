@@ -16,7 +16,7 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.Ifs1Uri
 import api.connectors.httpparsers.StandardDesHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -39,7 +39,7 @@ class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient, val appCo
 
     put(
       request.body,
-      IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear")
+      Ifs1Uri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear")
     )
   }
 
