@@ -126,7 +126,8 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         ("AA123456A", None, None, Some("BAD_LOT"), Some("000001"), BAD_REQUEST, PaymentLotFormatError),
         ("AA123456A", None, None, None, Some("BAD_LOT_ITEM"), BAD_REQUEST, PaymentLotItemFormatError),
         ("AA123456A", None, None, None, Some("000001"), BAD_REQUEST, MissingPaymentLotError),
-        ("AA123456A", None, None, Some("AA123456aa1"), None, BAD_REQUEST, MissingPaymentLotItemError)
+        ("AA123456A", None, None, Some("AA123456aa1"), None, BAD_REQUEST, MissingPaymentLotItemError),
+       // ("AA123456A", Some("2020-01-01"), Some("2021-01-01"), Some("AA123456aa1"), Some("000001"), BAD_REQUEST, RuleInconsistentQueryParamsMtdError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
@@ -164,6 +165,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
         (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleInvalidDateRangeError),
+        (BAD_REQUEST, "INVALID_REQUEST", BAD_REQUEST, RuleInconsistentQueryParamsErrorListSA),
         (BAD_REQUEST, "REQUEST_NOT_PROCESSED", BAD_REQUEST, BadRequestError),
         (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (BAD_REQUEST, "PARTIALLY_MIGRATED", BAD_REQUEST, BadRequestError),

@@ -58,6 +58,7 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
       "INVALID_DATE_FROM" -> FromDateFormatError,
       "INVALID_DATE_TO" -> ToDateFormatError,
       "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
+      "INVALID_REQUEST" -> RuleInconsistentQueryParamsErrorListSA,
       "REQUEST_NOT_PROCESSED" -> BadRequestError,
       "NO_DATA_FOUND" -> NotFoundError,
       "PARTIALLY_MIGRATED" -> BadRequestError,
