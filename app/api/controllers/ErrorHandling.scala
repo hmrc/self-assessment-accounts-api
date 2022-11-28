@@ -19,11 +19,7 @@ package api.controllers
 import api.models.errors.ErrorWrapper
 import play.api.mvc.Result
 
-trait ErrorHandlingComponent {
-  def errorHandling: ErrorHandling
-}
-
 trait ErrorHandling {
-  def errorResultPF: PartialFunction[ErrorWrapper, Result]
+  def errorHandler: PartialFunction[ErrorWrapper, Result]
 }
 

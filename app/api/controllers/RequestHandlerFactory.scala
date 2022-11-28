@@ -36,12 +36,12 @@ trait RequestHandlerFactoryComponent {
 }
 
 trait DefaultRequestHandlerFactoryComponent extends RequestHandlerFactoryComponent {
-  self: ErrorHandlingComponent =>
+  self: ErrorHandling =>
 
-  def requestHandlerFactory: RequestHandlerFactory = new RequestHandlerFactory {
+  val requestHandlerFactory: RequestHandlerFactory = new RequestHandlerFactory {
 
     def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): RequestHandlerFactory.ParserOnlyBuilder[InputRaw, Input] =
-      RequestHandlerFactory.ParserOnlyBuilder(parser, errorHandling)
+      RequestHandlerFactory.ParserOnlyBuilder(parser, errorHandler)
 
   }
 
@@ -54,21 +54,22 @@ trait RequestHandlerFactory {
 object RequestHandlerFactory {
 
   // Intermediate class so that the compiler can separately capture the InputRaw and Input types here, and the Output type later
-  case class ParserOnlyBuilder[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input], defaultErrorHandling: ErrorHandling) {
+  case class ParserOnlyBuilder[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input],
+                                                           errorHandler: PartialFunction[ErrorWrapper, Result]) {
 
     def withService[Output](
         serviceFunction: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output] =
-      RequestHandlerBuilder(parser, serviceFunction, defaultErrorHandling)
+      RequestHandlerBuilder(parser, serviceFunction, errorHandler)
 
   }
 
   case class RequestHandlerBuilder[InputRaw <: RawData, Input, Output](
-                                                                        parser: RequestParser[InputRaw, Input],
-                                                                        service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
-                                                                        errorHandling: ErrorHandling,
-                                                                        errorHandlerOverride: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
-                                                                        resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output],
-                                                                        auditHandler: Option[AuditHandler] = None
+      parser: RequestParser[InputRaw, Input],
+      service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
+      errorHandler: PartialFunction[ErrorWrapper, Result],
+      errorHandlerOverride: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
+      resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output],
+      auditHandler: Option[AuditHandler] = None
   ) {
 
     def withResultCreator(resultCreator: ResultCreator[InputRaw, Input, Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
@@ -80,13 +81,8 @@ object RequestHandlerFactory {
     def withAuditing(auditHandler: AuditHandler): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(auditHandler = Some(auditHandler))
 
-    def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] = {
-      val combinedErrorHandling = new ErrorHandling {
-        override def errorResultPF: PartialFunction[ErrorWrapper, Result] = errorHandlerOverride.orElse(errorHandling.errorResultPF)
-      }
-
-      new RequestHandler(parser, service, combinedErrorHandling, resultCreator, auditHandler)
-    }
+    def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
+      new RequestHandler(parser, service, errorHandlerOverride.orElse(errorHandler), resultCreator, auditHandler)
 
     /** Shorthand for
       * {{{

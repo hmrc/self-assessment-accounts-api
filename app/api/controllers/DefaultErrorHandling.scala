@@ -21,16 +21,10 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.Status
 
-object DefaultErrorHandling extends ErrorHandling {
+trait DefaultErrorHandling extends ErrorHandling {
 
-  override def errorResultPF: PartialFunction[ErrorWrapper, Result] = { case errorWrapper: ErrorWrapper =>
+  override val errorHandler: PartialFunction[ErrorWrapper, Result] = { case errorWrapper: ErrorWrapper =>
     Status(errorWrapper.error.httpStatus)(Json.toJson(errorWrapper))
   }
 
 }
-
-trait DefaultErrorHandlingComponent extends ErrorHandlingComponent{
-  override def errorHandling: ErrorHandling = DefaultErrorHandling
-}
-
-
