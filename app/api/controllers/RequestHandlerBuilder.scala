@@ -43,11 +43,11 @@ trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
 
   /** Shorthand for
     * {{{
-    * withResultCreator(ResultCreator.json(successStatus))
+    * withResultCreator(ResultCreator.plainJson(successStatus))
     * }}}
     */
   def withPlainJsonResult(successStatus: Int = Status.OK)(implicit ws: Writes[Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
-    withResultCreator(ResultCreator.json(successStatus))
+    withResultCreator(ResultCreator.plainJson(successStatus))
 
   /** Shorthand for
     * {{{
@@ -59,13 +59,13 @@ trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
 
   /** Shorthand for
     * {{{
-    * withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, successStatus)(data))
+    * withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
     * }}}
     */
   def withHateoasResult[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: (Input, Output) => HData, successStatus: Int = Status.OK)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
       writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
-    withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, successStatus)(data))
+    withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
 
   def withResultCreator(resultCreator: ResultCreator[InputRaw, Input , Output]): RequestHandlerBuilder[InputRaw, Input, Output]
 

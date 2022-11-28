@@ -56,7 +56,7 @@ class ListChargesController @Inject() (val authService: EnrolmentsAuthService,
         requestHandlerFactory
           .withParser(requestParser)
           .withService(service.list(_))
-          .withResultCreator(ResultCreator.hateoasListWrappingUsing(hateoasFactory)((parsedRequest, _) =>
+          .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest, _) =>
             ListChargesHateoasData(nino, parsedRequest.from, parsedRequest.to)))
           .withAuditing(
             AuditHandler(

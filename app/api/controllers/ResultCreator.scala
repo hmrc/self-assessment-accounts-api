@@ -17,7 +17,7 @@
 package api.controllers
 
 import api.hateoas.{HateoasFactory, HateoasLinksFactory, HateoasListLinksFactory}
-import api.models.hateoas.{HateoasData, HateoasDataBuilder, HateoasWrapper}
+import api.models.hateoas.{HateoasData, HateoasWrapper}
 import api.models.request.RawData
 import cats.Functor
 import play.api.http.Status.NO_CONTENT
@@ -53,22 +53,10 @@ object ResultCreator {
   def noContent[InputRaw <: RawData, Input, Output]: ResultCreator[InputRaw, Input, Output] =
     (_: InputRaw, _ , _: Output) => ResultWrapper(NO_CONTENT, None)
 
-  def json[InputRaw <: RawData, Input, Output](successStatus: Int = Status.OK)(implicit ws: Writes[Output]): ResultCreator[InputRaw, Input, Output] =
+  def plainJson[InputRaw <: RawData, Input, Output](successStatus: Int = Status.OK)(implicit ws: Writes[Output]): ResultCreator[InputRaw, Input, Output] =
     (_: InputRaw, input, output: Output) => ResultWrapper(successStatus, Some(Json.toJson(output)))
 
   def hateoasWrapping[InputRaw <: RawData, Input, Output, HData <: HateoasData](hateoasFactory: HateoasFactory, successStatus: Int = Status.OK)(
-      implicit
-      linksFactory: HateoasLinksFactory[Output, HData],
-      hateoasDataBuilder: HateoasDataBuilder[InputRaw, Input, Output, HData],
-      writes: Writes[HateoasWrapper[Output]]): ResultCreator[InputRaw, Input , Output] =
-    (raw: InputRaw, input: Input, output: Output) => {
-      val data: HData = hateoasDataBuilder.dataFor(raw, input, output)
-      val wrapped     = hateoasFactory.wrap(output, data)
-
-      ResultWrapper(successStatus, Some(Json.toJson(wrapped)))
-    }
-
-  def hateoasWrappingUsing[InputRaw <: RawData, Input, Output, HData <: HateoasData](hateoasFactory: HateoasFactory, successStatus: Int = Status.OK)(
       data: (Input, Output) => HData)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
       writes: Writes[HateoasWrapper[Output]]): ResultCreator[InputRaw, Input , Output] =
@@ -79,19 +67,7 @@ object ResultCreator {
     }
 
   def hateoasListWrapping[InputRaw <: RawData, Input, Output[_]: Functor, I, HData <: HateoasData](hateoasFactory: HateoasFactory,
-                                                                                                   successStatus: Int = Status.OK)(implicit
-      linksFactory: HateoasListLinksFactory[Output, I, HData],
-      hateoasDataBuilder: HateoasDataBuilder[InputRaw, Input, Output[I], HData],
-      writes: Writes[HateoasWrapper[Output[HateoasWrapper[I]]]]): ResultCreator[InputRaw, Input, Output[I]] =
-    (raw: InputRaw,  input: Input, output: Output[I]) => {
-      val data: HData = hateoasDataBuilder.dataFor(raw, input, output)
-      val wrapped     = hateoasFactory.wrapList(output, data)
-
-      ResultWrapper(successStatus, Some(Json.toJson(wrapped)))
-    }
-
-  def hateoasListWrappingUsing[InputRaw <: RawData, Input, Output[_]: Functor, I, HData <: HateoasData](hateoasFactory: HateoasFactory,
-                                                                                                 successStatus: Int = Status.OK)(
+                                                                                                   successStatus: Int = Status.OK)(
       data: (Input, Output[I]) => HData)(implicit
       linksFactory: HateoasListLinksFactory[Output, I, HData],
       writes: Writes[HateoasWrapper[Output[HateoasWrapper[I]]]]): ResultCreator[InputRaw, Input, Output[I]] =
