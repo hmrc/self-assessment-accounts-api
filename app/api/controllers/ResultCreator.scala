@@ -38,11 +38,6 @@ case class ResultWrapper(httpStatus: Int, body: Option[JsValue]) {
 
 }
 
-trait ResultCreatorComponent[InputRaw <: RawData, Input, Output] {
-
-  def resultCreator: ResultCreator[InputRaw, Input, Output]
-}
-
 trait ResultCreator[InputRaw <: RawData, Input, Output] {
 
   def createResult(raw: InputRaw, input: Input, output: Output): ResultWrapper

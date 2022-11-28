@@ -20,10 +20,6 @@ import api.models.errors.ErrorWrapper
 import com.google.inject.ImplementedBy
 import play.api.mvc.Result
 
-trait ErrorHandlingComponent {
-  def errorHandling: ErrorHandling
-}
-
 @ImplementedBy(classOf[DefaultErrorHandling])
 trait ErrorHandling {
   def errorResultPF: PartialFunction[ErrorWrapper, Result]

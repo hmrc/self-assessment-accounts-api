@@ -20,7 +20,6 @@ import api.controllers.requestParsers.RequestParser
 import api.models.errors.{DownstreamError, ErrorWrapper}
 import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
-import api.services.ServiceComponent
 import cats.data.EitherT
 import cats.implicits._
 import play.api.libs.json.{JsValue, Json}
@@ -30,16 +29,14 @@ import utils.Logging
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextImplicits {
-  self: Logging
-    with ServiceComponent[Input, Output]
-    with ResultCreatorComponent[InputRaw, Input, Output]
-    with ErrorHandlingComponent
-    with AuditHandlerComponent =>
-
-  val parser: RequestParser[InputRaw, Input]
-
-  implicit val ec: ExecutionContext
+class RequestHandler[InputRaw <: RawData, Input, Output] private[controllers] (
+    parser: RequestParser[InputRaw, Input],
+    service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
+    errorHandling: ErrorHandling,
+    resultCreator: ResultCreator[InputRaw, Input, Output],
+    auditHandler: Option[AuditHandler])(implicit ec: ExecutionContext)
+    extends Logging
+    with RequestContextImplicits {
 
   implicit class Response(result: Result) {
 
@@ -113,22 +110,5 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
         s"Unhandled error: $errorWrapper")
     InternalServerError(Json.toJson(DownstreamError))
   }
-
-}
-
-object RequestHandler {
-
-  private[controllers] class Impl[InputRaw <: RawData, Input, Output](val parser: RequestParser[InputRaw, Input],
-                                                                      val service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
-                                                                      val errorHandling: ErrorHandling,
-                                                                      val resultCreator: ResultCreator[InputRaw, Input, Output],
-                                                                      val auditHandler: Option[AuditHandler])(implicit
-      val ec: ExecutionContext)
-      extends RequestHandler[InputRaw, Input, Output]
-      with ResultCreatorComponent[InputRaw, Input, Output]
-      with ServiceComponent[Input, Output]
-      with ErrorHandlingComponent
-      with AuditHandlerComponent
-      with Logging
 
 }

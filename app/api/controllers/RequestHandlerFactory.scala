@@ -38,7 +38,7 @@ final class RequestHandlerFactory @Inject() (defaultErrorHandling: ErrorHandling
   def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): ParserOnlyBuilder[InputRaw, Input] =
     ParserOnlyBuilder(parser)
 
-  // Intermediate class so that the compiler can separately capture the InputRaw and Input types here and the Output type later
+  // Intermediate class so that the compiler can separately capture the InputRaw and Input types here, and the Output type later
   case class ParserOnlyBuilder[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]) {
 
     def withService[Output](
@@ -69,7 +69,7 @@ final class RequestHandlerFactory @Inject() (defaultErrorHandling: ErrorHandling
         override def errorResultPF: PartialFunction[ErrorWrapper, Result] = errorHandling.orElse(defaultErrorHandling.errorResultPF)
       }
 
-      new RequestHandler.Impl(parser, service, combinedErrorHandling, resultCreator, auditHandler)
+      new RequestHandler(parser, service, combinedErrorHandling, resultCreator, auditHandler)
     }
 
     /** Shorthand for

@@ -25,10 +25,6 @@ import play.api.libs.json.JsValue
 
 import scala.concurrent.ExecutionContext
 
-trait AuditHandlerComponent {
-  def auditHandler: Option[AuditHandler]
-}
-
 object AuditHandler {
 
   def apply(auditService: AuditService,
@@ -51,8 +47,8 @@ case class AuditHandler(auditService: AuditService,
                         transactionName: String,
                         params: Map[String, String],
                         requestBody: Option[JsValue],
-                        responseBodyMap: Option[JsValue] => Option[JsValue]) {
-  import api.controllers.RequestContextImplicits._
+                        responseBodyMap: Option[JsValue] => Option[JsValue])
+    extends RequestContextImplicits {
 
   def withResponseBody(responseBody: Option[JsValue]): AuditHandler =
     copy(responseBodyMap = _ => responseBody)

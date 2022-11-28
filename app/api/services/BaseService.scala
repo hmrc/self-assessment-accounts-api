@@ -17,13 +17,6 @@
 package api.services
 
 import api.controllers.RequestContextImplicits
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
 
-import scala.concurrent.Future
-
-trait ServiceComponent[Input, Output] {
-  def service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]
-}
 
 trait BaseService extends RequestContextImplicits
