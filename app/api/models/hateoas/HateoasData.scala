@@ -24,6 +24,6 @@ import api.models.request.RawData
   */
 trait HateoasData
 
-trait HateoasDataBuilder[Raw <: RawData, Output, Data <: HateoasData] {
-  def dataFor(raw: Raw, output: Output): Data
+trait HateoasDataBuilder[Raw <: RawData, Input, Output, Data <: HateoasData] {
+  def dataFor(raw: Raw, input: Input, output: Output): Data
 }

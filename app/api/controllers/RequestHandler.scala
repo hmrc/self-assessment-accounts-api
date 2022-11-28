@@ -33,9 +33,9 @@ import scala.concurrent.{ExecutionContext, Future}
 trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextImplicits {
   self: Logging
     with ServiceComponent[Input, Output]
-    with ResultCreatorComponent[InputRaw, Output]
+    with ResultCreatorComponent[InputRaw, Input, Output]
     with ErrorHandlingComponent
-    with AuditHandlerComponent[InputRaw] =>
+    with AuditHandlerComponent =>
 
   val parser: RequestParser[InputRaw, Input]
 
@@ -59,8 +59,8 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
   def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext, request: UserRequest[_]): Future[Result] = {
 
     def auditIfRequired(httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]]): Unit =
-      auditEventCreator.foreach { creator =>
-        creator.performAudit(rawData, request.userDetails, httpStatus, response)
+      auditHandler.foreach { creator =>
+        creator.performAudit(request.userDetails, httpStatus, response)
       }
 
     logger.info(
@@ -77,7 +77,7 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
             s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
         val resultWrapper = resultCreator
-          .createResult(rawData, serviceResponse.responseData)
+          .createResult(rawData, parsedRequest, serviceResponse.responseData)
 
         val result = resultWrapper.asResult.withApiHeaders(serviceResponse.correlationId)
 
@@ -122,14 +122,14 @@ object RequestHandler {
   private[controllers] class Impl[InputRaw <: RawData, Input, Output](val parser: RequestParser[InputRaw, Input],
                                                                       val service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
                                                                       val errorHandling: ErrorHandling,
-                                                                      val resultCreator: ResultCreator[InputRaw, Output],
-                                                                      val auditEventCreator: Option[AuditHandler[InputRaw]])(implicit
+                                                                      val resultCreator: ResultCreator[InputRaw, Input, Output],
+                                                                      val auditHandler: Option[AuditHandler])(implicit
       val ec: ExecutionContext)
       extends RequestHandler[InputRaw, Input, Output]
-      with ResultCreatorComponent[InputRaw, Output]
+      with ResultCreatorComponent[InputRaw, Input, Output]
       with ServiceComponent[Input, Output]
       with ErrorHandlingComponent
-      with AuditHandlerComponent[InputRaw]
+      with AuditHandlerComponent
       with Logging
 
 }

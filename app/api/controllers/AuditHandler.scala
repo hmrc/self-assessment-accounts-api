@@ -19,47 +19,56 @@ package api.controllers
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.auth.UserDetails
 import api.models.errors.ErrorWrapper
-import api.models.request.RawData
 import api.services.AuditService
-import play.api.libs.json.JsValue
 import cats.syntax.either._
+import play.api.libs.json.JsValue
 
 import scala.concurrent.ExecutionContext
 
-trait AuditHandlerComponent[InputRaw <: RawData] {
-  def auditEventCreator: Option[AuditHandler[InputRaw]]
+trait AuditHandlerComponent {
+  def auditHandler: Option[AuditHandler]
 }
 
 object AuditHandler {
 
-  def apply[InputRaw <: RawData](auditService: AuditService, auditType: String, transactionName: String, requestBody: Option[JsValue] = None)(
-      paramsCreator: InputRaw => Map[String, String]
-  ): AuditHandler[InputRaw] = new AuditHandler(
+  def apply(auditService: AuditService,
+            auditType: String,
+            transactionName: String,
+            params: Map[String, String],
+            requestBody: Option[JsValue] = None): AuditHandler = new AuditHandler(
     auditService = auditService,
     auditType = auditType,
     transactionName = transactionName,
-    paramsCreator = paramsCreator,
-    requestBody = requestBody
+    params = params,
+    requestBody = requestBody,
+    responseBodyMap = identity
   )
 
 }
 
-class AuditHandler[InputRaw <: RawData](auditService: AuditService,
-                                        auditType: String,
-                                        transactionName: String,
-                                        paramsCreator: InputRaw => Map[String, String],
-                                        requestBody: Option[JsValue]) {
+case class AuditHandler(auditService: AuditService,
+                        auditType: String,
+                        transactionName: String,
+                        params: Map[String, String],
+                        requestBody: Option[JsValue],
+                        responseBodyMap: Option[JsValue] => Option[JsValue]) {
   import api.controllers.RequestContextImplicits._
 
-  def performAudit(input: InputRaw, userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
+  def withResponseBody(responseBody: Option[JsValue]): AuditHandler =
+    copy(responseBodyMap = _ => responseBody)
+
+  def withResponseBodyMap(responseBodyMap: Option[JsValue] => Option[JsValue]): AuditHandler =
+    copy(responseBodyMap = responseBodyMap)
+
+  def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Unit = {
     val auditEvent = {
-      val auditResponse = AuditResponse(httpStatus, response.leftMap(ew => ew.auditErrors))
+      val auditResponse = AuditResponse(httpStatus, response.map(responseBodyMap).leftMap(ew => ew.auditErrors))
 
       val detail = GenericAuditDetail(
         userDetails = userDetails,
-        params = paramsCreator(input),
+        params = params,
         requestBody = requestBody,
         `X-CorrelationId` = ctx.correlationId,
         auditResponse = auditResponse

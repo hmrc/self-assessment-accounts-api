@@ -58,13 +58,14 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
         requestHandlerFactory
           .withParser(parser)
           .withService(service.amend(_))
-          .withHateoasResult(hateoasFactory)(_ => CreateOrAmendCodingOutHateoasData(nino, taxYear))
-          .withAuditing(
-            AuditHandler(
-              auditService,
-              auditType = "CreateAmendCodingOutUnderpayment",
-              transactionName = "create-amend-coding-out-underpayment",
-              Some(request.body))(_ => Map("nino" -> nino, "taxYear" -> taxYear)))
+          .withHateoasResult(hateoasFactory)((_, _) => CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "CreateAmendCodingOutUnderpayment",
+            transactionName = "create-amend-coding-out-underpayment",
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            Some(request.body)
+          ))
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)

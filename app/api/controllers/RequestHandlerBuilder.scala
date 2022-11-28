@@ -62,14 +62,14 @@ trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
     * withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, successStatus)(data))
     * }}}
     */
-  def withHateoasResult[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: Output => HData, successStatus: Int = Status.OK)(implicit
+  def withHateoasResult[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: (Input, Output) => HData, successStatus: Int = Status.OK)(implicit
       linksFactory: HateoasLinksFactory[Output, HData],
       writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
     withResultCreator(ResultCreator.hateoasWrappingUsing(hateoasFactory, successStatus)(data))
 
-  def withResultCreator(resultCreator: ResultCreator[InputRaw, Output]): RequestHandlerBuilder[InputRaw, Input, Output]
+  def withResultCreator(resultCreator: ResultCreator[InputRaw, Input , Output]): RequestHandlerBuilder[InputRaw, Input, Output]
 
-  def withAuditing(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output]
+  def withAuditing(auditHandler: AuditHandler): RequestHandlerBuilder[InputRaw, Input, Output]
 
   def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output]
   def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output]
@@ -94,17 +94,17 @@ final class RequestHandlerFactory @Inject() (defaultErrorHandling: ErrorHandling
       parser: RequestParser[InputRaw, Input],
       service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
       errorHandling: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
-      resultCreator: ResultCreator[InputRaw, Output] = ResultCreator.noContent[InputRaw, Output],
-      auditHandler: Option[AuditHandler[InputRaw]] = None
+      resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output],
+      auditHandler: Option[AuditHandler] = None
   ) extends RequestHandlerBuilder[InputRaw, Input, Output] {
 
-    def withResultCreator(resultCreator: ResultCreator[InputRaw, Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
+    def withResultCreator(resultCreator: ResultCreator[InputRaw, Input, Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(resultCreator = resultCreator)
 
     def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(errorHandling = errorHandling)
 
-    def withAuditing(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output] =
+    def withAuditing(auditHandler: AuditHandler): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(auditHandler = Some(auditHandler))
 
     def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] = {

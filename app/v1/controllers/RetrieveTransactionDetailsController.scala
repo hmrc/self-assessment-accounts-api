@@ -16,18 +16,10 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext, RequestHandlerFactory}
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import play.mvc.Http.MimeTypes
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveTransactionDetailsRequestParser
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsRawRequest
@@ -36,7 +28,7 @@ import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsR
 import v1.services.RetrieveTransactionDetailsService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RetrieveTransactionDetailsController @Inject() (val authService: EnrolmentsAuthService,
@@ -60,66 +52,25 @@ class RetrieveTransactionDetailsController @Inject() (val authService: Enrolment
 
   def retrieveTransactionDetails(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawRequest = RetrieveTransactionDetailsRawRequest(nino, transactionId)
-      val result = for {
-        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-        serviceResponse <- EitherT(service.retrieveTransactionDetails(parsedRequest))
-        vendorResponse <- EitherT.fromEither[Future](
-          hateoasFactory
-            .wrap(
-              serviceResponse.responseData,
-              RetrieveTransactionDetailsHateoasData(nino, transactionId, serviceResponse.responseData.transactionItems.head.paymentId))
-            .asRight[ErrorWrapper])
-      } yield {
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
 
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino),
-            requestBody = None,
-            `X-CorrelationId` = serviceResponse.correlationId,
-            auditResponse = AuditResponse(httpStatus = OK, None, None)
-          )
-        )
+      val requestHandler =
+        requestHandlerFactory
+          .withParser(requestParser)
+          .withService(service.retrieveTransactionDetails(_))
+          .withHateoasResult(hateoasFactory)((_, serviceResponse) =>
+            RetrieveTransactionDetailsHateoasData(nino, transactionId, serviceResponse.transactionItems.head.paymentId))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "retrieveASelfAssessmentTransactionsDetail",
+            transactionName = "retrieve-a-self-assessment-transactions-detail",
+            params = Map("nino" -> nino)
+          ).withResponseBody(None))
+          .createRequestHandler
 
-        Ok(Json.toJson(vendorResponse))
-          .withApiHeaders(serviceResponse.correlationId)
-          .as(MimeTypes.JSON)
-      }
-      result.leftMap { errorWrapper =>
-        val result = errorResult(errorWrapper)
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino),
-            requestBody = None,
-            `X-CorrelationId` = errorWrapper.correlationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
-        result
-      }.merge
+      requestHandler.handleRequest(rawRequest)
     }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "retrieveASelfAssessmentTransactionsDetail",
-      transactionName = "retrieve-a-self-assessment-transactions-detail",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
-  }
 
 }

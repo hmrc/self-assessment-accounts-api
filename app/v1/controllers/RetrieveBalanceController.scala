@@ -59,10 +59,13 @@ class RetrieveBalanceController @Inject() (val authService: EnrolmentsAuthServic
         requestHandlerFactory
           .withParser(requestParser)
           .withService(service.retrieveBalance(_))
-          .withHateoasResult(hateoasFactory)(_ => RetrieveBalanceHateoasData(nino))
+          .withHateoasResult(hateoasFactory)((_, _) => RetrieveBalanceHateoasData(nino))
           .withAuditing(
-            AuditHandler(auditService, auditType = "retrieveASelfAssessmentBalance", transactionName = "retrieve-a-self-assessment-balance", None)(
-              _ => Map("nino" -> nino)))
+            AuditHandler(
+              auditService,
+              auditType = "retrieveASelfAssessmentBalance",
+              transactionName = "retrieve-a-self-assessment-balance",
+              params = Map("nino" -> nino)))
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)

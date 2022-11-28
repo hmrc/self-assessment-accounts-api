@@ -59,13 +59,13 @@ class RetrieveAllocationsController @Inject() (val authService: EnrolmentsAuthSe
         requestHandlerFactory
           .withParser(requestParser)
           .withService(service.retrieveAllocations(_))
-          .withResultCreator(ResultCreator.hateoasListWrappingUsing(hateoasFactory)(_ => RetrieveAllocationsHateoasData(nino, paymentId)))
+          .withResultCreator(ResultCreator.hateoasListWrappingUsing(hateoasFactory)((_, _) => RetrieveAllocationsHateoasData(nino, paymentId)))
           .withAuditing(AuditHandler(
             auditService,
             auditType = "retrieveASelfAssessmentPaymentsAllocationDetails",
             transactionName = "retrieve-a-self-assessment-payments-allocation-details",
-            None
-          )(_ => Map("nino" -> nino)))
+            params = Map("nino" -> nino)
+          ).withResponseBody(None))
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)
