@@ -24,8 +24,6 @@ trait ErrorHandlingComponent {
   def errorHandling: ErrorHandling
 }
 
-/** Defines the error handling that can be used across all endpoints
-  */
 @ImplementedBy(classOf[DefaultErrorHandling])
 trait ErrorHandling {
   def errorResultPF: PartialFunction[ErrorWrapper, Result]

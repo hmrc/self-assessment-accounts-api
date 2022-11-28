@@ -28,7 +28,6 @@ import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
 import utils.Logging
 
-import scala.annotation.nowarn
 import scala.concurrent.{ExecutionContext, Future}
 
 trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextImplicits {
@@ -55,13 +54,6 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
       result.copy(header = result.header.copy(headers = result.header.headers ++ newHeaders))
     }
 
-  }
-
-  protected def unhandledError(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
-    logger.error(
-      s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-        s"Unhandled error: $errorWrapper")
-    InternalServerError(Json.toJson(DownstreamError))
   }
 
   def handleRequest(rawData: InputRaw)(implicit ctx: RequestContext, request: UserRequest[_]): Future[Result] = {
@@ -110,47 +102,34 @@ trait RequestHandler[InputRaw <: RawData, Input, Output] extends RequestContextI
       s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
         s"Error response received with CorrelationId: $resCorrelationId")
 
-    val errorResult = errorResultPF
-      .orElse(errorHandling.errorResultPF)
+    val errorResult = errorHandling.errorResultPF
       .applyOrElse(errorWrapper, unhandledError)
 
     errorResult.withApiHeaders(resCorrelationId)
   }
 
-  protected def errorResultPF(implicit @nowarn endpointLogContext: EndpointLogContext): PartialFunction[ErrorWrapper, Result] =
-    PartialFunction.empty
+  private def unhandledError(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
+    logger.error(
+      s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+        s"Unhandled error: $errorWrapper")
+    InternalServerError(Json.toJson(DownstreamError))
+  }
 
 }
 
 object RequestHandler {
 
-  def apply[InputRaw <: RawData, Input, Output](_parser: RequestParser[InputRaw, Input],
-                                                _service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
-                                                _errorHandling: PartialFunction[ErrorWrapper, Result],
-                                                _resultsCreator: ResultCreator[InputRaw, Output],
-                                                _auditEventCreator: Option[AuditHandler[InputRaw]],
-                                                _commonErrorHandling: ErrorHandling)(implicit
-      ec0: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
-    new RequestHandler[InputRaw, Input, Output]
+  private[controllers] class Impl[InputRaw <: RawData, Input, Output](val parser: RequestParser[InputRaw, Input],
+                                                                      val service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
+                                                                      val errorHandling: ErrorHandling,
+                                                                      val resultCreator: ResultCreator[InputRaw, Output],
+                                                                      val auditEventCreator: Option[AuditHandler[InputRaw]])(implicit
+      val ec: ExecutionContext)
+      extends RequestHandler[InputRaw, Input, Output]
       with ResultCreatorComponent[InputRaw, Output]
       with ServiceComponent[Input, Output]
       with ErrorHandlingComponent
       with AuditHandlerComponent[InputRaw]
-      with Logging {
-
-      override def auditEventCreator: Option[AuditHandler[InputRaw]] = _auditEventCreator
-
-      override def resultCreator: ResultCreator[InputRaw, Output] = _resultsCreator
-
-      override protected def errorResultPF(implicit endpointLogContext: EndpointLogContext): PartialFunction[ErrorWrapper, Result] =
-        _errorHandling
-
-      override def errorHandling: ErrorHandling = _commonErrorHandling
-
-      override val parser: RequestParser[InputRaw, Input]                                  = _parser
-      override val service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]] = _service
-
-      override implicit val ec: ExecutionContext = ec0
-    }
+      with Logging
 
 }

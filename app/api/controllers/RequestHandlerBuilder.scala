@@ -76,7 +76,7 @@ trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
 }
 
 @Singleton
-final class RequestHandlerFactory @Inject() (commonErrorHandling: ErrorHandling = DefaultErrorHandling) {
+final class RequestHandlerFactory @Inject() (defaultErrorHandling: ErrorHandling = DefaultErrorHandling) {
 
   def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): ParserOnlyBuilder[InputRaw, Input] =
     ParserOnlyBuilderImpl(parser)
@@ -107,8 +107,13 @@ final class RequestHandlerFactory @Inject() (commonErrorHandling: ErrorHandling 
     def withAuditing(auditHandler: AuditHandler[InputRaw]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(auditHandler = Some(auditHandler))
 
-    def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
-      RequestHandler(parser, service, errorHandling, resultCreator, auditHandler, commonErrorHandling)
+    def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] = {
+      val combinedErrorHandling = new ErrorHandling {
+        override def errorResultPF: PartialFunction[ErrorWrapper, Result] = errorHandling.orElse(defaultErrorHandling.errorResultPF)
+      }
+
+      new RequestHandler.Impl(parser, service, combinedErrorHandling, resultCreator, auditHandler)
+    }
 
   }
 
