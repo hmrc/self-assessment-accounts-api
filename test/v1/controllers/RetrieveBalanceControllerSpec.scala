@@ -76,7 +76,7 @@ class RetrieveBalanceControllerSpec
           .wrap(retrieveBalanceResponse, RetrieveBalanceHateoasData(nino))
           .returns(HateoasWrapper(retrieveBalanceResponse, Seq(balanceLink)))
 
-        runOkTestWithAudit(expectedStatus = OK, maybeAuditRequestBody = Some(mtdResponseJson))
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
