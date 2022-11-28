@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner, RequestHandlerFactory}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
@@ -132,8 +132,7 @@ class RetrieveChargeHistoryControllerSpec
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator,
-      requestHandlerFactory = new RequestHandlerFactory
+      idGenerator = mockIdGenerator
     )
 
     protected def callController(): Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)

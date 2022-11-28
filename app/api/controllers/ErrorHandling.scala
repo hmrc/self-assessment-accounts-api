@@ -17,10 +17,13 @@
 package api.controllers
 
 import api.models.errors.ErrorWrapper
-import com.google.inject.ImplementedBy
 import play.api.mvc.Result
 
-@ImplementedBy(classOf[DefaultErrorHandling])
+trait ErrorHandlingComponent {
+  def errorHandling: ErrorHandling
+}
+
 trait ErrorHandling {
   def errorResultPF: PartialFunction[ErrorWrapper, Result]
 }
+

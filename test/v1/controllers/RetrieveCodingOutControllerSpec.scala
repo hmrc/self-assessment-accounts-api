@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner, RequestHandlerFactory}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
 import api.models.domain.Nino
 import api.models.errors._
@@ -172,8 +172,7 @@ class RetrieveCodingOutControllerSpec
       service = mockRetrieveCodingOutService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,
-      idGenerator = mockIdGenerator,
-      new RequestHandlerFactory
+      idGenerator = mockIdGenerator
     )
 
     protected def callController(): Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)

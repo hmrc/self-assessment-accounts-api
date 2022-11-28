@@ -36,8 +36,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              service: RetrieveCodingOutService,
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
-                                             idGenerator: IdGenerator,
-                                             requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
+                                             idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {

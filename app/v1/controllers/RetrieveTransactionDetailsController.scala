@@ -38,8 +38,7 @@ class RetrieveTransactionDetailsController @Inject() (val authService: Enrolment
                                                       service: RetrieveTransactionDetailsService,
                                                       hateoasFactory: HateoasFactory,
                                                       cc: ControllerComponents,
-                                                      idGenerator: IdGenerator,
-                                                      requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
+                                                      idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {

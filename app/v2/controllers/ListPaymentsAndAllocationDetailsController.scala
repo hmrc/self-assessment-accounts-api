@@ -33,8 +33,7 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                                                             requestParser: ListPaymentsAndAllocationDetailsRequestParser,
                                                             service: ListPaymentsAndAllocationDetailsService,
                                                             cc: ControllerComponents,
-                                                            idGenerator: IdGenerator,
-                                                            requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
+                                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {

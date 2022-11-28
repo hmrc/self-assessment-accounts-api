@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner, RequestHandlerFactory}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
 import api.models.errors._
@@ -87,8 +87,7 @@ class DeleteCodingOutControllerSpec
       service = mockDeleteCodingOutService,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator,
-      new RequestHandlerFactory
+      idGenerator = mockIdGenerator
     )
 
     protected def callController(): Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)

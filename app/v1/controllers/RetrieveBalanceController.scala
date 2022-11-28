@@ -37,8 +37,7 @@ class RetrieveBalanceController @Inject() (val authService: EnrolmentsAuthServic
                                            service: RetrieveBalanceService,
                                            hateoasFactory: HateoasFactory,
                                            cc: ControllerComponents,
-                                           idGenerator: IdGenerator,
-                                           requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
+                                           idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {

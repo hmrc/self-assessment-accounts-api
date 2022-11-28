@@ -37,8 +37,7 @@ class RetrieveAllocationsController @Inject() (val authService: EnrolmentsAuthSe
                                                service: RetrieveAllocationsService,
                                                hateoasFactory: HateoasFactory,
                                                cc: ControllerComponents,
-                                               idGenerator: IdGenerator,
-                                               requestHandlerFactory: RequestHandlerFactory)(implicit ec: ExecutionContext)
+                                               idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {

@@ -26,47 +26,63 @@ import play.api.http.Status
 import play.api.libs.json.Writes
 import play.api.mvc.Result
 
-import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 // FIXME need to handle:
 // - nrs
 
-@Singleton
-final class RequestHandlerFactory @Inject() (defaultErrorHandling: ErrorHandling = DefaultErrorHandling) {
+trait RequestHandlerFactoryComponent {
+  def requestHandlerFactory: RequestHandlerFactory
+}
 
-  def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): ParserOnlyBuilder[InputRaw, Input] =
-    ParserOnlyBuilder(parser)
+trait DefaultRequestHandlerFactoryComponent extends RequestHandlerFactoryComponent {
+  self: ErrorHandlingComponent =>
+
+  def requestHandlerFactory: RequestHandlerFactory = new RequestHandlerFactory {
+
+    def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): RequestHandlerFactory.ParserOnlyBuilder[InputRaw, Input] =
+      RequestHandlerFactory.ParserOnlyBuilder(parser, errorHandling)
+
+  }
+
+}
+
+trait RequestHandlerFactory {
+  def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): RequestHandlerFactory.ParserOnlyBuilder[InputRaw, Input]
+}
+
+object RequestHandlerFactory {
 
   // Intermediate class so that the compiler can separately capture the InputRaw and Input types here, and the Output type later
-  case class ParserOnlyBuilder[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]) {
+  case class ParserOnlyBuilder[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input], defaultErrorHandling: ErrorHandling) {
 
     def withService[Output](
         serviceFunction: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output] =
-      RequestHandlerBuilder(parser, serviceFunction)
+      RequestHandlerBuilder(parser, serviceFunction, defaultErrorHandling)
 
   }
 
   case class RequestHandlerBuilder[InputRaw <: RawData, Input, Output](
-      parser: RequestParser[InputRaw, Input],
-      service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
-      errorHandling: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
-      resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output],
-      auditHandler: Option[AuditHandler] = None
+                                                                        parser: RequestParser[InputRaw, Input],
+                                                                        service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
+                                                                        errorHandling: ErrorHandling,
+                                                                        errorHandlerOverride: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
+                                                                        resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output],
+                                                                        auditHandler: Option[AuditHandler] = None
   ) {
 
     def withResultCreator(resultCreator: ResultCreator[InputRaw, Input, Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(resultCreator = resultCreator)
 
-    def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output] =
-      copy(errorHandling = errorHandling)
+    def withErrorHandlerOverride(errorHandlerOverride: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output] =
+      copy(errorHandlerOverride = errorHandlerOverride)
 
     def withAuditing(auditHandler: AuditHandler): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(auditHandler = Some(auditHandler))
 
     def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] = {
       val combinedErrorHandling = new ErrorHandling {
-        override def errorResultPF: PartialFunction[ErrorWrapper, Result] = errorHandling.orElse(defaultErrorHandling.errorResultPF)
+        override def errorResultPF: PartialFunction[ErrorWrapper, Result] = errorHandlerOverride.orElse(errorHandling.errorResultPF)
       }
 
       new RequestHandler(parser, service, combinedErrorHandling, resultCreator, auditHandler)

@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner, RequestHandlerFactory}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -86,8 +86,7 @@ class ListPaymentsAndAllocationDetailsControllerSpec
       requestParser = mockListPaymentsAndAllocationDetailsRequestParser,
       service = mockListPaymentsAndAllocationDetailsService,
       cc = cc,
-      idGenerator = mockIdGenerator,
-      requestHandlerFactory = new RequestHandlerFactory
+      idGenerator = mockIdGenerator
     )
 
     protected def callController(): Future[Result] =

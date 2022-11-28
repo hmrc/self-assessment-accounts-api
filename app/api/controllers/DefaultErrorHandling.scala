@@ -21,10 +21,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.Status
 
-import javax.inject.Singleton
-
-@Singleton
-class DefaultErrorHandling extends ErrorHandling {
+object DefaultErrorHandling extends ErrorHandling {
 
   override def errorResultPF: PartialFunction[ErrorWrapper, Result] = { case errorWrapper: ErrorWrapper =>
     Status(errorWrapper.error.httpStatus)(Json.toJson(errorWrapper))
@@ -32,4 +29,8 @@ class DefaultErrorHandling extends ErrorHandling {
 
 }
 
-object DefaultErrorHandling extends DefaultErrorHandling
+trait DefaultErrorHandlingComponent extends ErrorHandlingComponent{
+  override def errorHandling: ErrorHandling = DefaultErrorHandling
+}
+
+
