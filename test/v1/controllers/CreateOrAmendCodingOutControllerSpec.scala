@@ -16,7 +16,7 @@
 
 package v1.controllers
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner, RequestHandlerFactory}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.Nino
@@ -126,7 +126,7 @@ class CreateOrAmendCodingOutControllerSpec
           .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
           .returns(HateoasWrapper((), testHateoasLinks))
 
-        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson), maybeAuditRequestBody = Some(requestJson), maybeAuditResponseBody = Some(mtdResponseJson))
       }
     }
     "return the error as per spec" when {
@@ -135,7 +135,7 @@ class CreateOrAmendCodingOutControllerSpec
           .parseRequest(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-        runErrorTestWithAudit(NinoFormatError)
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestJson))
       }
 
       "the service returns an error" in new Test {
@@ -147,7 +147,7 @@ class CreateOrAmendCodingOutControllerSpec
           .amend(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
 
-        runErrorTestWithAudit(RuleTaxYearNotEndedError)
+        runErrorTestWithAudit(RuleTaxYearNotEndedError, maybeAuditRequestBody = Some(requestJson))
       }
     }
   }
@@ -162,8 +162,7 @@ class CreateOrAmendCodingOutControllerSpec
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
-      idGenerator = mockIdGenerator,
-      requestHandlerFactory = new RequestHandlerFactory
+      idGenerator = mockIdGenerator
     )
 
     protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))

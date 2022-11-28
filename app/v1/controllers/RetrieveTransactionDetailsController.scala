@@ -66,7 +66,7 @@ class RetrieveTransactionDetailsController @Inject() (val authService: Enrolment
             auditType = "retrieveASelfAssessmentTransactionsDetail",
             transactionName = "retrieve-a-self-assessment-transactions-detail",
             params = Map("nino" -> nino)
-          ).withResponseBody(None))
+          ))
           .createRequestHandler
 
       requestHandler.handleRequest(rawRequest)

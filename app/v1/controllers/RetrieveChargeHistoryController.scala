@@ -64,7 +64,7 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
               auditService,
               auditType = "retrieveASelfAssessmentChargesHistory",
               transactionName = "retrieve-a-self-assessment-charges-history",
-              params = Map("nino" -> nino)).withResponseBody(None))
+              params = Map("nino" -> nino)))
           .createRequestHandler
 
       requestHandler.handleRequest(rawRequest)

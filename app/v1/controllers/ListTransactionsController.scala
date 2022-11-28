@@ -61,12 +61,11 @@ class ListTransactionsController @Inject() (val authService: EnrolmentsAuthServi
           .withService(service.listTransactions(_))
           .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest, _) =>
             ListTransactionsHateoasData(nino, parsedRequest.from, parsedRequest.to)))
-          .withAuditing(
-            AuditHandler(
-              auditService,
-              auditType = "listSelfAssessmentTransactions",
-              transactionName = "list-self-assessment-transactions",
-              params = Map("nino" -> nino)).withResponseBody(None))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "listSelfAssessmentTransactions",
+            transactionName = "list-self-assessment-transactions",
+            params = Map("nino" -> nino)))
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)

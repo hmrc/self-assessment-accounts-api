@@ -31,13 +31,14 @@ object AuditHandler {
             auditType: String,
             transactionName: String,
             params: Map[String, String],
-            requestBody: Option[JsValue] = None): AuditHandler = new AuditHandler(
+            requestBody: Option[JsValue] = None,
+            includeResponse: Boolean = false): AuditHandler = new AuditHandler(
     auditService = auditService,
     auditType = auditType,
     transactionName = transactionName,
     params = params,
     requestBody = requestBody,
-    responseBodyMap = identity
+    responseBodyMap = if (includeResponse) identity else _ => None
   )
 
 }
@@ -49,12 +50,6 @@ case class AuditHandler(auditService: AuditService,
                         requestBody: Option[JsValue],
                         responseBodyMap: Option[JsValue] => Option[JsValue])
     extends RequestContextImplicits {
-
-  def withResponseBody(responseBody: Option[JsValue]): AuditHandler =
-    copy(responseBodyMap = _ => responseBody)
-
-  def withResponseBodyMap(responseBodyMap: Option[JsValue] => Option[JsValue]): AuditHandler =
-    copy(responseBodyMap = responseBodyMap)
 
   def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
       ctx: RequestContext,

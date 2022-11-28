@@ -63,7 +63,8 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
             auditType = "CreateAmendCodingOutUnderpayment",
             transactionName = "create-amend-coding-out-underpayment",
             params = Map("nino" -> nino, "taxYear" -> taxYear),
-            Some(request.body)
+            Some(request.body),
+            includeResponse = true
           ))
           .createRequestHandler
 

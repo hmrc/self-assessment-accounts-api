@@ -62,7 +62,7 @@ class ListPaymentsController @Inject() (val authService: EnrolmentsAuthService,
               auditService,
               auditType = "listSelfAssessmentPayments",
               transactionName = "list-self-assessment-payments",
-              params = Map("nino" -> nino)).withResponseBody(None))
+              params = Map("nino" -> nino)))
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)
