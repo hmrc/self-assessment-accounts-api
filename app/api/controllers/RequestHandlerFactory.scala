@@ -28,9 +28,6 @@ import play.api.mvc.Result
 
 import scala.concurrent.{ExecutionContext, Future}
 
-// FIXME need to handle:
-// - nrs
-
 trait RequestHandlerFactoryComponent {
   def requestHandlerFactory: RequestHandlerFactory
 }
@@ -105,11 +102,21 @@ object RequestHandlerFactory {
       * withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
       * }}}
       */
-    def withHateoasResult[HData <: HateoasData](
+    def withHateoasResultFrom[HData <: HateoasData](
         hateoasFactory: HateoasFactory)(data: (Input, Output) => HData, successStatus: Int = Status.OK)(implicit
         linksFactory: HateoasLinksFactory[Output, HData],
         writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
       withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
+
+    /** Shorthand for
+      * {{{
+      * withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)((_,_) => data))
+      * }}}
+      */
+    def withHateoasResult[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: HData, successStatus: Int = Status.OK)(implicit
+        linksFactory: HateoasLinksFactory[Output, HData],
+        writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
+      withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)((_, _) => data))
 
   }
 

@@ -32,7 +32,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) extends BaseService with  DownstreamResponseMappingSupport with Logging {
+class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) extends BaseService with DownstreamResponseMappingSupport with Logging {
 
   def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit
       ctx: RequestContext,

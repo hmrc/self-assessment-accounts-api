@@ -44,4 +44,3 @@ object RetrieveCodingOutResponse extends HateoasLinks {
 }
 
 case class RetrieveCodingOutHateoasData(nino: String, taxYear: String) extends HateoasData
-

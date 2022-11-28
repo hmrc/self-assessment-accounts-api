@@ -33,7 +33,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAllocationsService @Inject() (connector: RetrieveAllocationsConnector) extends BaseService with  DownstreamResponseMappingSupport with Logging {
+class RetrieveAllocationsService @Inject() (connector: RetrieveAllocationsConnector)
+    extends BaseService
+    with DownstreamResponseMappingSupport
+    with Logging {
 
   def retrieveAllocations(request: RetrieveAllocationsParsedRequest)(implicit
       ctx: RequestContext,

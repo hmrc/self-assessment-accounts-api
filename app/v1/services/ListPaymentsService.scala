@@ -32,7 +32,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector) extends BaseService with  DownstreamResponseMappingSupport with Logging {
+class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector)
+    extends BaseService
+    with DownstreamResponseMappingSupport
+    with Logging {
 
   def list(request: ListPaymentsParsedRequest)(implicit
       ctx: RequestContext,

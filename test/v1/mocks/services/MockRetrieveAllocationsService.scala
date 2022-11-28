@@ -43,7 +43,7 @@ trait MockRetrieveAllocationsService extends MockFactory {
             _: ExecutionContext
           )
         )
-        .expects(request, *,  *)
+        .expects(request, *, *)
     }
 
   }

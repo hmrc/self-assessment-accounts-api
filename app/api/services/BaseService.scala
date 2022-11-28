@@ -18,5 +18,4 @@ package api.services
 
 import api.controllers.RequestContextImplicits
 
-
 trait BaseService extends RequestContextImplicits

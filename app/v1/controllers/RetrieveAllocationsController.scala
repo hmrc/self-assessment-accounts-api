@@ -63,7 +63,8 @@ class RetrieveAllocationsController @Inject() (val authService: EnrolmentsAuthSe
             auditService,
             auditType = "retrieveASelfAssessmentPaymentsAllocationDetails",
             transactionName = "retrieve-a-self-assessment-payments-allocation-details",
-            params = Map("nino" -> nino)))
+            params = Map("nino" -> nino)
+          ))
           .createRequestHandler
 
       requestHandler.handleRequest(rawData)

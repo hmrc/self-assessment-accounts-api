@@ -32,11 +32,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListChargesService @Inject() (listChargesConnector: ListChargesConnector) extends BaseService with  DownstreamResponseMappingSupport with Logging {
+class ListChargesService @Inject() (listChargesConnector: ListChargesConnector)
+    extends BaseService
+    with DownstreamResponseMappingSupport
+    with Logging {
 
   def list(request: ListChargesParsedRequest)(implicit
-                                              ctx: RequestContext,
-                                              ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(listChargesConnector.listCharges(request)).leftMap(mapDownstreamErrors(desErrorMap))

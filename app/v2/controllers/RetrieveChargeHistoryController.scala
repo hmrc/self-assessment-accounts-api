@@ -54,7 +54,7 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
         requestHandlerFactory
           .withParser(requestParser)
           .withService(service.retrieveChargeHistory(_))
-          .withHateoasResult(hateoasFactory)((_,_) => RetrieveChargeHistoryHateoasData(nino, transactionId))
+          .withHateoasResult(hateoasFactory)(RetrieveChargeHistoryHateoasData(nino, transactionId))
           .createRequestHandler
 
       requestHandler.handleRequest(rawRequest)

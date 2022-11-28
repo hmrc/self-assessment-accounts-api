@@ -32,7 +32,10 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends BaseService with DownstreamResponseMappingSupport with Logging {
+class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector)
+    extends BaseService
+    with DownstreamResponseMappingSupport
+    with Logging {
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(implicit
       ctx: RequestContext,

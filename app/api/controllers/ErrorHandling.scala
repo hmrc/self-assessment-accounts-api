@@ -22,4 +22,3 @@ import play.api.mvc.Result
 trait ErrorHandling {
   def errorHandler: PartialFunction[ErrorWrapper, Result]
 }
-
