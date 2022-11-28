@@ -31,72 +31,29 @@ import scala.concurrent.{ExecutionContext, Future}
 
 // FIXME need to handle:
 // - nrs
-// - logging context (requires class to automate - ok for mix-in but not for builder usage)
-
-trait ParserOnlyBuilder[InputRaw <: RawData, Input] {
-
-  def withService[Output](service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output]
-
-}
-
-trait RequestHandlerBuilder[InputRaw <: RawData, Input, Output] {
-
-  /** Shorthand for
-    * {{{
-    * withResultCreator(ResultCreator.plainJson(successStatus))
-    * }}}
-    */
-  def withPlainJsonResult(successStatus: Int = Status.OK)(implicit ws: Writes[Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
-    withResultCreator(ResultCreator.plainJson(successStatus))
-
-  /** Shorthand for
-    * {{{
-    * withResultCreator(ResultCreator.noContent)
-    * }}}
-    */
-  def withNoContentResult(successStatus: Int = Status.OK): RequestHandlerBuilder[InputRaw, Input, Output] =
-    withResultCreator(ResultCreator.noContent)
-
-  /** Shorthand for
-    * {{{
-    * withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
-    * }}}
-    */
-  def withHateoasResult[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: (Input, Output) => HData, successStatus: Int = Status.OK)(implicit
-      linksFactory: HateoasLinksFactory[Output, HData],
-      writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
-    withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
-
-  def withResultCreator(resultCreator: ResultCreator[InputRaw, Input , Output]): RequestHandlerBuilder[InputRaw, Input, Output]
-
-  def withAuditing(auditHandler: AuditHandler): RequestHandlerBuilder[InputRaw, Input, Output]
-
-  def withErrorHandling(errorHandling: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output]
-  def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output]
-}
 
 @Singleton
 final class RequestHandlerFactory @Inject() (defaultErrorHandling: ErrorHandling = DefaultErrorHandling) {
 
   def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): ParserOnlyBuilder[InputRaw, Input] =
-    ParserOnlyBuilderImpl(parser)
+    ParserOnlyBuilder(parser)
 
-  private case class ParserOnlyBuilderImpl[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input])
-      extends ParserOnlyBuilder[InputRaw, Input] {
+  // Intermediate class so that the compiler can separately capture the InputRaw and Input types here and the Output type later
+  case class ParserOnlyBuilder[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]) {
 
     def withService[Output](
         serviceFunction: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output] =
-      RequestHandlerBuilderImpl(parser, serviceFunction)
+      RequestHandlerBuilder(parser, serviceFunction)
 
   }
 
-  private case class RequestHandlerBuilderImpl[InputRaw <: RawData, Input, Output](
+  case class RequestHandlerBuilder[InputRaw <: RawData, Input, Output](
       parser: RequestParser[InputRaw, Input],
       service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
       errorHandling: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
       resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output],
       auditHandler: Option[AuditHandler] = None
-  ) extends RequestHandlerBuilder[InputRaw, Input, Output] {
+  ) {
 
     def withResultCreator(resultCreator: ResultCreator[InputRaw, Input, Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(resultCreator = resultCreator)
@@ -114,6 +71,33 @@ final class RequestHandlerFactory @Inject() (defaultErrorHandling: ErrorHandling
 
       new RequestHandler.Impl(parser, service, combinedErrorHandling, resultCreator, auditHandler)
     }
+
+    /** Shorthand for
+      * {{{
+      * withResultCreator(ResultCreator.plainJson(successStatus))
+      * }}}
+      */
+    def withPlainJsonResult(successStatus: Int = Status.OK)(implicit ws: Writes[Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
+      withResultCreator(ResultCreator.plainJson(successStatus))
+
+    /** Shorthand for
+      * {{{
+      * withResultCreator(ResultCreator.noContent)
+      * }}}
+      */
+    def withNoContentResult(successStatus: Int = Status.OK): RequestHandlerBuilder[InputRaw, Input, Output] =
+      withResultCreator(ResultCreator.noContent)
+
+    /** Shorthand for
+      * {{{
+      * withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
+      * }}}
+      */
+    def withHateoasResult[HData <: HateoasData](
+        hateoasFactory: HateoasFactory)(data: (Input, Output) => HData, successStatus: Int = Status.OK)(implicit
+        linksFactory: HateoasLinksFactory[Output, HData],
+        writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[InputRaw, Input, Output] =
+      withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
 
   }
 
