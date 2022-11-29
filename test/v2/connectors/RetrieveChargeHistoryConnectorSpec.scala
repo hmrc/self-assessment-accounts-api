@@ -17,6 +17,7 @@
 package v2.connectors
 
 import mocks.MockAppConfig
+import api.connectors.ConnectorSpec
 import v2.models.response.retrieveChargeHistory._
 import v2.mocks.MockHttpClient
 import api.models.domain.Nino

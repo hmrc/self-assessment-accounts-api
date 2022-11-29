@@ -32,10 +32,15 @@ trait AppConfig {
 
   def mtdIdBaseUrl: String
 
-  def ifsBaseUrl: String
-  def ifsEnv: String
-  def ifsToken: String
-  def ifsEnvironmentHeaders: Option[Seq[String]]
+  def ifs1BaseUrl: String
+  def ifs1Env: String
+  def ifs1Token: String
+  def ifs1EnvironmentHeaders: Option[Seq[String]]
+
+  def ifs2BaseUrl: String
+  def ifs2Env: String
+  def ifs2Token: String
+  def ifs2EnvironmentHeaders: Option[Seq[String]]
 
   def apiGatewayContext: String
 
@@ -59,11 +64,17 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
   val desToken: String                           = config.getString("microservice.services.des.token")
   val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
 
-  // IFS config
-  val ifsBaseUrl: String                         = config.baseUrl("ifs")
-  val ifsEnv: String                             = config.getString("microservice.services.ifs.env")
-  val ifsToken: String                           = config.getString("microservice.services.ifs.token")
-  val ifsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs.environmentHeaders")
+  // IFS1 config
+  val ifs1BaseUrl: String                         = config.baseUrl("ifs1")
+  val ifs1Env: String                             = config.getString("microservice.services.ifs1.env")
+  val ifs1Token: String                           = config.getString("microservice.services.ifs1.token")
+  val ifs1EnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs1.environmentHeaders")
+
+  // IFS2 config
+  val ifs2BaseUrl: String = config.baseUrl("ifs2")
+  val ifs2Env: String = config.getString("microservice.services.ifs2.env")
+  val ifs2Token: String = config.getString("microservice.services.ifs2.token")
+  val ifs2EnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs2.environmentHeaders")
 
   val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
 

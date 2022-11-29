@@ -59,22 +59,22 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "X-Session-Id"
   )
 
-  val dummyIfsHeaderCarrierConfig: HeaderCarrier.Config =
+  val dummyIfs1HeaderCarrierConfig: HeaderCarrier.Config =
     HeaderCarrier.Config(
       Seq("^not-test-BaseUrl?$".r),
       Seq.empty[String],
       Some("self-assessment-accounts-api")
     )
 
-  val requiredIfsHeaders: Seq[(String, String)] = Seq(
-    "Authorization"     -> "Bearer ifs-token",
-    "Environment"       -> "ifs-environment",
+  val requiredIfs1Headers: Seq[(String, String)] = Seq(
+    "Authorization"     -> "Bearer ifs1-token",
+    "Environment"       -> "ifs1-environment",
     "User-Agent"        -> "self-assessment-accounts-api",
     "CorrelationId"     -> correlationId,
     "Gov-Test-Scenario" -> "DEFAULT"
   )
 
-  val allowedIfsHeaders: Seq[String] = Seq(
+  val allowedIfs1Headers: Seq[String] = Seq(
     "Accept",
     "Gov-Test-Scenario",
     "Content-Type",
@@ -83,4 +83,27 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     "X-Session-Id"
   )
 
+  val dummyIfs2HeaderCarrierConfig: HeaderCarrier.Config =
+    HeaderCarrier.Config(
+      Seq("^not-test-BaseUrl?$".r),
+      Seq.empty[String],
+      Some("self-assessment-accounts-api")
+    )
+
+  val requiredIfs2Headers: Seq[(String, String)] = Seq(
+    "Authorization"     -> "Bearer ifs2-token",
+    "Environment"       -> "ifs2-environment",
+    "User-Agent"        -> "self-assessment-accounts-api",
+    "CorrelationId"     -> correlationId,
+    "Gov-Test-Scenario" -> "DEFAULT"
+  )
+
+  val allowedIfs2Headers: Seq[String] = Seq(
+    "Accept",
+    "Gov-Test-Scenario",
+    "Content-Type",
+    "Location",
+    "X-Request-Timestamp",
+    "X-Session-Id"
+  )
 }

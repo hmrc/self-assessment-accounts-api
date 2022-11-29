@@ -71,7 +71,7 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
             MockHttpClient
               .get[MtdIdLookupOutcome](
                 url = s"$baseUrl/mtd-identifier-lookup/nino/$nino",
-                config = dummyIfsHeaderCarrierConfig
+                config = dummyIfs1HeaderCarrierConfig
               )
               .returns(Future.successful(Right(mtdId)))
 
@@ -85,7 +85,7 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
             MockHttpClient
               .get[MtdIdLookupOutcome](
                 url = s"$baseUrl/mtd-identifier-lookup/nino/$nino",
-                config = dummyIfsHeaderCarrierConfig
+                config = dummyIfs1HeaderCarrierConfig
               )
               .returns(Future.successful(Left(DownstreamError)))
 

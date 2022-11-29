@@ -16,6 +16,7 @@
 
 package v2.connectors
 
+import api.connectors.ConnectorSpec
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
@@ -77,10 +78,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     val connector: RetrieveBalanceAndTransactionsConnector =
       new RetrieveBalanceAndTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    MockAppConfig.ifsBaseUrl returns baseUrl
-    MockAppConfig.ifsToken returns "ifs-token"
-    MockAppConfig.ifsEnvironment returns "ifs-environment"
-    MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockAppConfig.ifs2BaseUrl returns baseUrl
+    MockAppConfig.ifs2Token returns "ifs2-token"
+    MockAppConfig.ifs2Environment returns "ifs2-environment"
+    MockAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
 
     def connectorRequest(request: RetrieveBalanceAndTransactionsRequest,
                          response: RetrieveBalanceAndTransactionsResponse,
@@ -91,9 +92,9 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       MockHttpClient
         .get(
           s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-          dummyIfsHeaderCarrierConfig,
+          dummyIfs2HeaderCarrierConfig,
           parameters = queryParams,
-          requiredIfsHeaders,
+          requiredIfs2Headers,
           Seq("AnotherHeader" -> "HeaderValue")
         )
         .returns(Future.successful(outcome))

@@ -17,6 +17,7 @@
 package v2.connectors
 
 import api.models.domain.Nino
+import api.connectors.ConnectorSpec
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
