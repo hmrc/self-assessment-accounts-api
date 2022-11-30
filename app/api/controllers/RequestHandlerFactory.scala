@@ -24,47 +24,28 @@ import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
 import play.api.http.Status
 import play.api.libs.json.Writes
-import play.api.mvc.Result
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait RequestHandlerFactoryComponent {
-  def requestHandlerFactory: RequestHandlerFactory
-}
-
-trait DefaultRequestHandlerFactoryComponent extends RequestHandlerFactoryComponent {
-  self: ErrorHandling =>
-
-  val requestHandlerFactory: RequestHandlerFactory = new RequestHandlerFactory {
-
-    def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): RequestHandlerFactory.ParserOnlyBuilder[InputRaw, Input] =
-      RequestHandlerFactory.ParserOnlyBuilder(parser, errorHandler)
-
-  }
-
-}
-
-trait RequestHandlerFactory {
-  def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): RequestHandlerFactory.ParserOnlyBuilder[InputRaw, Input]
-}
-
 object RequestHandlerFactory {
+
+  def withParser[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input]): RequestHandlerFactory.ParserOnlyBuilder[InputRaw, Input] =
+    RequestHandlerFactory.ParserOnlyBuilder(parser, ErrorHandling.Default)
 
   // Intermediate class so that the compiler can separately capture the InputRaw and Input types here, and the Output type later
   case class ParserOnlyBuilder[InputRaw <: RawData, Input](parser: RequestParser[InputRaw, Input],
-                                                           errorHandler: PartialFunction[ErrorWrapper, Result]) {
+                                                           errorHandling: ErrorHandling = ErrorHandling.Default) {
 
     def withService[Output](
         serviceFunction: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]]): RequestHandlerBuilder[InputRaw, Input, Output] =
-      RequestHandlerBuilder(parser, serviceFunction, errorHandler)
+      RequestHandlerBuilder(parser, serviceFunction, errorHandling)
 
   }
 
   case class RequestHandlerBuilder[InputRaw <: RawData, Input, Output](
       parser: RequestParser[InputRaw, Input],
       service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
-      errorHandler: PartialFunction[ErrorWrapper, Result],
-      errorHandlerOverride: PartialFunction[ErrorWrapper, Result] = PartialFunction.empty,
+      errorHandling: ErrorHandling,
       resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output],
       auditHandler: Option[AuditHandler] = None
   ) {
@@ -72,14 +53,14 @@ object RequestHandlerFactory {
     def withResultCreator(resultCreator: ResultCreator[InputRaw, Input, Output]): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(resultCreator = resultCreator)
 
-    def withErrorHandlerOverride(errorHandlerOverride: PartialFunction[ErrorWrapper, Result]): RequestHandlerBuilder[InputRaw, Input, Output] =
-      copy(errorHandlerOverride = errorHandlerOverride)
+    def withErrorHandling(errorHandling: ErrorHandling): RequestHandlerBuilder[InputRaw, Input, Output] =
+      copy(errorHandling = errorHandling)
 
     def withAuditing(auditHandler: AuditHandler): RequestHandlerBuilder[InputRaw, Input, Output] =
       copy(auditHandler = Some(auditHandler))
 
     def createRequestHandler(implicit ec: ExecutionContext): RequestHandler[InputRaw, Input, Output] =
-      new RequestHandler(parser, service, errorHandlerOverride.orElse(errorHandler), resultCreator, auditHandler)
+      new RequestHandler(parser, service, errorHandling, resultCreator, auditHandler)
 
     /** Shorthand for
       * {{{

@@ -68,7 +68,7 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
       )
 
       val requestHandler =
-        requestHandlerFactory
+        RequestHandlerFactory
           .withParser(requestParser)
           .withService(service.retrieveBalanceAndTransactions(_))
           .withPlainJsonResult()

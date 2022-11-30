@@ -22,7 +22,7 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Status
 import utils.Logging
 
-trait BaseController extends DefaultRequestHandlerFactoryComponent with DefaultErrorHandling { self: Logging =>
+trait BaseController { self: Logging =>
 
   protected def errorResult(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
     val resCorrelationId = errorWrapper.correlationId

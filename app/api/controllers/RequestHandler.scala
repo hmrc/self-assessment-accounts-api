@@ -32,7 +32,7 @@ import scala.concurrent.{ExecutionContext, Future}
 class RequestHandler[InputRaw <: RawData, Input, Output] private[controllers] (
     parser: RequestParser[InputRaw, Input],
     service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
-    errorHandler: PartialFunction[ErrorWrapper, Result],
+    errorHandling: ErrorHandling,
     resultCreator: ResultCreator[InputRaw, Input, Output],
     auditHandler: Option[AuditHandler])(implicit ec: ExecutionContext)
     extends Logging
@@ -98,8 +98,7 @@ class RequestHandler[InputRaw <: RawData, Input, Output] private[controllers] (
       s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
         s"Error response received with CorrelationId: $resCorrelationId")
 
-    val errorResult = errorHandler
-      .applyOrElse(errorWrapper, unhandledError)
+    val errorResult = errorHandling.errorHandler.applyOrElse(errorWrapper, unhandledError)
 
     errorResult.withApiHeaders(resCorrelationId)
   }

@@ -17,8 +17,21 @@
 package api.controllers
 
 import api.models.errors.ErrorWrapper
+import play.api.libs.json.Json
 import play.api.mvc.Result
+import play.api.mvc.Results.Status
 
-trait ErrorHandling {
-  def errorHandler: PartialFunction[ErrorWrapper, Result]
+case class ErrorHandling(errorHandler: PartialFunction[ErrorWrapper, Result]) {
+
+  def orElse(that: ErrorHandling): ErrorHandling =
+    ErrorHandling(this.errorHandler.orElse(that.errorHandler))
+
+}
+
+object ErrorHandling {
+
+  val Default: ErrorHandling = ErrorHandling { case errorWrapper: ErrorWrapper =>
+    Status(errorWrapper.error.httpStatus)(Json.toJson(errorWrapper))
+  }
+
 }

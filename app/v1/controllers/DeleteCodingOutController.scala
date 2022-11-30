@@ -49,7 +49,7 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
       val rawData = DeleteCodingOutRawRequest(nino, taxYear)
 
       val requestHandler =
-        requestHandlerFactory
+        RequestHandlerFactory
           .withParser(parser)
           .withService(service.deleteCodingOut(_))
           .withNoContentResult()
