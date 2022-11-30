@@ -55,7 +55,7 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
       val rawRequest = RetrieveChargeHistoryRawRequest(nino, transactionId)
 
       val requestHandler =
-        RequestHandlerFactory
+        RequestHandler
           .withParser(requestParser)
           .withService(service.retrieveChargeHistory(_))
           .withHateoasResult(hateoasFactory)(RetrieveChargeHistoryHateoasData(nino, transactionId))
@@ -65,7 +65,6 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
               auditType = "retrieveASelfAssessmentChargesHistory",
               transactionName = "retrieve-a-self-assessment-charges-history",
               params = Map("nino" -> nino)))
-          .createRequestHandler
 
       requestHandler.handleRequest(rawRequest)
     }

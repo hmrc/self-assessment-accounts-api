@@ -49,7 +49,7 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
       val rawData = DeleteCodingOutRawRequest(nino, taxYear)
 
       val requestHandler =
-        RequestHandlerFactory
+        RequestHandler
           .withParser(parser)
           .withService(service.deleteCodingOut(_))
           .withNoContentResult()
@@ -59,7 +59,6 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
               auditType = "DeleteCodingOutUnderpayments",
               transactionName = "delete-coding-out-underpayments",
               params = Map("nino" -> nino, "taxYear" -> taxYear)))
-          .createRequestHandler
 
       requestHandler.handleRequest(rawData)
 

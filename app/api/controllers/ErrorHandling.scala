@@ -21,12 +21,7 @@ import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.Status
 
-case class ErrorHandling(errorHandler: PartialFunction[ErrorWrapper, Result]) {
-
-  def orElse(that: ErrorHandling): ErrorHandling =
-    ErrorHandling(this.errorHandler.orElse(that.errorHandler))
-
-}
+case class ErrorHandling(errorHandler: PartialFunction[ErrorWrapper, Result])
 
 object ErrorHandling {
 

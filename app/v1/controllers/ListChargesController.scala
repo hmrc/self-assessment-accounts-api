@@ -52,7 +52,7 @@ class ListChargesController @Inject() (val authService: EnrolmentsAuthService,
       val rawData = ListChargesRawRequest(nino, from, to)
 
       val requestHandler =
-        RequestHandlerFactory
+        RequestHandler
           .withParser(requestParser)
           .withService(service.list(_))
           .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest, _) =>
@@ -63,7 +63,6 @@ class ListChargesController @Inject() (val authService: EnrolmentsAuthService,
               auditType = "listSelfAssessmentCharges",
               transactionName = "list-self-assessment-charges",
               params = Map("nino" -> nino)))
-          .createRequestHandler
 
       requestHandler.handleRequest(rawData)
     }

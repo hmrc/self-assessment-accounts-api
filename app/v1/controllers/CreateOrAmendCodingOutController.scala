@@ -54,7 +54,7 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
       val rawData = CreateOrAmendCodingOutRawRequest(nino, taxYear, request.body)
 
       val requestHandler =
-        RequestHandlerFactory
+        RequestHandler
           .withParser(parser)
           .withService(service.amend(_))
           .withHateoasResult(hateoasFactory)(CreateOrAmendCodingOutHateoasData(nino, taxYear))
@@ -66,7 +66,6 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
             Some(request.body),
             includeResponse = true
           ))
-          .createRequestHandler
 
       requestHandler.handleRequest(rawData)
     }
