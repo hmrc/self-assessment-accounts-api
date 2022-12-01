@@ -16,6 +16,8 @@
 
 package api.models.domain
 
+import config.FeatureSwitches
+
 /** Opaque representation of a tax year.
   *
   * @param value
@@ -45,10 +47,14 @@ final case class TaxYear private (private val value: String) {
   val asTysDownstream: String = {
     val year2 = value.toInt - 2000
     val year1 = year2 - 1
-    s"${year1}-$year2"
+    s"$year1-$year2"
   }
 
   override def toString: String = s"TaxYear($value)"
+
+  /** Use this for downstream API endpoints that are known to be TYS.
+    */
+  def useTaxYearSpecificApi(implicit featureSwitches: FeatureSwitches): Boolean = featureSwitches.isTaxYearSpecificApiEnabled && year >= 2024
 }
 
 object TaxYear {
