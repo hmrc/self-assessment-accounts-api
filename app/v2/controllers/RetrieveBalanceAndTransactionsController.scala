@@ -70,7 +70,7 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
       val requestHandler =
         RequestHandler
           .withParser(requestParser)
-          .withService(service.retrieveBalanceAndTransactions(_))
+          .withService(service.retrieveBalanceAndTransactions)
           .withPlainJsonResult()
 
       requestHandler.handleRequest(rawRequest)

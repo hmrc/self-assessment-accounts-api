@@ -51,7 +51,7 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
       val requestHandler =
         RequestHandler
           .withParser(parser)
-          .withService(service.deleteCodingOut(_))
+          .withService(service.deleteCodingOut)
           .withNoContentResult()
           .withAuditing(
             AuditHandler(

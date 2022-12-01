@@ -57,7 +57,7 @@ class RetrieveBalanceController @Inject() (val authService: EnrolmentsAuthServic
       val requestHandler =
         RequestHandler
           .withParser(requestParser)
-          .withService(service.retrieveBalance(_))
+          .withService(service.retrieveBalance)
           .withHateoasResult(hateoasFactory)(RetrieveBalanceHateoasData(nino))
           .withAuditing(
             AuditHandler(

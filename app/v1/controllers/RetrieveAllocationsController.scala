@@ -57,7 +57,7 @@ class RetrieveAllocationsController @Inject() (val authService: EnrolmentsAuthSe
       val requestHandler =
         RequestHandler
           .withParser(requestParser)
-          .withService(service.retrieveAllocations(_))
+          .withService(service.retrieveAllocations)
           .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((_, _) => RetrieveAllocationsHateoasData(nino, paymentId)))
           .withAuditing(AuditHandler(
             auditService,

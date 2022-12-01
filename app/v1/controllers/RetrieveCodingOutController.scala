@@ -60,7 +60,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
       val requestHandler =
         RequestHandler
           .withParser(requestParser)
-          .withService(service.retrieveCodingOut(_))
+          .withService(service.retrieveCodingOut)
           .withHateoasResult(hateoasFactory)(RetrieveCodingOutHateoasData(nino, taxYear))
 
       requestHandler.handleRequest(rawData)

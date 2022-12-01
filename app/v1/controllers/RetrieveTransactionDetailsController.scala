@@ -58,7 +58,7 @@ class RetrieveTransactionDetailsController @Inject() (val authService: Enrolment
       val requestHandler =
         RequestHandler
           .withParser(requestParser)
-          .withService(service.retrieveTransactionDetails(_))
+          .withService(service.retrieveTransactionDetails)
           .withHateoasResultFrom(hateoasFactory)((_, serviceResponse) =>
             RetrieveTransactionDetailsHateoasData(nino, transactionId, serviceResponse.transactionItems.head.paymentId))
           .withAuditing(AuditHandler(
