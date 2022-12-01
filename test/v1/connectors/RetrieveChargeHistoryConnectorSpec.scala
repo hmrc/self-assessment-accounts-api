@@ -53,7 +53,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
           .parameterGet(
             s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
             Seq("docNumber" -> transactionId),
-            dummyDesHeaderCarrierConfig,
+            dummyHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
           )

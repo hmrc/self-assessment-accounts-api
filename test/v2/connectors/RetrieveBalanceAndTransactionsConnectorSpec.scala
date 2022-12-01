@@ -91,11 +91,11 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
       MockHttpClient
         .get(
-          s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-          dummyIfs2HeaderCarrierConfig,
+          url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+          config = dummyHeaderCarrierConfig,
           parameters = queryParams,
-          requiredIfs2Headers,
-          Seq("AnotherHeader" -> "HeaderValue")
+          requiredHeaders = requiredIfs2Headers,
+          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
         )
         .returns(Future.successful(outcome))
 

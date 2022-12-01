@@ -73,7 +73,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .put(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyIfs1HeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             body = createOrAmendCodingOutRequestBody,
             requiredHeaders = requiredIfsHeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")

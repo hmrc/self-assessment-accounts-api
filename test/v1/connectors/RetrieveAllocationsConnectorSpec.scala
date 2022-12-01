@@ -70,7 +70,7 @@ class RetrieveAllocationsConnectorSpec extends ConnectorSpec {
           .parameterGet(
             s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
             queryParams,
-            dummyDesHeaderCarrierConfig,
+            dummyHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
           )
