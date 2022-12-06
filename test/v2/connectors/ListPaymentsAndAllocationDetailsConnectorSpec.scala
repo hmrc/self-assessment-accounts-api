@@ -57,7 +57,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       MockHttpClient
         .get(
           s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
-          dummyDesHeaderCarrierConfig,
+          dummyHeaderCarrierConfig,
           parameters = queryParams,
           requiredDesHeaders,
           Seq("AnotherHeader" -> "HeaderValue")

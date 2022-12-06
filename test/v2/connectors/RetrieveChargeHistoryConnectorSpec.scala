@@ -69,7 +69,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .get(
             s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-            dummyDesHeaderCarrierConfig,
+            dummyHeaderCarrierConfig,
             parameters = Seq("docNumber" -> transactionId),
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")

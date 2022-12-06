@@ -91,7 +91,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
           .parameterGet(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
             parameters = Seq("view" -> MtdSource.parser(source).toDownstreamSource),
-            config = dummyIfs1HeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredIfs1Headers,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
@@ -107,7 +107,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .get(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyIfs1HeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredIfs1Headers,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )

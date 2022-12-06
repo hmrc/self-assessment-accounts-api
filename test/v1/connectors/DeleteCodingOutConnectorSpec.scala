@@ -60,7 +60,7 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .delete(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyIfs1HeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeadersDelete,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
