@@ -96,8 +96,7 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
   val mtdFinancialDetailsWithoutLocksJson: JsValue = mtdFinancialDetailsWith(financialDetailsItemWithoutLocksMtdJson)
 
-  private def  mtdFinancialDetailsWith(items: JsValue): JsValue = Json.parse(
-    s"""
+  private def mtdFinancialDetailsWith(items: JsValue): JsValue = Json.parse(s"""
        |  {
        |      "taxYear":"2021-22",
        |      "chargeDetail": $mtdChargeDetailJson,

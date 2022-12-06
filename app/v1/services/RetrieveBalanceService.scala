@@ -16,30 +16,27 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import cats.data.EitherT
-import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import v1.connectors.RetrieveBalanceConnector
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
+import cats.data.EitherT
+import cats.implicits._
+import utils.Logging
+import v1.connectors.RetrieveBalanceConnector
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) extends BaseService with DownstreamResponseMappingSupport with Logging {
 
   def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveBalance(request)).leftMap(mapDownstreamErrors(desErrorMap))

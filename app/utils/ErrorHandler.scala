@@ -59,10 +59,10 @@ class ErrorHandler @Inject() (config: Configuration, auditConnector: AuditConnec
 
       case _ =>
         val errorCode = statusCode match {
-          case UNAUTHORIZED => UnauthorisedErrorWith401
-          case METHOD_NOT_ALLOWED => InvalidHttpMethodError
+          case UNAUTHORIZED           => UnauthorisedErrorWith401
+          case METHOD_NOT_ALLOWED     => InvalidHttpMethodError
           case UNSUPPORTED_MEDIA_TYPE => InvalidBodyTypeError
-          case _ => MtdError("INVALID_REQUEST", message, BAD_REQUEST)
+          case _                      => MtdError("INVALID_REQUEST", message, BAD_REQUEST)
         }
 
         auditConnector.sendEvent(
@@ -89,10 +89,10 @@ class ErrorHandler @Inject() (config: Configuration, auditConnector: AuditConnec
     )
 
     val (errorCode, eventType) = ex match {
-      case _: NotFoundException => (NotFoundError, "ResourceNotFound")
+      case _: NotFoundException      => (NotFoundError, "ResourceNotFound")
       case _: AuthorisationException => (UnauthorisedErrorWith401, "ClientError")
-      case _: JsValidationException => (BadRequestError, "ServerValidationError")
-      case e: HttpException => (BadRequestError, "ServerValidationError")
+      case _: JsValidationException  => (BadRequestError, "ServerValidationError")
+      case e: HttpException          => (BadRequestError, "ServerValidationError")
       case e: UpstreamErrorResponse if UpstreamErrorResponse.Upstream4xxResponse.unapply(e).isDefined =>
         (BadRequestError, "ServerValidationError")
       case e: UpstreamErrorResponse if UpstreamErrorResponse.Upstream5xxResponse.unapply(e).isDefined =>

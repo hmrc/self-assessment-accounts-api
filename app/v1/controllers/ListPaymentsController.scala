@@ -16,18 +16,10 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.http.MimeTypes
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.ListPaymentsRequestParser
 import v1.models.request.listPayments.ListPaymentsRawRequest
@@ -35,7 +27,7 @@ import v1.models.response.listPayments.ListPaymentsHateoasData
 import v1.services.ListPaymentsService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ListPaymentsController @Inject() (val authService: EnrolmentsAuthService,
@@ -45,7 +37,7 @@ class ListPaymentsController @Inject() (val authService: EnrolmentsAuthService,
                                         hateoasFactory: HateoasFactory,
                                         auditService: AuditService,
                                         cc: ControllerComponents,
-                                        val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                        idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -55,66 +47,24 @@ class ListPaymentsController @Inject() (val authService: EnrolmentsAuthService,
 
   def listPayments(nino: String, from: Option[String], to: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = ListPaymentsRawRequest(nino, from, to)
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.list(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrapList(serviceResponse.responseData, ListPaymentsHateoasData(nino, parsedRequest.from, parsedRequest.to))
-              .asRight[ErrorWrapper]
-          )
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with correlationId: ${serviceResponse.correlationId}"
-          )
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino),
-              requestBody = None,
-              `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, None, None)
-            )
-          )
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-      result.leftMap { errorWrapper =>
-        val result = errorResult(errorWrapper)
+      val requestHandler =
+        RequestHandler
+          .withParser(requestParser)
+          .withService(service.list)
+          .withResultCreator(ResultCreator.hateoasListWrapping(hateoasFactory)((parsedRequest, _) =>
+            ListPaymentsHateoasData(nino, parsedRequest.from, parsedRequest.to)))
+          .withAuditing(
+            AuditHandler(
+              auditService,
+              auditType = "listSelfAssessmentPayments",
+              transactionName = "list-self-assessment-payments",
+              params = Map("nino" -> nino)))
 
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino),
-            requestBody = None,
-            `X-CorrelationId` = errorWrapper.correlationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "listSelfAssessmentPayments",
-      transactionName = "list-self-assessment-payments",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
-  }
 
 }

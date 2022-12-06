@@ -27,7 +27,7 @@ import uk.gov.hmrc.http.{HttpReads, HttpResponse}
 class StandardDesHttpParserSpec extends UnitSpec with HttpParserSpec {
 
   val method = "POST"
-  val url = "test-url"
+  val url    = "test-url"
 
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
@@ -35,10 +35,10 @@ class StandardDesHttpParserSpec extends UnitSpec with HttpParserSpec {
 
   val httpReads: HttpReads[DownstreamOutcome[Unit]] = implicitly
 
-  val data = "someData"
+  val data                  = "someData"
   val expectedJson: JsValue = Json.obj("data" -> data)
 
-  val downstreamModel: SomeModel = SomeModel(data)
+  val downstreamModel: SomeModel                     = SomeModel(data)
   val downstreamResponse: ResponseWrapper[SomeModel] = ResponseWrapper(correlationId, downstreamModel)
 
   "The generic HTTP parser" when {
@@ -53,8 +53,8 @@ class StandardDesHttpParserSpec extends UnitSpec with HttpParserSpec {
 
       "return an outbound error if a model object cannot be read from the response json" in {
         val badFieldTypeJson: JsValue = Json.obj("incomeSourceId" -> 1234, "incomeSourceName" -> 1234)
-        val httpResponse = HttpResponse(OK, badFieldTypeJson.toString(), Map("CorrelationId" -> Seq(correlationId)))
-        val expected = ResponseWrapper(correlationId, OutboundError(DownstreamError))
+        val httpResponse              = HttpResponse(OK, badFieldTypeJson.toString(), Map("CorrelationId" -> Seq(correlationId)))
+        val expected                  = ResponseWrapper(correlationId, OutboundError(DownstreamError))
 
         httpReads.read(method, url, httpResponse) shouldBe Left(expected)
       }

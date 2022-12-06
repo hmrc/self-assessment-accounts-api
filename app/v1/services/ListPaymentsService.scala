@@ -16,30 +16,30 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import cats.data.EitherT
-import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import v1.connectors.ListPaymentsConnector
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
+import cats.data.EitherT
+import cats.implicits._
+import utils.Logging
+import v1.connectors.ListPaymentsConnector
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector) extends DownstreamResponseMappingSupport with Logging {
+class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector)
+    extends BaseService
+    with DownstreamResponseMappingSupport
+    with Logging {
 
   def list(request: ListPaymentsParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(listPaymentsConnector.listPayments(request)).leftMap(mapDownstreamErrors(desErrorMap))

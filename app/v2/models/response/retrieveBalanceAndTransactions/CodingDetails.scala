@@ -26,10 +26,10 @@ object CodingDetails {
 
   implicit val reads: Reads[CodingDetails] =
     (
-    (JsPath \ "taxYearReturn").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
-      (JsPath \ "totalLiabilityAmount").readNullable[BigDecimal] and
-      (JsPath \ "taxYearCoding").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
-      (JsPath \ "coded").readNullable[Coded]
+      (JsPath \ "taxYearReturn").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
+        (JsPath \ "totalLiabilityAmount").readNullable[BigDecimal] and
+        (JsPath \ "taxYearCoding").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
+        (JsPath \ "coded").readNullable[Coded]
     )(CodingDetails.apply _)
 
   implicit val writes: OWrites[CodingDetails] = Json.writes[CodingDetails]

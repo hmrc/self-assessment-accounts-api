@@ -16,10 +16,8 @@
 
 package v2.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.ListPaymentsAndAllocationDetailsRequestParser
@@ -27,7 +25,7 @@ import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocat
 import v2.services.ListPaymentsAndAllocationDetailsService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class ListPaymentsAndAllocationDetailsController @Inject() (val authService: EnrolmentsAuthService,
@@ -35,7 +33,7 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                                                             requestParser: ListPaymentsAndAllocationDetailsRequestParser,
                                                             service: ListPaymentsAndAllocationDetailsService,
                                                             cc: ControllerComponents,
-                                                            val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -49,10 +47,7 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                    paymentLot: Option[String],
                    paymentLotItem: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawData = ListPaymentsAndAllocationDetailsRawData(
         nino = nino,
@@ -62,21 +57,13 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
         paymentLotItem = paymentLotItem
       )
 
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.listPaymentsAndAllocationDetails(parsedRequest))
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with correlationId: ${serviceResponse.correlationId}"
-          )
+      val requestHandler =
+        RequestHandler
+          .withParser(requestParser)
+          .withService(service.listPaymentsAndAllocationDetails)
+          .withPlainJsonResult()
 
-          Ok(Json.toJson(serviceResponse.responseData))
-            .withApiHeaders(serviceResponse.correlationId)
-        }
-
-      result.leftMap(errorResult).merge
+      requestHandler.handleRequest(rawData)
     }
 
 }

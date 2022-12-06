@@ -31,7 +31,7 @@ object PaymentLotValidation {
   def validateMissing(paymentLot: Option[String], paymentLotItem: Option[String]): List[MtdError] = {
     (paymentLot, paymentLotItem) match {
       case (None, Some(_)) => List(MissingPaymentLotError)
-      case _ => Nil
+      case _               => Nil
     }
   }
 
