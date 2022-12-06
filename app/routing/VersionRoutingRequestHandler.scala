@@ -17,7 +17,7 @@
 package routing
 
 import api.models.errors.{InvalidAcceptHeaderError, NotFoundError, UnsupportedVersionError}
-import config.{AppConfig, FeatureSwitch}
+import config.{AppConfig, FeatureSwitches}
 import play.api.http.{DefaultHttpRequestHandler, HttpConfiguration, HttpErrorHandler, HttpFilters}
 import play.api.libs.json.Json
 import play.api.mvc.{DefaultActionBuilder, Handler, RequestHeader, Results}
@@ -42,7 +42,7 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
       filters = filters.filters
     ) {
 
-  private val featureSwitch = FeatureSwitch(config.featureSwitch)
+  private val featureSwitches = FeatureSwitches(config.featureSwitches)
 
   private val unsupportedVersionAction = action(Results.NotFound(Json.toJson(UnsupportedVersionError)))
 
@@ -82,10 +82,10 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
       }
     }
     val found = ignorePreviousEnabled match {
-      case false if (featureSwitch.isVersionEnabled(version)) => getRouting()
-      case true if validPath(request.path)                    => getRouting()
-      case true                                               => Some(resourceNotFoundAction)
-      case _                                                  => Some(unsupportedVersionAction)
+      case false if featureSwitches.isVersionEnabled(version.toString) => getRouting()
+      case true if validPath(request.path)                             => getRouting()
+      case true                                                        => Some(resourceNotFoundAction)
+      case _                                                           => Some(unsupportedVersionAction)
     }
 
     found

@@ -75,7 +75,7 @@ class ListChargesConnectorSpec extends ConnectorSpec {
           .parameterGet(
             s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
             queryParams,
-            dummyDesHeaderCarrierConfig,
+            dummyHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
           )

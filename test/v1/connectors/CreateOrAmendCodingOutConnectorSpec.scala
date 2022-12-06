@@ -56,10 +56,10 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockAppConfig.ifsBaseUrl returns baseUrl
-    MockAppConfig.ifsToken returns "ifs-token"
-    MockAppConfig.ifsEnvironment returns "ifs-environment"
-    MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockAppConfig.ifs1BaseUrl returns baseUrl
+    MockAppConfig.ifs1Token returns "ifs1-token"
+    MockAppConfig.ifs1Environment returns "ifs1-environment"
+    MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
   }
 
   "CreateOrAmendCodingOutConnector" when {
@@ -68,12 +68,12 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfs1Headers ++ Seq("Content-Type" -> "application/json")
 
         MockHttpClient
           .put(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             body = createOrAmendCodingOutRequestBody,
             requiredHeaders = requiredIfsHeadersPut,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")

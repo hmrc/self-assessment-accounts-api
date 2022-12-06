@@ -101,7 +101,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
           .parameterGet(
             url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
             queryParams,
-            dummyIfsHeaderCarrierConfig,
+            dummyHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
           )
@@ -149,7 +149,7 @@ class RetrieveTransactionDetailsConnectorSpec extends ConnectorSpec {
           .parameterGet(
             s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
             queryParams,
-            dummyDesHeaderCarrierConfig,
+            dummyHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
           )

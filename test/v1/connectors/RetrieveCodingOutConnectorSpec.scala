@@ -75,10 +75,10 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
     val connector: RetrieveCodingOutConnector = new RetrieveCodingOutConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    MockAppConfig.ifsBaseUrl returns baseUrl
-    MockAppConfig.ifsToken returns "ifs-token"
-    MockAppConfig.ifsEnvironment returns "ifs-environment"
-    MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockAppConfig.ifs1BaseUrl returns baseUrl
+    MockAppConfig.ifs1Token returns "ifs1-token"
+    MockAppConfig.ifs1Environment returns "ifs1-environment"
+    MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
   }
 
   "RetrieveCodingOutConnector" when {
@@ -91,8 +91,8 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
           .parameterGet(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
             parameters = Seq("view" -> MtdSource.parser(source).toDownstreamSource),
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
+            config = dummyHeaderCarrierConfig,
+            requiredHeaders = requiredIfs1Headers,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))
@@ -107,8 +107,8 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .get(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeaders,
+            config = dummyHeaderCarrierConfig,
+            requiredHeaders = requiredIfs1Headers,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))

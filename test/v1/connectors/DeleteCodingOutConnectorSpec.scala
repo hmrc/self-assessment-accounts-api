@@ -43,10 +43,10 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
       appConfig = mockAppConfig
     )
 
-    MockAppConfig.ifsBaseUrl returns baseUrl
-    MockAppConfig.ifsToken returns "ifs-token"
-    MockAppConfig.ifsEnvironment returns "ifs-environment"
-    MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
+    MockAppConfig.ifs1BaseUrl returns baseUrl
+    MockAppConfig.ifs1Token returns "ifs1-token"
+    MockAppConfig.ifs1Environment returns "ifs1-environment"
+    MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
   }
 
   "DeleteCodingOutConnector" when {
@@ -55,12 +55,12 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         implicit val hc: HeaderCarrier                      = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersDelete: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+        val requiredIfsHeadersDelete: Seq[(String, String)] = requiredIfs1Headers ++ Seq("Content-Type" -> "application/json")
 
         MockHttpClient
           .delete(
             url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
+            config = dummyHeaderCarrierConfig,
             requiredHeaders = requiredIfsHeadersDelete,
             excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
           )

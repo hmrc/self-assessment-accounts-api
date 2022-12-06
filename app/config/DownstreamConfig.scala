@@ -16,22 +16,9 @@
 
 package config
 
-import play.api.Configuration
-import routing.Version
-
-case class FeatureSwitch(value: Option[Configuration]) {
-
-  def isCodingOutEnabled: Boolean = {
-    value match {
-      case Some(config) => config.getOptional[Boolean]("coding-out.enabled").getOrElse(false)
-      case None         => false
-    }
-  }
-
-  def isVersionEnabled(version: Version): Boolean =
-    (for {
-      config  <- value
-      enabled <- config.getOptional[Boolean](s"version-${version.configName}.enabled")
-    } yield enabled).getOrElse(false)
-
-}
+case class DownstreamConfig(
+    baseUrl: String,
+    env: String,
+    token: String,
+    environmentHeaders: Option[Seq[String]]
+)
