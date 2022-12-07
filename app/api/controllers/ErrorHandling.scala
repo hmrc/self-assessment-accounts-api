@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package config
+package api.controllers
 
-import play.api.Configuration
-import routing.Version
+import api.models.errors.ErrorWrapper
+import play.api.libs.json.Json
+import play.api.mvc.Result
+import play.api.mvc.Results.Status
 
-case class FeatureSwitch(value: Option[Configuration]) {
+case class ErrorHandling(errorHandler: PartialFunction[ErrorWrapper, Result])
 
-  def isCodingOutEnabled: Boolean = {
-    value match {
-      case Some(config) => config.getOptional[Boolean]("coding-out.enabled").getOrElse(false)
-      case None         => false
-    }
+object ErrorHandling {
+
+  val Default: ErrorHandling = ErrorHandling { case errorWrapper: ErrorWrapper =>
+    Status(errorWrapper.error.httpStatus)(Json.toJson(errorWrapper))
   }
-
-  def isVersionEnabled(version: Version): Boolean =
-    (for {
-      config  <- value
-      enabled <- config.getOptional[Boolean](s"version-${version.configName}.enabled")
-    } yield enabled).getOrElse(false)
 
 }

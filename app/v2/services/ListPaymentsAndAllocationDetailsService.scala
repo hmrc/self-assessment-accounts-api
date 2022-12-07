@@ -16,11 +16,11 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
 import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
 import utils.Logging
 import v2.connectors.ListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
@@ -32,14 +32,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPaymentsAndAllocationDetailsConnector)
-    extends DownstreamResponseMappingSupport
+    extends BaseService
+    with DownstreamResponseMappingSupport
     with Logging {
 
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsAndAllocationDetailsResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsAndAllocationDetailsResponse]]] = {
 
     val result = EitherT(connector.listPaymentsAndAllocationDetails(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
 
@@ -48,21 +47,21 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
 
   val downstreamErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDVALUE" -> NinoFormatError,
-      "INVALID_IDTYPE" -> InternalError,
-      "INVALID_REGIME_TYPE" -> InternalError,
-      "INVALID_PAYMENT_LOT" -> PaymentLotFormatError,
+      "INVALID_CORRELATIONID"    -> InternalError,
+      "INVALID_IDVALUE"          -> NinoFormatError,
+      "INVALID_IDTYPE"           -> InternalError,
+      "INVALID_REGIME_TYPE"      -> InternalError,
+      "INVALID_PAYMENT_LOT"      -> PaymentLotFormatError,
       "INVALID_PAYMENT_LOT_ITEM" -> PaymentLotItemFormatError,
-      "INVALID_CLEARING_DOC" -> InternalError,
-      "INVALID_DATE_FROM" -> FromDateFormatError,
-      "INVALID_DATE_TO" -> ToDateFormatError,
-      "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
-      "REQUEST_NOT_PROCESSED" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "PARTIALLY_MIGRATED" -> InternalError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "INVALID_CLEARING_DOC"     -> InternalError,
+      "INVALID_DATE_FROM"        -> FromDateFormatError,
+      "INVALID_DATE_TO"          -> ToDateFormatError,
+      "INVALID_DATE_RANGE"       -> RuleInvalidDateRangeError,
+      "REQUEST_NOT_PROCESSED"    -> InternalError,
+      "NO_DATA_FOUND"            -> NotFoundError,
+      "PARTIALLY_MIGRATED"       -> InternalError,
+      "SERVER_ERROR"             -> InternalError,
+      "SERVICE_UNAVAILABLE"      -> InternalError
     )
 
 }

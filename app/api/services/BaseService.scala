@@ -14,15 +14,8 @@
  * limitations under the License.
  */
 
-package api.connectors
+package api.services
 
-trait DownstreamUri[Resp] {
-  val value: String
-}
+import api.controllers.RequestContextImplicits
 
-object DownstreamUri {
-  case class DesUri[Resp](value: String)                extends DownstreamUri[Resp]
-  case class Ifs1Uri[Resp](value: String)               extends DownstreamUri[Resp]
-  case class Ifs2Uri[Resp](value: String)               extends DownstreamUri[Resp]
-  case class TaxYearSpecificIfsUri[Resp](value: String) extends DownstreamUri[Resp]
-}
+trait BaseService extends RequestContextImplicits

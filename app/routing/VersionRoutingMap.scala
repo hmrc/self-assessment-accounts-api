@@ -17,7 +17,7 @@
 package routing
 
 import com.google.inject.ImplementedBy
-import config.{AppConfig, FeatureSwitch}
+import config.{AppConfig, FeatureSwitches}
 
 import javax.inject.Inject
 import play.api.routing.Router
@@ -40,8 +40,8 @@ case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
     extends VersionRoutingMap
     with Logging {
 
-  private lazy val featureSwitch: FeatureSwitch = FeatureSwitch(appConfig.featureSwitch)
-  private lazy val isCodingOutEnabled           = featureSwitch.isCodingOutEnabled
+  private lazy val featureSwitch: FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
+  private lazy val isCodingOutEnabled             = featureSwitch.isCodingOutEnabled
 
   if (isCodingOutEnabled) logger.info("Coding Out feature switch is enabled") else logger.info("Coding Out feature switch is disabled")
 

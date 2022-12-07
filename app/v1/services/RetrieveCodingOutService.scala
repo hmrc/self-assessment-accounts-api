@@ -16,31 +16,29 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import cats.data.EitherT
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.{CurrentDate, Logging}
-import v1.connectors.RetrieveCodingOutConnector
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
+import cats.data.EitherT
+import utils.{CurrentDate, Logging}
+import v1.connectors.RetrieveCodingOutConnector
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit currentDate: CurrentDate)
-    extends DownstreamResponseMappingSupport
+    extends BaseService
+    with DownstreamResponseMappingSupport
     with Logging {
 
   def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
 
     val result = for {
       desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(desErrorMap))

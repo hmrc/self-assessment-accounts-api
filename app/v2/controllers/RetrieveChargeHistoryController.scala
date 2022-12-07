@@ -16,13 +16,9 @@
 
 package v2.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveChargeHistoryRequestParser
@@ -31,7 +27,7 @@ import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.Re
 import v2.services.RetrieveChargeHistoryService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuthService,
@@ -40,7 +36,7 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
                                                  service: RetrieveChargeHistoryService,
                                                  hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
-                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                                 idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with BaseController
     with Logging {
@@ -50,29 +46,17 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
 
   def retrieveChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " + s"with correlationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawRequest = RetrieveChargeHistoryRawData(nino, transactionId)
-      val result = for {
-        parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-        serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
-        vendorResponse <- EitherT.fromEither[Future](
-          hateoasFactory
-            .wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId))
-            .asRight[ErrorWrapper]
-        )
-      } yield {
-        logger.info(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Success response received with correlationId: ${serviceResponse.correlationId}"
-        )
 
-        Ok(Json.toJson(vendorResponse))
-          .withApiHeaders(serviceResponse.correlationId)
-      }
+      val requestHandler =
+        RequestHandler
+          .withParser(requestParser)
+          .withService(service.retrieveChargeHistory)
+          .withHateoasResult(hateoasFactory)(RetrieveChargeHistoryHateoasData(nino, transactionId))
 
-      result.leftMap(errorResult).merge
+      requestHandler.handleRequest(rawRequest)
     }
 
 }

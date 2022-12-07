@@ -126,7 +126,12 @@ class CreateOrAmendCodingOutControllerSpec
           .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
           .returns(HateoasWrapper((), testHateoasLinks))
 
-        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson), maybeAuditRequestBody = Some(requestJson), maybeAuditResponseBody = Some(mtdResponseJson))
+        runOkTestWithAudit(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponseJson),
+          maybeAuditRequestBody = Some(requestJson),
+          maybeAuditResponseBody = Some(mtdResponseJson)
+        )
       }
     }
     "return the error as per spec" when {
