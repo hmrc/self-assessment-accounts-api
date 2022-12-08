@@ -18,7 +18,6 @@ package v1Andv2.endpoints
 
 import api.models.errors._
 import api.stubs.{AuthStub, MtdIdLookupStub}
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
@@ -36,18 +35,19 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String         = "AA123456A"
-    lazy val taxYear: String = "2021-22"
+    val nino: String = "AA123456A"
 
-    def desParamSource: String = "HMRC-HELD"
+    def taxYear: String
+
+    def downstreamParamSource: String = "HMRC-HELD"
 
     def mtdParamSource: String = "hmrcHeld"
 
-    def desBodySource: String = "HMRC HELD"
+    def downstreamBodySource: String = "HMRC HELD"
 
     def mtdBodySource: String = "hmrcHeld"
 
-    val desResponse: JsValue = Json.parse(
+    val downstreamResponse: JsValue = Json.parse(
       s"""
          |{
          |   "taxCodeComponents": {
@@ -56,7 +56,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "amount": 0,
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "source": "$desBodySource",
+         |               "source": "$downstreamBodySource",
          |               "componentIdentifier": "12345678910"
          |           }
          |       ],
@@ -65,7 +65,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "amount": 0,
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "source": "$desBodySource",
+         |               "source": "$downstreamBodySource",
          |               "componentIdentifier": "12345678910"
          |           }
          |       ],
@@ -74,7 +74,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "amount": 0,
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "source": "$desBodySource",
+         |               "source": "$downstreamBodySource",
          |               "componentIdentifier": "12345678910"
          |           }
          |       ],
@@ -82,7 +82,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |           "amount": 0,
          |           "relatedTaxYear": "$taxYear",
          |           "submittedOn": "2021-08-24T14:15:22Z",
-         |           "source": "$desBodySource",
+         |           "source": "$downstreamBodySource",
          |           "componentIdentifier": "12345678910"
          |       }
          |   },
@@ -118,7 +118,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
        """.stripMargin
     )
 
-    val desResponseNoId: JsValue = Json.parse(
+    val downstreamResponseNoId: JsValue = Json.parse(
       s"""
          |{
          |   "taxCodeComponents": {
@@ -127,7 +127,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "amount": 0,
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "source": "$desBodySource"
+         |               "source": "$downstreamBodySource"
          |           }
          |       ],
          |       "payeUnderpayment": [
@@ -135,7 +135,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "amount": 0,
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "source": "$desBodySource"
+         |               "source": "$downstreamBodySource"
          |           }
          |       ],
          |       "debt": [
@@ -143,14 +143,14 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |               "amount": 0,
          |               "relatedTaxYear": "$taxYear",
          |               "submittedOn": "2021-08-24T14:15:22Z",
-         |               "source": "$desBodySource"
+         |               "source": "$downstreamBodySource"
          |           }
          |       ],
          |       "inYearAdjustment": {
          |           "amount": 0,
          |           "relatedTaxYear": "$taxYear",
          |           "submittedOn": "2021-08-24T14:15:22Z",
-         |           "source": "$desBodySource"
+         |           "source": "$downstreamBodySource"
          |       }
          |   },
          |   "unmatchedCustomerSubmissions": {
@@ -186,14 +186,16 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/$nino/$taxYear/collection/tax-code"
 
-    def desUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
+    def downstreamUri: String // = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit = ()
 
     def request(version: String, source: Option[String]): WSRequest = {
       def queryParams: Seq[(String, String)] = Seq("source" -> source).collect { case (k, Some(v)) =>
         (k, v)
       }
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
 
       setupStubs()
       buildRequest(uri)
@@ -206,16 +208,30 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
   }
 
+  private trait NonTysTest extends Test {
+
+    def taxYear: String = "2020-21"
+
+    def downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
+
+  }
+
+  private trait TysIfsTest extends Test {
+
+    def taxYear: String = "2023-24"
+
+    def downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/23-24/$nino"
+
+  }
+
   "Calling the 'retrieve coding out' endpoint" should {
     "return a 200 status code for default" when {
-      def makeAValidRequest(version: String): Unit = {
-        s"any valid request is made to retrieve latest view when no query parameter is specified for version $version" in new Test {
 
-          override def setupStubs(): StubMapping = {
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
-          }
+      def makeAValidRequest(version: String): Unit = {
+        s"any valid request is made to retrieve latest view when no query parameter is specified for version $version" in new NonTysTest with Test {
+
+          override def setupStubs(): Unit =
+            DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
 
           val response: WSResponse = await(request(version, None).get())
           response.status shouldBe OK
@@ -227,19 +243,36 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       versions.foreach(arg => makeAValidRequest(arg))
     }
 
+    "return a 200 status code for default TYS request" when {
+
+      def makeAValidRequest(version: String): Unit = {
+        s"any valid TYS request is made to retrieve latest view when no query parameter is specified for version $version" in new TysIfsTest
+          with Test {
+
+          override def setupStubs(): Unit =
+            DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
+
+          val response: WSResponse = await(request(version, None).get())
+          response.status shouldBe OK
+          response.json shouldBe mtdResponse
+          response.header("X-CorrelationId").nonEmpty shouldBe true
+          response.header("Content-Type") shouldBe Some("application/json")
+        }
+      }
+
+      versions.foreach(arg => makeAValidRequest(arg))
+    }
+
     "return a 200 status code for latest" when {
       def latest(version: String): Unit = {
-        s"any valid request is made to retrieve the latest view for version $version" in new Test {
+        s"any valid request is made to retrieve the latest view for version $version" in new NonTysTest with Test {
 
-          override def desParamSource: String = "LATEST"
+          override def downstreamParamSource: String = "LATEST"
 
           override def mtdParamSource: String = "latest"
 
-          override def setupStubs(): StubMapping = {
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
-          }
+          override def setupStubs(): Unit =
+            DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> downstreamParamSource), OK, downstreamResponse)
 
           val response: WSResponse = await(request(version, Some(mtdParamSource)).get())
           response.status shouldBe OK
@@ -254,13 +287,10 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code for hmrcHeld data" should {
       def hmrcHeld(version: String): Unit = {
-        s"any valid request is made to retrieve hmrcHeld for version $version" in new Test {
+        s"any valid request is made to retrieve hmrcHeld for version $version" in new NonTysTest with Test {
 
-          override def setupStubs(): StubMapping = {
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
-          }
+          override def setupStubs(): Unit =
+            DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> downstreamParamSource), OK, downstreamResponse)
 
           val response: WSResponse = await(request(version, Some(mtdParamSource)).get())
           response.status shouldBe OK
@@ -274,21 +304,18 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code for user submitted data" should {
       def userSubmitted(version: String): Unit = {
-        s"any valid request is made to retrieve user submitted data for version $version" in new Test {
+        s"any valid request is made to retrieve user submitted data for version $version" in new NonTysTest with Test {
 
-          override def desParamSource: String = "CUSTOMER"
+          override def downstreamParamSource: String = "CUSTOMER"
 
           override def mtdParamSource: String = "user"
 
-          override def desBodySource: String = "CUSTOMER"
+          override def downstreamBodySource: String = "CUSTOMER"
 
           override def mtdBodySource: String = "user"
 
-          override def setupStubs(): StubMapping = {
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onSuccess(DownstreamStub.GET, desUri, Map("view" -> desParamSource), OK, desResponse)
-          }
+          override def setupStubs(): Unit =
+            DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, Map("view" -> downstreamParamSource), OK, downstreamResponse)
 
           val response: WSResponse = await(request(version, Some(mtdParamSource)).get())
           response.status shouldBe OK
@@ -300,17 +327,15 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
       versions.foreach(arg => userSubmitted(arg))
     }
 
-    "return a 200 status code for an taxYear that has ended" should {
+    "return a 200 status code for a taxYear that has ended" should {
       def endedTaxYear(version: String): Unit = {
-        s"any valid request is made that returns a body with the id present while the taxYear has ended for version $version" in new Test {
+        s"any valid request is made that returns a body with the id present while the taxYear has ended for version $version" in new NonTysTest
+          with Test {
 
           override lazy val taxYear: String = "2020-21"
 
-          override def setupStubs(): StubMapping = {
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
-          }
+          override def setupStubs(): Unit =
+            DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
 
           val response: WSResponse = await(request(version, None).get())
           response.status shouldBe OK
@@ -324,7 +349,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code for a taxYear that has not ended" should {
       def notEndedTaxYear(version: String): Unit = {
-        s"any valid request is made that returns a body with the id present while the taxYear hasn't ended for version $version" in new Test {
+        s"any valid request is made that returns a body with the id present while the taxYear hasn't ended for version $version" in new NonTysTest
+          with Test {
 
           def getCurrentTaxYear: String = {
             val currentDate = LocalDate.now(ZoneOffset.UTC)
@@ -341,11 +367,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           override lazy val taxYear: String = getCurrentTaxYear
 
-          override def setupStubs(): StubMapping = {
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponse)
-          }
+          override def setupStubs(): Unit =
+            DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponse)
 
           val response: WSResponse = await(request(version, None).get())
           response.status shouldBe OK
@@ -361,7 +384,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code for a taxYear that has not ended and no id" should {
       def notEndedTaxYearWithNoId(version: String): Unit = {
-        s"any valid request is made that returns a body without the id present while the taxYear hasn't ended for version $version" in new Test {
+        s"any valid request is made that returns a body without the id present while the taxYear hasn't ended for version $version" in new NonTysTest
+          with Test {
 
           def getCurrentTaxYear: String = {
             val currentDate = LocalDate.now(ZoneOffset.UTC)
@@ -378,11 +402,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           }
           override lazy val taxYear: String = getCurrentTaxYear
 
-          override def setupStubs(): StubMapping = {
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponseNoId)
-          }
+          override def setupStubs(): Unit =
+            DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponseNoId)
 
           val response: WSResponse = await(request(version, None).get())
           response.status shouldBe OK
@@ -404,12 +425,12 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
                                 expectedStatus: Int,
                                 expectedBody: MtdError,
                                 version: String): Unit = {
-          s"validation fails with ${expectedBody.code} error " in new Test {
+          s"validation fails with ${expectedBody.code} error " in new NonTysTest with Test {
 
             override val nino: String         = requestNino
             override lazy val taxYear: String = requestTaxYear
 
-            override def setupStubs(): StubMapping = {
+            override def setupStubs(): Unit = {
               AuthStub.authorised()
               MtdIdLookupStub.ninoFound(nino)
             }
@@ -438,15 +459,12 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
       }
 
-      "des service error" when {
-        def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError, version: String): Unit = {
-          s"des returns an $desCode error and status $desStatus for version $version" in new Test {
+      "downstream service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError, version: String): Unit = {
+          s"downstream returns an $downstreamCode error and status $downstreamStatus for version $version" in new NonTysTest with Test {
 
-            override def setupStubs(): StubMapping = {
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onError(DownstreamStub.GET, desUri, desStatus, errorBody(desCode))
-            }
+            override def setupStubs(): Unit =
+              DownstreamStub.onError(DownstreamStub.GET, downstreamUri, downstreamStatus, errorBody(downstreamCode))
 
             val response: WSResponse = await(request(version, None).get())
             response.status shouldBe expectedStatus
@@ -459,11 +477,11 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           s"""
              |{
              |  "code": "$code",
-             |  "reason": "des message"
+             |  "reason": "downstream message"
              |}
             """.stripMargin
 
-        val input: Seq[(Int, String, Int, MtdError)] = Seq(
+        val errors: Seq[(Int, String, Int, MtdError)] = Seq(
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_VIEW", BAD_REQUEST, SourceFormatError),
@@ -473,9 +491,14 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
           (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
         )
+
+        val extraTysErrors: Seq[(Int, String, Int, MtdError)] = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, DownstreamError),
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError)
+        )
         versions.foreach(version => {
           s"for version $version " when {
-            val parameters = input.map(c => (c._1, c._2, c._3, c._4, version))
+            val parameters = (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4, version))
             parameters.foreach(args => (serviceErrorTest _).tupled(args))
           }
         })
@@ -483,15 +506,12 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
       "service error" when {
         def requestForBodyWithoutIdForEndedTaxYear(version: String): Unit = {
-          s"any valid request is made that returns a body without the id present while the taxYear has ended " in new Test {
+          s"any valid request is made that returns a body without the id present while the taxYear has ended" in new NonTysTest with Test {
 
             override lazy val taxYear: String = "2020-21"
 
-            override def setupStubs(): StubMapping = {
-              AuthStub.authorised()
-              MtdIdLookupStub.ninoFound(nino)
-              DownstreamStub.onSuccess(DownstreamStub.GET, desUri, OK, desResponseNoId)
-            }
+            override def setupStubs(): Unit =
+              DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponseNoId)
 
             val response: WSResponse = await(request(version, None).get())
             response.status shouldBe INTERNAL_SERVER_ERROR
