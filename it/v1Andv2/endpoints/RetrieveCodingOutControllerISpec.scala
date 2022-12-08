@@ -494,7 +494,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
         val extraTysErrors: Seq[(Int, String, Int, MtdError)] = Seq(
           (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, DownstreamError),
-          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, NotFoundError)
+          (NOT_FOUND, "NOT_FOUND", NOT_FOUND, CodingOutNotFoundError)
         )
         versions.foreach(version => {
           s"for version $version " when {

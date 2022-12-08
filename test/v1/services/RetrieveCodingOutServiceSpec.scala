@@ -183,7 +183,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
 
         val extraTysErrors: Seq[(String, MtdError)] = Seq(
           "INVALID_CORRELATION_ID" -> DownstreamError,
-          "NOT_FOUND"              -> NotFoundError
+          "NOT_FOUND"              -> CodingOutNotFoundError
         )
 
         (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
