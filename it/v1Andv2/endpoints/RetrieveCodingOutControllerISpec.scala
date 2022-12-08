@@ -186,7 +186,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
     def uri: String = s"/$nino/$taxYear/collection/tax-code"
 
-    def downstreamUri: String // = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
+    def downstreamUri: String
 
     def setupStubs(): Unit = ()
 
