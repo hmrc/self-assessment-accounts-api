@@ -21,7 +21,7 @@ import config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import api.connectors.DownstreamUri.Ifs1Uri
+import api.connectors.DownstreamUri.{Ifs1Uri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDesHttpParser.reads
 import api.models.domain.MtdSource
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
@@ -41,19 +41,17 @@ class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig:
     val taxYear = request.taxYear
     val source  = request.source
 
-    val baseUrl = s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
-
-    if (source.isEmpty) {
-      get(Ifs1Uri[RetrieveCodingOutResponse](baseUrl))
-    } else {
-      val queryParams = Seq("view" -> source).collect { case (key, Some(value)) =>
-        key -> MtdSource.parser(value).toDownstreamSource
-      }
-      get(
-        Ifs1Uri[RetrieveCodingOutResponse](baseUrl),
-        queryParams
-      )
+    val queryParams = Seq("view" -> source).collect { case (key, Some(value)) =>
+      key -> MtdSource.parser(value).toDownstreamSource
     }
+
+    val uri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/$nino")
+    } else {
+      Ifs1Uri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}")
+    }
+
+    get(uri = uri, queryParams = queryParams)
   }
 
 }
