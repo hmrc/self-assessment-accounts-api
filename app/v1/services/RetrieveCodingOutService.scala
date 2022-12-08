@@ -41,15 +41,15 @@ class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(desErrorMap))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateCodingOutResponse(desResponseWrapper, request.taxYear))
+      downstreamResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+      mtdResponseWrapper        <- EitherT.fromEither[Future](validateCodingOutResponse(downstreamResponseWrapper, request.taxYear.asMtd))
     } yield mtdResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private def downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_VIEW"              -> SourceFormatError,
@@ -59,5 +59,13 @@ class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
       "SERVER_ERROR"              -> DownstreamError,
       "SERVICE_UNAVAILABLE"       -> DownstreamError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> DownstreamError,
+      "NOT_FOUND"              -> NotFoundError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

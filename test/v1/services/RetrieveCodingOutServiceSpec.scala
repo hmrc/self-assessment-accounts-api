@@ -23,7 +23,7 @@ import api.services.ServiceSpec
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import org.scalamock.handlers.CallHandler
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import uk.gov.hmrc.http.HeaderCarrier
 import utils.CurrentDate
 import v1.mocks.connectors.MockRetrieveCodingOutConnector
@@ -79,7 +79,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
   val requestData: RetrieveCodingOutParsedRequest =
     RetrieveCodingOutParsedRequest(
       nino = nino,
-      taxYear = "2021-22",
+      taxYear = TaxYear.fromMtd("2021-22"),
       source = Some("hmrcHeld")
     )
 
@@ -160,17 +160,17 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
     "unsuccessful" must {
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockRetrieveCodingOutConnector
               .retrieveCodingOut(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input: Seq[(String, MtdError)] = Seq(
+        val errors: Seq[(String, MtdError)] = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "INVALID_VIEW"              -> SourceFormatError,
@@ -181,7 +181,12 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
           "SERVICE_UNAVAILABLE"       -> DownstreamError
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors: Seq[(String, MtdError)] = Seq(
+          "INVALID_CORRELATION_ID" -> DownstreamError,
+          "NOT_FOUND"              -> NotFoundError
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }
