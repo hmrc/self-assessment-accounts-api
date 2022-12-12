@@ -37,21 +37,20 @@ class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig:
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
-    val source  = request.source
+    import request._
 
     val queryParams = Seq("view" -> source).collect { case (key, Some(value)) =>
       key -> MtdSource.parser(value).toDownstreamSource
     }
 
-    val uri = if (taxYear.useTaxYearSpecificApi) {
-      TaxYearSpecificIfsUri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/$nino")
+    val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[RetrieveCodingOutResponse](
+        s"income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/${nino.value}")
     } else {
-      Ifs1Uri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}")
+      Ifs1Uri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/${nino.value}/${taxYear.asMtd}")
     }
 
-    get(uri = uri, queryParams = queryParams)
+    get(uri = downstreamUri, queryParams = queryParams)
   }
 
 }
