@@ -17,7 +17,7 @@
 package v1.controllers.requestParsers
 
 import support.UnitSpec
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import v1.mocks.validators.MockRetrieveCodingOutValidator
 import api.models.errors._
 import v1.models.request.retrieveCodingOut._
@@ -44,7 +44,7 @@ class RetrieveCodingOutRequestParserSpec extends UnitSpec {
           .returns(Nil)
 
         parser.parseRequest(retrieveCodingOutRawData) shouldBe
-          Right(RetrieveCodingOutParsedRequest(Nino(nino), taxYear, source))
+          Right(RetrieveCodingOutParsedRequest(Nino(nino), TaxYear.fromMtd(taxYear), source))
       }
     }
 
