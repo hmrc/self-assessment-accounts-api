@@ -17,7 +17,7 @@
 package v1.services
 
 import api.mocks.MockCurrentDate
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec

@@ -61,7 +61,7 @@ class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
     )
 
     val extraTysErrors = Map(
-      "INVALID_CORRELATION_ID" -> DownstreamError,
+      "INVALID_CORRELATION_ID" -> InternalError,
       "NOT_FOUND"              -> CodingOutNotFoundError
     )
 
