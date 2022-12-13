@@ -16,9 +16,10 @@
 
 package api.services
 
+import api.models.auth.UserDetails
+import api.models.errors.{InternalError, UnauthorisedError}
+import api.models.outcomes.AuthOutcome
 import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
 import play.api.Logger
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core._
@@ -27,10 +28,8 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
-import api.models.auth.UserDetails
-import api.models.errors.{DownstreamError, UnauthorisedError}
-import api.models.outcomes.AuthOutcome
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
@@ -69,7 +68,7 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
             user
           case None =>
             logger.warn(s"[EnrolmentsAuthService][authorised] No AgentReferenceNumber defined on agent enrolment.")
-            Left(DownstreamError)
+            Left(InternalError)
         }
       case _ ~ _ =>
         logger.warn(s"[EnrolmentsAuthService][authorised] Invalid AffinityGroup.")
@@ -79,7 +78,7 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
       case _: AuthorisationException => Future.successful(Left(UnauthorisedError))
       case error =>
         logger.warn(s"[EnrolmentsAuthService][authorised] An unexpected error occurred: $error")
-        Future.successful(Left(DownstreamError))
+        Future.successful(Left(InternalError))
     }
   }
 

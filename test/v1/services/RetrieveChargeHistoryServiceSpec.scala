@@ -16,14 +16,12 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.services.ServiceSpec
 import api.models.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.RetrieveChargeHistoryFixture
-import v1.mocks.connectors.MockRetrieveChargeHistoryConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import v1.fixtures.RetrieveChargeHistoryFixture
+import v1.mocks.connectors.MockRetrieveChargeHistoryConnector
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
@@ -40,9 +38,6 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
     )
 
   trait Test extends MockRetrieveChargeHistoryConnector {
-
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveChargeHistoryController", "retrieveChargeHistory")
 
     val service = new RetrieveChargeHistoryService(
       connector = mockRetrieveChargeHistoryConnector
@@ -78,18 +73,18 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
         }
 
       val input: Seq[(String, MtdError)] = Seq(
-        ("INVALID_CORRELATIONID", DownstreamError),
-        ("INVALID_IDTYPE", DownstreamError),
+        ("INVALID_CORRELATIONID", InternalError),
+        ("INVALID_IDTYPE", InternalError),
         ("INVALID_IDVALUE", NinoFormatError),
-        ("INVALID_REGIME_TYPE", DownstreamError),
+        ("INVALID_REGIME_TYPE", InternalError),
         ("INVALID_DOC_NUMBER", TransactionIdFormatError),
-        ("INVALID_DATE_FROM", DownstreamError),
-        ("INVALID_DATE_TO", DownstreamError),
-        ("INVALID_DATE_RANGE", DownstreamError),
-        ("REQUEST_NOT_PROCESSED", DownstreamError),
+        ("INVALID_DATE_FROM", InternalError),
+        ("INVALID_DATE_TO", InternalError),
+        ("INVALID_DATE_RANGE", InternalError),
+        ("REQUEST_NOT_PROCESSED", InternalError),
         ("NO_DATA_FOUND", NotFoundError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

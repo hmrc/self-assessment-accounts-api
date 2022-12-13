@@ -51,20 +51,20 @@ class RetrieveAllocationsService @Inject() (connector: RetrieveAllocationsConnec
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID"    -> DownstreamError,
-      "INVALID_IDTYPE"           -> DownstreamError,
+      "INVALID_CORRELATIONID"    -> InternalError,
+      "INVALID_IDTYPE"           -> InternalError,
       "INVALID_IDVALUE"          -> NinoFormatError,
-      "INVALID_REGIME_TYPE"      -> DownstreamError,
+      "INVALID_REGIME_TYPE"      -> InternalError,
       "INVALID_PAYMENT_LOT"      -> PaymentIdFormatError,
       "INVALID_PAYMENT_LOT_ITEM" -> PaymentIdFormatError,
-      "INVALID_CLEARING_DOC"     -> DownstreamError,
-      "INVALID_DATE_FROM"        -> DownstreamError,
-      "INVALID_DATE_TO"          -> DownstreamError,
-      "REQUEST_NOT_PROCESSED"    -> DownstreamError,
-      "PARTIALLY_MIGRATED"       -> DownstreamError,
+      "INVALID_CLEARING_DOC"     -> InternalError,
+      "INVALID_DATE_FROM"        -> InternalError,
+      "INVALID_DATE_TO"          -> InternalError,
+      "REQUEST_NOT_PROCESSED"    -> InternalError,
+      "PARTIALLY_MIGRATED"       -> InternalError,
       "NO_DATA_FOUND"            -> NotFoundError,
-      "SERVER_ERROR"             -> DownstreamError,
-      "SERVICE_UNAVAILABLE"      -> DownstreamError
+      "SERVER_ERROR"             -> InternalError,
+      "SERVICE_UNAVAILABLE"      -> InternalError
     )
 
 }

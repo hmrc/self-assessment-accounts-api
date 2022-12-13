@@ -17,7 +17,7 @@
 package api.services
 
 import api.models.auth.UserDetails
-import api.models.errors.{DownstreamError, UnauthorisedError}
+import api.models.errors.{InternalError, UnauthorisedError}
 import config.ConfidenceLevelConfig
 import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
@@ -191,7 +191,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
       "return an error" in new Test {
         MockAppConfig.confidenceLevelCheckEnabled.returns(ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = false))
 
-        val expected = Left(DownstreamError)
+        val expected = Left(InternalError)
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)

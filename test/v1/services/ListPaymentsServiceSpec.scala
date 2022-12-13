@@ -16,13 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.services.ServiceSpec
 import api.models.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.mocks.connectors.MockListPaymentsConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import v1.mocks.connectors.MockListPaymentsConnector
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 
@@ -31,7 +29,6 @@ import scala.concurrent.Future
 class ListPaymentsServiceSpec extends ServiceSpec {
 
   private val nino = Nino("AA123456A")
-
   private val from = "2020-01-01"
   private val to   = "2020-01-02"
 
@@ -39,9 +36,6 @@ class ListPaymentsServiceSpec extends ServiceSpec {
   private val response = ListPaymentsResponse(Seq(Payment(Some("123-456"), Some(10.25), Some("beans"), Some("10/01/2020"))))
 
   trait Test extends MockListPaymentsConnector {
-
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new ListPaymentsService(
       listPaymentsConnector = mockListPaymentsConnector
@@ -72,21 +66,21 @@ class ListPaymentsServiceSpec extends ServiceSpec {
         }
 
       val input: Seq[(String, MtdError)] = Seq(
-        "INVALID_IDTYPE"           -> DownstreamError,
+        "INVALID_IDTYPE"           -> InternalError,
         "INVALID_IDVALUE"          -> NinoFormatError,
-        "INVALID_REGIME_TYPE"      -> DownstreamError,
-        "INVALID_PAYMENT_LOT"      -> DownstreamError,
-        "INVALID_PAYMENT_LOT_ITEM" -> DownstreamError,
-        "INVALID_CLEARING_DOC"     -> DownstreamError,
+        "INVALID_REGIME_TYPE"      -> InternalError,
+        "INVALID_PAYMENT_LOT"      -> InternalError,
+        "INVALID_PAYMENT_LOT_ITEM" -> InternalError,
+        "INVALID_CLEARING_DOC"     -> InternalError,
         "INVALID_DATE_FROM"        -> V1_FromDateFormatError,
         "INVALID_DATE_TO"          -> V1_ToDateFormatError,
-        "INVALID_DATE_RANGE"       -> DownstreamError,
-        "INVALID_CORRELATIONID"    -> DownstreamError,
-        "REQUEST_NOT_PROCESSED"    -> DownstreamError,
+        "INVALID_DATE_RANGE"       -> InternalError,
+        "INVALID_CORRELATIONID"    -> InternalError,
+        "REQUEST_NOT_PROCESSED"    -> InternalError,
         "NO_DATA_FOUND"            -> NotFoundError,
-        "PARTIALLY_MIGRATED"       -> DownstreamError,
-        "SERVER_ERROR"             -> DownstreamError,
-        "SERVICE_UNAVAILABLE"      -> DownstreamError
+        "PARTIALLY_MIGRATED"       -> InternalError,
+        "SERVER_ERROR"             -> InternalError,
+        "SERVICE_UNAVAILABLE"      -> InternalError
       )
 
       input.foreach(args => (serviceError _).tupled(args))

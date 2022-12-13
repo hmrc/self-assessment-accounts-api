@@ -51,12 +51,12 @@ class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOut
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> DownstreamError,
-      "INVALID_PAYLOAD"           -> DownstreamError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "INVALID_PAYLOAD"           -> InternalError,
       "INVALID_REQUEST_TAX_YEAR"  -> RuleTaxYearNotEndedError,
       "DUPLICATE_ID_NOT_ALLOWED"  -> RuleDuplicateIdError,
-      "SERVER_ERROR"              -> DownstreamError,
-      "SERVICE_UNAVAILABLE"       -> DownstreamError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
 }

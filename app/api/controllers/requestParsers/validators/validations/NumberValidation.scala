@@ -20,14 +20,14 @@ import api.models.errors.{MtdError, ValueFormatError}
 
 object NumberValidation {
 
-  def validateOptional(field: Option[BigDecimal], path: String): List[MtdError] = {
+  def validateOptional(field: Option[BigDecimal], path: String): Seq[MtdError] = {
     field match {
       case None        => NoValidationErrors
       case Some(value) => validate(value, path)
     }
   }
 
-  private def validate(field: BigDecimal, path: String): List[MtdError] = {
+  private def validate(field: BigDecimal, path: String): Seq[MtdError] = {
     if (field >= 0 && field < 100000000000.00 && field.scale <= 2) {
       NoValidationErrors
     } else {

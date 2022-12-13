@@ -61,7 +61,6 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
               params = Map("nino" -> nino, "taxYear" -> taxYear)))
 
       requestHandler.handleRequest(rawData)
-
     }
 
 }

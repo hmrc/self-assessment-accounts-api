@@ -20,7 +20,7 @@ import api.models.errors.MtdError
 
 object MissingParameterValidation {
 
-  def validate[T](input: Option[T], error: MtdError): List[MtdError] = input match {
+  def validate[T](input: Option[T], error: MtdError): Seq[MtdError] = input match {
     case Some(_) => NoValidationErrors
     case None    => List(error)
   }

@@ -17,7 +17,7 @@
 package definition
 
 import play.api.libs.json.{Format, Json, OFormat}
-import routing.{Version}
+import routing.Version
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import utils.enums.Enums
 
@@ -69,7 +69,7 @@ case class APIDefinition(name: String,
   require(uniqueVersions, "version numbers must be unique")
 
   private def uniqueVersions: Boolean = {
-    !versions.map(_.version).groupBy(identity).mapValues(_.size).exists(_._2 > 1)
+    !versions.map(_.version).groupBy(identity).view.mapValues(_.size).exists(_._2 > 1)
   }
 
 }

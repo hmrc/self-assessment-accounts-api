@@ -16,11 +16,10 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
 import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
-import uk.gov.hmrc.http.HeaderCarrier
+import api.services.ServiceSpec
 import v2.mocks.connectors.MockRetrieveChargeHistoryConnector
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
@@ -101,11 +100,6 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
   }
 
   trait Test extends MockRetrieveChargeHistoryConnector {
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    implicit val logContext: EndpointLogContext =
-      EndpointLogContext("RetrieveChargeHistoryController", "RetrieveChargeHistory")
 
     val service = new RetrieveChargeHistoryService(
       connector = mockRetrieveChargeHistoryConnector

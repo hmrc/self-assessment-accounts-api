@@ -251,12 +251,12 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
               val currentDate = LocalDate.now(ZoneOffset.UTC)
 
               val taxYearStartDate: LocalDate = LocalDate.parse(
-                currentDate.getYear + "-04-06",
+                s"${currentDate.getYear}-04-06",
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")
               )
 
               def fromDesIntToString(taxYear: Int): String =
-                (taxYear - 1) + "-" + taxYear.toString.drop(2)
+                s"${taxYear - 1}-${taxYear.toString.drop(2)}"
 
               if (currentDate.isBefore(taxYearStartDate)) fromDesIntToString(currentDate.getYear) else fromDesIntToString(currentDate.getYear + 1)
             }
@@ -672,12 +672,12 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
       val input = Seq(
         (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
         (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
         (UNPROCESSABLE_ENTITY, "DUPLICATE_ID_NOT_ALLOWED", BAD_REQUEST, RuleDuplicateIdError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError)
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError)
       )
       versions.foreach(version => {
         s"for version $version " when {

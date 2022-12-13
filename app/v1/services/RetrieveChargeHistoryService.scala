@@ -50,18 +50,18 @@ class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryCo
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_IDTYPE"        -> DownstreamError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "INVALID_IDTYPE"        -> InternalError,
       "INVALID_IDVALUE"       -> NinoFormatError,
-      "INVALID_REGIME_TYPE"   -> DownstreamError,
+      "INVALID_REGIME_TYPE"   -> InternalError,
       "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
-      "INVALID_DATE_FROM"     -> DownstreamError,
-      "INVALID_DATE_TO"       -> DownstreamError,
-      "INVALID_DATE_RANGE"    -> DownstreamError,
-      "REQUEST_NOT_PROCESSED" -> DownstreamError,
+      "INVALID_DATE_FROM"     -> InternalError,
+      "INVALID_DATE_TO"       -> InternalError,
+      "INVALID_DATE_RANGE"    -> InternalError,
+      "REQUEST_NOT_PROCESSED" -> InternalError,
       "NO_DATA_FOUND"         -> NotFoundError,
-      "SERVER_ERROR"          -> DownstreamError,
-      "SERVICE_UNAVAILABLE"   -> DownstreamError
+      "SERVER_ERROR"          -> InternalError,
+      "SERVICE_UNAVAILABLE"   -> InternalError
     )
 
 }

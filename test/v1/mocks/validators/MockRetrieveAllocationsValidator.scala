@@ -28,7 +28,7 @@ trait MockRetrieveAllocationsValidator extends MockFactory {
 
   object MockRetrieveAllocationsValidator {
 
-    def validate(data: RetrieveAllocationsRawRequest): CallHandler1[RetrieveAllocationsRawRequest, List[MtdError]] = {
+    def validate(data: RetrieveAllocationsRawRequest): CallHandler1[RetrieveAllocationsRawRequest, Seq[MtdError]] = {
       (mockValidator
         .validate(_: RetrieveAllocationsRawRequest))
         .expects(data)

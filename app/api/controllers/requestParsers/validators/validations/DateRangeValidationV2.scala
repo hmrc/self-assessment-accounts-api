@@ -22,7 +22,7 @@ import java.time.LocalDate
 
 object DateRangeValidationV2 {
 
-  def validate(fromDate: Option[String], toDate: Option[String]): List[MtdError] = {
+  def validate(fromDate: Option[String], toDate: Option[String]): Seq[MtdError] = {
     (fromDate, toDate) match {
       case (Some(f), Some(t)) => checkIfToDateIsBeforeFromDate(f, t)
       case (Some(_), None)    => List(RuleMissingToDateError)
@@ -31,7 +31,7 @@ object DateRangeValidationV2 {
     }
   }
 
-  private def checkIfToDateIsBeforeFromDate(fromDate: String, toDate: String): List[MtdError] = {
+  private def checkIfToDateIsBeforeFromDate(fromDate: String, toDate: String): Seq[MtdError] = {
     val fmtFrom = LocalDate.parse(fromDate, dateFormat)
     val fmtTo   = LocalDate.parse(toDate, dateFormat)
     if (fmtTo isBefore fmtFrom) List(RangeToDateBeforeFromDateError) else Nil

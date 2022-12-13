@@ -22,7 +22,7 @@ object TaxYearValidation {
 
   val taxYearFormat = "^2[0-9]{3}\\-[0-9]{2}$"
 
-  def validate(taxYear: String): List[MtdError] = {
+  def validate(taxYear: String): Seq[MtdError] = {
     if (taxYear.matches(taxYearFormat)) {
 
       val start = taxYear.substring(2, 4).toInt

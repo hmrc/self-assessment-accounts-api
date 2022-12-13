@@ -16,12 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.services.ServiceSpec
 import api.models.domain.Nino
-import v1.mocks.connectors.MockDeleteCodingOutConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import v1.mocks.connectors.MockDeleteCodingOutConnector
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
 import scala.concurrent.Future
@@ -37,7 +36,6 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
   )
 
   trait Test extends MockDeleteCodingOutConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: DeleteCodingOutService = new DeleteCodingOutService(
       connector = mockDeleteCodingOutConnector
@@ -73,10 +71,10 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
       val input = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
-        ("INVALID_CORRELATIONID", DownstreamError),
+        ("INVALID_CORRELATIONID", InternalError),
         ("NO_DATA_FOUND", CodingOutNotFoundError),
-        ("SERVER_ERROR", DownstreamError),
-        ("SERVICE_UNAVAILABLE", DownstreamError)
+        ("SERVER_ERROR", InternalError),
+        ("SERVICE_UNAVAILABLE", InternalError)
       )
 
       input.foreach(args => (serviceError _).tupled(args))

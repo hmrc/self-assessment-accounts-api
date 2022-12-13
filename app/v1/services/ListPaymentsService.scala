@@ -50,21 +50,21 @@ class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnecto
 
   private def desErrorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDTYPE"           -> DownstreamError,
+      "INVALID_IDTYPE"           -> InternalError,
       "INVALID_IDVALUE"          -> NinoFormatError,
-      "INVALID_REGIME_TYPE"      -> DownstreamError,
-      "INVALID_PAYMENT_LOT"      -> DownstreamError,
-      "INVALID_PAYMENT_LOT_ITEM" -> DownstreamError,
-      "INVALID_CLEARING_DOC"     -> DownstreamError,
+      "INVALID_REGIME_TYPE"      -> InternalError,
+      "INVALID_PAYMENT_LOT"      -> InternalError,
+      "INVALID_PAYMENT_LOT_ITEM" -> InternalError,
+      "INVALID_CLEARING_DOC"     -> InternalError,
       "INVALID_DATE_FROM"        -> V1_FromDateFormatError,
       "INVALID_DATE_TO"          -> V1_ToDateFormatError,
-      "INVALID_DATE_RANGE"       -> DownstreamError,
-      "INVALID_CORRELATIONID"    -> DownstreamError,
-      "REQUEST_NOT_PROCESSED"    -> DownstreamError,
+      "INVALID_DATE_RANGE"       -> InternalError,
+      "INVALID_CORRELATIONID"    -> InternalError,
+      "REQUEST_NOT_PROCESSED"    -> InternalError,
       "NO_DATA_FOUND"            -> NotFoundError,
-      "PARTIALLY_MIGRATED"       -> DownstreamError,
-      "SERVER_ERROR"             -> DownstreamError,
-      "SERVICE_UNAVAILABLE"      -> DownstreamError
+      "PARTIALLY_MIGRATED"       -> InternalError,
+      "SERVER_ERROR"             -> InternalError,
+      "SERVICE_UNAVAILABLE"      -> InternalError
     )
 
 }

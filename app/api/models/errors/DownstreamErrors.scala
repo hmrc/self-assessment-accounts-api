@@ -16,7 +16,6 @@
 
 package api.models.errors
 
-import play.api.http.Status.INTERNAL_SERVER_ERROR
 import play.api.libs.json.{Json, Reads}
 
 case class DownstreamErrorCode(code: String) {
@@ -29,12 +28,10 @@ object DownstreamErrorCode {
 
 sealed trait DownstreamError
 
-case class DownstreamErrors(errors: List[DownstreamErrorCode]) extends DownstreamError
+case class DownstreamErrors(errors: Seq[DownstreamErrorCode]) extends DownstreamError
 
 object DownstreamErrors {
   def single(error: DownstreamErrorCode): DownstreamErrors = DownstreamErrors(List(error))
 }
 
 case class OutboundError(error: MtdError, errors: Option[Seq[MtdError]] = None) extends DownstreamError
-
-object DownstreamError extends MtdError("INTERNAL_SERVER_ERROR", "An internal server error occurred", INTERNAL_SERVER_ERROR)

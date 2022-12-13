@@ -22,7 +22,7 @@ import config.AppConfig
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import api.connectors.DownstreamUri.DesUri
-import api.connectors.httpparsers.StandardDesHttpParser.reads
+import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import v1.models.request.retrieveBalance.RetrieveBalanceParsedRequest
 import v1.models.response.retrieveBalance.RetrieveBalanceResponse
 

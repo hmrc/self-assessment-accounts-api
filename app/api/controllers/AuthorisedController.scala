@@ -17,7 +17,7 @@
 package api.controllers
 
 import api.models.auth.UserDetails
-import api.models.errors.{DownstreamError, InvalidBearerTokenError, NinoFormatError, UnauthorisedError}
+import api.models.errors.{InternalError, InvalidBearerTokenError, NinoFormatError, UnauthorisedError}
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -51,7 +51,7 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
       authService.authorised(predicate(mtdId)).flatMap[Result] {
         case Right(userDetails)      => block(UserRequest(userDetails.copy(mtdId = mtdId), request))
         case Left(UnauthorisedError) => Future.successful(Forbidden(Json.toJson(UnauthorisedError)))
-        case Left(_)                 => Future.successful(InternalServerError(Json.toJson(DownstreamError)))
+        case Left(_)                 => Future.successful(InternalServerError(Json.toJson(InternalError)))
       }
     }
 
@@ -64,7 +64,7 @@ abstract class AuthorisedController(cc: ControllerComponents)(implicit ec: Execu
         case Left(NinoFormatError)         => Future.successful(BadRequest(Json.toJson(NinoFormatError)))
         case Left(UnauthorisedError)       => Future.successful(Forbidden(Json.toJson(UnauthorisedError)))
         case Left(InvalidBearerTokenError) => Future.successful(Unauthorized(Json.toJson(InvalidBearerTokenError)))
-        case Left(_)                       => Future.successful(InternalServerError(Json.toJson(DownstreamError)))
+        case Left(_)                       => Future.successful(InternalServerError(Json.toJson(InternalError)))
       }
     }
 
