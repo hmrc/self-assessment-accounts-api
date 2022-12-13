@@ -16,6 +16,6 @@
 
 package v1.models.request.retrieveCodingOut
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 
-case class RetrieveCodingOutParsedRequest(nino: Nino, taxYear: String, source: Option[String])
+case class RetrieveCodingOutParsedRequest(nino: Nino, taxYear: TaxYear, source: Option[String])

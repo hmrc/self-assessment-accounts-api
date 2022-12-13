@@ -17,10 +17,7 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import api.models.domain.MtdSource
-import mocks.MockAppConfig
-import api.models.domain.Nino
+import api.models.domain.{MtdSource, Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut._
@@ -71,49 +68,69 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
       Some(unmatchedCustomerSubmissionsObject)
     )
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test { _: ConnectorTest =>
 
-    val connector: RetrieveCodingOutConnector = new RetrieveCodingOutConnector(http = mockHttpClient, appConfig = mockAppConfig)
+    def taxYear: TaxYear
 
-    MockAppConfig.ifs1BaseUrl returns baseUrl
-    MockAppConfig.ifs1Token returns "ifs1-token"
-    MockAppConfig.ifs1Environment returns "ifs1-environment"
-    MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
+    def requestWithParams: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      source = Some(source)
+    )
+
+    def requestWithoutParams: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      source = None
+    )
+
+    val connector: RetrieveCodingOutConnector = new RetrieveCodingOutConnector(
+      http = mockHttpClient,
+      appConfig = mockAppConfig
+    )
+
   }
 
-  "RetrieveCodingOutConnector" when {
-    "retrieveCodingOut" must {
-      "return a valid response" in new Test {
-        val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(Nino(nino), taxYear, Some(source))
-        val outcome                                 = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
+  "RetrieveCodingOutConnector" should {
+    "retrieveCodingOut" when {
+      "return a valid response" in new Ifs1Test with Test {
 
-        MockHttpClient
-          .parameterGet(
-            url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            parameters = Seq("view" -> MtdSource.parser(source).toDownstreamSource),
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredIfs1Headers,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        val taxYear = TaxYear.fromMtd("2019-20")
+        val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
+
+        willGet(
+          url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}",
+          parameters = Seq("view" -> MtdSource.parser(source).toDownstreamSource)
+        )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveCodingOut(request)) shouldBe outcome
+        await(connector.retrieveCodingOut(requestWithParams)) shouldBe outcome
       }
 
-      "return a valid response when there's no source parameter" in new Test {
-        val request: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(Nino(nino), taxYear, None)
-        val outcome                                 = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
+      "return a valid response when there's no source parameter" in new Ifs1Test with Test {
 
-        MockHttpClient
-          .get(
-            url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredIfs1Headers,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
+        val taxYear = TaxYear.fromMtd("2019-20")
+        val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
+
+        willGet(
+          url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
+        )
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveCodingOut(request)) shouldBe outcome
+        await(connector.retrieveCodingOut(requestWithoutParams)) shouldBe outcome
+      }
+
+      "return a valid response when there's no source parameter for a TYS tax year" in new TysIfsTest with Test {
+
+        val taxYear = TaxYear.fromMtd("2023-24")
+        val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
+
+        willGet(
+          url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/$nino"
+        )
+          .returns(Future.successful(outcome))
+
+        await(connector.retrieveCodingOut(requestWithoutParams)) shouldBe outcome
       }
     }
   }
