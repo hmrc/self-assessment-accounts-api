@@ -16,23 +16,10 @@
 
 package api.controllers
 
-import api.models.errors.ErrorWrapper
-import play.api.libs.json.Json
 import play.api.mvc.Result
-import play.api.mvc.Results.Status
 import utils.Logging
 
 trait BaseController { self: Logging =>
-
-  protected def errorResult(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
-    val resCorrelationId = errorWrapper.correlationId
-    logger.warn(
-      s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-        s"Error response received with CorrelationId: $resCorrelationId")
-
-    Status(errorWrapper.error.httpStatus)(Json.toJson(errorWrapper))
-      .withApiHeaders(resCorrelationId)
-  }
 
   implicit class Response(result: Result) {
 
