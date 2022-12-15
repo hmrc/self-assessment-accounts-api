@@ -13,8 +13,8 @@ The Self Assessment Accounts API allows a developer to:
 - retrieve the allocation details of a specific payment against one or more liabilities
 
 ## Requirements
-- Scala 2.12.x
-- Java 8
+- Scala 2.13.x
+- Java 11
 - sbt 1.6.x
 - [Service Manager](https://github.com/hmrc/service-manager)
 
