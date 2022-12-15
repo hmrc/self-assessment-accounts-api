@@ -161,7 +161,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request(version).put(requestBodyJson))
             response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(NinoFormatError)
+            response.json shouldBe NinoFormatError.asJson
           }
 
         }
@@ -186,7 +186,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request(version).put(requestBodyJson))
             response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(TaxYearFormatError)
+            response.json shouldBe TaxYearFormatError.asJson
           }
         }
         versions.foreach(version => {
@@ -209,7 +209,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request(version).put(requestBodyJson))
             response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(RuleTaxYearNotSupportedError)
+            response.json shouldBe RuleTaxYearNotSupportedError.asJson
           }
         }
         versions.foreach(version => {
@@ -232,7 +232,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request(version).put(requestBodyJson))
             response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(RuleTaxYearRangeInvalidError)
+            response.json shouldBe RuleTaxYearRangeInvalidError.asJson
           }
 
         }
@@ -271,7 +271,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request(version).put(requestBodyJson))
             response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(RuleTaxYearNotEndedError)
+            response.json shouldBe RuleTaxYearNotEndedError.asJson
           }
 
         }
@@ -640,7 +640,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request(version).put(requestBodyJson))
             response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(RuleIncorrectOrEmptyBodyError)
+            response.json shouldBe RuleIncorrectOrEmptyBodyError.asJson
           }
         }
         versions.foreach(version => {

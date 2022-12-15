@@ -119,7 +119,7 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get)
         response.status shouldBe INTERNAL_SERVER_ERROR
-        response.json shouldBe Json.toJson(InternalError)
+        response.json shouldBe InternalError.asJson
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }

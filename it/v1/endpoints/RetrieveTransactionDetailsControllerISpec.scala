@@ -17,6 +17,7 @@
 package v1.endpoints
 
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -25,7 +26,6 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixture.RetrieveTransactionDetailsFixture
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import v1.stubs.DownstreamStub
 
 class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with RetrieveTransactionDetailsFixture {
@@ -110,7 +110,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
 
         response.status shouldBe NOT_FOUND
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.toJson(NoTransactionDetailsFoundError)
+        response.json shouldBe NoTransactionDetailsFoundError.asJson
       }
 
       "a success response with no relevant data is returned" in new Test {
@@ -126,7 +126,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
 
         response.status shouldBe NOT_FOUND
         response.header("Content-Type") shouldBe Some("application/json")
-        response.json shouldBe Json.toJson(NoTransactionDetailsFoundError)
+        response.json shouldBe NoTransactionDetailsFoundError.asJson
       }
     }
 
