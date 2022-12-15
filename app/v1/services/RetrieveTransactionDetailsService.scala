@@ -22,34 +22,29 @@ import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
 import cats.implicits._
-import utils.Logging
 import v1.connectors.RetrieveTransactionDetailsConnector
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
-import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveTransactionDetailsService @Inject() (val connector: RetrieveTransactionDetailsConnector)
-    extends BaseService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveTransactionDetailsService @Inject() (val connector: RetrieveTransactionDetailsConnector) extends BaseService {
 
   def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
 
     val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDownstreamErrors(desErrorMap))
+      desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper <- EitherT.fromEither[Future](validateTransactionDetailsResponse(desResponseWrapper))
     } yield mtdResponseWrapper
 
     result.value
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDTYPE"                       -> InternalError,
       "INVALID_IDNUMBER"                     -> NinoFormatError,

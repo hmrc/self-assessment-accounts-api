@@ -21,34 +21,30 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
-import utils.{CurrentDate, Logging}
+import utils.CurrentDate
 import v1.connectors.RetrieveCodingOutConnector
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
-import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit currentDate: CurrentDate)
-    extends BaseService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit currentDate: CurrentDate) extends BaseService {
 
   def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
 
     val result = for {
-      downstreamResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
+      downstreamResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(errorMap))
       mtdResponseWrapper        <- EitherT.fromEither[Future](validateCodingOutResponse(downstreamResponseWrapper, request.taxYear.asMtd))
     } yield mtdResponseWrapper
 
     result.value
   }
 
-  private def downstreamErrorMap: Map[String, MtdError] = {
+  private val errorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,

@@ -40,7 +40,6 @@ class RetrieveTransactionDetailsController @Inject() (val authService: Enrolment
                                                       cc: ControllerComponents,
                                                       idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =

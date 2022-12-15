@@ -20,32 +20,27 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
-import utils.Logging
+import cats.implicits._
 import v2.connectors.ListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
-import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPaymentsAndAllocationDetailsConnector)
-    extends BaseService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPaymentsAndAllocationDetailsConnector) extends BaseService {
 
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsAndAllocationDetailsResponse]]] = {
 
-    val result = EitherT(connector.listPaymentsAndAllocationDetails(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector
+      .listPaymentsAndAllocationDetails(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  val downstreamErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID"    -> InternalError,
       "INVALID_IDVALUE"          -> NinoFormatError,

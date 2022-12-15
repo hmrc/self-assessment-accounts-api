@@ -20,35 +20,27 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
-import utils.Logging
 import v1.connectors.ListChargesConnector
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.{Charge, ListChargesResponse}
-import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListChargesService @Inject() (listChargesConnector: ListChargesConnector)
-    extends BaseService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class ListChargesService @Inject() (listChargesConnector: ListChargesConnector) extends BaseService {
 
   def list(request: ListChargesParsedRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(listChargesConnector.listCharges(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
+    listChargesConnector
+      .listCharges(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDTYPE"                       -> InternalError,
       "INVALID_IDNUMBER"                     -> NinoFormatError,

@@ -39,7 +39,6 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
                                                  cc: ControllerComponents,
                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
