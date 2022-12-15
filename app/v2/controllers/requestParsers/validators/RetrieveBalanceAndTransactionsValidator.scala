@@ -28,7 +28,7 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  private def parameterFormatValidation: RetrieveBalanceAndTransactionsRawData => List[List[MtdError]] =
+  private def parameterFormatValidation: RetrieveBalanceAndTransactionsRawData => Seq[Seq[MtdError]] =
     (data: RetrieveBalanceAndTransactionsRawData) => {
       List(
         NinoValidation.validate(data.nino),
@@ -44,14 +44,14 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
       )
     }
 
-  private def parameterRuleValidation: RetrieveBalanceAndTransactionsRawData => List[List[MtdError]] =
+  private def parameterRuleValidation: RetrieveBalanceAndTransactionsRawData => Seq[Seq[MtdError]] =
     (data: RetrieveBalanceAndTransactionsRawData) => {
       List(
         DateRangeValidationV2.validate(data.fromDate, data.toDate)
       )
     }
 
-  override def validate(data: RetrieveBalanceAndTransactionsRawData): List[MtdError] = {
+  override def validate(data: RetrieveBalanceAndTransactionsRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

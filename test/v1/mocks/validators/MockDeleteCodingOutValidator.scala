@@ -28,7 +28,7 @@ trait MockDeleteCodingOutValidator extends MockFactory {
 
   object MockValidator {
 
-    def validate(data: DeleteCodingOutRawRequest): CallHandler1[DeleteCodingOutRawRequest, List[MtdError]] = {
+    def validate(data: DeleteCodingOutRawRequest): CallHandler1[DeleteCodingOutRawRequest, Seq[MtdError]] = {
       (mockValidator
         .validate(_: DeleteCodingOutRawRequest))
         .expects(data)

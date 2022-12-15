@@ -20,48 +20,40 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
-import utils.Logging
 import v1.connectors.RetrieveChargeHistoryConnector
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
-import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector)
-    extends BaseService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends BaseService {
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryParsedRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveChargeHistory(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper.map(des => des)
-
-    result.value
+    connector
+      .retrieveChargeHistory(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID" -> DownstreamError,
-      "INVALID_IDTYPE"        -> DownstreamError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "INVALID_IDTYPE"        -> InternalError,
       "INVALID_IDVALUE"       -> NinoFormatError,
-      "INVALID_REGIME_TYPE"   -> DownstreamError,
+      "INVALID_REGIME_TYPE"   -> InternalError,
       "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
-      "INVALID_DATE_FROM"     -> DownstreamError,
-      "INVALID_DATE_TO"       -> DownstreamError,
-      "INVALID_DATE_RANGE"    -> DownstreamError,
-      "REQUEST_NOT_PROCESSED" -> DownstreamError,
+      "INVALID_DATE_FROM"     -> InternalError,
+      "INVALID_DATE_TO"       -> InternalError,
+      "INVALID_DATE_RANGE"    -> InternalError,
+      "REQUEST_NOT_PROCESSED" -> InternalError,
       "NO_DATA_FOUND"         -> NotFoundError,
-      "SERVER_ERROR"          -> DownstreamError,
-      "SERVICE_UNAVAILABLE"   -> DownstreamError
+      "SERVER_ERROR"          -> InternalError,
+      "SERVICE_UNAVAILABLE"   -> InternalError
     )
 
 }

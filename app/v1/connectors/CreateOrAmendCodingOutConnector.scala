@@ -17,7 +17,7 @@
 package v1.connectors
 
 import api.connectors.DownstreamUri.Ifs1Uri
-import api.connectors.httpparsers.StandardDesHttpParser.readsEmpty
+import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}

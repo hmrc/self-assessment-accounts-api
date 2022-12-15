@@ -23,7 +23,7 @@ import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.HttpClient
 import api.connectors.DownstreamUri.DesUri
-import api.connectors.httpparsers.StandardDesHttpParser.reads
+import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.{Charge, ListChargesResponse}
 

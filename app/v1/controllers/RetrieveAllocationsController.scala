@@ -39,7 +39,6 @@ class RetrieveAllocationsController @Inject() (val authService: EnrolmentsAuthSe
                                                cc: ControllerComponents,
                                                idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =

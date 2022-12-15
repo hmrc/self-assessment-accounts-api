@@ -20,54 +20,46 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
-import utils.Logging
 import v1.connectors.ListChargesConnector
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.{Charge, ListChargesResponse}
-import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListChargesService @Inject() (listChargesConnector: ListChargesConnector)
-    extends BaseService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class ListChargesService @Inject() (listChargesConnector: ListChargesConnector) extends BaseService {
 
   def list(request: ListChargesParsedRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(listChargesConnector.listCharges(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
+    listChargesConnector
+      .listCharges(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDTYPE"                       -> DownstreamError,
+      "INVALID_IDTYPE"                       -> InternalError,
       "INVALID_IDNUMBER"                     -> NinoFormatError,
-      "INVALID_REGIME_TYPE"                  -> DownstreamError,
+      "INVALID_REGIME_TYPE"                  -> InternalError,
       "INVALID_DATE_FROM"                    -> V1_FromDateFormatError,
       "INVALID_DATE_TO"                      -> V1_ToDateFormatError,
       "NO_DATA_FOUND"                        -> NotFoundError,
-      "SERVER_ERROR"                         -> DownstreamError,
-      "SERVICE_UNAVAILABLE"                  -> DownstreamError,
-      "INVALID_DOC_NUMBER"                   -> DownstreamError,
-      "INVALID_ONLY_OPEN_ITEMS"              -> DownstreamError,
-      "INVALID_INCLUDE_LOCKS"                -> DownstreamError,
-      "INVALID_CALCULATE_ACCRUED_INTEREST"   -> DownstreamError,
-      "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
+      "SERVER_ERROR"                         -> InternalError,
+      "SERVICE_UNAVAILABLE"                  -> InternalError,
+      "INVALID_DOC_NUMBER"                   -> InternalError,
+      "INVALID_ONLY_OPEN_ITEMS"              -> InternalError,
+      "INVALID_INCLUDE_LOCKS"                -> InternalError,
+      "INVALID_CALCULATE_ACCRUED_INTEREST"   -> InternalError,
+      "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> InternalError,
       "INVALID_DATE_RANGE"                   -> RuleDateRangeInvalidError,
-      "INVALID_REQUEST"                      -> DownstreamError,
-      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> DownstreamError,
-      "INVALID_INCLUDE_STATISTICAL"          -> DownstreamError,
-      "REQUEST_NOT_PROCESSED"                -> DownstreamError
+      "INVALID_REQUEST"                      -> InternalError,
+      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> InternalError,
+      "INVALID_INCLUDE_STATISTICAL"          -> InternalError,
+      "REQUEST_NOT_PROCESSED"                -> InternalError
     )
 
 }

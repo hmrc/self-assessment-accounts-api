@@ -20,43 +20,35 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
-import utils.Logging
 import v1.connectors.CreateOrAmendCodingOutConnector
 import v1.models.request.createOrAmendCodingOut._
-import v1.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOutConnector)
-    extends BaseService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOutConnector) extends BaseService {
 
   def amend(request: CreateOrAmendCodingOutParsedRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.amendCodingOut(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
+    connector
+      .amendCodingOut(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def desErrorMap =
+  private val errorMap =
     Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> DownstreamError,
-      "INVALID_PAYLOAD"           -> DownstreamError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "INVALID_PAYLOAD"           -> InternalError,
       "INVALID_REQUEST_TAX_YEAR"  -> RuleTaxYearNotEndedError,
       "DUPLICATE_ID_NOT_ALLOWED"  -> RuleDuplicateIdError,
-      "SERVER_ERROR"              -> DownstreamError,
-      "SERVICE_UNAVAILABLE"       -> DownstreamError
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
 }

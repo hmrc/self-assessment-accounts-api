@@ -20,32 +20,27 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
-import utils.Logging
+import cats.implicits._
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
-import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanceAndTransactionsConnector)
-    extends BaseService
-    with DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanceAndTransactionsConnector) extends BaseService {
 
   def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
 
-    val result = EitherT(connector.retrieveBalanceAndTransactions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector
+      .retrieveBalanceAndTransactions(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  val downstreamErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID"                -> InternalError,
       "INVALID_IDTYPE"                       -> InternalError,

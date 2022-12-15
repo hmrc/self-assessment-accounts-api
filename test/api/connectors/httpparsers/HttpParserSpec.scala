@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2.connectors.httpparsers
+package api.connectors.httpparsers
 
 import play.api.libs.json.{Json, Reads}
 

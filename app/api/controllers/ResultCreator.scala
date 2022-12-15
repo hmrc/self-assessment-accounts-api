@@ -20,12 +20,9 @@ import api.hateoas.{HateoasFactory, HateoasLinksFactory, HateoasListLinksFactory
 import api.models.hateoas.{HateoasData, HateoasWrapper}
 import api.models.request.RawData
 import cats.Functor
-import play.api.http.Status.NO_CONTENT
 import play.api.http.{HttpEntity, Status}
 import play.api.libs.json.{JsValue, Json, Writes}
 import play.api.mvc.{ResponseHeader, Result, Results}
-
-import scala.language.higherKinds
 
 case class ResultWrapper(httpStatus: Int, body: Option[JsValue]) {
 
@@ -45,8 +42,8 @@ trait ResultCreator[InputRaw <: RawData, Input, Output] {
 
 object ResultCreator {
 
-  def noContent[InputRaw <: RawData, Input, Output]: ResultCreator[InputRaw, Input, Output] =
-    (_: InputRaw, _, _: Output) => ResultWrapper(NO_CONTENT, None)
+  def noContent[InputRaw <: RawData, Input, Output](successStatus: Int = Status.NO_CONTENT): ResultCreator[InputRaw, Input, Output] =
+    (_: InputRaw, _, _: Output) => ResultWrapper(successStatus, None)
 
   def plainJson[InputRaw <: RawData, Input, Output](successStatus: Int = Status.OK)(implicit
       ws: Writes[Output]): ResultCreator[InputRaw, Input, Output] =

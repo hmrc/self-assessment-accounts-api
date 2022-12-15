@@ -40,12 +40,12 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         MockAppConfig.featureSwitches returns Configuration.empty
         MockAppConfig.apiStatus(Version1) returns "ALPHA"
         MockAppConfig.apiStatus(Version2) returns "BETA"
-        MockAppConfig.endpointsEnabled(Version1) returns false anyNumberOfTimes ()
-        MockAppConfig.endpointsEnabled(Version2) returns true anyNumberOfTimes ()
+        MockAppConfig.endpointsEnabled(Version1).returns(false).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(Version2).returns(true).anyNumberOfTimes()
 
-        MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
-          definitionEnabled = true,
-          authValidationEnabled = true) anyNumberOfTimes ()
+        MockAppConfig.confidenceLevelCheckEnabled
+          .returns(ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = true))
+          .anyNumberOfTimes()
 
         private val readScope  = "read:self-assessment"
         private val writeScope = "write:self-assessment"

@@ -187,7 +187,6 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
 
     MockAppConfig.featureSwitches returns Configuration("tys-api.enabled" -> false)
-
   }
 
   protected trait Ifs1Test extends ConnectorTest {

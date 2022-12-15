@@ -22,11 +22,11 @@ import scala.util.{Failure, Success, Try}
 
 object BooleanValidation {
 
-  def validate(value: Option[String], error: MtdError): List[MtdError] = {
+  def validate(value: Option[String], error: MtdError): Seq[MtdError] = {
     value.map(validate(_, error)).getOrElse(Nil)
   }
 
-  def validate(value: String, error: MtdError): List[MtdError] = Try {
+  def validate(value: String, error: MtdError): Seq[MtdError] = Try {
     value.toBoolean
   } match {
     case Success(_) => Nil

@@ -16,11 +16,10 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
 import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
-import uk.gov.hmrc.http.HeaderCarrier
+import api.services.ServiceSpec
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
 import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDetails
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
@@ -119,11 +118,6 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
   }
 
   trait Test extends MockRetrieveBalanceAndTransactionsConnector {
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    implicit val logContext: EndpointLogContext =
-      EndpointLogContext("RetrieveBalanceAndTransactionsController", "RetrieveBalanceAndTransactions")
 
     val service = new RetrieveBalanceAndTransactionsService(
       connector = mockRetrieveBalanceAndTransactionsConnector

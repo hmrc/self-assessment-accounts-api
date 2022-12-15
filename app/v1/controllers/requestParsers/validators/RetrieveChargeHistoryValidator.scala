@@ -25,14 +25,14 @@ class RetrieveChargeHistoryValidator extends Validator[RetrieveChargeHistoryRawR
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveChargeHistoryRawRequest => List[List[MtdError]] = (data: RetrieveChargeHistoryRawRequest) => {
+  private def parameterFormatValidation: RetrieveChargeHistoryRawRequest => Seq[Seq[MtdError]] = (data: RetrieveChargeHistoryRawRequest) => {
     List(
       NinoValidation.validate(data.nino),
       TransactionIdValidation.validate(data.transactionId)
     )
   }
 
-  override def validate(data: RetrieveChargeHistoryRawRequest): List[MtdError] = {
+  override def validate(data: RetrieveChargeHistoryRawRequest): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

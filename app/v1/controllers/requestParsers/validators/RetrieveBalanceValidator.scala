@@ -25,13 +25,13 @@ class RetrieveBalanceValidator extends Validator[RetrieveBalanceRawRequest] {
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveBalanceRawRequest => List[List[MtdError]] = (data: RetrieveBalanceRawRequest) => {
+  private def parameterFormatValidation: RetrieveBalanceRawRequest => Seq[Seq[MtdError]] = (data: RetrieveBalanceRawRequest) => {
     List(
       NinoValidation.validate(data.nino)
     )
   }
 
-  override def validate(data: RetrieveBalanceRawRequest): List[MtdError] = {
+  override def validate(data: RetrieveBalanceRawRequest): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

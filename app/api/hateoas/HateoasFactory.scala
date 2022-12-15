@@ -16,13 +16,12 @@
 
 package api.hateoas
 
+import api.models.hateoas._
 import cats.Functor
 import cats.implicits._
 import config.AppConfig
-import javax.inject.Inject
-import api.models.hateoas._
 
-import scala.language.higherKinds
+import javax.inject.Inject
 
 class HateoasFactory @Inject() (appConfig: AppConfig) {
 

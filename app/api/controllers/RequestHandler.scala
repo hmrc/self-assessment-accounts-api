@@ -18,7 +18,7 @@ package api.controllers
 
 import api.controllers.requestParsers.RequestParser
 import api.hateoas.{HateoasFactory, HateoasLinksFactory}
-import api.models.errors.{DownstreamError, ErrorWrapper}
+import api.models.errors.{ErrorWrapper, InternalError}
 import api.models.hateoas.{HateoasData, HateoasWrapper}
 import api.models.outcomes.ResponseWrapper
 import api.models.request.RawData
@@ -56,7 +56,7 @@ object RequestHandler {
       parser: RequestParser[InputRaw, Input],
       service: Input => Future[Either[ErrorWrapper, ResponseWrapper[Output]]],
       errorHandling: ErrorHandling = ErrorHandling.Default,
-      resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output],
+      resultCreator: ResultCreator[InputRaw, Input, Output] = ResultCreator.noContent[InputRaw, Input, Output](),
       auditHandler: Option[AuditHandler] = None
   ) extends RequestHandler[InputRaw] {
 
@@ -85,8 +85,8 @@ object RequestHandler {
       * withResultCreator(ResultCreator.noContent)
       * }}}
       */
-    def withNoContentResult(successStatus: Int = Status.OK): RequestHandlerBuilder[InputRaw, Input, Output] =
-      withResultCreator(ResultCreator.noContent)
+    def withNoContentResult(successStatus: Int = Status.NO_CONTENT): RequestHandlerBuilder[InputRaw, Input, Output] =
+      withResultCreator(ResultCreator.noContent(successStatus))
 
     /** Shorthand for
       * {{{
@@ -181,7 +181,7 @@ object RequestHandler {
         logger.error(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
             s"Unhandled error: $errorWrapper")
-        InternalServerError(Json.toJson(DownstreamError))
+        InternalServerError(Json.toJson(InternalError))
       }
 
     }

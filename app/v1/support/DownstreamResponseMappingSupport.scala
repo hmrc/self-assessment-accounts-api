@@ -51,7 +51,7 @@ trait DownstreamResponseMappingSupport extends ResponseMappingSupport {
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId")
-        Left(ErrorWrapper(desResponseWrapper.correlationId, DownstreamError))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, InternalError))
       case _ => Right(desResponseWrapper)
     }
   }

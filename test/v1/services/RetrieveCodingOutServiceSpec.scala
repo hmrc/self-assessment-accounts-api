@@ -16,22 +16,19 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
 import api.mocks.MockCurrentDate
-import api.services.ServiceSpec
-
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import org.scalamock.handlers.CallHandler
 import api.models.domain.{Nino, TaxYear}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.CurrentDate
-import v1.mocks.connectors.MockRetrieveCodingOutConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import org.scalamock.handlers.CallHandler
+import utils.CurrentDate
+import v1.mocks.connectors.MockRetrieveCodingOutConnector
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut._
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
 
 class RetrieveCodingOutServiceSpec extends ServiceSpec {
@@ -93,9 +90,6 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
         .returns(LocalDate.parse(date, dateTimeFormatter))
         .anyNumberOfTimes()
 
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveCodingOutParsedRequest", "retrieveCodingOut")
-
     val service = new RetrieveCodingOutService(
       connector = mockRetrieveCodingOutConnector
     )
@@ -152,7 +146,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
           .retrieveCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
-        await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, DownstreamError))
+        await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
 
       }
     }
@@ -174,15 +168,15 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "INVALID_VIEW"              -> SourceFormatError,
-          "INVALID_CORRELATIONID"     -> DownstreamError,
+          "INVALID_CORRELATIONID"     -> InternalError,
           "NO_DATA_FOUND"             -> CodingOutNotFoundError,
           "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-          "SERVER_ERROR"              -> DownstreamError,
-          "SERVICE_UNAVAILABLE"       -> DownstreamError
+          "SERVER_ERROR"              -> InternalError,
+          "SERVICE_UNAVAILABLE"       -> InternalError
         )
 
         val extraTysErrors: Seq[(String, MtdError)] = Seq(
-          "INVALID_CORRELATION_ID" -> DownstreamError,
+          "INVALID_CORRELATION_ID" -> InternalError,
           "NOT_FOUND"              -> CodingOutNotFoundError
         )
 

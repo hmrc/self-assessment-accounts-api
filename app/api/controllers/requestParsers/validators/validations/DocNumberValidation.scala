@@ -22,7 +22,7 @@ object DocNumberValidation {
 
   val MAX_LENGTH = 12
 
-  def validate(docNumber: Option[String]): List[MtdError] =
+  def validate(docNumber: Option[String]): Seq[MtdError] =
     docNumber
       .map { docNumber =>
         val invalid = docNumber.isEmpty || docNumber.length > MAX_LENGTH

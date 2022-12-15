@@ -36,7 +36,6 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
                                            cc: ControllerComponents,
                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -61,7 +60,6 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
               params = Map("nino" -> nino, "taxYear" -> taxYear)))
 
       requestHandler.handleRequest(rawData)
-
     }
 
 }

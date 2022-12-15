@@ -356,12 +356,12 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
             val currentDate = LocalDate.now(ZoneOffset.UTC)
 
             val taxYearStartDate: LocalDate = LocalDate.parse(
-              currentDate.getYear + "-04-06",
+              s"${currentDate.getYear}-04-06",
               DateTimeFormatter.ofPattern("yyyy-MM-dd")
             )
 
             def fromDesIntToString(taxYear: Int): String =
-              (taxYear - 1) + "-" + taxYear.toString.drop(2)
+              s"${taxYear - 1}-${taxYear.toString.drop(2)}"
 
             if (currentDate.isBefore(taxYearStartDate)) fromDesIntToString(currentDate.getYear) else fromDesIntToString(currentDate.getYear + 1)
           }
@@ -391,12 +391,12 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
             val currentDate = LocalDate.now(ZoneOffset.UTC)
 
             val taxYearStartDate: LocalDate = LocalDate.parse(
-              currentDate.getYear + "-04-06",
+              s"${currentDate.getYear}-04-06",
               DateTimeFormatter.ofPattern("yyyy-MM-dd")
             )
 
             def fromDesIntToString(taxYear: Int): String =
-              (taxYear - 1) + "-" + taxYear.toString.drop(2)
+              s"${taxYear - 1}-${taxYear.toString.drop(2)}"
 
             if (currentDate.isBefore(taxYearStartDate)) fromDesIntToString(currentDate.getYear) else fromDesIntToString(currentDate.getYear + 1)
           }
@@ -485,15 +485,15 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
           (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
           (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
           (BAD_REQUEST, "INVALID_VIEW", BAD_REQUEST, SourceFormatError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
           (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, CodingOutNotFoundError),
           (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
         )
 
         val extraTysErrors: Seq[(Int, String, Int, MtdError)] = Seq(
-          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, DownstreamError),
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
           (NOT_FOUND, "NOT_FOUND", NOT_FOUND, CodingOutNotFoundError)
         )
         versions.foreach(version => {
@@ -515,7 +515,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
             val response: WSResponse = await(request(version, None).get())
             response.status shouldBe INTERNAL_SERVER_ERROR
-            response.json shouldBe Json.toJson(DownstreamError)
+            response.json shouldBe InternalError.asJson
             response.header("Content-Type") shouldBe Some("application/json")
           }
         }
