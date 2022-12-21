@@ -9,8 +9,10 @@ is:
   - errors.clientOrAgentNotAuthorised
   - errors.codingOutNotFound
   - queryParameters.source
-displayName: "Retrieve Coding Out underpayments and debt amounts [test only]"
-description: This endpoint allows the developer to retrieve HMRC-held coding out underpayment and debt amounts, or user submitted coding out amounts for a previous tax year and given NINO.
+displayName: Retrieve Coding Out Underpayments and Debt Amounts [test only]
+description: |
+    This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted amended coding out
+    amounts for a previous tax year and given National Insurance number.
 (annotations.sandboxData): !include scenarios/retrieveCodingOutUnderpayments.md
 (annotations.scope): "read:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "read:self-assessment" ] } ]
