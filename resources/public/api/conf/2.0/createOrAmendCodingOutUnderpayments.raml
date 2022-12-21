@@ -12,8 +12,10 @@ is:
   - errors.formatId
   - errors.incorrectOrEmptyBody
   - errors.clientOrAgentNotAuthorised
-displayName: "Create or Amend Coding Out underpayment and debt amounts"
-description: This endpoint allows the developer to overwrite coding out underpayment and debt amounts held by HMRC for a previous tax year and given NINO, and amend previously submitted overwrite amounts. <strong>This endpoint can only be used after the tax year has ended.</strong>
+displayName: Create or Amend Coding Out Underpayments and Debt Amounts
+description:
+    This endpoint enables you to overwrite coding out underpayments and debt amounts held by HMRC for a previous tax year and given National Insurance number,
+    and to amend previously submitted overwrite amounts. <strong>This endpoint can only be used after the tax year has ended.</strong>
 (annotations.sandboxData): !include scenarios/createOrAmendCodingOutUnderpayments.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]
