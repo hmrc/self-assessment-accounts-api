@@ -26,16 +26,15 @@ import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.stubs.DownstreamStub
 
-import java.time.format.DateTimeFormatter
-import java.time.{LocalDate, ZoneOffset}
-
 class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
 
-  val versions = Seq("1.0", "2.0")
+  val versions: Seq[String] = Seq("1.0", "2.0")
 
   private trait Test {
+    val version: String
 
     val nino: String = "AA123456A"
+
     def taxYear: String
 
     val requestBodyJson: JsValue = Json.parse(
@@ -66,7 +65,7 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
         |    }
         |  }
         |}
-      """.stripMargin
+    """.stripMargin
     )
 
     val responseBody: JsValue = Json.parse(
@@ -90,12 +89,12 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
          |    }
          |  ]
          |}
-       """.stripMargin
+     """.stripMargin
     )
 
     def setupStubs(): Unit = ()
 
-    def request(version: String): WSRequest = {
+    def request: WSRequest = {
       AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
@@ -113,534 +112,179 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
          |   "code": "$code",
          |   "reason": "A message from downstream"
          |}
-        """.stripMargin
+      """.stripMargin
 
   }
 
-  private trait NonTysTest extends Test {
+  private class NonTysTest(val version: String) extends Test {
     def taxYear: String = "2020-21"
 
     def downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/2020-21"
   }
 
-  private trait TysTest extends Test {
+  private class TysTest(val version: String) extends Test {
     def taxYear: String = "2023-24"
 
     def downstreamUri: String = s"/income-tax/23-24/accounts/self-assessment/collection/tax-code/$nino"
 
-    override def request(version : String): WSRequest =
-      super.request(version).addHttpHeaders("suspend-temporal-validations" -> "true")
+    override def request: WSRequest =
+      super.request.addHttpHeaders("suspend-temporal-validations" -> "true")
+
   }
 
-  "Calling the 'create or amend coding out' endpoint" should {
+  versions.foreach(version =>
+    s"Calling the 'create or amend coding out' endpoint for version $version" should {
+      behave like new EndpointBehaviour(version)
+    })
+
+  class EndpointBehaviour(version: String) {
 
     "return a 200 status code" when {
+      "any valid request is made" in new NonTysTest(version) {
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT, JsObject.empty)
 
-      def validRequest(version: String): Unit = {
-        "any valid request is made" in new NonTysTest  {
-          override def setupStubs(): Unit =
-            DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT, JsObject.empty)
-
-          val response: WSResponse = await(request(version).put(requestBodyJson))
-          response.status shouldBe OK
-          response.json shouldBe responseBody
-          response.header("X-CorrelationId").nonEmpty shouldBe true
-        }
-
-        "any valid request is made (TYS)" in new TysTest {
-          override def setupStubs(): Unit =
-            DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT, JsObject.empty)
-
-          val response: WSResponse = await(request(version).put(requestBodyJson))
-          response.status shouldBe OK
-          response.json shouldBe responseBody
-          response.header("X-CorrelationId").nonEmpty shouldBe true
-        }
+        val response: WSResponse = await(request.put(requestBodyJson))
+        response.status shouldBe OK
+        response.json shouldBe responseBody
+        response.header("X-CorrelationId").nonEmpty shouldBe true
       }
 
-      versions.foreach(version => {
-        s"for version $version" when {
-          validRequest(version)
-        }
-      })
+      "any valid request is made (TYS)" in new TysTest(version) {
+        override def setupStubs(): Unit =
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT, JsObject.empty)
+
+        val response: WSResponse = await(request.put(requestBodyJson))
+        response.status shouldBe OK
+        response.json shouldBe responseBody
+        response.header("X-CorrelationId").nonEmpty shouldBe true
+      }
     }
 
     "return an error according to the spec" when {
+      "validation error" when {
 
-      "the nino validation error is because" when {
-        def invalidNino(version: String): Unit = {
-          "an invalid NINO format is provided" in new NonTysTest {
-            override val nino: String = "INVALID_NINO"
+        "an invalid NINO format is provided" in new NonTysTest(version) {
+          override val nino: String = "INVALID_NINO"
 
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe NinoFormatError.asJson
-          }
-
-        }
-        versions.foreach(version => {
-          s"for version $version" when {
-            invalidNino(version)
-          }
-        })
-      }
-
-      "the taxYear validation error because" when {
-        def invalidTaxYear(version: String): Unit = {
-          "an invalid taxYear format is provided" in new NonTysTest {
-
-            override val taxYear: String = "INVALID_TAXYEAR"
-
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe TaxYearFormatError.asJson
-          }
-        }
-        versions.foreach(version => {
-          s"for version $version" when {
-            invalidTaxYear(version)
-          }
-        })
-      }
-
-      "the unsupported taxYear validation error because" when {
-        def unsupportedTaxYear(version: String): Unit = {
-          "an unsupported taxYear is provided" in new NonTysTest {
-            override val taxYear: String = "2016-17"
-
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe RuleTaxYearNotSupportedError.asJson
-          }
-        }
-        versions.foreach(version => {
-          s"for version $version" when {
-            unsupportedTaxYear(version)
-          }
-        })
-      }
-
-      "the incorrect range taxYear validation error because" when {
-        def incorrectRange(version: String): Unit = {
-          "a taxYear with an incorrect range is provided" in new NonTysTest {
-            override val taxYear: String = "2020-22"
-
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe RuleTaxYearRangeInvalidError.asJson
-          }
-
+          val response: WSResponse = await(request.put(requestBodyJson))
+          response.status shouldBe BAD_REQUEST
+          response.json shouldBe NinoFormatError.asJson
         }
 
-        versions.foreach(version => {
-          s"for version $version" when {
-            incorrectRange(version)
-          }
-        })
-      }
+        "an invalid taxYear format is provided" in new NonTysTest(version) {
+          override val taxYear: String = "INVALID_TAXYEAR"
 
-      "the taxYear not ended validation error because" when {
-        def taxYearNotEnded(version: String): Unit = {
-          "a taxYear which has not ended is provided" in new NonTysTest {
-            def getCurrentTaxYear: String = {
-              val currentDate = LocalDate.now(ZoneOffset.UTC)
-
-              val taxYearStartDate: LocalDate = LocalDate.parse(
-                s"${currentDate.getYear}-04-06",
-                DateTimeFormatter.ofPattern("yyyy-MM-dd")
-              )
-
-              def fromDesIntToString(taxYear: Int): String =
-                s"${taxYear - 1}-${taxYear.toString.drop(2)}"
-
-              if (currentDate.isBefore(taxYearStartDate)) fromDesIntToString(currentDate.getYear) else fromDesIntToString(currentDate.getYear + 1)
-            }
-
-            override val taxYear: String = getCurrentTaxYear
-
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe RuleTaxYearNotEndedError.asJson
-          }
-
+          val response: WSResponse = await(request.put(requestBodyJson))
+          response.status shouldBe BAD_REQUEST
+          response.json shouldBe TaxYearFormatError.asJson
         }
-        versions.foreach(version => {
-          s"for version $version" when {
-            taxYearNotEnded(version)
-          }
-        })
-      }
 
-      "the invalid payeUnderpayment validation error because" when {
-        def invalidPayeUnderpayment(version: String): Unit = {
-          "an invalid payeUnderpayment is submitted" in new NonTysTest {
-            override val requestBodyJson: JsValue = Json.parse(
-              """
-              |{
-              |  "taxCodeComponents": {
-              |    "payeUnderpayment": [
-              |      {
-              |        "amount": 123498394893843.4,
-              |        "id": 12345.35
-              |      }
-              |    ],
-              |    "selfAssessmentUnderpayment": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "debt": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "inYearAdjustment": {
-              |      "amount": 123.45,
-              |      "id": 12345
-              |    }
-              |  }
-              |}
+        "an unsupported taxYear is provided" in new NonTysTest(version) {
+          override val taxYear: String = "2016-17"
+
+          val response: WSResponse = await(request.put(requestBodyJson))
+          response.status shouldBe BAD_REQUEST
+          response.json shouldBe RuleTaxYearNotSupportedError.asJson
+        }
+
+        "a taxYear with an incorrect range is provided" in new NonTysTest(version) {
+          override val taxYear: String = "2020-22"
+
+          val response: WSResponse = await(request.put(requestBodyJson))
+          response.status shouldBe BAD_REQUEST
+          response.json shouldBe RuleTaxYearRangeInvalidError.asJson
+        }
+
+        "a taxYear which has not ended is provided" in new NonTysTest(version) {
+          override val taxYear: String = "2098-99"
+
+          val response: WSResponse = await(request.put(requestBodyJson))
+          response.status shouldBe BAD_REQUEST
+          response.json shouldBe RuleTaxYearNotEndedError.asJson
+        }
+
+        "an invalid value and id is submitted" in new NonTysTest(version) {
+          override val requestBodyJson: JsValue = Json.parse(
+            """
+                |{
+                |  "taxCodeComponents": {
+                |    "payeUnderpayment": [
+                |      {
+                |        "amount": 123498394893843.4,
+                |        "id": 12345.35
+                |      }
+                |    ]
+                |  }
+                |}
             """.stripMargin
-            )
+          )
 
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(
-              ErrorWrapper(
-                correlationId = "",
-                error = BadRequestError,
-                errors = Some(Seq(
-                  ValueFormatError.copy(
-                    paths = Some(List(
-                      "/taxCodeComponents/payeUnderpayment/0/amount"
-                    ))
-                  ),
-                  IdFormatError.copy(
-                    paths = Some(List(
-                      "/taxCodeComponents/payeUnderpayment/0/id"
-                    ))
-                  )
-                ))
-              )
-            )
-          }
-        }
-        versions.foreach(version => {
-          s"for version $version" when {
-            invalidPayeUnderpayment(version)
-          }
-        })
-      }
-
-      "the invalid selfAssessmentUnderpayment validation error because" when {
-        def invalidSelfAssessmentUnderpayment(version: String): Unit = {
-          "an invalid selfAssessmentUnderpayment is submitted" in new NonTysTest {
-            override val requestBodyJson: JsValue = Json.parse(
-              """
-              |{
-              |  "taxCodeComponents": {
-              |    "payeUnderpayment": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "selfAssessmentUnderpayment": [
-              |      {
-              |        "amount": 123498394893843.4,
-              |        "id": 12345.35
-              |      }
-              |    ],
-              |    "debt": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "inYearAdjustment": {
-              |      "amount": 123.45,
-              |      "id": 12345
-              |    }
-              |  }
-              |}
-            """.stripMargin
-            )
-
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(ErrorWrapper(
+          val response: WSResponse = await(request.put(requestBodyJson))
+          response.status shouldBe BAD_REQUEST
+          response.json shouldBe Json.toJson(
+            ErrorWrapper(
               correlationId = "",
               error = BadRequestError,
               errors = Some(Seq(
                 ValueFormatError.copy(
                   paths = Some(List(
-                    "/taxCodeComponents/selfAssessmentUnderpayment/0/amount"
+                    "/taxCodeComponents/payeUnderpayment/0/amount"
                   ))
                 ),
                 IdFormatError.copy(
                   paths = Some(List(
-                    "/taxCodeComponents/selfAssessmentUnderpayment/0/id"
+                    "/taxCodeComponents/payeUnderpayment/0/id"
                   ))
                 )
               ))
-            ))
-          }
-        }
-        versions.foreach(version => {
-          s"for version $version" when {
-            invalidSelfAssessmentUnderpayment(version)
-          }
-        })
-      }
-
-      "the invalid debt validation error because" when {
-        def invalidDebt(version: String): Unit = {
-          "an invalid debt is submitted" in new NonTysTest {
-            override val requestBodyJson: JsValue = Json.parse(
-              """
-              |{
-              |  "taxCodeComponents": {
-              |    "payeUnderpayment": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "selfAssessmentUnderpayment": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "debt": [
-              |      {
-              |        "amount": 123498394893843.4,
-              |        "id": 12345.35
-              |      }
-              |    ],
-              |    "inYearAdjustment": {
-              |      "amount": 123.45,
-              |      "id": 12345
-              |    }
-              |  }
-              |}
-            """.stripMargin
             )
-
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(ErrorWrapper(
-              correlationId = "",
-              error = BadRequestError,
-              errors = Some(
-                Seq(
-                  ValueFormatError.copy(
-                    paths = Some(List(
-                      "/taxCodeComponents/debt/0/amount"
-                    ))
-                  ),
-                  IdFormatError.copy(
-                    paths = Some(List(
-                      "/taxCodeComponents/debt/0/id"
-                    ))
-                  )
-                ))
-            ))
-          }
+          )
         }
-        versions.foreach(version => {
-          s"for version $version" when {
-            invalidDebt(version)
-          }
-        })
+
+        "an empty body is submitted" in new NonTysTest(version) {
+          override val requestBodyJson: JsValue = Json.parse("{}")
+
+          val response: WSResponse = await(request.put(requestBodyJson))
+          response.status shouldBe BAD_REQUEST
+          response.json shouldBe RuleIncorrectOrEmptyBodyError.asJson
+        }
       }
 
-      "the invalid inYearAdjustment validation error because" when {
-        def invalidInYearAdjustment(version: String): Unit = {
-          "an invalid inYearAdjustment is submitted" in new NonTysTest {
-            override val requestBodyJson: JsValue = Json.parse(
-              """
-              |{
-              |  "taxCodeComponents": {
-              |    "payeUnderpayment": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "selfAssessmentUnderpayment": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "debt": [
-              |      {
-              |        "amount": 123.45,
-              |        "id": 12345
-              |      }
-              |    ],
-              |    "inYearAdjustment": {
-              |      "amount": 123498394893843.4,
-              |      "id": 12345.35
-              |    }
-              |  }
-              |}
-            """.stripMargin
-            )
+      "service error" when {
+        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+          s"downstream returns a $downstreamCode error and status $downstreamStatus" in new NonTysTest(version) {
 
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(ErrorWrapper(
-              correlationId = "",
-              error = BadRequestError,
-              errors = Some(Seq(
-                ValueFormatError.copy(
-                  paths = Some(List(
-                    "/taxCodeComponents/inYearAdjustment/amount"
-                  ))
-                ),
-                IdFormatError.copy(
-                  paths = Some(List(
-                    "/taxCodeComponents/inYearAdjustment/id"
-                  ))
-                )
-              ))
-            ))
-          }
-        }
-        versions.foreach(version => {
-          s"for version $version" when {
-            invalidInYearAdjustment(version)
-          }
-        })
-      }
+            override def setupStubs(): Unit =
+              DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
 
-      "the invalid (all) values validation error because" when {
-        def allInvalidValues(version: String): Unit = {
-          "all values submitted are invalid" in new NonTysTest {
-            override val requestBodyJson: JsValue = Json.parse(
-              """
-              |{
-              |  "taxCodeComponents": {
-              |    "payeUnderpayment": [
-              |      {
-              |        "amount": 123.455,
-              |        "id": -12345
-              |      }
-              |    ],
-              |    "selfAssessmentUnderpayment": [
-              |      {
-              |        "amount": 123498394893843.4,
-              |        "id": 12345.35
-              |      }
-              |    ],
-              |    "debt": [
-              |      {
-              |        "amount": -123.45,
-              |        "id": 123453456789098765434567897654567890987654
-              |      }
-              |    ],
-              |    "inYearAdjustment": {
-              |      "amount": 11111111111111111111111111111123.45,
-              |      "id": -12345
-              |    }
-              |  }
-              |}
-            """.stripMargin
-            )
-
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe Json.toJson(ErrorWrapper(
-              correlationId = "",
-              error = BadRequestError,
-              errors = Some(Seq(
-                ValueFormatError.copy(
-                  paths = Some(List(
-                    "/taxCodeComponents/payeUnderpayment/0/amount",
-                    "/taxCodeComponents/selfAssessmentUnderpayment/0/amount",
-                    "/taxCodeComponents/debt/0/amount",
-                    "/taxCodeComponents/inYearAdjustment/amount"
-                  ))
-                ),
-                IdFormatError.copy(
-                  paths = Some(List(
-                    "/taxCodeComponents/payeUnderpayment/0/id",
-                    "/taxCodeComponents/selfAssessmentUnderpayment/0/id",
-                    "/taxCodeComponents/debt/0/id",
-                    "/taxCodeComponents/inYearAdjustment/id"
-                  ))
-                )
-              ))
-            ))
+            val response: WSResponse = await(request.put(requestBodyJson))
+            response.status shouldBe expectedStatus
+            response.json shouldBe Json.toJson(expectedBody)
           }
         }
 
-        versions.foreach(version => {
-          s"for version $version" when {
-            allInvalidValues(version)
-          }
-        })
+        val errors = Seq(
+          (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+          (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
+          (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
+          (UNPROCESSABLE_ENTITY, "DUPLICATE_ID_NOT_ALLOWED", BAD_REQUEST, RuleDuplicateIdError),
+          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
+          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError)
+        )
+
+        val extraTysErrors = Seq(
+          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
+          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceErrorTest _).tupled(args))
+
       }
-
-      "the empty body validation error because" when {
-        def emptyBodySubmitted(version: String): Unit = {
-          "an empty body is submitted" in new NonTysTest {
-            override val requestBodyJson: JsValue = Json.parse("{}")
-
-            val response: WSResponse = await(request(version).put(requestBodyJson))
-            response.status shouldBe BAD_REQUEST
-            response.json shouldBe RuleIncorrectOrEmptyBodyError.asJson
-          }
-        }
-        versions.foreach(version => {
-          s"for version $version" when {
-            emptyBodySubmitted(version)
-          }
-        })
-      }
-
     }
 
-    "the error response from downstream is" when {
-      def serviceErrorTest(version: String)(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"$downstreamCode and status $downstreamStatus " in new NonTysTest {
-
-          override def setupStubs(): Unit =
-            DownstreamStub.onError(DownstreamStub.PUT, downstreamUri, downstreamStatus, errorBody(downstreamCode))
-
-          val response: WSResponse = await(request(version).put(requestBodyJson))
-          response.status shouldBe expectedStatus
-          response.json shouldBe Json.toJson(expectedBody)
-        }
-      }
-
-      val errors = Seq(
-        (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-        (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_PAYLOAD", INTERNAL_SERVER_ERROR, InternalError),
-        (UNPROCESSABLE_ENTITY, "INVALID_REQUEST_TAX_YEAR", BAD_REQUEST, RuleTaxYearNotEndedError),
-        (UNPROCESSABLE_ENTITY, "DUPLICATE_ID_NOT_ALLOWED", BAD_REQUEST, RuleDuplicateIdError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError)
-      )
-
-      val extraTysErrors = Seq(
-        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
-        (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
-      )
-
-      versions.foreach(version => {
-        s"for version $version " when {
-          (errors ++ extraTysErrors).foreach(args => (serviceErrorTest(version) _).tupled(args))
-        }
-      })
-
-    }
   }
 
 }
