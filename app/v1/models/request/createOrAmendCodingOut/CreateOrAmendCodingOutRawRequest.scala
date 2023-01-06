@@ -19,4 +19,4 @@ package v1.models.request.createOrAmendCodingOut
 import api.models.request.RawData
 import play.api.libs.json.JsValue
 
-case class CreateOrAmendCodingOutRawRequest(nino: String, taxYear: String, body: JsValue) extends RawData
+case class CreateOrAmendCodingOutRawRequest(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean = true) extends RawData

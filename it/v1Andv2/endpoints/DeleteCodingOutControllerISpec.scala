@@ -120,7 +120,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
 
     "des service error" when {
 
-      def serviceErrorTest(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError, version: String): Unit = {
+      def serviceErrorTest(version: String)(desStatus: Int, desCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"des returns an $desCode error and status $desStatus " in new Test {
 
           override def setupStubs(): StubMapping = {
@@ -145,8 +145,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
 
       versions.foreach(version => {
         s"for version ${version}" when {
-          val parameters = input.map(c => (c._1, c._2, c._3, c._4, version))
-          parameters.foreach(args => (serviceErrorTest _).tupled(args))
+          input.foreach(args => (serviceErrorTest(version) _).tupled(args))
         }
       })
     }

@@ -19,7 +19,7 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 
 import javax.inject.Inject
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.CreateOrAmendCodingOutValidator
 import v1.models.request.createOrAmendCodingOut.{
   CreateOrAmendCodingOutParsedRequest,
@@ -31,6 +31,6 @@ class CreateOrAmendCodingOutParser @Inject() (val validator: CreateOrAmendCoding
     extends RequestParser[CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutParsedRequest] {
 
   override protected def requestFor(data: CreateOrAmendCodingOutRawRequest): CreateOrAmendCodingOutParsedRequest =
-    CreateOrAmendCodingOutParsedRequest(Nino(data.nino), data.taxYear, data.body.as[CreateOrAmendCodingOutRequestBody])
+    CreateOrAmendCodingOutParsedRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.body.as[CreateOrAmendCodingOutRequestBody])
 
 }
