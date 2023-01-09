@@ -19,6 +19,7 @@ package v1.controllers
 import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import utils.{IdGenerator, Logging}
@@ -34,6 +35,7 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAuthService,
                                                   val lookupService: MtdIdLookupService,
+                                                  appConfig: AppConfig,
                                                   parser: CreateOrAmendCodingOutParser,
                                                   service: CreateOrAmendCodingOutService,
                                                   hateoasFactory: HateoasFactory,
@@ -50,7 +52,11 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
     authorisedAction(nino).async(parse.json) { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = CreateOrAmendCodingOutRawRequest(nino, taxYear, request.body)
+      val rawData = CreateOrAmendCodingOutRawRequest(
+        nino = nino,
+        taxYear = taxYear,
+        body = request.body,
+        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled)
 
       val requestHandler =
         RequestHandler

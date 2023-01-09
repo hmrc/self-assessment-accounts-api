@@ -40,7 +40,7 @@ class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDa
   private def parameterRuleValidation: CreateOrAmendCodingOutRawRequest => Seq[Seq[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear),
-      TaxYearNotEndedValidation.validate(data.taxYear)
+      if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
     )
   }
 
