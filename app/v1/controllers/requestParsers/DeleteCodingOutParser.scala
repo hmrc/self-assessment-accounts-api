@@ -17,16 +17,16 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.DeleteCodingOutValidator
 import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
 
 import javax.inject.Inject
 
-class DeleteCodingOutParser @Inject() (val validator: DeleteCodingOutValidator)
-    extends RequestParser[DeleteCodingOutRawRequest, DeleteCodingOutParsedRequest] {
+class DeleteCodingOutParser @Inject()(val validator: DeleteCodingOutValidator)
+  extends RequestParser[DeleteCodingOutRawRequest, DeleteCodingOutParsedRequest] {
 
   override protected def requestFor(data: DeleteCodingOutRawRequest): DeleteCodingOutParsedRequest =
-    DeleteCodingOutParsedRequest(Nino(data.nino), data.taxYear)
+    DeleteCodingOutParsedRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))
 
 }

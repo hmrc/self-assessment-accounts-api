@@ -17,10 +17,7 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
@@ -28,47 +25,49 @@ import scala.concurrent.Future
 
 class DeleteCodingOutConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
-  val taxYear: String = "2021-22"
+  "DeleteCodingOutConnector" should {
+    "return a 204 status for a success scenario" when {
+      "a valid non-TYS request is made" in new Ifs1Test with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2019-20")
 
-  val request: DeleteCodingOutParsedRequest = DeleteCodingOutParsedRequest(
-    nino = Nino(nino),
-    taxYear = taxYear
-  )
-
-  class Test extends MockHttpClient with MockAppConfig {
-
-    val connector: DeleteCodingOutConnector = new DeleteCodingOutConnector(
-      http = mockHttpClient,
-      appConfig = mockAppConfig
-    )
-
-    MockAppConfig.ifs1BaseUrl returns baseUrl
-    MockAppConfig.ifs1Token returns "ifs1-token"
-    MockAppConfig.ifs1Environment returns "ifs1-environment"
-    MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
-  }
-
-  "DeleteCodingOutConnector" when {
-    ".deleteCodingOut" should {
-      "return a 204 status for a success scenario" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        implicit val hc: HeaderCarrier                      = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersDelete: Seq[(String, String)] = requiredIfs1Headers ++ Seq("Content-Type" -> "application/json")
+        willDelete(
+          url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
+        ).returns(Future.successful(outcome))
 
-        MockHttpClient
-          .delete(
-            url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyHeaderCarrierConfig,
-            requiredHeaders = requiredIfsHeadersDelete,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        await(connector.deleteCodingOut(request)) shouldBe outcome
+      }
+
+      "a valid TYS request is made" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willDelete(
+          url = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"
+        ).returns(Future.successful(outcome))
 
         await(connector.deleteCodingOut(request)) shouldBe outcome
       }
     }
   }
 
+  trait Test {
+    _: ConnectorTest =>
+
+    def taxYear: TaxYear
+
+    protected val nino: String = "AA111111A"
+
+    val request: DeleteCodingOutParsedRequest = DeleteCodingOutParsedRequest(
+      nino = Nino(nino),
+      taxYear = taxYear
+    )
+
+    val connector: DeleteCodingOutConnector = new DeleteCodingOutConnector(
+      http = mockHttpClient,
+      appConfig = mockAppConfig
+    )
+  }
 }

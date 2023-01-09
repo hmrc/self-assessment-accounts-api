@@ -16,35 +16,20 @@
 
 package v1.services
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v1.mocks.connectors.MockDeleteCodingOutConnector
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
+import scala.collection.Seq
 import scala.concurrent.Future
 
 class DeleteCodingOutServiceSpec extends ServiceSpec {
 
-  private val nino    = "AA123456A"
-  private val taxYear = "2021-22"
-
-  val request: DeleteCodingOutParsedRequest = DeleteCodingOutParsedRequest(
-    nino = Nino(nino),
-    taxYear = taxYear
-  )
-
-  trait Test extends MockDeleteCodingOutConnector {
-
-    val service: DeleteCodingOutService = new DeleteCodingOutService(
-      connector = mockDeleteCodingOutConnector
-    )
-
-  }
-
   "DeleteCodingOutService" when {
-    ".deleteCodingOut" must {
+    "deleteCodingOut" must {
       "return correct result for a success" in new Test {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
@@ -58,17 +43,17 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
 
     "map errors according to spec" when {
 
-      def serviceError(desErrorCode: String, error: MtdError): Unit =
-        s"a $desErrorCode error is returned from the service" in new Test {
+      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+        s"a $downstreamErrorCode error is returned from the service" in new Test {
 
           MockDeleteCodingOutConnector
             .deleteCodingOut(request)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           await(service.deleteCodingOut(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val input = Seq(
+      val errors = Seq(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("INVALID_CORRELATIONID", InternalError),
@@ -76,9 +61,29 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
         ("SERVER_ERROR", InternalError),
         ("SERVICE_UNAVAILABLE", InternalError)
       )
+      val extraTysErrors = Seq(
+        ("INVALID_CORRELATION_ID", InternalError),
+        ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+      )
 
-      input.foreach(args => (serviceError _).tupled(args))
+      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
+}
+
+
+trait Test extends MockDeleteCodingOutConnector {
+
+  private val nino = "AA123456A"
+  private val taxYear = "2021-22"
+
+  val request: DeleteCodingOutParsedRequest = DeleteCodingOutParsedRequest(
+    nino = Nino(nino),
+    taxYear = TaxYear.fromMtd(taxYear)
+  )
+
+  val service: DeleteCodingOutService = new DeleteCodingOutService(
+    connector = mockDeleteCodingOutConnector
+  )
 
 }

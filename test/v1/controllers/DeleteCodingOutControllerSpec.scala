@@ -18,7 +18,7 @@ package v1.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.JsValue
@@ -31,15 +31,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class DeleteCodingOutControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
     with MockDeleteCodingOutService
     with MockDeleteCodingOutParser {
 
   private val taxYear = "2019-20"
 
-  private val rawData     = DeleteCodingOutRawRequest(nino, taxYear)
-  private val requestData = DeleteCodingOutParsedRequest(Nino(nino), taxYear)
+  private val rawData = DeleteCodingOutRawRequest(nino, taxYear)
+  private val requestData = DeleteCodingOutParsedRequest(Nino(nino), TaxYear.fromMtd(taxYear))
 
   "handleRequest" should {
     "return NoContent" when {
