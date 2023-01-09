@@ -19,7 +19,7 @@ package v1.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponent, TaxCodeComponents}
+import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponents}
 
 import scala.concurrent.Future
 
@@ -30,13 +30,8 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
   trait Test { _: ConnectorTest =>
     def taxYear: TaxYear
 
-    val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents =
-      TaxCodeComponents(
-        payeUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
-        selfAssessmentUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
-        debt = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
-        inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
-      ))
+    val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody =
+      CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(None, None, None, None))
 
     val request: CreateOrAmendCodingOutParsedRequest = CreateOrAmendCodingOutParsedRequest(
       nino = Nino(nino),
@@ -54,7 +49,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
   "CreateOrAmendCodingOutConnector" when {
     "called for a non-TYS tax year" should {
       "return a success upon HttpClient success" in new Ifs1Test with Test {
-        def taxYear: TaxYear = TaxYear.fromMtd( "2021-22")
+        def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
 
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
