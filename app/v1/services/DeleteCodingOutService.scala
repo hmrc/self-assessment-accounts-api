@@ -28,25 +28,30 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends BaseService {
+class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) extends BaseService {
 
   def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+                                                             ctx: RequestContext,
+                                                             ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    connector
-      .deleteCodingOut(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.deleteCodingOut(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private val errorMap: Map[String, MtdError] =
-    Map(
+  private val downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> InternalError,
-      "NO_DATA_FOUND"             -> CodingOutNotFoundError,
-      "SERVER_ERROR"              -> InternalError,
-      "SERVICE_UNAVAILABLE"       -> InternalError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "NO_DATA_FOUND" -> CodingOutNotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 }

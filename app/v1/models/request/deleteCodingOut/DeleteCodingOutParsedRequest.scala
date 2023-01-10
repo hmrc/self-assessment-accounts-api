@@ -16,6 +16,6 @@
 
 package v1.models.request.deleteCodingOut
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 
-case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: String)
+case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: TaxYear)
