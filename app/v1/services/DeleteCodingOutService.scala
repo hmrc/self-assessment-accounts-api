@@ -20,7 +20,6 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
-import cats.data.EitherT
 import cats.implicits._
 import v1.connectors.DeleteCodingOutConnector
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
@@ -35,13 +34,10 @@ class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) exte
                                                              ctx: RequestContext,
                                                              ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = EitherT(connector.deleteCodingOut(request)).leftMap(mapDownstreamErrors(errorMap))
-
-    result.value
+    connector.deleteCodingOut(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def errorMap: Map[String, MtdError] = {
-
+  private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR" -> TaxYearFormatError,
@@ -57,7 +53,5 @@ class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) exte
     )
 
     errors ++ extraTysErrors
-
   }
-
 }

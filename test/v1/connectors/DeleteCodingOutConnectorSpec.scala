@@ -33,10 +33,12 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
-          url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
+          url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/2019-20"
         ).returns(Future.successful(outcome))
 
-        await(connector.deleteCodingOut(request)) shouldBe outcome
+        val result = await(connector.deleteCodingOut(request))
+
+        result shouldBe outcome
       }
 
       "a valid TYS request is made" in new TysIfsTest with Test {
@@ -45,10 +47,12 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(
-          url = s"$baseUrl/income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"
+          url = s"$baseUrl/income-tax/23-24/accounts/self-assessment/collection/tax-code/$nino"
         ).returns(Future.successful(outcome))
 
-        await(connector.deleteCodingOut(request)) shouldBe outcome
+        val result = await(connector.deleteCodingOut(request))
+
+        result shouldBe outcome
       }
     }
   }

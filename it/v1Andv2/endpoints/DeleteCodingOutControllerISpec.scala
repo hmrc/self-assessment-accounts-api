@@ -19,8 +19,7 @@ package v1Andv2.endpoints
 import api.models.errors._
 import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status
-import play.api.http.Status.{BAD_REQUEST, INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY}
+import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
@@ -39,11 +38,11 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         s"for version $version" in new NonTysTest {
 
           override def setupStubs(): Unit = {
-            DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, Status.NO_CONTENT, JsObject.empty)
+            DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
           }
 
           val response: WSResponse = await(request(version).delete())
-          response.status shouldBe Status.NO_CONTENT
+          response.status shouldBe NO_CONTENT
           response.header("X-CorrelationId").nonEmpty shouldBe true
         }
       }
@@ -56,11 +55,11 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         s"for version $version" in new TysIfsTest {
 
           override def setupStubs(): Unit = {
-            DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, Status.NO_CONTENT, JsObject.empty)
+            DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
           }
 
           val response: WSResponse = await(request(version).delete())
-          response.status shouldBe Status.NO_CONTENT
+          response.status shouldBe NO_CONTENT
           response.header("X-CorrelationId").nonEmpty shouldBe true
         }
       }
@@ -86,11 +85,11 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         }
       }
 
-      val input = Seq(
-        ("AA123456", "2021-22", Status.BAD_REQUEST, NinoFormatError),
-        ("AA123456A", "203100", Status.BAD_REQUEST, TaxYearFormatError),
-        ("AA123456A", "2018-19", Status.BAD_REQUEST, RuleTaxYearNotSupportedError),
-        ("AA123456A", "2018-20", Status.BAD_REQUEST, RuleTaxYearRangeInvalidError)
+      val input = List(
+        ("AA123456", "2021-22", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "203100", BAD_REQUEST, TaxYearFormatError),
+        ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
+        ("AA123456A", "2018-20", BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
       versions.foreach(version => {
         s"for version ${version}" when {
@@ -114,16 +113,16 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         }
       }
 
-      val errors = Seq(
-        (Status.BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", Status.BAD_REQUEST, NinoFormatError),
-        (Status.BAD_REQUEST, "INVALID_TAX_YEAR", Status.BAD_REQUEST, TaxYearFormatError),
-        (Status.BAD_REQUEST, "INVALID_CORRELATIONID", Status.INTERNAL_SERVER_ERROR, InternalError),
-        (Status.NOT_FOUND, "NO_DATA_FOUND", Status.NOT_FOUND, CodingOutNotFoundError),
-        (Status.INTERNAL_SERVER_ERROR, "SERVER_ERROR", Status.INTERNAL_SERVER_ERROR, InternalError),
-        (Status.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", Status.INTERNAL_SERVER_ERROR, InternalError)
+      val errors = List(
+        (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+        (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, CodingOutNotFoundError),
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
 
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
@@ -144,7 +143,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
 
     def downstreamUri: String
 
-    def uri: String = s"/$nino/$taxYear/collection/tax-code"
+    def mtdUri: String = s"/$nino/$taxYear/collection/tax-code"
 
     def setupStubs(): Unit
 
@@ -153,7 +152,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
       AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
-      buildRequest(uri)
+      buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, s"application/vnd.hmrc.$version+json"),
           (AUTHORIZATION, "Bearer 123")

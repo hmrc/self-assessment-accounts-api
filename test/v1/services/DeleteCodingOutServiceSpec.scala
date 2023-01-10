@@ -23,7 +23,6 @@ import api.services.ServiceSpec
 import v1.mocks.connectors.MockDeleteCodingOutConnector
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
 
-import scala.collection.Seq
 import scala.concurrent.Future
 
 class DeleteCodingOutServiceSpec extends ServiceSpec {
@@ -53,7 +52,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
           await(service.deleteCodingOut(request)) shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val errors = Seq(
+      val errors = List(
         ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
         ("INVALID_TAX_YEAR", TaxYearFormatError),
         ("INVALID_CORRELATIONID", InternalError),
@@ -61,7 +60,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
         ("SERVER_ERROR", InternalError),
         ("SERVICE_UNAVAILABLE", InternalError)
       )
-      val extraTysErrors = Seq(
+      val extraTysErrors = List(
         ("INVALID_CORRELATION_ID", InternalError),
         ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
       )
