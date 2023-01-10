@@ -39,8 +39,8 @@ class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOut
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private val errorMap =
-    Map(
+  private val errorMap = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
       "INVALID_CORRELATIONID"     -> InternalError,
@@ -50,5 +50,13 @@ class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOut
       "SERVER_ERROR"              -> InternalError,
       "SERVICE_UNAVAILABLE"       -> InternalError
     )
+
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 
 }

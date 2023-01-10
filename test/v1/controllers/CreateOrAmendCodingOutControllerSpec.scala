@@ -19,11 +19,13 @@ package v1.controllers
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockCreateOrAmendCodingOutRequestParser
@@ -39,7 +41,8 @@ class CreateOrAmendCodingOutControllerSpec
     with ControllerTestRunner
     with MockCreateOrAmendCodingOutService
     with MockCreateOrAmendCodingOutRequestParser
-    with MockHateoasFactory {
+    with MockHateoasFactory
+    with MockAppConfig {
 
   private val taxYear = "2019-20"
 
@@ -109,7 +112,7 @@ class CreateOrAmendCodingOutControllerSpec
           |""".stripMargin)
 
   private val rawData     = CreateOrAmendCodingOutRawRequest(nino, taxYear, requestJson)
-  private val requestData = CreateOrAmendCodingOutParsedRequest(Nino(nino), taxYear, requestBody)
+  private val requestData = CreateOrAmendCodingOutParsedRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBody)
 
   "handleRequest" should {
     "return OK" when {
@@ -162,6 +165,7 @@ class CreateOrAmendCodingOutControllerSpec
     val controller = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
       parser = mockCreateOrAmendCodingOutRequestParser,
       service = mockCreateOrAmendCodingOutService,
       hateoasFactory = mockHateoasFactory,
@@ -169,6 +173,8 @@ class CreateOrAmendCodingOutControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    MockAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
 
     protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
 
