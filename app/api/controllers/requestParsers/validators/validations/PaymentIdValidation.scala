@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ object PaymentIdValidation {
 
   private val paymentIdRegex = "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$"
 
-  def validate(paymentId: String): List[MtdError] = {
+  def validate(paymentId: String): Seq[MtdError] = {
     if (paymentId.matches(paymentIdRegex)) NoValidationErrors else List(PaymentIdFormatError)
   }
 

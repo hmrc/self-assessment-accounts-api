@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 package v2.connectors
 
 import api.connectors.BaseDownstreamConnector
-import api.connectors.DownstreamUri.IfsUri
-import api.connectors.httpparsers.StandardIfsHttpParser.reads
+import api.connectors.DownstreamUri.Ifs2Uri
+import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
@@ -59,7 +59,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
     // So that we don't read locks into result unless we've asked for them
     implicit val jsonReadLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(request.includeLocks)
 
-    get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
+    get(Ifs2Uri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
   }
 
 }

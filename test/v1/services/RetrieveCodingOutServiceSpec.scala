@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,19 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
 import api.mocks.MockCurrentDate
-import api.services.ServiceSpec
-
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import org.scalamock.handlers.CallHandler
-import api.models.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.CurrentDate
-import v1.mocks.connectors.MockRetrieveCodingOutConnector
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import org.scalamock.handlers.CallHandler
+import utils.CurrentDate
+import v1.mocks.connectors.MockRetrieveCodingOutConnector
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
 import v1.models.response.retrieveCodingOut._
 
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import scala.concurrent.Future
 
 class RetrieveCodingOutServiceSpec extends ServiceSpec {
@@ -79,7 +76,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
   val requestData: RetrieveCodingOutParsedRequest =
     RetrieveCodingOutParsedRequest(
       nino = nino,
-      taxYear = "2021-22",
+      taxYear = TaxYear.fromMtd("2021-22"),
       source = Some("hmrcHeld")
     )
 
@@ -92,9 +89,6 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
       MockCurrentDate.getCurrentDate
         .returns(LocalDate.parse(date, dateTimeFormatter))
         .anyNumberOfTimes()
-
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("RetrieveCodingOutParsedRequest", "retrieveCodingOut")
 
     val service = new RetrieveCodingOutService(
       connector = mockRetrieveCodingOutConnector
@@ -152,7 +146,7 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
           .retrieveCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, connectorResponse))))
 
-        await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, DownstreamError))
+        await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, InternalError))
 
       }
     }
@@ -160,28 +154,33 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
     "unsuccessful" must {
       "map errors according to spec" when {
 
-        def serviceError(desErrorCode: String, error: MtdError): Unit =
-          s"a $desErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
             MockRetrieveCodingOutConnector
               .retrieveCodingOut(requestData)
-              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(desErrorCode))))))
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
             await(service.retrieveCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input: Seq[(String, MtdError)] = Seq(
+        val errors: Seq[(String, MtdError)] = Seq(
           "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
           "INVALID_TAX_YEAR"          -> TaxYearFormatError,
           "INVALID_VIEW"              -> SourceFormatError,
-          "INVALID_CORRELATIONID"     -> DownstreamError,
+          "INVALID_CORRELATIONID"     -> InternalError,
           "NO_DATA_FOUND"             -> CodingOutNotFoundError,
           "TAX_YEAR_NOT_SUPPORTED"    -> RuleTaxYearNotSupportedError,
-          "SERVER_ERROR"              -> DownstreamError,
-          "SERVICE_UNAVAILABLE"       -> DownstreamError
+          "SERVER_ERROR"              -> InternalError,
+          "SERVICE_UNAVAILABLE"       -> InternalError
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors: Seq[(String, MtdError)] = Seq(
+          "INVALID_CORRELATION_ID" -> InternalError,
+          "NOT_FOUND"              -> CodingOutNotFoundError
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

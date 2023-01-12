@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ trait MockCurrentDate extends MockFactory {
   val mockCurrentDate: CurrentDate = mock[CurrentDate]
 
   object MockCurrentDate {
-    def getCurrentDate: CallHandler[LocalDate] = (mockCurrentDate.getCurrentDate _).expects()
+    def getCurrentDate: CallHandler[LocalDate] = (() => mockCurrentDate.getCurrentDate: LocalDate).expects()
   }
 
 }

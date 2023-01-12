@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.services.ServiceSpec
 import api.models.domain.Nino
-import v1.mocks.connectors.MockRetrieveTransactionDetailsConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import v1.mocks.connectors.MockRetrieveTransactionDetailsConnector
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
@@ -37,11 +36,6 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
     val requestData: RetrieveTransactionDetailsParsedRequest = RetrieveTransactionDetailsParsedRequest(
       nino = Nino(nino),
       transactionId = transactionId
-    )
-
-    implicit val logContext: EndpointLogContext = EndpointLogContext(
-      controllerName = "controller",
-      endpointName = "retrieveTransactions"
     )
 
     val service = new RetrieveTransactionDetailsService(
@@ -123,24 +117,24 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
           }
 
         val input: Seq[(String, MtdError)] = Seq(
-          ("INVALID_IDTYPE", DownstreamError),
+          ("INVALID_IDTYPE", InternalError),
           ("INVALID_IDNUMBER", NinoFormatError),
-          ("INVALID_REGIME_TYPE", DownstreamError),
+          ("INVALID_REGIME_TYPE", InternalError),
           ("INVALID_DOC_NUMBER", TransactionIdFormatError),
-          ("INVALID_ONLY_OPEN_ITEMS", DownstreamError),
-          ("INVALID_INCLUDE_LOCKS", DownstreamError),
-          ("INVALID_CALCULATE_ACCRUED_INTEREST", DownstreamError),
-          ("INVALID_CUSTOMER_PAYMENT_INFORMATION", DownstreamError),
-          ("INVALID_DATE_FROM", DownstreamError),
-          ("INVALID_DATE_TO", DownstreamError),
-          ("INVALID_DATE_RANGE", DownstreamError),
-          ("INVALID_INCLUDE_STATISTICAL", DownstreamError),
-          ("INVALID_REQUEST", DownstreamError),
-          ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", DownstreamError),
-          ("REQUEST_NOT_PROCESSED", DownstreamError),
+          ("INVALID_ONLY_OPEN_ITEMS", InternalError),
+          ("INVALID_INCLUDE_LOCKS", InternalError),
+          ("INVALID_CALCULATE_ACCRUED_INTEREST", InternalError),
+          ("INVALID_CUSTOMER_PAYMENT_INFORMATION", InternalError),
+          ("INVALID_DATE_FROM", InternalError),
+          ("INVALID_DATE_TO", InternalError),
+          ("INVALID_DATE_RANGE", InternalError),
+          ("INVALID_INCLUDE_STATISTICAL", InternalError),
+          ("INVALID_REQUEST", InternalError),
+          ("INVALID_REMOVE_PAYMENT_ON_ACCOUNT", InternalError),
+          ("REQUEST_NOT_PROCESSED", InternalError),
           ("NO_DATA_FOUND", NotFoundError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,10 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import play.mvc.Http.MimeTypes
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveBalanceRequestParser
 import v1.models.request.retrieveBalance.RetrieveBalanceRawRequest
@@ -35,7 +27,7 @@ import v1.models.response.retrieveBalance.RetrieveBalanceHateoasData
 import v1.services.RetrieveBalanceService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RetrieveBalanceController @Inject() (val authService: EnrolmentsAuthService,
@@ -45,9 +37,8 @@ class RetrieveBalanceController @Inject() (val authService: EnrolmentsAuthServic
                                            service: RetrieveBalanceService,
                                            hateoasFactory: HateoasFactory,
                                            cc: ControllerComponents,
-                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                           idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -58,64 +49,23 @@ class RetrieveBalanceController @Inject() (val authService: EnrolmentsAuthServic
 
   def retrieveBalance(nino: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawRequest = RetrieveBalanceRawRequest(nino)
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-          serviceResponse <- EitherT(service.retrieveBalance(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, RetrieveBalanceHateoasData(nino))
-              .asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received wth CorrelationId: ${serviceResponse.correlationId}")
+      val rawData = RetrieveBalanceRawRequest(nino)
 
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino),
-              requestBody = None,
-              `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, None, None)
-            )
-          )
+      val requestHandler =
+        RequestHandler
+          .withParser(requestParser)
+          .withService(service.retrieveBalance)
+          .withHateoasResult(hateoasFactory)(RetrieveBalanceHateoasData(nino))
+          .withAuditing(
+            AuditHandler(
+              auditService,
+              auditType = "retrieveASelfAssessmentBalance",
+              transactionName = "retrieve-a-self-assessment-balance",
+              params = Map("nino" -> nino)))
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-      result.leftMap { errorWrapper =>
-        val result = errorResult(errorWrapper)
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino),
-            requestBody = None,
-            `X-CorrelationId` = errorWrapper.correlationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-
-    val event = AuditEvent(
-      auditType = "retrieveASelfAssessmentBalance",
-      transactionName = "retrieve-a-self-assessment-balance",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
-  }
 
 }

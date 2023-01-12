@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package api.services
 
+import api.models.auth.UserDetails
+import api.models.errors.{ClientNotAuthorisedError, InternalError}
+import api.models.outcomes.AuthOutcome
 import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
-import play.api.Logger
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.Predicate
@@ -27,25 +27,23 @@ import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals
 import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
 import uk.gov.hmrc.auth.core.retrieve.~
 import uk.gov.hmrc.http.HeaderCarrier
-import api.models.auth.UserDetails
-import api.models.errors.{DownstreamError, UnauthorisedError}
-import api.models.outcomes.AuthOutcome
+import utils.Logging
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConfig: AppConfig) {
-
-  private val logger: Logger = Logger(this.getClass)
+class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConfig: AppConfig) extends Logging {
 
   private val authFunction: AuthorisedFunctions = new AuthorisedFunctions {
     override def authConnector: AuthConnector = connector
   }
 
-  def getAgentReferenceFromEnrolments(enrolments: Enrolments): Option[String] = enrolments
-    .getEnrolment("HMRC-AS-AGENT")
-    .flatMap(_.getIdentifier("AgentReferenceNumber"))
-    .map(_.value)
+  def getAgentReferenceFromEnrolments(enrolments: Enrolments): Option[String] =
+    enrolments
+      .getEnrolment("HMRC-AS-AGENT")
+      .flatMap(_.getIdentifier("AgentReferenceNumber"))
+      .map(_.value)
 
   def buildPredicate(predicate: Predicate): Predicate =
     if (appConfig.confidenceLevelConfig.authValidationEnabled) {
@@ -69,17 +67,18 @@ class EnrolmentsAuthService @Inject() (val connector: AuthConnector, val appConf
             user
           case None =>
             logger.warn(s"[EnrolmentsAuthService][authorised] No AgentReferenceNumber defined on agent enrolment.")
-            Left(DownstreamError)
+            Left(InternalError)
         }
-      case _ ~ _ =>
-        logger.warn(s"[EnrolmentsAuthService][authorised] Invalid AffinityGroup.")
-        Future.successful(Left(UnauthorisedError))
+      case unexpected =>
+        logger.error(s"[EnrolmentsAuthService][authorised] Unexpected AuthorisedFunction: $unexpected")
+        Future.successful(Left(ClientNotAuthorisedError))
+
     } recoverWith {
-      case _: MissingBearerToken     => Future.successful(Left(UnauthorisedError))
-      case _: AuthorisationException => Future.successful(Left(UnauthorisedError))
+      case _: MissingBearerToken     => Future.successful(Left(ClientNotAuthorisedError))
+      case _: AuthorisationException => Future.successful(Left(ClientNotAuthorisedError))
       case error =>
         logger.warn(s"[EnrolmentsAuthService][authorised] An unexpected error occurred: $error")
-        Future.successful(Left(DownstreamError))
+        Future.successful(Left(InternalError))
     }
   }
 

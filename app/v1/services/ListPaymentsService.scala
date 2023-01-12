@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,55 +16,47 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import cats.data.EitherT
-import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import v1.connectors.ListPaymentsConnector
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
+import cats.implicits._
+import v1.connectors.ListPaymentsConnector
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
-import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector) extends DownstreamResponseMappingSupport with Logging {
+class ListPaymentsService @Inject() (listPaymentsConnector: ListPaymentsConnector) extends BaseService {
 
   def list(request: ListPaymentsParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(listPaymentsConnector.listPayments(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
+    listPaymentsConnector
+      .listPayments(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private def desErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
-      "INVALID_IDTYPE"           -> DownstreamError,
+      "INVALID_IDTYPE"           -> InternalError,
       "INVALID_IDVALUE"          -> NinoFormatError,
-      "INVALID_REGIME_TYPE"      -> DownstreamError,
-      "INVALID_PAYMENT_LOT"      -> DownstreamError,
-      "INVALID_PAYMENT_LOT_ITEM" -> DownstreamError,
-      "INVALID_CLEARING_DOC"     -> DownstreamError,
+      "INVALID_REGIME_TYPE"      -> InternalError,
+      "INVALID_PAYMENT_LOT"      -> InternalError,
+      "INVALID_PAYMENT_LOT_ITEM" -> InternalError,
+      "INVALID_CLEARING_DOC"     -> InternalError,
       "INVALID_DATE_FROM"        -> V1_FromDateFormatError,
       "INVALID_DATE_TO"          -> V1_ToDateFormatError,
-      "INVALID_DATE_RANGE"       -> DownstreamError,
-      "INVALID_CORRELATIONID"    -> DownstreamError,
-      "REQUEST_NOT_PROCESSED"    -> DownstreamError,
+      "INVALID_DATE_RANGE"       -> InternalError,
+      "INVALID_CORRELATIONID"    -> InternalError,
+      "REQUEST_NOT_PROCESSED"    -> InternalError,
       "NO_DATA_FOUND"            -> NotFoundError,
-      "PARTIALLY_MIGRATED"       -> DownstreamError,
-      "SERVER_ERROR"             -> DownstreamError,
-      "SERVICE_UNAVAILABLE"      -> DownstreamError
+      "PARTIALLY_MIGRATED"       -> InternalError,
+      "SERVER_ERROR"             -> InternalError,
+      "SERVICE_UNAVAILABLE"      -> InternalError
     )
 
 }

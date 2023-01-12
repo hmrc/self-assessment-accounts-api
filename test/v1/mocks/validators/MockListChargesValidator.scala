@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ trait MockListChargesValidator extends MockFactory {
 
   object MockListChargesValidator {
 
-    def validate(data: ListChargesRawRequest): CallHandler1[ListChargesRawRequest, List[MtdError]] = {
+    def validate(data: ListChargesRawRequest): CallHandler1[ListChargesRawRequest, Seq[MtdError]] = {
       (mockValidator
         .validate(_: ListChargesRawRequest))
         .expects(data)

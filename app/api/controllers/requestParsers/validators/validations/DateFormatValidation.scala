@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@ import scala.util.{Failure, Success, Try}
 
 object DateFormatValidation {
 
-  def validate(date: Option[String], error: MtdError): List[MtdError] = date.map(validate(_, error)).getOrElse(Nil)
+  def validate(date: Option[String], error: MtdError): Seq[MtdError] = date.map(validate(_, error)).getOrElse(Nil)
 
-  def validate(date: String, error: MtdError): List[MtdError] = Try {
+  def validate(date: String, error: MtdError): Seq[MtdError] = Try {
     LocalDate.parse(date, dateFormat)
   } match {
     case Success(_) => NoValidationErrors

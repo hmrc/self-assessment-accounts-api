@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,52 +16,45 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import cats.data.EitherT
+import api.services.BaseService
 import cats.implicits._
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
 import v2.connectors.RetrieveChargeHistoryConnector
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
-import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends DownstreamResponseMappingSupport with Logging {
+class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends BaseService {
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveChargeHistory(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-    } yield desResponseWrapper.map(des => des)
-
-    result.value
+    connector
+      .retrieveChargeHistory(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  val downstreamErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDTYPE" -> InternalError,
-      "INVALID_IDVALUE" -> NinoFormatError,
-      "INVALID_REGIME_TYPE" -> InternalError,
-      "INVALID_DOC_NUMBER" -> TransactionIdFormatError,
-      "INVALID_DATE_FROM" -> InternalError,
-      "INVALID_DATE_TO" -> InternalError,
-      "INVALID_DATE_RANGE" -> InternalError,
-      "INVALID_REQUEST" -> InternalError,
+      "INVALID_IDTYPE"        -> InternalError,
+      "INVALID_IDVALUE"       -> NinoFormatError,
+      "INVALID_REGIME_TYPE"   -> InternalError,
+      "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
+      "INVALID_DATE_FROM"     -> InternalError,
+      "INVALID_DATE_TO"       -> InternalError,
+      "INVALID_DATE_RANGE"    -> InternalError,
+      "INVALID_REQUEST"       -> InternalError,
       "REQUEST_NOT_PROCESSED" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "NO_DATA_FOUND"         -> NotFoundError,
+      "SERVER_ERROR"          -> InternalError,
+      "SERVICE_UNAVAILABLE"   -> InternalError
     )
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -84,18 +84,33 @@ class ErrorWrapperSpec extends UnitSpec {
     }
   }
 
-  "rendering an audit error" should {
-    "render correctly" when {
-      "there is one error" in {
-        val errorWrapper = ErrorWrapper(correlationId, BadRequestError)
+  "When ErrorWrapper has several errors, containsAnyOf" should {
+    val errorWrapper = ErrorWrapper("correlationId", BadRequestError, Some(List(NinoFormatError, TaxYearFormatError, BusinessIdFormatError)))
 
-        errorWrapper.auditErrors shouldBe Seq(AuditError(BadRequestError.code))
+    "return false" when {
+      "given no matching errors" in {
+        errorWrapper.containsAnyOf(RuleIncorrectOrEmptyBodyError, RuleTaxYearNotSupportedError) shouldBe false
       }
-      "there are multiple errors" in {
-        val errorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, TaxYearFormatError)))
+      "given a matching error in 'errors' but not the single 'error' which should be a BadRequestError" in {
+        errorWrapper.containsAnyOf(NinoFormatError, TaxYearFormatError, RuleTaxYearNotSupportedError) shouldBe false
+      }
+    }
 
-        errorWrapper.auditErrors shouldBe Seq(AuditError(NinoFormatError.code), AuditError(TaxYearFormatError.code))
+    "return true" when {
+      "given the 'single' BadRequestError" in {
+        errorWrapper.containsAnyOf(NinoFormatError, BadRequestError, TaxYearFormatError, RuleTaxYearNotSupportedError) shouldBe true
       }
+    }
+  }
+
+  "auditErrors" should {
+    "handle errors = None" in {
+      val errorWrapper = ErrorWrapper(correlationId, BadRequestError, None)
+      errorWrapper.auditErrors shouldBe Seq(AuditError(BadRequestError.code))
+    }
+    "handle errors = Some(_)" in {
+      val errorWrapper = ErrorWrapper(correlationId, BadRequestError, Some(Seq(NinoFormatError, BusinessIdFormatError)))
+      errorWrapper.auditErrors shouldBe Seq(AuditError(NinoFormatError.code), AuditError(BusinessIdFormatError.code))
     }
   }
 

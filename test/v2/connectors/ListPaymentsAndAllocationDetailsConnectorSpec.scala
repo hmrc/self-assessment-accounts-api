@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package v2.connectors
 
 import api.models.domain.Nino
+import api.connectors.ConnectorSpec
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
@@ -56,7 +57,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       MockHttpClient
         .get(
           s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
-          dummyDesHeaderCarrierConfig,
+          dummyHeaderCarrierConfig,
           parameters = queryParams,
           requiredDesHeaders,
           Seq("AnotherHeader" -> "HeaderValue")

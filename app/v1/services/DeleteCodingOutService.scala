@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,45 +16,42 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import cats.data.EitherT
-import cats.implicits._
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
-import v1.connectors.DeleteCodingOutConnector
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
+import cats.implicits._
+import v1.connectors.DeleteCodingOutConnector
 import v1.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
-import v1.support.DownstreamResponseMappingSupport
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends DownstreamResponseMappingSupport with Logging {
+class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) extends BaseService {
 
   def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+                                                             ctx: RequestContext,
+                                                             ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
-    val result = for {
-      desResponseWrapper <- EitherT(connector.deleteCodingOut(request)).leftMap(mapDownstreamErrors(desErrorMap))
-    } yield desResponseWrapper
-
-    result.value
+    connector.deleteCodingOut(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private def desErrorMap: Map[String, MtdError] =
-    Map(
+  private val downstreamErrorMap: Map[String, MtdError] = {
+    val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
-      "INVALID_CORRELATIONID"     -> DownstreamError,
-      "NO_DATA_FOUND"             -> CodingOutNotFoundError,
-      "SERVER_ERROR"              -> DownstreamError,
-      "SERVICE_UNAVAILABLE"       -> DownstreamError
+      "INVALID_TAX_YEAR" -> TaxYearFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "NO_DATA_FOUND" -> CodingOutNotFoundError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
+    val extraTysErrors = Map(
+      "INVALID_CORRELATION_ID" -> InternalError,
+      "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
+    )
+
+    errors ++ extraTysErrors
+  }
 }

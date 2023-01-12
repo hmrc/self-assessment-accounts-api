@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package v1.controllers.requestParsers
 import play.api.libs.json.Json
 import support.UnitSpec
 import v1.mocks.validators.MockCreateOrAmendCodingOutValidator
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TaxYearFormatError}
 import v1.models.request.createOrAmendCodingOut._
 
@@ -76,7 +76,7 @@ class CreateOrAmendCodingOutParserSpec extends UnitSpec {
     "return a parsed request" when {
       "no validation errors occur" in new Test {
         MockCreateOrAmendCodingOutValidator.validate(request).returns(Nil)
-        parser.parseRequest(request) shouldBe Right(CreateOrAmendCodingOutParsedRequest(Nino(nino), taxYear, validBody))
+        parser.parseRequest(request) shouldBe Right(CreateOrAmendCodingOutParsedRequest(Nino(nino), TaxYear.fromMtd(taxYear), validBody))
       }
     }
 

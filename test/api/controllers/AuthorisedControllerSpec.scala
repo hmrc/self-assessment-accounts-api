@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package api.controllers
 
 import api.mocks.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.models.errors.{DownstreamError, InvalidBearerTokenError, NinoFormatError, UnauthorisedError}
+import api.models.errors._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent}
@@ -78,7 +78,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
         MockedEnrolmentsAuthService
           .authorised(predicate)
-          .returns(Future.successful(Left(DownstreamError)))
+          .returns(Future.successful(Left(InternalError)))
 
         private val result = target.action(nino)(fakeGetRequest)
         status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -116,7 +116,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedMtdIdLookupService
         .lookup(nino)
-        .returns(Future.successful(Left(UnauthorisedError)))
+        .returns(Future.successful(Left(ClientNotAuthorisedError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN
@@ -128,7 +128,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedMtdIdLookupService
         .lookup(nino)
-        .returns(Future.successful(Left(DownstreamError)))
+        .returns(Future.successful(Left(InternalError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe INTERNAL_SERVER_ERROR
@@ -144,7 +144,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedEnrolmentsAuthService
         .authorised(predicate)
-        .returns(Future.successful(Left(UnauthorisedError)))
+        .returns(Future.successful(Left(ClientNotAuthorisedError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN
@@ -160,7 +160,7 @@ class AuthorisedControllerSpec extends ControllerBaseSpec {
 
       MockedEnrolmentsAuthService
         .authorised(predicate)
-        .returns(Future.successful(Left(UnauthorisedError)))
+        .returns(Future.successful(Left(ClientNotAuthorisedError)))
 
       private val result = target.action(nino)(fakeGetRequest)
       status(result) shouldBe FORBIDDEN

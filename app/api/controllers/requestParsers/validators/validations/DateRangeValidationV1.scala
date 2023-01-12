@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import api.models.errors.{MtdError, V1_RangeToDateBeforeFromDateError, RuleDateR
 
 object DateRangeValidationV1 {
 
-  def validate(from: String, to: String): List[MtdError] = {
+  def validate(from: String, to: String): Seq[MtdError] = {
     val fmtFrom = LocalDate.parse(from, dateFormat)
     val fmtTo   = LocalDate.parse(to, dateFormat)
 
@@ -33,12 +33,12 @@ object DateRangeValidationV1 {
     ).flatten
   }
 
-  private def checkIfToIsBeforeFrom(from: LocalDate, to: LocalDate): List[MtdError] =
+  private def checkIfToIsBeforeFrom(from: LocalDate, to: LocalDate): Seq[MtdError] =
     if (to isBefore from) List(V1_RangeToDateBeforeFromDateError) else Nil
 
-  private def checkIfFromIsTooEarly(from: LocalDate): List[MtdError] = if (from isBefore earliestDate) List(RuleFromDateNotSupportedError) else Nil
+  private def checkIfFromIsTooEarly(from: LocalDate): Seq[MtdError] = if (from isBefore earliestDate) List(RuleFromDateNotSupportedError) else Nil
 
-  private def checkIfDateRangeIsTooLarge(from: LocalDate, to: LocalDate): List[MtdError] = {
+  private def checkIfDateRangeIsTooLarge(from: LocalDate, to: LocalDate): Seq[MtdError] = {
     val start = from.atStartOfDay()
     val end   = to.atStartOfDay()
     if (Duration.between(start, end.plusDays(1) /* add day to make inclusive */ ).toDays > maxDateRange)

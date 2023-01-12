@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 package api.connectors.httpparsers
 
+import api.connectors.MtdIdLookupOutcome
+import api.models.errors.{InternalError, InvalidBearerTokenError, NinoFormatError}
 import play.api.http.Status.{FORBIDDEN, OK, UNAUTHORIZED}
 import play.api.libs.json._
 import uk.gov.hmrc.http.{HttpReads, HttpResponse}
-import api.connectors.MtdIdLookupOutcome
-import api.models.errors.{DownstreamError, InvalidBearerTokenError, NinoFormatError}
 
 object MtdIdLookupHttpParser extends HttpParser {
 
@@ -31,11 +31,11 @@ object MtdIdLookupHttpParser extends HttpParser {
       case OK =>
         response.validateJson[String](mtdIdJsonReads) match {
           case Some(mtdId) => Right(mtdId)
-          case None        => Left(DownstreamError)
+          case None        => Left(InternalError)
         }
       case FORBIDDEN    => Left(NinoFormatError)
       case UNAUTHORIZED => Left(InvalidBearerTokenError)
-      case _            => Left(DownstreamError)
+      case _            => Left(InternalError)
     }
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 package v1.mocks.services
 
-import api.controllers.EndpointLogContext
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 import v1.models.request.listPayments.ListPaymentsParsedRequest
 import v1.models.response.listPayments.{ListPaymentsResponse, Payment}
 import v1.services.ListPaymentsService
@@ -37,8 +36,8 @@ trait MockListPaymentsService extends MockFactory {
     def listPayments(
         requestData: ListPaymentsParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsResponse[Payment]]]]] = {
       (mockService
-        .list(_: ListPaymentsParsedRequest)(_: HeaderCarrier, _: ExecutionContext, _: EndpointLogContext, _: String))
-        .expects(requestData, *, *, *, *)
+        .list(_: ListPaymentsParsedRequest)(_: RequestContext, _: ExecutionContext))
+        .expects(requestData, *, *)
     }
 
   }

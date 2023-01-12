@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ trait MockRetrieveAllocationsValidator extends MockFactory {
 
   object MockRetrieveAllocationsValidator {
 
-    def validate(data: RetrieveAllocationsRawRequest): CallHandler1[RetrieveAllocationsRawRequest, List[MtdError]] = {
+    def validate(data: RetrieveAllocationsRawRequest): CallHandler1[RetrieveAllocationsRawRequest, Seq[MtdError]] = {
       (mockValidator
         .validate(_: RetrieveAllocationsRawRequest))
         .expects(data)

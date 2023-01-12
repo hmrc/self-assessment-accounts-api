@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import api.models.request.RawDataWithDateRange
 trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  private def parameterFormatValidation: T => List[List[MtdError]] = (data: T) => {
+  private def parameterFormatValidation: T => Seq[Seq[MtdError]] = (data: T) => {
     List(
       NinoValidation.validate(data.nino),
       data.from.map(DateFormatValidation.validate(_, V1_FromDateFormatError)).getOrElse(Nil),
@@ -31,7 +31,7 @@ trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
     )
   }
 
-  private def parameterRuleValidation: T => List[List[MtdError]] = { data =>
+  private def parameterRuleValidation: T => Seq[Seq[MtdError]] = { data =>
     List(
       MissingParameterValidation.validate(data.from, V1_MissingFromDateError),
       MissingParameterValidation.validate(data.to, V1_MissingToDateError),
@@ -42,7 +42,7 @@ trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
     )
   }
 
-  override def validate(data: T): List[MtdError] = {
+  override def validate(data: T): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

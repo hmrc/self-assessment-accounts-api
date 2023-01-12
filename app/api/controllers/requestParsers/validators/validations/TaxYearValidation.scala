@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ object TaxYearValidation {
 
   val taxYearFormat = "^2[0-9]{3}\\-[0-9]{2}$"
 
-  def validate(taxYear: String): List[MtdError] = {
+  def validate(taxYear: String): Seq[MtdError] = {
     if (taxYear.matches(taxYearFormat)) {
 
       val start = taxYear.substring(2, 4).toInt

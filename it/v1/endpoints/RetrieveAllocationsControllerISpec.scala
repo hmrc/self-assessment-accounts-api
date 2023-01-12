@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -132,21 +132,21 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
-        (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "INVALID_PAYMENT_LOT", BAD_REQUEST, PaymentIdFormatError),
         (BAD_REQUEST, "INVALID_PAYMENT_LOT_ITEM", BAD_REQUEST, PaymentIdFormatError),
-        (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, DownstreamError),
+        (BAD_REQUEST, "INVALID_CLEARING_DOC", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_REQUEST, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-        (BAD_REQUEST, "PARTIALLY_MIGRATED", INTERNAL_SERVER_ERROR, DownstreamError),
-        (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "SERVER_ERROR", INTERNAL_SERVER_ERROR, DownstreamError),
-        (BAD_REQUEST, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, DownstreamError)
+        (BAD_REQUEST, "PARTIALLY_MIGRATED", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
       input.foreach(args => (serviceErrorTest _).tupled(args))
     }

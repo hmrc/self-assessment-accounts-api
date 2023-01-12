@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,12 @@
 
 package api.hateoas
 
+import api.models.hateoas._
 import cats.Functor
 import cats.implicits._
 import config.AppConfig
-import javax.inject.Inject
-import api.models.hateoas._
 
-import scala.language.higherKinds
+import javax.inject.Inject
 
 class HateoasFactory @Inject() (appConfig: AppConfig) {
 

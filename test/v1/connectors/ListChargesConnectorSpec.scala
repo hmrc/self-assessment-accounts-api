@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -75,7 +75,7 @@ class ListChargesConnectorSpec extends ConnectorSpec {
           .parameterGet(
             s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
             queryParams,
-            dummyDesHeaderCarrierConfig,
+            dummyHeaderCarrierConfig,
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")
           )

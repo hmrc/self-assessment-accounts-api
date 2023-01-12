@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,57 +16,51 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import cats.data.EitherT
-import uk.gov.hmrc.http.HeaderCarrier
-import utils.Logging
+import api.services.BaseService
+import cats.implicits._
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
-import v2.support.DownstreamResponseMappingSupport
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanceAndTransactionsConnector)
-    extends DownstreamResponseMappingSupport
-    with Logging {
+class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanceAndTransactionsConnector) extends BaseService {
 
   def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      logContext: EndpointLogContext,
-      correlationId: String): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
 
-    val result = EitherT(connector.retrieveBalanceAndTransactions(request)).leftMap(mapDownstreamErrors(downstreamErrorMap))
-
-    result.value
+    connector
+      .retrieveBalanceAndTransactions(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  val downstreamErrorMap: Map[String, MtdError] =
+  private val errorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDTYPE" -> InternalError,
-      "INVALID_IDNUMBER" -> NinoFormatError,
-      "INVALID_REGIME_TYPE" -> InternalError,
-      "INVALID_DOC_NUMBER" -> DocNumberFormatError,
-      "INVALID_ONLY_OPEN_ITEMS" -> OnlyOpenItemsFormatError,
-      "INVALID_INCLUDE_LOCKS" -> IncludeLocksFormatError,
-      "INVALID_CALCULATE_ACCRUED_INTEREST" -> CalculateAccruedInterestFormatError,
+      "INVALID_CORRELATIONID"                -> InternalError,
+      "INVALID_IDTYPE"                       -> InternalError,
+      "INVALID_IDNUMBER"                     -> NinoFormatError,
+      "INVALID_REGIME_TYPE"                  -> InternalError,
+      "INVALID_DOC_NUMBER"                   -> DocNumberFormatError,
+      "INVALID_ONLY_OPEN_ITEMS"              -> OnlyOpenItemsFormatError,
+      "INVALID_INCLUDE_LOCKS"                -> IncludeLocksFormatError,
+      "INVALID_CALCULATE_ACCRUED_INTEREST"   -> CalculateAccruedInterestFormatError,
       "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> CustomerPaymentInformationFormatError,
-      "INVALID_DATE_FROM" -> FromDateFormatError,
-      "INVALID_DATE_TO" -> ToDateFormatError,
-      "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
-      "INVALID_REQUEST" -> RuleInconsistentQueryParamsError,
-      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> RemovePaymentOnAccountFormatError,
-      "INVALID_INCLUDE_STATISTICAL" -> IncludeEstimatedChargesFormatError,
-      "REQUEST_NOT_PROCESSED" -> InternalError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "INVALID_DATE_FROM"                    -> FromDateFormatError,
+      "INVALID_DATE_TO"                      -> ToDateFormatError,
+      "INVALID_DATE_RANGE"                   -> RuleInvalidDateRangeError,
+      "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
+      "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> RemovePaymentOnAccountFormatError,
+      "INVALID_INCLUDE_STATISTICAL"          -> IncludeEstimatedChargesFormatError,
+      "REQUEST_NOT_PROCESSED"                -> InternalError,
+      "NO_DATA_FOUND"                        -> NotFoundError,
+      "SERVER_ERROR"                         -> InternalError,
+      "SERVICE_UNAVAILABLE"                  -> InternalError
     )
 
 }

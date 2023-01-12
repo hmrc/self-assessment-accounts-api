@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package v1.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 
 import javax.inject.Inject
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.RetrieveCodingOutValidator
 import v1.models.request.retrieveCodingOut._
 
@@ -27,6 +27,6 @@ class RetrieveCodingOutRequestParser @Inject() (val validator: RetrieveCodingOut
     extends RequestParser[RetrieveCodingOutRawRequest, RetrieveCodingOutParsedRequest] {
 
   override protected def requestFor(data: RetrieveCodingOutRawRequest): RetrieveCodingOutParsedRequest =
-    RetrieveCodingOutParsedRequest(Nino(data.nino), data.taxYear, data.source)
+    RetrieveCodingOutParsedRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.source)
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ class RetrieveTransactionDetailsValidator extends Validator[RetrieveTransactionD
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveTransactionDetailsRawRequest => List[List[MtdError]] =
+  private def parameterFormatValidation: RetrieveTransactionDetailsRawRequest => Seq[Seq[MtdError]] =
     (data: RetrieveTransactionDetailsRawRequest) => {
       List(
         NinoValidation.validate(data.nino),
@@ -33,7 +33,7 @@ class RetrieveTransactionDetailsValidator extends Validator[RetrieveTransactionD
       )
     }
 
-  override def validate(data: RetrieveTransactionDetailsRawRequest): List[MtdError] = {
+  override def validate(data: RetrieveTransactionDetailsRawRequest): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

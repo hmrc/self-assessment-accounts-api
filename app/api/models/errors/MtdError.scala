@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@
 package api.models.errors
 
 import play.api.libs.functional.syntax._
-import play.api.libs.json.{JsPath, OWrites}
+import play.api.libs.json.{JsObject, JsPath, Json, OWrites}
 
-case class MtdError(code: String, message: String, httpStatus: Int, paths: Option[Seq[String]] = None)
+case class MtdError(code: String, message: String, httpStatus: Int, paths: Option[Seq[String]] = None) {
+  val asJson: JsObject = Json.toJson(this).as[JsObject]
+}
 
 object MtdError {
 

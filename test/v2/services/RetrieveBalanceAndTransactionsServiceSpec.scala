@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
 import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
-import uk.gov.hmrc.http.HeaderCarrier
+import api.services.ServiceSpec
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
 import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDetails
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
@@ -92,25 +91,25 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
 
       val errors: Seq[(String, MtdError)] =
         Seq(
-          "INVALID_CORRELATIONID" -> InternalError,
-          "INVALID_IDTYPE" -> InternalError,
-          "INVALID_IDNUMBER" -> NinoFormatError,
-          "INVALID_REGIME_TYPE" -> InternalError,
-          "INVALID_DOC_NUMBER" -> DocNumberFormatError,
-          "INVALID_ONLY_OPEN_ITEMS" -> OnlyOpenItemsFormatError,
-          "INVALID_INCLUDE_LOCKS" -> IncludeLocksFormatError,
-          "INVALID_CALCULATE_ACCRUED_INTEREST" -> CalculateAccruedInterestFormatError,
+          "INVALID_CORRELATIONID"                -> InternalError,
+          "INVALID_IDTYPE"                       -> InternalError,
+          "INVALID_IDNUMBER"                     -> NinoFormatError,
+          "INVALID_REGIME_TYPE"                  -> InternalError,
+          "INVALID_DOC_NUMBER"                   -> DocNumberFormatError,
+          "INVALID_ONLY_OPEN_ITEMS"              -> OnlyOpenItemsFormatError,
+          "INVALID_INCLUDE_LOCKS"                -> IncludeLocksFormatError,
+          "INVALID_CALCULATE_ACCRUED_INTEREST"   -> CalculateAccruedInterestFormatError,
           "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> CustomerPaymentInformationFormatError,
-          "INVALID_DATE_FROM" -> FromDateFormatError,
-          "INVALID_DATE_TO" -> ToDateFormatError,
-          "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
-          "INVALID_REQUEST" -> RuleInconsistentQueryParamsError,
-          "INVALID_REMOVE_PAYMENT_ON_ACCOUNT" -> RemovePaymentOnAccountFormatError,
-          "INVALID_INCLUDE_STATISTICAL" -> IncludeEstimatedChargesFormatError,
-          "REQUEST_NOT_PROCESSED" -> InternalError,
-          "NO_DATA_FOUND" -> NotFoundError,
-          "SERVER_ERROR" -> InternalError,
-          "SERVICE_UNAVAILABLE" -> InternalError
+          "INVALID_DATE_FROM"                    -> FromDateFormatError,
+          "INVALID_DATE_TO"                      -> ToDateFormatError,
+          "INVALID_DATE_RANGE"                   -> RuleInvalidDateRangeError,
+          "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
+          "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> RemovePaymentOnAccountFormatError,
+          "INVALID_INCLUDE_STATISTICAL"          -> IncludeEstimatedChargesFormatError,
+          "REQUEST_NOT_PROCESSED"                -> InternalError,
+          "NO_DATA_FOUND"                        -> NotFoundError,
+          "SERVER_ERROR"                         -> InternalError,
+          "SERVICE_UNAVAILABLE"                  -> InternalError
         )
 
       errors.foreach(args => (serviceError _).tupled(args))
@@ -119,11 +118,6 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
   }
 
   trait Test extends MockRetrieveBalanceAndTransactionsConnector {
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    implicit val logContext: EndpointLogContext =
-      EndpointLogContext("RetrieveBalanceAndTransactionsController", "RetrieveBalanceAndTransactions")
 
     val service = new RetrieveBalanceAndTransactionsService(
       connector = mockRetrieveBalanceAndTransactionsConnector

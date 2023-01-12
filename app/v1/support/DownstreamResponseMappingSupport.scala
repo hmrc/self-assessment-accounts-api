@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ trait DownstreamResponseMappingSupport extends ResponseMappingSupport {
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId")
-        Left(ErrorWrapper(desResponseWrapper.correlationId, DownstreamError))
+        Left(ErrorWrapper(desResponseWrapper.correlationId, InternalError))
       case _ => Right(desResponseWrapper)
     }
   }

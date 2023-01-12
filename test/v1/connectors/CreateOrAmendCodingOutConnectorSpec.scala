@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,68 +17,61 @@
 package v1.connectors
 
 import api.connectors.ConnectorSpec
-import api.mocks.MockHttpClient
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v1.models.request.createOrAmendCodingOut.{
-  CreateOrAmendCodingOutParsedRequest,
-  CreateOrAmendCodingOutRequestBody,
-  TaxCodeComponent,
-  TaxCodeComponents
-}
+import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutParsedRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponents}
 
 import scala.concurrent.Future
 
 class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
 
-  val nino: String    = "AA111111A"
-  val taxYear: String = "2021-22"
+  val nino: String = "AA111111A"
 
-  val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
-    payeUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
-    selfAssessmentUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
-    debt = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
-    inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
-  ))
+  trait Test { _: ConnectorTest =>
+    def taxYear: TaxYear
 
-  val request: CreateOrAmendCodingOutParsedRequest = CreateOrAmendCodingOutParsedRequest(
-    nino = Nino(nino),
-    taxYear = taxYear,
-    body = createOrAmendCodingOutRequestBody
-  )
+    val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody =
+      CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(None, None, None, None))
 
-  class Test extends MockHttpClient with MockAppConfig {
+    val request: CreateOrAmendCodingOutParsedRequest = CreateOrAmendCodingOutParsedRequest(
+      nino = Nino(nino),
+      taxYear = taxYear,
+      body = createOrAmendCodingOutRequestBody
+    )
 
     val connector: CreateOrAmendCodingOutConnector = new CreateOrAmendCodingOutConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    MockAppConfig.ifsBaseUrl returns baseUrl
-    MockAppConfig.ifsToken returns "ifs-token"
-    MockAppConfig.ifsEnvironment returns "ifs-environment"
-    MockAppConfig.ifsEnvironmentHeaders returns Some(allowedIfsHeaders)
   }
 
   "CreateOrAmendCodingOutConnector" when {
-    ".amendCodingOut" should {
-      "return a success upon HttpClient success" in new Test {
+    "called for a non-TYS tax year" should {
+      "return a success upon HttpClient success" in new Ifs1Test with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2021-22")
+
         val outcome = Right(ResponseWrapper(correlationId, ()))
 
-        implicit val hc: HeaderCarrier                   = HeaderCarrier(otherHeaders = otherHeaders ++ Seq("Content-Type" -> "application/json"))
-        val requiredIfsHeadersPut: Seq[(String, String)] = requiredIfsHeaders ++ Seq("Content-Type" -> "application/json")
+        willPut(
+          url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/2021-22",
+          body = createOrAmendCodingOutRequestBody
+        ) returns Future.successful(outcome)
 
-        MockHttpClient
-          .put(
-            url = s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear",
-            config = dummyIfsHeaderCarrierConfig,
-            body = createOrAmendCodingOutRequestBody,
-            requiredHeaders = requiredIfsHeadersPut,
-            excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        await(connector.amendCodingOut(request)) shouldBe outcome
+      }
+    }
+
+    "called for a TYS tax year" should {
+      "return a success upon HttpClient success" in new TysIfsTest with Test {
+        def taxYear: TaxYear = TaxYear.fromMtd("2023-24")
+
+        val outcome = Right(ResponseWrapper(correlationId, ()))
+
+        willPut(
+          url = s"$baseUrl/income-tax/23-24/accounts/self-assessment/collection/tax-code/$nino",
+          body = createOrAmendCodingOutRequestBody
+        ) returns Future.successful(outcome)
 
         await(connector.amendCodingOut(request)) shouldBe outcome
       }

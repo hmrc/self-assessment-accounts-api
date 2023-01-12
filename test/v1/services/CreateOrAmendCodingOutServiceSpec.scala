@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.services.ServiceSpec
-import v1.mocks.connectors.MockCreateOrAmendCodingOutConnector
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import v1.mocks.connectors.MockCreateOrAmendCodingOutConnector
 import v1.models.request.createOrAmendCodingOut._
 
 import scala.concurrent.Future
@@ -29,7 +28,7 @@ import scala.concurrent.Future
 class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
 
   private val nino    = "AA112233A"
-  private val taxYear = "2021-22"
+  private val taxYear = TaxYear.fromMtd("2021-22")
 
   val createOrAmendCodingOutRequestBody: CreateOrAmendCodingOutRequestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
     payeUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
@@ -45,7 +44,6 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
   )
 
   trait Test extends MockCreateOrAmendCodingOutConnector {
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service: CreateOrAmendCodingOutService = new CreateOrAmendCodingOutService(
       connector = mockCreateOrAmendCodingOutConnector
@@ -77,18 +75,23 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
             await(service.amend(request)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
-        val input = Seq(
+        val errors = Seq(
           ("INVALID_TAXABLE_ENTITY_ID", NinoFormatError),
           ("INVALID_TAX_YEAR", TaxYearFormatError),
-          ("INVALID_CORRELATIONID", DownstreamError),
-          ("INVALID_PAYLOAD", DownstreamError),
+          ("INVALID_CORRELATIONID", InternalError),
+          ("INVALID_PAYLOAD", InternalError),
           ("INVALID_REQUEST_TAX_YEAR", RuleTaxYearNotEndedError),
           ("DUPLICATE_ID_NOT_ALLOWED", RuleDuplicateIdError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
-        input.foreach(args => (serviceError _).tupled(args))
+        val extraTysErrors = Seq(
+          ("INVALID_CORRELATION_ID", InternalError),
+          ("TAX_YEAR_NOT_SUPPORTED", RuleTaxYearNotSupportedError)
+        )
+
+        (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
       }
     }
   }

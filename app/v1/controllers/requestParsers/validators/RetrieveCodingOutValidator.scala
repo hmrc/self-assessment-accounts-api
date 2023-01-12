@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ class RetrieveCodingOutValidator @Inject() (implicit appConfig: AppConfig) exten
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  private def parameterFormatValidation: RetrieveCodingOutRawRequest => List[List[MtdError]] = (data: RetrieveCodingOutRawRequest) => {
+  private def parameterFormatValidation: RetrieveCodingOutRawRequest => Seq[Seq[MtdError]] = (data: RetrieveCodingOutRawRequest) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear),
@@ -36,13 +36,13 @@ class RetrieveCodingOutValidator @Inject() (implicit appConfig: AppConfig) exten
     )
   }
 
-  private def parameterRuleValidation: RetrieveCodingOutRawRequest => List[List[MtdError]] = (data: RetrieveCodingOutRawRequest) => {
+  private def parameterRuleValidation: RetrieveCodingOutRawRequest => Seq[Seq[MtdError]] = (data: RetrieveCodingOutRawRequest) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 
-  override def validate(data: RetrieveCodingOutRawRequest): List[MtdError] = {
+  override def validate(data: RetrieveCodingOutRawRequest): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

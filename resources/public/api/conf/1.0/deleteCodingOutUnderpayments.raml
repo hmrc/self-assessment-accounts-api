@@ -7,8 +7,8 @@ is:
   - errors.ruleTaxYearRangeInvalid
   - errors.clientOrAgentNotAuthorised
   - errors.codingOutNotFound
-displayName: "Delete Coding Out underpayments and debt amounts [test only]"
-description: This endpoint allows the developer to delete custom coding out amounts for a given tax year and NINO.
+displayName: Delete Coding Out Underpayments and Debt Amounts [test only]
+description: This endpoint enables you to delete custom coding out amounts for a given tax year and National Insurance number.
 (annotations.sandboxData): !include scenarios/deleteCodingOutUnderpayments.md
 (annotations.scope): "write:self-assessment"
 securedBy: [ sec.oauth_2_0: { scopes: [ "write:self-assessment" ] } ]

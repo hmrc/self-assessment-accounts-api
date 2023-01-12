@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,13 @@ package v1.controllers
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.mocks.hateoas.MockHateoasFactory
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.hateoas.Method.{DELETE, GET, PUT}
 import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v1.mocks.requestParsers.MockCreateOrAmendCodingOutRequestParser
@@ -39,7 +41,8 @@ class CreateOrAmendCodingOutControllerSpec
     with ControllerTestRunner
     with MockCreateOrAmendCodingOutService
     with MockCreateOrAmendCodingOutRequestParser
-    with MockHateoasFactory {
+    with MockHateoasFactory
+    with MockAppConfig {
 
   private val taxYear = "2019-20"
 
@@ -109,7 +112,7 @@ class CreateOrAmendCodingOutControllerSpec
           |""".stripMargin)
 
   private val rawData     = CreateOrAmendCodingOutRawRequest(nino, taxYear, requestJson)
-  private val requestData = CreateOrAmendCodingOutParsedRequest(Nino(nino), taxYear, requestBody)
+  private val requestData = CreateOrAmendCodingOutParsedRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBody)
 
   "handleRequest" should {
     "return OK" when {
@@ -126,7 +129,12 @@ class CreateOrAmendCodingOutControllerSpec
           .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
           .returns(HateoasWrapper((), testHateoasLinks))
 
-        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
+        runOkTestWithAudit(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponseJson),
+          maybeAuditRequestBody = Some(requestJson),
+          maybeAuditResponseBody = Some(mtdResponseJson)
+        )
       }
     }
     "return the error as per spec" when {
@@ -135,7 +143,7 @@ class CreateOrAmendCodingOutControllerSpec
           .parseRequest(rawData)
           .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-        runErrorTestWithAudit(NinoFormatError)
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestJson))
       }
 
       "the service returns an error" in new Test {
@@ -147,7 +155,7 @@ class CreateOrAmendCodingOutControllerSpec
           .amend(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
 
-        runErrorTestWithAudit(RuleTaxYearNotEndedError)
+        runErrorTestWithAudit(RuleTaxYearNotEndedError, maybeAuditRequestBody = Some(requestJson))
       }
     }
   }
@@ -157,6 +165,7 @@ class CreateOrAmendCodingOutControllerSpec
     val controller = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
+      appConfig = mockAppConfig,
       parser = mockCreateOrAmendCodingOutRequestParser,
       service = mockCreateOrAmendCodingOutService,
       hateoasFactory = mockHateoasFactory,
@@ -164,6 +173,8 @@ class CreateOrAmendCodingOutControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    MockAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
 
     protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
 

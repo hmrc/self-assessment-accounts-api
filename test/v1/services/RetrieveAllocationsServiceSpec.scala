@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
 import api.models.domain.Nino
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import uk.gov.hmrc.http.HeaderCarrier
 import v1.mocks.connectors.MockRetrieveAllocationsConnector
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
@@ -43,9 +41,6 @@ class RetrieveAllocationsServiceSpec extends ServiceSpec {
     )
 
   trait Test extends MockRetrieveAllocationsConnector {
-
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new RetrieveAllocationsService(
       connector = mockRetrieveAllocationsConnector
@@ -87,20 +82,20 @@ class RetrieveAllocationsServiceSpec extends ServiceSpec {
           }
 
         val input: Seq[(String, MtdError)] = Seq(
-          ("INVALID_CORRELATIONID", DownstreamError),
-          ("INVALID_IDTYPE", DownstreamError),
+          ("INVALID_CORRELATIONID", InternalError),
+          ("INVALID_IDTYPE", InternalError),
           ("INVALID_IDVALUE", NinoFormatError),
-          ("INVALID_REGIME_TYPE", DownstreamError),
+          ("INVALID_REGIME_TYPE", InternalError),
           ("INVALID_PAYMENT_LOT", PaymentIdFormatError),
           ("INVALID_PAYMENT_LOT_ITEM", PaymentIdFormatError),
-          ("INVALID_CLEARING_DOC", DownstreamError),
-          ("INVALID_DATE_FROM", DownstreamError),
-          ("INVALID_DATE_TO", DownstreamError),
-          ("REQUEST_NOT_PROCESSED", DownstreamError),
-          ("PARTIALLY_MIGRATED", DownstreamError),
+          ("INVALID_CLEARING_DOC", InternalError),
+          ("INVALID_DATE_FROM", InternalError),
+          ("INVALID_DATE_TO", InternalError),
+          ("REQUEST_NOT_PROCESSED", InternalError),
+          ("PARTIALLY_MIGRATED", InternalError),
           ("NO_DATA_FOUND", NotFoundError),
-          ("SERVER_ERROR", DownstreamError),
-          ("SERVICE_UNAVAILABLE", DownstreamError)
+          ("SERVER_ERROR", InternalError),
+          ("SERVICE_UNAVAILABLE", InternalError)
         )
 
         input.foreach(args => (serviceError _).tupled(args))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ trait ResponseMappingSupport {
 
     lazy val defaultErrorCodeMapping: String => MtdError = { code =>
       logger.warn(s"[${logContext.controllerName}] [${logContext.endpointName}] - No mapping found for error code $code")
-      DownstreamError
+      InternalError
     }
 
     downstreamResponseWrapper match {
@@ -39,11 +39,11 @@ trait ResponseMappingSupport {
       case ResponseWrapper(correlationId, DownstreamErrors(errorCodes)) =>
         val mtdErrors = errorCodes.map(error => errorCodeMap.applyOrElse(error.code, defaultErrorCodeMapping))
 
-        if (mtdErrors.contains(DownstreamError)) {
+        if (mtdErrors.contains(InternalError)) {
           logger.warn(
             s"[${logContext.controllerName}] [${logContext.endpointName}] [CorrelationId - $correlationId]" +
               s" - downstream returned ${errorCodes.map(_.code).mkString(",")}. Revert to ISE")
-          ErrorWrapper(correlationId, DownstreamError, None)
+          ErrorWrapper(correlationId, InternalError, None)
         } else {
           ErrorWrapper(correlationId, BadRequestError, Some(mtdErrors))
         }

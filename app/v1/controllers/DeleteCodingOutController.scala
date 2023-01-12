@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,26 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.DeleteCodingOutParser
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
 import v1.services.DeleteCodingOutService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
-class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthService,
-                                           val lookupService: MtdIdLookupService,
-                                           parser: DeleteCodingOutParser,
-                                           service: DeleteCodingOutService,
-                                           auditService: AuditService,
-                                           cc: ControllerComponents,
-                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with BaseController
+class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService,
+                                          val lookupService: MtdIdLookupService,
+                                          parser: DeleteCodingOutParser,
+                                          service: DeleteCodingOutService,
+                                          auditService: AuditService,
+                                          cc: ControllerComponents,
+                                          idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+  extends AuthorisedController(cc)
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -48,52 +43,23 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
 
   def handleRequest(nino: String, taxYear: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(message = s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-        s"with correlationId : $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+
       val rawData = DeleteCodingOutRawRequest(nino, taxYear)
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](parser.parseRequest(rawData))
-          serviceResponse <- EitherT(service.deleteCodingOut(parsedRequest))
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with CorrelationId: ${serviceResponse.correlationId}")
 
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino, "taxYear" -> taxYear),
-              requestBody = None,
-              `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = NO_CONTENT, None, None)
-            )
-          )
+      val requestHandler =
+        RequestHandler
+          .withParser(parser)
+          .withService(service.deleteCodingOut)
+          .withNoContentResult()
+          .withAuditing(
+            AuditHandler(
+              auditService,
+              auditType = "DeleteCodingOutUnderpayments",
+              transactionName = "delete-coding-out-underpayments",
+              params = Map("nino" -> nino, "taxYear" -> taxYear)))
 
-          NoContent.withApiHeaders(serviceResponse.correlationId)
-
-        }
-      result.leftMap { errorWrapper =>
-        val result = errorResult(errorWrapper)
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            requestBody = None,
-            `X-CorrelationId` = errorWrapper.correlationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
-        result
-      }.merge
+      requestHandler.handleRequest(rawData)
     }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent(auditType = "DeleteCodingOutUnderpayments", transactionName = "delete-coding-out-underpayments", detail = details)
-    auditService.auditEvent(event)
-  }
 
 }

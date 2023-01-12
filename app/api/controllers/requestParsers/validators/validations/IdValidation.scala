@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import api.models.errors.{IdFormatError, MtdError}
 
 object IdValidation {
 
-  def validate(field: BigDecimal, path: String): List[MtdError] = {
+  def validate(field: BigDecimal, path: String): Seq[MtdError] = {
     if (field > 0 && field < 1000000000000000.00 && field.scale <= 0) {
       NoValidationErrors
     } else {

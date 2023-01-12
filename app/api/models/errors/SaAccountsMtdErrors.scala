@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,4 +66,4 @@ object IncludeEstimatedChargesFormatError
     extends MtdError(code = "FORMAT_INCLUDE_ESTIMATED_CHARGES", message = "The provided includeEstimatedCharges is invalid", BAD_REQUEST)
 
 object CodingOutNotFoundError
-    extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Coding out amounts could not be found for the supplied nino and taxYear", NOT_FOUND)
+    extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Coded out amounts could not be found for the supplied nino and taxYear", NOT_FOUND)

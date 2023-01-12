@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
 
   private val validationSet = List(parameterValidation, parameterRuleValidation)
 
-  private def parameterValidation: ListPaymentsAndAllocationDetailsRawData => List[List[MtdError]] =
+  private def parameterValidation: ListPaymentsAndAllocationDetailsRawData => Seq[Seq[MtdError]] =
     (data: ListPaymentsAndAllocationDetailsRawData) => {
       List(
         NinoValidation.validate(data.nino),
@@ -40,7 +40,7 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
       )
     }
 
-  private def parameterRuleValidation: ListPaymentsAndAllocationDetailsRawData => List[List[MtdError]] =
+  private def parameterRuleValidation: ListPaymentsAndAllocationDetailsRawData => Seq[Seq[MtdError]] =
     (data: ListPaymentsAndAllocationDetailsRawData) => {
       List(
         DateRangeValidationV2.validate(data.fromDate, data.toDate),
@@ -48,7 +48,7 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
       )
     }
 
-  override def validate(data: ListPaymentsAndAllocationDetailsRawData): List[MtdError] = {
+  override def validate(data: ListPaymentsAndAllocationDetailsRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

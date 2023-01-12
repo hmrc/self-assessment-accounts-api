@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 package v2.mocks.services
 
-import api.controllers.EndpointLogContext
+import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import uk.gov.hmrc.http.HeaderCarrier
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.services.RetrieveChargeHistoryService
@@ -39,13 +38,11 @@ trait MockRetrieveChargeHistoryService extends MockFactory {
       (
         mockRetrieveChargeHistoryService
           .retrieveChargeHistory(_: RetrieveChargeHistoryRequest)(
-            _: HeaderCarrier,
-            _: ExecutionContext,
-            _: EndpointLogContext,
-            _: String
+            _: RequestContext,
+            _: ExecutionContext
           )
         )
-        .expects(request, *, *, *, *)
+        .expects(request, *, *)
     }
 
   }

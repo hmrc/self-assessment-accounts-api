@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import config.AppConfig
 object TaxYearNotSupportedValidation {
 
   // @param taxYear in MTD (vendor-facing) format YYYY-YY
-  def validate(taxYear: String)(implicit appConfig: AppConfig): List[MtdError] = {
+  def validate(taxYear: String)(implicit appConfig: AppConfig): Seq[MtdError] = {
     val downstreamTaxYear = TaxYear.fromMtd(taxYear).year
     if (downstreamTaxYear < appConfig.minimumPermittedTaxYear) List(RuleTaxYearNotSupportedError) else NoValidationErrors
   }

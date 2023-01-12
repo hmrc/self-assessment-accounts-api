@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -76,7 +76,7 @@ class RetrieveBalanceControllerSpec
           .wrap(retrieveBalanceResponse, RetrieveBalanceHateoasData(nino))
           .returns(HateoasWrapper(retrieveBalanceResponse, Seq(balanceLink)))
 
-        runOkTestWithAudit(expectedStatus = OK, maybeAuditRequestBody = Some(mtdResponseJson))
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 

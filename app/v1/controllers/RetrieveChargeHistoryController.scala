@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,10 @@
 
 package v1.controllers
 
-import api.controllers.{AuthorisedController, BaseController, EndpointLogContext}
+import api.controllers._
 import api.hateoas.HateoasFactory
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.errors._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import cats.data.EitherT
-import cats.implicits._
-import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import play.mvc.Http.MimeTypes
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.audit.http.connector.AuditResult
 import utils.{IdGenerator, Logging}
 import v1.controllers.requestParsers.RetrieveChargeHistoryRequestParser
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawRequest
@@ -35,7 +27,7 @@ import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryHateoasData
 import v1.services.RetrieveChargeHistoryService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 @Singleton
 class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuthService,
@@ -45,9 +37,8 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
                                                  service: RetrieveChargeHistoryService,
                                                  hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
-                                                 val idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                                 idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
-    with BaseController
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -58,66 +49,23 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
 
   def retrieveChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val correlationId: String = idGenerator.generateCorrelationId
-      logger.info(
-        s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
-          s"with CorrelationId: $correlationId")
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val rawRequest = RetrieveChargeHistoryRawRequest(nino, transactionId)
-      val result =
-        for {
-          parsedRequest   <- EitherT.fromEither[Future](requestParser.parseRequest(rawRequest))
-          serviceResponse <- EitherT(service.retrieveChargeHistory(parsedRequest))
-          vendorResponse <- EitherT.fromEither[Future](
-            hateoasFactory
-              .wrap(serviceResponse.responseData, RetrieveChargeHistoryHateoasData(nino, transactionId))
-              .asRight[ErrorWrapper])
-        } yield {
-          logger.info(
-            s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-              s"Success response received with correlationId: ${serviceResponse.correlationId}"
-          )
 
-          auditSubmission(
-            GenericAuditDetail(
-              userDetails = request.userDetails,
-              params = Map("nino" -> nino),
-              requestBody = None,
-              `X-CorrelationId` = serviceResponse.correlationId,
-              auditResponse = AuditResponse(httpStatus = OK, None, None)
-            )
-          )
+      val requestHandler =
+        RequestHandler
+          .withParser(requestParser)
+          .withService(service.retrieveChargeHistory)
+          .withHateoasResult(hateoasFactory)(RetrieveChargeHistoryHateoasData(nino, transactionId))
+          .withAuditing(
+            AuditHandler(
+              auditService,
+              auditType = "retrieveASelfAssessmentChargesHistory",
+              transactionName = "retrieve-a-self-assessment-charges-history",
+              params = Map("nino" -> nino)))
 
-          Ok(Json.toJson(vendorResponse))
-            .withApiHeaders(serviceResponse.correlationId)
-            .as(MimeTypes.JSON)
-        }
-
-      result.leftMap { errorWrapper =>
-        val result = errorResult(errorWrapper)
-
-        auditSubmission(
-          GenericAuditDetail(
-            userDetails = request.userDetails,
-            params = Map("nino" -> nino),
-            requestBody = None,
-            `X-CorrelationId` = errorWrapper.correlationId,
-            auditResponse = AuditResponse(httpStatus = result.header.status, response = Left(errorWrapper.auditErrors))
-          )
-        )
-
-        result
-      }.merge
+      requestHandler.handleRequest(rawRequest)
     }
-
-  private def auditSubmission(details: GenericAuditDetail)(implicit hc: HeaderCarrier, ec: ExecutionContext): Future[AuditResult] = {
-    val event = AuditEvent(
-      auditType = "retrieveASelfAssessmentChargesHistory",
-      transactionName = "retrieve-a-self-assessment-charges-history",
-      detail = details
-    )
-
-    auditService.auditEvent(event)
-  }
 
 }

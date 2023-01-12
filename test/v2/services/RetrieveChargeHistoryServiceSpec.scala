@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
 import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
-import uk.gov.hmrc.http.HeaderCarrier
+import api.services.ServiceSpec
 import v2.mocks.connectors.MockRetrieveChargeHistoryConnector
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
 import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
@@ -82,18 +81,18 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       val errors: Seq[(String, MtdError)] =
         Seq(
           "INVALID_CORRELATIONID" -> InternalError,
-          "INVALID_IDTYPE" -> InternalError,
-          "INVALID_IDVALUE" -> NinoFormatError,
-          "INVALID_REGIME_TYPE" -> InternalError,
-          "INVALID_DOC_NUMBER" -> TransactionIdFormatError,
-          "INVALID_DATE_FROM" -> InternalError,
-          "INVALID_DATE_TO" -> InternalError,
-          "INVALID_DATE_RANGE" -> InternalError,
-          "INVALID_REQUEST" -> InternalError,
+          "INVALID_IDTYPE"        -> InternalError,
+          "INVALID_IDVALUE"       -> NinoFormatError,
+          "INVALID_REGIME_TYPE"   -> InternalError,
+          "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
+          "INVALID_DATE_FROM"     -> InternalError,
+          "INVALID_DATE_TO"       -> InternalError,
+          "INVALID_DATE_RANGE"    -> InternalError,
+          "INVALID_REQUEST"       -> InternalError,
           "REQUEST_NOT_PROCESSED" -> InternalError,
-          "NO_DATA_FOUND" -> NotFoundError,
-          "SERVER_ERROR" -> InternalError,
-          "SERVICE_UNAVAILABLE" -> InternalError
+          "NO_DATA_FOUND"         -> NotFoundError,
+          "SERVER_ERROR"          -> InternalError,
+          "SERVICE_UNAVAILABLE"   -> InternalError
         )
 
       errors.foreach(args => (serviceError _).tupled(args))
@@ -101,11 +100,6 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
   }
 
   trait Test extends MockRetrieveChargeHistoryConnector {
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    implicit val logContext: EndpointLogContext =
-      EndpointLogContext("RetrieveChargeHistoryController", "RetrieveChargeHistory")
 
     val service = new RetrieveChargeHistoryService(
       connector = mockRetrieveChargeHistoryConnector

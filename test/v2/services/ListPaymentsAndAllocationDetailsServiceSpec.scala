@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
 
 package v2.services
 
-import api.controllers.EndpointLogContext
 import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
-import uk.gov.hmrc.http.HeaderCarrier
+import api.services.ServiceSpec
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
 import v2.mocks.connectors.MockListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
@@ -35,17 +34,17 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
   private val paymentLot     = "081203010024"
   private val paymentLotItem = "000001"
 
-  private val validRequest: ListPaymentsAndAllocationDetailsRequest =
+  private val request: ListPaymentsAndAllocationDetailsRequest =
     ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some(dateFrom), Some(dateTo), Some(paymentLot), Some(paymentLotItem))
 
   "ListPaymentsAndAllocationDetailsService" should {
     "service call successful" when {
       "return mapped result" in new Test {
         MockListPaymentsAndAllocationDetailsConnector
-          .listPaymentsAndAllocationDetails(validRequest)
+          .listPaymentsAndAllocationDetails(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObject))))
 
-        val result = await(service.listPaymentsAndAllocationDetails(validRequest))
+        val result = await(service.listPaymentsAndAllocationDetails(request))
         result shouldBe Right(ResponseWrapper(correlationId, responseObject))
       }
     }
@@ -55,30 +54,30 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
         s"a $downstreamErrorCode error is returned from the service" in new Test {
 
           MockListPaymentsAndAllocationDetailsConnector
-            .listPaymentsAndAllocationDetails(validRequest)
+            .listPaymentsAndAllocationDetails(request)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-          private val result = await(service.listPaymentsAndAllocationDetails(validRequest))
+          private val result = await(service.listPaymentsAndAllocationDetails(request))
           result shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
-      val errors: Seq[(String, MtdError)] = Seq(
-        "INVALID_CORRELATIONID" -> InternalError,
-        "INVALID_IDVALUE" -> NinoFormatError,
-        "INVALID_IDTYPE" -> InternalError,
-        "INVALID_REGIME_TYPE" -> InternalError,
-        "INVALID_PAYMENT_LOT" -> PaymentLotFormatError,
+      val errors: Seq[(String, MtdError)] = List(
+        "INVALID_CORRELATIONID"    -> InternalError,
+        "INVALID_IDVALUE"          -> NinoFormatError,
+        "INVALID_IDTYPE"           -> InternalError,
+        "INVALID_REGIME_TYPE"      -> InternalError,
+        "INVALID_PAYMENT_LOT"      -> PaymentLotFormatError,
         "INVALID_PAYMENT_LOT_ITEM" -> PaymentLotItemFormatError,
-        "INVALID_CLEARING_DOC" -> InternalError,
-        "INVALID_DATE_FROM" -> FromDateFormatError,
-        "INVALID_DATE_TO" -> ToDateFormatError,
-        "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
-        "INVALID_REQUEST" -> RuleInconsistentQueryParamsErrorListSA,
-        "REQUEST_NOT_PROCESSED" -> BadRequestError,
-        "NO_DATA_FOUND" -> NotFoundError,
-        "PARTIALLY_MIGRATED" -> BadRequestError,
-        "SERVER_ERROR" -> InternalError,
-        "SERVICE_UNAVAILABLE" -> InternalError
+        "INVALID_CLEARING_DOC"     -> InternalError,
+        "INVALID_DATE_FROM"        -> FromDateFormatError,
+        "INVALID_DATE_TO"          -> ToDateFormatError,
+        "INVALID_DATE_RANGE"       -> RuleInvalidDateRangeError,
+        "INVALID_REQUEST"          -> RuleInconsistentQueryParamsErrorListSA,
+        "REQUEST_NOT_PROCESSED"    -> BadRequestError,
+        "NO_DATA_FOUND"            -> NotFoundError,
+        "PARTIALLY_MIGRATED"       -> BadRequestError,
+        "SERVER_ERROR"             -> InternalError,
+        "SERVICE_UNAVAILABLE"      -> InternalError
       )
 
       errors.foreach(args => (serviceError _).tupled(args))
@@ -87,11 +86,6 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
   }
 
   trait Test extends MockListPaymentsAndAllocationDetailsConnector {
-
-    implicit val hc: HeaderCarrier = HeaderCarrier()
-
-    implicit val logContext: EndpointLogContext =
-      EndpointLogContext("ListPaymentsAndAllocationDetailsController", "ListPaymentsAndAllocationDetails")
 
     val service = new ListPaymentsAndAllocationDetailsService(
       connector = mockListPaymentsAndAllocationDetailsConnector

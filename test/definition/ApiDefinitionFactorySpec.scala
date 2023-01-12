@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import api.mocks.MockHttpClient
 import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.MockAppConfig
+import play.api.Configuration
 import routing.{Version1, Version2}
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -36,15 +37,15 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        MockAppConfig.featureSwitch returns None
+        MockAppConfig.featureSwitches returns Configuration.empty
         MockAppConfig.apiStatus(Version1) returns "ALPHA"
         MockAppConfig.apiStatus(Version2) returns "BETA"
-        MockAppConfig.endpointsEnabled(Version1) returns false anyNumberOfTimes ()
-        MockAppConfig.endpointsEnabled(Version2) returns true anyNumberOfTimes ()
+        MockAppConfig.endpointsEnabled(Version1).returns(false).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(Version2).returns(true).anyNumberOfTimes()
 
-        MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
-          definitionEnabled = true,
-          authValidationEnabled = true) anyNumberOfTimes ()
+        MockAppConfig.confidenceLevelCheckEnabled
+          .returns(ConfidenceLevelConfig(definitionEnabled = true, authValidationEnabled = true))
+          .anyNumberOfTimes()
 
         private val readScope  = "read:self-assessment"
         private val writeScope = "write:self-assessment"

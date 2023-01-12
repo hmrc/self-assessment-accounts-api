@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ class RetrieveChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Va
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveChargeHistoryRawData => List[List[MtdError]] =
+  private def parameterFormatValidation: RetrieveChargeHistoryRawData => Seq[Seq[MtdError]] =
     (data: RetrieveChargeHistoryRawData) => {
       List(
         NinoValidation.validate(data.nino),
@@ -38,7 +38,7 @@ class RetrieveChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Va
       )
     }
 
-  override def validate(data: RetrieveChargeHistoryRawData): List[MtdError] = {
+  override def validate(data: RetrieveChargeHistoryRawData): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

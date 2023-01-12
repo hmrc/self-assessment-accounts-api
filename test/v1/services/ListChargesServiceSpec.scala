@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,12 @@
 
 package v1.services
 
-import api.controllers.EndpointLogContext
-import api.services.ServiceSpec
 import api.models.domain.Nino
-import uk.gov.hmrc.http.HeaderCarrier
-import v1.fixtures.ListChargesFixture._
-import v1.mocks.connectors.MockListChargesConnector
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
+import v1.fixtures.ListChargesFixture._
+import v1.mocks.connectors.MockListChargesConnector
 import v1.models.request.listCharges.ListChargesParsedRequest
 import v1.models.response.listCharges.ListChargesResponse
 
@@ -40,9 +38,6 @@ class ListChargesServiceSpec extends ServiceSpec {
   private val response = ListChargesResponse(Seq(fullChargeModel))
 
   trait Test extends MockListChargesConnector {
-
-    implicit val hc: HeaderCarrier              = HeaderCarrier()
-    implicit val logContext: EndpointLogContext = EndpointLogContext("c", "ep")
 
     val service = new ListChargesService(
       listChargesConnector = mockListChargesConnector
@@ -73,24 +68,24 @@ class ListChargesServiceSpec extends ServiceSpec {
         }
 
       val input: Seq[(String, MtdError)] = Seq(
-        "INVALID_IDTYPE"                       -> DownstreamError,
+        "INVALID_IDTYPE"                       -> InternalError,
         "INVALID_IDNUMBER"                     -> NinoFormatError,
-        "INVALID_REGIME_TYPE"                  -> DownstreamError,
+        "INVALID_REGIME_TYPE"                  -> InternalError,
         "INVALID_DATE_FROM"                    -> V1_FromDateFormatError,
         "INVALID_DATE_TO"                      -> V1_ToDateFormatError,
         "NO_DATA_FOUND"                        -> NotFoundError,
-        "SERVER_ERROR"                         -> DownstreamError,
-        "SERVICE_UNAVAILABLE"                  -> DownstreamError,
-        "INVALID_DOC_NUMBER"                   -> DownstreamError,
-        "INVALID_ONLY_OPEN_ITEMS"              -> DownstreamError,
-        "INVALID_INCLUDE_LOCKS"                -> DownstreamError,
-        "INVALID_CALCULATE_ACCRUED_INTEREST"   -> DownstreamError,
-        "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> DownstreamError,
+        "SERVER_ERROR"                         -> InternalError,
+        "SERVICE_UNAVAILABLE"                  -> InternalError,
+        "INVALID_DOC_NUMBER"                   -> InternalError,
+        "INVALID_ONLY_OPEN_ITEMS"              -> InternalError,
+        "INVALID_INCLUDE_LOCKS"                -> InternalError,
+        "INVALID_CALCULATE_ACCRUED_INTEREST"   -> InternalError,
+        "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> InternalError,
         "INVALID_DATE_RANGE"                   -> RuleDateRangeInvalidError,
-        "INVALID_REQUEST"                      -> DownstreamError,
-        "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> DownstreamError,
-        "INVALID_INCLUDE_STATISTICAL"          -> DownstreamError,
-        "REQUEST_NOT_PROCESSED"                -> DownstreamError
+        "INVALID_REQUEST"                      -> InternalError,
+        "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> InternalError,
+        "INVALID_INCLUDE_STATISTICAL"          -> InternalError,
+        "REQUEST_NOT_PROCESSED"                -> InternalError
       )
 
       input.foreach(args => (serviceError _).tupled(args))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package api.connectors
 
 import api.mocks.MockHttpClient
-import api.models.errors.DownstreamError
+import api.models.errors.InternalError
 import mocks.MockAppConfig
 
 import scala.concurrent.Future
@@ -43,7 +43,7 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .get[MtdIdLookupOutcome](
             url = s"$baseUrl/mtd-identifier-lookup/nino/$nino",
-            config = dummyDesHeaderCarrierConfig
+            config = dummyHeaderCarrierConfig
           )
           .returns(Future.successful(Right(mtdId)))
 
@@ -57,12 +57,12 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .get[MtdIdLookupOutcome](
             url = s"$baseUrl/mtd-identifier-lookup/nino/$nino",
-            config = dummyDesHeaderCarrierConfig
+            config = dummyHeaderCarrierConfig
           )
-          .returns(Future.successful(Left(DownstreamError)))
+          .returns(Future.successful(Left(InternalError)))
 
         val result: MtdIdLookupOutcome = await(connector.getMtdId(nino))
-        result shouldBe Left(DownstreamError)
+        result shouldBe Left(InternalError)
       }
 
       "getMtdId" should {
@@ -71,7 +71,7 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
             MockHttpClient
               .get[MtdIdLookupOutcome](
                 url = s"$baseUrl/mtd-identifier-lookup/nino/$nino",
-                config = dummyIfsHeaderCarrierConfig
+                config = dummyHeaderCarrierConfig
               )
               .returns(Future.successful(Right(mtdId)))
 
@@ -85,12 +85,12 @@ class MtdIdLookupConnectorSpec extends ConnectorSpec {
             MockHttpClient
               .get[MtdIdLookupOutcome](
                 url = s"$baseUrl/mtd-identifier-lookup/nino/$nino",
-                config = dummyIfsHeaderCarrierConfig
+                config = dummyHeaderCarrierConfig
               )
-              .returns(Future.successful(Left(DownstreamError)))
+              .returns(Future.successful(Left(InternalError)))
 
             val result: MtdIdLookupOutcome = await(connector.getMtdId(nino))
-            result shouldBe Left(DownstreamError)
+            result shouldBe Left(InternalError)
           }
         }
       }

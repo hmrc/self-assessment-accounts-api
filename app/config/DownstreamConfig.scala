@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,11 @@
  * limitations under the License.
  */
 
-package v2.services
+package config
 
-import play.api.http.{HeaderNames, MimeTypes, Status}
-import support.UnitSpec
-import uk.gov.hmrc.http.HeaderCarrier
-
-import scala.concurrent.ExecutionContext
-
-trait ServiceSpec extends UnitSpec with Status with MimeTypes with HeaderNames {
-
-  implicit val hc: HeaderCarrier     = HeaderCarrier()
-  implicit val ec: ExecutionContext  = scala.concurrent.ExecutionContext.global
-  implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
-
-}
+case class DownstreamConfig(
+    baseUrl: String,
+    env: String,
+    token: String,
+    environmentHeaders: Option[Seq[String]]
+)

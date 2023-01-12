@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package v2.connectors
 
 import mocks.MockAppConfig
+import api.connectors.ConnectorSpec
 import v2.models.response.retrieveChargeHistory._
 import v2.mocks.MockHttpClient
 import api.models.domain.Nino
@@ -68,7 +69,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
         MockHttpClient
           .get(
             s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-            dummyDesHeaderCarrierConfig,
+            dummyHeaderCarrierConfig,
             parameters = Seq("docNumber" -> transactionId),
             requiredDesHeaders,
             Seq("AnotherHeader" -> "HeaderValue")

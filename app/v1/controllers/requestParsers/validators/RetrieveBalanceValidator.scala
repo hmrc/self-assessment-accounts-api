@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,13 +25,13 @@ class RetrieveBalanceValidator extends Validator[RetrieveBalanceRawRequest] {
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveBalanceRawRequest => List[List[MtdError]] = (data: RetrieveBalanceRawRequest) => {
+  private def parameterFormatValidation: RetrieveBalanceRawRequest => Seq[Seq[MtdError]] = (data: RetrieveBalanceRawRequest) => {
     List(
       NinoValidation.validate(data.nino)
     )
   }
 
-  override def validate(data: RetrieveBalanceRawRequest): List[MtdError] = {
+  override def validate(data: RetrieveBalanceRawRequest): Seq[MtdError] = {
     run(validationSet, data).distinct
   }
 

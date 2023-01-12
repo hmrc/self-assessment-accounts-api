@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 
 package v1.connectors
 
-import api.connectors.DownstreamUri.IfsUri
-import api.connectors.httpparsers.StandardDesHttpParser.readsEmpty
+import api.connectors.DownstreamUri.{Ifs1Uri, TaxYearSpecificIfsUri}
+import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -34,13 +34,15 @@ class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClient, val appCo
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    val nino    = request.nino.nino
-    val taxYear = request.taxYear
+    import request._
 
-    put(
-      request.body,
-      IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear")
-    )
+    val uri = if (taxYear.useTaxYearSpecificApi) {
+      TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino")
+    } else {
+      Ifs1Uri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}")
+    }
+
+    put(request.body, uri)
   }
 
 }

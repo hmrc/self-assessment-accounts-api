@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,42 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import play.api.Logger
-import play.api.libs.json._
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import play.api.libs.json._
+import utils.{EmptinessChecker, EmptyPathsResult, Logging}
 
-object JsonFormatValidation {
+object JsonFormatValidation extends Logging {
 
-  def validate[A: OFormat](data: JsValue): List[MtdError] = {
+  def validate[A: OFormat](data: JsValue): Seq[MtdError] =
+    validateOrRead(data) match {
+      case Left(errors) => errors
+      case Right(_)     => Nil
+    }
 
-    if (data == JsObject.empty) List(RuleIncorrectOrEmptyBodyError)
-    else {
+  def validateAndCheckNonEmpty[A: OFormat: EmptinessChecker](data: JsValue): Seq[MtdError] =
+    validateOrRead[A](data) match {
+      case Left(schemaErrors) => schemaErrors
+      case Right(body) =>
+        EmptinessChecker.findEmptyPaths(body) match {
+          case EmptyPathsResult.CompletelyEmpty   => List(RuleIncorrectOrEmptyBodyError)
+          case EmptyPathsResult.EmptyPaths(paths) => List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(paths)))
+          case EmptyPathsResult.NoEmptyPaths      => Nil
+        }
+      case _ => Nil
+    }
+
+  def validateOrRead[A: OFormat](data: JsValue): Either[Seq[MtdError], A] = {
+    if (data == JsObject.empty) {
+      Left(List(RuleIncorrectOrEmptyBodyError))
+    } else {
       data.validate[A] match {
-        case JsSuccess(body, _) => if (Json.toJson(body) == JsObject.empty) List(RuleIncorrectOrEmptyBodyError) else NoValidationErrors
-        case JsError(errors: Seq[(JsPath, Seq[JsonValidationError])]) => handleErrors(errors)
+        case JsSuccess(a, _) => Right(a)
+        case JsError(errors) => Left(handleErrors(errors.asInstanceOf[Seq[(JsPath, Seq[JsonValidationError])]]))
       }
     }
   }
 
-  private def handleErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): List[MtdError] = {
+  private def handleErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): Seq[MtdError] = {
     val failures = errors.map {
       case (path: JsPath, Seq(JsonValidationError(Seq("error.path.missing"))))                              => MissingMandatoryField(path)
       case (path: JsPath, Seq(JsonValidationError(Seq(error: String)))) if error.contains("error.expected") => WrongFieldType(path)
@@ -48,18 +66,18 @@ object JsonFormatValidation {
       .dropRight(1)
       .drop(5)
 
-    val logger: Logger = Logger(this.getClass)
     logger.warn(s"[JsonFormatValidation][validate] - Request body failed validation with errors - $logString")
     List(RuleIncorrectOrEmptyBodyError.copy(paths = Some(failures.map(_.fromJsPath))))
   }
 
   private class JsonFormatValidationFailure(path: JsPath, failure: String) {
-    val failureReason: String = this.failure
+    val failureReason: String = failure
 
-    def fromJsPath: String = this.path
-      .toString()
-      .replace("(", "/")
-      .replace(")", "")
+    def fromJsPath: String =
+      path
+        .toString()
+        .replace("(", "/")
+        .replace(")", "")
 
   }
 

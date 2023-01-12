@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,16 +22,16 @@ object PaymentLotValidation {
 
   private val paymentLotRegex = "^[0-9A-Za-z]{1,12}"
 
-  def validateFormat(paymentLot: Option[String]): List[MtdError] = paymentLot.map(validateFormat).getOrElse(NoValidationErrors)
+  def validateFormat(paymentLot: Option[String]): Seq[MtdError] = paymentLot.map(validateFormat).getOrElse(NoValidationErrors)
 
-  def validateFormat(paymentLot: String): List[MtdError] = {
+  def validateFormat(paymentLot: String): Seq[MtdError] = {
     if (paymentLot.matches(paymentLotRegex)) NoValidationErrors else List(PaymentLotFormatError)
   }
 
-  def validateMissing(paymentLot: Option[String], paymentLotItem: Option[String]): List[MtdError] = {
+  def validateMissing(paymentLot: Option[String], paymentLotItem: Option[String]): Seq[MtdError] = {
     (paymentLot, paymentLotItem) match {
       case (None, Some(_)) => List(MissingPaymentLotError)
-      case _ => Nil
+      case _               => Nil
     }
   }
 

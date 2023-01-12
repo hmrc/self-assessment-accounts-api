@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ object DocNumberValidation {
 
   val MAX_LENGTH = 12
 
-  def validate(docNumber: Option[String]): List[MtdError] =
+  def validate(docNumber: Option[String]): Seq[MtdError] =
     docNumber
       .map { docNumber =>
         val invalid = docNumber.isEmpty || docNumber.length > MAX_LENGTH

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,8 +33,12 @@ trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServ
   def servicesConfig: Map[String, String] = Map(
     "microservice.services.des.host"           -> mockHost,
     "microservice.services.des.port"           -> mockPort,
-    "microservice.services.ifs.host"           -> mockHost,
-    "microservice.services.ifs.port"           -> mockPort,
+    "microservice.services.ifs1.host"          -> mockHost,
+    "microservice.services.ifs1.port"          -> mockPort,
+    "microservice.services.ifs2.host"          -> mockHost,
+    "microservice.services.ifs2.port"          -> mockPort,
+    "microservice.services.tys-ifs.host"       -> mockHost,
+    "microservice.services.tys-ifs.port"       -> mockPort,
     "microservice.services.mtd-id-lookup.host" -> mockHost,
     "microservice.services.mtd-id-lookup.port" -> mockPort,
     "microservice.services.auth.host"          -> mockHost,
@@ -55,6 +59,11 @@ trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServ
   override def afterAll(): Unit = {
     stopWireMock()
     super.afterAll()
+  }
+
+  override def beforeEach(): Unit = {
+    super.beforeEach()
+    resetWireMock()
   }
 
   def buildRequest(path: String): WSRequest = client.url(s"http://localhost:$port$path").withFollowRedirects(false)
