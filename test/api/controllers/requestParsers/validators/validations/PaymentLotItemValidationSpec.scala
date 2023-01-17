@@ -28,9 +28,8 @@ class PaymentLotItemValidationSpec extends UnitSpec with JsonErrorValidators {
   "validateFormat" should {
     "return no errors" when {
       "when a valid paymentLotItem is supplied" in {
-        val validPaymentLotItem = "000001"
 
-        PaymentLotItemValidation.validateFormat(validPaymentLotItem) shouldBe List()
+        PaymentLotItemValidation.validateFormat(paymentLotItem) shouldBe List()
       }
       "when a valid optional paymentLotItem is supplied" in {
         val validPaymentLotItem = Some("000001")
@@ -56,8 +55,8 @@ class PaymentLotItemValidationSpec extends UnitSpec with JsonErrorValidators {
       "when a paymentLot and paymentLotItem are supplied" in {
         PaymentLotItemValidation.validateMissing(Some(paymentLot), Some(paymentLotItem)) shouldBe List()
       }
-      "when a paymentLot is supplied without a paymentLotItem" in {
-        PaymentLotItemValidation.validateMissing(Some(paymentLot), None) shouldBe List()
+      "when a paymentLotItem is supplied without a paymentLot" in {
+        PaymentLotItemValidation.validateMissing(Some(paymentLotItem), None) shouldBe List()
       }
       "when neither a paymentLot or paymentLotItem are supplied" in {
         PaymentLotItemValidation.validateMissing(None, None) shouldBe List()

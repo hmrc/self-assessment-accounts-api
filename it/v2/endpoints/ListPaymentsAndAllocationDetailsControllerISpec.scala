@@ -124,10 +124,9 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         ("AA123456A", None, Some("2020-02-01"), None, None, BAD_REQUEST, MissingFromDateError),
         ("AA123456A", Some("2020-02-01"), None, None, None, BAD_REQUEST, RuleMissingToDateError),
         ("AA123456A", None, None, Some("BAD_LOT"), Some("000001"), BAD_REQUEST, PaymentLotFormatError),
-        ("AA123456A", None, None, None, Some("BAD_LOT_ITEM"), BAD_REQUEST, PaymentLotItemFormatError),
+        ("AA123456A", None, None, Some("SomeLot"), Some("BAD_LOT_ITEM"), BAD_REQUEST, PaymentLotItemFormatError),
         ("AA123456A", None, None, None, Some("000001"), BAD_REQUEST, MissingPaymentLotError),
         ("AA123456A", None, None, Some("AA123456aa1"), None, BAD_REQUEST, MissingPaymentLotItemError),
-       // ("AA123456A", Some("2020-01-01"), Some("2021-01-01"), Some("AA123456aa1"), Some("000001"), BAD_REQUEST, RuleInconsistentQueryParamsMtdError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
