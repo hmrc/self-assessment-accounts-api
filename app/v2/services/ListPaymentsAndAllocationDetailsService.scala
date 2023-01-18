@@ -42,21 +42,22 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
 
   private val errorMap: Map[String, MtdError] =
     Map(
-      "INVALID_CORRELATIONID"    -> InternalError,
-      "INVALID_IDVALUE"          -> NinoFormatError,
-      "INVALID_IDTYPE"           -> InternalError,
-      "INVALID_REGIME_TYPE"      -> InternalError,
-      "INVALID_PAYMENT_LOT"      -> PaymentLotFormatError,
+      "INVALID_CORRELATIONID" -> InternalError,
+      "INVALID_IDVALUE" -> NinoFormatError,
+      "INVALID_IDTYPE" -> InternalError,
+      "INVALID_REGIME_TYPE" -> InternalError,
+      "INVALID_PAYMENT_LOT" -> PaymentLotFormatError,
       "INVALID_PAYMENT_LOT_ITEM" -> PaymentLotItemFormatError,
-      "INVALID_CLEARING_DOC"     -> InternalError,
-      "INVALID_DATE_FROM"        -> FromDateFormatError,
-      "INVALID_DATE_TO"          -> ToDateFormatError,
-      "INVALID_DATE_RANGE"       -> RuleInvalidDateRangeError,
-      "REQUEST_NOT_PROCESSED"    -> InternalError,
-      "NO_DATA_FOUND"            -> NotFoundError,
-      "PARTIALLY_MIGRATED"       -> InternalError,
-      "SERVER_ERROR"             -> InternalError,
-      "SERVICE_UNAVAILABLE"      -> InternalError
+      "INVALID_CLEARING_DOC" -> InternalError,
+      "INVALID_DATE_FROM" -> FromDateFormatError,
+      "INVALID_DATE_TO" -> ToDateFormatError,
+      "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
+      "INVALID_REQUEST" -> RuleInconsistentQueryParamsErrorListSA,
+      "REQUEST_NOT_PROCESSED" -> BadRequestError,
+      "NO_DATA_FOUND" -> NotFoundError,
+      "PARTIALLY_MIGRATED" -> BadRequestError,
+      "SERVER_ERROR" -> InternalError,
+      "SERVICE_UNAVAILABLE" -> InternalError
     )
 
 }

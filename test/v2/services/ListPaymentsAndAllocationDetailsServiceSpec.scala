@@ -72,9 +72,10 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
         "INVALID_DATE_FROM"        -> FromDateFormatError,
         "INVALID_DATE_TO"          -> ToDateFormatError,
         "INVALID_DATE_RANGE"       -> RuleInvalidDateRangeError,
-        "REQUEST_NOT_PROCESSED"    -> InternalError,
+        "INVALID_REQUEST"          -> RuleInconsistentQueryParamsErrorListSA,
+        "REQUEST_NOT_PROCESSED"    -> BadRequestError,
         "NO_DATA_FOUND"            -> NotFoundError,
-        "PARTIALLY_MIGRATED"       -> InternalError,
+        "PARTIALLY_MIGRATED"       -> BadRequestError,
         "SERVER_ERROR"             -> InternalError,
         "SERVICE_UNAVAILABLE"      -> InternalError
       )

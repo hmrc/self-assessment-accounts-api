@@ -349,6 +349,17 @@ traits:
                 description: The paymentLotItem value has been provided, but paymentLot value is missing.
                 value:
                   code: MISSING_PAYMENT_LOT
+  missingPaymentLotItem:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              missingPaymentLotItem:
+                description: The paymentLot value has been provided, but the paymentLotItem value is missing.
+                value:
+                  code: MISSING_PAYMENT_LOT_ITEM
   formatLossId:
     responses:
       400:
@@ -633,5 +644,16 @@ traits:
             examples:
               ruleInconsistentQueryParams:
                 description: Provide date range or docNumber when onlyOpenItems is false.
+                value:
+                  code: RULE_INCONSISTENT_QUERY_PARAMS
+  ruleInconsistentQueryParamsListSA:
+    responses:
+      400:
+        body:
+          application/json:
+            type: types.errorResponse
+            examples:
+              ruleInconsistentQueryParams:
+                description: Provide either paymentLot & paymentLotItem or fromDate & toDate.
                 value:
                   code: RULE_INCONSISTENT_QUERY_PARAMS
