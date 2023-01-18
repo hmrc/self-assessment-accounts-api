@@ -35,7 +35,8 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
         DateFormatValidation.validate(data.fromDate, FromDateFormatError),
         DateFormatValidation.validate(data.toDate, ToDateFormatError),
         PaymentLotValidation.validateFormat(data.paymentLot),
-        PaymentLotItemValidation.validateFormat(data.paymentLotItem)
+        PaymentLotItemValidation.validateFormat(data.paymentLotItem),
+        PaymentLotItemValidation.validateMissing(data.paymentLotItem, data.paymentLot)
       )
     }
 

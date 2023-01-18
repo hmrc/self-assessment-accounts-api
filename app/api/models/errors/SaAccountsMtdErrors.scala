@@ -32,9 +32,15 @@ object PaymentLotItemFormatError
 object MissingPaymentLotError
     extends MtdError(code = "MISSING_PAYMENT_LOT", message = "The paymentLotItem has been provided, but the paymentLot is missing", BAD_REQUEST)
 
+object MissingPaymentLotItemError
+  extends MtdError(code = "MISSING_PAYMENT_LOT_ITEM", message = "The paymentLot has been provided, but the paymentLotItem is missing", BAD_REQUEST)
+
 // Rule Errors
 object RuleInconsistentQueryParamsError
     extends MtdError(code = "RULE_INCONSISTENT_QUERY_PARAMS", message = "Provide date range or docNumber when onlyOpenItems is false", BAD_REQUEST)
+
+object RuleInconsistentQueryParamsErrorListSA
+  extends MtdError(code = "RULE_INCONSISTENT_QUERY_PARAMS", message = "Provide either paymentLot & paymentLotItem or fromDate & toDate", BAD_REQUEST)
 
 // Date Errors
 object V1_MissingFromDateError extends MtdError(code = "MISSING_FROM_DATE", message = "The From date parameter is missing", BAD_REQUEST)

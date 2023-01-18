@@ -91,6 +91,10 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
         validator.validate(validRequestRawDataWithOptionals.copy(paymentLot = None)) shouldBe List(MissingPaymentLotError)
       }
 
+      "a paymentLot is supplied but a paymentLotItem is not supplied" in {
+        validator.validate(validRequestRawDataWithOptionals.copy(paymentLotItem = None)) shouldBe List(MissingPaymentLotItemError)
+      }
+
       "multiple invalid values are supplied" in {
         val input = validRequestRawDataWithOptionals.copy(
           nino = "invalid",
