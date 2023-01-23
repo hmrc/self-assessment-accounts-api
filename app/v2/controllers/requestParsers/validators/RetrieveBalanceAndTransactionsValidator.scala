@@ -47,7 +47,8 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
   private def parameterRuleValidation: RetrieveBalanceAndTransactionsRawData => Seq[Seq[MtdError]] =
     (data: RetrieveBalanceAndTransactionsRawData) => {
       List(
-        DateRangeValidationV2.validate(data.fromDate, data.toDate)
+        DateRangeValidationV2.validate(data.fromDate, data.toDate),
+        OnlyOpenItemsValidation.validate(data.onlyOpenItems, data.docNumber,data.toDate, data.fromDate)
       )
     }
 
