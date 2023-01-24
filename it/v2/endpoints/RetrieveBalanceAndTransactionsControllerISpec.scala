@@ -122,10 +122,11 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "any valid request is made with only doc number and all flag params as true" in new Test {
+      "any valid request is made with only doc number and all flag params (except onlyOpenItems) as true" in new Test {
 
         override val fromDate: Option[String] = None
         override val toDate: Option[String]   = None
+        override val onlyOpenItems: Option[String]              = Some("false")
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -139,7 +140,9 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-      "any valid request is made with no doc number, but with fromDate, toDate and all flag params as true" in new Test {
+      "any valid request is made with no doc number, but with fromDate, toDate and all flag params (except onlyOpenItems) as true" in new Test {
+
+        override val onlyOpenItems: Option[String]              = Some("false")
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -207,7 +210,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, None, Some("invalid"), BAD_REQUEST, IncludeEstimatedChargesFormatError),
         ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, RangeToDateBeforeFromDateError),
         ("AA123456A", Some(validDocNumber), Some(validToDate), None, None, None, None, None, None, None, BAD_REQUEST, RuleMissingToDateError),
-        ("AA123456A", Some(validDocNumber), None, Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, MissingFromDateError)
+        ("AA123456A", Some(validDocNumber), None, Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, MissingFromDateError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), Some("true"), None, None, None, None, None, BAD_REQUEST, RuleInconsistentQueryParamsError)
 
       )
       // format: on
@@ -218,6 +222,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
     "des service error" when {
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
+
+          override val onlyOpenItems: Option[String]              = Some("false")
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()
@@ -261,3 +267,5 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
   }
 
 }
+
+//Return inconsistent query params if onlyOPenItems = true and toDate/fromDate is provided

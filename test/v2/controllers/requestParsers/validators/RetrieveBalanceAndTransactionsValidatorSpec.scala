@@ -34,10 +34,6 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       "a valid request with date range is supplied" in {
         validator.validate(inputDataDateRange) shouldBe Nil
       }
-
-      "a valid request with everything true is supplied" in {
-        validator.validate(inputDataEverythingTrue) shouldBe Nil
-      }
     }
 
     "return a parameter error" when {
@@ -97,6 +93,10 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       "multiple invalid values are supplied" in {
         validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"), removePOA = Some("invalid"))) shouldBe
           List(FromDateFormatError, RemovePaymentOnAccountFormatError)
+      }
+
+      "a request with everything true is supplied" in {
+        validator.validate(inputDataEverythingTrue) shouldBe List(RuleInconsistentQueryParamsError)
       }
     }
   }
