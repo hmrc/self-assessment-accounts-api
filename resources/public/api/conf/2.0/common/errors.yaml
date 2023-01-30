@@ -1,0 +1,413 @@
+components:
+  examples: #404
+    notFound:
+      description: |
+        Matching resource not found.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+
+    #404
+    notFoundTransactionDetails:
+      description: |
+        No transaction details found for the supplied transaction ID.
+      value:
+        code: NO_DETAILS_FOUND
+
+    #403
+    clientOrAgentNotAuthorised:
+      description: |
+        'The client or agent is not authorised. This is because: the client is not enrolled for MTD, the agent is not enrolled for Agent Services, the client has not authorised the agent to act on their behalf, or the Authorization token provided is not correct.'
+      value:
+        code: CLIENT_OR_AGENT_NOT_AUTHORISED
+
+    #400
+    formatNino:
+      description: |
+        The format of the supplied nino value is invalid.
+      value:
+        code: FORMAT_NINO
+
+    #400
+    formatTransactionId:
+      description: |
+        The format of the supplied transaction identifier field is not valid.
+      value:
+        code: FORMAT_TRANSACTION_ID
+
+    #400
+    formatTaxYear:
+      description: |
+        The format of the supplied taxYear value is invalid.
+      value:
+        code: FORMAT_TAX_YEAR
+
+    #400
+    formatFromDate:
+      description: |
+        The format of the fromDate is not valid.
+      value:
+        code: FORMAT_FROM_DATE
+
+    #400
+    formatToDate:
+      description: |
+        The format of toDate is not valid.
+      value:
+        code: FORMAT_TO_DATE
+
+    #400
+    invalidDateFrom:
+      description: |
+        The format of dateFrom is not valid.
+      value:
+        code: INVALID_DATE_FROM
+
+    #400
+    invalidDateTo:
+      description: |
+        The format of dateTo is not valid. .
+      value:
+        code: INVALID_DATE_TO
+
+    #400
+    missingFromDate:
+      description: |
+        The From date parameter is missing
+      value:
+        code: MISSING_FROM_DATE
+
+    #400
+    missingToDate:
+      description: |
+        The To date parameter is missing.
+      value:
+        code: MISSING_TO_DATE
+
+    #400
+    rangeToDateBeforeFromDate:
+      description: |
+        The To date must be after the From date.
+      value:
+        code: RANGE_TO_DATE_BEFORE_FROM_DATE
+
+    #400
+    ruleDateRangeInvalid:
+      description: |
+        The provided date range is not valid.
+      value:
+        code: RULE_INVALID_DATE_RANGE
+
+    #400
+    invalidDateRange:
+      description: |
+        The provided date range is not valid.
+      value:
+        code: RULE_INVALID_DATE_RANGE
+
+    #400
+    ruleFromDateNotSupported:
+      description: |
+        The from date specified is before 2018-04-06.
+      value:
+        code: RULE_FROM_DATE_NOT_SUPPORTED
+
+    #400
+    ruleDateTooLong:
+      description: |
+        The date range is longer than 732 days.
+      value:
+        code: RANGE_DATE_TOO_LONG
+
+    #400
+    incorrectOrEmptyBody:
+      description: |
+        An empty or non-matching body was submitted.
+      value:
+        code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+
+    #400
+    ruleTaxYearNotSupported:
+      description: |
+        The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value.
+      value:
+        code: RULE_TAX_YEAR_NOT_SUPPORTED
+
+    #400
+    ruleTaxYearRangeExceeded:
+      description: |
+        Tax year range exceeded. A tax year range of one year is required.
+      value:
+        code: RULE_TAX_YEAR_RANGE_EXCEEDED
+
+    #400
+    ruleTaxYearNotEnded:
+      description: |
+        The submission has been made before the taxYear it relates to has ended.
+      value:
+        code: RULE_TAX_YEAR_NOT_ENDED
+
+    #403
+    ruleNoChangeTypeOfClaim:
+      description: |
+        The remote endpoint has indicated that the requested type of claim is already active.
+      value:
+        code: RULE_ALREADY_EXISTS
+
+    #400
+    formatLossType:
+      description: |
+        The format of the loss type is not valid.
+      value:
+        code: FORMAT_TYPE_OF_LOSS
+
+    #400
+    formatSelfEmploymentId:
+      description: |
+        The format of the self-employment ID is not valid.
+      value:
+        code: FORMAT_SELF_EMPLOYMENT_ID
+
+    #400
+    ruleSelfEmploymentId:
+      description: |
+        A self-employment ID can only be supplied for a self-employment business type.
+      value:
+        code: RULE_SELF_EMPLOYMENT_ID
+
+    #400
+    formatValue:
+      description: |
+        One or more values have been added with the incorrect format.
+      value:
+        code: FORMAT_VALUE
+
+    #400
+    formatId:
+      description: |
+        The format of the supplied ID is invalid.
+      value:
+        code: FORMAT_ID
+
+    #400
+    formatPaymentId:
+      description: |
+        The format of the supplied payment identifier field is not valid.
+      value:
+        code: FORMAT_PAYMENT_ID
+
+    #400
+    formatPaymentLot:
+      description: |
+        The format of the supplied paymentLot value is not valid.
+      value:
+        code: FORMAT_PAYMENT_LOT
+
+    #400
+    formatPaymentLotItem:
+      description: |
+        The format of the supplied paymentLotItem value is not valid.
+      value:
+        code: FORMAT_PAYMENT_LOT_ITEM
+
+    #400
+    missingPaymentLot:
+      description: |
+        The paymentLotItem value has been provided, but paymentLot value is missing.
+      value:
+        code: MISSING_PAYMENT_LOT
+
+    #400
+    missingPaymentLotItem:
+      description: |
+        The paymentLot value has been provided, but the paymentLotItem value is missing.
+      value:
+        code: MISSING_PAYMENT_LOT_ITEM
+
+    #400
+    formatLossId:
+      description: |
+        The format of the loss ID is not valid.
+      value:
+        code: FORMAT_LOSS_ID
+
+    #400
+    formatLossAmount:
+      description: |
+        The format of the loss amount is not valid.
+      value:
+        code: FORMAT_LOSS_AMOUNT
+
+    #400
+    ruleLossAmount:
+      description: |
+        Amounts should be a positive number less than 99999999999.99 with up to 2 decimal places.
+      value:
+        code: RULE_LOSS_AMOUNT
+
+    #400
+    formatTypeOfClaim:
+      description: |
+        The format of the type of claim is not valid.
+      value:
+        code: FORMAT_TYPE_OF_CLAIM
+
+    #400
+    ruleTypeOfClaim400:
+      description: |
+        The type of claim supplied is not valid.
+      value:
+        code: RULE_TYPE_OF_CLAIM_INVALID
+
+    #400
+    tax:
+      description: |
+        The type of claim supplied is not valid.
+      value:
+        code: RULE_TYPE_OF_CLAIM_INVALID
+
+    #403
+    ruleTypeOfClaim403:
+      description: |
+        The type of claim supplied is not valid.
+      value:
+        code: RULE_TYPE_OF_CLAIM_INVALID
+
+    #403
+    rulePeriodNotEnded:
+      description: |
+        The loss claim has been made too soon.
+      value:
+        code: RULE_PERIOD_NOT_ENDED
+
+    #400
+    formatClaimId:
+      description: |
+        The format of the supplied claim ID is not valid.
+      value:
+        code: FORMAT_CLAIM_ID
+
+    #403
+    ruleDuplicateSubmission:
+      description: |
+        A brought forward loss already exists for this income source.
+      value:
+        code: RULE_DUPLICATE_SUBMISSION
+
+    #403
+    ruleDuplicateClaimSubmission:
+      description: |
+        The type of claim is the same as a previous submission.
+      value:
+        code: RULE_DUPLICATE_SUBMISSION
+
+    #403
+    ruleDeleteAfterCrystallisation:
+      description: |
+        An existing brought forward loss cannot be deleted after it has been crystallised.  The requested resource is locked.
+      value:
+        code: RULE_DELETE_AFTER_CRYSTALLISATION
+
+    #403
+    ruleNoChangeLossAmount:
+      description: |
+        The loss amount supplied is the same as the existing stored loss amount.
+      value:
+        code: RULE_NO_CHANGE
+
+    #403
+    ruleNoAccountingPeriod:
+      description: |
+        There is no accounting period for the year of the claim.
+      value:
+        code: RULE_NO_ACCOUNTING_PERIOD
+
+    #400
+    ruleTaxYearRangeInvalid:
+      description: |
+        A taxYear range of one year is required.
+      value:
+        code: RULE_TAX_YEAR_RANGE_INVALID
+
+    #400
+    ruleDuplicateIdNotAllowed:
+      description: |
+        The request data contains duplicate ID values.
+      value:
+        code: RULE_DUPLICATE_ID_NOT_ALLOWED
+
+    #400
+    formatSource:
+      description: |
+        The format of the supplied source is not valid.
+      value:
+        code: FORMAT_SOURCE
+
+    #404
+    codingOutNotFound:
+      description: |
+        Coding out amounts could not be found for the supplied nino and taxYear.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+
+    #400
+    invalidDocNumber:
+      description: |
+        The format of docNumber is not valid.
+      value:
+        code: FORMAT_DOC_NUMBER
+
+    #400
+    invalidOnlyOpenItems:
+      description: |
+        The format of onlyOpenItem is not valid.
+      value:
+        code: FORMAT_ONLY_OPEN_ITEMS
+
+    #400
+    invalidIncludeLocks:
+      description: |
+        The format of includeLocks is not valid.
+      value:
+        code: FORMAT_INCLUDE_LOCKS
+
+    #400
+    invalidCalculateAccruedInterest:
+      description: |
+        The format for calculatingAccruedInterest is not valid.
+      value:
+        code: FORMAT_CALCULATE_ACCRUED_INTEREST
+
+    #400
+    invalidCustomerPaymentInformation:
+      description: |
+        The format of customerPaymentInformation is not valid.
+      value:
+        code: FORMAT_CUSTOMER_PAYMENT_INFORMATION
+
+    #400
+    invalidRemovePaymentOnAccount:
+      description: |
+        The format of removePOA is not valid.
+      value:
+        code: FORMAT_REMOVE_PAYMENT_ON_ACCOUNT
+
+    #400
+    invalidIncludeChargeEstimate:
+      description: |
+        The format of includeEstimatedCharges is not valid
+      value:
+        code: FORMAT_INCLUDE_ESTIMATED_CHARGES
+
+    #400
+    ruleInconsistentQueryParams:
+      description: |
+        Provide date range or docNumber when onlyOpenItems is false.
+      value:
+        code: RULE_INCONSISTENT_QUERY_PARAMS
+
+    #400
+    ruleInconsistentQueryParamsListSA:
+      description: |
+        Provide either paymentLot & paymentLotItem or fromDate & toDate.
+      value:
+        code: RULE_INCONSISTENT_QUERY_PARAMS

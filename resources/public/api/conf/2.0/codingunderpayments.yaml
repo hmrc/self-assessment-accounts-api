@@ -1,0 +1,6 @@
+get:
+  $ref: "./retrieveCodingOutUnderpayments.yaml"
+put:
+  $ref: "./createOrAmendCodingOutUnderpayments.yaml"
+delete:
+  $ref: "./deleteCodingOutUnderpayments.yaml"

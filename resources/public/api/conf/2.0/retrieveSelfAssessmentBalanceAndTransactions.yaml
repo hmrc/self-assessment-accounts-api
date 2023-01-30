@@ -1,0 +1,88 @@
+summary: "Retrieve Self Assessment Balance and Transactions"
+security:
+  - User-Restricted:
+      - read:self-assessment
+parameters:
+  - $ref: "./common/queryParameters.yaml#/components/parameters/docNumber"
+  - $ref: "./common/queryParameters.yaml#/components/parameters/fromDate"
+  - $ref: "./common/queryParameters.yaml#/components/parameters/toDate"
+  - $ref: "./common/queryParameters.yaml#/components/parameters/onlyOpenItems"
+  - $ref: "./common/queryParameters.yaml#/components/parameters/includeLocks"
+  - $ref: "./common/queryParameters.yaml#/components/parameters/calculateAccruedInterest"
+  - $ref: "./common/queryParameters.yaml#/components/parameters/customerPaymentInformation"
+  - $ref: "./common/queryParameters.yaml#/components/parameters/includeEstimatedCharges"
+  - $ref: "./common/queryParameters.yaml#/components/parameters/removePOA"
+  - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+  - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+  - $ref: "./common/headers.yaml#/components/parameters/authorization"
+
+responses:
+  200:
+    description: Success
+    content:
+      application/json:
+        schema:
+          $ref: "./schemas/retrieveBalanceAndTransactions.json"
+        examples:
+          Request:
+            value:
+              $ref: "./examples/retrieveBalanceAndTransactions/retrieveBalanceAndTransactionsFullResponse.json"
+
+    headers:
+      X-CorrelationId:
+        $ref: "./common/headers.yaml#/components/parameters/correlationId"
+
+  400:
+    description: Bad request
+
+    content:
+      application/json:
+        examples:
+          FORMAT_NINO:
+            $ref: "./common/errors.yaml#/components/examples/formatNino"
+          FORMAT_TRANSACTION_ID:
+            $ref: "./common/errors.yaml#/components/examples/formatTransactionId"
+          INVALID_DOC_NUMBER:
+            $ref: "./common/errors.yaml#/components/examples/invalidDocNumber"
+          INVALID_ONLY_OPEN_ITEMS:
+            $ref: "./common/errors.yaml#/components/examples/invalidOnlyOpenItems"
+          INVALID_INCLUDE_LOCKS:
+            $ref: "./common/errors.yaml#/components/examples/invalidIncludeLocks"
+          INVALID_CALCULATE_ACCRUED_INTEREST:
+            $ref: "./common/errors.yaml#/components/examples/invalidCalculateAccruedInterest"
+          INVALID_CUSTOMER_PAYMENT_INFORMATION:
+            $ref: "./common/errors.yaml#/components/examples/invalidCustomerPaymentInformation"
+          FORMAT_FROM_DATE:
+            $ref: "./common/errors.yaml#/components/examples/formatFromDate"
+          FORMAT_TO_DATE:
+            $ref: "./common/errors.yaml#/components/examples/formatToDate"
+          INVALID_REMOVE_PAYMENT_ON_ACCOUNT:
+            $ref: "./common/errors.yaml#/components/examples/invalidRemovePaymentOnAccount"
+          INVALID_INCLUDE_CHARGE_ESTIMATE:
+            $ref: "./common/errors.yaml#/components/examples/invalidIncludeChargeEstimate"
+          INVALID_DATE_RANGE:
+            $ref: "./common/errors.yaml#/components/examples/invalidDateRange"
+          RULE_INCONSISTENT_QUERY_PARAMS:
+            $ref: "./common/errors.yaml#/components/examples/ruleInconsistentQueryParams"
+          MISSING_TO_DATE:
+            $ref: "./common/errors.yaml#/components/examples/missingToDate"
+          MISSING_FROM_DATE:
+            $ref: "./common/errors.yaml#/components/examples/missingFromDate"
+          RANGE_TO_DATE_BEFORE_FROM_DATE:
+            $ref: "./common/errors.yaml#/components/examples/rangeToDateBeforeFromDate"
+
+  403:
+    description: Forbidden
+
+    content:
+      application/json:
+        CLIENT_OR_AGENT_NOT_AUTHORISED:
+          $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+
+  404:
+    description: Not found
+
+    content:
+      application/json:
+        NOT_FOUND:
+          $ref: "./common/errors.yaml#/components/examples/notFound"
