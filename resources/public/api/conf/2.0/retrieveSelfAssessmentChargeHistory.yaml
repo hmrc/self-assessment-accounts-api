@@ -1,18 +1,10 @@
-summary: Retrieve History of a Self Assessment Charge
 description:
   This endpoint enables you to retrieve the history of changes to an individual charge.
   A National Insurance number and transaction ID must be provided.
 
-tags:
-  - Self Assessment
-
 parameters:
   - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
   - $ref: "./common/headers.yaml#/components/parameters/contentTypeJson"
-
-security:
-  - User-Restricted:
-      - read:self-assessment
 
 responses:
   "200":
