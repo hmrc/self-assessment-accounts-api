@@ -22,6 +22,9 @@ import play.api.libs.ws.WSResponse
 import routing.{Version1, Version2}
 import support.IntegrationBaseSpec
 
+import io.swagger.v3.parser.OpenAPIV3Parser
+import scala.util.Try
+
 class DocumentationControllerISpec extends IntegrationBaseSpec {
 
   val apiDefinitionJson: JsValue = Json.parse("""
@@ -69,15 +72,30 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "a documentation request" must {
-    Seq(Version1, Version2).foreach { version =>
-      s"return the documentation for $version" in {
-        val response: WSResponse = await(buildRequest(s"/api/conf/$version/application.raml").get())
-        response.status shouldBe Status.OK
-        response.body[String] should startWith(s"#%RAML 1.0")
-      }
+  "version One RAML documentation request" must {
+    val version = Version1
+    s"return the RAML documentation for $version" in {
+      val response: WSResponse = await(buildRequest(s"/api/conf/$version/application.raml").get())
+      response.status shouldBe Status.OK
+      response.body[String] should startWith(s"#%RAML 1.0")
     }
+  }
 
+  "a OAS documentation request" must {
+    s"return the ${Version2} documentation that passes OAS V3 parser" in {
+      val response: WSResponse = await(buildRequest("/api/conf/2.0/application.yaml").get())
+      response.status shouldBe Status.OK
+
+      val contents     = response.body[String]
+      val parserResult = Try(new OpenAPIV3Parser().readContents(contents))
+      parserResult.isSuccess shouldBe true
+
+      val openAPI = Option(parserResult.get.getOpenAPI)
+      openAPI.isEmpty shouldBe false
+      openAPI.get.getOpenapi shouldBe "3.0.3"
+      openAPI.get.getInfo.getTitle shouldBe "Self Assessment Accounts (MTD)"
+      openAPI.get.getInfo.getVersion shouldBe "2.0"
+    }
   }
 
 }

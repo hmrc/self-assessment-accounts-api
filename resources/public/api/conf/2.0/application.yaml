@@ -1,0 +1,1735 @@
+openapi: 3.0.3
+info:
+  title: Self Assessment Accounts (MTD)
+  version: "2.0"
+  description: List and retrieve details of Self Assessment balances, transactions, charges and payments.
+servers:
+  - url: https://api.service.hmrc.gov.uk/
+paths:
+  /accounts/self-assessment/{nino}:
+    parameters:
+      - name: nino
+        in: path
+        required: true
+        schema:
+          type: string
+        description: National Insurance number, in the format AA999999A.
+    x-annotation-annotations.group:
+      name: Payments and Liabilities
+      description: These endpoints allow a developer to retrieve accounting information to be shown back to the customer. This includes listing payments the customer has made, how these payments have been allocated and details of any upcoming or outstanding liabilities. The data returned only relates to payments and liabilities arising for tax years since the customer joined the new service. There may also be outstanding liabilities and payment information a customer needs to view for the years prior to signing up to Making Tax Digital for Income Tax Self Assessment that can be viewed using their existing Personal Tax Account.
+  /accounts/self-assessment/{nino}/charges/{transactionId}:
+    get:
+      responses:
+        "200":
+          description: ""
+          headers:
+            X-CorrelationId:
+              description: Unique ID for operation tracking <br> String, 36 characters.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Retrieve History of a Self Assessment Charge
+                required:
+                  - chargeHistoryDetails
+                description: This endpoint enables you to retrieve the history of changes to a single charge made by HMRC. A National Insurance number and transaction ID must be provided.
+                includePath: schemas/retrieve_self_assessment_charge_history_response.json
+                example:
+                  example-1:
+                    chargeHistoryDetails:
+                      - taxYear: 2022-23
+                        transactionId: X123456790A
+                        transactionDate: "2018-04-05"
+                        description: POA1, Balancing charge
+                        totalAmount: 600
+                        changeDate: "2018-04-05"
+                        changeReason: Amended return, Customer Request
+                type: object
+                properties:
+                  chargeHistoryDetails:
+                    description: A list of changes to a particular charge
+                    type: array
+                    items:
+                      title: changeDetails
+                      required:
+                        - transactionId
+                        - transactionDate
+                        - description
+                        - totalAmount
+                        - changeDate
+                        - changeReason
+                      type: object
+                      properties:
+                        taxYear:
+                          description: "The tax year that this charge relates to in the format: YYYY-YY."
+                          example: 2022-23
+                          type: string
+                        transactionId:
+                          description: A unique identifier used to return a single charge. Must conform to the regular expression ^[A-Za-z0-9]{1,30}$
+                          example: X123456790A
+                          type: string
+                        transactionDate:
+                          description: "The date the charge was created in the format: YYYY-MM-DD."
+                          example: "2018-04-05"
+                          type: string
+                        description:
+                          description: Primary method to identify what type of charge has been called.
+                          example: POA1, Balancing charge
+                          type: string
+                        totalAmount:
+                          multipleOf: 0.01
+                          minimum: -99999999999.99
+                          maximum: 99999999999.99
+                          description: The value of the charge following the change. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.
+                          example: "600.00"
+                          type: number
+                        changeDate:
+                          description: "The date the charge was changed in the format: YYYY-MM-DD."
+                          example: "2018-04-05"
+                          type: string
+                        changeReason:
+                          description: The reason for the change.
+                          example: " Amended return, Customer Request"
+                          type: string
+        "400":
+          $ref: "#/components/responses/trait_errors.formatTransactionId_400"
+        "403":
+          $ref: "#/components/responses/trait_errors.clientOrAgentNotAuthorised_403"
+        "404":
+          $ref: "#/components/responses/trait_errors.notFound_404"
+      description: This endpoint enables you to retrieve the history of changes to an individual charge. A National Insurance number and transaction ID must be provided.
+      operationId: Retrieve History of a Self Assessment Charge
+      parameters:
+        - $ref: "#/components/parameters/trait_headers.acceptJson_Accept"
+        - $ref: "#/components/parameters/trait_headers.testScenarioHeader_Gov-Test-Scenario"
+      x-annotation-annotations.sandboxData: |-
+        <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Header Value (Gov-Test-Scenario)</th>
+                    <th>Scenario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><p>N/A - DEFAULT</p></td>
+                    <td><p>Simulates a successful response.</p></td>
+                </tr>
+                <tr>
+                    <td><p>NOT_FOUND</p></td>
+                    <td><p>Simulates the scenario where no data can be found.</p></td>
+                </tr>
+            </tbody>
+        </table>
+      x-annotation-annotations.scope: read:self-assessment
+    parameters:
+      - name: transactionId
+        in: path
+        required: true
+        schema:
+          type: string
+        description: "A unique identifier for the charge. <br><br>  Must conform to the regular expression: ^[0-9A-Za-z]{1,16}$ <br/> `^[0-9A-Za-z]{1,12}$`"
+      - name: nino
+        in: path
+        required: true
+        schema:
+          type: string
+        description: National Insurance number, in the format AA999999A.
+  /accounts/self-assessment/{nino}/balance-and-transactions:
+    get:
+      responses:
+        "200":
+          description: ""
+          headers:
+            X-CorrelationId:
+              description: Unique ID for operation tracking <br> String, 36 characters.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Retrieve Self Assessment Balance and Transactions
+                required:
+                  - balanceDetails
+                description: This endpoint enables you to retrieve the overall liability broken down into overdue, currently due (payable), and pending (not yet due) amounts. A National Insurance number must be provided.
+                includePath: schemas/retrieveBalanceAndTransactions.json
+                example:
+                  example-1:
+                    balanceDetails:
+                      payableAmount: -99999999999.99
+                      payableDueDate: "1920-02-29"
+                      pendingChargeDueAmount: -99999999999.99
+                      pendingChargeDueDate: "1920-02-29"
+                      overdueAmount: -99999999999.99
+                      bcdBalancePerYear:
+                        - taxYear: 2022-23
+                          bcdAmount: 1300.12
+                        - taxYear: 2020-21
+                          bcdAmount: 1600.12
+                      earliestPaymentDateOverdue: "1920-02-29"
+                      totalBalance: -99999999999.99
+                      amountCodedOut: 3456.67
+                      totalBcdBalance: 2600.24
+                      unallocatedCredit: 3456.67
+                      allocatedCredit: 2345.67
+                      totalCredit: 4567.67
+                      firstPendingAmountRequested: 1234.67
+                      secondPendingAmountRequested: 3100.67
+                      availableCredit: 1212.67
+                    codingDetails:
+                      - returnTaxYear: 2020-21
+                        totalLiabilityAmount: 5009.99
+                        codingTaxYear: 2020-21
+                        coded:
+                          charge: 5009.99
+                          initiationDate: "2021-04-05"
+                    documentDetails:
+                      taxYear: 2020-21
+                      documentId: "1455"
+                      formBundleNumber: "88888888"
+                      creditReason: Voluntary Payment
+                      documentDate: "2018-04-05"
+                      documentText: ITSA- Bal Charge
+                      documentDueDate: "2021-04-05"
+                      documentDescription: ITSA- POA 1
+                      originalAmount: 5009.99
+                      outstandingAmount: 5009.99
+                      lastClearing:
+                        lastClearingDate: "2018-04-05"
+                        lastClearingReason: Incoming Payment
+                        lastClearedAmount: 5009.99
+                      isChargeEstimate: true
+                      isCodedOut: true
+                      paymentLot: AB1023456789
+                      paymentLotItem: "000001"
+                      effectiveDateOfPayment: "2021-04-05"
+                      latePaymentInterest:
+                        latePaymentInterestId: "1234567890123456"
+                        accruingInterestAmount: 5009.99
+                        interestRate: 5.99
+                        interestStartDate: "2020-04-01"
+                        interestEndDate: "2020-04-05"
+                        interestAmount: 5009.99
+                        interestDunningLockAmount: 5009.99
+                        interestOutstandingAmount: 5009.99
+                      amountCodedOut: 5009.99
+                      reducedCharge:
+                        chargeType: AA
+                        documentNumber: "1234567890123456"
+                        amendmentDate: "2018-04-05"
+                        taxYear: 2017-18
+                    financialDetails:
+                      - taxYear: 2016-17
+                        chargeDetail:
+                          documentId: "12345678901234568"
+                          documentType: "1234"
+                          documentTypeDescription: Income Tax Estimate
+                          chargeType: "5678"
+                          chargeTypeDescription: Income Tax Estimate - ITSA
+                        taxPeriodFrom: "2018-08-13"
+                        taxPeriodTo: "2018-08-14"
+                        contractAccount: X
+                        documentNumber: "1040000872"
+                        documentNumberItem: XM00
+                        chargeReference: XM002610011594
+                        originalAmount: 10000
+                        outstandingAmount: 10000
+                        clearedAmount: 10000
+                        accruedInterest: 10000
+                        items:
+                          - itemId: "001"
+                            dueDate: "2018-08-13"
+                            amount: 10000
+                            clearingDate: "2018-08-13"
+                            clearingReason: Outgoing Payment
+                            outgoingPaymentMethod: Payable Order Repayment
+                            locks:
+                              isChargeOnHold: false
+                              isEstimatedChargeOnHold: false
+                              isInterestAccrualOnHold: false
+                              isInterestChargeOnHold: false
+                            isReturn: true
+                            paymentReference: Ab12453535
+                            paymentAmount: 10000
+                            paymentMethod: Payment
+                            paymentLot: "81203010024"
+                            paymentLotItem: "000001"
+                            clearingSAPDocument: "3350000253"
+                            isChargeEstimate: true
+                type: object
+                additionalProperties: false
+                properties:
+                  balanceDetails:
+                    $ref: retrieveBalanceAndTransactions/balanceDetails_response.json
+                  codingDetails:
+                    $ref: retrieveBalanceAndTransactions/codingDetails.json
+                  documentDetails:
+                    $ref: retrieveBalanceAndTransactions/documentDetails.json
+                  financialDetails:
+                    $ref: retrieveBalanceAndTransactions/financialDetails.json
+        "400":
+          $ref: "#/components/responses/trait_errors.rangeToDateBeforeFromDate_400"
+        "403":
+          $ref: "#/components/responses/trait_errors.clientOrAgentNotAuthorised_403"
+        "404":
+          $ref: "#/components/responses/trait_errors.notFound_404"
+      description: This endpoint enables you to retrieve the overall liability broken down into overdue, currently due (payable), and pending (not yet due) amounts. A National Insurance number must be provided.
+      operationId: Retrieve Self Assessment Balance and Transactions
+      parameters:
+        - $ref: "#/components/parameters/trait_headers.acceptJson_Accept"
+        - $ref: "#/components/parameters/trait_headers.testScenarioHeader_Gov-Test-Scenario"
+        - name: docNumber
+          in: query
+          description: |
+            The docNumber is a unique number per tax grouping in the Account display.
+
+            (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) or doc number should be supplied.)
+          schema:
+            type: string
+        - name: fromDate
+          in: query
+          description: |
+            The inclusive start date to return balances and transactions. The maximum date range between fromDate and toDate should not exceed 732 days.
+
+            (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) or docNumber should be supplied.)
+          schema:
+            type: string
+        - name: toDate
+          in: query
+          description: |
+            The inclusive end date to return balances and transactions. The maximum date range between fromDate and toDate should not exceed 732 days.
+
+            (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) or docNumber should be supplied.)
+          schema:
+            type: string
+        - name: onlyOpenItems
+          in: query
+          description: |
+            Limits the extraction to unpaid or not reversed charges.
+
+            (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) or docNumber should be supplied.)
+
+            Defaults to false
+          schema:
+            type: boolean
+        - name: includeLocks
+          in: query
+          description: |
+            Include additional information related to claim and debt management.
+
+            Defaults to false
+          schema:
+            type: boolean
+        - name: calculateAccruedInterest
+          in: query
+          description: |
+            Calculate accrued interest. Accruing interest is the amount of interest calculated
+
+            a) To today’s date (or in the case of a created statement, to the statement date)
+
+            b) On any overdue interest-bearing liability
+
+            No interest charge is created for an amount of accruing interest. An interest charge is only created when the related liability is paid in full.
+          schema:
+            type: boolean
+        - name: removePOA
+          in: query
+          description: |
+            Remove Payment on Account details. When true, details of any payments that the customer has made will not be returned.
+
+            Defaults to false.
+          schema:
+            type: boolean
+        - name: customerPaymentInformation
+          in: query
+          description: |
+            Include customer payment information in the response. When true, the following information is returned:
+            Payment Reference, Payment Amount, Payment Method, Payment Lot, Payment Lot Item, Clearing SAP Document.
+
+            Note that if removePOA is true, no information is returned even if customerPaymentInformation is true.
+
+            Defaults to false.
+          schema:
+            type: boolean
+        - name: includeEstimatedCharges
+          in: query
+          description: |
+            Include statistical (estimated) values for monthly payments.
+
+            Defaults to false.
+          schema:
+            type: boolean
+      x-annotation-annotations.sandboxData: |-
+        <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Header Value (Gov-Test-Scenario)</th>
+                    <th>Scenario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><p>N/A - DEFAULT</p></td>
+                    <td><p>Simulates a successful response.</p></td>
+                </tr>
+                <tr>
+                    <td><p>NOT_FOUND</p></td>
+                    <td><p>Simulates the scenario where no data can be found.</p></td>
+                </tr>
+                <tr>
+                    <td><p>INCONSISTENT_QUERY_PARAMS</p></td>
+                    <td><p>Simulates the scenario where the query parameters are inconsistent.</p></td>
+                </tr>
+                <tr>
+                    <td><p>INVALID_DATE_RANGE</p></td>
+                    <td><p>Simulates the scenario where the provided date range is invalid.</p></td>
+                </tr>
+            </tbody>
+        </table>
+      x-annotation-annotations.scope: read:self-assessment
+    parameters:
+      - name: nino
+        in: path
+        required: true
+        schema:
+          type: string
+        description: National Insurance number, in the format AA999999A.
+  /accounts/self-assessment/{nino}/payments-and-allocations:
+    get:
+      responses:
+        "200":
+          description: ""
+          headers:
+            X-CorrelationId:
+              description: Unique ID for operation tracking <br> String, 36 characters.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                required:
+                  - payments
+                  - links
+                includePath: schemas/list_self_assessment_payments_and_allocation_details_schema.json
+                example:
+                  example-1:
+                    payments:
+                      - paymentLot: "081203010024"
+                        paymentLotItem: "000001"
+                        paymentReference: "1594"
+                        paymentAmount: 12345678912.02
+                        paymentMethod: A
+                        transactionDate: "2010-02-27"
+                        allocations:
+                          - chargeReference: XM002610011594
+                            periodKey: 16RL
+                            periodKeyDescription: 2016/17 month 12 RTI
+                            startDate: "2010-03-27"
+                            endDate: "2010-06-27"
+                            dueDate: "2010-07-27"
+                            chargeDetail:
+                              documentId: "1040000872"
+                              documentType: "1234"
+                              documentTypeDescription: Income Tax Estimate
+                              chargeType: "5678"
+                              chargeTypeDescription: Income Tax Estimate - ITSA
+                            amount: 12345678912.02
+                            clearedAmount: 345678912.02
+                            contractAccount: ABC
+                          - chargeReference: XM002610011560
+                            periodKey: 16RR
+                            periodKeyDescription: 2016/17 month 10 RTI
+                            startDate: "2010-04-21"
+                            endDate: "2010-09-20"
+                            dueDate: "2010-11-29"
+                            chargeDetail:
+                              documentId: "1040000872"
+                              documentType: "1234"
+                              documentTypeDescription: Income Tax Estimate
+                              chargeType: "5678"
+                              chargeTypeDescription: Income Tax Estimate - ITSA
+                            amount: 12345678999.92
+                            clearedAmount: 345678992.92
+                            contractAccount: ABS
+                    links:
+                      - href: /individuals/accounts/self-assessment/NS345678A/payments-and-allocations
+                        rel: self
+                        method: GET
+                type: object
+                properties:
+                  payments:
+                    description: An array containing payments made by the customer.
+                    type: array
+                    items:
+                      required:
+                        - allocations
+                      type: object
+                      properties:
+                        paymentLot:
+                          description: An identifier for the batch process that processed the payment and assigned it to the taxpayer's account.
+                          example: AB1023456789-000001
+                          type: string
+                        paymentLotItem:
+                          description: An identifier for each payment within a payment lot. paymentLot and paymentLotItem together uniquely identify a payment.
+                          example: "000001"
+                          type: string
+                        paymentReference:
+                          description: A unique reference number associated with the payment.
+                          example: "000001700000001"
+                          type: string
+                        paymentAmount:
+                          description: |-
+                            The amount of the payment received into the account. 
+
+                            The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.
+                          example: "10000.00"
+                          type: number
+                        paymentMethod:
+                          description: |-
+                            The method used to make the payment. 
+
+                            Must conform to the regular expression:
+                            ^[0-9A-Za-z]{1,30}$
+                          example: BACS, Payment by card
+                          type: string
+                        transactionDate:
+                          description: "The date the payment was received into the account in the format: YYYY-MM-DD"
+                          example: "2018-04-05"
+                          type: string
+                        allocations:
+                          description: A list of charges which are allocated amounts from the payment
+                          type: array
+                          items:
+                            required:
+                              - chargeReference
+                            type: object
+                            properties:
+                              chargeReference:
+                                description: A unique reference for the original charge that the payment was made against.
+                                example: XM002610011595
+                                type: string
+                              periodKey:
+                                description: |-
+                                  The period key attributed to the charge.
+
+                                  A four digit reference containing characters and numbers to identify the specific tax period.
+                                example: 16RL
+                                type: string
+                              periodKeyDescription:
+                                description: A description of the period key as a tax period.
+                                example: 6th April 2020 to 5th April 2021
+                                type: string
+                              startDate:
+                                description: The start date of the tax year for the charge in the format YYYY-MM-DD
+                                example: "2018-04-06"
+                                type: string
+                              endDate:
+                                description: The end date of the tax year for the charge in the format YYYY-MM-DD
+                                example: "2019-04-05"
+                                type: string
+                              dueDate:
+                                description: The date the charge must be paid by. Interest or penalties will be accrued after this date.
+                                example: "2019-07-27"
+                                type: string
+                              chargeDetail:
+                                type: object
+                                properties:
+                                  documentId:
+                                    description: "Same as Document Number unless on output there are no postings then the Form Bundle number is returned. Must conform to the regular expression: ^[0-9A-Za-z]{1,12}$"
+                                    example: "1040000872"
+                                    type: string
+                                  documentType:
+                                    description: A code to specify the document type of which this is a subitem.
+                                    example: "3880"
+                                    type: string
+                                  documentTypeDescription:
+                                    description: Description of the document type.
+                                    example: Income Tax Estimate
+                                    type: string
+                                  chargeType:
+                                    description: A code to specify the type of charge.
+                                    example: "1005"
+                                    type: string
+                                  chargeTypeDescription:
+                                    description: Description of the charge type.
+                                    example: Income Tax Estimate -  ITSA
+                                    type: string
+                                required:
+                                  - documentId
+                                  - documentType
+                                  - documentTypeDescription
+                                  - chargeType
+                                  - chargeTypeDescription
+                              amount:
+                                description: |-
+                                  The original value of this transaction.
+
+                                  The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.
+                                example: "600.00"
+                                type: number
+                              clearedAmount:
+                                description: |-
+                                  The cleared value of this transaction.
+
+                                  The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.
+                                example: "600.00"
+                                type: number
+                              contractAccount:
+                                description: The accounting record for a particular charge type.
+                                example: "000404772537"
+                                type: string
+                  links:
+                    type: array
+                    items:
+                      required:
+                        - href
+                        - rel
+                        - method
+                      type: object
+                      properties:
+                        method:
+                          description: The HTTP method type for the endpoint.
+                          enum:
+                            - GET
+                          type: string
+                        rel:
+                          description: A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.
+                          enum:
+                            - self
+                          type: string
+                        href:
+                          description: The relative URL of the endpoint.
+                          example: /accounts/self-assessment/AA999999A/payments-and-allocations
+                          type: string
+        "400":
+          $ref: "#/components/responses/trait_errors.missingPaymentLotItem_400"
+        "403":
+          $ref: "#/components/responses/trait_errors.clientOrAgentNotAuthorised_403"
+        "404":
+          $ref: "#/components/responses/trait_errors.notFound_404"
+      description: This endpoint enables you to list the payments and allocation details of one or more liabilities for a National insurance number.
+      operationId: List Self Assessment Payments & Allocation Details
+      parameters:
+        - $ref: "#/components/parameters/trait_headers.acceptJson_Accept"
+        - $ref: "#/components/parameters/trait_headers.testScenarioHeader_Gov-Test-Scenario"
+        - name: fromDate
+          in: query
+          description: The inclusive start date of the period to filter payments. The maximum date range between fromDate and toDate should not exceed 732 days.
+          schema:
+            type: string
+        - name: toDate
+          in: query
+          description: The inclusive end date of the period to filter payments. The maximum date range between fromDate and toDate should not exceed 732 days.
+          schema:
+            type: string
+        - name: paymentLot
+          in: query
+          description: An identifier for the batch process that processed the payment and assigned it to the taxpayer's account.
+          schema:
+            type: string
+        - name: paymentLotItem
+          in: query
+          description: An identifier for each payment within a payment lot. paymentLot and paymentLotItem together uniquely identify a payment.
+          schema:
+            type: string
+      x-annotation-annotations.sandboxData: |-
+        <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Header Value (Gov-Test-Scenario)</th>
+                    <th>Scenario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><p>N/A - DEFAULT</p></td>
+                    <td><p>Simulates a successful response.</p></td>
+                </tr>
+                <tr>
+                    <td><p>NOT_FOUND</p></td>
+                    <td><p>Simulates the scenario where no data can be found.</p></td>
+                </tr>
+                <tr>
+                    <td><p>INVALID_DATE_RANGE</p></td>
+                    <td><p>Simulates the scenario where the provided date range is invalid.</p></td>
+                </tr>
+            </tbody>
+        </table>
+      x-annotation-annotations.scope: read:self-assessment
+    parameters:
+      - name: nino
+        in: path
+        required: true
+        schema:
+          type: string
+        description: National Insurance number, in the format AA999999A.
+  /accounts/self-assessment/{nino}/{taxYear}/collection:
+    parameters:
+      - name: taxYear
+        in: path
+        required: true
+        schema:
+          type: string
+        description: "The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. The minimum tax year is 2021-22. No gaps are allowed, for example, 2020-22 is not valid. (The minimum tax year in Sandbox is 2019-20.). Must conform to the regular expression: `^2[0-9]{3}-[0-9]{2}$`"
+      - name: nino
+        in: path
+        required: true
+        schema:
+          type: string
+        description: National Insurance number, in the format AA999999A.
+    x-annotation-annotations.group:
+      name: Coding Out Underpayments and Debts
+      description: Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts.
+  /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code:
+    get:
+      responses:
+        "200":
+          description: ""
+          headers:
+            X-CorrelationId:
+              description: Unique ID for operation tracking <br> String, 36 characters.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Retrieve Coding Out underpayment and debt amounts
+                required:
+                  - links
+                description: Retrieve Coding Out underpayment and debt amounts
+                includePath: schemas/retrieve_coding_out_underpayments_response.json
+                example:
+                  example-1:
+                    taxCodeComponents:
+                      selfAssessmentUnderpayment:
+                        - amount: 89.78
+                          relatedTaxYear: 2021-22
+                          submittedOn: "2021-07-06T09:37:17.000Z"
+                          source: user
+                          id: 1234567891
+                      payeUnderpayment:
+                        - amount: 14.45
+                          relatedTaxYear: 2021-22
+                          submittedOn: "2021-07-06T09:37:17.000Z"
+                          source: user
+                          id: 1234567891
+                      debt:
+                        - amount: 12.01
+                          relatedTaxYear: 2021-22
+                          submittedOn: "2021-07-06T09:37:17.000Z"
+                          source: user
+                          id: 1234567891
+                      inYearAdjustment:
+                        amount: 75.99
+                        relatedTaxYear: 2021-22
+                        submittedOn: "2021-07-06T09:37:17.000Z"
+                        source: user
+                        id: 1234567891
+                    unmatchedCustomerSubmissions:
+                      selfAssessmentUnderpayment:
+                        - amount: 12.32
+                          submittedOn: "2021-07-06T09:37:17.000Z"
+                          id: 1234567891
+                      payeUnderpayment:
+                        - amount: 71.99
+                          submittedOn: "2021-07-06T09:37:17.000Z"
+                          id: 1234567891
+                      debt:
+                        - amount: 54.79
+                          submittedOn: "2021-07-06T09:37:17.000Z"
+                          id: 1234567891
+                      inYearAdjustment:
+                        amount: 56.74
+                        submittedOn: "2021-07-06T09:37:17.000Z"
+                        id: 1234567891
+                    links:
+                      - href: /accounts/self-assessment/TC663795B/2021-22/collection/tax-code
+                        method: PUT
+                        rel: create-or-amend-coding-out-underpayments
+                      - href: /accounts/self-assessment/TC663795B/2021-22/collection/tax-code
+                        method: GET
+                        rel: self
+                      - href: /accounts/self-assessment/TC663795B/2021-22/collection/tax-code
+                        method: DELETE
+                        rel: delete-coding-out-underpayments
+                type: object
+                properties:
+                  taxCodeComponents:
+                    description: Object holding underpayment arrays.
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      selfAssessmentUnderpayment:
+                        minItems: 1
+                        description: Array containing details of coded out Self Assessment underpayments.
+                        type: array
+                        items:
+                          required:
+                            - amount
+                            - source
+                            - submittedOn
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            id:
+                              multipleOf: 1
+                              minimum: 1
+                              maximum: 999999999999999
+                              description: The ID for the Self Assessment underpayment.  It will only be returned after the tax year has ended.
+                              example: "1234567890"
+                              type: number
+                            amount:
+                              multipleOf: 0.01
+                              minimum: 0
+                              maximum: 99999999999.99
+                              description: The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.
+                              example: "5000.99"
+                              type: number
+                            relatedTaxYear:
+                              description: The tax year related to the underpayment.
+                              example: 2021-22
+                              type: string
+                            submittedOn:
+                              description: The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.
+                              example: "2021-07-06T09:37:17.000Z"
+                              type: string
+                            source:
+                              description: Specifies the source of data.
+                              enum:
+                                - hmrcHeld
+                                - user
+                              type: string
+                      payeUnderpayment:
+                        minItems: 1
+                        description: Array containing details of coded out PAYE underpayments.
+                        type: array
+                        items:
+                          required:
+                            - amount
+                            - source
+                            - submittedOn
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            id:
+                              multipleOf: 1
+                              minimum: 1
+                              maximum: 999999999999999
+                              description: The ID for the PAYE underpayment.  It will only be returned after the tax year has ended.
+                              example: "1234567890"
+                              type: number
+                            amount:
+                              multipleOf: 0.01
+                              minimum: 0
+                              maximum: 99999999999.99
+                              description: The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.
+                              example: "5000.99"
+                              type: number
+                            relatedTaxYear:
+                              description: The tax year related to the underpayment.
+                              example: 2021-22
+                              type: string
+                            submittedOn:
+                              description: The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.
+                              example: "2021-07-06T09:37:17.000Z"
+                              type: string
+                            source:
+                              description: Specifies the source of data.
+                              enum:
+                                - hmrcHeld
+                                - user
+                              type: string
+                      debt:
+                        minItems: 1
+                        description: Array containing details of coded out debts.
+                        type: array
+                        items:
+                          required:
+                            - amount
+                            - source
+                            - submittedOn
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            id:
+                              multipleOf: 1
+                              minimum: 1
+                              maximum: 999999999999999
+                              description: The ID for the coded out debts. It will only be returned after the tax year has ended.
+                              example: "1234567890"
+                              type: number
+                            amount:
+                              multipleOf: 0.01
+                              minimum: 0
+                              maximum: 99999999999.99
+                              description: The total amount of debt coded out. The value must be between 0 and 99999999999.99 up to 2 decimal places.
+                              example: "5000.99"
+                              type: number
+                            relatedTaxYear:
+                              description: The tax year related to the debt.
+                              example: 2021-22
+                              type: string
+                            submittedOn:
+                              description: The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.
+                              example: "2021-07-06T09:37:17.000Z"
+                              type: string
+                            source:
+                              description: Specifies the source of data.
+                              enum:
+                                - hmrcHeld
+                                - user
+                              type: string
+                      inYearAdjustment:
+                        required:
+                          - amount
+                          - source
+                          - submittedOn
+                        description: Details of coded out in-year adjustments
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          id:
+                            multipleOf: 1
+                            minimum: 1
+                            maximum: 999999999999999
+                            description: The ID for the HMRC classified debts. It will only be returned after the tax year has ended.
+                            example: "1234567890"
+                            type: number
+                          amount:
+                            multipleOf: 0.01
+                            minimum: 0
+                            maximum: 99999999999.99
+                            description: The total amount of PAYE coded out in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.
+                            example: "5000.99"
+                            type: number
+                          relatedTaxYear:
+                            description: The tax year related to the in-year adjustment.
+                            example: 2021-22
+                            type: string
+                          submittedOn:
+                            description: The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.
+                            example: "2021-07-06T09:37:17.000Z"
+                            type: string
+                          source:
+                            description: Specifies the source of data.
+                            enum:
+                              - hmrcHeld
+                              - user
+                            type: string
+                    required:
+                      - selfAssessmentUnderpayment
+                      - payeUnderpayment
+                      - debt
+                  unmatchedCustomerSubmissions:
+                    description: Object holding underpayment arrays for unmatched customer submissions.
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      selfAssessmentUnderpayment:
+                        minItems: 1
+                        description: Array containing details of coded out Self Assessment underpayments.
+                        type: array
+                        items:
+                          required:
+                            - amount
+                            - submittedOn
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            id:
+                              multipleOf: 1
+                              minimum: 1
+                              maximum: 999999999999999
+                              description: The ID for the Self Assessment underpayment. It will only be returned after the tax year has ended.
+                              example: "1234567890"
+                              type: number
+                            amount:
+                              multipleOf: 0.01
+                              minimum: 0
+                              maximum: 99999999999.99
+                              description: The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.
+                              example: "5000.99"
+                              type: number
+                            submittedOn:
+                              description: The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.
+                              example: "2021-07-06T09:37:17.000Z"
+                              type: string
+                      payeUnderpayment:
+                        minItems: 1
+                        description: Array containing details of coded out PAYE underpayments.
+                        type: array
+                        items:
+                          required:
+                            - amount
+                            - submittedOn
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            id:
+                              multipleOf: 1
+                              minimum: 1
+                              maximum: 999999999999999
+                              description: The ID for the PAYE underpayment. It will only be returned after the tax year has ended.
+                              example: "1234567890"
+                              type: number
+                            amount:
+                              multipleOf: 0.01
+                              minimum: 0
+                              maximum: 99999999999.99
+                              description: The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.
+                              example: "5000.99"
+                              type: number
+                            submittedOn:
+                              description: The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.
+                              example: "2021-07-06T09:37:17.000Z"
+                              type: string
+                      debt:
+                        minItems: 1
+                        description: Array containing details of coded out debts.
+                        type: array
+                        items:
+                          required:
+                            - amount
+                            - submittedOn
+                          type: object
+                          additionalProperties: false
+                          properties:
+                            id:
+                              multipleOf: 1
+                              minimum: 1
+                              maximum: 999999999999999
+                              description: The ID for the coded out debts. It will only be returned after the tax year has ended.
+                              example: "1234567890"
+                              type: number
+                            amount:
+                              multipleOf: 0.01
+                              minimum: 0
+                              maximum: 99999999999.99
+                              description: The total amount of debt coded out. The value must be between 0 and 99999999999.99 up to 2 decimal places.
+                              example: "5000.99"
+                              type: number
+                            submittedOn:
+                              description: The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.
+                              example: "2021-07-06T09:37:17.000Z"
+                              type: string
+                      inYearAdjustment:
+                        required:
+                          - amount
+                          - submittedOn
+                        description: Details of coded out in-year adjustments
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          id:
+                            multipleOf: 1
+                            minimum: 1
+                            maximum: 999999999999999
+                            description: The ID for the HMRC classified debts. It will only be returned after the tax year has ended.
+                            example: "1234567890"
+                            type: number
+                          amount:
+                            multipleOf: 0.01
+                            minimum: 0
+                            maximum: 99999999999.99
+                            description: The total amount of PAYE coded out in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.
+                            example: "5000.99"
+                            type: number
+                          submittedOn:
+                            description: The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.
+                            example: "2021-07-06T09:37:17.000Z"
+                            type: string
+                    required:
+                      - selfAssessmentUnderpayment
+                      - payeUnderpayment
+                      - debt
+                  links:
+                    type: array
+                    items:
+                      required:
+                        - href
+                        - rel
+                        - method
+                      description: A list of endpoint links that indicate possible actions related to the current resource
+                      type: object
+                      properties:
+                        href:
+                          description: The relative url of the endpoint
+                          example: /accounts/self-assessment/TC663795B/2021-22/collection/tax-code
+                          type: string
+                        rel:
+                          description: A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource
+                          enum:
+                            - create-or-amend-coding-out-underpayments
+                            - self
+                            - delete-coding-out-underpayments
+                          type: string
+                        method:
+                          description: The HTTP method type for the endpoint
+                          enum:
+                            - PUT
+                            - GET
+                            - DELETE
+                          type: string
+        "400":
+          $ref: "#/components/responses/trait_errors.formatSource_400"
+        "403":
+          $ref: "#/components/responses/trait_errors.clientOrAgentNotAuthorised_403"
+        "404":
+          $ref: "#/components/responses/trait_errors.codingOutNotFound_404"
+      description: This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted amended coding out amounts for a previous tax year and given National Insurance number.
+      operationId: Retrieve Coding Out Underpayments and Debt Amounts
+      parameters:
+        - $ref: "#/components/parameters/trait_headers.acceptJson_Accept"
+        - $ref: "#/components/parameters/trait_headers.testScenarioHeader_Gov-Test-Scenario"
+        - $ref: "#/components/parameters/trait_queryParameters.source_source"
+      x-annotation-annotations.sandboxData: |-
+        <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Header Value (Gov-Test-Scenario)</th>
+                    <th>Scenario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><p>N/A - DEFAULT</p></td>
+                    <td><p>Simulates a successful response with latest values.</p></td>
+                </tr>
+                <tr>
+                    <td><p>N/A - DEFAULT<br>using <strong>?source=latest</strong></p></td>
+                    <td><p>Simulates a successful response with latest values.</p></td>
+                </tr>
+                <tr>
+                    <td><p>N/A - DEFAULT<br>using <strong>?source=hmrcHeld</strong></p></td>
+                    <td><p>Simulates a successful response with HMRC-held values.</p></td>
+                </tr>
+                <tr>
+                    <td><p>N/A - DEFAULT<br>using <strong>?source=user</strong></p></td>
+                    <td><p>Simulates a successful response with user submitted values.</p></td>
+                </tr>
+                <tr>
+                    <td><p>NOT_FOUND</p></td>
+                    <td><p>Simulates the scenario where no data is found.</p></td>
+                </tr>
+            </tbody>
+        </table>
+      x-annotation-annotations.scope: read:self-assessment
+    put:
+      responses:
+        "200":
+          description: ""
+          headers:
+            X-CorrelationId:
+              description: Unique ID for operation tracking <br> String, 36 characters.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                title: Create or Amend Coding Out underpayment and debt amounts
+                description: Create or Amend Coding Out underpayment and debt amounts
+                includePath: schemas/create_or_amend_coding_out_underpayments_response.json
+                example:
+                  example-1:
+                    links:
+                      - href: /accounts/self-assessment/TC663795B/2021-22/collection/tax-code
+                        method: PUT
+                        rel: create-or-amend-coding-out-underpayments
+                      - href: /accounts/self-assessment/TC663795B/2021-22/collection/tax-code
+                        method: GET
+                        rel: self
+                      - href: /accounts/self-assessment/TC663795B/2021-22/collection/tax-code
+                        method: DELETE
+                        rel: delete-coding-out-underpayments
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      required:
+                        - href
+                        - rel
+                        - method
+                      description: A list of endpoint links that indicate possible actions related to the current resource
+                      type: object
+                      properties:
+                        href:
+                          description: The relative url of the endpoint
+                          example: /accounts/self-assessment/TC663795B/2021-22/collection/tax-code
+                          type: string
+                        rel:
+                          description: A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource
+                          enum:
+                            - create-or-amend-coding-out-underpayments
+                            - self
+                            - delete-coding-out-underpayments
+                          type: string
+                        method:
+                          description: The HTTP method type for the endpoint
+                          enum:
+                            - PUT
+                            - GET
+                            - DELETE
+                          type: string
+                required:
+                  - links
+        "400":
+          $ref: "#/components/responses/trait_errors.incorrectOrEmptyBody_400"
+        "403":
+          $ref: "#/components/responses/trait_errors.clientOrAgentNotAuthorised_403"
+      description: This endpoint enables you to overwrite coding out underpayments and debt amounts held by HMRC for a previous tax year and given National Insurance number, and to amend previously submitted overwrite amounts. <strong>This endpoint can only be used after the tax year has ended.</strong>
+      operationId: Create or Amend Coding Out Underpayments and Debt Amounts
+      requestBody:
+        content:
+          application/json:
+            example:
+              example-1:
+                taxCodeComponents:
+                  payeUnderpayment:
+                    - amount: 2000.5
+                      id: 1234567890
+                  selfAssessmentUnderpayment:
+                    - amount: 1123.45
+                      id: 4657839807
+                  debt:
+                    - amount: 100.25
+                      id: 2134693857
+                  inYearAdjustment:
+                    amount: 123.45
+                    id: 9873562901
+            schema:
+              title: Create or Amend Coding Out underpayment and debt amounts
+              required:
+                - taxCodeComponents
+              description: Create or Amend Coding Out underpayment and debt amounts
+              includePath: schemas/create_or_amend_coding_out_underpayments_request.json
+              type: object
+              additionalProperties: false
+              properties:
+                taxCodeComponents:
+                  description: Object holding underpayment arrays.
+                  type: object
+                  additionalProperties: false
+                  properties:
+                    payeUnderpayment:
+                      description: Array containing details of coded out PAYE underpayments.
+                      type: array
+                      items:
+                        required:
+                          - id
+                          - amount
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          id:
+                            multipleOf: 1
+                            minimum: 1
+                            maximum: 999999999999999
+                            description: The identifier for the PAYE underpayments.
+                            example: "1234567890"
+                            type: number
+                          amount:
+                            multipleOf: 0.01
+                            minimum: 0
+                            maximum: 99999999999.99
+                            description: The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99.
+                            example: "1000.25"
+                            type: number
+                    selfAssessmentUnderpayment:
+                      description: Array containing details of coded out Self Assessment underpayments.
+                      type: array
+                      items:
+                        required:
+                          - id
+                          - amount
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          id:
+                            multipleOf: 1
+                            minimum: 1
+                            maximum: 999999999999999
+                            description: The identifier for the Self Assessment underpayments.
+                            example: "1234567890"
+                            type: number
+                          amount:
+                            multipleOf: 0.01
+                            minimum: 0
+                            maximum: 99999999999.99
+                            description: The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99.
+                            example: "1000.25"
+                            type: number
+                    debt:
+                      description: Array containing details of coded out debts.
+                      type: array
+                      items:
+                        required:
+                          - id
+                          - amount
+                        type: object
+                        additionalProperties: false
+                        properties:
+                          id:
+                            multipleOf: 1
+                            minimum: 1
+                            maximum: 999999999999999
+                            description: The identifier for the HMRC classified debts.
+                            example: "1234567890"
+                            type: number
+                          amount:
+                            multipleOf: 0.01
+                            minimum: 0
+                            maximum: 99999999999.99
+                            description: The total coded out amount attributed to HMRC classified debts. The value must be between 0 and 99999999999.99.
+                            example: "1000.25"
+                            type: number
+                    inYearAdjustment:
+                      required:
+                        - id
+                        - amount
+                      description: Details of coded out in-year adjustments.
+                      type: object
+                      additionalProperties: false
+                      properties:
+                        id:
+                          multipleOf: 1
+                          minimum: 1
+                          maximum: 999999999999999
+                          description: The identifier for the total coded out amount attributed to in-year tax code adjustments to collect underpayments or debts.
+                          example: "1234567890"
+                          type: number
+                        amount:
+                          multipleOf: 0.01
+                          minimum: 0
+                          maximum: 99999999999.99
+                          description: The total coded out amount attributed to in-year tax code adjustments to collect underpayments or debts. The value must be between 0 and 99999999999.99.
+                          example: "1000.25"
+                          type: number
+                  required:
+                    - payeUnderpayment
+                    - selfAssessmentUnderpayment
+                    - debt
+        required: true
+      parameters:
+        - $ref: "#/components/parameters/trait_headers.acceptJson_Accept"
+        - $ref: "#/components/parameters/trait_headers.contentTypeJson_Content-Type"
+        - $ref: "#/components/parameters/trait_headers.testScenarioHeader_Gov-Test-Scenario"
+      x-annotation-annotations.sandboxData: |
+        <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Header Value (Gov-Test-Scenario)</th>
+                    <th>Scenario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><p>N/A - DEFAULT</p></td>
+                    <td><p>Simulate a successful response.</p></td>
+                </tr>
+            </tbody>
+        </table>
+      x-annotation-annotations.scope: write:self-assessment
+    delete:
+      responses:
+        "204":
+          description: ""
+          headers:
+            X-CorrelationId:
+              description: Unique ID for operation tracking <br> String, 36 characters.
+              schema:
+                type: string
+        "400":
+          $ref: "#/components/responses/trait_errors.ruleTaxYearRangeInvalid_400"
+        "403":
+          $ref: "#/components/responses/trait_errors.clientOrAgentNotAuthorised_403"
+        "404":
+          $ref: "#/components/responses/trait_errors.codingOutNotFound_404"
+      description: This endpoint enables you to delete custom coding out amounts for a given tax year and National Insurance number.
+      operationId: Delete Coding Out Underpayments and Debt Amounts
+      parameters:
+        - $ref: "#/components/parameters/trait_headers.acceptJson_Accept"
+        - $ref: "#/components/parameters/trait_headers.testScenarioHeader_Gov-Test-Scenario"
+      x-annotation-annotations.sandboxData: |-
+        <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Header Value (Gov-Test-Scenario)</th>
+                    <th>Scenario</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><p>N/A - DEFAULT</p></td>
+                    <td><p>Simulates a success response.</p></td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr>
+                    <td><p>NOT_FOUND</p></td>
+                    <td><p>Simulates the scenario where coding out amounts could not be found.</p></td>
+                </tr>
+            </tbody>
+        </table>
+      x-annotation-annotations.scope: write:self-assessment
+    parameters:
+      - name: taxYear
+        in: path
+        required: true
+        schema:
+          type: string
+        description: "The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. The minimum tax year is 2021-22. No gaps are allowed, for example, 2020-22 is not valid. (The minimum tax year in Sandbox is 2019-20.). Must conform to the regular expression: `^2[0-9]{3}-[0-9]{2}$`"
+      - name: nino
+        in: path
+        required: true
+        schema:
+          type: string
+        description: National Insurance number, in the format AA999999A.
+components:
+  schemas:
+    types.errorResponse:
+      includePath: https://developer.service.hmrc.gov.uk/api-documentation/assets/common/modules/types.raml
+      properties:
+        code:
+          type: string
+      required:
+        - code
+      type: object
+  responses:
+    trait_errors.notFound_404:
+      description: ""
+      content:
+        application/json:
+          example:
+            notFound:
+              code: MATCHING_RESOURCE_NOT_FOUND
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.clientOrAgentNotAuthorised_403:
+      description: ""
+      content:
+        application/json:
+          example:
+            clientOrAgentNotAuthorised:
+              code: CLIENT_OR_AGENT_NOT_AUTHORISED
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatNino_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatNino:
+              code: FORMAT_NINO
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatTransactionId_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatTransactionId:
+              code: FORMAT_TRANSACTION_ID
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatTaxYear_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatTaxYear:
+              code: FORMAT_TAX_YEAR
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatFromDate_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatFromDate:
+              code: FORMAT_FROM_DATE
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatToDate_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatToDate:
+              code: FORMAT_TO_DATE
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.missingFromDate_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            missingFromDate:
+              code: MISSING_FROM_DATE
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.missingToDate_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            missingToDate:
+              code: MISSING_TO_DATE
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.rangeToDateBeforeFromDate_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            rangeToDateBeforeFromDate:
+              code: RANGE_TO_DATE_BEFORE_FROM_DATE
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.invalidDateRange_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            invalidDateRange:
+              code: RULE_INVALID_DATE_RANGE
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.incorrectOrEmptyBody_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            incorrectOrEmptyBody:
+              code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.ruleTaxYearNotSupported_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            ruleTaxYearNotSupported:
+              code: RULE_TAX_YEAR_NOT_SUPPORTED
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.ruleTaxYearNotEnded_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            ruleTaxYearNotEnded:
+              code: RULE_TAX_YEAR_NOT_ENDED
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatValue_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatValue:
+              code: FORMAT_VALUE
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatId_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatId:
+              code: FORMAT_ID
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatPaymentLot_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatPaymentLot:
+              code: FORMAT_PAYMENT_LOT
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatPaymentLotItem_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatPaymentLotItem:
+              code: FORMAT_PAYMENT_LOT_ITEM
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.missingPaymentLot_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            missingPaymentLot:
+              code: MISSING_PAYMENT_LOT
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.missingPaymentLotItem_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            missingPaymentLotItem:
+              code: MISSING_PAYMENT_LOT_ITEM
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.ruleTaxYearRangeInvalid_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            ruleTaxYearRangeInvalid:
+              code: RULE_TAX_YEAR_RANGE_INVALID
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.ruleDuplicateIdNotAllowed_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            ruleDuplicateIdNotAllowed:
+              code: RULE_DUPLICATE_ID_NOT_ALLOWED
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.formatSource_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            formatSource:
+              code: FORMAT_SOURCE
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.codingOutNotFound_404:
+      description: ""
+      content:
+        application/json:
+          example:
+            codingOutNotFound:
+              code: MATCHING_RESOURCE_NOT_FOUND
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.invalidDocNumber_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            invalidDocNUmber:
+              code: FORMAT_DOC_NUMBER
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.invalidOnlyOpenItems_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            invalidOnlyOpenItems:
+              code: FORMAT_ONLY_OPEN_ITEMS
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.invalidIncludeLocks_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            invalidIncludeLocks:
+              code: FORMAT_INCLUDE_LOCKS
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.invalidCalculateAccruedInterest_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            invalidCalculateAccruedInterest:
+              code: FORMAT_CALCULATE_ACCRUED_INTEREST
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.invalidCustomerPaymentInformation_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            invalidCustomerPaymentInformation:
+              code: FORMAT_CUSTOMER_PAYMENT_INFORMATION
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.invalidRemovePaymentOnAccount_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            invalidRemovePaymentOnAccount:
+              code: FORMAT_REMOVE_PAYMENT_ON_ACCOUNT
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.invalidIncludeChargeEstimate_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            invalidIncludeChargeEstimate:
+              code: FORMAT_INCLUDE_ESTIMATED_CHARGES
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.ruleInconsistentQueryParams_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            ruleInconsistentQueryParams:
+              code: RULE_INCONSISTENT_QUERY_PARAMS
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+    trait_errors.ruleInconsistentQueryParamsListSA_400:
+      description: ""
+      content:
+        application/json:
+          example:
+            ruleInconsistentQueryParams:
+              code: RULE_INCONSISTENT_QUERY_PARAMS
+          schema:
+            $ref: "#/components/schemas/types.errorResponse"
+  parameters:
+    trait_headers.contentTypeJson_Content-Type:
+      name: Content-Type
+      in: header
+      required: true
+      description: Specifies the format of the request body, which must be JSON.
+      schema:
+        type: string
+    trait_headers.acceptJson_Accept:
+      name: Accept
+      in: header
+      required: true
+      description: Specifies the response format and the version of the API to be used.
+      schema:
+        type: string
+    trait_headers.testScenarioHeader_Gov-Test-Scenario:
+      name: Gov-Test-Scenario
+      in: header
+      description: Only in sandbox environment. See Test Data table for all header values.
+      schema:
+        type: string
+    trait_queryParameters.source_source:
+      name: source
+      in: query
+      description: "Specifies the source of data to be returned. If source is not provided, the latest values will be returned.<p> Limited to the following possible values: <ul><li>`hmrcHeld`<li>`user`<li>`latest`</p>"
+      schema:
+        type: string
+  examples: {}
+  requestBodies: {}
+  headers: {}
+  securitySchemes: {}
+  links: {}
+  callbacks: {}
