@@ -33,10 +33,14 @@ get:
     - Payments and Liabilities
 
   parameters:
-    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
-    - $ref: "./common/headers.yaml#/components/parameters/contentTypeJson"
-    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
     - $ref: "./common/queryParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/fromDate"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/toDate"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/paymentLot"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/paymentLotItem"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
 
   responses:
     200:
