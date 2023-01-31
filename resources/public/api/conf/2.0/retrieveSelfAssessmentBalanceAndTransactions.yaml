@@ -41,7 +41,7 @@ get:
         - read:self-assessment
 
   parameters:
-    - $ref: './common/queryParameters.yaml#/components/parameters/nino'
+    - $ref: './common/pathParameters.yaml#/components/parameters/nino'
     - $ref: "./common/queryParameters.yaml#/components/parameters/docNumber"
     - $ref: "./common/queryParameters.yaml#/components/parameters/fromDate"
     - $ref: "./common/queryParameters.yaml#/components/parameters/toDate"
