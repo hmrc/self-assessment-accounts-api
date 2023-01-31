@@ -41,15 +41,7 @@ get:
         - read:self-assessment
 
   parameters:
-    - $ref: "./common/queryParameters.yaml#/components/parameters/docNumber"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/fromDate"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/toDate"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/onlyOpenItems"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/includeLocks"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/calculateAccruedInterest"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/customerPaymentInformation"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/includeEstimatedCharges"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/removePOA"
+    - $ref: './common/queryParameters.yaml#/components/parameters/nino'
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
     - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
     - $ref: "./common/headers.yaml#/components/parameters/authorization"
@@ -116,8 +108,9 @@ get:
         application/json:
           schema:
             $ref: './schemas/error-response.yaml'
-          CLIENT_OR_AGENT_NOT_AUTHORISED:
-            $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
 
     404:
       description: Not found
@@ -125,5 +118,6 @@ get:
         application/json:
           schema:
             $ref: './schemas/error-response.yaml'
-          NOT_FOUND:
-            $ref: "./common/errors.yaml#/components/examples/notFound"
+          examples:
+            NOT_FOUND:
+              $ref: "./common/errors.yaml#/components/examples/notFound"

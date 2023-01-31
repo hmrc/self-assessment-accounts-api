@@ -33,6 +33,8 @@ get:
         - read:self-assessment
 
   parameters:
+    - $ref: './common/queryParameters.yaml#/components/parameters/nino'
+    - $ref: './common/queryParameters.yaml#/components/parameters/transactionId'
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
     - $ref: "./common/headers.yaml#/components/parameters/contentTypeJson"
 

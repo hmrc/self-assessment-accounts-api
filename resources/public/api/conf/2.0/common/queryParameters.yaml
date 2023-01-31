@@ -1,14 +1,35 @@
 openapi: 3.0.3
 components:
   parameters:
-    fromPayments:
-      name: from
-      in: parameters
+    nino:
+      name: nino
+      in: path
       description: |
-        From date to return payments.<br><br> Date in the format: YYYY-MM-DD
+        National Insurance number, in the format `AA999999A`
       schema:
         type: string
-        example: 2019-05-04
+        example: TC663795B
+      required: true
+    taxYear:
+      name: taxYear
+      in: path
+      description: |
+        The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. The minimum tax year is 2021-22. No gaps are allowed, for example, 2020-22 is not valid. (The minimum tax year in Sandbox is 2019-20.)
+      schema:
+        type: string
+        example: 2021-22
+      required: true
+    transactionId:
+      name: transactionId
+      in: path
+      description: |
+        A unique identifier for this item. 
+      
+        Must conform to the regular expression
+        ^[0-9A-Za-z]{1,12}$
+      schema:
+        type: string
+        example: X92AM39DLE3D
       required: true
     fromDate:
       name: fromDate
@@ -26,24 +47,6 @@ components:
         type: string
         example: "2019-01-02"
       required: false
-    fromCharges:
-      name: from
-      in: parameters
-      description: |
-        From date to return charges.<br><br> Date in the format: YYYY-MM-DD
-      schema:
-        type: string
-        example: 2019-05-04
-      required: true
-    toPayments:
-      name: to
-      in: parameters
-      description: |
-        To date to return payments.<br><br> Date in the format: YYYY-MM-DD
-      schema:
-        type: string
-        example: 2019-06-12
-      required: true
     docNumber:
       name: docNumber
       in: parameters
@@ -118,7 +121,7 @@ components:
     paymentLot:
       name: paymentLot
       in: parameters
-      description: "An identifier for the batch process that processed the payment and assigned it to the taxpayer's account."
+      description: "An identifier for the batch process that processed the pagexyment and assigned it to the taxpayer's account."
       schema:
         type: string
         example: "081203010024"
@@ -145,20 +148,3 @@ components:
         type: boolean
         example: false
       required: false
-    toCharges:
-      name: to
-      in: parameters
-      description: |
-        To date to return charges.<br><br> Date in the format: YYYY-MM-DD
-      schema:
-        type: string
-        example: 2019-06-12
-      required: true
-    source:
-      name: source
-      in: parameters
-      description: |
-        Specifies the source of data to be returned. If source is not provided, the latest values will be returned.<p> Limited to the following possible values: <ul><li>`hmrcHeld`<li>`user`<li>`latest`</p>
-      schema:
-        type: string
-      required: true

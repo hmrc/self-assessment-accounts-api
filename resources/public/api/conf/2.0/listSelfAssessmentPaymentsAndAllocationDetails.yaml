@@ -36,10 +36,7 @@ get:
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
     - $ref: "./common/headers.yaml#/components/parameters/contentTypeJson"
     - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/fromDate"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/toDate"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/paymentLot"
-    - $ref: "./common/queryParameters.yaml#/components/parameters/paymentLotItem"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/nino"
 
   responses:
     200:
