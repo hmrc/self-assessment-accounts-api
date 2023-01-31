@@ -1,5 +1,5 @@
 get:
-  summary: Retrieve Coding Out underpayments and debt amounts
+  summary: Retrieve Coding Out Underpayments and Debt Amounts [test only]
   description: |
      This endpoint allows the developer to retrieve HMRC held coded out underpayments and coded out debt amounts or user submitted amended coded out underpayments and coded out debt amounts for a previous tax year and given NINO.
   

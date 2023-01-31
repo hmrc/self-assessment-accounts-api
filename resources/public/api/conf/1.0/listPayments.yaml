@@ -1,5 +1,5 @@
 get:
-  summary: List Self Assessment Payments
+  summary: List Self Assessment Payments [test only]
   description: |
     This endpoint allows a developer to retrieve a list of payments for a given date range. A unique identifier (National Insurance Number) for the account must be used and a valid date range provided.
     

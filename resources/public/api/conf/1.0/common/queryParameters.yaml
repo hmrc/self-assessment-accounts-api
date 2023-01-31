@@ -1,15 +1,23 @@
 components:
   parameters:
+
     source:
       in: query
       name: source
       description: |
         Specifies the source of data to be returned. If source is not provided, the latest submitted values will be 
         returned.
+        
+        Limited to the following possible values:
+
+        * user 
+        * hmrcHeld
+        * latest
+
       schema:
         type: string
         enum: [ user, hmrcHeld, latest ]
-        example: latest
+      required: false
 
     fromPayments:
       in: query
@@ -19,7 +27,7 @@ components:
       schema:
         type: string
         example: "2019-05-04"
-        required: true
+      required: true
 
     fromCharges:
       in: query
@@ -29,7 +37,7 @@ components:
       schema:
         type: string
         example: "2019-05-04"
-        required: true
+      required: true
 
     toPayments:
       in: query
@@ -39,7 +47,7 @@ components:
       schema:
         type: string
         example: "2019-06-12"
-        required: true
+      required: true
 
     toCharges:
       in: query
@@ -49,4 +57,4 @@ components:
       schema:
         type: string
         example: "2019-06-12"
-        required: true
+      required: true

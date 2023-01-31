@@ -1,5 +1,5 @@
 get:
-  summary: Retrieve History of a Self Assessment Charge
+  summary: Retrieve History of a Self Assessment Charge [test only]
   description: |
     This endpoint allows a developer to retrieve the history of changes to an individual charge. A unique identifier (National Insurance Number) for the account must be used and a charge identifier provided.
     

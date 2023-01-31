@@ -1,5 +1,5 @@
 put:
-  summary: Create or Amend Coded Out underpayment and debt amounts
+  summary: Create or Amend Coding Out Underpayments and Debt Amounts [test only]
   description: |
     This endpoint allows a developer to retrieve the history of changes to an individual charge. A unique identifier (National Insurance Number) for the account must be used and a charge identifier provided.
     

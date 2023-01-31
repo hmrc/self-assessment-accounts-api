@@ -1,5 +1,5 @@
 get:
-  summary: List Self Assessment Transactions
+  summary: List Self Assessment Transactions [test only]
   description: |
     This endpoint allows a developer to retrieve a list of charges and payments for a given date range. A unique identifier (National Insurance Number) for the account must be used and a search period provided.
     

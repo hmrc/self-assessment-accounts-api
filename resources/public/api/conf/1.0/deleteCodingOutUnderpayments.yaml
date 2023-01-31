@@ -1,5 +1,5 @@
 delete:
-  summary: Delete Coding Out underpayments and debt amounts
+  summary: Delete Coding Out Underpayments and Debt Amounts [test only]
   description: |
     This endpoint enables you to delete custom coding out amounts for a given tax year and National Insurance number.    
     ### Test data
