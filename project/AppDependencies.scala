@@ -37,7 +37,8 @@ object AppDependencies {
     "org.scalamock"         %% "scalamock"              % "5.2.0"              % scope,
     "com.typesafe.play"     %% "play-test"              % PlayVersion.current  % scope,
     "uk.gov.hmrc"           %% "bootstrap-test-play-28" % bootstrapPlayVersion % scope,
-    "com.github.tomakehurst" % "wiremock-jre8"          % "2.35.0"             % scope
+    "com.github.tomakehurst" % "wiremock-jre8"          % "2.35.0"             % scope,
+    "io.swagger.parser.v3"   % "swagger-parser-v3"      % "2.0.24"             % scope
   )
 
 }

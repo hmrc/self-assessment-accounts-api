@@ -1,0 +1,189 @@
+components:
+  examples:
+
+    # 400
+
+    formatNino:
+      description: The format of the supplied NINO field is not valid.
+      value:
+        code: FORMAT_NINO
+        message: The provided NINO is invalid
+
+    formatTransactionId:
+      description: The format of the supplied transaction identifier field is not valid.
+      value:
+        code: FORMAT_TRANSACTION_ID
+        message: The provided transaction ID is invalid
+
+    formatFromDate:
+      description: The From date is not a valid ISO format date.
+      value:
+        code: FORMAT_FROM_DATE
+        message: The provided fromDate is invalid
+
+    formatToDate:
+      description: The To date is not a valid ISO format date.
+      value:
+        code: FORMAT_TO_DATE
+        message: The provided toDate is invalid
+
+    missingFromDate:
+      description: The From date parameter is missing.
+      value:
+        code: MISSING_FROM_DATE
+        message: The toDate has been provided, but fromDate is missing
+
+    missingToDate:
+      description: The To date parameter is missing.
+      value:
+        code: MISSING_TO_DATE
+        message: The fromDate has been provided, but toDate is missing
+
+    rangeToDateBeforeFromDate:
+      description: The To date is before the From date.
+      value:
+        code: RANGE_TO_DATE_BEFORE_FROM_DATE
+        message: The toDate cannot be earlier than the fromDate
+
+    ruleDateRangeInvalid:
+      description: The date range is longer than 732 days.
+      value:
+        code: RULE_DATE_RANGE_INVALID
+        message: The provided date range is invalid
+
+    ruleFromDateNotSupported:
+      description: The from date specified is before 2018-04-06.
+      value:
+        code: RULE_FROM_DATE_NOT_SUPPORTED
+        message:
+
+    ruleDateTooLong:
+      description: The date range is longer than 732 days.
+      value:
+        code: RANGE_DATE_TOO_LONG
+        message:
+
+    incorrectOrEmptyBody:
+      description: An empty or non-matching body was submitted.
+      value:
+        code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+        message: An empty or non-matching body was submitted
+
+    rule_TaxYearNotSupported:
+      description: The specified taxYear is not supported. The taxYear specified is before the minimum tax year value.
+      value:
+        code: RULE_TAX_YEAR_NOT_SUPPORTED
+        message: The specified taxYear is not supported. The taxYear specified is before the minimum tax year value
+
+
+    ruleTaxYearNotEnded:
+      description: The submission has been made before the taxYear it relates to has ended.
+      value:
+        code: RULE_TAX_YEAR_NOT_ENDED
+        message: Tax year not ended
+
+    formatId:
+      description: The format of the supplied ID is invalid.
+      value:
+        code: FORMAT_ID
+        message: The format of the ID is invalid.
+
+    formatPaymentId:
+      description: The format of the supplied payment identifier field is not valid.
+      value:
+        code: FORMAT_PAYMENT_ID
+        message: The provided payment ID is invalid
+
+    formatTaxYear:
+      description: The format of the supplied taxYear field is not valid.
+      value:
+        code: FORMAT_TAX_YEAR
+        message: The provided tax year is invalid
+
+    formatSource:
+      description: The format of the supplied Source field is not valid.
+      value:
+        code: FORMAT_SOURCE
+        message: The provided source is invalid
+
+    formatValue:
+      description: One or more values have been added with the incorrect format.
+      value:
+        code: FORMAT_VALUE
+        message: The field should be between 0 and 99999999999.99
+
+    formatCustomerRef:
+      description: The format of customer reference is not valid.
+      value:
+        code: FORMAT_CUSTOMER_REFERENCE
+        message: The provided customer reference is not valid
+
+    ruleIncorrectOrEmptyBody:
+      description: An empty or non-matching body was submitted.
+      value:
+        code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+        message: An empty or non-matching body was submitted
+
+    ruleTaxYearNotSupported:
+      description: |
+        The specified tax year is not supported.
+        Either the tax year specified is before the minimum tax year value,
+        or it is after the maximum tax year value.
+      value:
+        code: RULE_TAX_YEAR_NOT_SUPPORTED
+        message: The tax year specified does not lie within the supported range
+
+    ruleTaxYearRangeInvalid:
+      description: Tax year range invalid. A tax year range of one year is required.
+      value:
+        code: RULE_TAX_YEAR_RANGE_INVALID
+        message: Tax year range invalid. A tax year range of one year is required
+
+    ruleTaxYearNotEnded:
+      description: The submission has been made before the Tax year it relates to has ended.
+      value:
+        code: RULE_TAX_YEAR_NOT_ENDED
+        message: Tax year not ended
+
+    ruleDuplicateIdNotAllowed:
+      description: The request data contains duplicate ID values.
+      value:
+        code: RULE_DUPLICATE_ID_NOT_ALLOWED
+        message:
+
+
+    # 403
+
+    clientOrAgentNotAuthorised:
+      description: |
+        The client and/or agent is not authorised. This is normally because:
+        the client is not subscribed to MTD, the agent is not subscribed to Agent Services,
+        or the client has not authorised the agent to act on their behalf.
+      value:
+        code: CLIENT_OR_AGENT_NOT_AUTHORISED
+        message: The client and/or agent is not authorised
+
+
+
+
+    # 404
+
+    notFound:
+      description: The supplied income source could not be found.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+        message: Matching resource not found
+
+    codingOutNotFound:
+      description: Coded out amounts could not be found for the supplied nino and taxYear.
+      value:
+        code: MATCHING_RESOURCE_NOT_FOUND
+        message: Matching resource not found
+
+    notFoundTransactionDetails:
+      description: No transaction details found for the supplied transaction ID.
+      value:
+        code: NO_DETAILS_FOUND
+        message: No transaction details found
+
+

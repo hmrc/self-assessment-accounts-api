@@ -180,17 +180,7 @@ traits:
                 description: The specified taxYear is not supported. The taxYear specified is before the minimum tax year value.
                 value:
                   code: RULE_TAX_YEAR_NOT_SUPPORTED
-  ruleTaxYearRangeExceeded:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleTaxYearRangeExceeded:
-                description: Tax year range exceeded. A tax year range of one year is required.
-                value:
-                  code: RULE_TAX_YEAR_RANGE_EXCEEDED
+
   ruleTaxYearNotEnded:
       responses:
         400:
@@ -202,50 +192,7 @@ traits:
                   description: The submission has been made before the taxYear it relates to has ended.
                   value:
                     code: RULE_TAX_YEAR_NOT_ENDED
-  ruleNoChangeTypeOfClaim:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleNoChangeTypeOfClaim:
-                description: The remote endpoint has indicated that the requested type of claim is already active.
-                value:
-                  code: RULE_ALREADY_EXISTS
-  formatLossType:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatLossType:
-                description: The format of the loss type is not valid.
-                value:
-                  code: FORMAT_TYPE_OF_LOSS
-  formatSelfEmploymentId:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatSelfEmploymentId:
-                description: The format of the self-employment ID is not valid.
-                value:
-                  code: FORMAT_SELF_EMPLOYMENT_ID
-  ruleSelfEmploymentId:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleSelfEmploymentId:
-                description: A self-employment ID can only be supplied for a self-employment business type.
-                value:
-                  code: RULE_SELF_EMPLOYMENT_ID
+
   formatValue:
     responses:
       400:
@@ -279,39 +226,7 @@ traits:
                 description: The format of the supplied payment identifier field is not valid.
                 value:
                   code: FORMAT_PAYMENT_ID
-  formatLossId:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatLossId:
-                description: The format of the loss ID is not valid.
-                value:
-                  code: FORMAT_LOSS_ID
-  formatLossAmount:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              formatLossAmount:
-                description: The format of the loss amount is not valid.
-                value:
-                  code: FORMAT_LOSS_AMOUNT
-  ruleLossAmount:
-    responses:
-      400:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleLossAmount:
-                description: Amounts should be a positive number less than 99999999999.99 with up to 2 decimal places.
-                value:
-                  code: RULE_LOSS_AMOUNT
+
   formatTypeOfClaim:
     responses:
       400:
@@ -345,28 +260,7 @@ traits:
                     description: The type of claim supplied is not valid.
                     value:
                       code: RULE_TYPE_OF_CLAIM_INVALID
-  ruleTypeOfClaim403:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              ruleTypeOfClaim:
-                description: The type of claim supplied is not valid.
-                value:
-                  code: RULE_TYPE_OF_CLAIM_INVALID
-  rulePeriodNotEnded:
-    responses:
-      403:
-        body:
-          application/json:
-            type: types.errorResponse
-            examples:
-              rulePeriodNotEnded:
-                description: The loss claim has been made too soon.
-                value:
-                  code: RULE_PERIOD_NOT_ENDED
+
   formatClaimId:
     responses:
       400:
@@ -396,10 +290,10 @@ traits:
           application/json:
             type: types.errorResponse
             examples:
-              ruleDuplicateSubmission:
+              ruleDuplicateClaimSubmission:
                 description: The type of claim is the same as a previous submission.
                 value:
-                  code: RULE_DUPLICATE_SUBMISSION
+                  code: RULE_DUPLICATE_CLAIM_SUBMISSION
   ruleDeleteAfterCrystallisation:
     responses:
       403:
