@@ -28,7 +28,7 @@ get:
     - $ref: './common/queryParameters.yaml#/components/parameters/fromCharges'
     - $ref: './common/queryParameters.yaml#/components/parameters/toCharges'
     - $ref: './common/headers.yaml#/components/parameters/acceptJson'
-    - $ref: './common/headers.yaml#/components/parameters/authorization'
+    - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
     - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
   security:

@@ -29,7 +29,7 @@ get:
     - $ref: './common/pathParameters.yaml#/components/parameters/taxYear'
     - $ref: './common/queryParameters.yaml#/components/parameters/source'
     - $ref: './common/headers.yaml#/components/parameters/acceptJson'
-    - $ref: './common/headers.yaml#/components/parameters/authorization'
+    - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
     - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
   security:
