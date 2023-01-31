@@ -1,9 +1,35 @@
-openapi: 3.0.0
-summary: Delete Coding Out Underpayments and Debt Amounts
-description: This endpoint enables you to delete custom coding out amounts for a given tax year and National Insurance number.
+description: | 
+  This endpoint enables you to delete custom coding out amounts for a given tax year and National Insurance number.
+  
+  ### Test data
+  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+  <table>
+      <thead>
+          <tr>
+              <th>Header Value (Gov-Test-Scenario)</th>
+              <th>Scenario</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT</p></td>
+              <td><p>Simulates a success response.</p></td>
+          </tr>
+      </tbody>
+      <tbody>
+          <tr>
+              <td><p>NOT_FOUND</p></td>
+              <td><p>Simulates the scenario where coding out amounts could not be found.</p></td>
+          </tr>
+      </tbody>
+  </table>
+
 security:
   - User-Restricted:
       - write:self-assessment
+
+tags:
+- Coding Out Underpayments and Debts
 
 responses:
   204:
@@ -15,6 +41,8 @@ responses:
     description: Bad request
     content:
       application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
         examples:
           FORMAT_NINO:
             $ref: "./common/errors.yaml#/components/examples/formatNino"
@@ -29,6 +57,8 @@ responses:
     description: Forbidden
     content:
       application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
         examples:
           CLIENT_OR_AGENT_NOT_AUTHORISED:
             $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
@@ -37,6 +67,8 @@ responses:
     description: Not found
     content:
       application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
         examples:
           CODING_OUT_NOT_FOUND:
             $ref: "./common/errors.yaml#/components/examples/codingOutNotFound"

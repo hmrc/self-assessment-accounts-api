@@ -1,12 +1,31 @@
-openapi: 3.0.0
 summary: Create or Amend Coding Out Underpayments and Debt Amounts
-description:
-  This endpoint enables you to overwrite coding out underpayments and debt amounts held by HMRC for a previous tax year and given National Insurance number,
-  and to amend previously submitted overwrite amounts. <strong>This endpoint can only be used after the tax year has ended.</strong>
+
+description: |
+  This endpoint enables you to overwrite coding out underpayments and debt amounts held by HMRC for a previous tax year and given National Insurance number, and to amend previously submitted overwrite amounts. <strong>This endpoint can only be used after the tax year has ended.</strong>
+  
+  ### Test data
+  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+  <table>
+      <thead>
+          <tr>
+              <th>Header Value (Gov-Test-Scenario)</th>
+              <th>Scenario</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT</p></td>
+              <td><p>Simulate a successful response.</p></td>
+          </tr>
+      </tbody>
+  </table>
 
 security:
   - User-Restricted:
       - write:self-assessment
+
+tags:
+  - Coding Out Underpayments and Debts
 
 responses:
   "200":
@@ -29,6 +48,8 @@ responses:
     description: Bad request
     content:
       application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
         examples:
           FORMAT_NINO:
             $ref: "./common/errors.yaml#/components/examples/formatNino"
@@ -55,6 +76,8 @@ responses:
     description: Forbidden
     content:
       application/json:
+        schema:
+          $ref: './schemas/error-response.yaml'
         examples:
           CLIENT_OR_AGENT_NOT_AUTHORISED:
             $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"

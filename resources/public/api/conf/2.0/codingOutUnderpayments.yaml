@@ -1,0 +1,26 @@
+get:
+  $ref: "./retrieveCodingOutUnderpayments.yaml"
+
+  summary: Retrieve Coding Out Underpayments and Debt Amounts
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+put:
+  $ref: "./createOrAmendCodingOutUnderpayments.yaml"
+
+  summary: Create or Amend Coding Out Underpayments and Debt Amounts
+
+  security:
+    - User-Restricted:
+        - write:self-assessment
+
+delete:
+  $ref: "./deleteCodingOutUnderpayments.yaml"
+
+  summary: Delete Coding Out Underpayments and Debt Amounts
+
+  security:
+    - User-Restricted:
+        - write:self-assessment

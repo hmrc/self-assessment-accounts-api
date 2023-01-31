@@ -1,8 +1,0 @@
-get:
-  $ref: "./retrieveSelfAssessmentChargeHistory.yaml"
-  summary: Retrieve History of a Self Assessment Charge
-  tags:
-    - Self Assessment
-  security:
-    - User-Restricted:
-        - read:self-assessment
