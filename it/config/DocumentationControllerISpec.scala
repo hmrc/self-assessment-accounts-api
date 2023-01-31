@@ -72,7 +72,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
     }
   }
 
-  "a RAML documentation request" should {
+  "a RAML documentation request" must {
     Seq(Version1, Version2).foreach { version =>
       s"return the documentation for $version" in {
         val response: WSResponse = await(buildRequest(s"/api/conf/$version/application.raml").get())
