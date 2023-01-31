@@ -46,8 +46,8 @@ parameters:
   - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
   - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
   - $ref: "./common/queryParameters.yaml#/components/parameters/source"
-  - $ref: "./common/queryParameters.yaml#/components/parameters/nino"
-  - $ref: "./common/queryParameters.yaml#/components/parameters/taxYear"
+  - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+  - $ref: "./common/pathParameters.yaml#/components/parameters/taxYear"
 
 responses:
   "200":
@@ -94,7 +94,7 @@ responses:
           $ref: './schemas/error-response.yaml'
         examples:
           CLIENT_OR_AGENT_NOT_AUTHORISED:
-            $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+            $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
 
   "404":
     description: Not found
@@ -104,6 +104,6 @@ responses:
           $ref: './schemas/error-response.yaml'
         examples:
           NOT_FOUND:
-            $ref: "./common/errors.yaml#/components/examples/notFound"
+            $ref: './common/errors.yaml#/components/examples/notFound'
           CODING_OUT_NOT_FOUND:
-            $ref: "./common/errors.yaml#/components/examples/codingOutNotFound"
+            $ref: './common/errors.yaml#/components/examples/codingOutNotFound'
