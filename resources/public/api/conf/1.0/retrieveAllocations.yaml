@@ -23,6 +23,9 @@ get:
         </tbody>
     </table>
 
+  tags:
+    - Payments and Liabilities
+
   parameters:
     - $ref: './common/pathParameters.yaml#/components/parameters/nino'
     - $ref: './common/pathParameters.yaml#/components/parameters/paymentId'
@@ -45,11 +48,11 @@ get:
           schema:
             $ref: './schemas/retrieve_allocations_response.json'
           examples:
-            example-response-1:
+            Example Response with Allocations:
               description: Example Response with Allocations
               value:
                 $ref: './examples/retrieveAllocations/retrieve_response.json'
-            example-response-2:
+            Example Response with no Allocations:
               description: Example Response with no Allocations
               value:
                 $ref: './examples/retrieveAllocations/retrieve_no_allocations_response.json'

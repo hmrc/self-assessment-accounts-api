@@ -17,11 +17,20 @@ get:
                 <td><p>N/A - DEFAULT</p></td>
                 <td><p>Simulate a successful response with a self-assessment accounts.</p></td> 
             <tr>
+              <td><p>NOTHING_DUE</p></td>
+              <td><p>Simulates a successful response where no payments are due.</p></td>
+            <tr>
+              <td><p>OVERDUE</p></td>
+              <td><p>Simulates a successful response where a payment is overdue.</p></td>
+            <tr>
               <td><p>NOT_FOUND</p></td>
               <td><p>Simulates the scenario where no data is found.</p></td>
             </tr>
         </tbody>
     </table>
+
+  tags:
+    - Payments and Liabilities
 
   parameters:
     - $ref: './common/pathParameters.yaml#/components/parameters/nino'
@@ -44,15 +53,15 @@ get:
           schema:
             $ref: './schemas/retrieve_balance_response.json'
           examples:
-            example-response-1:
+            Example Response:
               description: Example Response
               value:
                 $ref: './examples/retrieveBalance/retrieve_response.json'
-            example-response-2:
+            Example response with nothing due:
               description: Example response with nothing due
               value:
                 $ref: './examples/retrieveBalance/retrieve_nothing_due.json'
-            example-response-3:
+            Example response with an overdue payment:
               description: Example response with an overdue payment
               value:
                 $ref: './examples/retrieveBalance/retrieve_overdue.json'

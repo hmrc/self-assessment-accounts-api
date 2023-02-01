@@ -23,6 +23,9 @@ put:
         </tbody>
     </table>
 
+  tags:
+    - Coding Out Underpayments and Debts
+
   parameters:
     - $ref: './common/pathParameters.yaml#/components/parameters/nino'
     - $ref: './common/pathParameters.yaml#/components/parameters/taxYear'
@@ -43,12 +46,12 @@ put:
       content:
         application/json:
           schema:
-            $ref: './schemas/retrieve_charge_history_response.json'
+            $ref: './schemas/create_or_amend_coding_out_underpayments_response.json'
           examples:
             example-response:
               description: Example Response
               value:
-                $ref: './examples/retrieveChargeHistory/retrieve_response.json'
+                $ref: './examples/createOrAmendCodingOutUnderpayments/create_or_amend_coding_out_underpayments_response.json'
 
 
     "400":

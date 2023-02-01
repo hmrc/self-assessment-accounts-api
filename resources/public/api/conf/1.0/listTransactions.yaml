@@ -23,6 +23,9 @@ get:
         </tbody>
     </table>
 
+  tags:
+    - Payments and Liabilities
+
   parameters:
     - $ref: './common/pathParameters.yaml#/components/parameters/nino'
     - $ref: './common/queryParameters.yaml#/components/parameters/fromCharges'
@@ -74,6 +77,8 @@ get:
               $ref: './common/errors.yaml#/components/examples/ruleDateRangeInvalid'
             RULE_FROM_DATE_NOT_SUPPORTED:
               $ref: './common/errors.yaml#/components/examples/ruleFromDateNotSupported'
+            RANGE_DATE_TOO_LONG:
+              $ref: './common/errors.yaml#/components/examples/ruleDateTooLong'
 
     "403":
       description: Forbidden

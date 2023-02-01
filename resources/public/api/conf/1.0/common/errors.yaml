@@ -64,14 +64,14 @@ components:
         The from date specified is before 2018-04-06.
       value:
         code: RULE_FROM_DATE_NOT_SUPPORTED
-        message:
+        message: The specified From date is not supported as it is too early
 
     ruleDateTooLong:
       description: |
         The date range is longer than 732 days.
       value:
         code: RANGE_DATE_TOO_LONG
-        message:
+        message: The specified date range is invalid
 
     incorrectOrEmptyBody:
       description: |

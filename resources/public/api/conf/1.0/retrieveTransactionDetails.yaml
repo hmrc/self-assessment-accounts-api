@@ -29,6 +29,9 @@ get:
         </tbody>
     </table>
 
+  tags:
+    - Payments and Liabilities
+
   parameters:
     - $ref: './common/pathParameters.yaml#/components/parameters/nino'
     - $ref: './common/pathParameters.yaml#/components/parameters/transactionId'
@@ -51,11 +54,11 @@ get:
           schema:
             $ref: './schemas/retrieve_transaction_details_response.json'
           examples:
-            example-1:
+            Payment example:
               description: Payment example
               value:
                 $ref: './examples/retrieveTransactionDetails/retrieve_payment_response.json'
-            example-2:
+            Charge example:
               description: Charge example
               value:
                 $ref: './examples/retrieveTransactionDetails/retrieve_charge_response.json'
@@ -70,6 +73,8 @@ get:
           examples:
             FORMAT_NINO:
               $ref: './common/errors.yaml#/components/examples/formatNino'
+            FORMAT_TRANSACTION_ID:
+              $ref: './common/errors.yaml#/components/examples/formatTransactionId'
 
 
     "403":

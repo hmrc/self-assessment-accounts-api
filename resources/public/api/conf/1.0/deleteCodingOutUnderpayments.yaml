@@ -22,6 +22,9 @@ delete:
         </tbody>
     </table>
 
+  tags:
+    - Coding Out Underpayments and Debts
+
   parameters:
     - $ref: './common/pathParameters.yaml#/components/parameters/nino'
     - $ref: './common/pathParameters.yaml#/components/parameters/taxYear'
