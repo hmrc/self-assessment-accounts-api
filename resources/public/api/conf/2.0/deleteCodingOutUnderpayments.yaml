@@ -32,15 +32,15 @@ tags:
 - Coding Out Underpayments and Debts
 
 parameters:
-  - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
-  - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
-  - $ref: "./common/headers.yaml#/components/parameters/contentTypeJson"
-  - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
   - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
   - $ref: "./common/pathParameters.yaml#/components/parameters/taxYear"
+  - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+  - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+  - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
 
 responses:
   204:
+    description: No content
     headers:
       X-CorrelationId:
         $ref: "./common/headers.yaml#/components/parameters/correlationId"

@@ -77,14 +77,12 @@ responses:
             $ref: "./common/errors.yaml#/components/examples/formatNino"
           FORMAT_TAX_YEAR:
             $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
-          FORMAT_SOURCE:
-            $ref: "./common/errors.yaml#/components/examples/formatSource"
-          FORMAT_TRANSACTION_ID:
-            $ref: "./common/errors.yaml#/components/examples/formatTransactionId"
           RULE_TAX_YEAR_NOT_SUPPORTED:
             $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
           RULE_TAX_YEAR_RANGE_INVALID:
             $ref: "./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid"
+          FORMAT_SOURCE:
+            $ref: "./common/errors.yaml#/components/examples/formatSource"
 
   "403":
     description: Forbidden

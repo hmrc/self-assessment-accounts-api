@@ -80,27 +80,25 @@ get:
           examples:
             FORMAT_NINO:
               $ref: "./common/errors.yaml#/components/examples/formatNino"
-            FORMAT_TRANSACTION_ID:
-              $ref: "./common/errors.yaml#/components/examples/formatTransactionId"
-            INVALID_DOC_NUMBER:
+            FORMAT_DOC_NUMBER:
               $ref: "./common/errors.yaml#/components/examples/invalidDocNumber"
-            INVALID_ONLY_OPEN_ITEMS:
+            FORMAT_ONLY_OPEN_ITEMS:
               $ref: "./common/errors.yaml#/components/examples/invalidOnlyOpenItems"
-            INVALID_INCLUDE_LOCKS:
+            FORMAT_INCLUDE_LOCKS:
               $ref: "./common/errors.yaml#/components/examples/invalidIncludeLocks"
-            INVALID_CALCULATE_ACCRUED_INTEREST:
+            FORMAT_CALCULATE_ACCRUED_INTEREST:
               $ref: "./common/errors.yaml#/components/examples/invalidCalculateAccruedInterest"
-            INVALID_CUSTOMER_PAYMENT_INFORMATION:
+            FORMAT_CUSTOMER_PAYMENT_INFORMATION:
               $ref: "./common/errors.yaml#/components/examples/invalidCustomerPaymentInformation"
             FORMAT_FROM_DATE:
               $ref: "./common/errors.yaml#/components/examples/formatFromDate"
             FORMAT_TO_DATE:
               $ref: "./common/errors.yaml#/components/examples/formatToDate"
-            INVALID_REMOVE_PAYMENT_ON_ACCOUNT:
+            FORMAT_REMOVE_PAYMENT_ON_ACCOUNT:
               $ref: "./common/errors.yaml#/components/examples/invalidRemovePaymentOnAccount"
-            INVALID_INCLUDE_CHARGE_ESTIMATE:
+            FORMAT_INCLUDE_ESTIMATED_CHARGES:
               $ref: "./common/errors.yaml#/components/examples/invalidIncludeChargeEstimate"
-            INVALID_DATE_RANGE:
+            RULE_INVALID_DATE_RANGE:
               $ref: "./common/errors.yaml#/components/examples/invalidDateRange"
             RULE_INCONSISTENT_QUERY_PARAMS:
               $ref: "./common/errors.yaml#/components/examples/ruleInconsistentQueryParams"

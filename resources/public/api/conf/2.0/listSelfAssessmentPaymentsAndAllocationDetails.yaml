@@ -22,6 +22,10 @@ get:
                 <td><p>NOT_FOUND</p></td>
                 <td><p>Simulates the scenario where no data can be found.</p></td>
             </tr>
+            <tr>
+              <td><p>INVALID_DATE_RANGE</p></td>
+              <td><p>Simulates the scenario where the provided date range is invalid.</p></td>
+            </tr>
         </tbody>
     </table>
 
@@ -73,13 +77,13 @@ get:
               $ref: "./common/errors.yaml#/components/examples/formatToDate"
             RANGE_TO_DATE_BEFORE_FROM_DATE:
               $ref: "./common/errors.yaml#/components/examples/rangeToDateBeforeFromDate"
-            INVALID_DATE_RANGE:
+            RULE_INVALID_DATE_RANGE:
               $ref: "./common/errors.yaml#/components/examples/invalidDateRange"
             MISSING_TO_DATE:
               $ref: "./common/errors.yaml#/components/examples/missingToDate"
             MISSING_FROM_DATE:
               $ref: "./common/errors.yaml#/components/examples/missingFromDate"
-            RULE_INCONSISTENT_QUERY_PARAMS_LIST_SA:
+            RULE_INCONSISTENT_QUERY_PARAMS:
               $ref: "./common/errors.yaml#/components/examples/ruleInconsistentQueryParamsListSA"
             FORMAT_PAYMENT_LOT:
               $ref: "./common/errors.yaml#/components/examples/formatPaymentLot"

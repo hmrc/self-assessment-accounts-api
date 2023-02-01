@@ -5,6 +5,7 @@ components:
         Matching resource not found.
       value:
         code: MATCHING_RESOURCE_NOT_FOUND
+        message: Matching resource not found
 
     #403
     clientOrAgentNotAuthorised:
@@ -12,6 +13,7 @@ components:
         'The client or agent is not authorised. This is because: the client is not enrolled for MTD, the agent is not enrolled for Agent Services, the client has not authorised the agent to act on their behalf, or the Authorization token provided is not correct.'
       value:
         code: CLIENT_OR_AGENT_NOT_AUTHORISED
+        message: "The client or agent is not authorised. This is because: the client is not enrolled for MTD, the agent is not enrolled for Agent Services, the client has not authorised the agent to act on their behalf, or the Authorization token provided is not correct."
 
     #400
     formatNino:
@@ -19,6 +21,7 @@ components:
         The format of the supplied nino value is invalid.
       value:
         code: FORMAT_NINO
+        message: The format of the supplied nino value is invalid.
 
     #400
     formatTransactionId:
@@ -26,6 +29,7 @@ components:
         The format of the supplied transaction identifier field is not valid.
       value:
         code: FORMAT_TRANSACTION_ID
+        message: The format of the supplied transaction identifier field is not valid0
 
     #400
     formatTaxYear:
@@ -33,6 +37,7 @@ components:
         The format of the supplied taxYear value is invalid.
       value:
         code: FORMAT_TAX_YEAR
+        message: The format of the supplied taxYear value is invalid.
 
     #400
     formatFromDate:
@@ -40,6 +45,7 @@ components:
         The format of the fromDate is not valid.
       value:
         code: FORMAT_FROM_DATE
+        message: The format of the fromDate is not valid.
 
     #400
     formatToDate:
@@ -47,6 +53,7 @@ components:
         The format of toDate is not valid.
       value:
         code: FORMAT_TO_DATE
+        message: The format of toDate is not valid.
 
     #400
     missingFromDate:
@@ -54,6 +61,7 @@ components:
         The From date parameter is missing
       value:
         code: MISSING_FROM_DATE
+        message: The From date parameter is missing
 
     #400
     missingToDate:
@@ -61,6 +69,7 @@ components:
         The To date parameter is missing.
       value:
         code: MISSING_TO_DATE
+        message: The To date parameter is missing.
 
     #400
     rangeToDateBeforeFromDate:
@@ -68,6 +77,7 @@ components:
         The To date must be after the From date.
       value:
         code: RANGE_TO_DATE_BEFORE_FROM_DATE
+        message: The To date must be after the From date.
 
     #400
     invalidDateRange:
@@ -75,6 +85,7 @@ components:
         The provided date range is not valid.
       value:
         code: RULE_INVALID_DATE_RANGE
+        message: The provided date range is not valid.
 
     #400
     incorrectOrEmptyBody:
@@ -82,6 +93,7 @@ components:
         An empty or non-matching body was submitted.
       value:
         code: RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED
+        message: An empty or non-matching body was submitted.
 
     #400
     ruleTaxYearNotSupported:
@@ -89,13 +101,7 @@ components:
         The specified tax year is not supported. That is, the tax year specified is before the minimum tax year value.
       value:
         code: RULE_TAX_YEAR_NOT_SUPPORTED
-
-    #400
-    ruleTaxYearRangeExceeded:
-      description: |
-        Tax year range exceeded. A tax year range of one year is required.
-      value:
-        code: RULE_TAX_YEAR_RANGE_EXCEEDED
+        message: The specified tax year is not supported. Either the tax year specified is before the minimum tax year value, or it is after the maximum tax year value.
 
     #400
     ruleTaxYearNotEnded:
@@ -103,6 +109,7 @@ components:
         The submission has been made before the taxYear it relates to has ended.
       value:
         code: RULE_TAX_YEAR_NOT_ENDED
+        message: The submission has been made before the taxYear it relates to has ended.
 
     #400
     formatValue:
@@ -110,6 +117,7 @@ components:
         One or more values have been added with the incorrect format.
       value:
         code: FORMAT_VALUE
+        message: One or more values have been added with the incorrect format.
 
     #400
     formatId:
@@ -117,6 +125,7 @@ components:
         The format of the supplied ID is invalid.
       value:
         code: FORMAT_ID
+        message: The format of the supplied ID is invalid.
 
     #400
     formatPaymentLot:
@@ -124,6 +133,7 @@ components:
         The format of the supplied paymentLot value is not valid.
       value:
         code: FORMAT_PAYMENT_LOT
+        message: The format of the supplied paymentLot value is not valid.
 
     #400
     formatPaymentLotItem:
@@ -131,6 +141,7 @@ components:
         The format of the supplied paymentLotItem value is not valid.
       value:
         code: FORMAT_PAYMENT_LOT_ITEM
+        message: The format of the supplied paymentLotItem value is not valid.
 
     #400
     missingPaymentLot:
@@ -138,6 +149,7 @@ components:
         The paymentLotItem value has been provided, but paymentLot value is missing.
       value:
         code: MISSING_PAYMENT_LOT
+        message: The paymentLotItem value has been provided, but paymentLot value is missing.
 
     #400
     missingPaymentLotItem:
@@ -145,6 +157,7 @@ components:
         The paymentLot value has been provided, but the paymentLotItem value is missing.
       value:
         code: MISSING_PAYMENT_LOT_ITEM
+        message: The paymentLot value has been provided, but the paymentLotItem value is missing.
 
     #400
     ruleTaxYearRangeInvalid:
@@ -152,6 +165,7 @@ components:
         A taxYear range of one year is required.
       value:
         code: RULE_TAX_YEAR_RANGE_INVALID
+        message: A taxYear range of one year is required.
 
     #400
     ruleDuplicateIdNotAllowed:
@@ -159,6 +173,7 @@ components:
         The request data contains duplicate ID values.
       value:
         code: RULE_DUPLICATE_ID_NOT_ALLOWED
+        message: The request data contains duplicate ID values.
 
     #400
     formatSource:
@@ -166,6 +181,7 @@ components:
         The format of the supplied source is not valid.
       value:
         code: FORMAT_SOURCE
+        message: The format of the supplied source is not valid.
 
     #404
     codingOutNotFound:
@@ -173,6 +189,7 @@ components:
         Coding out amounts could not be found for the supplied nino and taxYear.
       value:
         code: MATCHING_RESOURCE_NOT_FOUND
+        message: Matching resource not found.
 
     #400
     invalidDocNumber:
@@ -180,6 +197,7 @@ components:
         The format of docNumber is not valid.
       value:
         code: FORMAT_DOC_NUMBER
+        message: The format of docNumber is not valid.
 
     #400
     invalidOnlyOpenItems:
@@ -187,6 +205,7 @@ components:
         The format of onlyOpenItem is not valid.
       value:
         code: FORMAT_ONLY_OPEN_ITEMS
+        message: The format of onlyOpenItem is not valid.
 
     #400
     invalidIncludeLocks:
@@ -194,6 +213,7 @@ components:
         The format of includeLocks is not valid.
       value:
         code: FORMAT_INCLUDE_LOCKS
+        message: The format of includeLocks is not valid.
 
     #400
     invalidCalculateAccruedInterest:
@@ -201,6 +221,7 @@ components:
         The format for calculatingAccruedInterest is not valid.
       value:
         code: FORMAT_CALCULATE_ACCRUED_INTEREST
+        message: The format for calculatingAccruedInterest is not valid.
 
     #400
     invalidCustomerPaymentInformation:
@@ -208,6 +229,7 @@ components:
         The format of customerPaymentInformation is not valid.
       value:
         code: FORMAT_CUSTOMER_PAYMENT_INFORMATION
+        message: The format of customerPaymentInformation is not valid.
 
     #400
     invalidRemovePaymentOnAccount:
@@ -215,6 +237,7 @@ components:
         The format of removePOA is not valid.
       value:
         code: FORMAT_REMOVE_PAYMENT_ON_ACCOUNT
+        message: The format of removePOA is not valid.
 
     #400
     invalidIncludeChargeEstimate:
@@ -222,6 +245,7 @@ components:
         The format of includeEstimatedCharges is not valid
       value:
         code: FORMAT_INCLUDE_ESTIMATED_CHARGES
+        message: The format of includeEstimatedCharges is not valid
 
     #400
     ruleInconsistentQueryParams:
@@ -229,6 +253,7 @@ components:
         Provide date range or docNumber when onlyOpenItems is false.
       value:
         code: RULE_INCONSISTENT_QUERY_PARAMS
+        message: Provide date range or docNumber when onlyOpenItems is false.
 
     #400
     ruleInconsistentQueryParamsListSA:
@@ -236,3 +261,4 @@ components:
         Provide either paymentLot & paymentLotItem or fromDate & toDate.
       value:
         code: RULE_INCONSISTENT_QUERY_PARAMS
+        message: Provide either paymentLot & paymentLotItem or fromDate & toDate.
