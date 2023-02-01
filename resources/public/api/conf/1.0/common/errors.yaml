@@ -165,7 +165,7 @@ components:
         The request data contains duplicate ID values.
       value:
         code: RULE_DUPLICATE_ID_NOT_ALLOWED
-        message:
+        message: Duplicate IDs are not allowed
 
 
     # 403

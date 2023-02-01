@@ -6,15 +6,12 @@ get:
         - read:self-assessment
   parameters:
     - $ref: './common/queryParameters.yaml#/components/parameters/source'
-
 put:
   $ref: './createOrAmendCodingOutUnderpayments.yaml'
   summary: Create or Amend Coding Out Underpayments and Debt Amounts [test only]
   security:
     - User-Restricted:
         - write:self-assessment
-
-
 delete:
   $ref: './deleteCodingOutUnderpayments.yaml'
   summary: Delete Coding Out Underpayments and Debt Amounts [test only]
