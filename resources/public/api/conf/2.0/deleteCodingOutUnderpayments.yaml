@@ -40,7 +40,7 @@ parameters:
 
 responses:
   204:
-    description: No content
+    description: (No content)
     headers:
       X-CorrelationId:
         $ref: "./common/headers.yaml#/components/parameters/correlationId"
