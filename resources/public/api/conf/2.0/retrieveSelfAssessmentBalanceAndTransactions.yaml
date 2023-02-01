@@ -1,0 +1,130 @@
+get:
+  summary: "Retrieve Self Assessment Balance and Transactions"
+
+  description: |
+    This endpoint enables you to retrieve the overall liability broken down into overdue, currently due (payable), and pending (not yet due) amounts. A National Insurance number must be provided.
+    
+    ### Test data
+    <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
+    <table>
+      <thead>
+          <tr>
+              <th>Header Value (Gov-Test-Scenario)</th>
+              <th>Scenario</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr>
+              <td><p>N/A - DEFAULT</p></td>
+              <td><p>Simulates a successful response.</p></td>
+          </tr>
+          <tr>
+              <td><p>NOT_FOUND</p></td>
+              <td><p>Simulates the scenario where no data can be found.</p></td>
+          </tr>
+          <tr>
+              <td><p>INCONSISTENT_QUERY_PARAMS</p></td>
+              <td><p>Simulates the scenario where the query parameters are inconsistent.</p></td>
+          </tr>
+          <tr>
+              <td><p>INVALID_DATE_RANGE</p></td>
+              <td><p>Simulates the scenario where the provided date range is invalid.</p></td>
+          </tr>
+      </tbody>
+    </table>
+
+  tags:
+    - Payments and Liabilities
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  parameters:
+    - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+    - $ref: "./common/queryParameters.yaml#/components/parameters/docNumber"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/fromDate"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/toDate"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/onlyOpenItems"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/includeLocks"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/calculateAccruedInterest"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/removePOA"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/customerPaymentInformation"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/includeEstimatedCharges"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+
+  responses:
+    200:
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/retrieveBalanceAndTransactions.json"
+          examples:
+            Request:
+              value:
+                $ref: "./examples/retrieveBalanceAndTransactions/retrieveBalanceAndTransactionsFullResponse.json"
+
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_DOC_NUMBER:
+              $ref: "./common/errors.yaml#/components/examples/invalidDocNumber"
+            FORMAT_ONLY_OPEN_ITEMS:
+              $ref: "./common/errors.yaml#/components/examples/invalidOnlyOpenItems"
+            FORMAT_INCLUDE_LOCKS:
+              $ref: "./common/errors.yaml#/components/examples/invalidIncludeLocks"
+            FORMAT_CALCULATE_ACCRUED_INTEREST:
+              $ref: "./common/errors.yaml#/components/examples/invalidCalculateAccruedInterest"
+            FORMAT_CUSTOMER_PAYMENT_INFORMATION:
+              $ref: "./common/errors.yaml#/components/examples/invalidCustomerPaymentInformation"
+            FORMAT_FROM_DATE:
+              $ref: "./common/errors.yaml#/components/examples/formatFromDate"
+            FORMAT_TO_DATE:
+              $ref: "./common/errors.yaml#/components/examples/formatToDate"
+            FORMAT_REMOVE_PAYMENT_ON_ACCOUNT:
+              $ref: "./common/errors.yaml#/components/examples/invalidRemovePaymentOnAccount"
+            FORMAT_INCLUDE_ESTIMATED_CHARGES:
+              $ref: "./common/errors.yaml#/components/examples/invalidIncludeChargeEstimate"
+            RULE_INVALID_DATE_RANGE:
+              $ref: "./common/errors.yaml#/components/examples/invalidDateRange"
+            RULE_INCONSISTENT_QUERY_PARAMS:
+              $ref: "./common/errors.yaml#/components/examples/ruleInconsistentQueryParams"
+            MISSING_TO_DATE:
+              $ref: "./common/errors.yaml#/components/examples/missingToDate"
+            MISSING_FROM_DATE:
+              $ref: "./common/errors.yaml#/components/examples/missingFromDate"
+            RANGE_TO_DATE_BEFORE_FROM_DATE:
+              $ref: "./common/errors.yaml#/components/examples/rangeToDateBeforeFromDate"
+
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+
+    404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            NOT_FOUND:
+              $ref: "./common/errors.yaml#/components/examples/notFound"
