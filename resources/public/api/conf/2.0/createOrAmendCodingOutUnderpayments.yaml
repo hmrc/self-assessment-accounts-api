@@ -50,8 +50,6 @@ responses:
     headers:
       X-CorrelationId:
         $ref: "./common/headers.yaml#/components/parameters/correlationId"
-      Gov-Test-Scenario:
-        $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
     content:
       application/json:
         schema:
