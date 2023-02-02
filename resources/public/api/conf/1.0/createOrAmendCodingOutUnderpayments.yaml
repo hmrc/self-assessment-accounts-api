@@ -40,7 +40,7 @@
         schema:
           $ref: './schemas/create_or_amend_coding_out_underpayments_request.json'
         examples:
-          example-1:
+          Example Request:
             description: Example Request
             value:
               $ref: './examples/createOrAmendCodingOutUnderpayments/create_or_amend_coding_out_underpayments_request.json'
