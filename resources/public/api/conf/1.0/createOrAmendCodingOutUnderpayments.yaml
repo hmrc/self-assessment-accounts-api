@@ -1,6 +1,6 @@
 
   description: |
-    This endpoint allows a developer to retrieve the history of changes to an individual charge. A unique identifier (National Insurance Number) for the account must be used and a charge identifier provided.
+    This endpoint enables you to overwrite coding out underpayments and debt amounts held by HMRC for a previous tax year and given National Insurance number, and to amend previously submitted overwrite amounts. This endpoint can only be used after the tax year has ended.
     
     ### Test data
     <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
@@ -26,12 +26,24 @@
     - $ref: './common/pathParameters.yaml#/components/parameters/nino'
     - $ref: './common/pathParameters.yaml#/components/parameters/taxYear'
     - $ref: './common/headers.yaml#/components/parameters/acceptJson'
+    - $ref: './common/headers.yaml#/components/parameters/contentTypeJson'
     - $ref: './common/headers.yaml#/components/parameters/authorizationWriteScopeHeader'
     - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
 
   security:
     - User-Restricted:
         - write:self-assessment
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: './schemas/create_or_amend_coding_out_underpayments_request.json'
+        examples:
+          example-1:
+            description: Example Request
+            value:
+              $ref: './examples/createOrAmendCodingOutUnderpayments/create_or_amend_coding_out_underpayments_request.json'
 
   responses:
     "200":

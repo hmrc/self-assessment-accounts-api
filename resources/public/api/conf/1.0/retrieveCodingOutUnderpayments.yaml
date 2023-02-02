@@ -1,8 +1,6 @@
 
 description: |
-  This endpoint allows the developer to retrieve HMRC held coded out underpayments and coded out debt amounts or user submitted amended coded out underpayments and coded out debt amounts for a previous tax year and given NINO.
-  
-  
+  This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted amended coding out amounts for a previous tax year and given National Insurance number.  
   ### Test data
     <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
     <table>
