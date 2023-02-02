@@ -21,7 +21,6 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.WSResponse
 import routing.{Version1, Version2}
 import support.IntegrationBaseSpec
-
 import io.swagger.v3.parser.OpenAPIV3Parser
 import scala.util.Try
 
@@ -83,11 +82,11 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "an OAS documentation request" must {
-    s"return the $Version2 documentation that passes OAS V3 parser" in {
-      val response: WSResponse = await(buildRequest("/api/conf/2.0/application.yaml").get())
+    "return the documentation that passes OAS V3 parser" in {
+      val response: WSResponse = await(buildRequest("/api/conf/1.0/application.yaml").get())
       response.status shouldBe Status.OK
 
-      val contents     = response.body[String]
+      val contents = response.body[String]
       val parserResult = Try(new OpenAPIV3Parser().readContents(contents))
       parserResult.isSuccess shouldBe true
 
@@ -95,8 +94,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       openAPI.isEmpty shouldBe false
       openAPI.get.getOpenapi shouldBe "3.0.3"
       openAPI.get.getInfo.getTitle shouldBe "Self Assessment Accounts (MTD)"
-      openAPI.get.getInfo.getVersion shouldBe "2.0"
+      openAPI.get.getInfo.getVersion shouldBe "1.0"
     }
   }
-
 }

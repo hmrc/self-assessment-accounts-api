@@ -1,0 +1,86 @@
+get:
+  summary: Retrieve History of a Self Assessment Charge [test only]
+  description: |
+    This endpoint allows a developer to retrieve the history of changes to an individual charge. A unique identifier (National Insurance Number) for the account must be used and a charge identifier provided.
+    
+    ### Test data
+    <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Header Value (Gov-Test-Scenario)</th>
+                <th>Scenario</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><p>N/A - DEFAULT</p></td>
+                <td><p>Simulate a successful response with a self-assessment accounts.</p></td> 
+            <tr>
+              <td><p>NOT_FOUND</p></td>
+              <td><p>Simulates the scenario where no data is found.</p></td>
+            </tr>
+        </tbody>
+    </table>
+
+  tags:
+    - Payments and Liabilities
+
+  parameters:
+    - $ref: './common/pathParameters.yaml#/components/parameters/nino'
+    - $ref: './common/pathParameters.yaml#/components/parameters/transactionId'
+    - $ref: './common/headers.yaml#/components/parameters/acceptJson'
+    - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
+    - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  responses:
+    "200":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: './common/headers.yaml#/components/parameters/correlationId'
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/retrieve_charge_history_response.json'
+          examples:
+            example-response:
+              description: Example Response
+              value:
+                $ref: './examples/retrieveChargeHistory/retrieve_response.json'
+
+
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            FORMAT_NINO:
+              $ref: './common/errors.yaml#/components/examples/formatNino'
+
+
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: './common/errors.yaml#/components/examples/clientOrAgentNotAuthorised'
+
+    "404":
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            MATCHING_RESOURCE_NOT_FOUND:
+              $ref: './common/errors.yaml#/components/examples/notFound'
