@@ -18,7 +18,7 @@ components:
       schema:
         type: string
         pattern: ^\d{4}-\d{2}$
-        example: 2022-23
+        example: 2021-22
       required: true
 
     paymentId:
