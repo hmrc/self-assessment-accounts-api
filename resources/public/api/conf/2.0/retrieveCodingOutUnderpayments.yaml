@@ -43,8 +43,8 @@ tags:
 
 parameters:
   - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
-  - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
   - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+  - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
   - $ref: "./common/queryParameters.yaml#/components/parameters/source"
   - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
   - $ref: "./common/pathParameters.yaml#/components/parameters/taxYear"
@@ -55,8 +55,6 @@ responses:
     headers:
       X-CorrelationId:
         $ref: "./common/headers.yaml#/components/parameters/correlationId"
-      Gov-Test-Scenario:
-        $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
     content:
       application/json:
         schema:
