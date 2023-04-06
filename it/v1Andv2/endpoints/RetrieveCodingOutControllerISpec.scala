@@ -349,7 +349,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code for a taxYear that has not ended" should {
       def notEndedTaxYear(version: String): Unit = {
-        s"any valid request is made that returns a body with the id present while the taxYear hasn't ended for version $version" in new NonTysTest
+        s"any valid request is made that returns a body with the id present while the taxYear hasn't ended for version $version" in new TysIfsTest
           with Test {
 
           def getCurrentTaxYear: String = {
@@ -384,7 +384,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
     "return a 200 status code for a taxYear that has not ended and no id" should {
       def notEndedTaxYearWithNoId(version: String): Unit = {
-        s"any valid request is made that returns a body without the id present while the taxYear hasn't ended for version $version" in new NonTysTest
+        s"any valid request is made that returns a body without the id present while the taxYear hasn't ended for version $version" in new TysIfsTest
           with Test {
 
           def getCurrentTaxYear: String = {
