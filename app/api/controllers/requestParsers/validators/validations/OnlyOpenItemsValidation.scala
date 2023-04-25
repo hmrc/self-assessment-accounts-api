@@ -20,7 +20,7 @@ import api.models.errors.{MtdError, RuleInconsistentQueryParamsError}
 
 object OnlyOpenItemsValidation {
 
-  def validate(onlyOpenItems: Option[String], docNumber: Option[String], toDate: Option[String], fromDate: Option[String]): Seq[MtdError] = {
+  def validate(onlyOpenItems: Option[String], docNumber: Option[String], toDate: Option[String], fromDate: Option[String]): List[MtdError] = {
 
     val otherQueryParamsDefined = (docNumber.isDefined || toDate.isDefined) || fromDate.isDefined
 

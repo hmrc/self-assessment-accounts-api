@@ -20,9 +20,9 @@ import api.models.errors.{MtdError, SourceFormatError}
 
 object SourceValidation {
 
-  val sources = Seq("user", "hmrcHeld", "latest")
+  val sources: List[String] = List("user", "hmrcHeld", "latest")
 
-  def validate(source: String): Seq[MtdError] = {
+  def validate(source: String): List[MtdError] = {
     source match {
       case x if sources.contains(x) => NoValidationErrors
       case _                        => List(SourceFormatError)

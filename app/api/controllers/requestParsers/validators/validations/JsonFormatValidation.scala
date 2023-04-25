@@ -22,13 +22,13 @@ import utils.{EmptinessChecker, EmptyPathsResult, Logging}
 
 object JsonFormatValidation extends Logging {
 
-  def validate[A: OFormat](data: JsValue): Seq[MtdError] =
+  def validate[A: OFormat](data: JsValue): List[MtdError] =
     validateOrRead(data) match {
       case Left(errors) => errors
       case Right(_)     => Nil
     }
 
-  def validateAndCheckNonEmpty[A: OFormat: EmptinessChecker](data: JsValue): Seq[MtdError] =
+  def validateAndCheckNonEmpty[A: OFormat: EmptinessChecker](data: JsValue): List[MtdError] =
     validateOrRead[A](data) match {
       case Left(schemaErrors) => schemaErrors
       case Right(body) =>
@@ -40,21 +40,21 @@ object JsonFormatValidation extends Logging {
       case _ => Nil
     }
 
-  def validateOrRead[A: OFormat](data: JsValue): Either[Seq[MtdError], A] = {
+  def validateOrRead[A: OFormat](data: JsValue): Either[List[MtdError], A] = {
     if (data == JsObject.empty) {
       Left(List(RuleIncorrectOrEmptyBodyError))
     } else {
       data.validate[A] match {
         case JsSuccess(a, _) => Right(a)
-        case JsError(errors) => Left(handleErrors(errors.asInstanceOf[Seq[(JsPath, Seq[JsonValidationError])]]))
+        case JsError(errors) => Left(handleErrors(errors.asInstanceOf[List[(JsPath, List[JsonValidationError])]]))
       }
     }
   }
 
-  private def handleErrors(errors: Seq[(JsPath, Seq[JsonValidationError])]): Seq[MtdError] = {
+  private def handleErrors(errors: List[(JsPath, List[JsonValidationError])]): List[MtdError] = {
     val failures = errors.map {
-      case (path: JsPath, Seq(JsonValidationError(Seq("error.path.missing"))))                              => MissingMandatoryField(path)
-      case (path: JsPath, Seq(JsonValidationError(Seq(error: String)))) if error.contains("error.expected") => WrongFieldType(path)
+      case (path: JsPath, List(JsonValidationError(List("error.path.missing"))))                              => MissingMandatoryField(path)
+      case (path: JsPath, List(JsonValidationError(List(error: String)))) if error.contains("error.expected") => WrongFieldType(path)
       case (path: JsPath, _)                                                                                => OtherFailure(path)
     }
 

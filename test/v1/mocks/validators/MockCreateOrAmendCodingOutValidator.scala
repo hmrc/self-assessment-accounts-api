@@ -28,7 +28,7 @@ trait MockCreateOrAmendCodingOutValidator extends MockFactory {
 
   object MockCreateOrAmendCodingOutValidator {
 
-    def validate(data: CreateOrAmendCodingOutRawRequest): CallHandler1[CreateOrAmendCodingOutRawRequest, Seq[MtdError]] = {
+    def validate(data: CreateOrAmendCodingOutRawRequest): CallHandler1[CreateOrAmendCodingOutRawRequest, List[MtdError]] = {
       (mockValidator
         .validate(_: CreateOrAmendCodingOutRawRequest))
         .expects(data)

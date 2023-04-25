@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter
 object TaxYearNotEndedValidation {
 
   // @param taxYear In format YYYY-YY
-  def validate(taxYear: String)(implicit dateProvider: CurrentDate): Seq[MtdError] = {
+  def validate(taxYear: String)(implicit dateProvider: CurrentDate): List[MtdError] = {
     val downstreamTaxYear      = TaxYear.fromMtd(taxYear).year
     val currentDate: LocalDate = dateProvider.getCurrentDate
 

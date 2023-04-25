@@ -22,9 +22,9 @@ object PaymentLotItemValidation {
 
   private val paymentLotItemRegex = "^[0-9A-Za-z]{1,6}"
 
-  def validateFormat(paymentLotItem: Option[String]): Seq[MtdError] = paymentLotItem.map(validateFormat).getOrElse(NoValidationErrors)
+  def validateFormat(paymentLotItem: Option[String]): List[MtdError] = paymentLotItem.map(validateFormat).getOrElse(NoValidationErrors)
 
-  def validateFormat(paymentLotItem: String): Seq[MtdError] = {
+  def validateFormat(paymentLotItem: String): List[MtdError] = {
     if (paymentLotItem.matches(paymentLotItemRegex)) NoValidationErrors else List(PaymentLotItemFormatError)
   }
 

@@ -28,7 +28,7 @@ trait MockRetrieveBalanceValidator extends MockFactory {
 
   object MockRetrieveBalanceValidator {
 
-    def validate(data: RetrieveBalanceRawRequest): CallHandler1[RetrieveBalanceRawRequest, Seq[MtdError]] = {
+    def validate(data: RetrieveBalanceRawRequest): CallHandler1[RetrieveBalanceRawRequest, List[MtdError]] = {
       (mockValidator
         .validate(_: RetrieveBalanceRawRequest))
         .expects(data)

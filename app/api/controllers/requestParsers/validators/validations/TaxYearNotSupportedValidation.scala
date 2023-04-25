@@ -23,7 +23,7 @@ import config.AppConfig
 object TaxYearNotSupportedValidation {
 
   // @param taxYear in MTD (vendor-facing) format YYYY-YY
-  def validate(taxYear: String)(implicit appConfig: AppConfig): Seq[MtdError] = {
+  def validate(taxYear: String)(implicit appConfig: AppConfig): List[MtdError] = {
     val downstreamTaxYear = TaxYear.fromMtd(taxYear).year
     if (downstreamTaxYear < appConfig.minimumPermittedTaxYear) List(RuleTaxYearNotSupportedError) else NoValidationErrors
   }

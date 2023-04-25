@@ -30,7 +30,7 @@ class RetrieveChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Va
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveChargeHistoryRawData => Seq[Seq[MtdError]] =
+  private def parameterFormatValidation: RetrieveChargeHistoryRawData => List[List[MtdError]] =
     (data: RetrieveChargeHistoryRawData) => {
       List(
         NinoValidation.validate(data.nino),
@@ -38,7 +38,7 @@ class RetrieveChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Va
       )
     }
 
-  override def validate(data: RetrieveChargeHistoryRawData): Seq[MtdError] = {
+  override def validate(data: RetrieveChargeHistoryRawData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

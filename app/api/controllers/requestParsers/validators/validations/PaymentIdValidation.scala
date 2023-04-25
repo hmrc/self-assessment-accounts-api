@@ -22,7 +22,7 @@ object PaymentIdValidation {
 
   private val paymentIdRegex = "^[0-9A-Za-z]{1,12}-[0-9A-Za-z]{1,6}$"
 
-  def validate(paymentId: String): Seq[MtdError] = {
+  def validate(paymentId: String): List[MtdError] = {
     if (paymentId.matches(paymentIdRegex)) NoValidationErrors else List(PaymentIdFormatError)
   }
 

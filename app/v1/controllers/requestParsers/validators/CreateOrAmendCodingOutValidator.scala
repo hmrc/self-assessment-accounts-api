@@ -30,27 +30,27 @@ class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDa
 
   private val validationSet = List(parameterValidation, parameterRuleValidation, bodyFormatValidation, bodyFieldsEmptyValidation, bodyFieldValidation)
 
-  private def parameterValidation: CreateOrAmendCodingOutRawRequest => Seq[Seq[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+  private def parameterValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def parameterRuleValidation: CreateOrAmendCodingOutRawRequest => Seq[Seq[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+  private def parameterRuleValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear),
       if (data.temporalValidationEnabled) TaxYearNotEndedValidation.validate(data.taxYear) else Nil
     )
   }
 
-  private def bodyFormatValidation: CreateOrAmendCodingOutRawRequest => Seq[Seq[MtdError]] = { data =>
+  private def bodyFormatValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = { data =>
     List(
       JsonFormatValidation.validate[CreateOrAmendCodingOutRequestBody](data.body)
     )
   }
 
-  private def bodyFieldsEmptyValidation: CreateOrAmendCodingOutRawRequest => Seq[Seq[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+  private def bodyFieldsEmptyValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     val body = data.body.as[CreateOrAmendCodingOutRequestBody]
 
     if (body.emptyFields.nonEmpty) {
@@ -60,38 +60,38 @@ class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDa
     }
   }
 
-  private def bodyFieldValidation: CreateOrAmendCodingOutRawRequest => Seq[Seq[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
+  private def bodyFieldValidation: CreateOrAmendCodingOutRawRequest => List[List[MtdError]] = (data: CreateOrAmendCodingOutRawRequest) => {
     val body = data.body.as[CreateOrAmendCodingOutRequestBody]
 
     List(flattenErrors(bodyValidations(body)))
   }
 
-  private def bodyValidations(body: CreateOrAmendCodingOutRequestBody): Seq[Seq[MtdError]] = {
-    val payeUnderpaymentErrors: Seq[Seq[MtdError]] = body.taxCodeComponents.payeUnderpayment
+  private def bodyValidations(body: CreateOrAmendCodingOutRequestBody): List[List[MtdError]] = {
+    val payeUnderpaymentErrors: List[List[MtdError]] = body.taxCodeComponents.payeUnderpayment
       .map(_.zipWithIndex.map { case (component, i) =>
         getPayeUnderpaymentErrors(component, i)
       })
       .getOrElse(NoValidationErrors)
       .toList
-    val selfAssessmentUnderpaymentErrors: Seq[Seq[MtdError]] = body.taxCodeComponents.selfAssessmentUnderpayment
+    val selfAssessmentUnderpaymentErrors: List[List[MtdError]] = body.taxCodeComponents.selfAssessmentUnderpayment
       .map(_.zipWithIndex.map { case (component, i) =>
         getSelfAssessmentUnderpaymentErrors(component, i)
       })
       .getOrElse(NoValidationErrors)
       .toList
-    val debtErrors: Seq[Seq[MtdError]] = body.taxCodeComponents.debt
+    val debtErrors: List[List[MtdError]] = body.taxCodeComponents.debt
       .map(_.zipWithIndex.map { case (component, i) =>
         getDebtErrors(component, i)
       })
       .getOrElse(NoValidationErrors)
       .toList
-    val inYearAdjustmentErrors: Seq[Seq[MtdError]] = List(
+    val inYearAdjustmentErrors: List[List[MtdError]] = List(
       body.taxCodeComponents.inYearAdjustment.map(getInYearAdjustmentErrors).getOrElse(NoValidationErrors))
 
     payeUnderpaymentErrors ++ selfAssessmentUnderpaymentErrors ++ debtErrors ++ inYearAdjustmentErrors
   }
 
-  private def getPayeUnderpaymentErrors(taxCodeComponent: TaxCodeComponent, i: Int): Seq[MtdError] = {
+  private def getPayeUnderpaymentErrors(taxCodeComponent: TaxCodeComponent, i: Int): List[MtdError] = {
     List(
       NumberValidation.validateOptional(
         field = Some(taxCodeComponent.amount),
@@ -104,7 +104,7 @@ class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDa
     ).flatten
   }
 
-  private def getSelfAssessmentUnderpaymentErrors(taxCodeComponent: TaxCodeComponent, i: Int): Seq[MtdError] = {
+  private def getSelfAssessmentUnderpaymentErrors(taxCodeComponent: TaxCodeComponent, i: Int): List[MtdError] = {
     List(
       NumberValidation.validateOptional(
         field = Some(taxCodeComponent.amount),
@@ -117,7 +117,7 @@ class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDa
     ).flatten
   }
 
-  private def getDebtErrors(taxCodeComponent: TaxCodeComponent, i: Int): Seq[MtdError] = {
+  private def getDebtErrors(taxCodeComponent: TaxCodeComponent, i: Int): List[MtdError] = {
     List(
       NumberValidation.validateOptional(
         field = Some(taxCodeComponent.amount),
@@ -130,7 +130,7 @@ class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDa
     ).flatten
   }
 
-  private def getInYearAdjustmentErrors(taxCodeComponent: TaxCodeComponent): Seq[MtdError] = {
+  private def getInYearAdjustmentErrors(taxCodeComponent: TaxCodeComponent): List[MtdError] = {
     List(
       NumberValidation.validateOptional(
         field = Some(taxCodeComponent.amount),
@@ -143,7 +143,7 @@ class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDa
     ).flatten
   }
 
-  override def validate(data: CreateOrAmendCodingOutRawRequest): Seq[MtdError] = {
+  override def validate(data: CreateOrAmendCodingOutRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

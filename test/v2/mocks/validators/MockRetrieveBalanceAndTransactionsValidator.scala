@@ -28,7 +28,7 @@ class MockRetrieveBalanceAndTransactionsValidator extends MockFactory {
 
   object MockRetrieveBalanceAndTransactionsValidator {
 
-    def validate(data: RetrieveBalanceAndTransactionsRawData): CallHandler1[RetrieveBalanceAndTransactionsRawData, Seq[MtdError]] = {
+    def validate(data: RetrieveBalanceAndTransactionsRawData): CallHandler1[RetrieveBalanceAndTransactionsRawData, List[MtdError]] = {
       (mockValidator
         .validate(_: RetrieveBalanceAndTransactionsRawData))
         .expects(data)

@@ -28,7 +28,7 @@ trait MockRetrieveChargeHistoryValidator extends MockFactory {
 
   object MockRetrieveChargeHistoryValidator {
 
-    def validate(data: RetrieveChargeHistoryRawRequest): CallHandler1[RetrieveChargeHistoryRawRequest, Seq[MtdError]] = {
+    def validate(data: RetrieveChargeHistoryRawRequest): CallHandler1[RetrieveChargeHistoryRawRequest, List[MtdError]] = {
       (mockValidator
         .validate(_: RetrieveChargeHistoryRawRequest))
         .expects(data)
