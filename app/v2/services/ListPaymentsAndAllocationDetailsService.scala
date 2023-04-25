@@ -18,8 +18,7 @@ package v2.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v2.connectors.ListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
@@ -33,7 +32,7 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
 
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsAndAllocationDetailsResponse]]] = {
+      ec: ExecutionContext): Future[ServiceOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
     connector
       .listPaymentsAndAllocationDetails(request)

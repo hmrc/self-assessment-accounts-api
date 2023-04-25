@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v2
+package api
 
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
