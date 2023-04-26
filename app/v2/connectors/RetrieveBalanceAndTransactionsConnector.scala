@@ -16,7 +16,7 @@
 
 package v2.connectors
 
-import api.connectors.BaseDownstreamConnector
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.connectors.DownstreamUri.Ifs2Uri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import config.AppConfig
