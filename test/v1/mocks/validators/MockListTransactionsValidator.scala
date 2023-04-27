@@ -28,7 +28,7 @@ trait MockListTransactionsValidator extends MockFactory {
 
   object MockListTransactionsValidator {
 
-    def validate(data: ListTransactionsRawRequest): CallHandler1[ListTransactionsRawRequest, Seq[MtdError]] = {
+    def validate(data: ListTransactionsRawRequest): CallHandler1[ListTransactionsRawRequest, List[MtdError]] = {
       (mockValidator
         .validate(_: ListTransactionsRawRequest))
         .expects(data)

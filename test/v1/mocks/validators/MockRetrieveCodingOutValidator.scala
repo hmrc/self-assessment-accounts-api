@@ -28,7 +28,7 @@ trait MockRetrieveCodingOutValidator extends MockFactory {
 
   object MockValidator {
 
-    def validate(data: RetrieveCodingOutRawRequest): CallHandler1[RetrieveCodingOutRawRequest, Seq[MtdError]] = {
+    def validate(data: RetrieveCodingOutRawRequest): CallHandler1[RetrieveCodingOutRawRequest, List[MtdError]] = {
       (mockValidator
         .validate(_: RetrieveCodingOutRawRequest))
         .expects(data)

@@ -18,8 +18,7 @@ package v2.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v2.connectors.RetrieveChargeHistoryConnector
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
@@ -33,7 +32,7 @@ class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryCo
 
   def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]] = {
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveChargeHistoryResponse]] = {
 
     connector
       .retrieveChargeHistory(request)

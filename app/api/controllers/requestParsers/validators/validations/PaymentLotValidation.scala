@@ -22,13 +22,13 @@ object PaymentLotValidation {
 
   private val paymentLotRegex = "^[0-9A-Za-z]{1,12}"
 
-  def validateFormat(paymentLot: Option[String]): Seq[MtdError] = paymentLot.map(validateFormat).getOrElse(NoValidationErrors)
+  def validateFormat(paymentLot: Option[String]): List[MtdError] = paymentLot.map(validateFormat).getOrElse(NoValidationErrors)
 
-  def validateFormat(paymentLot: String): Seq[MtdError] = {
+  def validateFormat(paymentLot: String): List[MtdError] = {
     if (paymentLot.matches(paymentLotRegex)) NoValidationErrors else List(PaymentLotFormatError)
   }
 
-  def validateMissing(paymentLot: Option[String], paymentLotItem: Option[String]): Seq[MtdError] = {
+  def validateMissing(paymentLot: Option[String], paymentLotItem: Option[String]): List[MtdError] = {
     (paymentLot, paymentLotItem) match {
       case (None, Some(_)) => List(MissingPaymentLotError)
       case _               => Nil

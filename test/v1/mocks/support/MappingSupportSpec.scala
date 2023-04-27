@@ -23,12 +23,12 @@ import play.api.http.Status.BAD_REQUEST
 import support.UnitSpec
 import utils.Logging
 import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, TransactionItem}
-import v1.support.DownstreamResponseMappingSupport
+import v1.support.MappingSupportDownstream
 
-class DownstreamResponseMappingSupportSpec extends UnitSpec {
+class MappingSupportSpec extends UnitSpec {
 
   implicit val logContext: EndpointLogContext                = EndpointLogContext("ctrl", "ep")
-  val mapping: DownstreamResponseMappingSupport with Logging = new DownstreamResponseMappingSupport with Logging {}
+  val mapping: MappingSupportDownstream with Logging = new MappingSupportDownstream with Logging {}
 
   val correlationId: String = "someCorrelationId"
 

@@ -18,6 +18,6 @@ package api.services
 
 import api.controllers.RequestContextImplicits
 import utils.Logging
-import v1.support.DownstreamResponseMappingSupport
+import v1.support.MappingSupportDownstream
 
-trait BaseService extends RequestContextImplicits with DownstreamResponseMappingSupport with Logging
+trait BaseService extends RequestContextImplicits with MappingSupportDownstream with Logging

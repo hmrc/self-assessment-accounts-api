@@ -25,14 +25,14 @@ class RetrieveAllocationsValidator extends Validator[RetrieveAllocationsRawReque
 
   private val validationSet = List(parameterFormatValidation)
 
-  private def parameterFormatValidation: RetrieveAllocationsRawRequest => Seq[Seq[MtdError]] = (data: RetrieveAllocationsRawRequest) => {
+  private def parameterFormatValidation: RetrieveAllocationsRawRequest => List[List[MtdError]] = (data: RetrieveAllocationsRawRequest) => {
     List(
       NinoValidation.validate(data.nino),
       PaymentIdValidation.validate(data.paymentId)
     )
   }
 
-  override def validate(data: RetrieveAllocationsRawRequest): Seq[MtdError] = {
+  override def validate(data: RetrieveAllocationsRawRequest): List[MtdError] = {
     run(validationSet, data).distinct
   }
 

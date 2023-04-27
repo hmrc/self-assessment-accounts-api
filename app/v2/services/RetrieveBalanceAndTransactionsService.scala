@@ -18,8 +18,7 @@ package v2.services
 
 import api.controllers.RequestContext
 import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
+import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
@@ -33,7 +32,7 @@ class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanc
 
   def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]] = {
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveBalanceAndTransactionsResponse]] = {
 
     connector
       .retrieveBalanceAndTransactions(request)

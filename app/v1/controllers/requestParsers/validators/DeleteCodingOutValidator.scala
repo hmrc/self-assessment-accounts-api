@@ -28,18 +28,18 @@ class DeleteCodingOutValidator @Inject() (implicit appConfig: AppConfig) extends
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  private def parameterFormatValidation: DeleteCodingOutRawRequest => Seq[Seq[MtdError]] = { data =>
+  private def parameterFormatValidation: DeleteCodingOutRawRequest => List[List[MtdError]] = { data =>
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear)
     )
   }
 
-  private def parameterRuleValidation: DeleteCodingOutRawRequest => Seq[Seq[MtdError]] = { data =>
+  private def parameterRuleValidation: DeleteCodingOutRawRequest => List[List[MtdError]] = { data =>
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
 
-  override def validate(data: DeleteCodingOutRawRequest): Seq[MtdError] = run(validationSet, data)
+  override def validate(data: DeleteCodingOutRawRequest): List[MtdError] = run(validationSet, data)
 }

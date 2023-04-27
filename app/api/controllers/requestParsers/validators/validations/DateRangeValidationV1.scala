@@ -22,7 +22,7 @@ import api.models.errors.{MtdError, V1_RangeToDateBeforeFromDateError, RuleDateR
 
 object DateRangeValidationV1 {
 
-  def validate(from: String, to: String): Seq[MtdError] = {
+  def validate(from: String, to: String): List[MtdError] = {
     val fmtFrom = LocalDate.parse(from, dateFormat)
     val fmtTo   = LocalDate.parse(to, dateFormat)
 
@@ -33,12 +33,12 @@ object DateRangeValidationV1 {
     ).flatten
   }
 
-  private def checkIfToIsBeforeFrom(from: LocalDate, to: LocalDate): Seq[MtdError] =
+  private def checkIfToIsBeforeFrom(from: LocalDate, to: LocalDate): List[MtdError] =
     if (to isBefore from) List(V1_RangeToDateBeforeFromDateError) else Nil
 
-  private def checkIfFromIsTooEarly(from: LocalDate): Seq[MtdError] = if (from isBefore earliestDate) List(RuleFromDateNotSupportedError) else Nil
+  private def checkIfFromIsTooEarly(from: LocalDate): List[MtdError] = if (from isBefore earliestDate) List(RuleFromDateNotSupportedError) else Nil
 
-  private def checkIfDateRangeIsTooLarge(from: LocalDate, to: LocalDate): Seq[MtdError] = {
+  private def checkIfDateRangeIsTooLarge(from: LocalDate, to: LocalDate): List[MtdError] = {
     val start = from.atStartOfDay()
     val end   = to.atStartOfDay()
     if (Duration.between(start, end.plusDays(1) /* add day to make inclusive */ ).toDays > maxDateRange)

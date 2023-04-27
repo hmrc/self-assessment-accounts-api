@@ -28,7 +28,7 @@ class MockListPaymentsAndAllocationDetailsValidator extends MockFactory {
 
   object MockListPaymentsAndAllocationDetailsValidator {
 
-    def validate(data: ListPaymentsAndAllocationDetailsRawData): CallHandler1[ListPaymentsAndAllocationDetailsRawData, Seq[MtdError]] = {
+    def validate(data: ListPaymentsAndAllocationDetailsRawData): CallHandler1[ListPaymentsAndAllocationDetailsRawData, List[MtdError]] = {
       (mockValidator
         .validate(_: ListPaymentsAndAllocationDetailsRawData))
         .expects(data)

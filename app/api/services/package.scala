@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package v2.support
+package api
 
-import api.support.ResponseMappingSupport
-import utils.Logging
+import api.models.errors.ErrorWrapper
+import api.models.outcomes.ResponseWrapper
 
-trait DownstreamResponseMappingSupport extends ResponseMappingSupport {
-  self: Logging =>
+package object services {
+
+  type ServiceOutcome[A] = Either[ErrorWrapper, ResponseWrapper[A]]
 
 }
