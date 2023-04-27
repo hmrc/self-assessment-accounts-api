@@ -20,12 +20,12 @@ import api.controllers.EndpointLogContext
 import api.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.ResponseMappingSupport
+import api.support.DownstreamResponseMappingSupport
 import utils.{CurrentDate, Logging}
 import v1.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v1.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
-trait DownstreamResponseMappingSupport extends ResponseMappingSupport {
+trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
   self: Logging =>
 
   final def validateTransactionDetailsResponse[T](desResponseWrapper: ResponseWrapper[T]): Either[ErrorWrapper, ResponseWrapper[T]] = {
