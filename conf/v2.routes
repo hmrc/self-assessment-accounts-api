@@ -3,4 +3,11 @@ GET        /:nino/charges/:transactionId                   v2.controllers.Retrie
 GET        /:nino/balance-and-transactions                 v2.controllers.RetrieveBalanceAndTransactionsController.retrieveBalanceAndTransactions(nino: String, docNumber: Option[String], fromDate: Option[String], toDate: Option[String], onlyOpenItems: Option[String], includeLocks: Option[String], calculateAccruedInterest: Option[String], removePOA: Option[String], customerPaymentInformation: Option[String], includeEstimatedCharges: Option[String])
 GET        /:nino/payments-and-allocations                 v2.controllers.ListPaymentsAndAllocationDetailsController.listPayments(nino: String, fromDate: Option[String], toDate: Option[String], paymentLot: Option[String], paymentLotItem: Option[String])
 
+# V1 endpoints routed from V2
+GET        /:nino/payments/:paymentId                      v1.controllers.RetrieveAllocationsController.retrieveAllocations(nino: String, paymentId: String)
+GET        /:nino/payments                                 v1.controllers.ListPaymentsController.listPayments(nino: String, from: Option[String], to: Option[String])
+GET        /:nino/balance                                  v1.controllers.RetrieveBalanceController.retrieveBalance(nino: String)
+GET        /:nino/charges                                  v1.controllers.ListChargesController.listCharges(nino: String, from: Option[String], to: Option[String])
+GET        /:nino/transactions                             v1.controllers.ListTransactionsController.listTransactions(nino: String, from: Option[String], to: Option[String])
+GET        /:nino/transactions/:transactionId              v1.controllers.RetrieveTransactionDetailsController.retrieveTransactionDetails(nino: String, transactionId: String)
 

@@ -212,9 +212,9 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     }
   }
 
-  "Routing requests with route that does not exist for V1, but exists in V1" should {
+  "Routing requests with route that does not exist for V1 or for V2" when {
     implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
-    "neither does the route exist in the V1 handler" must {
+    "the route does not exist in the V1 handler" must {
       implicit val useConf: Config = confWithAllEnabled
       "return a 404 error" in new Test {
         val request: RequestHeader = buildRequest("/missing_resource")
@@ -226,13 +226,13 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
       }
     }
 
-    "Routing requests with route that does not exist for V1 or V2" should {
+    "Routing requests with route that does not exist for V1 or V2" when {
       implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
       "the V1 has a route, but the requested route does not match the V2 allowed routes" must {
         implicit val useConf: Config = confWithV1DisabledV2Enabled
 
         "return a 404 error" in new Test {
-          val request = buildRequest("/oldResource")
+          val request: RequestHeader = buildRequest("/oldResource")
 
           inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
             val result = a.apply(request)
@@ -244,10 +244,16 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
       }
     }
 
-    "Routing requests with route that does not exist for V2, but exists in V1" should {
-      implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
-      "the V1 has a route, but the requested route matches the V2 allowed routes" must {
-        handleWithVersionRoutes("/x/collection/tax-code", V1Handler, confWithV1DisabledV2Enabled)
+    "Routing requests with an endpoint for a specific version" should {
+      "return the correct handler" when {
+        implicit val acceptHeader: Option[String] = Some("application/vnd.hmrc.2.0+json")
+        implicit val useConf: Config              = confWithAllEnabled
+        "the endpoint exists " in new Test {
+          requestHandler.routeRequest(buildRequest("/resource")) shouldBe Some(V2Handler)
+        }
+        "the requested endpoint is not in the specified route" in new Test {
+          requestHandler.routeRequest(buildRequest("/foo")) shouldBe Some(requestHandler.resourceNotFoundAction)
+        }
       }
     }
   }

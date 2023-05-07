@@ -20,7 +20,7 @@ import api.models.errors.{InvalidAcceptHeaderError, NotFoundError, UnsupportedVe
 import config.{AppConfig, FeatureSwitches}
 import play.api.http.{DefaultHttpRequestHandler, HttpConfiguration, HttpErrorHandler, HttpFilters}
 import play.api.libs.json.Json
-import play.api.mvc.{DefaultActionBuilder, Handler, RequestHeader, Results}
+import play.api.mvc.{Action, AnyContent, DefaultActionBuilder, Handler, RequestHeader, Results}
 import play.api.routing.Router
 import play.core.DefaultWebCommands
 
@@ -42,11 +42,11 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
       filters = filters.filters
     ) {
 
-  private val featureSwitches = FeatureSwitches(config.featureSwitches)
+  val resourceNotFoundAction: Action[AnyContent] = action(Results.NotFound(Json.toJson(NotFoundError)))
+
+  private val featureSwitches                    = FeatureSwitches(config.featureSwitches)
 
   private val unsupportedVersionAction = action(Results.NotFound(Json.toJson(UnsupportedVersionError)))
-
-  private val resourceNotFoundAction = action(Results.NotFound(Json.toJson(NotFoundError)))
 
   private val invalidAcceptHeaderError = action(Results.NotAcceptable(Json.toJson(InvalidAcceptHeaderError)))
 
@@ -81,15 +81,13 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
         case _    => path.matches(pattern.get)
       }
     }
-    val found = ignorePreviousEnabled match {
+
+    ignorePreviousEnabled match {
       case false if featureSwitches.isVersionEnabled(version.toString) => getRouting()
       case true if validPath(request.path)                             => getRouting()
       case true                                                        => Some(resourceNotFoundAction)
       case _                                                           => Some(unsupportedVersionAction)
     }
-
-    found
-      .orElse(version.maybePrevious.flatMap(previousVersion => findRoute(request, previousVersion, true, pattern = version.regexMatch)))
   }
 
   private def routeWith(router: Router, request: RequestHeader): Option[Handler] = {
