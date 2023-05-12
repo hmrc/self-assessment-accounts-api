@@ -45,12 +45,11 @@ object Version {
   implicit val versionFormat: Format[Version] = Format(VersionReads, VersionWrites)
 }
 
-sealed trait Version {
+trait Version {
   val name: String
   val configName: String
-  val maybePrevious: Option[Version] = None
-  val regexMatch: Option[String]     = None
-  override def toString: String      = name
+
+  override def toString: String = name
 }
 
 case object Version1 extends Version {
@@ -61,8 +60,6 @@ case object Version1 extends Version {
 case object Version2 extends Version {
   val name                   = "2.0"
   val configName             = "2"
-  override val maybePrevious = Some(Version1)
-  override val regexMatch    = Some("^.*collection/tax-code/?$")
 }
 
 object Versions {
