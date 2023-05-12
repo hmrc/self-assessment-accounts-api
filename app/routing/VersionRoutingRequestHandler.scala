@@ -54,7 +54,6 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
 
     def apiHandler: Option[Handler] = Versions.getFromRequest(request) match {
       case Right(version) =>
-        println("got " + version)
         versionRoutingMap.versionRouter(version) match {
           case Some(versionRouter) if featureSwitch.isVersionEnabled(version.name) => routeWith(versionRouter)(request)
           case Some(_)                                                             => Some(unsupportedVersionAction)
@@ -62,7 +61,7 @@ class VersionRoutingRequestHandler @Inject() (versionRoutingMap: VersionRoutingM
         }
 
       case Left(VersionNotFound) => Some(unsupportedVersionAction)
-      case Left(_) => Some(invalidAcceptHeaderError)
+      case Left(_)               => Some(invalidAcceptHeaderError)
     }
 
     documentHandler orElse apiHandler

@@ -47,19 +47,16 @@ object Version {
 
 trait Version {
   val name: String
-  val configName: String
 
   override def toString: String = name
 }
 
 case object Version1 extends Version {
   val name       = "1.0"
-  val configName = "1"
 }
 
 case object Version2 extends Version {
   val name                   = "2.0"
-  val configName             = "2"
 }
 
 object Versions {
