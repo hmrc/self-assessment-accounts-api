@@ -29,6 +29,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
   val v1Routes: v1.Routes                           = app.injector.instanceOf[v1.Routes]
   val v2Routes: v2.Routes                           = app.injector.instanceOf[v2.Routes]
   val v1WithCodingOutRoutes: v1WithCodingOut.Routes = app.injector.instanceOf[v1WithCodingOut.Routes]
+  val v2WithCodingOutRoutes: v2WithCodingOut.Routes = app.injector.instanceOf[v2WithCodingOut.Routes]
 
   "map" when {
     "routing to v1" when {
@@ -39,7 +40,7 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
                  |coding-out.enabled = $isCodingOutEnabled
                  |""".stripMargin)))
             val versionRoutingMap: VersionRoutingMapImpl =
-              VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, mockAppConfig)
+              VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, v2WithCodingOutRoutes, mockAppConfig)
 
             versionRoutingMap.map(Version1) shouldBe routes
           }
@@ -52,9 +53,23 @@ class VersionRoutingMapSpec extends UnitSpec with MockAppConfig with GuiceOneApp
       "route to v2.routes" in {
         MockAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"""
              |version-2.enabled = true
+             |coding-out.enabled = false
              |""".stripMargin)))
-        val versionRoutingMap: VersionRoutingMapImpl = VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, mockAppConfig)
+        val versionRoutingMap: VersionRoutingMapImpl =
+          VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, v2WithCodingOutRoutes, mockAppConfig)
         versionRoutingMap.map(Version2) shouldBe v2Routes
+      }
+
+      "route to v2.withCodingOutRoutes" when {
+        "coding out feature switch is enabled" in {
+          MockAppConfig.featureSwitches.returns(Configuration(ConfigFactory.parseString(s"""
+               |version-2.enabled = true
+               |coding-out.enabled = true
+               |""".stripMargin)))
+          val versionRoutingMap: VersionRoutingMapImpl =
+            VersionRoutingMapImpl(defaultRouter, v1Routes, v2Routes, v1WithCodingOutRoutes, v2WithCodingOutRoutes, mockAppConfig)
+          versionRoutingMap.map(Version2) shouldBe v2WithCodingOutRoutes
+        }
       }
     }
   }

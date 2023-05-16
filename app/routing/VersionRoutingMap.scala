@@ -21,6 +21,7 @@ import config.{AppConfig, FeatureSwitches}
 
 import javax.inject.Inject
 import play.api.routing.Router
+import play.core.routing.GeneratedRouter
 import utils.Logging
 
 @ImplementedBy(classOf[VersionRoutingMapImpl])
@@ -36,6 +37,7 @@ case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
                                             v1Routes: v1.Routes,
                                             v2Routes: v2.Routes,
                                             v1WithCodingOutRoutes: v1WithCodingOut.Routes,
+                                            v2WithCodingOutRoutes: v2WithCodingOut.Routes,
                                             appConfig: AppConfig)
     extends VersionRoutingMap
     with Logging {
@@ -45,11 +47,20 @@ case class VersionRoutingMapImpl @Inject() (defaultRouter: Router,
 
   if (isCodingOutEnabled) logger.info("Coding Out feature switch is enabled") else logger.info("Coding Out feature switch is disabled")
 
-  val map: Map[Version, Router] = Map(
-    Version1 -> {
-      if (isCodingOutEnabled) v1WithCodingOutRoutes else v1Routes
-    },
-    Version2 -> v2Routes
-  )
+  val map: Map[Version, Router] = if (isCodingOutEnabled) codingOutRoutes() else nonCodingOutRoutes()
+
+  def codingOutRoutes(): Map[Version, GeneratedRouter] = {
+    Map(
+      Version1 -> v1WithCodingOutRoutes,
+      Version2 -> v2WithCodingOutRoutes
+    )
+  }
+
+  def nonCodingOutRoutes(): Map[Version, GeneratedRouter] = {
+    Map(
+      Version1 -> v1Routes,
+      Version2 -> v2Routes
+    )
+  }
 
 }
