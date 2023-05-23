@@ -74,7 +74,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desJsonCharge)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdJsonCharge
@@ -89,7 +89,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desJsonPayment)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe mtdJsonPayment
@@ -106,7 +106,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desJsonNoTransactions)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe NOT_FOUND
         response.header("Content-Type") shouldBe Some("application/json")
@@ -122,7 +122,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
           DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, OK, desJsonNoRelevantTransactions)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe NOT_FOUND
         response.header("Content-Type") shouldBe Some("application/json")
@@ -144,7 +144,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -176,7 +176,7 @@ class RetrieveTransactionDetailsControllerISpec extends IntegrationBaseSpec with
             DownstreamStub.onError(DownstreamStub.GET, desUrl, desStatus, errorBody(desCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

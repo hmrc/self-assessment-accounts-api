@@ -66,7 +66,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, responseDownstreamJson)
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
@@ -84,7 +84,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, queryParams, OK, responseDownstreamJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
@@ -109,7 +109,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
           override val paymentLot: Option[String]     = requestLot
           override val paymentLotItem: Option[String] = requestLotItem
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -146,7 +146,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.json shouldBe Json.toJson(expectedBody)
           response.status shouldBe expectedStatus
           response.header("Content-Type") shouldBe Some("application/json")

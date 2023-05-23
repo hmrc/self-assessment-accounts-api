@@ -78,7 +78,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, queryParams, OK, desResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponse
         response.header("Content-Type") shouldBe Some("application/json")
@@ -99,7 +99,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -124,7 +124,7 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
             DownstreamStub.onError(DownstreamStub.GET, desUrl, queryParams, desStatus, errorBody(desCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

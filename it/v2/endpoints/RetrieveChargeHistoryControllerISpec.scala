@@ -80,7 +80,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseWithHateoas
         response.header("Content-Type") shouldBe Some("application/json")
@@ -112,7 +112,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, BAD_REQUEST, multipleErrors)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe INTERNAL_SERVER_ERROR
         response.json shouldBe Json.toJson(InternalError)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -131,7 +131,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -155,7 +155,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

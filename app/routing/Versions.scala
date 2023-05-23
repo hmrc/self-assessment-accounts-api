@@ -24,10 +24,7 @@ object Version {
 
   implicit object VersionWrites extends Writes[Version] {
 
-    def writes(version: Version): JsValue = version match {
-      case Version1 => Json.toJson(Version1.name)
-      case Version2 => Json.toJson(Version2.name)
-    }
+    def writes(version: Version): JsValue = Json.toJson(version.name)
 
   }
 
@@ -52,11 +49,11 @@ trait Version {
 }
 
 case object Version1 extends Version {
-  val name       = "1.0"
+  val name = "1.0"
 }
 
 case object Version2 extends Version {
-  val name                   = "2.0"
+  val name = "2.0"
 }
 
 object Versions {

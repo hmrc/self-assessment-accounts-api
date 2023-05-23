@@ -79,7 +79,7 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, desQueryParams, OK, fullDesListChargesMultipleResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe NOT_FOUND
         response.header("Content-Type") shouldBe Some("application/json")
