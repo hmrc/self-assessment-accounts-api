@@ -81,7 +81,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, desUrl, desQueryParams, OK, fullMultipleItemsListTransactionsDesResponse)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
 
         response.status shouldBe OK
         response.header("Content-Type") shouldBe Some("application/json")
@@ -126,7 +126,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onError(DownstreamStub.GET, desUrl, desQueryParams, BAD_REQUEST, multipleErrors)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe INTERNAL_SERVER_ERROR
         response.header("Content-Type") shouldBe Some("application/json")
         response.json shouldBe InternalError.asJson
@@ -152,7 +152,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -201,7 +201,7 @@ class ListTransactionsControllerISpec extends IntegrationBaseSpec {
             DownstreamStub.onError(DownstreamStub.GET, desUrl, desQueryParams, desStatus, errorBody(desCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")

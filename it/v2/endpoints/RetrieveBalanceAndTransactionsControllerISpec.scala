@@ -116,7 +116,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseWithoutLocksJson
         response.header("Content-Type") shouldBe Some("application/json")
@@ -134,7 +134,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
@@ -150,7 +150,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
         }
 
-        val response: WSResponse = await(request.get)
+        val response: WSResponse = await(request.get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
@@ -189,7 +189,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -232,7 +232,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request.get)
+          val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
