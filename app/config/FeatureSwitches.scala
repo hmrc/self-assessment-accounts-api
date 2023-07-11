@@ -22,24 +22,6 @@ import play.api.mvc.Request
 
 case class FeatureSwitches(featureSwitchConfig: Configuration) {
 
-  private val versionRegex = """(\d)\.\d""".r
-
-  def isVersionEnabled(version: String): Boolean = {
-
-    val maybeVersion: Option[String] =
-      version match {
-        case versionRegex(v) => Some(v)
-        case _               => None
-      }
-
-    val enabled = for {
-      validVersion <- maybeVersion
-      enabled      <- featureSwitchConfig.getOptional[Boolean](s"version-$validVersion.enabled")
-    } yield enabled
-
-    enabled.getOrElse(false)
-  }
-
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension.enabled")) {
       request.headers.get("suspend-temporal-validations").forall(!BooleanUtils.toBoolean(_))
