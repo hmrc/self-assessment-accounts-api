@@ -41,7 +41,6 @@ case class FeatureSwitches(featureSwitchConfig: Configuration) {
   }
 
   val isCodingOutEnabled: Boolean          = isEnabled("coding-out.enabled")
-  val isTaxYearSpecificApiEnabled: Boolean = isEnabled("tys-api.enabled")
 
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension.enabled")) {
