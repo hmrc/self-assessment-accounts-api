@@ -10,3 +10,7 @@ GET        /:nino/balance                                  v1.controllers.Retrie
 GET        /:nino/transactions                             v1.controllers.ListTransactionsController.listTransactions(nino: String, from: Option[String], to: Option[String])
 GET        /:nino/transactions/:transactionId              v1.controllers.RetrieveTransactionDetailsController.retrieveTransactionDetails(nino: String, transactionId: String)
 
+# Coding Out endpoints routed from V2
+PUT        /:nino/:taxYear/collection/tax-code             v1.controllers.CreateOrAmendCodingOutController.createOrAmendCodingOut(nino, taxYear)
+GET        /:nino/:taxYear/collection/tax-code             v1.controllers.RetrieveCodingOutController.retrieveCodingOut(nino: String, taxYear: String, source: Option[String])
+DELETE     /:nino/:taxYear/collection/tax-code             v1.controllers.DeleteCodingOutController.handleRequest(nino: String, taxYear: String)
