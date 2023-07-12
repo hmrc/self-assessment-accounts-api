@@ -27,7 +27,7 @@ import scala.util.Try
 
 class DocumentationControllerISpec extends IntegrationBaseSpec {
 
-  val config: AppConfig = app.injector.instanceOf[AppConfig]
+  val config: AppConfig                = app.injector.instanceOf[AppConfig]
   val confidenceLevel: ConfidenceLevel = config.confidenceLevelConfig.confidenceLevel
 
   val apiDefinitionJson: JsValue = Json.parse(s"""
@@ -54,13 +54,13 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |    "versions":[
       |      {
       |        "version":"1.0",
-      |        "status":"ALPHA",
-      |        "endpointsEnabled":false
+      |        "status":"BETA",
+      |        "endpointsEnabled":true
       |      },
       |      {
       |        "version":"2.0",
-      |        "status":"ALPHA",
-      |        "endpointsEnabled":false
+      |        "status":"BETA",
+      |        "endpointsEnabled":true
       |      }
       |    ]
       |  }

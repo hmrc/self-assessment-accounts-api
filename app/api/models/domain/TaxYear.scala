@@ -16,7 +16,6 @@
 
 package api.models.domain
 
-import config.FeatureSwitches
 import play.api.libs.json.Writes
 
 import java.time.LocalDate
@@ -57,7 +56,7 @@ final case class TaxYear private (private val value: String) {
 
   /** Use this for downstream API endpoints that are known to be TYS.
     */
-  def useTaxYearSpecificApi(implicit featureSwitches: FeatureSwitches): Boolean = featureSwitches.isTaxYearSpecificApiEnabled && year >= 2024
+  def useTaxYearSpecificApi: Boolean = year >= 2024
 }
 
 object TaxYear {
