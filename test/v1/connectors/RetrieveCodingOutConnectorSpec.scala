@@ -70,6 +70,11 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
   trait Test { _: ConnectorTest =>
 
+    val connector: RetrieveCodingOutConnector = new RetrieveCodingOutConnector(
+      http = mockHttpClient,
+      appConfig = mockAppConfig
+    )
+
     def taxYear: TaxYear
 
     def requestWithParams: RetrieveCodingOutParsedRequest = RetrieveCodingOutParsedRequest(
@@ -82,11 +87,6 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
       nino = Nino(nino),
       taxYear = taxYear,
       source = None
-    )
-
-    val connector: RetrieveCodingOutConnector = new RetrieveCodingOutConnector(
-      http = mockHttpClient,
-      appConfig = mockAppConfig
     )
 
   }

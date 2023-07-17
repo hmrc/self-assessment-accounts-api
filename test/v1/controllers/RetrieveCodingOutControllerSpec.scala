@@ -80,7 +80,6 @@ class RetrieveCodingOutControllerSpec
       "2021-08-24T14:15:22Z",
       Some(BigInt(12345678910L))
     )
-
   val taxCodeComponents: TaxCodeComponents =
     TaxCodeComponents(
       0,
@@ -89,7 +88,6 @@ class RetrieveCodingOutControllerSpec
       "hmrcHeld",
       Some(BigInt(12345678910L))
     )
-
   val taxCodeComponentObject: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
       Some(Seq(taxCodeComponents)),
@@ -97,7 +95,6 @@ class RetrieveCodingOutControllerSpec
       Some(Seq(taxCodeComponents)),
       Some(taxCodeComponents)
     )
-
   val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
     UnmatchedCustomerSubmissionsObject(
       Some(Seq(unmatchedCustomerSubmissions)),
@@ -105,7 +102,6 @@ class RetrieveCodingOutControllerSpec
       Some(Seq(unmatchedCustomerSubmissions)),
       Some(unmatchedCustomerSubmissions)
     )
-
   val retrieveCodingOutResponse: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
       Some(taxCodeComponentObject),

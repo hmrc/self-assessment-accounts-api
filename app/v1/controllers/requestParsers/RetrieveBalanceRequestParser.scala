@@ -17,11 +17,11 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-
-import javax.inject.Inject
 import api.models.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveBalanceValidator
 import v1.models.request.retrieveBalance.{RetrieveBalanceParsedRequest, RetrieveBalanceRawRequest}
+
+import javax.inject.Inject
 
 class RetrieveBalanceRequestParser @Inject() (val validator: RetrieveBalanceValidator)
     extends RequestParser[RetrieveBalanceRawRequest, RetrieveBalanceParsedRequest] {

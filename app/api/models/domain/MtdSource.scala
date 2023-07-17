@@ -24,6 +24,7 @@ sealed trait MtdSource {
 }
 
 object MtdSource {
+  val parser: PartialFunction[String, MtdSource] = Enums.parser[MtdSource]
 
   case object hmrcHeld extends MtdSource {
     override def toDownstreamSource: String = "HMRC-HELD"
@@ -33,10 +34,9 @@ object MtdSource {
     override def toDownstreamSource: String = "CUSTOMER"
   }
 
+  implicit val format: Format[MtdSource]         = Enums.format[MtdSource]
+
   case object latest extends MtdSource {
     override def toDownstreamSource: String = "LATEST"
   }
-
-  implicit val format: Format[MtdSource]         = Enums.format[MtdSource]
-  val parser: PartialFunction[String, MtdSource] = Enums.parser[MtdSource]
 }

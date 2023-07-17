@@ -16,9 +16,9 @@
 
 package v2.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.connectors.DownstreamUri.Ifs2Uri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest

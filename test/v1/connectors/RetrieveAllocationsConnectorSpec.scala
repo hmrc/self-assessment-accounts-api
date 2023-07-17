@@ -18,9 +18,9 @@ package v1.connectors
 
 import api.connectors.ConnectorSpec
 import api.mocks.MockHttpClient
-import mocks.MockAppConfig
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import v1.models.request.retrieveAllocations.RetrieveAllocationsParsedRequest
 import v1.models.response.retrieveAllocations.RetrieveAllocationsResponse
 import v1.models.response.retrieveAllocations.detail.AllocationDetail

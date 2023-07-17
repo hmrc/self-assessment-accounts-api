@@ -43,23 +43,20 @@ class RetrieveBalanceControllerSpec
     with MockHateoasFactory
     with MockRetrieveBalanceRequestParser {
 
-  private val rawRequest: RetrieveBalanceRawRequest =
-    RetrieveBalanceRawRequest(nino = nino)
-
-  private val parsedRequest: RetrieveBalanceParsedRequest =
-    RetrieveBalanceParsedRequest(
-      nino = Nino(nino)
-    )
-
-  private val retrieveBalanceResponse = RetrieveBalanceFixture.fullModel
-  private val mtdResponseJson         = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
-
   val balanceLink: Link =
     Link(
       href = s"/accounts/self-assessment/$nino/balance",
       method = GET,
       rel = SELF
     )
+  private val rawRequest: RetrieveBalanceRawRequest =
+    RetrieveBalanceRawRequest(nino = nino)
+  private val parsedRequest: RetrieveBalanceParsedRequest =
+    RetrieveBalanceParsedRequest(
+      nino = Nino(nino)
+    )
+  private val retrieveBalanceResponse = RetrieveBalanceFixture.fullModel
+  private val mtdResponseJson         = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
 
   "retrieveBalance" should {
     "return OK" when {

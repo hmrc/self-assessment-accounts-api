@@ -31,15 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) extends BaseService {
 
-  def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]] = {
-
-    connector
-      .retrieveBalance(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
-
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDTYPE"                       -> InternalError,
@@ -61,5 +52,14 @@ class RetrieveBalanceService @Inject() (connector: RetrieveBalanceConnector) ext
       "SERVER_ERROR"                         -> InternalError,
       "SERVICE_UNAVAILABLE"                  -> InternalError
     )
+
+  def retrieveBalance(request: RetrieveBalanceParsedRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceResponse]]] = {
+
+    connector
+      .retrieveBalance(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+  }
 
 }

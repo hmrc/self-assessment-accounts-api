@@ -30,15 +30,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryConnector) extends BaseService {
 
-  def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveChargeHistoryResponse]] = {
-
-    connector
-      .retrieveChargeHistory(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
-
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID" -> InternalError,
@@ -55,5 +46,14 @@ class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryCo
       "SERVER_ERROR"          -> InternalError,
       "SERVICE_UNAVAILABLE"   -> InternalError
     )
+
+  def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveChargeHistoryResponse]] = {
+
+    connector
+      .retrieveChargeHistory(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+  }
 
 }

@@ -31,15 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListTransactionsService @Inject() (val connector: ListTransactionsConnector) extends BaseService {
 
-  def listTransactions(request: ListTransactionsParsedRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]] = {
-
-    connector
-      .listTransactions(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
-
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDTYPE"                       -> InternalError,
@@ -61,5 +52,14 @@ class ListTransactionsService @Inject() (val connector: ListTransactionsConnecto
       "SERVER_ERROR"                         -> InternalError,
       "SERVICE_UNAVAILABLE"                  -> InternalError
     )
+
+  def listTransactions(request: ListTransactionsParsedRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListTransactionsResponse[TransactionItem]]]] = {
+
+    connector
+      .listTransactions(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+  }
 
 }

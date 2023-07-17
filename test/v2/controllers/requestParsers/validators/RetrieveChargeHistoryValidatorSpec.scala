@@ -16,9 +16,9 @@
 
 package v2.controllers.requestParsers.validators
 
+import api.models.errors._
 import mocks.MockAppConfig
 import support.UnitSpec
-import api.models.errors._
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
 
 class RetrieveChargeHistoryValidatorSpec extends UnitSpec with MockAppConfig {

@@ -17,13 +17,13 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import config.AppConfig
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors.{MtdError, RuleIncorrectOrEmptyBodyError}
+import config.AppConfig
+import utils.CurrentDate
 import v1.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRawRequest, CreateOrAmendCodingOutRequestBody, TaxCodeComponent}
 
 import javax.inject.Inject
-import utils.CurrentDate
 
 class CreateOrAmendCodingOutValidator @Inject() (implicit currentDate: CurrentDate, appConfig: AppConfig)
     extends Validator[CreateOrAmendCodingOutRawRequest] {

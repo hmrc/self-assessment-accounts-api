@@ -17,12 +17,12 @@
 package config
 
 import com.typesafe.config.Config
-
-import javax.inject.{Inject, Singleton}
 import play.api.{ConfigLoader, Configuration}
 import routing.Version
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 trait AppConfig {
 
@@ -37,8 +37,11 @@ trait AppConfig {
 
   // IFS1 Config
   def ifs1BaseUrl: String
+
   def ifs1Env: String
+
   def ifs1Token: String
+
   def ifs1EnvironmentHeaders: Option[Seq[String]]
 
   lazy val ifs1DownstreamConfig: DownstreamConfig =
@@ -46,8 +49,11 @@ trait AppConfig {
 
   // IFS2 Config
   def ifs2BaseUrl: String
+
   def ifs2Env: String
+
   def ifs2Token: String
+
   def ifs2EnvironmentHeaders: Option[Seq[String]]
 
   lazy val ifs2DownstreamConfig: DownstreamConfig =
@@ -55,8 +61,11 @@ trait AppConfig {
 
   // TYS IFS Config
   def tysIfsBaseUrl: String
+
   def tysIfsEnv: String
+
   def tysIfsToken: String
+
   def tysIfsEnvironmentHeaders: Option[Seq[String]]
 
   lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =

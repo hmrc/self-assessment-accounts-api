@@ -66,6 +66,8 @@ object TaxYear {
   private val taxYearMonthStart = 4
   private val taxYearDayStart   = 6
 
+  def now(): TaxYear = TaxYear.fromIso(LocalDate.now().toString)
+
   /** @param date
     *   the date in extended ISO-8601 format (e.g. 2020-04-05)
     */
@@ -77,8 +79,6 @@ object TaxYear {
 
     new TaxYear(year)
   }
-
-  def now(): TaxYear = TaxYear.fromIso(LocalDate.now().toString)
 
   private def isPreviousTaxYear(date: LocalDate): Boolean = {
     val taxYearStartDate = LocalDate.of(date.getYear, taxYearMonthStart, taxYearDayStart)

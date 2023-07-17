@@ -29,6 +29,11 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
   val mapping: DownstreamResponseMappingSupport with Logging = new DownstreamResponseMappingSupport with Logging {}
 
   val correlationId = "someCorrelationId"
+  val errorCodeMap: PartialFunction[String, MtdError] = {
+    case "ERR1" => Error1
+    case "ERR2" => Error2
+    case "DS"   => InternalError
+  }
 
   object Error1 extends MtdError("msg", "code1", BAD_REQUEST)
 
@@ -37,12 +42,6 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
   object ErrorBvrMain extends MtdError("msg", "bvrMain", BAD_REQUEST)
 
   object ErrorBvr extends MtdError("msg", "bvr", BAD_REQUEST)
-
-  val errorCodeMap: PartialFunction[String, MtdError] = {
-    case "ERR1" => Error1
-    case "ERR2" => Error2
-    case "DS"   => InternalError
-  }
 
   "mapping Ifs errors" when {
     "single error" when {
@@ -101,4 +100,5 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
       }
     }
   }
+
 }

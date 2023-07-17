@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{MissingFromDateError, RuleMissingToDateError, RangeToDateBeforeFromDateError}
+import api.models.errors.{MissingFromDateError, RangeToDateBeforeFromDateError, RuleMissingToDateError}
 import support.UnitSpec
 
 class DateRangeValidationV2Spec extends UnitSpec {

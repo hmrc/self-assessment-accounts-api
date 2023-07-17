@@ -16,10 +16,10 @@
 
 package v1.controllers.requestParsers.validators
 
+import api.models.errors._
 import config.AppConfig
 import mocks.MockAppConfig
 import support.UnitSpec
-import api.models.errors._
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
 
 class DeleteCodingOutValidatorSpec extends UnitSpec {

@@ -16,7 +16,7 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.{MtdError, MissingFromDateError, RuleMissingToDateError, RangeToDateBeforeFromDateError}
+import api.models.errors.{MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError}
 
 import java.time.LocalDate
 

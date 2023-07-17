@@ -16,10 +16,10 @@
 
 package v1.controllers.requestParsers
 
-import support.UnitSpec
 import api.models.domain.Nino
-import v1.mocks.validators.MockRetrieveAllocationsValidator
 import api.models.errors._
+import support.UnitSpec
+import v1.mocks.validators.MockRetrieveAllocationsValidator
 import v1.models.request.retrieveAllocations._
 
 class RetrieveAllocationsRequestParserSpec extends UnitSpec {

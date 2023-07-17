@@ -16,10 +16,10 @@
 
 package api.models.audit
 
+import api.fixtures.audit.AuditResponseFixture._
+import api.fixtures.audit.GenericAuditDetailFixture._
 import play.api.libs.json.Json
 import support.UnitSpec
-import api.fixtures.audit.GenericAuditDetailFixture._
-import api.fixtures.audit.AuditResponseFixture._
 
 class AuditDetailSpec extends UnitSpec {
 

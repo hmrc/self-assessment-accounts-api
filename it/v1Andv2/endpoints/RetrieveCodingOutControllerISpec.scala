@@ -36,17 +36,6 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
   private trait Test {
 
     val nino: String = "AA123456A"
-
-    def taxYear: String
-
-    def downstreamParamSource: String = "HMRC-HELD"
-
-    def mtdParamSource: String = "hmrcHeld"
-
-    def downstreamBodySource: String = "HMRC HELD"
-
-    def mtdBodySource: String = "hmrcHeld"
-
     val downstreamResponse: JsValue = Json.parse(
       s"""
          |{
@@ -117,7 +106,6 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |}
        """.stripMargin
     )
-
     val downstreamResponseNoId: JsValue = Json.parse(
       s"""
          |{
@@ -180,15 +168,20 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |}
        """.stripMargin
     )
-
     val mtdResponse: JsValue     = mtdResponseWithHateoas(nino, taxYear, mtdBodySource)
     val mtdResponseNoId: JsValue = mtdResponseWithHateoasNoId(nino, taxYear, mtdBodySource)
 
-    def uri: String = s"/$nino/$taxYear/collection/tax-code"
+    def taxYear: String
+
+    def downstreamParamSource: String = "HMRC-HELD"
+
+    def mtdParamSource: String = "hmrcHeld"
+
+    def downstreamBodySource: String = "HMRC HELD"
+
+    def mtdBodySource: String = "hmrcHeld"
 
     def downstreamUri: String
-
-    def setupStubs(): Unit = ()
 
     def request(version: String, source: Option[String]): WSRequest = {
       def queryParams: Seq[(String, String)] = Seq("source" -> source).collect { case (k, Some(v)) =>
@@ -206,13 +199,17 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
         )
     }
 
+    def uri: String = s"/$nino/$taxYear/collection/tax-code"
+
+    def setupStubs(): Unit = ()
+
   }
 
   private trait NonTysTest extends Test {
 
-    def taxYear: String = "2020-21"
-
     def downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
+
+    def taxYear: String = "2020-21"
 
   }
 

@@ -28,14 +28,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class DeleteCodingOutController @Inject()(val authService: EnrolmentsAuthService,
-                                          val lookupService: MtdIdLookupService,
-                                          parser: DeleteCodingOutParser,
-                                          service: DeleteCodingOutService,
-                                          auditService: AuditService,
-                                          cc: ControllerComponents,
-                                          idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-  extends AuthorisedController(cc)
+class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthService,
+                                           val lookupService: MtdIdLookupService,
+                                           parser: DeleteCodingOutParser,
+                                           service: DeleteCodingOutService,
+                                           auditService: AuditService,
+                                           cc: ControllerComponents,
+                                           idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+    extends AuthorisedController(cc)
     with Logging {
 
   implicit val endpointLogContext: EndpointLogContext =

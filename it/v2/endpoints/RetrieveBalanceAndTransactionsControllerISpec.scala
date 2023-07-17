@@ -44,7 +44,6 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
     val customerPaymentInformation: Option[String] = Some("true")
     val includeEstimatedCharges: Option[String]    = Some("true")
 
-    def uri: String           = s"/$nino/balance-and-transactions"
     def downstreamUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
@@ -74,6 +73,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
           (AUTHORIZATION, "Bearer 123")
         )
     }
+
+    def uri: String           = s"/$nino/balance-and-transactions"
 
     def errorBody(code: String): String =
       s"""
@@ -124,9 +125,9 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
       "any valid request is made with only doc number and all flag params (except onlyOpenItems) as true" in new Test {
 
-        override val fromDate: Option[String] = None
-        override val toDate: Option[String]   = None
-        override val onlyOpenItems: Option[String]              = Some("false")
+        override val fromDate: Option[String]      = None
+        override val toDate: Option[String]        = None
+        override val onlyOpenItems: Option[String] = Some("false")
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -142,7 +143,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
       "any valid request is made with no doc number, but with fromDate, toDate and all flag params (except onlyOpenItems) as true" in new Test {
 
-        override val onlyOpenItems: Option[String]              = Some("false")
+        override val onlyOpenItems: Option[String] = Some("false")
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -223,7 +224,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
-          override val onlyOpenItems: Option[String]              = Some("false")
+          override val onlyOpenItems: Option[String] = Some("false")
 
           override def setupStubs(): StubMapping = {
             AuditStub.audit()

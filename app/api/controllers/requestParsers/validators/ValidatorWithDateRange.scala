@@ -17,11 +17,15 @@
 package api.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.validations.{DateFormatValidation, DateRangeValidationV1, MissingParameterValidation, NinoValidation}
-import api.models.errors.{V1_FromDateFormatError, V1_MissingFromDateError, V1_MissingToDateError, MtdError, V1_ToDateFormatError}
+import api.models.errors._
 import api.models.request.RawDataWithDateRange
 
 trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
+
+  override def validate(data: T): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
 
   private def parameterFormatValidation: T => List[List[MtdError]] = (data: T) => {
     List(
@@ -40,10 +44,6 @@ trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
         to   <- data.to
       } yield DateRangeValidationV1.validate(from, to)).getOrElse(Nil)
     )
-  }
-
-  override def validate(data: T): List[MtdError] = {
-    run(validationSet, data).distinct
   }
 
 }

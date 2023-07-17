@@ -32,18 +32,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveTransactionDetailsService @Inject() (val connector: RetrieveTransactionDetailsConnector) extends BaseService {
 
-  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
-
-    val result = for {
-      desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDownstreamErrors(errorMap))
-      mtdResponseWrapper <- EitherT.fromEither[Future](validateTransactionDetailsResponse(desResponseWrapper))
-    } yield mtdResponseWrapper
-
-    result.value
-  }
-
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDTYPE"                       -> InternalError,
@@ -65,5 +53,17 @@ class RetrieveTransactionDetailsService @Inject() (val connector: RetrieveTransa
       "SERVER_ERROR"                         -> InternalError,
       "SERVICE_UNAVAILABLE"                  -> InternalError
     )
+
+  def retrieveTransactionDetails(request: RetrieveTransactionDetailsParsedRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveTransactionDetailsResponse]]] = {
+
+    val result = for {
+      desResponseWrapper <- EitherT(connector.retrieveTransactionDetails(request)).leftMap(mapDownstreamErrors(errorMap))
+      mtdResponseWrapper <- EitherT.fromEither[Future](validateTransactionDetailsResponse(desResponseWrapper))
+    } yield mtdResponseWrapper
+
+    result.value
+  }
 
 }

@@ -27,10 +27,15 @@ import v1.support.MappingSupportDownstream
 
 class MappingSupportSpec extends UnitSpec {
 
-  implicit val logContext: EndpointLogContext                = EndpointLogContext("ctrl", "ep")
+  implicit val logContext: EndpointLogContext        = EndpointLogContext("ctrl", "ep")
   val mapping: MappingSupportDownstream with Logging = new MappingSupportDownstream with Logging {}
 
   val correlationId: String = "someCorrelationId"
+  val errorCodeMap: PartialFunction[String, MtdError] = {
+    case "ERR1" => Error1
+    case "ERR2" => Error2
+    case "DS"   => InternalError
+  }
 
   object Error1 extends MtdError("msg", "code1", BAD_REQUEST)
 
@@ -39,12 +44,6 @@ class MappingSupportSpec extends UnitSpec {
   object ErrorBvrMain extends MtdError("msg", "bvrMain", BAD_REQUEST)
 
   object ErrorBvr extends MtdError("msg", "bvr", BAD_REQUEST)
-
-  val errorCodeMap: PartialFunction[String, MtdError] = {
-    case "ERR1" => Error1
-    case "ERR2" => Error2
-    case "DS"   => InternalError
-  }
 
   "validateTransactionDetailsResponse" when {
     "passed a RetrieveTransactionDetailsResponse with an empty transactionItems array" should {

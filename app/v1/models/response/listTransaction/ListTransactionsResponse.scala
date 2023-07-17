@@ -16,11 +16,11 @@
 
 package v1.models.response.listTransaction
 
+import api.hateoas.{HateoasLinks, HateoasListLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import cats.Functor
 import config.AppConfig
 import play.api.libs.json._
-import api.hateoas.{HateoasLinks, HateoasListLinksFactory}
 
 case class ListTransactionsResponse[I](transactions: Seq[I])
 

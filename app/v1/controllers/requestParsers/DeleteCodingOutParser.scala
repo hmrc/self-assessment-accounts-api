@@ -23,8 +23,8 @@ import v1.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCo
 
 import javax.inject.Inject
 
-class DeleteCodingOutParser @Inject()(val validator: DeleteCodingOutValidator)
-  extends RequestParser[DeleteCodingOutRawRequest, DeleteCodingOutParsedRequest] {
+class DeleteCodingOutParser @Inject() (val validator: DeleteCodingOutValidator)
+    extends RequestParser[DeleteCodingOutRawRequest, DeleteCodingOutParsedRequest] {
 
   override protected def requestFor(data: DeleteCodingOutRawRequest): DeleteCodingOutParsedRequest =
     DeleteCodingOutParsedRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear))

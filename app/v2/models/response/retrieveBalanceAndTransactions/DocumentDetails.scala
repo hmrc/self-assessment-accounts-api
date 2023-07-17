@@ -98,6 +98,7 @@ case class DocumentDetails(taxYear: Option[String],
                            reducedCharge: Option[ReducedCharge])
 
 object DocumentDetails {
+  val informationCode: Option[String] => Boolean = _.exists(_.nonEmpty)
 
   private def taxYear(maybeValue: Option[String]): Option[String] = maybeValue.flatMap {
     case year if year == "9999" => None
@@ -105,8 +106,6 @@ object DocumentDetails {
       val ty = TaxYear.fromDownstream(year)
       Some(ty.asMtd)
   }
-
-  val informationCode: Option[String] => Boolean = _.exists(_.nonEmpty)
 
   private def replaceWithNoneIfEmpty[A](maybeA: Option[A])(implicit emptinessChecker: EmptinessChecker[A]): Option[A] =
     maybeA.flatMap { a =>

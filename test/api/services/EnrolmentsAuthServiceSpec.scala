@@ -242,9 +242,19 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
   }
 
   trait Test {
+    lazy val target = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
     val mockAuthConnector: AuthConnector = mock[AuthConnector]
-
     val authRetrievals: Retrieval[Option[AffinityGroup] ~ Enrolments] = affinityGroup and authorisedEnrolments
+
+    def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean = true, confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200): Unit = {
+      MockAppConfig.confidenceLevelCheckEnabled.returns(
+        ConfidenceLevelConfig(
+          confidenceLevel = confidenceLevel,
+          definitionEnabled = true,
+          authValidationEnabled = authValidationEnabled
+        )
+      )
+    }
 
     object MockedAuthConnector {
 
@@ -256,16 +266,6 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
     }
 
-    lazy val target = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
-
-    def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean = true, confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200): Unit = {
-      MockAppConfig.confidenceLevelCheckEnabled.returns(
-        ConfidenceLevelConfig(
-          confidenceLevel = confidenceLevel,
-          definitionEnabled = true,
-          authValidationEnabled = authValidationEnabled
-        )
-      )
-    }
   }
+
 }

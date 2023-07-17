@@ -32,7 +32,11 @@ class OnlyOpenItemsValidationSpec extends UnitSpec with JsonErrorValidators {
 
       "only a date range is provided" in {
         val validationResult =
-          OnlyOpenItemsValidation.validate(onlyOpenItems = Some("false"), docNumber = None, fromDate = Some("2022-08-15"), toDate = Some("2022-09-15"))
+          OnlyOpenItemsValidation.validate(
+            onlyOpenItems = Some("false"),
+            docNumber = None,
+            fromDate = Some("2022-08-15"),
+            toDate = Some("2022-09-15"))
         validationResult shouldBe Nil
       }
 
@@ -55,7 +59,11 @@ class OnlyOpenItemsValidationSpec extends UnitSpec with JsonErrorValidators {
       }
       "everything is provided" in {
         val validationResult =
-          OnlyOpenItemsValidation.validate(onlyOpenItems = Some("true"), docNumber = Some("0123456"), fromDate = Some("2022-08-15"), toDate = Some("2022-09-15"))
+          OnlyOpenItemsValidation.validate(
+            onlyOpenItems = Some("true"),
+            docNumber = Some("0123456"),
+            fromDate = Some("2022-08-15"),
+            toDate = Some("2022-09-15"))
         validationResult shouldBe List(RuleInconsistentQueryParamsError)
       }
     }

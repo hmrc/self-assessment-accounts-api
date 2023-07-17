@@ -17,6 +17,7 @@
 package v1.endpoints
 
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -25,7 +26,6 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.ListPaymentsFixture._
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import v1.stubs.DownstreamStub
 
 class ListPaymentsControllerISpec extends IntegrationBaseSpec {
@@ -35,7 +35,6 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
     val correlationId        = "X-123"
     val from: Option[String] = Some("2018-10-01")
     val to: Option[String]   = Some("2019-10-01")
-    def uri: String          = s"/$nino/payments"
 
     def desUrl: String = s"/cross-regime/payment-allocation/NINO/$nino/ITSA"
 
@@ -55,6 +54,8 @@ class ListPaymentsControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String          = s"/$nino/payments"
 
   }
 

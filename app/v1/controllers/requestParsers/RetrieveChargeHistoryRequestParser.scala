@@ -17,11 +17,11 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-
-import javax.inject.Inject
 import api.models.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveChargeHistoryValidator
 import v1.models.request.retrieveChargeHistory.{RetrieveChargeHistoryParsedRequest, RetrieveChargeHistoryRawRequest}
+
+import javax.inject.Inject
 
 class RetrieveChargeHistoryRequestParser @Inject() (val validator: RetrieveChargeHistoryValidator)
     extends RequestParser[RetrieveChargeHistoryRawRequest, RetrieveChargeHistoryParsedRequest] {

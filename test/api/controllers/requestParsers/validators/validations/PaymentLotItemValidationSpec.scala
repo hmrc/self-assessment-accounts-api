@@ -22,9 +22,8 @@ import support.UnitSpec
 
 class PaymentLotItemValidationSpec extends UnitSpec with JsonErrorValidators {
 
-  val paymentLot = "AA123456aa12"
+  val paymentLot     = "AA123456aa12"
   val paymentLotItem = "000001"
-
 
   "validateFormat" should {
     "return no errors" when {

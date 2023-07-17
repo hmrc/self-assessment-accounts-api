@@ -34,8 +34,6 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     val from: Option[String] = Some("2018-10-01")
     val to: Option[String]   = Some("2019-10-01")
 
-    def uri: String = s"/$nino/charges"
-
     def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
@@ -54,6 +52,8 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino/charges"
 
   }
 

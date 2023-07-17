@@ -17,11 +17,11 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-
-import javax.inject.Inject
 import api.models.domain.Nino
 import v1.controllers.requestParsers.validators.ListTransactionsValidator
 import v1.models.request.listTransactions.{ListTransactionsParsedRequest, ListTransactionsRawRequest}
+
+import javax.inject.Inject
 
 class ListTransactionsRequestParser @Inject() (val validator: ListTransactionsValidator)
     extends RequestParser[ListTransactionsRawRequest, ListTransactionsParsedRequest] {

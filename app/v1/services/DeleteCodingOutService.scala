@@ -28,23 +28,16 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) extends BaseService {
-
-  def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
-                                                             ctx: RequestContext,
-                                                             ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-
-    connector.deleteCodingOut(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
-  }
+class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends BaseService {
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
-      "INVALID_TAX_YEAR" -> TaxYearFormatError,
-      "INVALID_CORRELATIONID" -> InternalError,
-      "NO_DATA_FOUND" -> CodingOutNotFoundError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "INVALID_CORRELATIONID"     -> InternalError,
+      "NO_DATA_FOUND"             -> CodingOutNotFoundError,
+      "SERVER_ERROR"              -> InternalError,
+      "SERVICE_UNAVAILABLE"       -> InternalError
     )
 
     val extraTysErrors = Map(
@@ -54,4 +47,12 @@ class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) exte
 
     errors ++ extraTysErrors
   }
+
+  def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+
+    connector.deleteCodingOut(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+  }
+
 }
