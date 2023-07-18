@@ -30,6 +30,26 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPaymentsAndAllocationDetailsConnector) extends BaseService {
 
+  private val errorMap: Map[String, MtdError] =
+    Map(
+      "INVALID_CORRELATIONID"    -> InternalError,
+      "INVALID_IDVALUE"          -> NinoFormatError,
+      "INVALID_IDTYPE"           -> InternalError,
+      "INVALID_REGIME_TYPE"      -> InternalError,
+      "INVALID_PAYMENT_LOT"      -> PaymentLotFormatError,
+      "INVALID_PAYMENT_LOT_ITEM" -> PaymentLotItemFormatError,
+      "INVALID_CLEARING_DOC"     -> InternalError,
+      "INVALID_DATE_FROM"        -> FromDateFormatError,
+      "INVALID_DATE_TO"          -> ToDateFormatError,
+      "INVALID_DATE_RANGE"       -> RuleInvalidDateRangeError,
+      "INVALID_REQUEST"          -> RuleInconsistentQueryParamsErrorListSA,
+      "REQUEST_NOT_PROCESSED"    -> BadRequestError,
+      "NO_DATA_FOUND"            -> NotFoundError,
+      "PARTIALLY_MIGRATED"       -> BadRequestError,
+      "SERVER_ERROR"             -> InternalError,
+      "SERVICE_UNAVAILABLE"      -> InternalError
+    )
+
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
       ctx: RequestContext,
       ec: ExecutionContext): Future[ServiceOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
@@ -38,25 +58,5 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
       .listPaymentsAndAllocationDetails(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
-
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDVALUE" -> NinoFormatError,
-      "INVALID_IDTYPE" -> InternalError,
-      "INVALID_REGIME_TYPE" -> InternalError,
-      "INVALID_PAYMENT_LOT" -> PaymentLotFormatError,
-      "INVALID_PAYMENT_LOT_ITEM" -> PaymentLotItemFormatError,
-      "INVALID_CLEARING_DOC" -> InternalError,
-      "INVALID_DATE_FROM" -> FromDateFormatError,
-      "INVALID_DATE_TO" -> ToDateFormatError,
-      "INVALID_DATE_RANGE" -> RuleInvalidDateRangeError,
-      "INVALID_REQUEST" -> RuleInconsistentQueryParamsErrorListSA,
-      "REQUEST_NOT_PROCESSED" -> BadRequestError,
-      "NO_DATA_FOUND" -> NotFoundError,
-      "PARTIALLY_MIGRATED" -> BadRequestError,
-      "SERVER_ERROR" -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
-    )
 
 }

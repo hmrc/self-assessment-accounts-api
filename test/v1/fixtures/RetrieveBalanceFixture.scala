@@ -61,19 +61,6 @@ object RetrieveBalanceFixture {
       |}
       |""".stripMargin
   )
-
-  def fullMtdResponseJsonWithHateoas(nino: String): JsValue = fullMtdResponseJson.as[JsObject] ++ Json.obj(
-    "links" -> JsArray(
-      Seq(
-        Json.obj(
-          "href"   -> s"/accounts/self-assessment/$nino/balance",
-          "method" -> "GET",
-          "rel"    -> "self"
-        )
-      )
-    )
-  )
-
   val fullModel: RetrieveBalanceResponse = RetrieveBalanceResponse(
     overdueAmount = BigDecimal(1000),
     payableAmount = BigDecimal(2000),
@@ -82,7 +69,6 @@ object RetrieveBalanceFixture {
     pendingChargeDueDate = Some("2020-12-12"),
     totalBalance = BigDecimal(1000)
   )
-
   val minimalDesResponse: JsValue = Json.parse(
     """
       |{
@@ -100,7 +86,6 @@ object RetrieveBalanceFixture {
       |}
       |""".stripMargin
   )
-
   val minMtdResponseJson: JsValue = Json.parse(
     """
       |{
@@ -111,7 +96,6 @@ object RetrieveBalanceFixture {
       |}
       |""".stripMargin
   )
-
   val minimalResponseModel: RetrieveBalanceResponse = RetrieveBalanceResponse(
     overdueAmount = BigDecimal(1000),
     payableAmount = BigDecimal(2000),
@@ -120,13 +104,24 @@ object RetrieveBalanceFixture {
     pendingChargeDueDate = None,
     totalBalance = BigDecimal(1000)
   )
-
   val InvalidDesResponse: JsValue = Json.parse(
     """
       |{
       |
       |}
       |""".stripMargin
+  )
+
+  def fullMtdResponseJsonWithHateoas(nino: String): JsValue = fullMtdResponseJson.as[JsObject] ++ Json.obj(
+    "links" -> JsArray(
+      Seq(
+        Json.obj(
+          "href"   -> s"/accounts/self-assessment/$nino/balance",
+          "method" -> "GET",
+          "rel"    -> "self"
+        )
+      )
+    )
   )
 
 }

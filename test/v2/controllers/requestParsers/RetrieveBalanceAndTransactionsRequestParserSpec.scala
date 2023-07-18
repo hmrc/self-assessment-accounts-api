@@ -16,7 +16,7 @@
 
 package v2.controllers.requestParsers
 
-import api.models.errors.{BadRequestError, ErrorWrapper, DocNumberFormatError, NinoFormatError}
+import api.models.errors.{BadRequestError, DocNumberFormatError, ErrorWrapper, NinoFormatError}
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.mocks.validators.MockRetrieveBalanceAndTransactionsValidator

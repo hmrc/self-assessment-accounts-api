@@ -18,7 +18,7 @@ package v2.models.response.listPaymentsAndAllocationDetails
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.{responseDownstreamJson, mtdResponseJson, responseObject}
+import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.{mtdResponseJson, responseDownstreamJson, responseObject}
 
 class ListPaymentsAndAllocationDetailsResponseSpec extends UnitSpec {
 

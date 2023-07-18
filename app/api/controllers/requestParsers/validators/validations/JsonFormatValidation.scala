@@ -55,7 +55,7 @@ object JsonFormatValidation extends Logging {
     val failures = errors.map {
       case (path: JsPath, List(JsonValidationError(List("error.path.missing"))))                              => MissingMandatoryField(path)
       case (path: JsPath, List(JsonValidationError(List(error: String)))) if error.contains("error.expected") => WrongFieldType(path)
-      case (path: JsPath, _)                                                                                => OtherFailure(path)
+      case (path: JsPath, _)                                                                                  => OtherFailure(path)
     }
 
     val logString = failures

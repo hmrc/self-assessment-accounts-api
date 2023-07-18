@@ -30,6 +30,10 @@ class RetrieveChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Va
 
   private val validationSet = List(parameterFormatValidation)
 
+  override def validate(data: RetrieveChargeHistoryRawData): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
+
   private def parameterFormatValidation: RetrieveChargeHistoryRawData => List[List[MtdError]] =
     (data: RetrieveChargeHistoryRawData) => {
       List(
@@ -37,9 +41,5 @@ class RetrieveChargeHistoryValidator @Inject() (appConfig: AppConfig) extends Va
         TransactionIdValidation.validate(data.transactionId)
       )
     }
-
-  override def validate(data: RetrieveChargeHistoryRawData): List[MtdError] = {
-    run(validationSet, data).distinct
-  }
 
 }

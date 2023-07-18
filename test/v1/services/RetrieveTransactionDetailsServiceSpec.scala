@@ -37,7 +37,6 @@ class RetrieveTransactionDetailsServiceSpec extends ServiceSpec {
       nino = Nino(nino),
       transactionId = transactionId
     )
-
     val service = new RetrieveTransactionDetailsService(
       connector = mockRetrieveTransactionDetailsConnector
     )

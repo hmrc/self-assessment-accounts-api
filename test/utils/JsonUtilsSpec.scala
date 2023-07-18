@@ -21,16 +21,7 @@ import support.UnitSpec
 
 class JsonUtilsSpec extends UnitSpec {
 
-  case class TestClass(field1: String, field2: String)
-
-  object TestClass extends JsonUtils {
-    implicit val reads: Reads[TestClass]         = Json.reads[TestClass]
-    implicit val writes: OWrites[TestClass]      = Json.writes[TestClass].removeField("field2")
-    implicit val wrongWrites: OWrites[TestClass] = Json.writes[TestClass].removeField("field3")
-  }
-
   private val testData: TestClass = TestClass("value1", "value2")
-
   private val removedFieldJson: JsValue = Json.parse(
     """
       |{
@@ -38,7 +29,6 @@ class JsonUtilsSpec extends UnitSpec {
       |}
     """.stripMargin
   )
-
   private val fullJson: JsValue = Json.parse(
     """
       |{
@@ -47,6 +37,14 @@ class JsonUtilsSpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
+  case class TestClass(field1: String, field2: String)
+
+  object TestClass extends JsonUtils {
+    implicit val reads: Reads[TestClass]         = Json.reads[TestClass]
+    implicit val writes: OWrites[TestClass]      = Json.writes[TestClass].removeField("field2")
+    implicit val wrongWrites: OWrites[TestClass] = Json.writes[TestClass].removeField("field3")
+  }
 
   "JsonUtils" when {
     "removeField" should {

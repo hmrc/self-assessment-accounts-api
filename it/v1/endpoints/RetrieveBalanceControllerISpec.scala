@@ -37,10 +37,6 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
 
     val desResponse: JsValue = RetrieveBalanceFixture.fullDesResponse
     val mtdResponse: JsValue = RetrieveBalanceFixture.fullMtdResponseJsonWithHateoas(nino)
-
-    def uri: String    = s"/$nino/balance"
-    def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
-
     val desQueryParams: Seq[(String, String)] =
       Seq(
         "onlyOpenItems"              -> "true",
@@ -50,6 +46,8 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
         "customerPaymentInformation" -> "true",
         "includeStatistical"         -> "false"
       )
+
+    def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
 
@@ -62,6 +60,8 @@ class RetrieveBalanceControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String    = s"/$nino/balance"
 
     def errorBody(code: String): String =
       s"""

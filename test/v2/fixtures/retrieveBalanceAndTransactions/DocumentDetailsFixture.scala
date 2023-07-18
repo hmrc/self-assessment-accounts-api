@@ -147,6 +147,17 @@ object DocumentDetailsFixture {
        |""".stripMargin)
 
   // Downstream response JSON:
+  val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021")
+  val documentDetailsDownstreamResponseMinimalJson: JsValue = Json.parse(s"""
+       |{
+       |  "documentId": "1455",
+       |  "documentDate": "2018-04-05",
+       |  "documentDueDate": "2021-04-05",
+       |  "totalAmount": 1.99,
+       |  "documentOutstandingAmount": 2.99,
+       |  "statisticalFlag": false
+       |}
+       |""".stripMargin)
 
   def newDownstreamDocumentDetailsJson(taxYear: String): JsValue = Json.parse(s"""
        |{
@@ -181,19 +192,6 @@ object DocumentDetailsFixture {
        |  "lpiWithDunningLock": 7.99,
        |  "latePaymentInterestAmount": 8.99,
        |  "interestOutstandingAmount": 9.99
-       |}
-       |""".stripMargin)
-
-  val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021")
-
-  val documentDetailsDownstreamResponseMinimalJson: JsValue = Json.parse(s"""
-       |{
-       |  "documentId": "1455",
-       |  "documentDate": "2018-04-05",
-       |  "documentDueDate": "2021-04-05",
-       |  "totalAmount": 1.99,
-       |  "documentOutstandingAmount": 2.99,     
-       |  "statisticalFlag": false
        |}
        |""".stripMargin)
 

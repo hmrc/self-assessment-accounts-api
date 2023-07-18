@@ -31,12 +31,7 @@ import play.api.mvc.Result
 import v1.mocks.requestParsers.MockRetrieveTransactionDetailsRequestParser
 import v1.mocks.services.MockRetrieveTransactionDetailsService
 import v1.models.request.retrieveTransactionDetails.{RetrieveTransactionDetailsParsedRequest, RetrieveTransactionDetailsRawRequest}
-import v1.models.response.retrieveTransactionDetails.{
-  RetrieveTransactionDetailsHateoasData,
-  RetrieveTransactionDetailsResponse,
-  SubItem,
-  TransactionItem
-}
+import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsHateoasData, RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

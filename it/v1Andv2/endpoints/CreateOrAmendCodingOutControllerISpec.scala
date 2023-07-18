@@ -67,7 +67,6 @@ class CreateOrAmendCodingOutControllerISpec extends IntegrationBaseSpec {
         |}
     """.stripMargin
     )
-
     val responseBody: JsValue = Json.parse(
       s"""
          |{

@@ -16,9 +16,9 @@
 
 package v1.controllers.requestParsers.validators
 
+import api.models.errors.NinoFormatError
 import support.UnitSpec
 import v1.fixtures.RetrieveBalanceFixture._
-import api.models.errors.NinoFormatError
 
 class RetrieveBalanceValidatorSpec extends UnitSpec {
 

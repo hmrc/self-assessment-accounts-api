@@ -68,7 +68,6 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
       nino = Nino(nino),
       taxYear = taxYear
     )
-
     val connector: DeleteCodingOutConnector = new DeleteCodingOutConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig

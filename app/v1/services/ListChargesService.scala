@@ -31,15 +31,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListChargesService @Inject() (listChargesConnector: ListChargesConnector) extends BaseService {
 
-  def list(request: ListChargesParsedRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]] = {
-
-    listChargesConnector
-      .listCharges(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
-
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_IDTYPE"                       -> InternalError,
@@ -61,5 +52,14 @@ class ListChargesService @Inject() (listChargesConnector: ListChargesConnector) 
       "INVALID_INCLUDE_STATISTICAL"          -> InternalError,
       "REQUEST_NOT_PROCESSED"                -> InternalError
     )
+
+  def list(request: ListChargesParsedRequest)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[ListChargesResponse[Charge]]]] = {
+
+    listChargesConnector
+      .listCharges(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+  }
 
 }

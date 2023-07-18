@@ -17,9 +17,9 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import config.AppConfig
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
+import config.AppConfig
 import v1.models.request.deleteCodingOut.DeleteCodingOutRawRequest
 
 import javax.inject.Inject
@@ -27,6 +27,8 @@ import javax.inject.Inject
 class DeleteCodingOutValidator @Inject() (implicit appConfig: AppConfig) extends Validator[DeleteCodingOutRawRequest] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
+
+  override def validate(data: DeleteCodingOutRawRequest): List[MtdError] = run(validationSet, data)
 
   private def parameterFormatValidation: DeleteCodingOutRawRequest => List[List[MtdError]] = { data =>
     List(
@@ -40,6 +42,4 @@ class DeleteCodingOutValidator @Inject() (implicit appConfig: AppConfig) extends
       TaxYearNotSupportedValidation.validate(data.taxYear)
     )
   }
-
-  override def validate(data: DeleteCodingOutRawRequest): List[MtdError] = run(validationSet, data)
 }

@@ -18,10 +18,10 @@ package v1.connectors
 
 import api.connectors.ConnectorSpec
 import api.mocks.MockHttpClient
-import mocks.MockAppConfig
-import uk.gov.hmrc.http.HeaderCarrier
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import uk.gov.hmrc.http.HeaderCarrier
 import v1.models.request.retrieveTransactionDetails.RetrieveTransactionDetailsParsedRequest
 import v1.models.response.retrieveTransactionDetails.{RetrieveTransactionDetailsResponse, SubItem, TransactionItem}
 

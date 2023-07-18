@@ -16,10 +16,10 @@
 
 package v1.models.response.retrieveChargeHistory
 
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 
 case class RetrieveChargeHistoryResponse(history: Seq[ChargeHistory])
 

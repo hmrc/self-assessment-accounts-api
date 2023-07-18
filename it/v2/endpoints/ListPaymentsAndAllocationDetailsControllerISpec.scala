@@ -38,8 +38,6 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
 
     def downstreamUrl: String = s"/cross-regime/payment-allocation/NINO/$nino/ITSA"
 
-    def setupStubs(): Unit = ()
-
     def request: WSRequest = {
 
       AuditStub.audit()
@@ -57,6 +55,8 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def setupStubs(): Unit = ()
 
   }
 
@@ -166,7 +166,7 @@ class ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBaseSpe
         (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleInvalidDateRangeError),
         (BAD_REQUEST, "INVALID_REQUEST", BAD_REQUEST, RuleInconsistentQueryParamsErrorListSA),
         (BAD_REQUEST, "REQUEST_NOT_PROCESSED", BAD_REQUEST, BadRequestError),
-        (NOT_FOUND,   "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
         (BAD_REQUEST, "PARTIALLY_MIGRATED", BAD_REQUEST, BadRequestError),
         (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),

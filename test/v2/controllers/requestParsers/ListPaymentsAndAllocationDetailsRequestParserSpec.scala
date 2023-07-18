@@ -17,7 +17,7 @@
 package v2.controllers.requestParsers
 
 import api.models.domain.Nino
-import api.models.errors.{BadRequestError, ErrorWrapper, RuleInvalidDateRangeError, NinoFormatError}
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, RuleInvalidDateRangeError}
 import support.UnitSpec
 import v2.mocks.validators.MockListPaymentsAndAllocationDetailsValidator
 import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}

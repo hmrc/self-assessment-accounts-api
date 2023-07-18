@@ -18,7 +18,7 @@ package v2.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
-import api.models.errors.{MtdError, FromDateFormatError, ToDateFormatError}
+import api.models.errors.{FromDateFormatError, MtdError, ToDateFormatError}
 import config.AppConfig
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRawData
 
@@ -27,6 +27,10 @@ import javax.inject.Inject
 class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig) extends Validator[ListPaymentsAndAllocationDetailsRawData] {
 
   private val validationSet = List(parameterValidation, parameterRuleValidation)
+
+  override def validate(data: ListPaymentsAndAllocationDetailsRawData): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
 
   private def parameterValidation: ListPaymentsAndAllocationDetailsRawData => List[List[MtdError]] =
     (data: ListPaymentsAndAllocationDetailsRawData) => {
@@ -47,9 +51,5 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
         PaymentLotValidation.validateMissing(data.paymentLot, data.paymentLotItem)
       )
     }
-
-  override def validate(data: ListPaymentsAndAllocationDetailsRawData): List[MtdError] = {
-    run(validationSet, data).distinct
-  }
 
 }

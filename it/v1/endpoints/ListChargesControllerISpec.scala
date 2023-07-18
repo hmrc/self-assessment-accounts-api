@@ -17,6 +17,7 @@
 package v1.endpoints
 
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -25,7 +26,6 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.ListChargesFixture._
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import v1.stubs.DownstreamStub
 
 class ListChargesControllerISpec extends IntegrationBaseSpec {
@@ -34,8 +34,6 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
     val nino                 = "AA123456A"
     val from: Option[String] = Some("2018-10-01")
     val to: Option[String]   = Some("2019-10-01")
-
-    def uri: String = s"/$nino/charges"
 
     def desUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
 
@@ -55,6 +53,8 @@ class ListChargesControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String = s"/$nino/charges"
 
   }
 

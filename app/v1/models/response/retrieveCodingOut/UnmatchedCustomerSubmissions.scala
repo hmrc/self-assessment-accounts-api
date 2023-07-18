@@ -16,8 +16,8 @@
 
 package v1.models.response.retrieveCodingOut
 
-import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json._
 
 case class UnmatchedCustomerSubmissions(amount: BigDecimal, submittedOn: String, id: Option[BigInt])
 

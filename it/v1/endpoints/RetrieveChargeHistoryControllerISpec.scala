@@ -39,7 +39,6 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
     val desResponse: JsValue = RetrieveChargeHistoryFixture.desResponseWithMultipleHHistory
     val mtdResponse: JsValue = RetrieveChargeHistoryFixture.mtdResponseMultipleWithHateoas(nino, transactionId)
 
-    def uri: String    = s"/$nino/charges/$transactionId"
     def desUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
@@ -53,6 +52,8 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String    = s"/$nino/charges/$transactionId"
 
     def errorBody(code: String): String =
       s"""

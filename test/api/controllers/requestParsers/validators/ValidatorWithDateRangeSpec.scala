@@ -16,24 +16,17 @@
 
 package api.controllers.requestParsers.validators
 
-import api.models.errors.{
-  V1_FromDateFormatError,
-  V1_MissingFromDateError,
-  V1_MissingToDateError,
-  NinoFormatError,
-  V1_RangeToDateBeforeFromDateError,
-  RuleDateRangeInvalidError,
-  RuleFromDateNotSupportedError,
-  V1_ToDateFormatError
-}
+import api.models.errors._
 import api.models.request.RawDataWithDateRange
 import support.UnitSpec
 
 class ValidatorWithDateRangeSpec extends UnitSpec {
 
-  case class TestRawDataWithDateRange(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange
-  class TestValidatorWithDateRange                                                            extends ValidatorWithDateRange[TestRawDataWithDateRange]
   val validator = new TestValidatorWithDateRange
+
+  case class TestRawDataWithDateRange(nino: String, from: Option[String], to: Option[String]) extends RawDataWithDateRange
+
+  class TestValidatorWithDateRange                                                            extends ValidatorWithDateRange[TestRawDataWithDateRange]
 
   "validation" should {
     "return no errors" when {

@@ -28,14 +28,6 @@ import scala.concurrent.Future
 
 class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
 
-  private val nino = Nino("AA123456A")
-
-  private val requestData: RetrieveChargeHistoryRequest =
-    RetrieveChargeHistoryRequest(
-      nino = nino,
-      transactionId = "anId"
-    )
-
   val chargeHistoryDetails: ChargeHistoryDetail =
     ChargeHistoryDetail(
       taxYear = Some("2019-20"),
@@ -46,10 +38,15 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       changeDate = "2019-06-05",
       changeReason = "Example reason"
     )
-
   val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
     RetrieveChargeHistoryResponse(
       chargeHistoryDetails = Seq(chargeHistoryDetails)
+    )
+  private val nino = Nino("AA123456A")
+  private val requestData: RetrieveChargeHistoryRequest =
+    RetrieveChargeHistoryRequest(
+      nino = nino,
+      transactionId = "anId"
     )
 
   "RetrieveChargeHistoryService" should {

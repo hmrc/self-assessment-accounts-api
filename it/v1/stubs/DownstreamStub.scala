@@ -23,12 +23,12 @@ import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
 
 object DownstreamStub extends BaseDownstreamStub {
 
-  private def url(nino: String): String =
-    s"/cross-regime/payment-allocation/NINO/$nino/ITSA"
-
   def serviceSuccess(nino: String, paymentLot: String, paymentLotItem: String): StubMapping = {
     when(method = GET, uri = url(nino), queryParams = Map("paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem))
       .thenReturn(status = OK, RetrieveAllocationsResponseFixture.desJson)
   }
+
+  private def url(nino: String): String =
+    s"/cross-regime/payment-allocation/NINO/$nino/ITSA"
 
 }

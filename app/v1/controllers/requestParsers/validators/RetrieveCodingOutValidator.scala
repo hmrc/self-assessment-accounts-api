@@ -17,16 +17,20 @@
 package v1.controllers.requestParsers.validators
 
 import api.controllers.requestParsers.validators.Validator
-import config.AppConfig
-
-import javax.inject.Inject
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
+import config.AppConfig
 import v1.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
+
+import javax.inject.Inject
 
 class RetrieveCodingOutValidator @Inject() (implicit appConfig: AppConfig) extends Validator[RetrieveCodingOutRawRequest] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
+
+  override def validate(data: RetrieveCodingOutRawRequest): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
 
   private def parameterFormatValidation: RetrieveCodingOutRawRequest => List[List[MtdError]] = (data: RetrieveCodingOutRawRequest) => {
     List(
@@ -40,10 +44,6 @@ class RetrieveCodingOutValidator @Inject() (implicit appConfig: AppConfig) exten
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear)
     )
-  }
-
-  override def validate(data: RetrieveCodingOutRawRequest): List[MtdError] = {
-    run(validationSet, data).distinct
   }
 
 }

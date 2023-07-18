@@ -16,10 +16,10 @@
 
 package api.fixtures.audit
 
-import play.api.libs.json.{JsValue, Json}
-import AuditResponseFixture._
+import api.fixtures.audit.AuditResponseFixture._
 import api.models.audit.GenericAuditDetail
 import api.models.auth.UserDetails
+import play.api.libs.json.{JsValue, Json}
 
 object GenericAuditDetailFixture {
 

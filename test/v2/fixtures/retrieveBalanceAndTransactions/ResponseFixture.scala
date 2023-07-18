@@ -18,16 +18,8 @@ package v2.fixtures.retrieveBalanceAndTransactions
 
 import play.api.libs.json.{JsValue, Json}
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture._
-import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.{
-  codingDetails,
-  codingDetailsDownstreamResponseJson,
-  codingDetailsMtdResponseJson
-}
-import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{
-  documentDetails,
-  documentDetailsDownstreamResponseJson,
-  documentDetailsMtdResponseJson
-}
+import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.{codingDetails, codingDetailsDownstreamResponseJson, codingDetailsMtdResponseJson}
+import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{documentDetails, documentDetailsDownstreamResponseJson, documentDetailsMtdResponseJson}
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture._
 import v2.models.response.retrieveBalanceAndTransactions.{FinancialDetails, RetrieveBalanceAndTransactionsResponse}
 
@@ -35,6 +27,34 @@ object ResponseFixture {
 
   val response: RetrieveBalanceAndTransactionsResponse             = responseWith(financialDetailsFull)
   val responseWithoutLocks: RetrieveBalanceAndTransactionsResponse = responseWith(financialDetailsWithoutLocks)
+  val minimalResponse: RetrieveBalanceAndTransactionsResponse =
+    RetrieveBalanceAndTransactionsResponse(
+      minimalBalanceDetails,
+      None,
+      None,
+      None
+    )
+  val mtdResponseJson: JsValue = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
+  val mtdResponseWithoutLocksJson: JsValue = mtdResponseJsonWith(mtdFinancialDetailsWithoutLocksJson)
+  val downstreamResponseJson: JsValue = Json.parse(s"""
+        |  {
+        |    "balanceDetails": $balanceDetailsDownstreamResponseJson,
+        |    "codingDetails": [
+        |        $codingDetailsDownstreamResponseJson
+        |    ],
+        |    "documentDetails": [
+        |        $documentDetailsDownstreamResponseJson
+        |    ],
+        |    "financialDetails": [
+        |        $downstreamFinancialDetailsFullJson
+        |    ]
+        |  }
+        |""".stripMargin)
+  val minimalDownstreamResponseJson: JsValue = Json.parse(s"""
+        |  {
+        |    "balanceDetails": $minimalBalanceDetailsDownstreamResponseJson
+        |  }
+        |""".stripMargin)
 
   private def responseWith(financialDetails: FinancialDetails) =
     RetrieveBalanceAndTransactionsResponse(
@@ -43,18 +63,6 @@ object ResponseFixture {
       Some(List(documentDetails)),
       Some(List(financialDetails))
     )
-
-  val minimalResponse: RetrieveBalanceAndTransactionsResponse =
-    RetrieveBalanceAndTransactionsResponse(
-      minimalBalanceDetails,
-      None,
-      None,
-      None
-    )
-
-  val mtdResponseJson: JsValue = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
-
-  val mtdResponseWithoutLocksJson: JsValue = mtdResponseJsonWith(mtdFinancialDetailsWithoutLocksJson)
 
   private def mtdResponseJsonWith(financialDefails: JsValue) = Json.parse(s"""
        |  {
@@ -70,26 +78,5 @@ object ResponseFixture {
        |    ]
        |  }
        |""".stripMargin)
-
-  val downstreamResponseJson: JsValue = Json.parse(s"""
-        |  {
-        |    "balanceDetails": $balanceDetailsDownstreamResponseJson,
-        |    "codingDetails": [
-        |        $codingDetailsDownstreamResponseJson
-        |    ],
-        |    "documentDetails": [
-        |        $documentDetailsDownstreamResponseJson
-        |    ],
-        |    "financialDetails": [
-        |        $downstreamFinancialDetailsFullJson
-        |    ]
-        |  }
-        |""".stripMargin)
-
-  val minimalDownstreamResponseJson: JsValue = Json.parse(s"""
-        |  {
-        |    "balanceDetails": $minimalBalanceDetailsDownstreamResponseJson
-        |  }
-        |""".stripMargin)
 
 }

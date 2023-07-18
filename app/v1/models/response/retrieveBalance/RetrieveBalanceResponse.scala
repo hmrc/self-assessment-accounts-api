@@ -16,11 +16,11 @@
 
 package v1.models.response.retrieveBalance
 
+import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.functional.syntax._
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import api.hateoas.{HateoasLinks, HateoasLinksFactory}
 
 case class RetrieveBalanceResponse(overdueAmount: BigDecimal,
                                    payableAmount: BigDecimal,

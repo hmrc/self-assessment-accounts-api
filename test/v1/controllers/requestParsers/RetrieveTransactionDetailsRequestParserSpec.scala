@@ -16,22 +16,21 @@
 
 package v1.controllers.requestParsers
 
-import support.UnitSpec
 import api.models.domain.Nino
-import v1.mocks.validators.MockRetrieveTransactionDetailsValidator
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
+import support.UnitSpec
+import v1.mocks.validators.MockRetrieveTransactionDetailsValidator
 import v1.models.request.retrieveTransactionDetails._
 
 class RetrieveTransactionDetailsRequestParserSpec extends UnitSpec {
-
-  trait Test extends MockRetrieveTransactionDetailsValidator {
-    lazy val parser = new RetrieveTransactionDetailsRequestParser(mockValidator)
-  }
-
   private val validNino              = "AA111111A"
   private val validTransactionId     = "F02LDPDEE"
   private val invalidNino            = "notANino"
   private val invalidTransactionId   = "notATransactionNino"
+
+  trait Test extends MockRetrieveTransactionDetailsValidator {
+    lazy val parser = new RetrieveTransactionDetailsRequestParser(mockValidator)
+  }
   implicit val correlationId: String = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
   "parsing a retrieve TransactionDetails request" should {

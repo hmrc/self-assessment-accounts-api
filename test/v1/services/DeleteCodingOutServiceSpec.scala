@@ -68,8 +68,8 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
       (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
     }
   }
-}
 
+}
 
 trait Test extends MockDeleteCodingOutConnector {
 
@@ -80,7 +80,6 @@ trait Test extends MockDeleteCodingOutConnector {
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
-
   val service: DeleteCodingOutService = new DeleteCodingOutService(
     connector = mockDeleteCodingOutConnector
   )

@@ -56,14 +56,12 @@ class RetrieveChargeHistoryControllerSpec
       method = GET,
       rel = SELF
     )
-
   val transactionDetailsLink: Link =
     Link(
       href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
       method = GET,
       rel = RETRIEVE_TRANSACTION_DETAILS
     )
-
   val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
   "retrieveChargeHistory" should {

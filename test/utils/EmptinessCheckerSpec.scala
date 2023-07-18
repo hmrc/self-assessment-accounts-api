@@ -24,7 +24,21 @@ import utils.EmptyPathsResult._
 
 class EmptinessCheckerSpec extends UnitSpec with ScalaCheckPropertyChecks {
 
+  // balanced so that there is a fair chance of None
+  def balancedArbitraryOption[T](implicit arb: Arbitrary[T]): Gen[Option[T]] =
+    Gen.frequency(1 -> Gen.const(None), 1 -> Gen.some(Arbitrary.arbitrary(arb)))
+
   sealed trait SomeEnum
+
+  case class Baz(a: Option[Int] = None, e: Option[SomeEnum] = None)
+
+  case class Bar(baz: Option[Baz] = None, arr: Option[List[Baz]] = None)
+
+  case class Foo(bar: Option[Bar] = None,
+                 arr1: Option[List[Bar]] = None,
+                 arr2: Option[List[Bar]] = None,
+                 arr3: Option[List[Bar]] = None,
+                 bar2: Option[Bar] = None)
 
   object SomeEnum {
     case object E1 extends SomeEnum
@@ -33,12 +47,6 @@ class EmptinessCheckerSpec extends UnitSpec with ScalaCheckPropertyChecks {
     implicit val ckr: EmptinessChecker[SomeEnum] = EmptinessChecker.primitive
     implicit val arb: Arbitrary[SomeEnum]        = Arbitrary(Gen.oneOf(E1, E2))
   }
-
-  // balanced so that there is a fair chance of None
-  def balancedArbitraryOption[T](implicit arb: Arbitrary[T]): Gen[Option[T]] =
-    Gen.frequency(1 -> Gen.const(None), 1 -> Gen.some(Arbitrary.arbitrary(arb)))
-
-  case class Baz(a: Option[Int] = None, e: Option[SomeEnum] = None)
 
   object Baz {
 
@@ -49,8 +57,6 @@ class EmptinessCheckerSpec extends UnitSpec with ScalaCheckPropertyChecks {
 
   }
 
-  case class Bar(baz: Option[Baz] = None, arr: Option[List[Baz]] = None)
-
   object Bar {
 
     implicit val arb: Arbitrary[Bar] = Arbitrary(for {
@@ -59,12 +65,6 @@ class EmptinessCheckerSpec extends UnitSpec with ScalaCheckPropertyChecks {
     } yield Bar(baz, arr))
 
   }
-
-  case class Foo(bar: Option[Bar] = None,
-                 arr1: Option[List[Bar]] = None,
-                 arr2: Option[List[Bar]] = None,
-                 arr3: Option[List[Bar]] = None,
-                 bar2: Option[Bar] = None)
 
   "EmptinessChecker" when {
     "empty object" must {

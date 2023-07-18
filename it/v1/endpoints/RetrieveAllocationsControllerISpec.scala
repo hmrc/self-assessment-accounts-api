@@ -17,6 +17,7 @@
 package v1.endpoints
 
 import api.models.errors._
+import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -25,7 +26,6 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
 import v1.fixtures.retrieveAllocations.RetrieveAllocationsResponseFixture
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import v1.stubs.DownstreamStub
 
 class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
@@ -43,7 +43,6 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
 
     val queryParams: Map[String, String] = Map("paymentLot" -> paymentLot, "paymentLotItem" -> paymentLotItem)
 
-    def uri: String    = s"/$nino/payments/$paymentId"
     def desUrl: String = s"/cross-regime/payment-allocation/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
@@ -56,6 +55,8 @@ class RetrieveAllocationsControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123") // some bearer token
         )
     }
+
+    def uri: String    = s"/$nino/payments/$paymentId"
 
     def errorBody(code: String): String =
       s"""

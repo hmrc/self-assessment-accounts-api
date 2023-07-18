@@ -16,16 +16,15 @@
 
 package v1.controllers.requestParsers.validators
 
-import support.UnitSpec
 import api.models.errors._
+import support.UnitSpec
 import v1.models.request.retrieveAllocations.RetrieveAllocationsRawRequest
 
 class RetrieveAllocationsValidatorSpec extends UnitSpec {
 
+  val validator = new RetrieveAllocationsValidator()
   private val validNino      = "AA123456A"
   private val validPaymentId = "AF234F-12DFA"
-
-  val validator = new RetrieveAllocationsValidator()
 
   "running a validation" should {
     "return no errors" when {

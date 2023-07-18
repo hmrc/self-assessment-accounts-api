@@ -17,11 +17,11 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-
-import javax.inject.Inject
 import api.models.domain.Nino
 import v1.controllers.requestParsers.validators.RetrieveTransactionDetailsValidator
 import v1.models.request.retrieveTransactionDetails._
+
+import javax.inject.Inject
 
 class RetrieveTransactionDetailsRequestParser @Inject() (val validator: RetrieveTransactionDetailsValidator)
     extends RequestParser[RetrieveTransactionDetailsRawRequest, RetrieveTransactionDetailsParsedRequest] {

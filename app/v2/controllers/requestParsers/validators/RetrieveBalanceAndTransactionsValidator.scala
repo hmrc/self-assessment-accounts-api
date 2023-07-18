@@ -28,6 +28,10 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
+  override def validate(data: RetrieveBalanceAndTransactionsRawData): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
+
   private def parameterFormatValidation: RetrieveBalanceAndTransactionsRawData => List[List[MtdError]] =
     (data: RetrieveBalanceAndTransactionsRawData) => {
       List(
@@ -48,12 +52,8 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
     (data: RetrieveBalanceAndTransactionsRawData) => {
       List(
         DateRangeValidationV2.validate(data.fromDate, data.toDate),
-        OnlyOpenItemsValidation.validate(data.onlyOpenItems, data.docNumber,data.toDate, data.fromDate)
+        OnlyOpenItemsValidation.validate(data.onlyOpenItems, data.docNumber, data.toDate, data.fromDate)
       )
     }
-
-  override def validate(data: RetrieveBalanceAndTransactionsRawData): List[MtdError] = {
-    run(validationSet, data).distinct
-  }
 
 }

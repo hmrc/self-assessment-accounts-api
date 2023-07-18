@@ -16,16 +16,15 @@
 
 package v1.connectors
 
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
-
-import javax.inject.{Inject, Singleton}
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import api.connectors.DownstreamUri.DesUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import config.AppConfig
+import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v1.models.request.retrieveChargeHistory.RetrieveChargeHistoryParsedRequest
 import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
+import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton

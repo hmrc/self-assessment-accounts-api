@@ -17,11 +17,11 @@
 package v1.controllers.requestParsers
 
 import api.controllers.requestParsers.RequestParser
-
-import javax.inject.Inject
 import api.models.domain.{Nino, TaxYear}
 import v1.controllers.requestParsers.validators.RetrieveCodingOutValidator
 import v1.models.request.retrieveCodingOut._
+
+import javax.inject.Inject
 
 class RetrieveCodingOutRequestParser @Inject() (val validator: RetrieveCodingOutValidator)
     extends RequestParser[RetrieveCodingOutRawRequest, RetrieveCodingOutParsedRequest] {

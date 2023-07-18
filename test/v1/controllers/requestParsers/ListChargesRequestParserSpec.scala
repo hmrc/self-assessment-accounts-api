@@ -16,10 +16,10 @@
 
 package v1.controllers.requestParsers
 
-import support.UnitSpec
 import api.models.domain.Nino
-import v1.mocks.validators.MockListChargesValidator
 import api.models.errors._
+import support.UnitSpec
+import v1.mocks.validators.MockListChargesValidator
 import v1.models.request.listCharges._
 
 class ListChargesRequestParserSpec extends UnitSpec {

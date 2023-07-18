@@ -16,10 +16,10 @@
 
 package v2.mocks.validators
 
+import api.models.errors.MtdError
 import org.scalamock.handlers.CallHandler1
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.validators.RetrieveChargeHistoryValidator
-import api.models.errors.MtdError
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
 
 class MockRetrieveChargeHistoryValidator extends MockFactory {

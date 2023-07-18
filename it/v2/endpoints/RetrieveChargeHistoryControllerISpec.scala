@@ -32,8 +32,9 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String               = "AA123456A"
     lazy val transactionId: String = "12345678"
+    val nino: String               = "AA123456A"
+    val mtdResponseWithHateoas = mtdMultipleResponseWithHateoas(nino, transactionId)
 
     def desParamSource: String = "HMRC-HELD"
 
@@ -43,9 +44,6 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
     def mtdBodySource: String = "hmrcHeld"
 
-    val mtdResponseWithHateoas = mtdMultipleResponseWithHateoas(nino, transactionId)
-
-    def uri: String           = s"/$nino/charges/$transactionId"
     def downstreamUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
@@ -59,6 +57,8 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           (AUTHORIZATION, "Bearer 123")
         )
     }
+
+    def uri: String           = s"/$nino/charges/$transactionId"
 
     def errorBody(code: String): String =
       s"""

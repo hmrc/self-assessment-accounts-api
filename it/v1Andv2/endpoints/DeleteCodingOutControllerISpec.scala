@@ -180,4 +180,5 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
 
     def downstreamUri: String = s"/income-tax/23-24/accounts/self-assessment/collection/tax-code/$nino"
   }
+
 }

@@ -16,10 +16,10 @@
 
 package v2.controllers.requestParsers
 
-import support.UnitSpec
-import v2.mocks.validators.MockRetrieveChargeHistoryValidator
 import api.models.domain.Nino
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
+import support.UnitSpec
+import v2.mocks.validators.MockRetrieveChargeHistoryValidator
 import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
 
 class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {

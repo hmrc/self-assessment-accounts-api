@@ -25,6 +25,10 @@ class RetrieveTransactionDetailsValidator extends Validator[RetrieveTransactionD
 
   private val validationSet = List(parameterFormatValidation)
 
+  override def validate(data: RetrieveTransactionDetailsRawRequest): List[MtdError] = {
+    run(validationSet, data).distinct
+  }
+
   private def parameterFormatValidation: RetrieveTransactionDetailsRawRequest => List[List[MtdError]] =
     (data: RetrieveTransactionDetailsRawRequest) => {
       List(
@@ -32,9 +36,5 @@ class RetrieveTransactionDetailsValidator extends Validator[RetrieveTransactionD
         TransactionIdValidation.validate(data.transactionId)
       )
     }
-
-  override def validate(data: RetrieveTransactionDetailsRawRequest): List[MtdError] = {
-    run(validationSet, data).distinct
-  }
 
 }
