@@ -74,6 +74,6 @@ paths:
     /accounts/self-assessment/{nino}/charges/{transactionId}:
       $ref: ./self_assessment_charge_history_retrieve.yaml
     /accounts/self-assessment/{nino}/payments/{paymentId}:
-      $ref: ./self-assessment_payments_allocations_retrieve.yaml
+      $ref: ./self_assessment_payments_allocations_retrieve.yaml
     /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code:
       $ref: ./coding_out_underpayments.yaml
