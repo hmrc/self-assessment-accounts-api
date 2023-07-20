@@ -3,21 +3,11 @@
     This endpoint enables you to overwrite coding out underpayments and debt amounts held by HMRC for a previous tax year and given National Insurance number, and to amend previously submitted overwrite amounts. This endpoint can only be used after the tax year has ended.
     
     ### Test data
-    <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulate a successful response with a self-assessment accounts.</p></td> 
-            </tr>
-        </tbody>
-    </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                         |
+    |----------------------------------|------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with a self-assessment accounts. |    
 
   tags:
     - Coding Out Underpayments and Debts

@@ -4,30 +4,14 @@ get:
     This endpoint allows a developer to retrieve the overall liability broken down into overdue, currently due (payable) and pending (not yet due) amounts. A unique identifier (National Insurance Number) for the account must be used.
     
     ### Test data
-    <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulate a successful response with a self-assessment accounts.</p></td> 
-            <tr>
-              <td><p>NOTHING_DUE</p></td>
-              <td><p>Simulates a successful response where no payments are due.</p></td>
-            <tr>
-              <td><p>OVERDUE</p></td>
-              <td><p>Simulates a successful response where a payment is overdue.</p></td>
-            <tr>
-              <td><p>NOT_FOUND</p></td>
-              <td><p>Simulates the scenario where no data is found.</p></td>
-            </tr>
-        </tbody>
-    </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                         |
+    |----------------------------------|------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with a self-assessment accounts. |
+    | NOTHING_DUE                      | Simulates a successful response where no payments are due.       |
+    | OVERDUE                          | Simulates a successful response where a payment is overdue.      |
+    | NOT_FOUND                        | Simulates the scenario where no data is found.                   |    
 
   tags:
     - Payments and Liabilities

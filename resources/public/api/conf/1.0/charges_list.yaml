@@ -1,27 +1,15 @@
 get:
-  summary: List Self Assessment Transactions [test only]
+  summary: List Self Assessment Charges [test only]
   description: |
-    This endpoint allows a developer to retrieve a list of charges and payments for a given date range. A unique identifier (National Insurance Number) for the account must be used and a search period provided.
+    This endpoint allows a developer to retrieve the details of charges made to an account between two dates. A unique identifier (National Insurance Number) for the account must be used and a valid date range provided.
     
     ### Test data
-    <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulate a successful response with a self-assessment accounts.</p></td> 
-            <tr>
-              <td><p>NOT_FOUND</p></td>
-              <td><p>Simulates the scenario where no data is found.</p></td>
-            </tr>
-        </tbody>
-    </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                         |
+    |----------------------------------|------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with a self-assessment accounts. |
+    | NOT_FOUND                        | Simulates the scenario where no data is found.                   |    
 
   tags:
     - Payments and Liabilities
@@ -47,12 +35,12 @@ get:
       content:
         application/json:
           schema:
-            $ref: './schemas/list_transactions_response.json'
+            $ref: './schemas/list_charges_response.json'
           examples:
             example-response:
               description: Example Response
               value:
-                $ref: './examples/listTransactions/retrieve_response.json'
+                $ref: './examples/listCharges/retrieve_response.json'
 
     "400":
       description: Bad request
@@ -77,8 +65,6 @@ get:
               $ref: './common/errors.yaml#/components/examples/ruleDateRangeInvalid'
             RULE_FROM_DATE_NOT_SUPPORTED:
               $ref: './common/errors.yaml#/components/examples/ruleFromDateNotSupported'
-            RANGE_DATE_TOO_LONG:
-              $ref: './common/errors.yaml#/components/examples/ruleDateTooLong'
 
     "403":
       description: Forbidden

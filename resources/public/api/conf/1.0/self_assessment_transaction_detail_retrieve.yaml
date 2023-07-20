@@ -4,30 +4,14 @@ get:
     This endpoint allows a developer to retrieve more detail about a specific transaction. A unique identifier must be used for both the account (National Insurance number) and the transaction (transactionId).
     
     ### Test data
-    <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulate a successful response with a self-assessment accounts.</p></td>
-            <tr>
-                <td><p>PAYMENT_ON_ACCOUNT</p></td>
-                <td><p>Simulate a successful response with a payment.</p></td> 
-            <tr>
-                <td><p>NOT_FOUND</p></td>
-                <td><p>Simulates the scenario where no data is found.</p></td>
-            <tr>
-                <td><p>NO_DETAILS_FOUND</p></td>
-                <td><p>Simulate the scenario where no transaction details can be found for this transaction ID.</p></td>
-            </tr>
-        </tbody>
-    </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                                  |
+    |----------------------------------|-------------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with a self-assessment accounts.                          |
+    | PAYMENT_ON_ACCOUNT               | Simulates a successful response with a payment.                                           |
+    | NOT_FOUND                        | Simulates the scenario where no data is found.                                            |
+    | NO_DETAILS_FOUND                 | Simulates the scenario where no transaction details can be found for this transaction ID. |     
 
   tags:
     - Payments and Liabilities

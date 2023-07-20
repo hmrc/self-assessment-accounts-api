@@ -2,27 +2,12 @@ description: |
   This endpoint enables you to delete custom coding out amounts for a given tax year and National Insurance number.
   
   ### Test data
-  <p>Scenario simulations using Gov-Test-Scenario headers is only available in the sandbox environment.</p>
-  <table>
-      <thead>
-          <tr>
-              <th>Header Value (Gov-Test-Scenario)</th>
-              <th>Scenario</th>
-          </tr>
-      </thead>
-      <tbody>
-          <tr>
-              <td><p>N/A - DEFAULT</p></td>
-              <td><p>Simulates a success response.</p></td>
-          </tr>
-      </tbody>
-      <tbody>
-          <tr>
-              <td><p>NOT_FOUND</p></td>
-              <td><p>Simulates the scenario where coding out amounts could not be found.</p></td>
-          </tr>
-      </tbody>
-  </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario) | Scenario                                                            |
+  |----------------------------------|---------------------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates a success response.                                       |
+  | NOT_FOUND                        | Simulates the scenario where coding out amounts could not be found. |   
 
 security:
   - User-Restricted:
