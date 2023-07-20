@@ -7,12 +7,12 @@ get:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
 
-    | Header Value (Gov-Test-Scenario)      | Scenario                                                            |
-    |---------------------------------------|---------------------------------------------------------------------|
-    | N/A - DEFAULT                         | Simulates a successful response.                                    |
-    | NOT_FOUND                             | Simulates the scenario where no data can be found.                  |
-    | INCONSISTENT_QUERY_PARAMS             | Simulates the scenario where the query parameters are inconsistent. |
-    | INVALID_DATE_RANGE                    | Simulates the scenario where the provided date range is invalid.    |
+    | Header Value (Gov-Test-Scenario) | Scenario                                                            |
+    |----------------------------------|---------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response.                                    |
+    | NOT_FOUND                        | Simulates the scenario where no data can be found.                  |
+    | INCONSISTENT_QUERY_PARAMS        | Simulates the scenario where the query parameters are inconsistent. |
+    | INVALID_DATE_RANGE               | Simulates the scenario where the provided date range is invalid.    |
 
   tags:
     - Payments and Liabilities

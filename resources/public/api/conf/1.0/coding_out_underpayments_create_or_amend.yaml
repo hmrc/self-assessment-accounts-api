@@ -5,9 +5,9 @@
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
     
-    | Header Value (Gov-Test-Scenario)      | Scenario                                                         |
-    |---------------------------------------|------------------------------------------------------------------|
-    | N/A - DEFAULT                         | Simulates a successful response with a self-assessment accounts. |    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                         |
+    |----------------------------------|------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with a self-assessment accounts. |    
 
   tags:
     - Coding Out Underpayments and Debts

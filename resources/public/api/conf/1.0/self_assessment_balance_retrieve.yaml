@@ -1,22 +1,23 @@
 get:
-  summary: Retrieve History of a Self Assessment Charge [test only]
+  summary: Retrieve a Self Assessment Balance [test only]
   description: |
-    This endpoint allows a developer to retrieve the history of changes to an individual charge. A unique identifier (National Insurance Number) for the account must be used and a charge identifier provided.
+    This endpoint allows a developer to retrieve the overall liability broken down into overdue, currently due (payable) and pending (not yet due) amounts. A unique identifier (National Insurance Number) for the account must be used.
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
     
-    | Header Value (Gov-Test-Scenario)      | Scenario                                                         |
-    |---------------------------------------|------------------------------------------------------------------|
-    | N/A - DEFAULT                         | Simulates a successful response with a self-assessment accounts. |
-    | NOT_FOUND                             | Simulates the scenario where no data is found.                   |     
+    | Header Value (Gov-Test-Scenario) | Scenario                                                         |
+    |----------------------------------|------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with a self-assessment accounts. |
+    | NOTHING_DUE                      | Simulates a successful response where no payments are due.       |
+    | OVERDUE                          | Simulates a successful response where a payment is overdue.      |
+    | NOT_FOUND                        | Simulates the scenario where no data is found.                   |    
 
   tags:
     - Payments and Liabilities
 
   parameters:
     - $ref: './common/pathParameters.yaml#/components/parameters/nino'
-    - $ref: './common/pathParameters.yaml#/components/parameters/transactionId'
     - $ref: './common/headers.yaml#/components/parameters/acceptJson'
     - $ref: './common/headers.yaml#/components/parameters/authorizationReadScopeHeader'
     - $ref: './common/headers.yaml#/components/parameters/testScenarioHeader'
@@ -34,12 +35,20 @@ get:
       content:
         application/json:
           schema:
-            $ref: './schemas/retrieve_charge_history_response.json'
+            $ref: './schemas/retrieve_balance_response.json'
           examples:
-            example-response:
+            Example Response:
               description: Example Response
               value:
-                $ref: './examples/retrieveChargeHistory/retrieve_response.json'
+                $ref: './examples/retrieveBalance/retrieve_response.json'
+            Example response with nothing due:
+              description: Example response with nothing due
+              value:
+                $ref: './examples/retrieveBalance/retrieve_nothing_due.json'
+            Example response with an overdue payment:
+              description: Example response with an overdue payment
+              value:
+                $ref: './examples/retrieveBalance/retrieve_overdue.json'
 
 
     "400":

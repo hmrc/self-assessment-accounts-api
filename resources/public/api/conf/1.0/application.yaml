@@ -62,18 +62,18 @@ tags:
 
 paths:
     /accounts/self-assessment/{nino}/charges:
-      $ref: ./listCharges.yaml
+      $ref: ./charges_list.yaml
     /accounts/self-assessment/{nino}/transactions:
-      $ref: ./listTransactions.yaml
+      $ref: ./self_assessment_transactions_list.yaml
     /accounts/self-assessment/{nino}/payments:
-      $ref: ./listPayments.yaml
+      $ref: ./self_assessment_payments_list.yaml
     /accounts/self-assessment/{nino}/transactions/{transactionId}:
-      $ref: ./retrieveTransactionDetails.yaml
+      $ref: ./self_assessment_transaction_detail_retrieve.yaml
     /accounts/self-assessment/{nino}/balance:
-      $ref: ./retrieveBalance.yaml
+      $ref: ./self_assessment_balance_retrieve.yaml
     /accounts/self-assessment/{nino}/charges/{transactionId}:
-      $ref: ./retrieveChargeHistory.yaml
+      $ref: ./self_assessment_charge_history_retrieve.yaml
     /accounts/self-assessment/{nino}/payments/{paymentId}:
-      $ref: ./retrieveAllocations.yaml
+      $ref: ./self-assessment_payments_allocations_retrieve.yaml
     /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code:
-      $ref: ./codingOutUnderpayments.yaml
+      $ref: ./coding_out_underpayments.yaml

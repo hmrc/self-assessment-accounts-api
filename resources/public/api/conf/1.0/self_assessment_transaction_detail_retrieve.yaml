@@ -6,12 +6,12 @@ get:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
     
-    | Header Value (Gov-Test-Scenario)      | Scenario                                                                                  |
-    |---------------------------------------|-------------------------------------------------------------------------------------------|
-    | N/A - DEFAULT                         | Simulates a successful response with a self-assessment accounts.                          |
-    | PAYMENT_ON_ACCOUNT                    | Simulates a successful response with a payment.                                           |
-    | NOT_FOUND                             | Simulates the scenario where no data is found.                                            |
-    | NO_DETAILS_FOUND                      | Simulates the scenario where no transaction details can be found for this transaction ID. |     
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                                  |
+    |----------------------------------|-------------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with a self-assessment accounts.                          |
+    | PAYMENT_ON_ACCOUNT               | Simulates a successful response with a payment.                                           |
+    | NOT_FOUND                        | Simulates the scenario where no data is found.                                            |
+    | NO_DETAILS_FOUND                 | Simulates the scenario where no transaction details can be found for this transaction ID. |     
 
   tags:
     - Payments and Liabilities

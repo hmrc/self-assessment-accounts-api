@@ -4,10 +4,10 @@ description: |
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario)      | Scenario                                                            |
-  |---------------------------------------|---------------------------------------------------------------------|
-  | N/A - DEFAULT                         | Simulates a successful response.                                    |
-  | NOT_FOUND                             | Simulates the scenario where coding out amounts could not be found. |   
+  | Header Value (Gov-Test-Scenario) | Scenario                                                            |
+  |----------------------------------|---------------------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates a success response.                                       |
+  | NOT_FOUND                        | Simulates the scenario where coding out amounts could not be found. |   
 
 security:
   - User-Restricted:

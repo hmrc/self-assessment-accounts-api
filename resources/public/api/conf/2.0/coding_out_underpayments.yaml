@@ -1,5 +1,5 @@
 get:
-  $ref: "./retrieveCodingOutUnderpayments.yaml"
+  $ref: "./coding_out_underpayments_retrieve.yaml"
   summary: Retrieve Coding Out Underpayments and Debt Amounts
   security:
     - User-Restricted:
@@ -8,14 +8,14 @@ get:
     - $ref: "./common/queryParameters.yaml#/components/parameters/source"
 
 put:
-  $ref: "./createOrAmendCodingOutUnderpayments.yaml"
+  $ref: "./coding_out_underpayments_create_or_amend.yaml"
   summary: Create or Amend Coding Out Underpayments and Debt Amounts
   security:
     - User-Restricted:
         - write:self-assessment
 
 delete:
-  $ref: "./deleteCodingOutUnderpayments.yaml"
+  $ref: "./coding_out_underpayments_delete.yaml"
   summary: Delete Coding Out Underpayments and Debt Amounts
   security:
     - User-Restricted:

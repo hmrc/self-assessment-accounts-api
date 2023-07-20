@@ -7,11 +7,11 @@ get:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
     
-    | Header Value (Gov-Test-Scenario)      | Scenario                                                         |
-    |---------------------------------------|------------------------------------------------------------------|
-    | N/A - DEFAULT                         | Simulate a successful response.                                  |
-    | NOT_FOUND                             | Simulates the scenario where no data can be found.               |
-    | INVALID_DATE_RANGE                    | Simulates the scenario where the provided date range is invalid. |    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                         |
+    |----------------------------------|------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulate a successful response.                                  |
+    | NOT_FOUND                        | Simulates the scenario where no data can be found.               |
+    | INVALID_DATE_RANGE               | Simulates the scenario where the provided date range is invalid. |    
 
   security:
     - User-Restricted:
