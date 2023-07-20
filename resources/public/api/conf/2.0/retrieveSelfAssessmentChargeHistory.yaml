@@ -5,25 +5,12 @@ get:
     This endpoint enables you to retrieve the history of changes to an individual charge. A National Insurance number and transaction ID must be provided.
     
     ### Test data
-    <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulates success response.</p></td>
-            </tr>   
-            <tr>
-                <td><p>NOT_FOUND</p></td>
-                <td><p>Simulates the scenario where no data can be found.</p></td>
-            </tr>
-        </tbody>
-    </table>
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario)      | Scenario                                                            |
+    |---------------------------------------|---------------------------------------------------------------------|
+    | N/A - DEFAULT                         | Simulates a successful response.                                    |
+    | NOT_FOUND                             | Simulates the scenario where no data can be found.                  |   
 
   tags:
     - Payments and Liabilities

@@ -2,33 +2,16 @@
 description: |
   This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted amended coding out amounts for a previous tax year and given National Insurance number.  
   ### Test data
-    <p>Scenario simulations using <code>Gov-Test-Scenario</code> headers is only available in the sandbox environment.</p>
-    <table>
-        <thead>
-            <tr>
-                <th>Header Value (Gov-Test-Scenario)</th>
-                <th>Scenario</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><p>N/A - DEFAULT</p></td>
-                <td><p>Simulate a successful response with a self-assessment accounts.</p></td>
-            <tr>
-                <td><p>N/A - DEFAULT <br> using ?source=latest </p></td>
-                <td><p> Simulates a successful response with latest values.</p></td>
-            <tr>
-                <td><p>N/A - DEFAULT <br> using ?source=hmrcHeld </p></td>
-                <td><p>Simulates a successful response with HMRC-held values.</p></td>
-            <tr>
-                <td><p>N/A - DEFAULT <br> using ?source=user </p></td>
-                <td><p>Simulates a successful response with user submitted values.</p></td>
-            <tr>
-              <td><p>NOT_FOUND</p></td>
-              <td><p>Simulates the scenario where no data is found.</p></td>
-            </tr>
-        </tbody>
-    </table>
+  Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+  
+  | Header Value (Gov-Test-Scenario)           | Scenario                                                         |
+  |--------------------------------------------|------------------------------------------------------------------|
+  | N/A - DEFAULT                              | Simulates a successful response with a self-assessment accounts. |
+  | N/A - DEFAULT <br> using ?source=latest    | Simulates a successful response with latest values.              |
+  | N/A - DEFAULT <br> using ?source=hmrcHeld  | Simulates a successful response with HMRC-held values.           |
+  | N/A - DEFAULT <br> using ?source=user      | Simulates a successful response with user submitted values.      |
+  | NOT_FOUND                                  | Simulates the scenario where no data is found.                   |
+  
 
 tags:
   - Coding Out Underpayments and Debts
