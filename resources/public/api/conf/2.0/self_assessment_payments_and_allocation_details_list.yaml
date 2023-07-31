@@ -77,6 +77,8 @@ get:
               $ref: "./common/errors.yaml#/components/examples/missingPaymentLot"
             MISSING_PAYMENT_LOT_ITEM:
               $ref: "./common/errors.yaml#/components/examples/missingPaymentLotItem"
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
 
     403:
       description: Forbidden

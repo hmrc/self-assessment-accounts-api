@@ -67,6 +67,8 @@ get:
               $ref: './common/errors.yaml#/components/examples/ruleFromDateNotSupported'
             RANGE_DATE_TOO_LONG:
               $ref: './common/errors.yaml#/components/examples/ruleDateTooLong'
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
 
     "403":
       description: Forbidden
