@@ -53,7 +53,7 @@ get:
             FORMAT_TRANSACTION_ID:
               $ref: "./common/errors.yaml#/components/examples/formatTransactionId"
             RULE_INCORRECT_GOV_TEST_SCENARIO:
-              $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
 
     "403":
       description: Forbidden
