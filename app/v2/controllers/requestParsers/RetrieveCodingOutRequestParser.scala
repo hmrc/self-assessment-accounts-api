@@ -14,30 +14,19 @@
  * limitations under the License.
  */
 
-package routing
+package v2.controllers.requestParsers
 
-import com.google.inject.ImplementedBy
-import config.AppConfig
-import play.api.routing.Router
+import api.controllers.requestParsers.RequestParser
+import api.models.domain.{Nino, TaxYear}
+import v2.controllers.requestParsers.validators.RetrieveCodingOutValidator
+import v2.models.request.retrieveCodingOut._
 
 import javax.inject.Inject
 
-@ImplementedBy(classOf[VersionRoutingMapImpl])
-trait VersionRoutingMap {
-  val defaultRouter: Router
+class RetrieveCodingOutRequestParser @Inject()(val validator: RetrieveCodingOutValidator)
+    extends RequestParser[RetrieveCodingOutRawRequest, RetrieveCodingOutParsedRequest] {
 
-  val map: Map[Version, Router]
-
-  final def versionRouter(version: Version): Option[Router] = map.get(version)
-}
-
-case class VersionRoutingMapImpl @Inject() (defaultRouter: Router, v2Routes: v2.Routes, appConfig: AppConfig)
-    extends VersionRoutingMap {
-
-  val map: Map[Version, Router] = {
-    Map(
-      Version2 -> v2Routes
-    )
-  }
+  override protected def requestFor(data: RetrieveCodingOutRawRequest): RetrieveCodingOutParsedRequest =
+    RetrieveCodingOutParsedRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.source)
 
 }

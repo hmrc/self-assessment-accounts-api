@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package api.services
+package v2.models.request.retrieveCodingOut
 
-import api.controllers.RequestContextImplicits
-import utils.Logging
-import api.support.MappingSupportDownstream
+import api.models.request.RawData
 
-trait BaseService extends RequestContextImplicits with MappingSupportDownstream with Logging
+case class RetrieveCodingOutRawRequest(nino: String, taxYear: String, source: Option[String]) extends RawData

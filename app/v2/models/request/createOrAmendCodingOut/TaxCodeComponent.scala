@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package api.services
+package v2.models.request.createOrAmendCodingOut
 
-import api.controllers.RequestContextImplicits
-import utils.Logging
-import api.support.MappingSupportDownstream
+import play.api.libs.json._
 
-trait BaseService extends RequestContextImplicits with MappingSupportDownstream with Logging
+case class TaxCodeComponent(id: BigDecimal, amount: BigDecimal)
+
+object TaxCodeComponent {
+  implicit val reads: Reads[TaxCodeComponent] = Json.reads[TaxCodeComponent]
+
+  implicit val writes: OWrites[TaxCodeComponent] = (o: TaxCodeComponent) =>
+    Json.obj(
+      "componentIdentifier" -> o.id.toString(),
+      "amount"              -> o.amount
+    )
+
+}
