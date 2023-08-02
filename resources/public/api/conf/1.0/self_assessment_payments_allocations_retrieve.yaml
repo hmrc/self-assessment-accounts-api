@@ -57,6 +57,8 @@ get:
               $ref: './common/errors.yaml#/components/examples/formatNino'
             FORMAT_PAYMENT_ID:
               $ref: './common/errors.yaml#/components/examples/formatPaymentId'
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: './common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario'
 
     "403":
       description: Forbidden
