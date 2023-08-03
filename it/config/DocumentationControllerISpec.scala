@@ -54,8 +54,8 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |    "versions":[
       |      {
       |        "version":"1.0",
-      |        "status":"BETA",
-      |        "endpointsEnabled":true
+      |        "status":"RETIRED",
+      |        "endpointsEnabled":false
       |      },
       |      {
       |        "version":"2.0",
@@ -77,7 +77,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
 
   "an OAS documentation request" must {
     "return the documentation that passes OAS V3 parser" in {
-      val response: WSResponse = await(buildRequest("/api/conf/1.0/application.yaml").get())
+      val response: WSResponse = await(buildRequest("/api/conf/2.0/application.yaml").get())
       response.status shouldBe Status.OK
 
       val contents     = response.body[String]
@@ -88,7 +88,7 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       openAPI.isEmpty shouldBe false
       openAPI.get.getOpenapi shouldBe "3.0.3"
       openAPI.get.getInfo.getTitle shouldBe "Self Assessment Accounts (MTD)"
-      openAPI.get.getInfo.getVersion shouldBe "1.0"
+      openAPI.get.getInfo.getVersion shouldBe "2.0"
     }
   }
 

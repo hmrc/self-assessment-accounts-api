@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package api.services
+package v2.models.response.retrieveCodingOut
 
-import api.controllers.RequestContextImplicits
-import utils.Logging
-import api.support.MappingSupportDownstream
+import play.api.libs.json.{Json, OFormat}
 
-trait BaseService extends RequestContextImplicits with MappingSupportDownstream with Logging
+case class TaxCodeComponentsObject(selfAssessmentUnderpayment: Option[Seq[TaxCodeComponents]],
+                                   payeUnderpayment: Option[Seq[TaxCodeComponents]],
+                                   debt: Option[Seq[TaxCodeComponents]],
+                                   inYearAdjustment: Option[TaxCodeComponents])
+
+object TaxCodeComponentsObject {
+  implicit val format: OFormat[TaxCodeComponentsObject] = Json.format[TaxCodeComponentsObject]
+}

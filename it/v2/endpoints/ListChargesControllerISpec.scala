@@ -24,8 +24,8 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v1.fixtures.ListChargesFixture._
-import v1.stubs.DownstreamStub
+import v2.fixtures.ListChargesFixture._
+import v2.stubs.DownstreamStub
 
 class ListChargesControllerISpec extends IntegrationBaseSpec {
 

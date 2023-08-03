@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package api.services
+package v2.models.request.deleteCodingOut
 
-import api.controllers.RequestContextImplicits
-import utils.Logging
-import api.support.MappingSupportDownstream
+import api.models.domain.{Nino, TaxYear}
 
-trait BaseService extends RequestContextImplicits with MappingSupportDownstream with Logging
+case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: TaxYear)

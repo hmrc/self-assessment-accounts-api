@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package api.services
+package v2.models.request.createOrAmendCodingOut
 
-import api.controllers.RequestContextImplicits
-import utils.Logging
-import api.support.MappingSupportDownstream
+import api.models.request.RawData
+import play.api.libs.json.JsValue
 
-trait BaseService extends RequestContextImplicits with MappingSupportDownstream with Logging
+case class CreateOrAmendCodingOutRawRequest(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean = true) extends RawData

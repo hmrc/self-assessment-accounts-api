@@ -20,7 +20,7 @@ import api.hateoas.HateoasLinksFactory
 import api.models.hateoas.{HateoasData, Link}
 import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v1.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.{retrieveChargeHistory, retrieveTransactionDetails}
+import v2.models.response.retrieveCodingOut.RetrieveCodingOutResponse.{retrieveChargeHistory, retrieveTransactionDetails}
 
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
 
