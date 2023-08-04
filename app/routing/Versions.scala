@@ -32,7 +32,6 @@ object Version {
 
     override def reads(version: JsValue): JsResult[Version] =
       version.validate[String].flatMap {
-        case Version1.name => JsSuccess(Version1)
         case Version2.name => JsSuccess(Version2)
         case _             => JsError("Unrecognised version")
       }
@@ -50,11 +49,6 @@ sealed trait Version {
   override def toString: String = name
 }
 
-case object Version1 extends Version {
-  val name       = "1.0"
-  val configName = "1"
-}
-
 case object Version2 extends Version {
   val name       = "2.0"
   val configName = "2"
@@ -63,7 +57,6 @@ case object Version2 extends Version {
 object Versions {
 
   private val versionsByName: Map[String, Version] = Map(
-    Version1.name -> Version1,
     Version2.name -> Version2
   )
 
