@@ -4,9 +4,10 @@ description: |
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario) | Scenario                         |
-  |----------------------------------|----------------------------------|
-  | N/A - DEFAULT                    | Simulates a successful response. |
+  | Header Value (Gov-Test-Scenario) | Scenario                                                                    |
+  |----------------------------------|-----------------------------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response.                                                 |
+  | DUPLICATE_ID_NOT_ALLOWED         | Simulates the scenario where the request data contains duplicate ID values. |
 
 security:
   - User-Restricted:
