@@ -9,8 +9,8 @@ get:
     
     | Header Value (Gov-Test-Scenario) | Scenario                                                         |
     |----------------------------------|------------------------------------------------------------------|
-    | N/A - DEFAULT                    | Simulate a successful response.                                  |
-    | NOT_FOUND                        | Simulates the scenario where no data can be found.               |
+    | N/A - DEFAULT                    | Simulates success response.                                      |
+    | NOT_FOUND                        | Simulates the scenario where no data is found.                   |
     | INVALID_DATE_RANGE               | Simulates the scenario where the provided date range is invalid. |    
 
   security:
