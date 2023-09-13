@@ -11,6 +11,7 @@ description: |
   | N/A - DEFAULT<br>using ?source=hmrcHeld | Simulates a successful response with HMRC-held values.      |
   | N/A - DEFAULT<br>using ?source=user     | Simulates a successful response with user submitted values. |
   | NOT_FOUND                               | Simulates the scenario where no data is found.              |
+  | STATEFUL                                | Performs a stateful retrieve.                               |
 
 security:
   - User-Restricted:
