@@ -11,7 +11,7 @@ description: |
   | N/A - DEFAULT<br>using ?source=hmrcHeld | Simulates a successful response with HMRC-held values.      |
   | N/A - DEFAULT<br>using ?source=user     | Simulates a successful response with user submitted values. |
   | NOT_FOUND                               | Simulates the scenario where no data is found.              |
-  | STATEFUL                                | Performs a stateful retrieve. <p>Information and data held by HMRC is not available in the sandbox environment.</p> <p> Providing ‘source=hmrcHeld’ will result in the expected HTTP 404 (matching resource not found) error being returned.</p> |
+  | STATEFUL                                | Performs a stateful retrieve. <p>Information and data held by HMRC is not available in the sandbox environment.<br> Providing ‘source=hmrcHeld’ will result in the expected HTTP 404 (matching resource not found) error being returned.</p> |
 
 security:
   - User-Restricted:
