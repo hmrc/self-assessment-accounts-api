@@ -23,7 +23,7 @@ import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 
 class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppConfig {
 
-  private val validator = new RetrieveBalanceAndTransactionsValidator(mockAppConfig)
+  private val validator = new RetrieveBalanceAndTransactionsValidator()
 
   "running a validation" should {
     "return no errors" when {
@@ -65,8 +65,17 @@ class RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec with MockAppC
       "an invalid from date is supplied" in {
         validator.validate(inputDataDocNumber.copy(fromDate = Some("invalid"))) shouldBe List(FromDateFormatError)
       }
+
+      "a from date before 1900 is supplied" in {
+        validator.validate(inputDataDocNumber.copy(fromDate = Some("1878-01-21"))) shouldBe List(FromDateFormatError)
+      }
+
       "an invalid to date is supplied" in {
         validator.validate(inputDataDocNumber.copy(toDate = Some("invalid"))) shouldBe List(ToDateFormatError)
+      }
+
+      "a to date after 2100 is supplied" in {
+        validator.validate(inputDataDocNumber.copy(toDate = Some("2100-01-21"))) shouldBe List(ToDateFormatError)
       }
 
       "an invalid remove POA is supplied" in {

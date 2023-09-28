@@ -16,40 +16,48 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.models.errors.V1_FromDateFormatError
+import api.models.errors.{V1_FromDateFormatError, V1_ToDateFormatError}
 import support.UnitSpec
 
 class DateFormatValidationSpec extends UnitSpec {
 
+  private val dateFormatValidation: DateFormatValidation = new DateFormatValidation(minYear = 1900, maxYear = 2100)
+
   "validate" should {
     "return an empty list" when {
       "passed a valid date" in {
-        DateFormatValidation.validate("2019-02-02", V1_FromDateFormatError) shouldBe List()
+        dateFormatValidation.validate("2019-02-02", isFromDate = true, V1_FromDateFormatError) shouldBe List()
       }
 
       "passed an optional valid date" in {
-        DateFormatValidation.validate(Some("2019-02-02"), V1_FromDateFormatError) shouldBe List()
+        dateFormatValidation.validate(Some("2019-02-02"), isFromDate = true, V1_FromDateFormatError) shouldBe List()
       }
     }
 
     "return a list containing an error" when {
       "passed a date with an invalid month" in {
-        DateFormatValidation.validate("2019-13-02", V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
+        dateFormatValidation.validate("2019-13-02", isFromDate = true, V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
       }
       "passed a date with an invalid day" in {
-        DateFormatValidation.validate("2019-02-32", V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
+        dateFormatValidation.validate("2019-02-32", isFromDate = true, V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
       }
       "passed a date with an invalid year" in {
-        DateFormatValidation.validate("201-02-02", V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
+        dateFormatValidation.validate("201-02-02", isFromDate = true, V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
       }
       "passed a date with an invalid separator" in {
-        DateFormatValidation.validate("2012.02-02", V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
+        dateFormatValidation.validate("2012.02-02", isFromDate = true, V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
       }
       "passed a date written as text" in {
-        DateFormatValidation.validate("2nd Feb 2012", V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
+        dateFormatValidation.validate("2nd Feb 2012", isFromDate = true, V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
       }
       "passed a optional invalid date" in {
-        DateFormatValidation.validate(Some("2nd Feb 2012"), V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
+        dateFormatValidation.validate(Some("2nd Feb 2012"), isFromDate = true, V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
+      }
+      "passed a from date before 1900" in {
+        dateFormatValidation.validate(Some("1899-11-02"), isFromDate = true, V1_FromDateFormatError) shouldBe List(V1_FromDateFormatError)
+      }
+      "passed a to date after 2100" in {
+        dateFormatValidation.validate(Some("2100-12-31"), isFromDate = false, V1_ToDateFormatError) shouldBe List(V1_ToDateFormatError)
       }
     }
   }

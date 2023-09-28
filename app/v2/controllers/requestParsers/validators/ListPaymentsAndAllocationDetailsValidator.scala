@@ -26,7 +26,8 @@ import javax.inject.Inject
 
 class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig) extends Validator[ListPaymentsAndAllocationDetailsRawData] {
 
-  private val validationSet = List(parameterValidation, parameterRuleValidation)
+  private val dateFormatValidation: DateFormatValidation = new DateFormatValidation(minYear = 1900, maxYear = 2100)
+  private val validationSet                              = List(parameterValidation, parameterRuleValidation)
 
   override def validate(data: ListPaymentsAndAllocationDetailsRawData): List[MtdError] = {
     run(validationSet, data).distinct
@@ -36,8 +37,8 @@ class ListPaymentsAndAllocationDetailsValidator @Inject() (appConfig: AppConfig)
     (data: ListPaymentsAndAllocationDetailsRawData) => {
       List(
         NinoValidation.validate(data.nino),
-        DateFormatValidation.validate(data.fromDate, FromDateFormatError),
-        DateFormatValidation.validate(data.toDate, ToDateFormatError),
+        dateFormatValidation.validate(data.fromDate, isFromDate = true, FromDateFormatError),
+        dateFormatValidation.validate(data.toDate, isFromDate = false, ToDateFormatError),
         PaymentLotValidation.validateFormat(data.paymentLot),
         PaymentLotItemValidation.validateFormat(data.paymentLotItem),
         PaymentLotItemValidation.validateMissing(data.paymentLotItem, data.paymentLot)

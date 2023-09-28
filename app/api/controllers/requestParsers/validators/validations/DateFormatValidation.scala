@@ -21,15 +21,24 @@ import api.models.errors.MtdError
 import java.time.LocalDate
 import scala.util.{Failure, Success, Try}
 
-object DateFormatValidation {
+class DateFormatValidation(minYear: Int, maxYear: Int) {
 
-  def validate(date: Option[String], error: MtdError): List[MtdError] = date.map(validate(_, error)).getOrElse(Nil)
+  def validate(date: Option[String], isFromDate: Boolean, error: MtdError): List[MtdError] = date.map(validate(_, isFromDate, error)).getOrElse(Nil)
 
-  def validate(date: String, error: MtdError): List[MtdError] = Try {
+  def validate(date: String, isFromDate: Boolean, error: MtdError): List[MtdError] = Try {
     LocalDate.parse(date, dateFormat)
   } match {
-    case Success(_) => NoValidationErrors
-    case Failure(_) => List(error)
+    case Success(parsedDate) => validateFromAndToDate(parsedDate, isFromDate, error)
+    case Failure(_)          => List(error)
   }
+
+  private def validateFromAndToDate(date: LocalDate, isFromDate: Boolean, error: MtdError): List[MtdError] =
+    if (isFromDate && date.getYear < minYear) {
+      List(error)
+    } else if (!isFromDate && date.getYear >= maxYear) {
+      List(error)
+    } else {
+      NoValidationErrors
+    }
 
 }
