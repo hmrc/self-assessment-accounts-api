@@ -8,6 +8,7 @@ description: |
   |----------------------------------|-----------------------------------------------------------------------------|
   | N/A - DEFAULT                    | Simulates success response.                                                 |
   | DUPLICATE_ID_NOT_ALLOWED         | Simulates the scenario where the request data contains duplicate ID values. |
+  | STATEFUL                         | Performs a stateful create or update.                                       |
 
 security:
   - User-Restricted:
