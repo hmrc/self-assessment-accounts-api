@@ -95,6 +95,14 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
         validator.validate(validRequestRawDataWithOptionals.copy(paymentLotItem = None)) shouldBe List(MissingPaymentLotItemError)
       }
 
+      "a from date before 1900 is supplied" in {
+        validator.validate(validRequestRawDataWithOptionals.copy(fromDate = Some("1878-01-21"))) shouldBe List(FromDateFormatError)
+      }
+
+      "a to date after 2100 is supplied" in {
+        validator.validate(validRequestRawDataWithOptionals.copy(toDate = Some("2100-01-21"))) shouldBe List(ToDateFormatError)
+      }
+
       "multiple invalid values are supplied" in {
         val input = validRequestRawDataWithOptionals.copy(
           nino = "invalid",

@@ -19,13 +19,11 @@ package v2.controllers.requestParsers.validators
 import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors._
-import config.AppConfig
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRawData
 
-import javax.inject.Inject
+class RetrieveBalanceAndTransactionsValidator() extends Validator[RetrieveBalanceAndTransactionsRawData] {
 
-class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) extends Validator[RetrieveBalanceAndTransactionsRawData] {
-
+  private val dateFormatValidation: DateFormatValidation = new DateFormatValidation(minYear = 1900, maxYear = 2100)
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
   override def validate(data: RetrieveBalanceAndTransactionsRawData): List[MtdError] = {
@@ -37,8 +35,8 @@ class RetrieveBalanceAndTransactionsValidator @Inject() (appConfig: AppConfig) e
       List(
         NinoValidation.validate(data.nino),
         DocNumberValidation.validate(data.docNumber),
-        DateFormatValidation.validate(data.fromDate, FromDateFormatError),
-        DateFormatValidation.validate(data.toDate, ToDateFormatError),
+        dateFormatValidation.validate(data.fromDate, isFromDate = true, FromDateFormatError),
+        dateFormatValidation.validate(data.toDate, isFromDate = false, ToDateFormatError),
         BooleanValidation.validate(data.onlyOpenItems, OnlyOpenItemsFormatError),
         BooleanValidation.validate(data.includeLocks, IncludeLocksFormatError),
         BooleanValidation.validate(data.calculateAccruedInterest, CalculateAccruedInterestFormatError),

@@ -21,6 +21,7 @@ import api.models.errors._
 import api.models.request.RawDataWithDateRange
 
 trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
+  private val dateFormatValidation: DateFormatValidation = new DateFormatValidation(minYear = 1900, maxYear = 2100)
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
   override def validate(data: T): List[MtdError] = {
@@ -30,8 +31,8 @@ trait ValidatorWithDateRange[T <: RawDataWithDateRange] extends Validator[T] {
   private def parameterFormatValidation: T => List[List[MtdError]] = (data: T) => {
     List(
       NinoValidation.validate(data.nino),
-      data.from.map(DateFormatValidation.validate(_, V1_FromDateFormatError)).getOrElse(Nil),
-      data.to.map(DateFormatValidation.validate(_, V1_ToDateFormatError)).getOrElse(Nil)
+      data.from.map(dateFormatValidation.validate(_, isFromDate = true,  V1_FromDateFormatError)).getOrElse(Nil),
+      data.to.map(dateFormatValidation.validate(_, isFromDate = false, V1_ToDateFormatError)).getOrElse(Nil)
     )
   }
 
