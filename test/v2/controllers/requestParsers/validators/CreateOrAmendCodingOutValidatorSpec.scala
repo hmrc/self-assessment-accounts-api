@@ -16,10 +16,9 @@
 
 package v2.controllers.requestParsers.validators
 
-import api.mocks.MockCurrentDate
 import api.models.errors._
 import config.AppConfig
-import mocks.MockAppConfig
+import mocks.{MockAppConfig, MockCurrentDate}
 import play.api.libs.json.{JsObject, JsPath, Json}
 import support.UnitSpec
 import utils.CurrentDate

@@ -16,9 +16,9 @@
 
 package api.hateoas
 
-import api.models.hateoas.Link
-import api.models.hateoas.Method._
-import api.models.hateoas.RelType._
+import api.hateoas
+import api.hateoas.Method._
+import api.hateoas.RelType._
 import config.AppConfig
 
 trait HateoasLinks {
@@ -27,7 +27,7 @@ trait HateoasLinks {
 
   // L1
   def retrieveBalance(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/balance",
       method = GET,
       rel = if (isSelf) SELF else RETRIEVE_BALANCE
@@ -35,7 +35,7 @@ trait HateoasLinks {
 
   // L2
   def listTransactions(appConfig: AppConfig, nino: String, from: String, to: String, isSelf: Boolean): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/transactions?from=$from&to=$to",
       method = GET,
       rel = if (isSelf) SELF else LIST_TRANSACTIONS
@@ -43,7 +43,7 @@ trait HateoasLinks {
 
   // L3
   def retrieveTransactionDetails(appConfig: AppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/transactions/$transactionId",
       method = GET,
       rel = if (isSelf) SELF else RETRIEVE_TRANSACTION_DETAILS
@@ -51,7 +51,7 @@ trait HateoasLinks {
 
   // L4
   def listCharges(appConfig: AppConfig, nino: String, from: String, to: String, isSelf: Boolean): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/charges?from=$from&to=$to",
       method = GET,
       rel = if (isSelf) SELF else LIST_CHARGES
@@ -59,7 +59,7 @@ trait HateoasLinks {
 
   // L5
   def retrieveChargeHistory(appConfig: AppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/charges/$transactionId",
       method = GET,
       rel = if (isSelf) SELF else RETRIEVE_CHARGE_HISTORY
@@ -67,7 +67,7 @@ trait HateoasLinks {
 
   // L6
   def listPayments(appConfig: AppConfig, nino: String, from: String, to: String, isSelf: Boolean): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/payments?from=$from&to=$to",
       method = GET,
       rel = if (isSelf) SELF else LIST_PAYMENTS
@@ -75,7 +75,7 @@ trait HateoasLinks {
 
   // L7
   def retrievePaymentAllocations(appConfig: AppConfig, nino: String, paymentId: String, isSelf: Boolean): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/payments/$paymentId",
       method = GET,
       rel = if (isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS
@@ -85,7 +85,7 @@ trait HateoasLinks {
 
   // L1
   def createOrAmendCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/$taxYear/collection/tax-code",
       method = PUT,
       rel = CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS
@@ -93,7 +93,7 @@ trait HateoasLinks {
 
   // L2
   def retrieveCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/$taxYear/collection/tax-code",
       method = GET,
       rel = SELF
@@ -101,7 +101,7 @@ trait HateoasLinks {
 
   // L3
   def deleteCodingOut(appConfig: AppConfig, nino: String, taxYear: String): Link =
-    Link(
+    hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/$taxYear/collection/tax-code",
       method = DELETE,
       rel = DELETE_CODING_OUT_UNDERPAYMENTS

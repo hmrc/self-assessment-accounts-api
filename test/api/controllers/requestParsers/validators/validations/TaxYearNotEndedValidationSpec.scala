@@ -16,8 +16,8 @@
 
 package api.controllers.requestParsers.validators.validations
 
-import api.mocks.MockCurrentDate
 import api.models.errors.RuleTaxYearNotEndedError
+import mocks.MockCurrentDate
 import org.scalamock.handlers.CallHandler
 import support.UnitSpec
 import utils.CurrentDate

@@ -24,7 +24,9 @@ object Version {
 
   implicit object VersionWrites extends Writes[Version] {
 
-    def writes(version: Version): JsValue = Json.toJson(version.name)
+    def writes(version: Version): JsValue = version match {
+      case Version2 => Json.toJson(Version2.name)
+    }
 
   }
 
@@ -43,15 +45,11 @@ object Version {
 
 sealed trait Version {
   val name: String
-  val configName: String
-  val maybePrevious: Option[Version] = None
-
   override def toString: String = name
 }
 
 case object Version2 extends Version {
-  val name       = "2.0"
-  val configName = "2"
+  val name = "2.0"
 }
 
 object Versions {

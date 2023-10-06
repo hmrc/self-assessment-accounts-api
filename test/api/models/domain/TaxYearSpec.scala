@@ -40,6 +40,7 @@ class TaxYearSpec extends UnitSpec {
         taxYear.asTysDownstream shouldBe "23-24"
       }
     }
+
     "constructed from an ISO date" should {
       "be the expected year, taking into account the UK tax year start date" in {
 
@@ -114,6 +115,21 @@ class TaxYearSpec extends UnitSpec {
       "return the expected JsValue" in {
         Json.toJson(model) shouldBe requestJson
       }
+    }
+  }
+
+  "TaxYear.currentTaxYear()" should {
+    "return the current tax year" in {
+      val today = LocalDate.now(ZoneId.of("UTC"))
+      val year  = today.getYear
+
+      val expectedYear = {
+        val taxYearStartDate = LocalDate.of(year, 4, 6)
+        if (today.isBefore(taxYearStartDate)) year else year + 1
+      }
+
+      val result = TaxYear.currentTaxYear()
+      result.year shouldBe expectedYear
     }
   }
 

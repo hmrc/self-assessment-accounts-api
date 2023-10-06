@@ -21,10 +21,11 @@ import support.UnitSpec
 
 class EmptyJsonBodySpec extends UnitSpec {
 
-  "EmptyJsonBody" when {
-    "written to JSON" should {
-      "produce an empty JSON body" in {
-        Json.toJson(EmptyJsonBody) shouldBe Json.parse("""{}""")
+  "EmptyJsonBody.writes" should {
+    "return an empty JSON body" when {
+      "called" in {
+        val json = EmptyJsonBody
+        Json.toJson(json)(EmptyJsonBody.writes) shouldBe Json.obj()
       }
     }
   }

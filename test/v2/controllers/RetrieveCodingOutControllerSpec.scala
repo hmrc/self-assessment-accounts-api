@@ -17,19 +17,19 @@
 package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.mocks.hateoas.MockHateoasFactory
+import api.hateoas
+import api.hateoas.Method.{DELETE, GET, PUT}
+import api.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
+import api.hateoas.{HateoasWrapper, MockHateoasFactory}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
-import api.models.hateoas.Method.{DELETE, GET, PUT}
-import api.models.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
-import api.models.hateoas.{HateoasWrapper, Link}
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
 import v2.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v2.mocks.requestParsers.MockRetrieveCodingOutRequestParser
 import v2.mocks.services.MockRetrieveCodingOutService
 import v2.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
-import v2.models.response.retrieveCodingOut.{RetrieveCodingOutHateoasData, RetrieveCodingOutResponse, TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
+import v2.models.response.retrieveCodingOut._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -56,19 +56,19 @@ class RetrieveCodingOutControllerSpec
     source = Some(source)
   )
 
-  private val createOrAmendCodingOutLink = Link(
+  private val createOrAmendCodingOutLink = hateoas.Link(
     href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
     method = PUT,
     rel = CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS
   )
 
-  private val retrieveCodingOutLink = Link(
+  private val retrieveCodingOutLink = hateoas.Link(
     href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
     method = GET,
     rel = SELF
   )
 
-  private val deleteCodingOutLink = Link(
+  private val deleteCodingOutLink = hateoas.Link(
     href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
     method = DELETE,
     rel = DELETE_CODING_OUT_UNDERPAYMENTS
@@ -80,6 +80,7 @@ class RetrieveCodingOutControllerSpec
       "2021-08-24T14:15:22Z",
       Some(BigInt(12345678910L))
     )
+
   val taxCodeComponents: TaxCodeComponents =
     TaxCodeComponents(
       0,
@@ -88,6 +89,7 @@ class RetrieveCodingOutControllerSpec
       "hmrcHeld",
       Some(BigInt(12345678910L))
     )
+
   val taxCodeComponentObject: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
       Some(Seq(taxCodeComponents)),
@@ -95,6 +97,7 @@ class RetrieveCodingOutControllerSpec
       Some(Seq(taxCodeComponents)),
       Some(taxCodeComponents)
     )
+
   val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
     UnmatchedCustomerSubmissionsObject(
       Some(Seq(unmatchedCustomerSubmissions)),
@@ -102,6 +105,7 @@ class RetrieveCodingOutControllerSpec
       Some(Seq(unmatchedCustomerSubmissions)),
       Some(unmatchedCustomerSubmissions)
     )
+
   val retrieveCodingOutResponse: RetrieveCodingOutResponse =
     RetrieveCodingOutResponse(
       Some(taxCodeComponentObject),
