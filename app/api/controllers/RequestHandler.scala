@@ -34,9 +34,9 @@ import scala.concurrent.{ExecutionContext, Future}
 trait RequestHandler {
 
   def handleRequest()(implicit
-                      ctx: RequestContext,
-                      request: UserRequest[_],
-                      ec: ExecutionContext
+      ctx: RequestContext,
+      request: UserRequest[_],
+      ec: ExecutionContext
   ): Future[Result]
 
 }
@@ -54,12 +54,12 @@ object RequestHandler {
   }
 
   case class RequestHandlerBuilder[Input, Output] private[RequestHandler] (
-                                                                            validator: Validator[Input],
-                                                                            service: Input => Future[ServiceOutcome[Output]],
-                                                                            errorHandling: ErrorHandling = ErrorHandling.Default,
-                                                                            resultCreator: ResultCreator[Input, Output] = ResultCreator.noContent[Input, Output](),
-                                                                            auditHandler: Option[AuditHandler] = None
-                                                                          ) extends RequestHandler {
+      validator: Validator[Input],
+      service: Input => Future[ServiceOutcome[Output]],
+      errorHandling: ErrorHandling = ErrorHandling.Default,
+      resultCreator: ResultCreator[Input, Output] = ResultCreator.noContent[Input, Output](),
+      auditHandler: Option[AuditHandler] = None
+  ) extends RequestHandler {
 
     def handleRequest()(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext): Future[Result] =
       Delegate.handleRequest()
@@ -95,9 +95,9 @@ object RequestHandler {
       * }}}
       */
     def withHateoasResultFrom[HData <: HateoasData](
-                                                     hateoasFactory: HateoasFactory)(data: (Input, Output) => HData, successStatus: Int = Status.OK)(implicit
-                                                                                                                                                     linksFactory: HateoasLinksFactory[Output, HData],
-                                                                                                                                                     writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[Input, Output] =
+        hateoasFactory: HateoasFactory)(data: (Input, Output) => HData, successStatus: Int = Status.OK)(implicit
+        linksFactory: HateoasLinksFactory[Output, HData],
+        writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[Input, Output] =
       withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)(data))
 
     /** Shorthand for
@@ -106,8 +106,8 @@ object RequestHandler {
       * }}}
       */
     def withHateoasResult[HData <: HateoasData](hateoasFactory: HateoasFactory)(data: HData, successStatus: Int = Status.OK)(implicit
-                                                                                                                             linksFactory: HateoasLinksFactory[Output, HData],
-                                                                                                                             writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[Input, Output] =
+        linksFactory: HateoasLinksFactory[Output, HData],
+        writes: Writes[HateoasWrapper[Output]]): RequestHandlerBuilder[Input, Output] =
       withResultCreator(ResultCreator.hateoasWrapping(hateoasFactory, successStatus)((_, _) => data))
 
     // Scoped as a private delegate so as to keep the logic completely separate from the configuration
@@ -129,9 +129,9 @@ object RequestHandler {
       }
 
       def handleRequest()(implicit
-                          ctx: RequestContext,
-                          request: UserRequest[_],
-                          ec: ExecutionContext
+          ctx: RequestContext,
+          request: UserRequest[_],
+          ec: ExecutionContext
       ): Future[Result] = {
 
         logger.info(
@@ -156,9 +156,9 @@ object RequestHandler {
       private def doWithContext[A](ctx: RequestContext)(f: RequestContext => A): A = f(ctx)
 
       private def handleSuccess(parsedRequest: Input, serviceResponse: ResponseWrapper[Output])(implicit
-                                                                                                ctx: RequestContext,
-                                                                                                request: UserRequest[_],
-                                                                                                ec: ExecutionContext
+          ctx: RequestContext,
+          request: UserRequest[_],
+          ec: ExecutionContext
       ): Result = {
         logger.info(
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
@@ -173,9 +173,9 @@ object RequestHandler {
       }
 
       private def handleFailure(errorWrapper: ErrorWrapper)(implicit
-                                                            ctx: RequestContext,
-                                                            request: UserRequest[_],
-                                                            ec: ExecutionContext
+          ctx: RequestContext,
+          request: UserRequest[_],
+          ec: ExecutionContext
       ): Result = {
         logger.warn(
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
@@ -195,9 +195,9 @@ object RequestHandler {
       }
 
       def auditIfRequired(httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
-                                                                                            ctx: RequestContext,
-                                                                                            request: UserRequest[_],
-                                                                                            ec: ExecutionContext): Unit =
+          ctx: RequestContext,
+          request: UserRequest[_],
+          ec: ExecutionContext): Unit =
         auditHandler.foreach { creator =>
           creator.performAudit(request.userDetails, httpStatus, response)
         }
@@ -207,4 +207,3 @@ object RequestHandler {
   }
 
 }
-

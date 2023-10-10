@@ -45,7 +45,7 @@ object AuditHandlerOld {
                         auditDetailCreator: AuditDetailCreator[A],
                         requestBody: Option[JsValue] = None,
                         includeResponse: Boolean = false): AuditHandlerOld =
-    new AuditHandlerImpl[A](
+    new AuditHandlerOldImpl[A](
       auditService = auditService,
       auditType = auditType,
       transactionName = transactionName,
@@ -69,7 +69,7 @@ object AuditHandlerOld {
       includeResponse = includeResponse
     )
 
-  private class AuditHandlerImpl[A: Writes](auditService: AuditService,
+  private class AuditHandlerOldImpl[A: Writes](auditService: AuditService,
                                             auditType: String,
                                             transactionName: String,
                                             auditDetailCreator: AuditDetailCreator[A],

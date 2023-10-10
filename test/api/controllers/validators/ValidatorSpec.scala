@@ -51,7 +51,7 @@ class ValidatorSpec extends UnitSpec with MockFactory {
   /** The main/outermost validator.
     */
   private class TestValidator(nino: String = "AA123456A", taxYear: String = "2023-24", jsonBody: JsValue = validBody)
-    extends Validator[TestParsedRequest] {
+      extends Validator[TestParsedRequest] {
 
     private val jsonResolver = new ResolveJsonObject[TestParsedRequestBody]
 
@@ -60,7 +60,7 @@ class ValidatorSpec extends UnitSpec with MockFactory {
         ResolveNino(nino),
         ResolveTaxYear(taxYear),
         jsonResolver(jsonBody, RuleIncorrectOrEmptyBodyError)
-        ).mapN(TestParsedRequest) andThen TestRulesValidator.validateBusinessRules
+      ).mapN(TestParsedRequest) andThen TestRulesValidator.validateBusinessRules
 
   }
 
