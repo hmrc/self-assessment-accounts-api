@@ -57,7 +57,7 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
       )
 
       val requestHandler =
-        RequestHandler
+        RequestHandlerOld
           .withParser(requestParser)
           .withService(service.listPaymentsAndAllocationDetails)
           .withPlainJsonResult()

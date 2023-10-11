@@ -59,11 +59,11 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
         temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled)
 
       val requestHandler =
-        RequestHandler
+        RequestHandlerOld
           .withParser(parser)
           .withService(service.amend)
           .withHateoasResult(hateoasFactory)(CreateOrAmendCodingOutHateoasData(nino, taxYear))
-          .withAuditing(AuditHandler(
+          .withAuditing(AuditHandlerOld(
             auditService,
             auditType = "CreateAmendCodingOutUnderpayment",
             transactionName = "create-amend-coding-out-underpayment",

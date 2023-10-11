@@ -17,12 +17,12 @@
 package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.mocks.hateoas.MockHateoasFactory
+import api.hateoas
+import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.models.domain.Nino
 import api.models.errors._
-import api.models.hateoas.Method.GET
-import api.models.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
-import api.models.hateoas.{HateoasWrapper, Link}
+import api.hateoas.Method.GET
+import api.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
 import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
@@ -51,13 +51,13 @@ class RetrieveChargeHistoryControllerSpec
     RetrieveChargeHistoryRequest(nino = Nino(nino), transactionId = transactionId)
 
   val chargeHistoryLink: Link =
-    Link(
+    hateoas.Link(
       href = s"/accounts/self-assessment/$nino/charges/$transactionId",
       method = GET,
       rel = SELF
     )
   val transactionDetailsLink: Link =
-    Link(
+    hateoas.Link(
       href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
       method = GET,
       rel = RETRIEVE_TRANSACTION_DETAILS

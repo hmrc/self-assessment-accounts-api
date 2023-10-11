@@ -26,7 +26,7 @@ case class ErrorWrapper(correlationId: String, error: MtdError, errors: Option[S
 
   private def allErrors: Seq[MtdError] = errors match {
     case Some(seq) => seq
-    case None      => Seq(error)
+    case None      => List(error)
   }
 
   /** Controller only checks the first/main error code, not the additional errors.

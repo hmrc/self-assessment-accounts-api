@@ -16,8 +16,7 @@
 
 package v2.models.response.retrieveChargeHistory
 
-import api.hateoas.HateoasLinksFactory
-import api.models.hateoas.{HateoasData, Link}
+import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v2.models.response.retrieveCodingOut.RetrieveCodingOutResponse.{retrieveChargeHistory, retrieveTransactionDetails}
