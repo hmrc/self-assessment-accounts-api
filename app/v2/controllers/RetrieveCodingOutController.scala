@@ -20,9 +20,8 @@ import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.RetrieveCodingOutRequestParser
-import v2.models.request.retrieveCodingOut.RetrieveCodingOutRawRequestData
+import utils.IdGenerator
+import v2.controllers.validators.RetrieveCodingOutValidatorFactory
 import v2.models.response.retrieveCodingOut.RetrieveCodingOutHateoasData
 import v2.services.RetrieveCodingOutService
 
@@ -32,13 +31,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthService,
                                              val lookupService: MtdIdLookupService,
-                                             requestParser: RetrieveCodingOutRequestParser,
+                                             validatorFactory: RetrieveCodingOutValidatorFactory,
                                              service: RetrieveCodingOutService,
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
                                              idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
@@ -50,19 +48,15 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData: RetrieveCodingOutRawRequestData = RetrieveCodingOutRawRequestData(
-        nino = nino,
-        taxYear = taxYear,
-        source = source
-      )
+      val validator = validatorFactory.validator(nino, taxYear, source)
 
       val requestHandler =
-        RequestHandlerOld
-          .withParser(requestParser)
+        RequestHandler
+          .withValidator(validator)
           .withService(service.retrieveCodingOut)
           .withHateoasResult(hateoasFactory)(RetrieveCodingOutHateoasData(nino, taxYear))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
 
     }
 

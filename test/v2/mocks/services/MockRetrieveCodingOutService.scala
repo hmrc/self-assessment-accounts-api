@@ -21,7 +21,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
+import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 import v2.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v2.services.RetrieveCodingOutService
 
@@ -34,9 +34,9 @@ trait MockRetrieveCodingOutService extends MockFactory {
   object MockRetrieveCodingOutService {
 
     def retrieveCodingOut(
-        request: RetrieveCodingOutParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]]] = {
+        request: RetrieveCodingOutRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]]] = {
       (mockRetrieveCodingOutService
-        .retrieveCodingOut(_: RetrieveCodingOutParsedRequest)(_: RequestContext, _: ExecutionContext))
+        .retrieveCodingOut(_: RetrieveCodingOutRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(request, *, *)
     }
 
