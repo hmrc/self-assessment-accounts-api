@@ -28,7 +28,7 @@ import play.api.mvc.Result
 import v2.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v2.mocks.requestParsers.MockRetrieveCodingOutRequestParser
 import v2.mocks.services.MockRetrieveCodingOutService
-import v2.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
+import v2.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequestData}
 import v2.models.response.retrieveCodingOut._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +44,7 @@ class RetrieveCodingOutControllerSpec
   private val taxYear = "2021-22"
   private val source  = "hmrcHeld"
 
-  private val rawData = RetrieveCodingOutRawRequest(
+  private val rawData = RetrieveCodingOutRawRequestData(
     nino = nino,
     taxYear = taxYear,
     source = Some(source)

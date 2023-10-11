@@ -21,7 +21,7 @@ import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v2.connectors.ListPaymentsAndAllocationDetailsConnector
-import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
 import javax.inject.{Inject, Singleton}
@@ -50,9 +50,9 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
       "SERVICE_UNAVAILABLE"      -> InternalError
     )
 
-  def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
+  def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequestData)(implicit
+                                                                                             ctx: RequestContext,
+                                                                                             ec: ExecutionContext): Future[ServiceOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
     connector
       .listPaymentsAndAllocationDetails(request)

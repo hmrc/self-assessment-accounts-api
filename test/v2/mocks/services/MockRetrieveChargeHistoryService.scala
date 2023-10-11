@@ -21,7 +21,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.services.RetrieveChargeHistoryService
 
@@ -34,10 +34,10 @@ trait MockRetrieveChargeHistoryService extends MockFactory {
   object MockRetrieveChargeHistoryService {
 
     def retrieveChargeHistory(
-        request: RetrieveChargeHistoryRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
+        request: RetrieveChargeHistoryRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
       (
         mockRetrieveChargeHistoryService
-          .retrieveChargeHistory(_: RetrieveChargeHistoryRequest)(
+          .retrieveChargeHistory(_: RetrieveChargeHistoryRequestData)(
             _: RequestContext,
             _: ExecutionContext
           )

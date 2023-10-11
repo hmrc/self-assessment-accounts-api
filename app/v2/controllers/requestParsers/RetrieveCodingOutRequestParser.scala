@@ -24,9 +24,9 @@ import v2.models.request.retrieveCodingOut._
 import javax.inject.Inject
 
 class RetrieveCodingOutRequestParser @Inject()(val validator: RetrieveCodingOutValidator)
-    extends RequestParser[RetrieveCodingOutRawRequest, RetrieveCodingOutParsedRequest] {
+    extends RequestParser[RetrieveCodingOutRawRequestData, RetrieveCodingOutParsedRequest] {
 
-  override protected def requestFor(data: RetrieveCodingOutRawRequest): RetrieveCodingOutParsedRequest =
+  override protected def requestFor(data: RetrieveCodingOutRawRequestData): RetrieveCodingOutParsedRequest =
     RetrieveCodingOutParsedRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.source)
 
 }

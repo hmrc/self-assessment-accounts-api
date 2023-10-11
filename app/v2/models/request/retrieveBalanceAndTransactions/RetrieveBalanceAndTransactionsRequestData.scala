@@ -14,8 +14,19 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveCodingOut
+package v2.models.request.retrieveBalanceAndTransactions
 
-import api.models.request.RawData
+import api.models.domain.Nino
 
-case class RetrieveCodingOutRawRequest(nino: String, taxYear: String, source: Option[String]) extends RawData
+case class RetrieveBalanceAndTransactionsRequestData(
+    nino: Nino,
+    docNumber: Option[String],
+    fromDate: Option[String],
+    toDate: Option[String],
+    onlyOpenItems: Boolean,
+    includeLocks: Boolean,
+    calculateAccruedInterest: Boolean,
+    removePOA: Boolean,
+    customerPaymentInformation: Boolean,
+    includeEstimatedCharges: Boolean
+)

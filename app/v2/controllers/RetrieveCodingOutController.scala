@@ -22,7 +22,7 @@ import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.{IdGenerator, Logging}
 import v2.controllers.requestParsers.RetrieveCodingOutRequestParser
-import v2.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
+import v2.models.request.retrieveCodingOut.RetrieveCodingOutRawRequestData
 import v2.models.response.retrieveCodingOut.RetrieveCodingOutHateoasData
 import v2.services.RetrieveCodingOutService
 
@@ -50,7 +50,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData: RetrieveCodingOutRawRequest = RetrieveCodingOutRawRequest(
+      val rawData: RetrieveCodingOutRawRequestData = RetrieveCodingOutRawRequestData(
         nino = nino,
         taxYear = taxYear,
         source = source

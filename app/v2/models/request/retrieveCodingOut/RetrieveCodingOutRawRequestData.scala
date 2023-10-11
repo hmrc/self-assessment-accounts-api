@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v2.models.request.deleteCodingOut
+package v2.models.request.retrieveCodingOut
 
-import api.models.domain.{Nino, TaxYear}
+import api.models.request.RawData
 
-case class DeleteCodingOutParsedRequest(nino: Nino, taxYear: TaxYear)
+case class RetrieveCodingOutRawRequestData(nino: String, taxYear: String, source: Option[String]) extends RawData

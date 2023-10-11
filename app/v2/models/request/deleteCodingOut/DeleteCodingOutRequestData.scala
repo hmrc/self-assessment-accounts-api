@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveChargeHistory
+package v2.models.request.deleteCodingOut
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 
-case class RetrieveChargeHistoryRequest(nino: Nino, transactionId: String)
+case class DeleteCodingOutRequestData(nino: Nino, taxYear: TaxYear)

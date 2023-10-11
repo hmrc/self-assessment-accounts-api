@@ -21,7 +21,7 @@ import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v2.connectors.RetrieveChargeHistoryConnector
-import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
 import javax.inject.{Inject, Singleton}
@@ -47,9 +47,9 @@ class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryCo
       "SERVICE_UNAVAILABLE"   -> InternalError
     )
 
-  def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveChargeHistoryResponse]] = {
+  def retrieveChargeHistory(request: RetrieveChargeHistoryRequestData)(implicit
+                                                                       ctx: RequestContext,
+                                                                       ec: ExecutionContext): Future[ServiceOutcome[RetrieveChargeHistoryResponse]] = {
 
     connector
       .retrieveChargeHistory(request)

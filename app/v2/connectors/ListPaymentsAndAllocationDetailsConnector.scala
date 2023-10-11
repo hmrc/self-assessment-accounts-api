@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
 import javax.inject.{Inject, Singleton}
@@ -30,10 +30,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
+  def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequestData)(implicit
+                                                                                             hc: HeaderCarrier,
+                                                                                             ec: ExecutionContext,
+                                                                                             correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
     val nino           = request.nino.nino
     val dateFrom       = request.fromDate

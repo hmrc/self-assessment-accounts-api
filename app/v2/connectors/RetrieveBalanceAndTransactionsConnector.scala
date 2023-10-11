@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions.{FinancialDetailsItem, RetrieveBalanceAndTransactionsResponse}
 
 import javax.inject.{Inject, Singleton}
@@ -30,10 +30,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
+  def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)(implicit
+                                                                                         hc: HeaderCarrier,
+                                                                                         ec: ExecutionContext,
+                                                                                         correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
 
     import request._
 

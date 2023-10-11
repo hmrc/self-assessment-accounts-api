@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
+import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,10 +29,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class DeleteCodingOutConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def deleteCodingOut(request: DeleteCodingOutRequestData)(implicit
+                                                           hc: HeaderCarrier,
+                                                           ec: ExecutionContext,
+                                                           correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 

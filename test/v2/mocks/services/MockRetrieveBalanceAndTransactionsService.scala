@@ -21,7 +21,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
 import v2.services.RetrieveBalanceAndTransactionsService
 
@@ -33,11 +33,11 @@ trait MockRetrieveBalanceAndTransactionsService extends MockFactory {
 
   object MockRetrieveBalanceAndTransactionsService {
 
-    def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)
+    def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)
         : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]]] = {
       (
         mockRetrieveBalanceAndTransactionsService
-          .retrieveBalanceAndTransactions(_: RetrieveBalanceAndTransactionsRequest)(
+          .retrieveBalanceAndTransactions(_: RetrieveBalanceAndTransactionsRequestData)(
             _: RequestContext,
             _: ExecutionContext
           )

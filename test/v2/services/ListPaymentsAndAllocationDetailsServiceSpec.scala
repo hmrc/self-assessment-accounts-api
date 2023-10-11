@@ -22,7 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
 import v2.mocks.connectors.MockListPaymentsAndAllocationDetailsConnector
-import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 
 import scala.concurrent.Future
 
@@ -34,8 +34,8 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
   private val paymentLot     = "081203010024"
   private val paymentLotItem = "000001"
 
-  private val request: ListPaymentsAndAllocationDetailsRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some(dateFrom), Some(dateTo), Some(paymentLot), Some(paymentLotItem))
+  private val request: ListPaymentsAndAllocationDetailsRequestData =
+    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), Some(dateFrom), Some(dateTo), Some(paymentLot), Some(paymentLotItem))
 
   "ListPaymentsAndAllocationDetailsService" should {
     "service call successful" when {

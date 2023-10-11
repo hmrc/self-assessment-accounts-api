@@ -20,7 +20,7 @@ import api.models.domain.Nino
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, RuleInvalidDateRangeError}
 import support.UnitSpec
 import v2.mocks.validators.MockListPaymentsAndAllocationDetailsValidator
-import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
+import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequestData}
 
 class ListPaymentsAndAllocationDetailsRequestParserSpec extends UnitSpec {
   val nino: String                   = "AA999999A"
@@ -32,14 +32,14 @@ class ListPaymentsAndAllocationDetailsRequestParserSpec extends UnitSpec {
   val validRequestRawDataWithoutOptionals: ListPaymentsAndAllocationDetailsRawData =
     ListPaymentsAndAllocationDetailsRawData(nino, None, None, None, None)
 
-  val validRequestWithoutOptionals: ListPaymentsAndAllocationDetailsRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), None, None, None, None)
+  val validRequestWithoutOptionals: ListPaymentsAndAllocationDetailsRequestData =
+    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), None, None, None, None)
 
   val validRequestRawDataWithOptionals: ListPaymentsAndAllocationDetailsRawData =
     ListPaymentsAndAllocationDetailsRawData(nino, dateFrom, dateTo, paymentLot, paymentLotItem)
 
-  val validRequestWithOptionals: ListPaymentsAndAllocationDetailsRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), dateFrom, dateTo, paymentLot, paymentLotItem)
+  val validRequestWithOptionals: ListPaymentsAndAllocationDetailsRequestData =
+    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), dateFrom, dateTo, paymentLot, paymentLotItem)
 
   implicit val correlationId: String = "X-123"
 

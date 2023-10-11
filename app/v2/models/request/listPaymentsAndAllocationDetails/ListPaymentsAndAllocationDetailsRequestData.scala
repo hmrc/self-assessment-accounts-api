@@ -18,7 +18,7 @@ package v2.models.request.listPaymentsAndAllocationDetails
 
 import api.models.domain.Nino
 
-case class ListPaymentsAndAllocationDetailsRequest(
+case class ListPaymentsAndAllocationDetailsRequestData(
     nino: Nino,
     fromDate: Option[String],
     toDate: Option[String],

@@ -21,7 +21,7 @@ import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v2.mocks.connectors.MockRetrieveChargeHistoryConnector
-import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
 
 import scala.concurrent.Future
@@ -43,8 +43,8 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       chargeHistoryDetails = Seq(chargeHistoryDetails)
     )
   private val nino = Nino("AA123456A")
-  private val requestData: RetrieveChargeHistoryRequest =
-    RetrieveChargeHistoryRequest(
+  private val requestData: RetrieveChargeHistoryRequestData =
+    RetrieveChargeHistoryRequestData(
       nino = nino,
       transactionId = "anId"
     )

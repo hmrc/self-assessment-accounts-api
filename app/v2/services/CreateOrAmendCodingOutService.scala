@@ -30,9 +30,9 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends BaseService {
 
-  def amend(request: CreateOrAmendCodingOutParsedRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def amend(request: CreateOrAmendCodingOutRequestData)(implicit
+                                                        ctx: RequestContext,
+                                                        ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     connector
       .amendCodingOut(request)

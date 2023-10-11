@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
+import v2.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -29,10 +29,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateOrAmendCodingOutConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def amendCodingOut(request: CreateOrAmendCodingOutParsedRequest)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+  def amendCodingOut(request: CreateOrAmendCodingOutRequestData)(implicit
+                                                                 hc: HeaderCarrier,
+                                                                 ec: ExecutionContext,
+                                                                 correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
     import request._
 

@@ -19,14 +19,14 @@ package v2.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveChargeHistoryValidator
-import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
+import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequestData}
 
 import javax.inject.Inject
 
 class RetrieveChargeHistoryRequestParser @Inject() (val validator: RetrieveChargeHistoryValidator)
-    extends RequestParser[RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest] {
+    extends RequestParser[RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequestData] {
 
-  override protected def requestFor(data: RetrieveChargeHistoryRawData): RetrieveChargeHistoryRequest =
-    RetrieveChargeHistoryRequest(Nino(data.nino), data.transactionId)
+  override protected def requestFor(data: RetrieveChargeHistoryRawData): RetrieveChargeHistoryRequestData =
+    RetrieveChargeHistoryRequestData(Nino(data.nino), data.transactionId)
 
 }

@@ -20,7 +20,7 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.DeleteCodingOutParser
-import v2.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
+import v2.models.request.deleteCodingOut.{DeleteCodingOutRequestData, DeleteCodingOutRawRequest}
 
 trait MockDeleteCodingOutParser extends MockFactory {
 
@@ -28,7 +28,7 @@ trait MockDeleteCodingOutParser extends MockFactory {
 
   object MockDeleteCodingOutParser {
 
-    def parse(data: DeleteCodingOutRawRequest): CallHandler[Either[ErrorWrapper, DeleteCodingOutParsedRequest]] = {
+    def parse(data: DeleteCodingOutRawRequest): CallHandler[Either[ErrorWrapper, DeleteCodingOutRequestData]] = {
       (mockRequestDataParser.parseRequest(_: DeleteCodingOutRawRequest)(_: String)).expects(data, *)
     }
 

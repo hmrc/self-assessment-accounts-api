@@ -20,7 +20,7 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.RetrieveCodingOutRequestParser
-import v2.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
+import v2.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequestData}
 
 trait MockRetrieveCodingOutRequestParser extends MockFactory {
 
@@ -28,8 +28,8 @@ trait MockRetrieveCodingOutRequestParser extends MockFactory {
 
   object MockRetrieveCodingOutRequestParser {
 
-    def parse(data: RetrieveCodingOutRawRequest): CallHandler[Either[ErrorWrapper, RetrieveCodingOutParsedRequest]] = {
-      (mockRetrieveCodingOutRequestParser.parseRequest(_: RetrieveCodingOutRawRequest)(_: String)).expects(data, *)
+    def parse(data: RetrieveCodingOutRawRequestData): CallHandler[Either[ErrorWrapper, RetrieveCodingOutParsedRequest]] = {
+      (mockRetrieveCodingOutRequestParser.parseRequest(_: RetrieveCodingOutRawRequestData)(_: String)).expects(data, *)
     }
 
   }

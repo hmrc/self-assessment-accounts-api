@@ -20,7 +20,7 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.RetrieveChargeHistoryRequestParser
-import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
+import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequestData}
 
 trait MockRetrieveChargeHistoryRequestParser extends MockFactory {
 
@@ -29,7 +29,7 @@ trait MockRetrieveChargeHistoryRequestParser extends MockFactory {
 
   object MockRetrieveChargeHistoryRequestParser {
 
-    def parse(data: RetrieveChargeHistoryRawData): CallHandler[Either[ErrorWrapper, RetrieveChargeHistoryRequest]] = {
+    def parse(data: RetrieveChargeHistoryRawData): CallHandler[Either[ErrorWrapper, RetrieveChargeHistoryRequestData]] = {
       (mockRetrieveChargeHistoryRequestParser
         .parseRequest(_: RetrieveChargeHistoryRawData)(_: String))
         .expects(data, *)

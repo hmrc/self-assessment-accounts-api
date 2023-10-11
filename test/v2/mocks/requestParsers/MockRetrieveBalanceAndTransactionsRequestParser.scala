@@ -20,7 +20,7 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.RetrieveBalanceAndTransactionsRequestParser
-import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest}
+import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequestData}
 
 trait MockRetrieveBalanceAndTransactionsRequestParser extends MockFactory {
 
@@ -29,7 +29,7 @@ trait MockRetrieveBalanceAndTransactionsRequestParser extends MockFactory {
 
   object MockRetrieveBalanceAndTransactionsRequestParser {
 
-    def parse(data: RetrieveBalanceAndTransactionsRawData): CallHandler[Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequest]] = {
+    def parse(data: RetrieveBalanceAndTransactionsRawData): CallHandler[Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData]] = {
       (mockRetrieveBalanceAndTransactionsRequestParser
         .parseRequest(_: RetrieveBalanceAndTransactionsRawData)(_: String))
         .expects(data, *)

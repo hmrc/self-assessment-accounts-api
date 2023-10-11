@@ -115,7 +115,7 @@ class CreateOrAmendCodingOutControllerSpec
           |""".stripMargin)
 
   private val rawData     = CreateOrAmendCodingOutRawRequest(nino, taxYear, requestJson)
-  private val requestData = CreateOrAmendCodingOutParsedRequest(Nino(nino), TaxYear.fromMtd(taxYear), requestBody)
+  private val requestData = CreateOrAmendCodingOutRequestData(Nino(nino), TaxYear.fromMtd(taxYear), requestBody)
 
   "handleRequest" should {
     "return OK" when {
@@ -163,7 +163,7 @@ class CreateOrAmendCodingOutControllerSpec
     }
   }
 
-  private trait Test extends ControllerTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetailOld] {
 
     val controller = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,

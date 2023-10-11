@@ -20,7 +20,7 @@ import api.models.domain.Nino
 import api.models.errors._
 import mocks.MockAppConfig
 import support.UnitSpec
-import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
+import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequestData}
 
 class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAppConfig {
   val nino: String                   = "AA999999A"
@@ -32,14 +32,14 @@ class ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAp
   val validRequestRawDataWithoutOptionals: ListPaymentsAndAllocationDetailsRawData =
     ListPaymentsAndAllocationDetailsRawData(nino, None, None, None, None)
 
-  val validRequestWithoutOptionals: ListPaymentsAndAllocationDetailsRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), None, None, None, None)
+  val validRequestWithoutOptionals: ListPaymentsAndAllocationDetailsRequestData =
+    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), None, None, None, None)
 
   val validRequestRawDataWithOptionals: ListPaymentsAndAllocationDetailsRawData =
     ListPaymentsAndAllocationDetailsRawData(nino, fromDate, toDate, paymentLot, paymentLotItem)
 
-  val validRequestWithOptionals: ListPaymentsAndAllocationDetailsRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), fromDate, toDate, paymentLot, paymentLotItem)
+  val validRequestWithOptionals: ListPaymentsAndAllocationDetailsRequestData =
+    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), fromDate, toDate, paymentLot, paymentLotItem)
 
   private val validator = new ListPaymentsAndAllocationDetailsValidator(mockAppConfig)
 

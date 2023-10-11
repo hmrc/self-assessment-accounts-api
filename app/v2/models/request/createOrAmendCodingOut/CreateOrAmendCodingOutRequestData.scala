@@ -18,4 +18,4 @@ package v2.models.request.createOrAmendCodingOut
 
 import api.models.domain.{Nino, TaxYear}
 
-case class CreateOrAmendCodingOutParsedRequest(nino: Nino, taxYear: TaxYear, body: CreateOrAmendCodingOutRequestBody)
+case class CreateOrAmendCodingOutRequestData(nino: Nino, taxYear: TaxYear, body: CreateOrAmendCodingOutRequestBody)

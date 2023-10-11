@@ -20,19 +20,19 @@ import api.controllers.requestParsers.validators.Validator
 import api.controllers.requestParsers.validators.validations._
 import api.models.errors.MtdError
 import config.AppConfig
-import v2.models.request.retrieveCodingOut.RetrieveCodingOutRawRequest
+import v2.models.request.retrieveCodingOut.RetrieveCodingOutRawRequestData
 
 import javax.inject.Inject
 
-class RetrieveCodingOutValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveCodingOutRawRequest] {
+class RetrieveCodingOutValidator @Inject()(implicit appConfig: AppConfig) extends Validator[RetrieveCodingOutRawRequestData] {
 
   private val validationSet = List(parameterFormatValidation, parameterRuleValidation)
 
-  override def validate(data: RetrieveCodingOutRawRequest): List[MtdError] = {
+  override def validate(data: RetrieveCodingOutRawRequestData): List[MtdError] = {
     run(validationSet, data).distinct
   }
 
-  private def parameterFormatValidation: RetrieveCodingOutRawRequest => List[List[MtdError]] = (data: RetrieveCodingOutRawRequest) => {
+  private def parameterFormatValidation: RetrieveCodingOutRawRequestData => List[List[MtdError]] = (data: RetrieveCodingOutRawRequestData) => {
     List(
       NinoValidation.validate(data.nino),
       TaxYearValidation.validate(data.taxYear),
@@ -40,7 +40,7 @@ class RetrieveCodingOutValidator @Inject()(implicit appConfig: AppConfig) extend
     )
   }
 
-  private def parameterRuleValidation: RetrieveCodingOutRawRequest => List[List[MtdError]] = (data: RetrieveCodingOutRawRequest) => {
+  private def parameterRuleValidation: RetrieveCodingOutRawRequestData => List[List[MtdError]] = (data: RetrieveCodingOutRawRequestData) => {
     List(
       TaxYearNotSupportedValidation.validate(data.taxYear)
     )

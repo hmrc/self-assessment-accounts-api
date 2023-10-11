@@ -28,7 +28,7 @@ import play.api.mvc.Result
 import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
 import v2.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
 import v2.mocks.services.MockRetrieveChargeHistoryService
-import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
+import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequestData}
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 
@@ -47,8 +47,8 @@ class RetrieveChargeHistoryControllerSpec
   private val rawRequest: RetrieveChargeHistoryRawData =
     RetrieveChargeHistoryRawData(nino = nino, transactionId = transactionId)
 
-  private val parsedRequest: RetrieveChargeHistoryRequest =
-    RetrieveChargeHistoryRequest(nino = Nino(nino), transactionId = transactionId)
+  private val parsedRequest: RetrieveChargeHistoryRequestData =
+    RetrieveChargeHistoryRequestData(nino = Nino(nino), transactionId = transactionId)
 
   val chargeHistoryLink: Link =
     hateoas.Link(

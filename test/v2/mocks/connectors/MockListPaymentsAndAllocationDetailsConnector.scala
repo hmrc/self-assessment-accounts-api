@@ -21,7 +21,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.ListPaymentsAndAllocationDetailsConnector
-import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,10 +34,10 @@ trait MockListPaymentsAndAllocationDetailsConnector extends MockFactory {
   object MockListPaymentsAndAllocationDetailsConnector {
 
     def listPaymentsAndAllocationDetails(
-        requestData: ListPaymentsAndAllocationDetailsRequest): CallHandler[Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]]] = {
+        requestData: ListPaymentsAndAllocationDetailsRequestData): CallHandler[Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]]] = {
       (
         mockListPaymentsAndAllocationDetailsConnector
-          .listPaymentsAndAllocationDetails(_: ListPaymentsAndAllocationDetailsRequest)(
+          .listPaymentsAndAllocationDetails(_: ListPaymentsAndAllocationDetailsRequestData)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String

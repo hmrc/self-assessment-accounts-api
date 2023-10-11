@@ -20,7 +20,7 @@ import api.models.domain.Nino
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
 import support.UnitSpec
 import v2.mocks.validators.MockRetrieveChargeHistoryValidator
-import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequest}
+import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequestData}
 
 class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
 
@@ -40,7 +40,7 @@ class RetrieveChargeHistoryRequestParserSpec extends UnitSpec {
       "valid request data is supplied" in new Test {
         MockRetrieveChargeHistoryValidator.validate(inputData).returns(Nil)
 
-        parser.parseRequest(inputData) shouldBe Right(RetrieveChargeHistoryRequest(Nino(validNino), validTransactionId))
+        parser.parseRequest(inputData) shouldBe Right(RetrieveChargeHistoryRequestData(Nino(validNino), validTransactionId))
       }
     }
 

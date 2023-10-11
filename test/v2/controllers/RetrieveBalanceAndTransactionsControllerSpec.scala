@@ -24,7 +24,7 @@ import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
 import v2.mocks.requestParsers.MockRetrieveBalanceAndTransactionsRequestParser
 import v2.mocks.services.MockRetrieveBalanceAndTransactionsService
-import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest}
+import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequestData}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -36,7 +36,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
     with MockRetrieveBalanceAndTransactionsRequestParser {
 
   private val rawRequest: RetrieveBalanceAndTransactionsRawData    = inputDataEverythingTrue
-  private val parsedRequest: RetrieveBalanceAndTransactionsRequest = requestEverythingTrue
+  private val parsedRequest: RetrieveBalanceAndTransactionsRequestData = requestEverythingTrue
 
   "retrieveBalanceAndTransactions" should {
     "return OK" when {

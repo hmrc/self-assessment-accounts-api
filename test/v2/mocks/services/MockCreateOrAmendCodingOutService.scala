@@ -21,7 +21,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutParsedRequest
+import v2.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRequestData
 import v2.services.CreateOrAmendCodingOutService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,9 +32,9 @@ trait MockCreateOrAmendCodingOutService extends MockFactory {
 
   object MockCreateOrAmendCodingOutService {
 
-    def amend(request: CreateOrAmendCodingOutParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def amend(request: CreateOrAmendCodingOutRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockCreateOrAmendCodingOutService
-        .amend(_: CreateOrAmendCodingOutParsedRequest)(_: RequestContext, _: ExecutionContext))
+        .amend(_: CreateOrAmendCodingOutRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(request, *, *)
     }
 

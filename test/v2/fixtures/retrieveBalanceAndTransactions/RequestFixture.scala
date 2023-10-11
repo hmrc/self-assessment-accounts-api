@@ -18,7 +18,7 @@ package v2.fixtures.retrieveBalanceAndTransactions
 
 import api.controllers.ControllerTestRunner.validNino
 import api.models.domain.Nino
-import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest}
+import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequestData}
 
 object RequestFixture {
   val validDocNumber: String = "1234"
@@ -77,7 +77,7 @@ object RequestFixture {
     includeEstimatedCharges = Some("false")
   )
 
-  val requestDocNumber: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
+  val requestDocNumber: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
     nino = Nino(validNino),
     docNumber = Some(validDocNumber),
     fromDate = None,
@@ -90,7 +90,7 @@ object RequestFixture {
     includeEstimatedCharges = false
   )
 
-  val requestDateRange: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
+  val requestDateRange: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
     nino = Nino(validNino),
     docNumber = None,
     fromDate = Some(validFromDate),
@@ -103,7 +103,7 @@ object RequestFixture {
     includeEstimatedCharges = false
   )
 
-  val requestEverythingTrue: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
+  val requestEverythingTrue: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
     nino = Nino(validNino),
     docNumber = Some(validDocNumber),
     fromDate = None,

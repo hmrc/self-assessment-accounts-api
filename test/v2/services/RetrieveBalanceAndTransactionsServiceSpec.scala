@@ -25,7 +25,7 @@ import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDet
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFull
 import v2.mocks.connectors.MockRetrieveBalanceAndTransactionsConnector
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions._
 
 import scala.concurrent.Future
@@ -43,8 +43,8 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
   private val customerPaymentInformation = false
   private val includeStatistical         = false
 
-  private val requestData: RetrieveBalanceAndTransactionsRequest =
-    RetrieveBalanceAndTransactionsRequest(
+  private val requestData: RetrieveBalanceAndTransactionsRequestData =
+    RetrieveBalanceAndTransactionsRequestData(
       Nino(nino),
       Some(docNumber),
       Some(dateFrom),

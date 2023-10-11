@@ -17,15 +17,15 @@
 package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetailOld}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v2.mocks.requestParsers.MockDeleteCodingOutParser
+import v2.controllers.validators.MockDeleteCodingOutValidatorFactory
 import v2.mocks.services.MockDeleteCodingOutService
-import v2.models.request.deleteCodingOut.{DeleteCodingOutParsedRequest, DeleteCodingOutRawRequest}
+import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -34,19 +34,15 @@ class DeleteCodingOutControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockDeleteCodingOutService
-    with MockDeleteCodingOutParser {
+    with MockDeleteCodingOutValidatorFactory {
 
-  private val taxYear = "2019-20"
-
-  private val rawData     = DeleteCodingOutRawRequest(nino, taxYear)
-  private val requestData = DeleteCodingOutParsedRequest(Nino(nino), TaxYear.fromMtd(taxYear))
+  private val taxYear     = "2019-20"
+  private val requestData = DeleteCodingOutRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
 
   "handleRequest" should {
     "return NoContent" when {
       "the request is valid" in new Test {
-        MockDeleteCodingOutParser
-          .parse(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockDeleteCodingOutService
           .delete(requestData)
@@ -57,17 +53,13 @@ class DeleteCodingOutControllerSpec
     }
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockDeleteCodingOutParser
-          .parse(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+        willUseValidator(returning(NinoFormatError))
 
         runErrorTestWithAudit(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockDeleteCodingOutParser
-          .parse(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockDeleteCodingOutService
           .delete(requestData)
@@ -78,27 +70,28 @@ class DeleteCodingOutControllerSpec
     }
   }
 
-  private trait Test extends ControllerTest with AuditEventChecking {
+  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new DeleteCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      parser = mockRequestDataParser,
+      validatorFactory = mockDeleteCodingOutValidatorFactory,
       service = mockDeleteCodingOutService,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)
+    override protected def callController(): Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)
 
-    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetailOld] =
+    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "DeleteCodingOutUnderpayments",
         transactionName = "delete-coding-out-underpayments",
-        detail = GenericAuditDetailOld(
+        detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
+          versionNumber = "2.0",
           params = Map("nino" -> nino, "taxYear" -> taxYear),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,

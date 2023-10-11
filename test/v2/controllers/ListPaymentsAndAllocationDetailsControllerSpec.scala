@@ -24,7 +24,7 @@ import play.api.mvc.Result
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures._
 import v2.mocks.requestParsers.MockListPaymentsAndAllocationDetailsRequestParser
 import v2.mocks.services.MockListPaymentsAndAllocationDetailsService
-import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
+import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequestData}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,7 +38,7 @@ class ListPaymentsAndAllocationDetailsControllerSpec
   private val rawRequest = ListPaymentsAndAllocationDetailsRawData(nino, Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))
 
   private val parsedRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))
+    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))
 
   "retrieveList" should {
     "return a payments and allocation details response" when {

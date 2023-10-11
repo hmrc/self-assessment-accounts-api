@@ -19,9 +19,9 @@ package v2.controllers
 import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.DeleteCodingOutParser
-import v2.models.request.deleteCodingOut.DeleteCodingOutRawRequest
+import routing.{Version, Version2}
+import utils.IdGenerator
+import v2.controllers.validators.DeleteCodingOutValidatorFactory
 import v2.services.DeleteCodingOutService
 
 import javax.inject.{Inject, Singleton}
@@ -30,13 +30,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthService,
                                            val lookupService: MtdIdLookupService,
-                                           parser: DeleteCodingOutParser,
+                                           validatorFactory: DeleteCodingOutValidatorFactory,
                                            service: DeleteCodingOutService,
                                            auditService: AuditService,
                                            cc: ControllerComponents,
                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "DeleteCodingOutController", endpointName = "deleteCodingOut")
@@ -45,21 +44,22 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = DeleteCodingOutRawRequest(nino, taxYear)
+      val validator = validatorFactory.validator(nino, taxYear)
 
       val requestHandler =
-        RequestHandlerOld
-          .withParser(parser)
+        RequestHandler
+          .withValidator(validator)
           .withService(service.deleteCodingOut)
           .withNoContentResult()
-          .withAuditing(
-            AuditHandlerOld(
-              auditService,
-              auditType = "DeleteCodingOutUnderpayments",
-              transactionName = "delete-coding-out-underpayments",
-              params = Map("nino" -> nino, "taxYear" -> taxYear)))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "DeleteCodingOutUnderpayments",
+            transactionName = "delete-coding-out-underpayments",
+            apiVersion = Version.from(request, orElse = Version2),
+            params = Map("nino" -> nino, "taxYear" -> taxYear)
+          ))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
 
 }

@@ -19,15 +19,15 @@ package v2.controllers.requestParsers
 import api.controllers.requestParsers.RequestParser
 import api.models.domain.Nino
 import v2.controllers.requestParsers.validators.RetrieveBalanceAndTransactionsValidator
-import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest}
+import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequestData}
 
 import javax.inject.Inject
 
 class RetrieveBalanceAndTransactionsRequestParser @Inject() (val validator: RetrieveBalanceAndTransactionsValidator)
-    extends RequestParser[RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest] {
+    extends RequestParser[RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequestData] {
 
-  override protected def requestFor(data: RetrieveBalanceAndTransactionsRawData): RetrieveBalanceAndTransactionsRequest =
-    RetrieveBalanceAndTransactionsRequest(
+  override protected def requestFor(data: RetrieveBalanceAndTransactionsRawData): RetrieveBalanceAndTransactionsRequestData =
+    RetrieveBalanceAndTransactionsRequestData(
       nino = Nino(data.nino),
       docNumber = data.docNumber,
       fromDate = data.fromDate,
