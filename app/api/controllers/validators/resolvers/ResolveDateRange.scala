@@ -17,7 +17,7 @@
 package api.controllers.validators.resolvers
 
 import api.models.domain.DateRange
-import api.models.errors.{FromDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
+import api.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
@@ -71,14 +71,14 @@ private[resolvers] class ResolveDateRange(yearLimits: Option[YearLimits],
 object ResolveDateRange {
 
   def unlimited(startDateError: MtdError = StartDateFormatError,
-                endDateError: MtdError = FromDateFormatError,
+                endDateError: MtdError = EndDateFormatError,
                 endBeforeStartError: MtdError = RuleEndBeforeStartDateError): ResolveDateRange =
     new ResolveDateRange(None, startDateError, endDateError, endBeforeStartError)
 
   def withLimits(minYear: Int,
                  maxYear: Int,
                  startDateError: MtdError = StartDateFormatError,
-                 endDateError: MtdError = FromDateFormatError,
+                 endDateError: MtdError = EndDateFormatError,
                  endBeforeStartError: MtdError = RuleEndBeforeStartDateError): ResolveDateRange =
     new ResolveDateRange(Some(YearLimits(minYear, maxYear)), startDateError, endDateError, endBeforeStartError)
 
