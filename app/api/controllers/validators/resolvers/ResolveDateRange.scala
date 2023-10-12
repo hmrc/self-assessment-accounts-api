@@ -16,6 +16,7 @@
 
 package api.controllers.validators.resolvers
 
+import api.models.domain.DateRange
 import api.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
@@ -31,7 +32,7 @@ private[resolvers] class ResolveDateRange private (yearLimits: Option[YearLimits
     val resolvedDates = (
       ResolveIsoDate(startDate, StartDateFormatError),
       ResolveIsoDate(endDate, EndDateFormatError)
-      ).mapN(resolveDateRange).andThen(identity)
+    ).mapN(resolveDateRange).andThen(identity)
 
     yearLimits match {
       case Some(YearLimits(minYear, maxYear)) => resolvedDates.andThen(validateFromAndToDate(_, minYear, maxYear))
@@ -70,7 +71,5 @@ object ResolveDateRange {
     new ResolveDateRange(Some(YearLimits(minYear, maxYear)))
 
 }
-
-case class DateRange(startDate: LocalDate, endDate: LocalDate)
 
 private case class YearLimits(minYear: Int, maxYear: Int)

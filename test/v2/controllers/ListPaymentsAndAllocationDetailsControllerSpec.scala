@@ -17,15 +17,16 @@
 package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures._
 import v2.mocks.requestParsers.MockListPaymentsAndAllocationDetailsRequestParser
 import v2.mocks.services.MockListPaymentsAndAllocationDetailsService
-import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
+import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequestData}
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -35,10 +36,15 @@ class ListPaymentsAndAllocationDetailsControllerSpec
     with MockListPaymentsAndAllocationDetailsRequestParser
     with MockListPaymentsAndAllocationDetailsService {
 
-  private val rawRequest = ListPaymentsAndAllocationDetailsRawData(nino, Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))
+  private val rawRequest =
+    ListPaymentsAndAllocationDetailsRawData(nino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))
 
   private val parsedRequest =
-    ListPaymentsAndAllocationDetailsRequest(Nino(nino), Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))
+    ListPaymentsAndAllocationDetailsRequestData(
+      Nino(nino),
+      Some(DateRange(LocalDate.parse("2022-08-15"), LocalDate.parse("2022-09-15"))),
+      Some("paymentLot"),
+      Some("paymentLotItem"))
 
   "retrieveList" should {
     "return a payments and allocation details response" when {
@@ -90,7 +96,7 @@ class ListPaymentsAndAllocationDetailsControllerSpec
     )
 
     protected def callController(): Future[Result] =
-      controller.listPayments(nino, Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
+      controller.listPayments(nino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
 
   }
 

@@ -20,7 +20,7 @@ import api.models.errors.ErrorWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v2.controllers.requestParsers.ListPaymentsAndAllocationDetailsRequestParser
-import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequest}
+import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequestData}
 
 trait MockListPaymentsAndAllocationDetailsRequestParser extends MockFactory {
 
@@ -29,7 +29,7 @@ trait MockListPaymentsAndAllocationDetailsRequestParser extends MockFactory {
 
   object MockListPaymentsAndAllocationDetailsRequestParser {
 
-    def parse(data: ListPaymentsAndAllocationDetailsRawData): CallHandler[Either[ErrorWrapper, ListPaymentsAndAllocationDetailsRequest]] = {
+    def parse(data: ListPaymentsAndAllocationDetailsRawData): CallHandler[Either[ErrorWrapper, ListPaymentsAndAllocationDetailsRequestData]] = {
       (mockListPaymentsAndAllocationDetailsRequestParser
         .parseRequest(_: ListPaymentsAndAllocationDetailsRawData)(_: String))
         .expects(data, *)
