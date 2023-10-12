@@ -18,17 +18,18 @@ package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
+import api.hateoas.Method.GET
+import api.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.models.domain.Nino
 import api.models.errors._
-import api.hateoas.Method.GET
-import api.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
+import v2.controllers.validators.MockRetrieveChargeHistoryValidatorFactory
 import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
-import v2.mocks.requestParsers.MockRetrieveChargeHistoryRequestParser
 import v2.mocks.services.MockRetrieveChargeHistoryService
-import v2.models.request.retrieveChargeHistory.{RetrieveChargeHistoryRawData, RetrieveChargeHistoryRequestData}
+import v2.models.domain.TransactionId
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 
@@ -40,15 +41,12 @@ class RetrieveChargeHistoryControllerSpec
     with ControllerTestRunner
     with MockRetrieveChargeHistoryService
     with MockHateoasFactory
-    with MockRetrieveChargeHistoryRequestParser {
+    with MockRetrieveChargeHistoryValidatorFactory {
 
   private val transactionId = "anId"
 
-  private val rawRequest: RetrieveChargeHistoryRawData =
-    RetrieveChargeHistoryRawData(nino = nino, transactionId = transactionId)
-
-  private val parsedRequest: RetrieveChargeHistoryRequestData =
-    RetrieveChargeHistoryRequestData(nino = Nino(nino), transactionId = transactionId)
+  private val requestData: RetrieveChargeHistoryRequestData =
+    RetrieveChargeHistoryRequestData(nino = Nino(nino), transactionId = TransactionId(transactionId))
 
   val chargeHistoryLink: Link =
     hateoas.Link(
@@ -56,23 +54,23 @@ class RetrieveChargeHistoryControllerSpec
       method = GET,
       rel = SELF
     )
+
   val transactionDetailsLink: Link =
     hateoas.Link(
       href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
       method = GET,
       rel = RETRIEVE_TRANSACTION_DETAILS
     )
+
   val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
   "retrieveChargeHistory" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockRetrieveChargeHistoryRequestParser
-          .parse(rawRequest)
-          .returns(Right(parsedRequest))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveChargeHistoryService
-          .retrieveChargeHistory(parsedRequest)
+          .retrieveChargeHistory(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
@@ -90,12 +88,10 @@ class RetrieveChargeHistoryControllerSpec
     }
     "return the error as per spec" when {
       "the service returns an error" in new Test {
-        MockRetrieveChargeHistoryRequestParser
-          .parse(rawRequest)
-          .returns(Right(parsedRequest))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveChargeHistoryService
-          .retrieveChargeHistory(parsedRequest)
+          .retrieveChargeHistory(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
 
         runErrorTest(NinoFormatError)
@@ -109,7 +105,7 @@ class RetrieveChargeHistoryControllerSpec
     private val controller = new RetrieveChargeHistoryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveChargeHistoryRequestParser,
+      validatorFactory = mockRetrieveChargeHistoryValidatorFactory,
       service = mockRetrieveChargeHistoryService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

@@ -16,13 +16,14 @@
 
 package v2.connectors
 
-import mocks.MockAppConfig
 import api.connectors.ConnectorSpec
-import v2.models.response.retrieveChargeHistory._
-import v2.mocks.MockHttpClient
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
+import v2.mocks.MockHttpClient
+import v2.models.domain.TransactionId
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
+import v2.models.response.retrieveChargeHistory._
 
 import scala.concurrent.Future
 
@@ -60,7 +61,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
   "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      val request: RetrieveChargeHistoryRequestData = RetrieveChargeHistoryRequestData(Nino(nino), transactionId)
+      val request: RetrieveChargeHistoryRequestData = RetrieveChargeHistoryRequestData(Nino(nino), TransactionId(transactionId))
 
       "return a valid response" in new Test {
 
