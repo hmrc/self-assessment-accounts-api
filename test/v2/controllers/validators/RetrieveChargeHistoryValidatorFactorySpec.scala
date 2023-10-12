@@ -18,12 +18,11 @@ package v2.controllers.validators
 
 import api.models.domain.Nino
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
-import mocks.MockAppConfig
 import support.UnitSpec
 import v2.models.domain.TransactionId
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 
-class RetrieveChargeHistoryValidatorFactorySpec extends UnitSpec with MockAppConfig {
+class RetrieveChargeHistoryValidatorFactorySpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino          = "AA123456A"
@@ -32,7 +31,7 @@ class RetrieveChargeHistoryValidatorFactorySpec extends UnitSpec with MockAppCon
   private val parsedNino          = Nino(validNino)
   private val parsedTransactionId = TransactionId(validTransactionId)
 
-  private val validatorFactory = new RetrieveChargeHistoryValidatorFactory(mockAppConfig)
+  private val validatorFactory = new RetrieveChargeHistoryValidatorFactory()
 
   private def validator(nino: String, transactionId: String) = validatorFactory.validator(nino, transactionId)
 

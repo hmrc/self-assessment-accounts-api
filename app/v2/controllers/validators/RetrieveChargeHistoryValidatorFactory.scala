@@ -21,14 +21,13 @@ import api.controllers.validators.resolvers.ResolveNino
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
-import config.AppConfig
 import v2.controllers.validators.resolvers.ResolveTransactionId
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Singleton
 
 @Singleton
-class RetrieveChargeHistoryValidatorFactory @Inject() (appConfig: AppConfig) {
+class RetrieveChargeHistoryValidatorFactory {
 
   def validator(nino: String, transactionId: String): Validator[RetrieveChargeHistoryRequestData] =
     new Validator[RetrieveChargeHistoryRequestData] {

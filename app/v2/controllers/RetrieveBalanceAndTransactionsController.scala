@@ -19,9 +19,8 @@ package v2.controllers
 import api.controllers._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.RetrieveBalanceAndTransactionsRequestParser
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRawData
+import utils.IdGenerator
+import v2.controllers.validators.RetrieveBalanceAndTransactionsValidatorFactory
 import v2.services.RetrieveBalanceAndTransactionsService
 
 import javax.inject.{Inject, Singleton}
@@ -30,12 +29,11 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveBalanceAndTransactionsController @Inject() (val authService: EnrolmentsAuthService,
                                                           val lookupService: MtdIdLookupService,
-                                                          requestParser: RetrieveBalanceAndTransactionsRequestParser,
+                                                          validatorFactory: RetrieveBalanceAndTransactionsValidatorFactory,
                                                           service: RetrieveBalanceAndTransactionsService,
                                                           cc: ControllerComponents,
                                                           idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveBalanceAndTransactionsController", endpointName = "retrieveBalanceAndTransactions")
@@ -53,7 +51,7 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawRequest = RetrieveBalanceAndTransactionsRawData(
+      val validator = validatorFactory.validator(
         nino,
         docNumber: Option[String],
         fromDate: Option[String],
@@ -67,12 +65,12 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
       )
 
       val requestHandler =
-        RequestHandlerOld
-          .withParser(requestParser)
+        RequestHandler
+          .withValidator(validator)
           .withService(service.retrieveBalanceAndTransactions)
           .withPlainJsonResult()
 
-      requestHandler.handleRequest(rawRequest)
+      requestHandler.handleRequest()
     }
 
 }
