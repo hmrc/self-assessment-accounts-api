@@ -50,7 +50,11 @@ class ListPaymentsAndAllocationDetailsValidatorFactory {
           (
             ResolveNino(nino),
             maybeFromAndTo
-              .map { case (from, to) => ResolveDateRange.withLimits(minYear, maxYear)(from -> to).map(Some(_)) }
+              .map { case (from, to) =>
+                ResolveDateRange
+                  .withLimits(minYear, maxYear, FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)(from -> to)
+                  .map(Some(_))
+              }
               .getOrElse(Valid(None)),
             resolvePaymentLot(paymentLot),
             resolvePaymentLotItem(paymentLotItem)
@@ -66,13 +70,12 @@ class ListPaymentsAndAllocationDetailsValidatorFactory {
           case (None, Some(_))        => Invalid(List(MissingFromDateError))
         }
 
-      private def validateMissingPaymentData(paymentLot: Option[String], paymentLotItem: Option[String]): Validated[Seq[MtdError], Unit] = {
+      private def validateMissingPaymentData(paymentLot: Option[String], paymentLotItem: Option[String]): Validated[Seq[MtdError], Unit] =
         (paymentLot, paymentLotItem) match {
           case (None, Some(_)) => Invalid(List(MissingPaymentLotError))
           case (Some(_), None) => Invalid(List(MissingPaymentLotItemError))
           case _               => Valid(())
         }
-      }
 
     }
 

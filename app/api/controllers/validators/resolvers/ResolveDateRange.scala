@@ -17,21 +17,25 @@
 package api.controllers.validators.resolvers
 
 import api.models.domain.DateRange
-import api.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
+import api.models.errors.{FromDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
 
 import java.time.LocalDate
 
-private[resolvers] class ResolveDateRange private (yearLimits: Option[YearLimits]) extends Resolver[(String, String), DateRange] {
+private[resolvers] class ResolveDateRange(yearLimits: Option[YearLimits],
+                                          startDateError: MtdError,
+                                          endDateError: MtdError,
+                                          endBeforeStartError: MtdError)
+    extends Resolver[(String, String), DateRange] {
 
   def apply(value: (String, String), notUsedError: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], DateRange] = {
     val (startDate, endDate) = value
 
     val resolvedDates = (
-      ResolveIsoDate(startDate, StartDateFormatError),
-      ResolveIsoDate(endDate, EndDateFormatError)
+      ResolveIsoDate(startDate, startDateError),
+      ResolveIsoDate(endDate, endDateError)
     ).mapN(resolveDateRange).andThen(identity)
 
     yearLimits match {
@@ -45,15 +49,15 @@ private[resolvers] class ResolveDateRange private (yearLimits: Option[YearLimits
     val endDateEpochTime   = parsedEndDate.toEpochDay
 
     if ((endDateEpochTime - startDateEpochTime) <= 0) {
-      Invalid(List(RuleEndBeforeStartDateError))
+      Invalid(List(endBeforeStartError))
     } else {
       Valid(DateRange(parsedStartDate, parsedEndDate))
     }
   }
 
   private def validateFromAndToDate(value: DateRange, minYear: Int, maxYear: Int): Validated[Seq[MtdError], DateRange] = {
-    val validatedFromDate = if (value.startDate.getYear < minYear) Invalid(List(StartDateFormatError)) else Valid(())
-    val validatedToDate   = if (value.endDate.getYear >= maxYear) Invalid(List(EndDateFormatError)) else Valid(())
+    val validatedFromDate = if (value.startDate.getYear < minYear) Invalid(List(startDateError)) else Valid(())
+    val validatedToDate   = if (value.endDate.getYear >= maxYear) Invalid(List(endDateError)) else Valid(())
 
     List(
       validatedFromDate,
@@ -65,10 +69,18 @@ private[resolvers] class ResolveDateRange private (yearLimits: Option[YearLimits
 }
 
 object ResolveDateRange {
-  def unlimited: ResolveDateRange = new ResolveDateRange(None)
 
-  def withLimits(minYear: Int, maxYear: Int): ResolveDateRange =
-    new ResolveDateRange(Some(YearLimits(minYear, maxYear)))
+  def unlimited(startDateError: MtdError = StartDateFormatError,
+                endDateError: MtdError = FromDateFormatError,
+                endBeforeStartError: MtdError = RuleEndBeforeStartDateError): ResolveDateRange =
+    new ResolveDateRange(None, startDateError, endDateError, endBeforeStartError)
+
+  def withLimits(minYear: Int,
+                 maxYear: Int,
+                 startDateError: MtdError = StartDateFormatError,
+                 endDateError: MtdError = FromDateFormatError,
+                 endBeforeStartError: MtdError = RuleEndBeforeStartDateError): ResolveDateRange =
+    new ResolveDateRange(Some(YearLimits(minYear, maxYear)), startDateError, endDateError, endBeforeStartError)
 
 }
 
