@@ -19,9 +19,8 @@ package v2.controllers
 import api.controllers._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.ListPaymentsAndAllocationDetailsRequestParser
-import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRawData
+import utils.IdGenerator
+import v2.controllers.validators.ListPaymentsAndAllocationDetailsValidatorFactory
 import v2.services.ListPaymentsAndAllocationDetailsService
 
 import javax.inject.{Inject, Singleton}
@@ -30,12 +29,11 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class ListPaymentsAndAllocationDetailsController @Inject() (val authService: EnrolmentsAuthService,
                                                             val lookupService: MtdIdLookupService,
-                                                            requestParser: ListPaymentsAndAllocationDetailsRequestParser,
+                                                            validatorFactory: ListPaymentsAndAllocationDetailsValidatorFactory,
                                                             service: ListPaymentsAndAllocationDetailsService,
                                                             cc: ControllerComponents,
                                                             idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListPaymentsAndAllocationDetailsController", endpointName = "listPaymentsAndAllocationDetails")
@@ -48,21 +46,15 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = ListPaymentsAndAllocationDetailsRawData(
-        nino = nino,
-        fromDate = fromDate,
-        toDate = toDate,
-        paymentLot = paymentLot,
-        paymentLotItem = paymentLotItem
-      )
+      val validator = validatorFactory.validator(nino, fromDate, toDate, paymentLot, paymentLotItem)
 
       val requestHandler =
-        RequestHandlerOld
-          .withParser(requestParser)
+        RequestHandler
+          .withValidator(validator)
           .withService(service.listPaymentsAndAllocationDetails)
           .withPlainJsonResult()
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
 
 }

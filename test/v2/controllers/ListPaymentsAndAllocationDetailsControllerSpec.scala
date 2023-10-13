@@ -17,38 +17,39 @@
 package v2.controllers
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
+import v2.controllers.validators.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures._
-import v2.mocks.requestParsers.MockListPaymentsAndAllocationDetailsRequestParser
 import v2.mocks.services.MockListPaymentsAndAllocationDetailsService
-import v2.models.request.listPaymentsAndAllocationDetails.{ListPaymentsAndAllocationDetailsRawData, ListPaymentsAndAllocationDetailsRequestData}
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 
+import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class ListPaymentsAndAllocationDetailsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockListPaymentsAndAllocationDetailsRequestParser
+    with MockListPaymentsAndAllocationDetailsValidatorFactory
     with MockListPaymentsAndAllocationDetailsService {
 
-  private val rawRequest = ListPaymentsAndAllocationDetailsRawData(nino, Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))
-
-  private val parsedRequest =
-    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))
+  private val requestData =
+    ListPaymentsAndAllocationDetailsRequestData(
+      Nino(nino),
+      Some(DateRange(LocalDate.parse("2022-08-15"), LocalDate.parse("2022-09-15"))),
+      Some("paymentLot"),
+      Some("paymentLotItem"))
 
   "retrieveList" should {
     "return a payments and allocation details response" when {
       "the request is valid" in new Test {
-        MockListPaymentsAndAllocationDetailsRequestParser
-          .parse(rawRequest)
-          .returns(Right(parsedRequest))
+        willUseValidator(returningSuccess(requestData))
 
         MockListPaymentsAndAllocationDetailsService
-          .listPaymentsAndAllocationDetails(parsedRequest)
+          .listPaymentsAndAllocationDetails(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObject))))
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
@@ -57,20 +58,16 @@ class ListPaymentsAndAllocationDetailsControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockListPaymentsAndAllocationDetailsRequestParser
-          .parse(rawRequest)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+        willUseValidator(returning(NinoFormatError))
 
         runErrorTest(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockListPaymentsAndAllocationDetailsRequestParser
-          .parse(rawRequest)
-          .returns(Right(parsedRequest))
+        willUseValidator(returningSuccess(requestData))
 
         MockListPaymentsAndAllocationDetailsService
-          .listPaymentsAndAllocationDetails(parsedRequest)
+          .listPaymentsAndAllocationDetails(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, PaymentLotFormatError))))
 
         runErrorTest(PaymentLotFormatError)
@@ -83,14 +80,14 @@ class ListPaymentsAndAllocationDetailsControllerSpec
     private val controller = new ListPaymentsAndAllocationDetailsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockListPaymentsAndAllocationDetailsRequestParser,
+      validatorFactory = mockListPaymentsAndAllocationDetailsValidatorFactory,
       service = mockListPaymentsAndAllocationDetailsService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
 
     protected def callController(): Future[Result] =
-      controller.listPayments(nino, Some("fromDate"), Some("toDate"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
+      controller.listPayments(nino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
 
   }
 

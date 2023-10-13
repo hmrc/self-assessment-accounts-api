@@ -31,15 +31,14 @@ import scala.concurrent.{ExecutionContext, Future}
 class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequestData)(implicit
-                                                                                             hc: HeaderCarrier,
-                                                                                             ec: ExecutionContext,
-                                                                                             correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
-    val nino           = request.nino.nino
-    val dateFrom       = request.fromDate
-    val dateTo         = request.toDate
-    val paymentLot     = request.paymentLot
-    val paymentLotItem = request.paymentLotItem
+    import request._
+
+    val dateFrom = fromAndToDates.map(_.startDate.toString)
+    val dateTo   = fromAndToDates.map(_.endDate.toString)
 
     def getIfExists(option: Option[String], name: String): Seq[(String, String)] = option match {
       case Some(x) => Seq(name -> x)

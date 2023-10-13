@@ -19,23 +19,20 @@ package v2.services
 import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
-import api.services.ServiceSpec
+import api.services.{ServiceOutcome, ServiceSpec}
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
 import v2.mocks.connectors.MockListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
+import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
 import scala.concurrent.Future
 
 class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
 
-  private val nino           = "AA123456A"
-  private val dateFrom       = "2018-08-13"
-  private val dateTo         = "2019-08-13"
-  private val paymentLot     = "081203010024"
-  private val paymentLotItem = "000001"
+  private val nino = "AA123456A"
 
   private val request: ListPaymentsAndAllocationDetailsRequestData =
-    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), Some(dateFrom), Some(dateTo), Some(paymentLot), Some(paymentLotItem))
+    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), None, None, None)
 
   "ListPaymentsAndAllocationDetailsService" should {
     "service call successful" when {
@@ -44,7 +41,7 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
           .listPaymentsAndAllocationDetails(request)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseObject))))
 
-        val result = await(service.listPaymentsAndAllocationDetails(request))
+        val result: ServiceOutcome[ListPaymentsAndAllocationDetailsResponse] = await(service.listPaymentsAndAllocationDetails(request))
         result shouldBe Right(ResponseWrapper(correlationId, responseObject))
       }
     }

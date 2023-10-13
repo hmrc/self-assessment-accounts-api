@@ -17,7 +17,7 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
@@ -25,6 +25,7 @@ import v2.mocks.MockHttpClient
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
@@ -36,7 +37,11 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
   private val paymentLotItem = "000001"
 
   private val validRequest: ListPaymentsAndAllocationDetailsRequestData =
-    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), Some(dateFrom), Some(dateTo), Some(paymentLot), Some(paymentLotItem))
+    ListPaymentsAndAllocationDetailsRequestData(
+      Nino(nino),
+      Some(DateRange(LocalDate.parse(dateFrom), LocalDate.parse(dateTo))),
+      Some(paymentLot),
+      Some(paymentLotItem))
 
   class Test extends MockHttpClient with MockAppConfig {
 
