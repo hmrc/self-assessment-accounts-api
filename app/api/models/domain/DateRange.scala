@@ -14,14 +14,8 @@
  * limitations under the License.
  */
 
-package v2.models.request.listPaymentsAndAllocationDetails
+package api.models.domain
 
-import api.models.request.RawData
+import java.time.LocalDate
 
-case class ListPaymentsAndAllocationDetailsRawData(
-    nino: String,
-    fromDate: Option[String],
-    toDate: Option[String],
-    paymentLot: Option[String],
-    paymentLotItem: Option[String]
-) extends RawData
+case class DateRange(startDate: LocalDate, endDate: LocalDate)

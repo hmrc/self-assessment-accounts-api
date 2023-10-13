@@ -16,12 +16,11 @@
 
 package v2.models.request.listPaymentsAndAllocationDetails
 
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 
-case class ListPaymentsAndAllocationDetailsRequest(
+case class ListPaymentsAndAllocationDetailsRequestData(
     nino: Nino,
-    fromDate: Option[String],
-    toDate: Option[String],
+    fromAndToDates: Option[DateRange],
     paymentLot: Option[String],
     paymentLotItem: Option[String]
 )

@@ -16,6 +16,7 @@
 
 package api.controllers.validators.resolvers
 
+import api.models.domain.DateRange
 import api.models.errors.{EndDateFormatError, RuleEndBeforeStartDateError, StartDateFormatError}
 import cats.data.Validated.{Invalid, Valid}
 import support.UnitSpec
@@ -45,7 +46,7 @@ class ResolveDateRangeSpec extends UnitSpec {
       }
 
       "when date bounding is not in use" in {
-        val unboundedResolver = ResolveDateRange.unlimited
+        val unboundedResolver = ResolveDateRange.unlimited()
         val result            = unboundedResolver("1567-01-01" -> "1678-01-31")
 
         result shouldBe Valid(DateRange(LocalDate.parse("1567-01-01"), LocalDate.parse("1678-01-31")))

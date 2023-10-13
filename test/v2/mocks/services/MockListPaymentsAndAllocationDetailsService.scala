@@ -21,7 +21,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 import v2.services.ListPaymentsAndAllocationDetailsService
 
@@ -33,11 +33,11 @@ trait MockListPaymentsAndAllocationDetailsService extends MockFactory {
 
   object MockListPaymentsAndAllocationDetailsService {
 
-    def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)
+    def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequestData)
         : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[ListPaymentsAndAllocationDetailsResponse]]]] = {
       (
         mockListPaymentsAndAllocationDetailsService
-          .listPaymentsAndAllocationDetails(_: ListPaymentsAndAllocationDetailsRequest)(
+          .listPaymentsAndAllocationDetails(_: ListPaymentsAndAllocationDetailsRequestData)(
             _: RequestContext,
             _: ExecutionContext
           )

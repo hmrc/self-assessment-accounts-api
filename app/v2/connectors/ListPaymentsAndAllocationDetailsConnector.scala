@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequest
+import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
 import javax.inject.{Inject, Singleton}
@@ -30,16 +30,15 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequest)(implicit
+  def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequestData)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
-    val nino           = request.nino.nino
-    val dateFrom       = request.fromDate
-    val dateTo         = request.toDate
-    val paymentLot     = request.paymentLot
-    val paymentLotItem = request.paymentLotItem
+    import request._
+
+    val dateFrom = fromAndToDates.map(_.startDate.toString)
+    val dateTo   = fromAndToDates.map(_.endDate.toString)
 
     def getIfExists(option: Option[String], name: String): Seq[(String, String)] = option match {
       case Some(x) => Seq(name -> x)
