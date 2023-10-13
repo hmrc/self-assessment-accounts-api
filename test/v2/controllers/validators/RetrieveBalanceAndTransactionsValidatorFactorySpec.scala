@@ -209,7 +209,7 @@ class RetrieveBalanceAndTransactionsValidatorFactorySpec extends UnitSpec {
 
       "multiple invalid values are supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, fromDate = Some("invalid"), None, None, None, None, removePOA = Some("invalid"), None, None)
+          validator(validNino, None, fromDate = Some("invalid"), Some(validToDate), None, None, None, removePOA = Some("invalid"), None, None)
             .validateAndWrapResult()
 
         result shouldBe Left(

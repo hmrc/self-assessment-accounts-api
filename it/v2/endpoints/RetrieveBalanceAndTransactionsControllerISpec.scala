@@ -74,7 +74,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         )
     }
 
-    def uri: String           = s"/$nino/balance-and-transactions"
+    def uri: String = s"/$nino/balance-and-transactions"
 
     def errorBody(code: String): String =
       s"""
@@ -207,7 +207,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
         ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, Some("invalid"), None, BAD_REQUEST, CustomerPaymentInformationFormatError),
         ("AA123456A", Some(validDocNumber), Some("invalid"), Some(validToDate), None, None, None, None, None, None, BAD_REQUEST, FromDateFormatError),
         ("AA123456A", Some(validDocNumber), Some(validFromDate), Some("invalid"), None, None, None, None, None, None, BAD_REQUEST, ToDateFormatError),
-        ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, Some("invalid"), None, None, BAD_REQUEST, RemovePaymentOnAccountFormatError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, Some("invalid"), None, None, BAD_REQUEST, RemovePaymentOnAccountFormatError),
         ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, None, Some("invalid"), BAD_REQUEST, IncludeEstimatedChargesFormatError),
         ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, RangeToDateBeforeFromDateError),
         ("AA123456A", Some(validDocNumber), Some(validToDate), None, None, None, None, None, None, None, BAD_REQUEST, RuleMissingToDateError),

@@ -17,7 +17,7 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
@@ -28,6 +28,7 @@ import v2.mocks.MockHttpClient
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions._
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
@@ -54,8 +55,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   private val validRequest: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
     nino = Nino(nino),
     docNumber = Some(docNumber),
-    fromDate = Some(fromDate),
-    toDate = Some(toDate),
+    Some(DateRange(LocalDate.parse(fromDate), LocalDate.parse(toDate))),
     onlyOpenItems = onlyOpenItems,
     includeLocks = includeLocks,
     calculateAccruedInterest = calculateAccruedInterest,
@@ -120,7 +120,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       }
 
       "a valid request containing docNumber and not fromDate or dateTo is supplied" in new Test {
-        val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromDate = None, toDate = None)
+        val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
 
         val queryParams: Seq[(String, String)] =
           commonQueryParams ++ Seq("docNumber" -> s"$docNumber")

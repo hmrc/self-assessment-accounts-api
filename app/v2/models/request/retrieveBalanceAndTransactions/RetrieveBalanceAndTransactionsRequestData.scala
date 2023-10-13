@@ -16,13 +16,12 @@
 
 package v2.models.request.retrieveBalanceAndTransactions
 
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 
 case class RetrieveBalanceAndTransactionsRequestData(
     nino: Nino,
     docNumber: Option[String],
-    fromDate: Option[String],
-    toDate: Option[String],
+    fromAndToDates: Option[DateRange],
     onlyOpenItems: Boolean,
     includeLocks: Boolean,
     calculateAccruedInterest: Boolean,

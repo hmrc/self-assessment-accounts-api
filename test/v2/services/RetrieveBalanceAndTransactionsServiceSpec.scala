@@ -16,7 +16,7 @@
 
 package v2.services
 
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -28,6 +28,7 @@ import v2.mocks.connectors.MockRetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions._
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
@@ -47,8 +48,7 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
     RetrieveBalanceAndTransactionsRequestData(
       Nino(nino),
       Some(docNumber),
-      Some(dateFrom),
-      Some(dateTo),
+      Some(DateRange(LocalDate.parse(dateFrom), LocalDate.parse(dateTo))),
       onlyOpenItems,
       includeLocks,
       calculateAccruedInterest,

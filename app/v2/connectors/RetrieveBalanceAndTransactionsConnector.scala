@@ -31,9 +31,9 @@ import scala.concurrent.{ExecutionContext, Future}
 class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)(implicit
-                                                                                         hc: HeaderCarrier,
-                                                                                         ec: ExecutionContext,
-                                                                                         correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
 
     import request._
 
@@ -50,8 +50,8 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
     val optionalQueryParams: Seq[(String, String)] =
       Seq(
         "docNumber" -> docNumber,
-        "dateFrom"  -> fromDate,
-        "dateTo"    -> toDate
+        "dateFrom"  -> fromAndToDates.map(_.startDate.toString),
+        "dateTo"    -> fromAndToDates.map(_.endDate.toString)
       ).collect { case (k, Some(v)) => k -> v }
 
     val queryParams = booleanQueryParams ++ optionalQueryParams

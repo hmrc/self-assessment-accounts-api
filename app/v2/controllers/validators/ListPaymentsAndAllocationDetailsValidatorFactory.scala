@@ -42,6 +42,9 @@ class ListPaymentsAndAllocationDetailsValidatorFactory {
                 paymentLotItem: Option[String]): Validator[ListPaymentsAndAllocationDetailsRequestData] =
     new Validator[ListPaymentsAndAllocationDetailsRequestData] {
 
+      private val resolveDateRange = ResolveDateRange
+        .withLimits(minYear, maxYear, FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)
+
       def validate: Validated[Seq[MtdError], ListPaymentsAndAllocationDetailsRequestData] = {
 
         validateMissingPaymentData(paymentLot, paymentLotItem) andThen { _ =>
@@ -51,8 +54,7 @@ class ListPaymentsAndAllocationDetailsValidatorFactory {
             ResolveNino(nino),
             maybeFromAndTo
               .map { case (from, to) =>
-                ResolveDateRange
-                  .withLimits(minYear, maxYear, FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)(from -> to)
+                resolveDateRange(from -> to)
                   .map(Some(_))
               }
               .getOrElse(Valid(None)),

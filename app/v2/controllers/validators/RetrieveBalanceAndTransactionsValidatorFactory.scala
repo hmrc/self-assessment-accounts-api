@@ -17,23 +17,21 @@
 package v2.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveBoolean, ResolveIsoDate, ResolveNino}
+import api.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
+import api.models.domain.DateRange
 import api.models.errors._
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.inject.Singleton
 
 @Singleton
 class RetrieveBalanceAndTransactionsValidatorFactory {
 
-  private val minYear                       = 1900
-  private val maxYear                       = 2100
-  private val dateFormat: DateTimeFormatter = DateTimeFormatter ofPattern "yyyy-MM-dd"
+  private val minYear = 1900
+  private val maxYear = 2100
 
   def validator(nino: String,
                 docNumber: Option[String],
@@ -47,12 +45,21 @@ class RetrieveBalanceAndTransactionsValidatorFactory {
                 includeEstimatedCharges: Option[String]): Validator[RetrieveBalanceAndTransactionsRequestData] =
     new Validator[RetrieveBalanceAndTransactionsRequestData] {
 
+      private val resolveDateRange = ResolveDateRange
+        .withLimits(minYear, maxYear, FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)
+
       def validate: Validated[Seq[MtdError], RetrieveBalanceAndTransactionsRequestData] =
         (
           ResolveNino(nino),
           resolveDocNumber(docNumber),
-          validateFromDate(fromDate),
-          validateToDate(toDate),
+          validateDateRange(fromDate, toDate) andThen { maybeFromAndTo =>
+            maybeFromAndTo
+              .map { case (from, to) =>
+                resolveDateRange(from -> to)
+                  .map(Some(_))
+              }
+              .getOrElse(Valid(None))
+          },
           ResolveBoolean(onlyOpenItems, defaultValue = false, OnlyOpenItemsFormatError),
           ResolveBoolean(includeLocks, defaultValue = false, IncludeLocksFormatError),
           ResolveBoolean(calculateAccruedInterest, defaultValue = false, CalculateAccruedInterestFormatError),
@@ -71,30 +78,6 @@ class RetrieveBalanceAndTransactionsValidatorFactory {
           .getOrElse(Valid(None))
       }
 
-      private def validateFromDate(fromDate: Option[String]): Validated[Seq[MtdError], Option[String]] = {
-        def checkMinYear(maybeParsedFromDate: Option[LocalDate]): Validated[Seq[MtdError], Option[String]] =
-          maybeParsedFromDate
-            .map {
-              case parsedFromDate if parsedFromDate.getYear <= minYear => Invalid(List(FromDateFormatError))
-              case _                                                   => Valid(fromDate)
-            }
-            .getOrElse(Valid(None))
-
-        ResolveIsoDate(fromDate, FromDateFormatError) andThen checkMinYear
-      }
-
-      private def validateToDate(toDate: Option[String]): Validated[Seq[MtdError], Option[String]] = {
-        def checkMaxYear(maybeParsedToDate: Option[LocalDate]): Validated[Seq[MtdError], Option[String]] =
-          maybeParsedToDate
-            .map {
-              case parsedToDate if parsedToDate.getYear >= maxYear => Invalid(List(ToDateFormatError))
-              case _                                               => Valid(toDate)
-            }
-            .getOrElse(Valid(None))
-
-        ResolveIsoDate(toDate, ToDateFormatError) andThen checkMaxYear
-      }
-
     }
 
   private def validateParameterRules(
@@ -102,32 +85,24 @@ class RetrieveBalanceAndTransactionsValidatorFactory {
     import parsed._
 
     List(
-      validateDateRange(fromDate, toDate),
-      validateOnlyOpenItems(onlyOpenItems, docNumber, toDate, fromDate)
+      validateOnlyOpenItems(onlyOpenItems, docNumber, fromAndToDates)
     ).traverse(identity).map(_ => parsed)
 
   }
 
-  private def validateDateRange(fromDate: Option[String], toDate: Option[String]): Validated[Seq[MtdError], Unit] = {
+  private def validateDateRange(fromDate: Option[String], toDate: Option[String]): Validated[Seq[MtdError], Option[(String, String)]] = {
     (fromDate, toDate) match {
-      case (Some(f), Some(t)) => checkIfToDateIsBeforeFromDate(f, t)
-      case (Some(_), None)    => Invalid(List(RuleMissingToDateError))
-      case (None, Some(_))    => Invalid(List(MissingFromDateError))
-      case (None, None)       => Valid(())
+      case (None, None)           => Valid(None)
+      case (Some(from), Some(to)) => Valid(Some((from, to)))
+      case (Some(_), None)        => Invalid(List(RuleMissingToDateError))
+      case (None, Some(_))        => Invalid(List(MissingFromDateError))
     }
-  }
-
-  private def checkIfToDateIsBeforeFromDate(fromDate: String, toDate: String): Validated[Seq[MtdError], Unit] = {
-    val fmtFrom = LocalDate.parse(fromDate, dateFormat)
-    val fmtTo   = LocalDate.parse(toDate, dateFormat)
-    if (fmtTo isBefore fmtFrom) Invalid(List(RangeToDateBeforeFromDateError)) else Valid(())
   }
 
   private def validateOnlyOpenItems(onlyOpenItems: Boolean,
                                     docNumber: Option[String],
-                                    toDate: Option[String],
-                                    fromDate: Option[String]): Validated[Seq[MtdError], Unit] = {
-    val otherQueryParamsDefined = (docNumber.isDefined || toDate.isDefined) || fromDate.isDefined
+                                    fromAndToDates: Option[DateRange]): Validated[Seq[MtdError], Unit] = {
+    val otherQueryParamsDefined = docNumber.isDefined || fromAndToDates.isDefined
 
     if (onlyOpenItems && otherQueryParamsDefined)
       Invalid(List(RuleInconsistentQueryParamsError))
