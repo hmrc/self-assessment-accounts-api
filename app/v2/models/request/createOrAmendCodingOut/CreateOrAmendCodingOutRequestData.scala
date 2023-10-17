@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package v2.controllers.requestParsers
+package v2.models.request.createOrAmendCodingOut
 
-import api.controllers.requestParsers.RequestParser
 import api.models.domain.{Nino, TaxYear}
-import v2.controllers.requestParsers.validators.RetrieveCodingOutValidator
-import v2.models.request.retrieveCodingOut._
 
-import javax.inject.Inject
-
-class RetrieveCodingOutRequestParser @Inject()(val validator: RetrieveCodingOutValidator)
-    extends RequestParser[RetrieveCodingOutRawRequest, RetrieveCodingOutParsedRequest] {
-
-  override protected def requestFor(data: RetrieveCodingOutRawRequest): RetrieveCodingOutParsedRequest =
-    RetrieveCodingOutParsedRequest(Nino(data.nino), TaxYear.fromMtd(data.taxYear), data.source)
-
-}
+case class CreateOrAmendCodingOutRequestData(nino: Nino, taxYear: TaxYear, body: CreateOrAmendCodingOutRequestBody)

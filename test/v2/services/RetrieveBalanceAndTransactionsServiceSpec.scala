@@ -16,7 +16,7 @@
 
 package v2.services
 
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -25,9 +25,10 @@ import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDet
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFull
 import v2.mocks.connectors.MockRetrieveBalanceAndTransactionsConnector
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions._
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
@@ -43,12 +44,11 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
   private val customerPaymentInformation = false
   private val includeStatistical         = false
 
-  private val requestData: RetrieveBalanceAndTransactionsRequest =
-    RetrieveBalanceAndTransactionsRequest(
+  private val requestData: RetrieveBalanceAndTransactionsRequestData =
+    RetrieveBalanceAndTransactionsRequestData(
       Nino(nino),
       Some(docNumber),
-      Some(dateFrom),
-      Some(dateTo),
+      Some(DateRange(LocalDate.parse(dateFrom), LocalDate.parse(dateTo))),
       onlyOpenItems,
       includeLocks,
       calculateAccruedInterest,

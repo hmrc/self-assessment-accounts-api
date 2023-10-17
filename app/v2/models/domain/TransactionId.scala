@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package v2.models.request.createOrAmendCodingOut
+package v2.models.domain
 
-import api.models.domain.{Nino, TaxYear}
+case class TransactionId(transactionId: String) {
 
-case class CreateOrAmendCodingOutParsedRequest(nino: Nino, taxYear: TaxYear, body: CreateOrAmendCodingOutRequestBody)
+  override def toString: String = transactionId
+
+}

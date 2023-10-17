@@ -21,7 +21,7 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v2.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
+import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 import v2.services.DeleteCodingOutService
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,9 +32,9 @@ trait MockDeleteCodingOutService extends MockFactory {
 
   object MockDeleteCodingOutService {
 
-    def delete(requestData: DeleteCodingOutParsedRequest): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def delete(requestData: DeleteCodingOutRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
       (mockDeleteCodingOutService
-        .deleteCodingOut(_: DeleteCodingOutParsedRequest)(_: RequestContext, _: ExecutionContext))
+        .deleteCodingOut(_: DeleteCodingOutRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
     }
 

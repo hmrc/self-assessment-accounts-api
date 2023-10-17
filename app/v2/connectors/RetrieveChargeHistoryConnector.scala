@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
 import javax.inject.{Inject, Singleton}
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveChargeHistoryConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveChargeHistory(request: RetrieveChargeHistoryRequest)(implicit
+  def retrieveChargeHistory(request: RetrieveChargeHistoryRequestData)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
@@ -38,7 +38,7 @@ class RetrieveChargeHistoryConnector @Inject() (val http: HttpClient, val appCon
     val nino          = request.nino.nino
     val transactionId = request.transactionId
 
-    val queryParams = Seq("docNumber" -> transactionId)
+    val queryParams = Seq("docNumber" -> transactionId.toString)
 
     get(DesUri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
   }

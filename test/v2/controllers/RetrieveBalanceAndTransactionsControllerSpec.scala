@@ -20,11 +20,11 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
+import v2.controllers.validators.MockRetrieveBalanceAndTransactionsValidatorFactory
 import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
-import v2.mocks.requestParsers.MockRetrieveBalanceAndTransactionsRequestParser
 import v2.mocks.services.MockRetrieveBalanceAndTransactionsService
-import v2.models.request.retrieveBalanceAndTransactions.{RetrieveBalanceAndTransactionsRawData, RetrieveBalanceAndTransactionsRequest}
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -33,20 +33,17 @@ class RetrieveBalanceAndTransactionsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveBalanceAndTransactionsService
-    with MockRetrieveBalanceAndTransactionsRequestParser {
+    with MockRetrieveBalanceAndTransactionsValidatorFactory {
 
-  private val rawRequest: RetrieveBalanceAndTransactionsRawData    = inputDataEverythingTrue
-  private val parsedRequest: RetrieveBalanceAndTransactionsRequest = requestEverythingTrue
+  private val requestData: RetrieveBalanceAndTransactionsRequestData = requestEverythingTrue
 
   "retrieveBalanceAndTransactions" should {
     "return OK" when {
       "the request is valid" in new Test {
-        MockRetrieveBalanceAndTransactionsRequestParser
-          .parse(rawRequest)
-          .returns(Right(parsedRequest))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveBalanceAndTransactionsService
-          .retrieveBalanceAndTransactions(parsedRequest)
+          .retrieveBalanceAndTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
@@ -55,20 +52,16 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockRetrieveBalanceAndTransactionsRequestParser
-          .parse(rawRequest)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+        willUseValidator(returning(NinoFormatError))
 
         runErrorTest(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockRetrieveBalanceAndTransactionsRequestParser
-          .parse(rawRequest)
-          .returns(Right(parsedRequest))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveBalanceAndTransactionsService
-          .retrieveBalanceAndTransactions(parsedRequest)
+          .retrieveBalanceAndTransactions(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, DocNumberFormatError))))
 
         runErrorTest(DocNumberFormatError)
@@ -81,7 +74,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
     val controller = new RetrieveBalanceAndTransactionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveBalanceAndTransactionsRequestParser,
+      validatorFactory = mockRetrieveBalanceAndTransactionsValidatorFactory,
       service = mockRetrieveBalanceAndTransactionsService,
       cc = cc,
       idGenerator = mockIdGenerator

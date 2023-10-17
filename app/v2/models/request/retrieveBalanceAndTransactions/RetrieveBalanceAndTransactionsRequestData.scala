@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveChargeHistory
+package v2.models.request.retrieveBalanceAndTransactions
 
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 
-case class RetrieveChargeHistoryRequest(nino: Nino, transactionId: String)
+case class RetrieveBalanceAndTransactionsRequestData(
+    nino: Nino,
+    docNumber: Option[String],
+    fromAndToDates: Option[DateRange],
+    onlyOpenItems: Boolean,
+    includeLocks: Boolean,
+    calculateAccruedInterest: Boolean,
+    removePOA: Boolean,
+    customerPaymentInformation: Boolean,
+    includeEstimatedCharges: Boolean
+)

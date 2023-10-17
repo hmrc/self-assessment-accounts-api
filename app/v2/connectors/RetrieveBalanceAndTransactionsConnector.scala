@@ -21,7 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions.{FinancialDetailsItem, RetrieveBalanceAndTransactionsResponse}
 
 import javax.inject.{Inject, Singleton}
@@ -30,7 +30,7 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
+  def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
@@ -50,8 +50,8 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
     val optionalQueryParams: Seq[(String, String)] =
       Seq(
         "docNumber" -> docNumber,
-        "dateFrom"  -> fromDate,
-        "dateTo"    -> toDate
+        "dateFrom"  -> fromAndToDates.map(_.startDate.toString),
+        "dateTo"    -> fromAndToDates.map(_.endDate.toString)
       ).collect { case (k, Some(v)) => k -> v }
 
     val queryParams = booleanQueryParams ++ optionalQueryParams

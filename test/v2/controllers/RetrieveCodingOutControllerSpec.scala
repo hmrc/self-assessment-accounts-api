@@ -21,14 +21,14 @@ import api.hateoas
 import api.hateoas.Method.{DELETE, GET, PUT}
 import api.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.models.domain.{Nino, TaxYear}
+import api.models.domain.{MtdSource, Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
+import v2.controllers.validators.MockRetrieveCodingOutValidatorFactory
 import v2.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
-import v2.mocks.requestParsers.MockRetrieveCodingOutRequestParser
 import v2.mocks.services.MockRetrieveCodingOutService
-import v2.models.request.retrieveCodingOut.{RetrieveCodingOutParsedRequest, RetrieveCodingOutRawRequest}
+import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 import v2.models.response.retrieveCodingOut._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -38,22 +38,16 @@ class RetrieveCodingOutControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveCodingOutService
-    with MockHateoasFactory
-    with MockRetrieveCodingOutRequestParser {
+    with MockRetrieveCodingOutValidatorFactory
+    with MockHateoasFactory {
 
   private val taxYear = "2021-22"
   private val source  = "hmrcHeld"
 
-  private val rawData = RetrieveCodingOutRawRequest(
-    nino = nino,
-    taxYear = taxYear,
-    source = Some(source)
-  )
-
-  private val requestData = RetrieveCodingOutParsedRequest(
+  private val requestData = RetrieveCodingOutRequestData(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear),
-    source = Some(source)
+    source = Some(MtdSource.parser(source))
   )
 
   private val createOrAmendCodingOutLink = hateoas.Link(
@@ -117,9 +111,7 @@ class RetrieveCodingOutControllerSpec
   "RetrieveCodingOutController" should {
     "return OK" when {
       "happy path" in new Test {
-        MockRetrieveCodingOutRequestParser
-          .parse(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveCodingOutService
           .retrieveCodingOut(requestData)
@@ -142,17 +134,13 @@ class RetrieveCodingOutControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockRetrieveCodingOutRequestParser
-          .parse(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
+        willUseValidator(returning(NinoFormatError))
 
         runErrorTest(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockRetrieveCodingOutRequestParser
-          .parse(rawData)
-          .returns(Right(requestData))
+        willUseValidator(returningSuccess(requestData))
 
         MockRetrieveCodingOutService
           .retrieveCodingOut(requestData)
@@ -168,7 +156,7 @@ class RetrieveCodingOutControllerSpec
     val controller = new RetrieveCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      requestParser = mockRetrieveCodingOutRequestParser,
+      validatorFactory = mockRetrieveCodingOutValidatorFactory,
       service = mockRetrieveCodingOutService,
       hateoasFactory = mockHateoasFactory,
       cc = cc,

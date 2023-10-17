@@ -20,9 +20,8 @@ import api.controllers._
 import api.hateoas.HateoasFactory
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.RetrieveChargeHistoryRequestParser
-import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRawData
+import utils.IdGenerator
+import v2.controllers.validators.RetrieveChargeHistoryValidatorFactory
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 import v2.services.RetrieveChargeHistoryService
 
@@ -32,13 +31,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
-                                                 requestParser: RetrieveChargeHistoryRequestParser,
+                                                 validatorFactory: RetrieveChargeHistoryValidatorFactory,
                                                  service: RetrieveChargeHistoryService,
                                                  hateoasFactory: HateoasFactory,
                                                  cc: ControllerComponents,
                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext)
-    extends AuthorisedController(cc)
-    with Logging {
+    extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveChargeHistoryController", endpointName = "retrieveChargeHistory")
@@ -47,15 +45,15 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawRequest = RetrieveChargeHistoryRawData(nino, transactionId)
+      val validator = validatorFactory.validator(nino, transactionId)
 
       val requestHandler =
-        RequestHandlerOld
-          .withParser(requestParser)
+        RequestHandler
+          .withValidator(validator)
           .withService(service.retrieveChargeHistory)
           .withHateoasResult(hateoasFactory)(RetrieveChargeHistoryHateoasData(nino, transactionId))
 
-      requestHandler.handleRequest(rawRequest)
+      requestHandler.handleRequest()
     }
 
 }

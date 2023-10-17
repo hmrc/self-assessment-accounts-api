@@ -14,19 +14,8 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveBalanceAndTransactions
+package v2.models.request.deleteCodingOut
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TaxYear}
 
-case class RetrieveBalanceAndTransactionsRequest(
-    nino: Nino,
-    docNumber: Option[String],
-    fromDate: Option[String],
-    toDate: Option[String],
-    onlyOpenItems: Boolean,
-    includeLocks: Boolean,
-    calculateAccruedInterest: Boolean,
-    removePOA: Boolean,
-    customerPaymentInformation: Boolean,
-    includeEstimatedCharges: Boolean
-)
+case class DeleteCodingOutRequestData(nino: Nino, taxYear: TaxYear)

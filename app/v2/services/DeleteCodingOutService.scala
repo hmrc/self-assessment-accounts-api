@@ -22,7 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.implicits._
 import v2.connectors.DeleteCodingOutConnector
-import v2.models.request.deleteCodingOut.DeleteCodingOutParsedRequest
+import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -48,9 +48,9 @@ class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) exte
     errors ++ extraTysErrors
   }
 
-  def deleteCodingOut(request: DeleteCodingOutParsedRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+  def deleteCodingOut(request: DeleteCodingOutRequestData)(implicit
+                                                           ctx: RequestContext,
+                                                           ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     connector.deleteCodingOut(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }

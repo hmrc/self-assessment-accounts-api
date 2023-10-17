@@ -23,7 +23,7 @@ import api.services.BaseService
 import cats.data.EitherT
 import utils.CurrentDate
 import v2.connectors.RetrieveCodingOutConnector
-import v2.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
+import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 import v2.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 
 import javax.inject.{Inject, Singleton}
@@ -52,9 +52,9 @@ class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)(
     errors ++ extraTysErrors
   }
 
-  def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
+  def retrieveCodingOut(request: RetrieveCodingOutRequestData)(implicit
+                                                               ctx: RequestContext,
+                                                               ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
 
     val result = for {
       downstreamResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(errorMap))

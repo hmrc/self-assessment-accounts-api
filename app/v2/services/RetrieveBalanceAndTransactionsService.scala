@@ -21,7 +21,7 @@ import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
 
 import javax.inject.{Inject, Singleton}
@@ -53,9 +53,9 @@ class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanc
       "SERVICE_UNAVAILABLE"                  -> InternalError
     )
 
-  def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequest)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveBalanceAndTransactionsResponse]] = {
+  def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)(implicit
+                                                                                         ctx: RequestContext,
+                                                                                         ec: ExecutionContext): Future[ServiceOutcome[RetrieveBalanceAndTransactionsResponse]] = {
 
     connector
       .retrieveBalanceAndTransactions(request)

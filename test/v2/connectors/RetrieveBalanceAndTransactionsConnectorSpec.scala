@@ -17,7 +17,7 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.Nino
+import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
@@ -25,9 +25,10 @@ import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDet
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFull
 import v2.mocks.MockHttpClient
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions._
 
+import java.time.LocalDate
 import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
@@ -51,11 +52,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       financialDetails = Some(Seq(financialDetailsFull))
     )
 
-  private val validRequest: RetrieveBalanceAndTransactionsRequest = RetrieveBalanceAndTransactionsRequest(
+  private val validRequest: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
     nino = Nino(nino),
     docNumber = Some(docNumber),
-    fromDate = Some(fromDate),
-    toDate = Some(toDate),
+    Some(DateRange(LocalDate.parse(fromDate), LocalDate.parse(toDate))),
     onlyOpenItems = onlyOpenItems,
     includeLocks = includeLocks,
     calculateAccruedInterest = calculateAccruedInterest,
@@ -83,7 +83,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     MockAppConfig.ifs2Environment returns "ifs2-environment"
     MockAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
 
-    def connectorRequest(request: RetrieveBalanceAndTransactionsRequest,
+    def connectorRequest(request: RetrieveBalanceAndTransactionsRequestData,
                          response: RetrieveBalanceAndTransactionsResponse,
                          queryParams: Seq[(String, String)]): Unit = {
 
@@ -120,7 +120,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       }
 
       "a valid request containing docNumber and not fromDate or dateTo is supplied" in new Test {
-        val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(fromDate = None, toDate = None)
+        val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
 
         val queryParams: Seq[(String, String)] =
           commonQueryParams ++ Seq("docNumber" -> s"$docNumber")
@@ -129,7 +129,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       }
 
       "a valid request containing fromDate and dateTo and no docNumber is supplied" in new Test {
-        val request: RetrieveBalanceAndTransactionsRequest = validRequest.copy(docNumber = None)
+        val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
 
         val queryParams: Seq[(String, String)] =
           commonQueryParams ++ Seq(

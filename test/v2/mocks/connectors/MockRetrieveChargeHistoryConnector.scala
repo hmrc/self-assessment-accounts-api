@@ -21,7 +21,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.RetrieveChargeHistoryConnector
-import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequest
+import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,10 +33,10 @@ trait MockRetrieveChargeHistoryConnector extends MockFactory {
 
   object MockRetrieveChargeHistoryConnector {
 
-    def retrieveChargeHistory(requestData: RetrieveChargeHistoryRequest): CallHandler[Future[DownstreamOutcome[RetrieveChargeHistoryResponse]]] = {
+    def retrieveChargeHistory(requestData: RetrieveChargeHistoryRequestData): CallHandler[Future[DownstreamOutcome[RetrieveChargeHistoryResponse]]] = {
       (
         mockRetrieveChargeHistoryConnector
-          .retrieveChargeHistory(_: RetrieveChargeHistoryRequest)(
+          .retrieveChargeHistory(_: RetrieveChargeHistoryRequestData)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String

@@ -19,19 +19,18 @@ package v2.connectors
 import api.connectors.DownstreamUri.{Ifs1Uri, TaxYearSpecificIfsUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.models.domain.MtdSource
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v2.models.request.retrieveCodingOut.RetrieveCodingOutParsedRequest
+import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 import v2.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveCodingOut(request: RetrieveCodingOutParsedRequest)(implicit
+  def retrieveCodingOut(request: RetrieveCodingOutRequestData)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
@@ -39,7 +38,7 @@ class RetrieveCodingOutConnector @Inject()(val http: HttpClient, val appConfig: 
     import request._
 
     val queryParams = Seq("view" -> source).collect { case (key, Some(value)) =>
-      key -> MtdSource.parser(value).toDownstreamSource
+      key -> value.toDownstreamSource
     }
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {

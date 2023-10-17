@@ -19,7 +19,7 @@ package api.controllers.validators.resolvers
 import api.models.domain.TaxYear
 import api.models.errors._
 import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
+import cats.data.Validated.{Invalid, Valid}
 
 trait ResolvingTaxYear extends Resolver[String, TaxYear] {
 
@@ -39,7 +39,7 @@ trait ResolvingTaxYear extends Resolver[String, TaxYear] {
       if (end - start == 1) {
         Valid(TaxYear.fromMtd(value))
       } else {
-        Invalid(List(withError(error, RuleTaxYearRangeInvalid, path)))
+        Invalid(List(withError(error, RuleTaxYearRangeInvalidError, path)))
       }
 
     } else {
@@ -77,5 +77,5 @@ object ResolveTysTaxYear extends ResolvingTaxYear {
           Valid(taxYear)
         }
       }
-}
 
+}

@@ -21,7 +21,7 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
 import v2.connectors.RetrieveBalanceAndTransactionsConnector
-import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequest
+import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,10 +34,10 @@ trait MockRetrieveBalanceAndTransactionsConnector extends MockFactory {
   object MockRetrieveBalanceAndTransactionsConnector {
 
     def retrieveBalanceAndTransactions(
-        requestData: RetrieveBalanceAndTransactionsRequest): CallHandler[Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]]] = {
+        requestData: RetrieveBalanceAndTransactionsRequestData): CallHandler[Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]]] = {
       (
         mockRetrieveBalanceAndTransactionsConnector
-          .retrieveBalanceAndTransactions(_: RetrieveBalanceAndTransactionsRequest)(
+          .retrieveBalanceAndTransactions(_: RetrieveBalanceAndTransactionsRequestData)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String
