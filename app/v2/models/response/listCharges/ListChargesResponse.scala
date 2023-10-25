@@ -34,13 +34,13 @@ object ListChargesResponse extends HateoasLinks {
   implicit object LinksFactory extends HateoasListLinksFactory[ListChargesResponse, Charge, ListChargesHateoasData] {
 
     override def itemLinks(appConfig: AppConfig, data: ListChargesHateoasData, item: Charge): Seq[Link] =
-      Seq(
+      List(
         retrieveTransactionDetails(appConfig, data.nino, item.transactionId, isSelf = false)
       )
 
     override def links(appConfig: AppConfig, data: ListChargesHateoasData): Seq[Link] = {
       import data._
-      Seq(
+      List(
         listCharges(appConfig, nino, from, to, isSelf = true),
         listTransactions(appConfig, nino, from, to, isSelf = false)
       )
