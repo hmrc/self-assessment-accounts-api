@@ -16,28 +16,17 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.domain.CalculationId
-import api.models.errors.CalculationIdFormatError
+import api.models.errors.{IdFormatError, MtdError}
+import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import support.UnitSpec
 
-class ResolveCalculationIdSpec extends UnitSpec {
+object ResolveParsedNumericId extends Resolver[BigDecimal, BigDecimal] {
 
-  "ResolveCalculationId" should {
-    "return no errors" when {
-      "given a valid Calculation ID" in {
-        val value  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-        val result = ResolveCalculationId(value)
-        result shouldBe Valid(CalculationId(value))
-      }
-    }
-
-    "return an error" when {
-      "given an invalid CalculationId" in {
-        val result = ResolveCalculationId("not-a-calculation-id")
-        result shouldBe Invalid(List(CalculationIdFormatError))
-      }
-    }
+  def apply(value: BigDecimal, maybeError: Option[MtdError], maybePath: Option[String]): Validated[Seq[MtdError], BigDecimal] = {
+    if (value > 0 && value < 1000000000000000.00 && value.scale <= 0)
+      Valid(value)
+    else
+      Invalid(List(withError(maybeError, IdFormatError, maybePath)))
   }
 
 }

@@ -16,28 +16,20 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.domain.CalculationId
-import api.models.errors.CalculationIdFormatError
+import api.models.domain.TransactionId
+import api.models.errors.{MtdError, TransactionIdFormatError}
+import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import support.UnitSpec
 
-class ResolveCalculationIdSpec extends UnitSpec {
+object ResolveTransactionId extends Resolver[String, TransactionId] {
 
-  "ResolveCalculationId" should {
-    "return no errors" when {
-      "given a valid Calculation ID" in {
-        val value  = "a54ba782-5ef4-47f4-ab72-495406665ca9"
-        val result = ResolveCalculationId(value)
-        result shouldBe Valid(CalculationId(value))
-      }
-    }
+  private val transactionIdRegex = "^[0-9A-Za-z]{1,12}$".r
 
-    "return an error" when {
-      "given an invalid CalculationId" in {
-        val result = ResolveCalculationId("not-a-calculation-id")
-        result shouldBe Invalid(List(CalculationIdFormatError))
-      }
-    }
+  def apply(value: String, maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], TransactionId] = {
+    if (transactionIdRegex.matches(value))
+      Valid(TransactionId(value))
+    else
+      Invalid(List(maybeError.getOrElse(TransactionIdFormatError).maybeWithExtraPath(errorPath)))
   }
 
 }

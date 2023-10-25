@@ -21,7 +21,7 @@ import api.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, R
 import api.models.domain.DateRange
 import api.models.errors._
 import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import cats.data.Validated.Valid
 import cats.implicits._
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 
@@ -73,40 +73,40 @@ class RetrieveBalanceAndTransactionsValidatorFactory {
         docNumber
           .map {
             case docNumber if docNumber.nonEmpty && docNumber.length < MAX_LENGTH => Valid(Some(docNumber))
-            case _                                                                => Invalid(List(DocNumberFormatError))
+            case _                                                                => invalid(DocNumberFormatError)
           }
           .getOrElse(Valid(None))
       }
 
+      private def validateParameterRules(
+          parsed: RetrieveBalanceAndTransactionsRequestData): Validated[Seq[MtdError], RetrieveBalanceAndTransactionsRequestData] = {
+
+        List(
+          validateOnlyOpenItems(parsed.onlyOpenItems, parsed.docNumber, parsed.fromAndToDates)
+        ).traverse(identity).map(_ => parsed)
+
+      }
+
+      private def validateDateRange(fromDate: Option[String], toDate: Option[String]): Validated[Seq[MtdError], Option[(String, String)]] = {
+        (fromDate, toDate) match {
+          case (None, None)           => Valid(None)
+          case (Some(from), Some(to)) => Valid(Some((from, to)))
+          case (Some(_), None)        => invalid(RuleMissingToDateError)
+          case (None, Some(_))        => invalid(MissingFromDateError)
+        }
+      }
+
+      private def validateOnlyOpenItems(onlyOpenItems: Boolean,
+                                        docNumber: Option[String],
+                                        fromAndToDates: Option[DateRange]): Validated[Seq[MtdError], Unit] = {
+        val otherQueryParamsDefined = docNumber.isDefined || fromAndToDates.isDefined
+
+        if (onlyOpenItems && otherQueryParamsDefined)
+          invalid(RuleInconsistentQueryParamsError)
+        else
+          Valid(())
+      }
+
     }
-
-  private def validateParameterRules(
-      parsed: RetrieveBalanceAndTransactionsRequestData): Validated[Seq[MtdError], RetrieveBalanceAndTransactionsRequestData] = {
-    import parsed._
-
-    List(
-      validateOnlyOpenItems(onlyOpenItems, docNumber, fromAndToDates)
-    ).traverse(identity).map(_ => parsed)
-
-  }
-
-  private def validateDateRange(fromDate: Option[String], toDate: Option[String]): Validated[Seq[MtdError], Option[(String, String)]] = {
-    (fromDate, toDate) match {
-      case (None, None)           => Valid(None)
-      case (Some(from), Some(to)) => Valid(Some((from, to)))
-      case (Some(_), None)        => Invalid(List(RuleMissingToDateError))
-      case (None, Some(_))        => Invalid(List(MissingFromDateError))
-    }
-  }
-
-  private def validateOnlyOpenItems(onlyOpenItems: Boolean,
-                                    docNumber: Option[String],
-                                    fromAndToDates: Option[DateRange]): Validated[Seq[MtdError], Unit] = {
-    val otherQueryParamsDefined = docNumber.isDefined || fromAndToDates.isDefined
-
-    if (onlyOpenItems && otherQueryParamsDefined)
-      Invalid(List(RuleInconsistentQueryParamsError))
-    else Valid(())
-  }
 
 }

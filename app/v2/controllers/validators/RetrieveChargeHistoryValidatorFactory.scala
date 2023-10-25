@@ -17,11 +17,10 @@
 package v2.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.ResolveNino
+import api.controllers.validators.resolvers.{ResolveNino, ResolveTransactionId}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
-import v2.controllers.validators.resolvers.ResolveTransactionId
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 
 import javax.inject.Singleton

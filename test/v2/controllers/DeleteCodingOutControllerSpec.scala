@@ -21,6 +21,7 @@ import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v2.controllers.validators.MockDeleteCodingOutValidatorFactory
@@ -33,6 +34,7 @@ import scala.concurrent.Future
 class DeleteCodingOutControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
+    with MockAppConfig
     with MockDeleteCodingOutService
     with MockDeleteCodingOutValidatorFactory {
 

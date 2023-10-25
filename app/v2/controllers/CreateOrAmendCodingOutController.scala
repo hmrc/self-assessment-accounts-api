@@ -22,9 +22,9 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
+import routing.{Version, Version2}
 import utils.{IdGenerator, Logging}
-import v2.controllers.requestParsers.CreateOrAmendCodingOutParser
-import v2.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRawRequest
+import v2.controllers.validators.CreateOrAmendCodingOutValidatorFactory
 import v2.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
 import v2.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutResponse.LinksFactory
 import v2.services.CreateOrAmendCodingOutService
@@ -36,7 +36,7 @@ import scala.concurrent.ExecutionContext
 class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuthService,
                                                  val lookupService: MtdIdLookupService,
                                                  appConfig: AppConfig,
-                                                 parser: CreateOrAmendCodingOutParser,
+                                                 validatorFactory: CreateOrAmendCodingOutValidatorFactory,
                                                  service: CreateOrAmendCodingOutService,
                                                  hateoasFactory: HateoasFactory,
                                                  auditService: AuditService,
@@ -50,29 +50,31 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
 
   def createOrAmendCodingOut(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+        implicit val apiVersion: Version = Version.from(request, orElse = Version2)
+        implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val rawData = CreateOrAmendCodingOutRawRequest(
-        nino = nino,
-        taxYear = taxYear,
-        body = request.body,
-        temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled)
+        val validator = validatorFactory.validator(
+          nino,
+          taxYear,
+          request.body,
+          temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled)
 
-      val requestHandler =
-        RequestHandlerOld
-          .withParser(parser)
-          .withService(service.amend)
-          .withHateoasResult(hateoasFactory)(CreateOrAmendCodingOutHateoasData(nino, taxYear))
-          .withAuditing(AuditHandlerOld(
-            auditService,
-            auditType = "CreateAmendCodingOutUnderpayment",
-            transactionName = "create-amend-coding-out-underpayment",
-            params = Map("nino" -> nino, "taxYear" -> taxYear),
-            Some(request.body),
-            includeResponse = true
+        val requestHandler =
+          RequestHandler
+            .withValidator(validator)
+            .withService(service.amend)
+            .withHateoasResult(hateoasFactory)(CreateOrAmendCodingOutHateoasData(nino, taxYear))
+            .withAuditing(AuditHandler(
+              auditService,
+              auditType = "CreateAmendCodingOutUnderpayment",
+              transactionName = "create-amend-coding-out-underpayment",
+              apiVersion = apiVersion,
+              params = Map("nino" -> nino, "taxYear" -> taxYear),
+              requestBody = Some(request.body),
+              includeResponse = true
           ))
 
-      requestHandler.handleRequest(rawData)
+      requestHandler.handleRequest()
     }
 
 }

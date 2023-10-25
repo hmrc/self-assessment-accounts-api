@@ -21,8 +21,6 @@ import play.api.http.Status.{BAD_REQUEST, NOT_FOUND}
 // MtdError types that are common to SA Accounts API.
 
 // Format Errors
-object V1_FromDateFormatError extends MtdError(code = "FORMAT_FROM_DATE", message = "The provided From date is invalid", BAD_REQUEST)
-object V1_ToDateFormatError   extends MtdError(code = "FORMAT_TO_DATE", message = "The provided To date is invalid", BAD_REQUEST)
 object SourceFormatError      extends MtdError(code = "FORMAT_SOURCE", message = "The format of the supplied source is not valid", BAD_REQUEST)
 object PaymentLotFormatError  extends MtdError(code = "FORMAT_PAYMENT_LOT", message = "The provided paymentLot value is invalid", BAD_REQUEST)
 
@@ -44,13 +42,6 @@ object RuleInconsistentQueryParamsErrorListSA
       code = "RULE_INCONSISTENT_QUERY_PARAMS",
       message = "Provide either paymentLot & paymentLotItem or fromDate & toDate",
       BAD_REQUEST)
-
-// Date Errors
-object V1_MissingFromDateError extends MtdError(code = "MISSING_FROM_DATE", message = "The From date parameter is missing", BAD_REQUEST)
-object V1_MissingToDateError   extends MtdError(code = "MISSING_TO_DATE", message = "The To date parameter is missing", BAD_REQUEST)
-
-object V1_RangeToDateBeforeFromDateError
-    extends MtdError(code = "RANGE_TO_DATE_BEFORE_FROM_DATE", message = "The To date must be after the From date", BAD_REQUEST)
 
 object DocNumberFormatError     extends MtdError(code = "FORMAT_DOC_NUMBER", message = "The provided docNumber is invalid", BAD_REQUEST)
 object OnlyOpenItemsFormatError extends MtdError(code = "FORMAT_ONLY_OPEN_ITEMS", message = "The provided onlyOpenItems is invalid", BAD_REQUEST)

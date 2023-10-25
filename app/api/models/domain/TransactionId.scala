@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveChargeHistory
+package api.models.domain
 
-import api.models.domain.{Nino, TransactionId}
+case class TransactionId(transactionId: String) {
 
-case class RetrieveChargeHistoryRequestData(nino: Nino, transactionId: TransactionId)
+  override def toString: String = transactionId
+
+}

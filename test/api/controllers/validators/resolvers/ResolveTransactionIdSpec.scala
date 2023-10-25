@@ -16,28 +16,26 @@
 
 package api.controllers.validators.resolvers
 
-import api.models.errors.StartDateFormatError
+import api.models.domain.TransactionId
+import api.models.errors.TransactionIdFormatError
 import cats.data.Validated.{Invalid, Valid}
 import support.UnitSpec
 
-import java.time.LocalDate
+class ResolveTransactionIdSpec extends UnitSpec {
 
-class ResolveIsoDateSpec extends UnitSpec {
-
-  "ResolveBusinessId" should {
+  "ResolveTransactionId" should {
     "return no errors" when {
-      "given a valid business ID" in {
-        val validDate = "2024-06-21"
-        val result    = ResolveIsoDate(validDate, Some(StartDateFormatError), None)
-        result shouldBe Valid(LocalDate.parse("2024-06-21"))
+      "given a valid Transaction ID" in {
+        val value  = "1234567890AB"
+        val result = ResolveTransactionId(value)
+        result shouldBe Valid(TransactionId(value))
       }
     }
 
     "return an error" when {
-      "given an invalid business ID" in {
-        val invalidDate = "not-a-date"
-        val result      = ResolveIsoDate(invalidDate, Some(StartDateFormatError), None)
-        result shouldBe Invalid(List(StartDateFormatError))
+      "given an invalid TransactionId" in {
+        val result = ResolveTransactionId("not-a-transaction-id")
+        result shouldBe Invalid(List(TransactionIdFormatError))
       }
     }
   }

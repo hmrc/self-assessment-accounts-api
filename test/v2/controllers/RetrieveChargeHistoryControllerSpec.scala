@@ -21,14 +21,13 @@ import api.hateoas
 import api.hateoas.Method.GET
 import api.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import api.models.domain.Nino
+import api.models.domain.{Nino, TransactionId}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
 import v2.controllers.validators.MockRetrieveChargeHistoryValidatorFactory
 import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
 import v2.mocks.services.MockRetrieveChargeHistoryService
-import v2.models.domain.TransactionId
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData

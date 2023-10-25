@@ -24,6 +24,7 @@ import api.hateoas.{HateoasWrapper, MockHateoasFactory}
 import api.models.domain.{MtdSource, Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import mocks.MockAppConfig
 import play.api.mvc.Result
 import v2.controllers.validators.MockRetrieveCodingOutValidatorFactory
 import v2.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
@@ -39,6 +40,7 @@ class RetrieveCodingOutControllerSpec
     with ControllerTestRunner
     with MockRetrieveCodingOutService
     with MockRetrieveCodingOutValidatorFactory
+    with MockAppConfig
     with MockHateoasFactory {
 
   private val taxYear = "2021-22"

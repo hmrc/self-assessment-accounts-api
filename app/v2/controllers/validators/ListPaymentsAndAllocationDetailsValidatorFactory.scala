@@ -68,14 +68,14 @@ class ListPaymentsAndAllocationDetailsValidatorFactory {
         (fromDate, toDate) match {
           case (None, None)           => Valid(None)
           case (Some(from), Some(to)) => Valid(Some((from, to)))
-          case (Some(_), None)        => Invalid(List(RuleMissingToDateError))
-          case (None, Some(_))        => Invalid(List(MissingFromDateError))
+          case (Some(_), None)        => invalid(RuleMissingToDateError)
+          case (None, Some(_))        => invalid(MissingFromDateError)
         }
 
       private def validateMissingPaymentData(paymentLot: Option[String], paymentLotItem: Option[String]): Validated[Seq[MtdError], Unit] =
         (paymentLot, paymentLotItem) match {
-          case (None, Some(_)) => Invalid(List(MissingPaymentLotError))
-          case (Some(_), None) => Invalid(List(MissingPaymentLotItemError))
+          case (None, Some(_)) => invalid(MissingPaymentLotError)
+          case (Some(_), None) => invalid(MissingPaymentLotItemError)
           case _               => Valid(())
         }
 

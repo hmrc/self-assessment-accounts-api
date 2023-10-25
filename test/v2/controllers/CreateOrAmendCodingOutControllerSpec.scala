@@ -20,15 +20,16 @@ import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.{DELETE, GET, PUT}
 import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetailOld}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import api.services.MockAuditService
 import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import v2.mocks.requestParsers.MockCreateOrAmendCodingOutRequestParser
+import v2.controllers.validators.MockCreateOrAmendCodingOutValidatorFactory
 import v2.mocks.services.MockCreateOrAmendCodingOutService
 import v2.models.request.createOrAmendCodingOut._
 import v2.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
@@ -40,13 +41,14 @@ class CreateOrAmendCodingOutControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockCreateOrAmendCodingOutService
-    with MockCreateOrAmendCodingOutRequestParser
-    with MockHateoasFactory
-    with MockAppConfig {
+    with MockCreateOrAmendCodingOutValidatorFactory
+    with MockAuditService
+    with MockAppConfig
+    with MockHateoasFactory {
 
   private val taxYear = "2019-20"
 
-  private val testHateoasLinks = Seq(
+  private val testHateoasLinks = List(
     hateoas.Link(
       href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
       method = PUT,
@@ -86,90 +88,84 @@ class CreateOrAmendCodingOutControllerSpec
   )
 
   private val requestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
-    payeUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
-    selfAssessmentUnderpayment = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
-    debt = Some(Seq(TaxCodeComponent(id = 12345, amount = 123.45))),
+    payeUnderpayment = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
+    selfAssessmentUnderpayment = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
+    debt = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
     inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
   ))
 
+  private val requestData = CreateOrAmendCodingOutRequestData(Nino(nino), TaxYear.fromMtd(taxYear), requestBody)
+
   val mtdResponseJson: JsValue =
     Json.parse(s"""{
-          |  "links": [
-          |    {
-          |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-          |      "method": "PUT",
-          |      "rel": "create-or-amend-coding-out-underpayments"
-          |    },
-          |    {
-          |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-          |      "method": "GET",
-          |      "rel": "self"
-          |    },
-          |    {
-          |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-          |      "method": "DELETE",
-          |      "rel": "delete-coding-out-underpayments"
-          |    }
-          |  ]
-          |}
-          |""".stripMargin)
-
-  private val rawData     = CreateOrAmendCodingOutRawRequest(nino, taxYear, requestJson)
-  private val requestData = CreateOrAmendCodingOutRequestData(Nino(nino), TaxYear.fromMtd(taxYear), requestBody)
+                  |  "links": [
+                  |    {
+                  |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+                  |      "method": "PUT",
+                  |      "rel": "create-or-amend-coding-out-underpayments"
+                  |    },
+                  |    {
+                  |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+                  |      "method": "GET",
+                  |      "rel": "self"
+                  |    },
+                  |    {
+                  |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+                  |      "method": "DELETE",
+                  |      "rel": "delete-coding-out-underpayments"
+                  |    }
+                  |  ]
+                  |}
+                  |""".stripMargin)
 
   "handleRequest" should {
     "return OK" when {
-      "the request is valid" in new Test {
-        MockCreateOrAmendCodingOutRequestParser
-          .parseRequest(rawData)
-          .returns(Right(requestData))
 
-        MockCreateOrAmendCodingOutService
-          .amend(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+        "the request is valid" in new Test {
+          willUseValidator(returningSuccess(requestData))
 
-        MockHateoasFactory
-          .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
-          .returns(HateoasWrapper((), testHateoasLinks))
+          MockCreateOrAmendCodingOutService
+            .amend(requestData)
+            .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        runOkTestWithAudit(
-          expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdResponseJson),
-          maybeAuditRequestBody = Some(requestJson),
-          maybeAuditResponseBody = Some(mtdResponseJson)
-        )
+          MockHateoasFactory
+            .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
+            .returns(HateoasWrapper((), testHateoasLinks))
+
+          runOkTestWithAudit(
+            expectedStatus = OK,
+            maybeExpectedResponseBody = Some(mtdResponseJson),
+            maybeAuditRequestBody = Some(requestJson),
+            maybeAuditResponseBody = Some(mtdResponseJson)
+          )
+        }
+      }
+
+      "return the error as per spec" when {
+        "the parser validation fails" in new Test {
+          willUseValidator(returning(NinoFormatError))
+          runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestJson))
+        }
+
+        "the service returns an error" in new Test {
+          willUseValidator(returningSuccess(requestData))
+
+          MockCreateOrAmendCodingOutService
+            .amend(requestData)
+            .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
+
+          runErrorTestWithAudit(RuleTaxYearNotEndedError, maybeAuditRequestBody = Some(requestJson))
+        }
       }
     }
-    "return the error as per spec" when {
-      "the parser validation fails" in new Test {
-        MockCreateOrAmendCodingOutRequestParser
-          .parseRequest(rawData)
-          .returns(Left(ErrorWrapper(correlationId, NinoFormatError, None)))
 
-        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestJson))
-      }
-
-      "the service returns an error" in new Test {
-        MockCreateOrAmendCodingOutRequestParser
-          .parseRequest(rawData)
-          .returns(Right(requestData))
-
-        MockCreateOrAmendCodingOutService
-          .amend(requestData)
-          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
-
-        runErrorTestWithAudit(RuleTaxYearNotEndedError, maybeAuditRequestBody = Some(requestJson))
-      }
-    }
-  }
-
-  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetailOld] {
+  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
-      parser = mockCreateOrAmendCodingOutRequestParser,
+      validatorFactory = mockCreateOrAmendCodingOutValidatorFactory,
       service = mockCreateOrAmendCodingOutService,
       hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
@@ -181,11 +177,12 @@ class CreateOrAmendCodingOutControllerSpec
 
     protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
 
-    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetailOld] =
+    protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
         auditType = "CreateAmendCodingOutUnderpayment",
         transactionName = "create-amend-coding-out-underpayment",
-        detail = GenericAuditDetailOld(
+        detail = GenericAuditDetail(
+          versionNumber = "2.0",
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear),

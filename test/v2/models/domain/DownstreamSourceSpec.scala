@@ -14,8 +14,24 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveChargeHistory
+package v2.models.domain
 
-import api.models.domain.{Nino, TransactionId}
+import support.UnitSpec
+import utils.enums.EnumJsonSpecSupport
+import v2.models.domain.DownstreamSource.{`CUSTOMER`, `HMRC HELD`}
 
-case class RetrieveChargeHistoryRequestData(nino: Nino, transactionId: TransactionId)
+class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {
+
+  testRoundTrip[DownstreamSource](
+    ("HMRC HELD", `HMRC HELD`),
+    ("CUSTOMER", `CUSTOMER`)
+  )
+
+  "toMtdSource" should {
+    "return the correct identifier value" in {
+      DownstreamSource.`HMRC HELD`.toMtdSource shouldBe "hmrcHeld"
+      DownstreamSource.`CUSTOMER`.toMtdSource shouldBe "user"
+    }
+  }
+
+}
