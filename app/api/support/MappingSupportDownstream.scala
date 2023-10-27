@@ -17,11 +17,11 @@
 package api.support
 
 import api.controllers.EndpointLogContext
-import api.controllers.requestParsers.validators.validations.TaxYearNotEndedValidation
+import api.models.domain.{TaxYear, TodaySupplier}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import api.support.DownstreamResponseMappingSupport
-import utils.{CurrentDate, Logging}
+import api.services.DownstreamResponseMappingSupport
+import utils.Logging
 import v2.models.response.retrieveCodingOut.RetrieveCodingOutResponse
 import v2.models.response.retrieveTransactionDetails.RetrieveTransactionDetailsResponse
 
@@ -36,8 +36,9 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
     }
   }
 
-  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[RetrieveCodingOutResponse], taxYear: String)(implicit
-                                                                                                                          currentDate: CurrentDate): Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]] = {
+  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[RetrieveCodingOutResponse], taxYear: TaxYear)(implicit
+      todaySupplier: TodaySupplier): Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]] = {
+
     implicit val endpointLogContext: EndpointLogContext =
       EndpointLogContext(
         controllerName = "RetrieveCodingOutController",
@@ -45,14 +46,15 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
       )
 
     desResponseWrapper.responseData match {
-      case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse
-        if TaxYearNotEndedValidation.validate(taxYear).isEmpty
-          && idsMissing(retrieveCodingOutDetailsResponse) =>
+      case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse if taxYear.isTaxYearComplete && idsMissing(retrieveCodingOutDetailsResponse) =>
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId")
+
         Left(ErrorWrapper(desResponseWrapper.correlationId, InternalError))
-      case _ => Right(desResponseWrapper)
+
+      case _ =>
+        Right(desResponseWrapper)
     }
   }
 

@@ -14,8 +14,17 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveChargeHistory
+package api.models.domain
 
-import api.models.domain.{Nino, TransactionId}
+import support.UnitSpec
 
-case class RetrieveChargeHistoryRequestData(nino: Nino, transactionId: TransactionId)
+class TransactionIdSpec extends UnitSpec {
+
+  "toString" should {
+    "return the TransactionId value" in {
+      val result = TransactionId("some id").toString
+      result shouldBe "some id"
+    }
+  }
+
+}

@@ -47,7 +47,7 @@ object ListChargesFixture {
       |""".stripMargin
   )
 
-  val fullChargeModel: Charge = Charge(
+  val fullCharge: Charge = Charge(
     taxYear = "2019-20",
     transactionId = "1234567890AB",
     transactionDate = "2020-02-01",
@@ -93,9 +93,9 @@ object ListChargesFixture {
       |""".stripMargin
   )
 
-  val fullListSingleChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullChargeModel))
+  val fullListSingleCharge: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullCharge))
 
-  val fullListMultipleChargeModel: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullChargeModel, fullChargeModel))
+  val fullListMultipleCharges: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullCharge, fullCharge))
 
   val listChargesMtdResponse: JsValue = Json.parse(
     s"""
@@ -153,6 +153,6 @@ object ListChargesFixture {
                                                                 |  ]
                                                                 |}""".stripMargin)
 
-  val mtdResponseObj: ListChargesResponse[Charge] = ListChargesResponse(charges = Seq(fullChargeModel, fullChargeModel))
+  val mtdResponseObj: ListChargesResponse[Charge] = ListChargesResponse(charges = Seq(fullCharge, fullCharge))
 
 }

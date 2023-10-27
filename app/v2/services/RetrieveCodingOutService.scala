@@ -17,11 +17,11 @@
 package v2.services
 
 import api.controllers.RequestContext
+import api.models.domain.TodaySupplier
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
-import utils.CurrentDate
 import v2.connectors.RetrieveCodingOutConnector
 import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 import v2.models.response.retrieveCodingOut.RetrieveCodingOutResponse
@@ -30,7 +30,8 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)(implicit currentDate: CurrentDate) extends BaseService {
+class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit todaySupplier: TodaySupplier = new TodaySupplier)
+    extends BaseService {
 
   private val errorMap: Map[String, MtdError] = {
     val errors = Map(
@@ -58,7 +59,7 @@ class RetrieveCodingOutService @Inject()(connector: RetrieveCodingOutConnector)(
 
     val result = for {
       downstreamResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(errorMap))
-      mtdResponseWrapper        <- EitherT.fromEither[Future](validateCodingOutResponse(downstreamResponseWrapper, request.taxYear.asMtd))
+      mtdResponseWrapper        <- EitherT.fromEither[Future](validateCodingOutResponse(downstreamResponseWrapper, request.taxYear))
     } yield mtdResponseWrapper
 
     result.value

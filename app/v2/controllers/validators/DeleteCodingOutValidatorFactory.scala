@@ -17,7 +17,8 @@
 package v2.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
+import api.controllers.validators.resolvers.{DetailedResolveTaxYear, ResolveNino}
+import api.models.domain.TodaySupplier
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
@@ -27,17 +28,18 @@ import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class DeleteCodingOutValidatorFactory @Inject() (appConfig: AppConfig) {
-
-  private lazy val minTaxYear = appConfig.minimumPermittedTaxYear
+class DeleteCodingOutValidatorFactory @Inject() (implicit todaySupplier: TodaySupplier, appConfig: AppConfig) {
 
   def validator(nino: String, taxYear: String): Validator[DeleteCodingOutRequestData] =
     new Validator[DeleteCodingOutRequestData] {
 
+      private val resolveTaxYear =
+        DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
+
       def validate: Validated[Seq[MtdError], DeleteCodingOutRequestData] =
         (
           ResolveNino(nino),
-          ResolveTaxYear(minTaxYear, taxYear, None, None)
+          resolveTaxYear(taxYear)
         ).mapN(DeleteCodingOutRequestData)
 
     }

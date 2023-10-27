@@ -37,11 +37,13 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig 
 
   private def validator(nino: String, taxYear: String, source: Option[String]) = validatorFactory.validator(nino, taxYear, source)
 
-  MockAppConfig.minimumPermittedTaxYear.returns(2022)
+  private def setupMocks(): Unit = (MockAppConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
 
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request" in {
+        setupMocks()
+
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, validTaxYear, validSource).validateAndWrapResult()
 
@@ -51,6 +53,8 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig 
 
     "should return a single error" when {
       "an invalid nino is supplied" in {
+        setupMocks()
+
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator("invalidNino", validTaxYear, validSource).validateAndWrapResult()
 
@@ -58,6 +62,8 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig 
       }
 
       "an incorrectly formatted taxYear is supplied" in {
+        setupMocks()
+
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, "202122", validSource).validateAndWrapResult()
 
@@ -65,6 +71,8 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig 
       }
 
       "an invalid tax year range is supplied" in {
+        setupMocks()
+
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, "2020-22", validSource).validateAndWrapResult()
 
@@ -72,6 +80,8 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig 
       }
 
       "an invalid tax year, before the minimum, is supplied" in {
+        setupMocks()
+
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, "2020-21", validSource).validateAndWrapResult()
 
@@ -79,6 +89,8 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig 
       }
 
       "invalid source is supplied" in {
+        setupMocks()
+
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, validTaxYear, Some("badSource")).validateAndWrapResult()
 
@@ -88,6 +100,8 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig 
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {
+        setupMocks()
+
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator("invalidNino", "invalidTaxYear", Some("badSource")).validateAndWrapResult()
 

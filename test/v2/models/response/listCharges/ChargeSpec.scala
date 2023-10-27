@@ -23,14 +23,14 @@ import v2.fixtures.ListChargesFixture._
 class ChargeSpec extends UnitSpec {
 
   "Charge" should {
-    "return a successful Json model" when {
+    "return the expected Json object" when {
       "the json contains all fields" in {
-        fullDesChargeResponse.as[Charge] shouldBe fullChargeModel
+        fullDesChargeResponse.as[Charge] shouldBe fullCharge
       }
 
       "successfully write the model to Json" when {
         "using a standard Json Owrites" in {
-          Json.toJson(fullChargeModel) shouldBe fullChargeMtdResponse
+          Json.toJson(fullCharge) shouldBe fullChargeMtdResponse
         }
       }
 

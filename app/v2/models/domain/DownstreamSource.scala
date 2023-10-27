@@ -14,8 +14,24 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveChargeHistory
+package v2.models.domain
 
-import api.models.domain.{Nino, TransactionId}
+import play.api.libs.json
+import utils.enums.Enums
 
-case class RetrieveChargeHistoryRequestData(nino: Nino, transactionId: TransactionId)
+sealed trait DownstreamSource {
+  def toMtdSource: String
+}
+
+object DownstreamSource {
+
+  case object `HMRC HELD` extends DownstreamSource {
+    override def toMtdSource: String = "hmrcHeld"
+  }
+
+  case object `CUSTOMER` extends DownstreamSource {
+    override def toMtdSource: String = "user"
+  }
+
+  implicit val format: json.Format[DownstreamSource] = Enums.format[DownstreamSource]
+}

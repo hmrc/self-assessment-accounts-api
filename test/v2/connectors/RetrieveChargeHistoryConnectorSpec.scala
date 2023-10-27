@@ -17,11 +17,10 @@
 package v2.connectors
 
 import api.connectors.ConnectorSpec
-import api.models.domain.Nino
+import api.models.domain.{Nino, TransactionId}
 import api.models.outcomes.ResponseWrapper
 import mocks.MockAppConfig
 import v2.mocks.MockHttpClient
-import v2.models.domain.TransactionId
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory._
 
