@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "description": "A list of charges that make up the overall transaction. The items may include subitems.",
+    "properties": {
+      "taxYear": {
+        "description": "The tax year to which the charge relates, in the format YYYY-YY",
+        "type": "string",
+        "example": "2020-21"
+      },
+      "chargeDetail": {
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "description": "A unique ID is used to reference the document of which this is a subitem.\nMust conform to the regular expression: ^[0-9a-zA-Z]{1,30}$",
+            "example": "XAIS12345678910"
+          },
+          "documentType": {
+            "type": "string",
+            "description": "A unique ID is used to reference the document type of which this is a subitem.",
+            "example": "1234"
+          },
+          "documentTypeDescription": {
+            "type": "string",
+            "description": "The Description of the main charge type",
+            "example": "SA Balancing Charge"
+          },
+          "chargeType": {
+            "type": "string",
+            "description": "A unique ID is used to identify the type of sub-item.",
+            "example": "3175"
+          },
+          "chargeTypeDescription": {
+            "type": "string",
+            "description": "Name of charge type.\nMust conform to the regular expression:\n^[0-9A-Za-z]{1,30}$",
+            "example": "Income Tax Estimate - NIC2 NI"
+          }
+        },
+        "required": [
+          "documentId"
+        ]
+      },
+      "taxPeriodFrom": {
+        "type": "string",
+        "description": "The 'from' date of this tax period.\nDate in the format: YYYY-MM-DD",
+        "example": "2020-04-06"
+      },
+      "taxPeriodTo": {
+        "type": "string",
+        "description": "The 'to' date of this tax period.\nDate in the format: YYYY-MM-DD",
+        "example": "2021-04-05"
+      },
+      "contractAccount": {
+        "type": "string",
+        "description": "A contract account is the accounting record for a particular charge type.",
+        "example": "X"
+      },
+      "documentNumber": {
+        "type": "string",
+        "description": "Same as Document Number/ID unless on output there is no postings (zero amounts) then the Form Bundle is returned \n\nMust conform to the regular expression: ^[0-9A-Za-z]{1,12}$",
+        "example": "1040000872"
+      },
+      "documentNumberItem": {
+        "type": "string",
+        "description": "An identifier for this part of the overall transaction is used to link an allocation and charge.",
+        "example": "XM00"
+      },
+      "chargeReference": {
+        "type": "string",
+        "description": "A unique reference number is associated with the charge.",
+        "example": "XM002610011594"
+      },
+      "originalAmount": {
+        "type": "number",
+        "description": "The original amount of this transaction.\nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places.",
+        "example": "5009.99"
+      },
+      "outstandingAmount": {
+        "type": "number",
+        "description": "The remaining amount is due on this transaction.\nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places.",
+        "example": "5009.99"
+      },
+      "clearedAmount": {
+        "type": "number",
+        "description": "The cleared value of this transaction. For example, the paid amount of a charge. \nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places.",
+        "example": "5009.99"
+      },
+      "accruedInterest": {
+        "type": "number",
+        "description": "The accrued interest of this transaction.\nAccrued interest is interest calculated and charged.\nThe value must be between -99999999999.99 and 99999999999.99 to 2 decimal places",
+        "example": "5009.99"
+      },
+      "items": {
+        "$ref": "itemDetails.json"
+      }
+    },
+    "required": [
+      "taxYear",
+      "chargeDetail",
+      "items"
+    ]
+  }
+}
+
+
+

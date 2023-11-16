@@ -31,12 +31,13 @@ trait VersionRoutingMap {
   final def versionRouter(version: Version): Option[Router] = map.get(version)
 }
 
-case class VersionRoutingMapImpl @Inject() (defaultRouter: Router, v2Routes: v2.Routes, appConfig: AppConfig)
+case class VersionRoutingMapImpl @Inject() (defaultRouter: Router, v2Routes: v2.Routes, v3Routes: v3.Routes, appConfig: AppConfig)
     extends VersionRoutingMap {
 
   val map: Map[Version, Router] = {
     Map(
-      Version2 -> v2Routes
+      Version2 -> v2Routes,
+      Version3 -> v3Routes
     )
   }
 

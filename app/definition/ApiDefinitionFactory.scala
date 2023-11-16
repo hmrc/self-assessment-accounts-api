@@ -17,7 +17,7 @@
 package definition
 
 import config.AppConfig
-import routing.{Version, Version2}
+import routing.{Version, Version2, Version3}
 
 import javax.inject.{Inject, Singleton}
 import uk.gov.hmrc.auth.core.ConfidenceLevel
@@ -61,6 +61,11 @@ class ApiDefinitionFactory @Inject() (appConfig: AppConfig) extends Logging {
             version = Version2,
             status = buildAPIStatus(Version2),
             endpointsEnabled = appConfig.endpointsEnabled(Version2)
+          ),
+          APIVersion(
+            version = Version3,
+            status = buildAPIStatus(Version3),
+            endpointsEnabled = appConfig.endpointsEnabled(Version3)
           )
         ),
         requiresTrust = None
