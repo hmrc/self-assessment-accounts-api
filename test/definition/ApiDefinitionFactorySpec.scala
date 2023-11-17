@@ -20,7 +20,7 @@ import config.ConfidenceLevelConfig
 import definition.APIStatus.{ALPHA, BETA}
 import mocks.{MockAppConfig, MockHttpClient}
 import play.api.Configuration
-import routing.Version2
+import routing.{Version2, Version3}
 import support.UnitSpec
 import uk.gov.hmrc.auth.core.ConfidenceLevel
 
@@ -38,7 +38,9 @@ class ApiDefinitionFactorySpec extends UnitSpec {
       "return a valid Definition case class" in new Test {
         MockAppConfig.featureSwitches returns Configuration.empty
         MockAppConfig.apiStatus(Version2) returns "BETA"
+        MockAppConfig.apiStatus(Version3) returns "BETA"
         MockAppConfig.endpointsEnabled(Version2).returns(true).anyNumberOfTimes()
+        MockAppConfig.endpointsEnabled(Version3).returns(true).anyNumberOfTimes()
 
         MockAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
@@ -73,6 +75,11 @@ class ApiDefinitionFactorySpec extends UnitSpec {
                   version = Version2,
                   status = BETA,
                   endpointsEnabled = true
+                ),
+                APIVersion(
+                  version = Version3,
+                  status = BETA,
+                  endpointsEnabled = true
                 )
               ),
               requiresTrust = None
@@ -103,7 +110,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
       Seq(
-        (Version2, BETA)
+        (Version2, BETA),
+        (Version3, BETA)
       ).foreach { case (version, status) =>
         s"return the correct $status for $version " in new Test {
           MockAppConfig.apiStatus(version) returns status.toString
@@ -113,7 +121,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
-      Seq(Version2).foreach { version =>
+      Seq(Version2, Version3).foreach { version =>
         s"default to alpha for $version " in new Test {
           MockAppConfig.apiStatus(version) returns "ALPHO"
           apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA

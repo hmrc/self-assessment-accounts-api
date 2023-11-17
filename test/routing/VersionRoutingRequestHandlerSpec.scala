@@ -49,9 +49,12 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   private val v2Router = Router.from { case GET(p"/v2") =>
     V2Handler
   }
+  private val v3Router = Router.from { case GET(p"/v3") =>
+    V3Handler
+  }
   private val routingMap = new VersionRoutingMap {
     override val defaultRouter: Router     = test.defaultRouter
-    override val map: Map[Version, Router] = Map(Version2 -> v2Router)
+    override val map: Map[Version, Router] = Map(Version2 -> v2Router, Version3 -> v3Router)
   }
 
   class Test(implicit acceptHeader: Option[String]) {
@@ -80,6 +83,11 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   "Routing requests with v2" should {
     implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.2.0+json")
     handleWithVersionRoutes("/v2", V2Handler, Version2)
+  }
+
+  "Routing requests with v3" should {
+    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.3.0+json")
+    handleWithVersionRoutes("/v3", V3Handler, Version3)
   }
 
   private def handleWithDefaultRoutes()(implicit acceptHeader: Option[String]): Unit = {
@@ -124,7 +132,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
     "return 406" in new Test {
 
-      val request: RequestHeader = buildRequest("/v2")
+      val request: RequestHeader = buildRequest("/v3")
       inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
         val result = a.apply(request)
 
@@ -139,7 +147,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
     "return 404" in new Test {
 
-      private val request = buildRequest("/v2")
+      private val request = buildRequest("/v3")
 
       inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
         val result = a.apply(request)
@@ -151,12 +159,12 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   }
 
   "Routing requests for supported version but not enabled" when {
-    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.3.0+json")
+    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.4.0+json")
 
     "the version has a route for the resource" must {
       "return 404 Not Found" in new Test {
 
-        private val request = buildRequest("/v2")
+        private val request = buildRequest("/v3")
         inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
           val result = a.apply(request)
 

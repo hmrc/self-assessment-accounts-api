@@ -1,0 +1,398 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Coding Out underpayment and debt amounts",
+  "description": "Retrieve Coding Out underpayment and debt amounts",
+  "type": "object",
+  "properties": {
+    "taxCodeComponents": {
+      "type": "object",
+      "description": "Object holding underpayment arrays.",
+      "properties": {
+        "selfAssessmentUnderpayment": {
+          "type": "array",
+          "description": "Array containing details of coded out Self Assessment underpayments.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The ID for the Self Assessment underpayment.  It will only be returned after the tax year has ended.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "5000.99"
+              },
+              "relatedTaxYear": {
+                "description": "The tax year related to the underpayment.",
+                "type": "string",
+                "example": "2021-22"
+              },
+              "submittedOn": {
+                "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
+                "type": "string",
+                "example": "2021-07-06T09:37:17.000Z"
+              },
+              "source": {
+                "description": "Specifies the source of data.",
+                "type": "string",
+                "enum": [
+                  "hmrcHeld",
+                  "user"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "amount",
+              "source",
+              "submittedOn"
+            ]
+          }
+        },
+        "payeUnderpayment": {
+          "type": "array",
+          "description": "Array containing details of coded out PAYE underpayments.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The ID for the PAYE underpayment.  It will only be returned after the tax year has ended.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "5000.99"
+              },
+              "relatedTaxYear": {
+                "description": "The tax year related to the underpayment.",
+                "type": "string",
+                "example": "2021-22"
+              },
+              "submittedOn": {
+                "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
+                "type": "string",
+                "example": "2021-07-06T09:37:17.000Z"
+              },
+              "source": {
+                "description": "Specifies the source of data.",
+                "type": "string",
+                "enum": [
+                  "hmrcHeld",
+                  "user"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "amount",
+              "source",
+              "submittedOn"
+            ]
+          }
+        },
+        "debt": {
+          "type": "array",
+          "description": "Array containing details of coded out debts.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The ID for the coded out debts. It will only be returned after the tax year has ended.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total amount of debt coded out. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "5000.99"
+              },
+              "relatedTaxYear": {
+                "description": "The tax year related to the debt.",
+                "type": "string",
+                "example": "2021-22"
+              },
+              "submittedOn": {
+                "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
+                "type": "string",
+                "example": "2021-07-06T09:37:17.000Z"
+              },
+              "source": {
+                "description": "Specifies the source of data.",
+                "type": "string",
+                "enum": [
+                  "hmrcHeld",
+                  "user"
+                ]
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "amount",
+              "source",
+              "submittedOn"
+            ]
+          }
+        },
+        "inYearAdjustment": {
+          "type": "object",
+          "description": "Details of coded out in-year adjustments",
+          "properties": {
+            "id": {
+              "description": "The ID for the HMRC classified debts. It will only be returned after the tax year has ended.",
+              "type": "number",
+              "multipleOf": 1,
+              "minimum": 1,
+              "maximum": 999999999999999,
+              "example": "1234567890"
+            },
+            "amount": {
+              "description": "The total amount of PAYE coded out in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0.00,
+              "maximum": 99999999999.99,
+              "example": "5000.99"
+            },
+            "relatedTaxYear": {
+              "description": "The tax year related to the in-year adjustment.",
+              "type": "string",
+              "example": "2021-22"
+            },
+            "submittedOn": {
+              "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
+              "type": "string",
+              "example": "2021-07-06T09:37:17.000Z"
+            },
+            "source": {
+              "description": "Specifies the source of data.",
+              "type": "string",
+              "enum": [
+                "hmrcHeld",
+                "user"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "amount",
+            "source",
+            "submittedOn"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "unmatchedCustomerSubmissions": {
+      "type": "object",
+      "description": "Object holding underpayment arrays for unmatched customer submissions.",
+      "properties": {
+        "selfAssessmentUnderpayment": {
+          "type": "array",
+          "description": "Array containing details of coded out Self Assessment underpayments.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The ID for the Self Assessment underpayment. It will only be returned after the tax year has ended.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "5000.99"
+              },
+              "submittedOn": {
+                "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
+                "type": "string",
+                "example": "2021-07-06T09:37:17.000Z"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "amount",
+              "submittedOn"
+            ]
+          }
+        },
+        "payeUnderpayment": {
+          "type": "array",
+          "description": "Array containing details of coded out PAYE underpayments.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The ID for the PAYE underpayment. It will only be returned after the tax year has ended.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "5000.99"
+              },
+              "submittedOn": {
+                "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
+                "type": "string",
+                "example": "2021-07-06T09:37:17.000Z"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "amount",
+              "submittedOn"
+            ]
+          }
+        },
+        "debt": {
+          "type": "array",
+          "description": "Array containing details of coded out debts.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "The ID for the coded out debts. It will only be returned after the tax year has ended.",
+                "type": "number",
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 999999999999999,
+                "example": "1234567890"
+              },
+              "amount": {
+                "description": "The total amount of debt coded out. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": 0.00,
+                "maximum": 99999999999.99,
+                "example": "5000.99"
+              },
+              "submittedOn": {
+                "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
+                "type": "string",
+                "example": "2021-07-06T09:37:17.000Z"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "amount",
+              "submittedOn"
+            ]
+          }
+        },
+        "inYearAdjustment": {
+          "type": "object",
+          "description": "Details of coded out in-year adjustments",
+          "properties": {
+            "id": {
+              "description": "The ID for the HMRC classified debts. It will only be returned after the tax year has ended.",
+              "type": "number",
+              "multipleOf": 1,
+              "minimum": 1,
+              "maximum": 999999999999999,
+              "example": "1234567890"
+            },
+            "amount": {
+              "description": "The total amount of PAYE coded out in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": 0.00,
+              "maximum": 99999999999.99,
+              "example": "5000.99"
+            },
+            "submittedOn": {
+              "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
+              "type": "string",
+              "example": "2021-07-06T09:37:17.000Z"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "amount",
+            "submittedOn"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "description": "A list of endpoint links that indicate possible actions related to the current resource",
+        "properties": {
+          "href": {
+            "description": "The relative url of the endpoint",
+            "type": "string",
+            "example": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code"
+          },
+          "rel": {
+            "description": "A label for the endpoint, which describes how it is related to the current resource. The rel will be self where the action is retrieval of the same resource",
+            "type": "string",
+            "enum": [
+              "create-or-amend-coding-out-underpayments",
+              "self",
+              "delete-coding-out-underpayments"
+            ]
+          },
+          "method": {
+            "description": "The HTTP method type for the endpoint",
+            "type": "string",
+            "enum": [
+              "PUT",
+              "GET",
+              "DELETE"
+            ]
+          }
+        },
+        "required": [
+          "href",
+          "rel",
+          "method"
+        ]
+      }
+    }
+  },
+  "required": [
+    "links"
+  ]
+}
