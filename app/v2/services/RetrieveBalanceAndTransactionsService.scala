@@ -30,6 +30,15 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanceAndTransactionsConnector) extends BaseService {
 
+  def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveBalanceAndTransactionsResponse]] = {
+
+    connector
+      .retrieveBalanceAndTransactions(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+  }
+
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID"                -> InternalError,
@@ -52,14 +61,5 @@ class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanc
       "SERVER_ERROR"                         -> InternalError,
       "SERVICE_UNAVAILABLE"                  -> InternalError
     )
-
-  def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)(implicit
-                                                                                         ctx: RequestContext,
-                                                                                         ec: ExecutionContext): Future[ServiceOutcome[RetrieveBalanceAndTransactionsResponse]] = {
-
-    connector
-      .retrieveBalanceAndTransactions(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
 
 }

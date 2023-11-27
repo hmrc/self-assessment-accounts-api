@@ -16,10 +16,9 @@
 
 package v2.controllers.validators
 
-import api.models.domain.Nino
+import api.models.domain.{Nino, TransactionId}
 import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
 import support.UnitSpec
-import v2.models.domain.TransactionId
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 
 class RetrieveChargeHistoryValidatorFactorySpec extends UnitSpec {

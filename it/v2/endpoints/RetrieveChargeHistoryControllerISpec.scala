@@ -17,32 +17,24 @@
 package v2.endpoints
 
 import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
-import v2.stubs.DownstreamStub
 
 class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    lazy val transactionId: String = "12345678"
-    val nino: String               = "AA123456A"
-    val mtdResponseWithHateoas = mtdMultipleResponseWithHateoas(nino, transactionId)
+    lazy private val transactionId = "12345678"
+    protected val nino             = "AA123456A"
 
-    def desParamSource: String = "HMRC-HELD"
-
-    def mtdParamSource: String = "hmrcHeld"
-
-    def desBodySource: String = "HMRC HELD"
-
-    def mtdBodySource: String = "hmrcHeld"
+    protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, transactionId)
 
     def downstreamUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
 
@@ -58,7 +50,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
         )
     }
 
-    def uri: String           = s"/$nino/charges/$transactionId"
+    def uri: String = s"/$nino/charges/$transactionId"
 
     def errorBody(code: String): String =
       s"""

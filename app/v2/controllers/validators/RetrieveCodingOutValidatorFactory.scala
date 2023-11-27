@@ -17,7 +17,7 @@
 package v2.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
+import api.controllers.validators.resolvers.{DetailedResolveTaxYear, ResolveNino}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
@@ -30,15 +30,15 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class RetrieveCodingOutValidatorFactory @Inject() (appConfig: AppConfig) {
 
-  private lazy val minTaxYear = appConfig.minimumPermittedTaxYear
-
   def validator(nino: String, taxYear: String, source: Option[String]): Validator[RetrieveCodingOutRequestData] =
     new Validator[RetrieveCodingOutRequestData] {
+
+      private val resolveTaxYear = DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
 
       def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] =
         (
           ResolveNino(nino),
-          ResolveTaxYear(minTaxYear, taxYear, None, None),
+          resolveTaxYear(taxYear),
           ResolveSource(source)
         ).mapN(RetrieveCodingOutRequestData)
 

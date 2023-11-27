@@ -128,7 +128,7 @@ trait BaseDownstreamConnector extends Logging {
       case DesUri(_)                => appConfig.desDownstreamConfig
       case Ifs1Uri(_)               => appConfig.ifs1DownstreamConfig
       case Ifs2Uri(_)               => appConfig.ifs2DownstreamConfig
-      case TaxYearSpecificIfsUri(_) => appConfig.taxYearSpecificIfsDownstreamConfig
+      case TaxYearSpecificIfsUri(_) => appConfig.tysIfsDownstreamConfig
     }
 
 }

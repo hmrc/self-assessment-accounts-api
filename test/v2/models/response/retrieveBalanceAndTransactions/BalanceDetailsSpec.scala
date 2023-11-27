@@ -58,7 +58,7 @@ class BalanceDetailsSpec extends UnitSpec {
            |""".stripMargin)
         .as[BalanceDetails]
 
-      balanceDetails.bcdBalancePerYear shouldBe Seq(
+      balanceDetails.bcdBalancePerYear shouldBe List(
         BalancePerYear(bcdAmount = 1, taxYear = "2020-21"),
         BalancePerYear(bcdAmount = 4, taxYear = "2023-24")
       )

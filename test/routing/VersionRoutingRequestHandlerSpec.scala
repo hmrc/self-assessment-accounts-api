@@ -17,8 +17,8 @@
 package routing
 
 import akka.actor.ActorSystem
+import api.config.MockAppConfig
 import api.models.errors.{InvalidAcceptHeaderError, UnsupportedVersionError}
-import mocks.MockAppConfig
 import org.scalatest.Inside
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.http.HeaderNames.ACCEPT
@@ -46,12 +46,18 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   private val defaultRouter = Router.from { case GET(p"") =>
     DefaultHandler
   }
+
   private val v2Router = Router.from { case GET(p"/v2") =>
     V2Handler
   }
+
+  private val v3Router = Router.from { case GET(p"/v3") =>
+    V3Handler
+  }
+
   private val routingMap = new VersionRoutingMap {
     override val defaultRouter: Router     = test.defaultRouter
-    override val map: Map[Version, Router] = Map(Version2 -> v2Router)
+    override val map: Map[Version, Router] = Map(Version2 -> v2Router, Version3 -> v3Router)
   }
 
   class Test(implicit acceptHeader: Option[String]) {
@@ -82,6 +88,11 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     handleWithVersionRoutes("/v2", V2Handler, Version2)
   }
 
+  "Routing requests with v3" should {
+    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.3.0+json")
+    handleWithVersionRoutes("/v3", V3Handler, Version3)
+  }
+
   private def handleWithDefaultRoutes()(implicit acceptHeader: Option[String]): Unit = {
     "if the request ends with a trailing slash" when {
       "handler found" should {
@@ -103,7 +114,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     "if the request ends with a trailing slash" when {
       "handler found" should {
         "use it" in new Test {
-          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
 
           requestHandler.routeRequest(buildRequest(s"$path/")) shouldBe Some(handler)
         }
@@ -111,7 +122,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
       "handler not found" should {
         "try without the trailing slash" in new Test {
-          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
 
           requestHandler.routeRequest(buildRequest(s"$path")) shouldBe Some(handler)
         }
@@ -124,7 +135,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
     "return 406" in new Test {
 
-      val request: RequestHeader = buildRequest("/v2")
+      val request: RequestHeader = buildRequest("/v3")
       inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
         val result = a.apply(request)
 
@@ -139,7 +150,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
     "return 404" in new Test {
 
-      private val request = buildRequest("/v2")
+      private val request = buildRequest("/v3")
 
       inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
         val result = a.apply(request)
@@ -151,12 +162,12 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
   }
 
   "Routing requests for supported version but not enabled" when {
-    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.3.0+json")
+    implicit val acceptHeader: Some[String] = Some("application/vnd.hmrc.4.0+json")
 
     "the version has a route for the resource" must {
       "return 404 Not Found" in new Test {
 
-        private val request = buildRequest("/v2")
+        private val request = buildRequest("/v3")
         inside(requestHandler.routeRequest(request)) { case Some(a: EssentialAction) =>
           val result = a.apply(request)
 

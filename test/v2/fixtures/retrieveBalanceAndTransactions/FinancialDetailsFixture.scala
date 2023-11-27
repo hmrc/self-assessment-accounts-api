@@ -32,9 +32,9 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
     chargeTypeDescription = Some("PAYE")
   )
 
-  val financialDetailsFull: FinancialDetails = financialDetailsWith(Seq(financialDetailsItem))
+  val financialDetailsFull: FinancialDetails = financialDetailsWith(List(financialDetailsItem))
 
-  val financialDetailsWithoutLocks: FinancialDetails = financialDetailsWith(Seq(financialDetailsItemWithoutLocks))
+  val financialDetailsWithoutLocks: FinancialDetails = financialDetailsWith(List(financialDetailsItemWithoutLocks))
 
   private def financialDetailsWith(items: Seq[FinancialDetailsItem]): FinancialDetails = FinancialDetails(
     taxYear = taxYear.asMtd,

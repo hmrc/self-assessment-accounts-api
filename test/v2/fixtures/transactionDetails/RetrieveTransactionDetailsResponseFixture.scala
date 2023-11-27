@@ -202,7 +202,7 @@ trait RetrieveTransactionDetailsResponseFixture {
   )
 
   val responseModelCharge: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
-    transactionItems = Seq(
+    transactionItems = List(
       TransactionItem(
         transactionItemId = Some("0001"),
         `type` = Some("National Insurance Class 2"),
@@ -213,7 +213,7 @@ trait RetrieveTransactionDetailsResponseFixture {
         dueDate = Some("2021-01-31"),
         paymentMethod = Some("BACS RECEIPTS"),
         paymentId = None,
-        subItems = Seq(
+        subItems = List(
           SubItem(
             subItemId = Some("002"),
             amount = Some(100.11),
@@ -231,7 +231,7 @@ trait RetrieveTransactionDetailsResponseFixture {
   )
 
   val responseModelPayment: RetrieveTransactionDetailsResponse = RetrieveTransactionDetailsResponse(
-    transactionItems = Seq(
+    transactionItems = List(
       TransactionItem(
         transactionItemId = Some("0002"),
         `type` = Some("National Insurance Class 4"),
@@ -242,7 +242,7 @@ trait RetrieveTransactionDetailsResponseFixture {
         dueDate = Some("2021-01-31"),
         paymentMethod = None,
         paymentId = Some("P0101180112-000001"),
-        subItems = Seq(
+        subItems = List(
           SubItem(
             subItemId = Some("004"),
             amount = None,

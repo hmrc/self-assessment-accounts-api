@@ -32,7 +32,7 @@ object BalanceDetailsFixture {
     pendingChargeDueAmount = 0.12,
     pendingChargeDueDate = Some("2022-01-01"),
     overdueAmount = 12.65,
-    bcdBalancePerYear = Seq(balancePerYear),
+    bcdBalancePerYear = List(balancePerYear),
     earliestPaymentDateOverdue = Some("2022-05-05"),
     totalBalance = 1263.12,
     amountCodedOut = Some(12.12),

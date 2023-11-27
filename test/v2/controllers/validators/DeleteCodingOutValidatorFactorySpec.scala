@@ -16,14 +16,21 @@
 
 package v2.controllers.validators
 
-import api.models.domain.{Nino, TaxYear}
+import api.config.MockAppConfig
+import api.models.domain.{Nino, TaxYear, TodaySupplier}
 import api.models.errors._
-import mocks.MockAppConfig
 import support.UnitSpec
 import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 
+import java.time.LocalDate
+
 class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig {
+
   private implicit val correlationId: String = "1234"
+
+  private implicit val todaySupplier: TodaySupplier = new TodaySupplier {
+    override def today(): LocalDate = LocalDate.parse("2022-07-11")
+  }
 
   private val validNino    = "AA123456A"
   private val validTaxYear = "2021-22"
@@ -31,11 +38,12 @@ class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig {
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val validatorFactory = new DeleteCodingOutValidatorFactory(mockAppConfig)
+  private val validatorFactory = new DeleteCodingOutValidatorFactory
 
-  private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
-
-  MockAppConfig.minimumPermittedTaxYear.returns(2022)
+  private def validator(nino: String, taxYear: String) = {
+    MockedAppConfig.minimumPermittedTaxYear returns 2022
+    validatorFactory.validator(nino, taxYear)
+  }
 
   "validator" should {
     "return the parsed domain object" when {

@@ -77,7 +77,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
                 json(downstreamValue).as[FinancialDetailsItem] shouldBe model(Some(mtdValue))
               }
 
-            Seq("A" -> "Repayment to Card", "P" -> "Payable Order Repayment", "R" -> "BACS Payment out").foreach((doTest _).tupled)
+            List("A" -> "Repayment to Card", "P" -> "Payable Order Repayment", "R" -> "BACS Payment out").foreach((doTest _).tupled)
           }
 
           "leave absent if present and no mapping is defined" in {

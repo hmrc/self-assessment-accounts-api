@@ -32,7 +32,7 @@ object RetrieveChargeHistoryFixture {
   )
 
   val validChargeHistoryResponseObject: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(
-    Seq(validChargeHistoryDetailObject, validChargeHistoryDetailObject))
+    List(validChargeHistoryDetailObject, validChargeHistoryDetailObject))
 
   val downstreamDetailSingleJson: JsValue = Json.parse(
     s"""

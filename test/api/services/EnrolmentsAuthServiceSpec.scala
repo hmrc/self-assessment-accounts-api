@@ -16,10 +16,10 @@
 
 package api.services
 
+import api.config.MockAppConfig
 import api.models.auth.UserDetails
 import api.models.errors.{ClientNotAuthorisedError, InternalError}
 import config.ConfidenceLevelConfig
-import mocks.MockAppConfig
 import org.scalamock.handlers.CallHandler
 import uk.gov.hmrc.auth.core._
 import uk.gov.hmrc.auth.core.authorise.{AlternatePredicate, CompositePredicate, EmptyPredicate, Predicate}
@@ -247,7 +247,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
     val authRetrievals: Retrieval[Option[AffinityGroup] ~ Enrolments] = affinityGroup and authorisedEnrolments
 
     def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean = true, confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200): Unit = {
-      MockAppConfig.confidenceLevelCheckEnabled.returns(
+      MockedAppConfig.confidenceLevelCheckEnabled.returns(
         ConfidenceLevelConfig(
           confidenceLevel = confidenceLevel,
           definitionEnabled = true,
