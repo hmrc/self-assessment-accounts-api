@@ -16,9 +16,9 @@
 
 package v2.models.response.listCharges
 
+import api.config.MockAppConfig
 import api.hateoas.Link
 import api.hateoas.Method.GET
-import mocks.MockAppConfig
 import play.api.libs.json.{JsError, Json}
 import support.UnitSpec
 import v2.fixtures.ListChargesFixture._
@@ -51,7 +51,7 @@ class ListChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   "LinksFactory.itemLinks" should {
     "return the expected links" in {
-      MockAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
+      MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
 
       val result = ListChargesResponse.LinksFactory.itemLinks(
         mockAppConfig,
@@ -67,7 +67,7 @@ class ListChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   "LinksFactory.links" should {
     "return the expected links" in {
-      MockAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
+      MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
 
       val result = ListChargesResponse.LinksFactory.links(
         mockAppConfig,
