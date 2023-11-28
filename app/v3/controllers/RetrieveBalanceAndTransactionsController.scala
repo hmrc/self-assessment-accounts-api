@@ -27,12 +27,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveBalanceAndTransactionsController @Inject()(val authService: EnrolmentsAuthService,
-                                                         val lookupService: MtdIdLookupService,
-                                                         validatorFactory: RetrieveBalanceAndTransactionsValidatorFactory,
-                                                         service: RetrieveBalanceAndTransactionsService,
-                                                         cc: ControllerComponents,
-                                                         idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class RetrieveBalanceAndTransactionsController @Inject() (val authService: EnrolmentsAuthService,
+                                                          val lookupService: MtdIdLookupService,
+                                                          validatorFactory: RetrieveBalanceAndTransactionsValidatorFactory,
+                                                          service: RetrieveBalanceAndTransactionsService,
+                                                          cc: ControllerComponents,
+                                                          idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -53,16 +53,15 @@ class RetrieveBalanceAndTransactionsController @Inject()(val authService: Enrolm
 
       val validator = validatorFactory.validator(
         nino,
-        docNumber: Option[String],
-        fromDate: Option[String],
-        toDate: Option[String],
-        onlyOpenItems: Option[String],
-        includeLocks: Option[String],
-        calculateAccruedInterest: Option[String],
-        removePOA: Option[String],
-        customerPaymentInformation: Option[String],
-        includeEstimatedCharges: Option[String]
-      )
+        docNumber,
+        fromDate,
+        toDate,
+        onlyOpenItems,
+        includeLocks,
+        calculateAccruedInterest,
+        removePOA,
+        customerPaymentInformation,
+        includeEstimatedCharges)
 
       val requestHandler =
         RequestHandler

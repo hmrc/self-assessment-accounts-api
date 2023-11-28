@@ -21,8 +21,6 @@ import v3.models.response.retrieveBalanceAndTransactions.{DocumentDetails, LastC
 
 object DocumentDetailsFixture {
 
-  // MTD model:
-
   val lastClearing: LastClearing = LastClearing(
     lastClearingDate = Some("2018-04-05"),
     lastClearingReason = Some("Incoming Payment"),
@@ -78,7 +76,7 @@ object DocumentDetailsFixture {
     None,
     documentDate = "2018-04-05",
     None,
-    documentDueDate = Some("2021-04-05"),
+    documentDueDate = None,
     None,
     originalAmount = 1.99,
     outstandingAmount = 2.99,
@@ -159,7 +157,6 @@ object DocumentDetailsFixture {
        |{
        |  "documentId": "1455",
        |  "documentDate": "2018-04-05",
-       |  "documentDueDate": "2021-04-05",
        |  "totalAmount": 1.99,
        |  "documentOutstandingAmount": 2.99,
        |  "statisticalFlag": false

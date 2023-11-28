@@ -52,15 +52,15 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     )
 
   private val validRequest: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
-    nino = Nino(nino),
-    docNumber = Some(docNumber),
+    Nino(nino),
+    Some(docNumber),
     Some(DateRange(LocalDate.parse(fromDate), LocalDate.parse(toDate))),
-    onlyOpenItems = onlyOpenItems,
-    includeLocks = includeLocks,
-    calculateAccruedInterest = calculateAccruedInterest,
-    removePOA = removePOA,
-    customerPaymentInformation = customerPaymentInformation,
-    includeEstimatedCharges = includeEstimatedCharges
+    onlyOpenItems,
+    includeLocks,
+    calculateAccruedInterest,
+    removePOA,
+    customerPaymentInformation,
+    includeEstimatedCharges
   )
 
   private val commonQueryParams: Seq[(String, String)] = List(

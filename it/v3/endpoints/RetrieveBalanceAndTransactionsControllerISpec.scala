@@ -33,8 +33,6 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
   "Calling the 'retrieve a charge history' endpoint" when {
     "any valid request is made with doc number, fromDate, toDate and all flag params as false" should {
       "return a 200 status code" in new Test {
-
-        override val onlyOpenItems: Option[String]              = Some("false")
         override val includeLocks: Option[String]               = Some("false")
         override val calculateAccruedInterest: Option[String]   = Some("false")
         override val removePOA: Option[String]                  = Some("false")
@@ -54,10 +52,8 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
       }
 
       "any valid request is made with only doc number and all flag params (except onlyOpenItems) as true" in new Test {
-
-        override val fromDate: Option[String]      = None
-        override val toDate: Option[String]        = None
-        override val onlyOpenItems: Option[String] = Some("false")
+        override val fromDate: Option[String] = None
+        override val toDate: Option[String]   = None
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -72,8 +68,6 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
       }
 
       "any valid request is made with no doc number, but with fromDate, toDate and all flag params (except onlyOpenItems) as true" in new Test {
-
-        override val onlyOpenItems: Option[String] = Some("false")
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
@@ -106,7 +100,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
 
       s"validation fails with ${expectedBody.code} error" in new Test {
 
-        override protected val nino = requestNino
+        override protected val nino: String = requestNino
 
         override protected val docNumber: Option[String]                  = requestDocNumber
         override protected val fromDate: Option[String]                   = requestFromDate
@@ -150,14 +144,12 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
       )
       // format: on
 
-    input.foreach(args => (validationErrorTest _).tupled(args))
+    input.foreach((validationErrorTest _).tupled)
   }
 
   "downstream service error" should {
     def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
       s"handle $downstreamCode with status $downstreamStatus" in new Test {
-
-        override val onlyOpenItems: Option[String] = Some("false")
 
         override def setupStubs(): StubMapping = {
           AuditStub.audit()
@@ -206,7 +198,7 @@ class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec 
     protected val docNumber: Option[String]                  = Some("1234")
     protected val fromDate: Option[String]                   = Some("2022-08-15")
     protected val toDate: Option[String]                     = Some("2022-09-15")
-    protected val onlyOpenItems: Option[String]              = Some("true")
+    protected val onlyOpenItems: Option[String]              = Some("false")
     protected val includeLocks: Option[String]               = Some("true")
     protected val calculateAccruedInterest: Option[String]   = Some("true")
     protected val removePOA: Option[String]                  = Some("true")

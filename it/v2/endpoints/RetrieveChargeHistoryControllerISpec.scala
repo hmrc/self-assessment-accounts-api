@@ -31,8 +31,8 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    lazy private val transactionId = "12345678"
-    protected val nino             = "AA123456A"
+    private val transactionId = "12345678"
+    protected val nino        = "AA123456A"
 
     protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, transactionId)
 

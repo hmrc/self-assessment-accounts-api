@@ -52,16 +52,16 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
 
   val retrieveBalanceAndTransactionsResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
-      balanceDetails = balanceDetails,
-      codingDetails = Some(List(codingDetails)),
-      documentDetails = Some(List(documentDetails, documentDetailsWithoutDocDueDate)),
-      financialDetails = Some(List(financialDetailsFull))
+      balanceDetails,
+      Some(List(codingDetails)),
+      Some(List(documentDetails, documentDetailsWithoutDocDueDate)),
+      Some(List(financialDetailsFull))
     )
 
   "RetrieveBalanceAndTransactionsService" when {
     "the service call is successful" should {
       "return the mapped result" in new Test {
-        MockRetrieveBalanceAndTransactionsConnector
+        MockedRetrieveBalanceAndTransactionsConnector
           .retrieveBalanceAndTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveBalanceAndTransactionsResponse))))
 
@@ -74,7 +74,7 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
         s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveBalanceAndTransactionsConnector
+          MockedRetrieveBalanceAndTransactionsConnector
             .retrieveBalanceAndTransactions(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
@@ -105,17 +105,12 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
           "SERVICE_UNAVAILABLE"                  -> InternalError
         )
 
-      errors.foreach(args => (serviceError _).tupled(args))
+      errors.foreach((serviceError _).tupled)
     }
-
   }
 
   trait Test extends MockRetrieveBalanceAndTransactionsConnector {
-
-    val service = new RetrieveBalanceAndTransactionsService(
-      connector = mockRetrieveBalanceAndTransactionsConnector
-    )
-
+    val service = new RetrieveBalanceAndTransactionsService(mockRetrieveBalanceAndTransactionsConnector)
   }
 
 }

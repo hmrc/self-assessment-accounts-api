@@ -30,10 +30,10 @@ import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture._
 
 class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec {
 
-  "Calling the 'retrieve a charge history' endpoint" when {
-    "any valid request is made with doc number, fromDate, toDate and all flag params as false" should {
-      "return a 200 status code" in new Test {
+  "Calling the 'retrieve a charge history' endpoint" should {
+    "return a 200 status code" when {
 
+      "any valid request is made with doc number, fromDate, toDate and all flag params as false" in new Test {
         override val onlyOpenItems: Option[String]              = Some("false")
         override val includeLocks: Option[String]               = Some("false")
         override val calculateAccruedInterest: Option[String]   = Some("false")

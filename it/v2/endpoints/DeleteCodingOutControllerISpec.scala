@@ -74,7 +74,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
       )
 
       val parameters = input.map(c => (c._1, c._2, c._3, c._4))
-      parameters.foreach(args => (validationErrorTest _).tupled(args))
+      parameters.foreach((validationErrorTest _).tupled)
     }
 
     "downstream service error" when {
@@ -103,7 +103,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
       )
 
       val parameters = (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4))
-      parameters.foreach(args => (serviceErrorTest _).tupled(args))
+      parameters.foreach((serviceErrorTest _).tupled)
     }
   }
 

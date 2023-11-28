@@ -23,11 +23,7 @@
       },
       "creditReason": {
         "description": "Credit Reason gives the reason as to why there is a credit on the account.",
-<<<<<<< HEAD
         "type": "string",
-=======
-        "type":"string",
->>>>>>> main
         "example": "Voluntary Payment",
         "enum": [
           "Voluntary Payment",
@@ -52,11 +48,7 @@
       },
       "documentDescription": {
         "description": "The primary method to identify what type of document has been called.",
-<<<<<<< HEAD
         "type": "string",
-=======
-        "type":"string",
->>>>>>> main
         "example": "ITSA- POA 1",
         "enum": [
           "ITSA- POA 1",
@@ -97,11 +89,7 @@
           },
           "lastClearingReason": {
             "description": "The reason for the change. For example, an interest charge was created.",
-<<<<<<< HEAD
             "type": "string",
-=======
-            "type":"string",
->>>>>>> main
             "example": "Incoming Payment",
             "enum": [
               "Incoming Payment",
@@ -245,10 +233,6 @@
     "required": [
       "documentId",
       "documentDate",
-<<<<<<< HEAD
-=======
-      "documentDueDate",
->>>>>>> main
       "originalAmount",
       "outstandingAmount",
       "isChargeEstimate",

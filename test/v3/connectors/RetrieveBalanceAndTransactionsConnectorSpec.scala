@@ -110,10 +110,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     }
   }
 
-  private class Test extends MockHttpClient with MockAppConfig {
+  private trait Test extends MockHttpClient with MockAppConfig {
 
     val connector: RetrieveBalanceAndTransactionsConnector =
-      new RetrieveBalanceAndTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
+      new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockAppConfig)
 
     MockedAppConfig.ifs2BaseUrl returns baseUrl
     MockedAppConfig.ifs2Token returns "ifs2-token"

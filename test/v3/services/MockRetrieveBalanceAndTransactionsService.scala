@@ -30,7 +30,7 @@ trait MockRetrieveBalanceAndTransactionsService extends MockFactory {
 
   val mockRetrieveBalanceAndTransactionsService: RetrieveBalanceAndTransactionsService = mock[RetrieveBalanceAndTransactionsService]
 
-  object MockRetrieveBalanceAndTransactionsService {
+  object MockedRetrieveBalanceAndTransactionsService {
 
     def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)
         : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveBalanceAndTransactionsResponse]]]] = {

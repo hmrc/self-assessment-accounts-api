@@ -63,7 +63,7 @@ object BalanceDetailsFixture {
     availableCredit = None
   )
   val downstreamDetailSingleYearJson: JsValue = Json.parse(
-    s"""
+    """
        |{
        |   "amount": 123.45,
        |   "taxYear": "2022"
@@ -71,7 +71,7 @@ object BalanceDetailsFixture {
        |""".stripMargin
   )
   val mtdDetailSingleYearJson: JsValue = Json.parse(
-    s"""
+    """
        |{
        |   "bcdAmount": 123.45,
        |   "taxYear": "2021-22"
@@ -103,7 +103,7 @@ object BalanceDetailsFixture {
        |""".stripMargin
   )
   val minimalBalanceDetailsDownstreamResponseJson: JsValue = Json.parse(
-    s"""
+    """
        |{
        |    "balanceDueWithin30Days": 124.20,
        |    "balanceNotDueIn30Days": 0.12,
