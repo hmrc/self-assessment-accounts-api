@@ -307,4 +307,5 @@ class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with JsonError
       }
     }
   }
+
 }

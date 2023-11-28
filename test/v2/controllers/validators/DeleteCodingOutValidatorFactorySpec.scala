@@ -16,9 +16,9 @@
 
 package v2.controllers.validators
 
-import api.config.MockAppConfig
 import api.models.domain.{Nino, TaxYear, TodaySupplier}
 import api.models.errors._
+import mocks.MockAppConfig
 import support.UnitSpec
 import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 
@@ -41,7 +41,7 @@ class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig {
   private val validatorFactory = new DeleteCodingOutValidatorFactory
 
   private def validator(nino: String, taxYear: String) = {
-    MockedAppConfig.minimumPermittedTaxYear returns 2022
+    MockAppConfig.minimumPermittedTaxYear returns 2022
     validatorFactory.validator(nino, taxYear)
   }
 
