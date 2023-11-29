@@ -73,8 +73,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         ("AA123456A", "2018-20", BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
 
-      val parameters = input.map(c => (c._1, c._2, c._3, c._4))
-      parameters.foreach((validationErrorTest _).tupled)
+      input.map(c => (c._1, c._2, c._3, c._4)).foreach((validationErrorTest _).tupled)
     }
 
     "downstream service error" when {
@@ -102,8 +101,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
 
-      val parameters = (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4))
-      parameters.foreach((serviceErrorTest _).tupled)
+      (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4)).foreach((serviceErrorTest _).tupled)
     }
   }
 
