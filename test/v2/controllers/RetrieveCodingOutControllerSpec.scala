@@ -16,6 +16,7 @@
 
 package v2.controllers
 
+import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.{DELETE, GET, PUT}
@@ -24,13 +25,12 @@ import api.hateoas.{HateoasWrapper, MockHateoasFactory}
 import api.models.domain.{MtdSource, Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.mvc.Result
 import v2.controllers.validators.MockRetrieveCodingOutValidatorFactory
 import v2.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
-import v2.mocks.services.MockRetrieveCodingOutService
 import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 import v2.models.response.retrieveCodingOut._
+import v2.services.MockRetrieveCodingOutService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -88,17 +88,17 @@ class RetrieveCodingOutControllerSpec
 
   val taxCodeComponentObject: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
-      Some(Seq(taxCodeComponents)),
-      Some(Seq(taxCodeComponents)),
-      Some(Seq(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
       Some(taxCodeComponents)
     )
 
   val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
     UnmatchedCustomerSubmissionsObject(
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(List(unmatchedCustomerSubmissions)),
+      Some(List(unmatchedCustomerSubmissions)),
+      Some(List(unmatchedCustomerSubmissions)),
       Some(unmatchedCustomerSubmissions)
     )
 
@@ -124,7 +124,7 @@ class RetrieveCodingOutControllerSpec
           .returns(
             HateoasWrapper(
               retrieveCodingOutResponse,
-              Seq(
+              List(
                 createOrAmendCodingOutLink,
                 retrieveCodingOutLink,
                 deleteCodingOutLink

@@ -181,17 +181,17 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
 
   val taxCodeComponentObject: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
-      Some(Seq(taxCodeComponents)),
-      Some(Seq(taxCodeComponents)),
-      Some(Seq(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
       Some(taxCodeComponents)
     )
 
   val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
     UnmatchedCustomerSubmissionsObject(
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(Seq(unmatchedCustomerSubmissions)),
-      Some(Seq(unmatchedCustomerSubmissions)),
+      Some(List(unmatchedCustomerSubmissions)),
+      Some(List(unmatchedCustomerSubmissions)),
+      Some(List(unmatchedCustomerSubmissions)),
       Some(unmatchedCustomerSubmissions)
     )
 

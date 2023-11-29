@@ -16,15 +16,14 @@
 
 package v2.connectors
 
-import api.connectors.ConnectorSpec
+import api.config.MockAppConfig
+import api.connectors.{ConnectorSpec, MockHttpClient}
 import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
 import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDetails
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFull
-import v2.mocks.MockHttpClient
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions._
 
@@ -47,24 +46,24 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   private val validResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
       balanceDetails = balanceDetails,
-      codingDetails = Some(Seq(codingDetails)),
-      documentDetails = Some(Seq(documentDetails)),
-      financialDetails = Some(Seq(financialDetailsFull))
+      codingDetails = Some(List(codingDetails)),
+      documentDetails = Some(List(documentDetails)),
+      financialDetails = Some(List(financialDetailsFull))
     )
 
   private val validRequest: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
-    nino = Nino(nino),
-    docNumber = Some(docNumber),
+    Nino(nino),
+    Some(docNumber),
     Some(DateRange(LocalDate.parse(fromDate), LocalDate.parse(toDate))),
-    onlyOpenItems = onlyOpenItems,
-    includeLocks = includeLocks,
-    calculateAccruedInterest = calculateAccruedInterest,
-    removePOA = removePOA,
-    customerPaymentInformation = customerPaymentInformation,
-    includeEstimatedCharges = includeEstimatedCharges
+    onlyOpenItems,
+    includeLocks,
+    calculateAccruedInterest,
+    removePOA,
+    customerPaymentInformation,
+    includeEstimatedCharges
   )
 
-  private val commonQueryParams: Seq[(String, String)] = Seq(
+  private val commonQueryParams: Seq[(String, String)] = List(
     "onlyOpenItems"              -> onlyOpenItems.toString,
     "includeLocks"               -> includeLocks.toString,
     "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
@@ -78,10 +77,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     val connector: RetrieveBalanceAndTransactionsConnector =
       new RetrieveBalanceAndTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    MockAppConfig.ifs2BaseUrl returns baseUrl
-    MockAppConfig.ifs2Token returns "ifs2-token"
-    MockAppConfig.ifs2Environment returns "ifs2-environment"
-    MockAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
+    MockedAppConfig.ifs2BaseUrl returns baseUrl
+    MockedAppConfig.ifs2Token returns "ifs2-token"
+    MockedAppConfig.ifs2Environment returns "ifs2-environment"
+    MockedAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
 
     def connectorRequest(request: RetrieveBalanceAndTransactionsRequestData,
                          response: RetrieveBalanceAndTransactionsResponse,
@@ -89,13 +88,13 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
       val outcome = Right(ResponseWrapper(correlationId, response))
 
-      MockHttpClient
+      MockedHttpClient
         .get(
           url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
           config = dummyHeaderCarrierConfig,
           parameters = queryParams,
           requiredHeaders = requiredIfs2Headers,
-          excludedHeaders = Seq("AnotherHeader" -> "HeaderValue")
+          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
         .returns(Future.successful(outcome))
 
@@ -110,7 +109,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
       "a valid request containing both docNumber and fromDate and dateTo is supplied" in new Test {
         val queryParams: Seq[(String, String)] =
-          commonQueryParams ++ Seq(
+          commonQueryParams ++ List(
             "docNumber" -> s"$docNumber",
             "dateFrom"  -> s"$fromDate",
             "dateTo"    -> s"$toDate"
@@ -123,7 +122,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
         val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
 
         val queryParams: Seq[(String, String)] =
-          commonQueryParams ++ Seq("docNumber" -> s"$docNumber")
+          commonQueryParams ++ List("docNumber" -> s"$docNumber")
 
         connectorRequest(request, validResponse, queryParams)
       }
@@ -132,7 +131,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
         val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
 
         val queryParams: Seq[(String, String)] =
-          commonQueryParams ++ Seq(
+          commonQueryParams ++ List(
             "dateFrom" -> s"$fromDate",
             "dateTo"   -> s"$toDate"
           )

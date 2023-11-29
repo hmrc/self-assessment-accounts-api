@@ -16,16 +16,15 @@
 
 package v2.endpoints
 
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v2.fixtures.ListChargesFixture._
-import v2.stubs.DownstreamStub
 
 class ListChargesControllerISpec extends IntegrationBaseSpec {
 

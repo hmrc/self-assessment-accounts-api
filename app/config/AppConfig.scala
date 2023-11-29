@@ -68,7 +68,7 @@ trait AppConfig {
 
   def tysIfsEnvironmentHeaders: Option[Seq[String]]
 
-  lazy val taxYearSpecificIfsDownstreamConfig: DownstreamConfig =
+  lazy val tysIfsDownstreamConfig: DownstreamConfig =
     DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
 
   // API Config

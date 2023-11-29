@@ -20,11 +20,11 @@ import api.models.domain.{DateRange, Nino}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import v2.connectors.MockRetrieveBalanceAndTransactionsConnector
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture.balanceDetails
 import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.codingDetails
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.documentDetails
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture.financialDetailsFull
-import v2.mocks.connectors.MockRetrieveBalanceAndTransactionsConnector
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.models.response.retrieveBalanceAndTransactions._
 
@@ -60,9 +60,9 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
   val retrieveBalanceAndTransactionsResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
       balanceDetails = balanceDetails,
-      codingDetails = Some(Seq(codingDetails)),
-      documentDetails = Some(Seq(documentDetails)),
-      financialDetails = Some(Seq(financialDetailsFull))
+      codingDetails = Some(List(codingDetails)),
+      documentDetails = Some(List(documentDetails)),
+      financialDetails = Some(List(financialDetailsFull))
     )
 
   "RetrieveBalanceAndTransactionsService" should {
@@ -90,7 +90,7 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
         }
 
       val errors: Seq[(String, MtdError)] =
-        Seq(
+        List(
           "INVALID_CORRELATIONID"                -> InternalError,
           "INVALID_IDTYPE"                       -> InternalError,
           "INVALID_IDNUMBER"                     -> NinoFormatError,

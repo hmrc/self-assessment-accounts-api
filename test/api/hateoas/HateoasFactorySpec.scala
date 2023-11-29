@@ -18,9 +18,9 @@ package api.hateoas
 
 import api.hateoas
 import Method.GET
+import api.config.MockAppConfig
 import cats.Functor
 import config.AppConfig
-import mocks.MockAppConfig
 import support.UnitSpec
 
 class HateoasFactorySpec extends UnitSpec with MockAppConfig {
@@ -37,7 +37,7 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
   case class Data2(id: String) extends HateoasData
 
   class Test {
-    MockAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
+    MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
   }
 
   "wrap" should {

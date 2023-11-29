@@ -17,14 +17,13 @@
 package v2.endpoints
 
 import api.models.errors._
-import api.stubs.{AuditStub, AuthStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v2.stubs.DownstreamStub
 
 class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
 
@@ -40,72 +39,70 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
     }
 
     "return a 204 status code for a TYS request" when {
-        "sent a valid request" in new TysIfsTest {
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
+      "sent a valid request" in new TysIfsTest {
+        DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
+
+        val response: WSResponse = await(newRequest.delete())
+        withClue(s"Response message: ${response.body}") {
+          response.status shouldBe NO_CONTENT
+          response.header("X-CorrelationId") shouldBe defined
+        }
+      }
+    }
+
+    "return error according to spec" when {
+      def validationErrorTest(requestNino: String, requestId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"validation fails with ${expectedBody.code} error " in new NonTysTest {
+
+          override val nino: String    = requestNino
+          override val taxYear: String = requestId
+
+          MtdIdLookupStub.ninoFound(nino)
 
           val response: WSResponse = await(newRequest.delete())
-          withClue(s"Response message: ${response.body}") {
-            response.status shouldBe NO_CONTENT
-            response.header("X-CorrelationId") shouldBe defined
-          }
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
+          response.header("Content-Type") shouldBe Some("application/json")
         }
       }
 
-      "return error according to spec" when {
-        def validationErrorTest(requestNino: String, requestId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"validation fails with ${expectedBody.code} error " in new NonTysTest {
+      val input = List(
+        ("AA123456", "2021-22", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "203100", BAD_REQUEST, TaxYearFormatError),
+        ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
+        ("AA123456A", "2018-20", BAD_REQUEST, RuleTaxYearRangeInvalidError)
+      )
 
-            override val nino: String    = requestNino
-            override val taxYear: String = requestId
+      input.map(c => (c._1, c._2, c._3, c._4)).foreach((validationErrorTest _).tupled)
+    }
 
-            MtdIdLookupStub.ninoFound(nino)
+    "downstream service error" when {
+      def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"downstream returns an $downstreamCode error and status $downstreamStatus " in new NonTysTest {
+          DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
 
-            val response: WSResponse = await(newRequest.delete())
-            response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
-            response.header("Content-Type") shouldBe Some("application/json")
-          }
+          val response: WSResponse = await(newRequest.delete())
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
         }
-
-        val input = List(
-          ("AA123456", "2021-22", BAD_REQUEST, NinoFormatError),
-          ("AA123456A", "203100", BAD_REQUEST, TaxYearFormatError),
-          ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
-          ("AA123456A", "2018-20", BAD_REQUEST, RuleTaxYearRangeInvalidError)
-        )
-
-        val parameters = input.map(c => (c._1, c._2, c._3, c._4))
-        parameters.foreach(args => (validationErrorTest _).tupled(args))
       }
 
-      "downstream service error" when {
-        def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-          s"downstream returns an $downstreamCode error and status $downstreamStatus " in new NonTysTest {
-            DownstreamStub.onError(DownstreamStub.DELETE, downstreamUri, downstreamStatus, errorBody(downstreamCode))
+      val errors = List(
+        (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
+        (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
+        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, CodingOutNotFoundError),
+        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
+      )
 
-            val response: WSResponse = await(newRequest.delete())
-            response.status shouldBe expectedStatus
-            response.json shouldBe Json.toJson(expectedBody)
-          }
-        }
+      val extraTysErrors = List(
+        (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
+      )
 
-        val errors = List(
-          (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-          (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
-          (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
-          (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, CodingOutNotFoundError),
-          (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-          (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
-        )
-
-        val extraTysErrors = List(
-          (BAD_REQUEST, "INVALID_CORRELATION_ID", INTERNAL_SERVER_ERROR, InternalError),
-          (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
-        )
-
-        val parameters = (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4))
-        parameters.foreach(args => (serviceErrorTest _).tupled(args))
-      }
+      (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4)).foreach((serviceErrorTest _).tupled)
+    }
   }
 
   private trait Test {

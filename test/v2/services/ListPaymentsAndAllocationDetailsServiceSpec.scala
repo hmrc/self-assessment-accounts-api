@@ -20,8 +20,8 @@ import api.models.domain.Nino
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import api.services.{ServiceOutcome, ServiceSpec}
+import v2.connectors.MockListPaymentsAndAllocationDetailsConnector
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
-import v2.mocks.connectors.MockListPaymentsAndAllocationDetailsConnector
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 

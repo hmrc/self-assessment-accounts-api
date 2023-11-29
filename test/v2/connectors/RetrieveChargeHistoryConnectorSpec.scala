@@ -16,11 +16,10 @@
 
 package v2.connectors
 
-import api.connectors.ConnectorSpec
+import api.config.MockAppConfig
+import api.connectors.{ConnectorSpec, MockHttpClient}
 import api.models.domain.{Nino, TransactionId}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
-import v2.mocks.MockHttpClient
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory._
 
@@ -44,7 +43,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
   val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
     RetrieveChargeHistoryResponse(
-      chargeHistoryDetails = Seq(chargeHistoryDetails)
+      chargeHistoryDetails = List(chargeHistoryDetails)
     )
 
   class Test extends MockHttpClient with MockAppConfig {
@@ -52,10 +51,10 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
     val connector: RetrieveChargeHistoryConnector =
       new RetrieveChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    MockAppConfig.desBaseUrl returns baseUrl
-    MockAppConfig.desToken returns "des-token"
-    MockAppConfig.desEnvironment returns "des-environment"
-    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.desBaseUrl returns baseUrl
+    MockedAppConfig.desToken returns "des-token"
+    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "RetrieveChargeHistoryConnector" when {
@@ -64,15 +63,15 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
       "return a valid response" in new Test {
 
-        val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
+        private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
-        MockHttpClient
+        MockedHttpClient
           .get(
             s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
             dummyHeaderCarrierConfig,
-            parameters = Seq("docNumber" -> transactionId),
+            parameters = List("docNumber" -> transactionId),
             requiredDesHeaders,
-            Seq("AnotherHeader" -> "HeaderValue")
+            List("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))
 

@@ -30,6 +30,15 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPaymentsAndAllocationDetailsConnector) extends BaseService {
 
+  def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequestData)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
+
+    connector
+      .listPaymentsAndAllocationDetails(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+  }
+
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID"    -> InternalError,
@@ -49,14 +58,5 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
       "SERVER_ERROR"             -> InternalError,
       "SERVICE_UNAVAILABLE"      -> InternalError
     )
-
-  def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequestData)(implicit
-                                                                                             ctx: RequestContext,
-                                                                                             ec: ExecutionContext): Future[ServiceOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
-
-    connector
-      .listPaymentsAndAllocationDetails(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
 
 }

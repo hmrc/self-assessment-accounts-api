@@ -16,7 +16,7 @@
 
 package routing
 
-import mocks.MockAppConfig
+import api.config.MockAppConfig
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.routing.Router
 import support.UnitSpec

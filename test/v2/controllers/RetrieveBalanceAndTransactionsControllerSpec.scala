@@ -23,8 +23,8 @@ import play.api.mvc.Result
 import v2.controllers.validators.MockRetrieveBalanceAndTransactionsValidatorFactory
 import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
-import v2.mocks.services.MockRetrieveBalanceAndTransactionsService
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
+import v2.services.MockRetrieveBalanceAndTransactionsService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

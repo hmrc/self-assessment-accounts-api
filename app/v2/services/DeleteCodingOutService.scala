@@ -28,7 +28,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) extends BaseService {
+class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) extends BaseService {
+
+  def deleteCodingOut(request: DeleteCodingOutRequestData)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+
+    connector.deleteCodingOut(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
+  }
 
   private val downstreamErrorMap: Map[String, MtdError] = {
     val errors = Map(
@@ -46,13 +53,6 @@ class DeleteCodingOutService @Inject()(connector: DeleteCodingOutConnector) exte
     )
 
     errors ++ extraTysErrors
-  }
-
-  def deleteCodingOut(request: DeleteCodingOutRequestData)(implicit
-                                                           ctx: RequestContext,
-                                                           ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-
-    connector.deleteCodingOut(request).map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
 }

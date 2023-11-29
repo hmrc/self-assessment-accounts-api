@@ -20,7 +20,7 @@ import api.models.domain.{Nino, TransactionId}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v2.mocks.connectors.MockRetrieveChargeHistoryConnector
+import v2.connectors.MockRetrieveChargeHistoryConnector
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.{ChargeHistoryDetail, RetrieveChargeHistoryResponse}
 
@@ -41,7 +41,7 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
 
   val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
     RetrieveChargeHistoryResponse(
-      chargeHistoryDetails = Seq(chargeHistoryDetails)
+      chargeHistoryDetails = List(chargeHistoryDetails)
     )
 
   private val nino          = Nino("AA123456A")
@@ -80,7 +80,7 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
         }
 
       val errors: Seq[(String, MtdError)] =
-        Seq(
+        List(
           "INVALID_CORRELATIONID" -> InternalError,
           "INVALID_IDTYPE"        -> InternalError,
           "INVALID_IDVALUE"       -> NinoFormatError,

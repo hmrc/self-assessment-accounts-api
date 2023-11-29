@@ -16,17 +16,17 @@
 
 package v2.controllers
 
+import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v2.controllers.validators.MockDeleteCodingOutValidatorFactory
-import v2.mocks.services.MockDeleteCodingOutService
 import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
+import v2.services.MockDeleteCodingOutService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

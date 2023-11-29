@@ -16,9 +16,9 @@
 
 package v2.controllers.validators
 
+import api.config.MockAppConfig
 import api.models.domain.{DateRange, Nino}
 import api.models.errors._
-import mocks.MockAppConfig
 import support.UnitSpec
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 

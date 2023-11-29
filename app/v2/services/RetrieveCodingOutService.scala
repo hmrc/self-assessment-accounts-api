@@ -31,7 +31,20 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit todaySupplier: TodaySupplier = new TodaySupplier)
-    extends BaseService {
+    extends BaseService
+    with MappingSupportDownstream {
+
+  def retrieveCodingOut(request: RetrieveCodingOutRequestData)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
+
+    val result = for {
+      downstreamResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(errorMap))
+      mtdResponseWrapper        <- EitherT.fromEither[Future](validateCodingOutResponse(downstreamResponseWrapper, request.taxYear))
+    } yield mtdResponseWrapper
+
+    result.value
+  }
 
   private val errorMap: Map[String, MtdError] = {
     val errors = Map(
@@ -51,18 +64,6 @@ class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
     )
 
     errors ++ extraTysErrors
-  }
-
-  def retrieveCodingOut(request: RetrieveCodingOutRequestData)(implicit
-                                                               ctx: RequestContext,
-                                                               ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]]] = {
-
-    val result = for {
-      downstreamResponseWrapper <- EitherT(connector.retrieveCodingOut(request)).leftMap(mapDownstreamErrors(errorMap))
-      mtdResponseWrapper        <- EitherT.fromEither[Future](validateCodingOutResponse(downstreamResponseWrapper, request.taxYear))
-    } yield mtdResponseWrapper
-
-    result.value
   }
 
 }

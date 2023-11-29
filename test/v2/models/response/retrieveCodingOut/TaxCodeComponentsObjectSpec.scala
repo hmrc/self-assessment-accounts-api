@@ -114,9 +114,9 @@ class TaxCodeComponentsObjectSpec extends UnitSpec {
 
   val responseModel: TaxCodeComponentsObject =
     TaxCodeComponentsObject(
-      Some(Seq(taxCodeComponents)),
-      Some(Seq(taxCodeComponents)),
-      Some(Seq(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
       Some(taxCodeComponents)
     )
 

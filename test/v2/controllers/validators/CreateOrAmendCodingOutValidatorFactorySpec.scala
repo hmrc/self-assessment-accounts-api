@@ -16,10 +16,10 @@
 
 package v2.controllers.validators
 
+import api.config.MockAppConfig
 import api.models.domain.{Nino, TaxYear, TodaySupplier}
 import api.models.errors._
 import api.models.utils.JsonErrorValidators
-import mocks.MockAppConfig
 import play.api.libs.json.{JsObject, JsPath, JsValue, Json}
 import support.UnitSpec
 import v2.models.request.createOrAmendCodingOut.{CreateOrAmendCodingOutRequestBody, CreateOrAmendCodingOutRequestData, TaxCodeComponents}
@@ -119,7 +119,7 @@ class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with JsonError
   private def validator(nino: String, taxYear: String, body: JsValue) =
     validatorFactory.validator(nino, taxYear, body, temporalValidationEnabled = true)
 
-  private def setupMocks(): Unit = (MockAppConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
+  private def setupMocks(): Unit = (MockedAppConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
 
   "running a validation" should {
     "return the parsed domain object" when {
@@ -307,4 +307,5 @@ class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with JsonError
       }
     }
   }
+
 }

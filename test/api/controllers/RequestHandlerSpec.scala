@@ -23,10 +23,10 @@ import api.models.auth.UserDetails
 import api.models.errors.{ErrorWrapper, MtdError, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.services.{MockAuditService, ServiceOutcome}
+import api.utils.MockIdGenerator
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import config.AppConfig
-import mocks.MockIdGenerator
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsString, Json, OWrites}

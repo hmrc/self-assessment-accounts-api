@@ -16,10 +16,10 @@
 
 package v2.models.response.retrieveBalanceAndTransactions
 
+import api.models.utils.JsonErrorValidators
 import play.api.libs.json.{JsString, Json}
 import support.UnitSpec
 import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture._
-import v2.models.utils.JsonErrorValidators
 
 class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
 

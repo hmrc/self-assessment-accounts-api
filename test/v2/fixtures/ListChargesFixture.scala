@@ -93,9 +93,9 @@ object ListChargesFixture {
       |""".stripMargin
   )
 
-  val fullListSingleCharge: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullCharge))
+  val fullListSingleCharge: ListChargesResponse[Charge] = ListChargesResponse(List(fullCharge))
 
-  val fullListMultipleCharges: ListChargesResponse[Charge] = ListChargesResponse(Seq(fullCharge, fullCharge))
+  val fullListMultipleCharges: ListChargesResponse[Charge] = ListChargesResponse(List(fullCharge, fullCharge))
 
   val listChargesMtdResponse: JsValue = Json.parse(
     s"""
@@ -106,53 +106,53 @@ object ListChargesFixture {
   )
 
   val ListChargesMtdResponseWithHateoas: JsValue = Json.parse("""
-                                                                |{
-                                                                |  "charges":[
-                                                                |    {
-                                                                |      "taxYear":"2019-20",
-                                                                |      "transactionId":"1234567890AB",
-                                                                |      "transactionDate":"2020-02-01",
-                                                                |      "type":"Charge Type",
-                                                                |      "totalAmount":11.23,
-                                                                |      "outstandingAmount":4.56,
-                                                                |      "links": [
-                                                                |        {
-                                                                |          "href": "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
-                                                                |          "method": "GET",
-                                                                |          "rel": "retrieve-transaction-details"
-                                                                |        }
-                                                                |      ]
-                                                                |    },
-                                                                |    {
-                                                                |      "taxYear":"2019-20",
-                                                                |      "transactionId":"1234567890AB",
-                                                                |      "transactionDate":"2020-02-01",
-                                                                |      "type":"Charge Type",
-                                                                |      "totalAmount":11.23,
-                                                                |      "outstandingAmount":4.56,
-                                                                |      "links": [
-                                                                |        {
-                                                                |          "href": "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
-                                                                |          "method": "GET",
-                                                                |          "rel": "retrieve-transaction-details"
-                                                                |        }
-                                                                |      ]
-                                                                |    }
-                                                                |  ],
-                                                                |  "links": [
-                                                                |    {
-                                                                |      "href": "/accounts/self-assessment/AA123456A/charges?from=2018-10-01&to=2019-10-01",
-                                                                |      "method": "GET",
-                                                                |      "rel": "self"
-                                                                |    },
-                                                                |    {
-                                                                |      "href": "/accounts/self-assessment/AA123456A/transactions?from=2018-10-01&to=2019-10-01",
-                                                                |      "method": "GET",
-                                                                |      "rel": "list-transactions"
-                                                                |    }
-                                                                |  ]
-                                                                |}""".stripMargin)
+    |{
+    |  "charges":[
+    |    {
+    |      "taxYear":"2019-20",
+    |      "transactionId":"1234567890AB",
+    |      "transactionDate":"2020-02-01",
+    |      "type":"Charge Type",
+    |      "totalAmount":11.23,
+    |      "outstandingAmount":4.56,
+    |      "links": [
+    |        {
+    |          "href": "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
+    |          "method": "GET",
+    |          "rel": "retrieve-transaction-details"
+    |        }
+    |      ]
+    |    },
+    |    {
+    |      "taxYear":"2019-20",
+    |      "transactionId":"1234567890AB",
+    |      "transactionDate":"2020-02-01",
+    |      "type":"Charge Type",
+    |      "totalAmount":11.23,
+    |      "outstandingAmount":4.56,
+    |      "links": [
+    |        {
+    |          "href": "/accounts/self-assessment/AA123456A/transactions/1234567890AB",
+    |          "method": "GET",
+    |          "rel": "retrieve-transaction-details"
+    |        }
+    |      ]
+    |    }
+    |  ],
+    |  "links": [
+    |    {
+    |      "href": "/accounts/self-assessment/AA123456A/charges?from=2018-10-01&to=2019-10-01",
+    |      "method": "GET",
+    |      "rel": "self"
+    |    },
+    |    {
+    |      "href": "/accounts/self-assessment/AA123456A/transactions?from=2018-10-01&to=2019-10-01",
+    |      "method": "GET",
+    |      "rel": "list-transactions"
+    |    }
+    |  ]
+    |}""".stripMargin)
 
-  val mtdResponseObj: ListChargesResponse[Charge] = ListChargesResponse(charges = Seq(fullCharge, fullCharge))
+  val mtdResponseObj: ListChargesResponse[Charge] = ListChargesResponse(charges = List(fullCharge, fullCharge))
 
 }

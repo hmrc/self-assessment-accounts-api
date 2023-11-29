@@ -23,8 +23,8 @@ import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
 import v2.controllers.validators.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures._
-import v2.mocks.services.MockListPaymentsAndAllocationDetailsService
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
+import v2.services.MockListPaymentsAndAllocationDetailsService
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global

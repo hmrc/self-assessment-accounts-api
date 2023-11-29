@@ -16,12 +16,11 @@
 
 package v2.connectors
 
-import api.connectors.ConnectorSpec
+import api.config.MockAppConfig
+import api.connectors.{ConnectorSpec, MockHttpClient}
 import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
-import mocks.MockAppConfig
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures.responseObject
-import v2.mocks.MockHttpClient
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.models.response.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsResponse
 
@@ -48,10 +47,10 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
     val connector: ListPaymentsAndAllocationDetailsConnector =
       new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    MockAppConfig.desBaseUrl returns baseUrl
-    MockAppConfig.desToken returns "des-token"
-    MockAppConfig.desEnvironment returns "des-environment"
-    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockedAppConfig.desBaseUrl returns baseUrl
+    MockedAppConfig.desToken returns "des-token"
+    MockedAppConfig.desEnvironment returns "des-environment"
+    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
 
     def connectorRequest(request: ListPaymentsAndAllocationDetailsRequestData,
                          response: ListPaymentsAndAllocationDetailsResponse,
@@ -59,13 +58,13 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
       val outcome = Right(ResponseWrapper(correlationId, response))
 
-      MockHttpClient
+      MockedHttpClient
         .get(
           s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
           dummyHeaderCarrierConfig,
           parameters = queryParams,
           requiredDesHeaders,
-          Seq("AnotherHeader" -> "HeaderValue")
+          List("AnotherHeader" -> "HeaderValue")
         )
         .returns(Future.successful(outcome))
 
@@ -79,7 +78,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
     "return a valid response" when {
       "a valid request is supplied" in new Test {
         val queryParams: Seq[(String, String)] =
-          Seq(
+          List(
             "dateFrom"       -> s"$dateFrom",
             "dateTo"         -> s"$dateTo",
             "paymentLot"     -> s"$paymentLot",

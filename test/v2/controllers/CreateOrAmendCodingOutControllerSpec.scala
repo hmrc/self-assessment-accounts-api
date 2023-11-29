@@ -16,6 +16,7 @@
 
 package v2.controllers
 
+import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.{DELETE, GET, PUT}
@@ -25,14 +26,13 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.MockAuditService
-import mocks.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import v2.controllers.validators.MockCreateOrAmendCodingOutValidatorFactory
-import v2.mocks.services.MockCreateOrAmendCodingOutService
 import v2.models.request.createOrAmendCodingOut._
 import v2.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
+import v2.services.MockCreateOrAmendCodingOutService
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -121,47 +121,47 @@ class CreateOrAmendCodingOutControllerSpec
   "handleRequest" should {
     "return OK" when {
 
-        "the request is valid" in new Test {
-          willUseValidator(returningSuccess(requestData))
+      "the request is valid" in new Test {
+        willUseValidator(returningSuccess(requestData))
 
-          MockCreateOrAmendCodingOutService
-            .amend(requestData)
-            .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
+        MockCreateOrAmendCodingOutService
+          .amend(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-          MockHateoasFactory
-            .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
-            .returns(HateoasWrapper((), testHateoasLinks))
+        MockHateoasFactory
+          .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .returns(HateoasWrapper((), testHateoasLinks))
 
-          runOkTestWithAudit(
-            expectedStatus = OK,
-            maybeExpectedResponseBody = Some(mtdResponseJson),
-            maybeAuditRequestBody = Some(requestJson),
-            maybeAuditResponseBody = Some(mtdResponseJson)
-          )
-        }
-      }
-
-      "return the error as per spec" when {
-        "the parser validation fails" in new Test {
-          willUseValidator(returning(NinoFormatError))
-          runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestJson))
-        }
-
-        "the service returns an error" in new Test {
-          willUseValidator(returningSuccess(requestData))
-
-          MockCreateOrAmendCodingOutService
-            .amend(requestData)
-            .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
-
-          runErrorTestWithAudit(RuleTaxYearNotEndedError, maybeAuditRequestBody = Some(requestJson))
-        }
+        runOkTestWithAudit(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdResponseJson),
+          maybeAuditRequestBody = Some(requestJson),
+          maybeAuditResponseBody = Some(mtdResponseJson)
+        )
       }
     }
 
+    "return the error as per spec" when {
+      "the parser validation fails" in new Test {
+        willUseValidator(returning(NinoFormatError))
+        runErrorTestWithAudit(NinoFormatError, maybeAuditRequestBody = Some(requestJson))
+      }
+
+      "the service returns an error" in new Test {
+        willUseValidator(returningSuccess(requestData))
+
+        MockCreateOrAmendCodingOutService
+          .amend(requestData)
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
+
+        runErrorTestWithAudit(RuleTaxYearNotEndedError, maybeAuditRequestBody = Some(requestJson))
+      }
+    }
+  }
+
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new CreateOrAmendCodingOutController(
+    private val controller = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       appConfig = mockAppConfig,
@@ -173,7 +173,7 @@ class CreateOrAmendCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
+    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
 
     protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
 

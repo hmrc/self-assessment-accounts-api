@@ -17,15 +17,14 @@
 package v2.endpoints
 
 import api.models.errors._
-import api.stubs.{AuthStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.stubs.{AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v2.fixtures.RetrieveCodingOutFixture._
-import v2.stubs.DownstreamStub
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, ZoneOffset}
@@ -35,8 +34,9 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    val nino: String = "AA123456A"
-    val downstreamResponse: JsValue = Json.parse(
+    protected val nino = "AA123456A"
+
+    protected val downstreamResponse: JsValue = Json.parse(
       s"""
          |{
          |   "taxCodeComponents": {
@@ -106,6 +106,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |}
        """.stripMargin
     )
+
     val downstreamResponseNoId: JsValue = Json.parse(
       s"""
          |{
@@ -168,6 +169,7 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
          |}
        """.stripMargin
     )
+
     val mtdResponse: JsValue     = mtdResponseWithHateoas(nino, taxYear, mtdBodySource)
     val mtdResponseNoId: JsValue = mtdResponseWithHateoasNoId(nino, taxYear, mtdBodySource)
 
@@ -424,8 +426,8 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
                                 version: String): Unit = {
           s"validation fails with ${expectedBody.code} error " in new NonTysTest with Test {
 
-            override val nino: String         = requestNino
-            override lazy val taxYear: String = requestTaxYear
+            override protected val nino: String = requestNino
+            override lazy val taxYear: String   = requestTaxYear
 
             override def setupStubs(): Unit = {
               AuthStub.authorised()
