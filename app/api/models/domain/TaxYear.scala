@@ -17,7 +17,7 @@
 package api.models.domain
 
 import api.models.domain.TaxYear.currentTaxYear
-import play.api.libs.json.Writes
+import play.api.libs.json.{Format, Reads, Writes}
 
 import java.time.{LocalDate, ZoneOffset}
 import javax.inject.Singleton
@@ -131,6 +131,10 @@ object TaxYear {
   }
 
   implicit val writes: Writes[TaxYear] = implicitly[Writes[String]].contramap(_.asMtd)
+
+  private val fromDownstreamIntReads: Reads[TaxYear]     = implicitly[Reads[Int]].map(fromDownstreamInt)
+  implicit val downstreamIntToMtdFormat: Format[TaxYear] = Format(fromDownstreamIntReads, writes)
+
 }
 
 @Singleton

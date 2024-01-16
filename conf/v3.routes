@@ -9,3 +9,7 @@ GET        /:nino/payments-and-allocations                 v2.controllers.ListPa
 PUT        /:nino/:taxYear/collection/tax-code             v2.controllers.CreateOrAmendCodingOutController.createOrAmendCodingOut(nino, taxYear)
 GET        /:nino/:taxYear/collection/tax-code             v2.controllers.RetrieveCodingOutController.retrieveCodingOut(nino: String, taxYear: String, source: Option[String])
 DELETE     /:nino/:taxYear/collection/tax-code             v2.controllers.DeleteCodingOutController.handleRequest(nino: String, taxYear: String)
+
+
+# Opting Out of Autocoding endpoints
+GET        /:nino/:taxYear/autocoding/status               v3.controllers.RetrieveAutocodingStatusController.retrieveAutocodingStatus(nino: String, taxYear: String)
