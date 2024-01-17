@@ -51,11 +51,9 @@ class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
   }
 
   "return error according to spec" when {
-
     def validationErrorTest(requestNino: String, requestTaxYear: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
 
       s"validation fails with ${expectedBody.code} error" in new Test {
-
         override protected val nino: String    = requestNino
         override protected val taxYear: String = requestTaxYear
 
@@ -71,13 +69,10 @@ class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
       }
     }
 
-    // format: off
     val input = List(
       ("AA1123A", "2021-22", BAD_REQUEST, NinoFormatError),
       ("AA123456A", "20199", BAD_REQUEST, TaxYearFormatError)
     )
-    // format: on
-
     input foreach (validationErrorTest _).tupled
   }
 

@@ -39,8 +39,9 @@ class RetrieveCodingOutStatusControllerSpec
     with MockRetrieveCodingOutStatusValidatorFactory
     with MockAppConfig {
 
-  override val nino   = "AB123456A"
-  private val taxYear = "2023-24"
+  override val nino                  = "AB123456A"
+  private val taxYear                = "2023-24"
+  private val processingDate: String = "2020-12-17T09:30:47Z"
 
   private val requestData = RetrieveCodingOutStatusRequestData(
     nino = Nino(nino),
@@ -48,7 +49,7 @@ class RetrieveCodingOutStatusControllerSpec
   )
 
   private val downstreamResponse: RetrieveCodingOutStatusResponse =
-    RetrieveCodingOutStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true)
+    RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true)
 
   "RetrieveCodingOutStatusController" should {
     "return OK" when {

@@ -29,13 +29,6 @@ trait MockRetrieveCodingOutStatusValidatorFactory extends MockFactory {
   val mockRetrieveCodingOutStatusValidatorFactory: RetrieveCodingOutStatusValidatorFactory =
     mock[RetrieveCodingOutStatusValidatorFactory]
 
-  object MockRetrieveCodingOutStatusValidatorFactory {
-
-    def validator(): CallHandler[Validator[RetrieveCodingOutStatusRequestData]] =
-      (mockRetrieveCodingOutStatusValidatorFactory.validator(_: String, _: String)).expects(*, *)
-
-  }
-
   def willUseValidator(use: Validator[RetrieveCodingOutStatusRequestData]): CallHandler[Validator[RetrieveCodingOutStatusRequestData]] = {
     MockRetrieveCodingOutStatusValidatorFactory
       .validator()
@@ -54,5 +47,12 @@ trait MockRetrieveCodingOutStatusValidatorFactory extends MockFactory {
     new Validator[RetrieveCodingOutStatusRequestData] {
       def validate: Validated[Seq[MtdError], RetrieveCodingOutStatusRequestData] = Invalid(result)
     }
+
+  object MockRetrieveCodingOutStatusValidatorFactory {
+
+    def validator(): CallHandler[Validator[RetrieveCodingOutStatusRequestData]] =
+      (mockRetrieveCodingOutStatusValidatorFactory.validator(_: String, _: String)).expects(*, *)
+
+  }
 
 }
