@@ -41,7 +41,7 @@ class RetrieveCodingOutStatusControllerSpec
 
   override val nino                  = "AB123456A"
   private val taxYear                = "2023-24"
-  private val processingDate: String = "2020-12-17T09:30:47Z"
+  private val processingDate: String = "2023-12-17T09:30:47Z"
 
   private val requestData = RetrieveCodingOutStatusRequestData(
     nino = Nino(nino),

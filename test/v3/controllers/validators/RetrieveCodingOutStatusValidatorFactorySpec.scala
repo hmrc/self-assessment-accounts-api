@@ -18,14 +18,7 @@ package v3.controllers.validators
 
 import api.config.MockAppConfig
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{
-  BadRequestError,
-  ErrorWrapper,
-  NinoFormatError,
-  RuleTaxYearNotSupportedError,
-  RuleTaxYearRangeInvalidError,
-  TaxYearFormatError
-}
+import api.models.errors._
 import support.UnitSpec
 import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
 
