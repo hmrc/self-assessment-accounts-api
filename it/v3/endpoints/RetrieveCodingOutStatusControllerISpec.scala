@@ -129,7 +129,7 @@ class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
         )
     }
 
-    private def uri: String = s"/$nino/$taxYear/coding-out/status"
+    private def uri: String = s"/$nino/$taxYear/collection/tax-code/coding-out/status"
 
     def errorBody(code: String): String =
       s"""

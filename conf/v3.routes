@@ -12,4 +12,4 @@ DELETE     /:nino/:taxYear/collection/tax-code             v2.controllers.Delete
 
 
 # Opting Out of Coding Out endpoints
-GET        /:nino/:taxYear/coding-out/status               v3.controllers.RetrieveCodingOutStatusController.retrieveCodingOutStatus(nino: String, taxYear: String)
+GET        /:nino/:taxYear/collection/tax-code/coding-out/status               v3.controllers.RetrieveCodingOutStatusController.retrieveCodingOutStatus(nino: String, taxYear: String)
