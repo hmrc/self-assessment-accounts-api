@@ -26,24 +26,24 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v3.fixtures.retrieveAutocodingStatus.ResponseFixture.{downstreamResponse, mtdResponse}
+import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.{downstreamResponseJson, mtdResponseJson}
 import v3.models.errors.{BusinessPartnerNotExistError, ITSAContractObjectNotExistError}
 
-class RetrieveAutocodingStatusControllerISpec extends IntegrationBaseSpec {
+class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
 
-  "Calling the 'retrieve a autocoding status endpoint" when {
+  "Calling the 'retrieve a coding out status endpoint" when {
     "any valid request is made with nino and tax year" should {
       "return a 200 status code" in new Test {
 
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponse(nino, taxYear))
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseJson)
         }
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdResponse(nino, taxYear)
+        response.json shouldBe mtdResponseJson
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
@@ -134,7 +134,7 @@ class RetrieveAutocodingStatusControllerISpec extends IntegrationBaseSpec {
         )
     }
 
-    private def uri: String = s"/$nino/$taxYear/autocoding/status"
+    private def uri: String = s"/$nino/$taxYear/coding-out/status"
 
     def errorBody(code: String): String =
       s"""

@@ -14,37 +14,41 @@
  * limitations under the License.
  */
 
-package v3.fixtures.retrieveAutocodingStatus
+package v3.fixtures.retrieveCodingOutStatus
 
 import api.models.domain.TaxYear
 import play.api.libs.json.{JsObject, Json}
+import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 object ResponseFixture {
 
-  def mtdResponse(nino: String, taxYear: String): JsObject = Json
+  val mtdResponseJson: JsObject = Json
     .parse(
       s"""
        |{
        |  "processingDate": "2023-12-17T09:30:47Z",
-       |  "nino": "$nino",
-       |  "taxYear": "$taxYear",
+       |  "nino": "AB123456A",
+       |  "taxYear": "2023-24",
        |  "optOutIndicator": true
        |}
      """.stripMargin
     )
     .as[JsObject]
 
-  def downstreamResponse(nino: String, taxYear: String): JsObject = Json
+  val downstreamResponseJson: JsObject = Json
     .parse(
       s"""
          |{
          |  "processingDate": "2023-12-17T09:30:47Z",
-         |  "nino": "$nino",
-         |  "taxYear": ${TaxYear.fromMtd(taxYear).year},
+         |  "nino": "AB123456A",
+         |  "taxYear": 2024,
          |  "optOutIndicator": true
          |}
      """.stripMargin
     )
     .as[JsObject]
+
+  val responseModel: RetrieveCodingOutStatusResponse =
+    RetrieveCodingOutStatusResponse("2023-12-17T09:30:47Z", "AB123456A", TaxYear("2024"), true)
 
 }

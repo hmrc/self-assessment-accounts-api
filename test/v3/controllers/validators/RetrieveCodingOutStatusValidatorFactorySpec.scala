@@ -27,9 +27,9 @@ import api.models.errors.{
   TaxYearFormatError
 }
 import support.UnitSpec
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
 
-class RetrieveAutocodingStatusValidatorFactorySpec extends UnitSpec with MockAppConfig {
+class RetrieveCodingOutStatusValidatorFactorySpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -38,7 +38,7 @@ class RetrieveAutocodingStatusValidatorFactorySpec extends UnitSpec with MockApp
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private val validatorFactory = new RetrieveAutocodingStatusValidatorFactory(mockAppConfig)
+  private val validatorFactory = new RetrieveCodingOutStatusValidatorFactory(mockAppConfig)
 
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
@@ -49,10 +49,10 @@ class RetrieveAutocodingStatusValidatorFactorySpec extends UnitSpec with MockApp
       "passed a valid request" in {
         setupMocks()
 
-        val result: Either[ErrorWrapper, RetrieveAutocodingStatusRequestData] =
+        val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
-        result shouldBe Right(RetrieveAutocodingStatusRequestData(parsedNino, parsedTaxYear))
+        result shouldBe Right(RetrieveCodingOutStatusRequestData(parsedNino, parsedTaxYear))
       }
     }
 
@@ -60,7 +60,7 @@ class RetrieveAutocodingStatusValidatorFactorySpec extends UnitSpec with MockApp
       "an invalid nino is supplied" in {
         setupMocks()
 
-        val result: Either[ErrorWrapper, RetrieveAutocodingStatusRequestData] =
+        val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator("invalidNino", validTaxYear).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
@@ -69,7 +69,7 @@ class RetrieveAutocodingStatusValidatorFactorySpec extends UnitSpec with MockApp
       "an incorrectly formatted taxYear is supplied" in {
         setupMocks()
 
-        val result: Either[ErrorWrapper, RetrieveAutocodingStatusRequestData] =
+        val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, "202324").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, TaxYearFormatError))
@@ -78,7 +78,7 @@ class RetrieveAutocodingStatusValidatorFactorySpec extends UnitSpec with MockApp
       "an invalid tax year range is supplied" in {
         setupMocks()
 
-        val result: Either[ErrorWrapper, RetrieveAutocodingStatusRequestData] =
+        val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, "2022-24").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
@@ -87,7 +87,7 @@ class RetrieveAutocodingStatusValidatorFactorySpec extends UnitSpec with MockApp
       "an invalid tax year, before the minimum, is supplied" in {
         setupMocks()
 
-        val result: Either[ErrorWrapper, RetrieveAutocodingStatusRequestData] =
+        val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, "2020-21").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
@@ -98,7 +98,7 @@ class RetrieveAutocodingStatusValidatorFactorySpec extends UnitSpec with MockApp
       "request supplied has multiple errors" in {
         setupMocks()
 
-        val result: Either[ErrorWrapper, RetrieveAutocodingStatusRequestData] =
+        val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator("invalidNino", "invalidTaxYear").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(NinoFormatError, TaxYearFormatError))))

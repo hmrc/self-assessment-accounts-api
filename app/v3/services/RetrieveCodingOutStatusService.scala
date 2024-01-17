@@ -20,16 +20,16 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-import v3.connectors.RetrieveAutocodingStatusConnector
+import v3.connectors.RetrieveCodingOutStatusConnector
 import v3.models.errors.{BusinessPartnerNotExistError, ITSAContractObjectNotExistError}
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
-import v3.models.response.retrieveAutocodingStatus.RetrieveAutocodingStatusResponse
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
+import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAutocodingStatusService @Inject() (connector: RetrieveAutocodingStatusConnector) extends BaseService {
+class RetrieveCodingOutStatusService @Inject()(connector: RetrieveCodingOutStatusConnector) extends BaseService {
 
   private val errorMap: Map[String, MtdError] =
     Map(
@@ -46,11 +46,11 @@ class RetrieveAutocodingStatusService @Inject() (connector: RetrieveAutocodingSt
       "SERVICE_UNAVAILABLE"            -> InternalError
     )
 
-  def retrieveAutocodingStatus(request: RetrieveAutocodingStatusRequestData)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveAutocodingStatusResponse]] = {
+  def retrieveCodingOutStatus(request: RetrieveCodingOutStatusRequestData)(implicit
+                                                                           ctx: RequestContext,
+                                                                           ec: ExecutionContext): Future[ServiceOutcome[RetrieveCodingOutStatusResponse]] = {
 
-    connector.retrieveAutocodingStatus(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.retrieveCodingOutStatus(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
 }

@@ -11,5 +11,5 @@ GET        /:nino/:taxYear/collection/tax-code             v2.controllers.Retrie
 DELETE     /:nino/:taxYear/collection/tax-code             v2.controllers.DeleteCodingOutController.handleRequest(nino: String, taxYear: String)
 
 
-# Opting Out of Autocoding endpoints
-GET        /:nino/:taxYear/autocoding/status               v3.controllers.RetrieveAutocodingStatusController.retrieveAutocodingStatus(nino: String, taxYear: String)
+# Opting Out of Coding Out endpoints
+GET        /:nino/:taxYear/coding-out/status               v3.controllers.RetrieveCodingOutStatusController.retrieveCodingOutStatus(nino: String, taxYear: String)

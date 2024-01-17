@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package v3.models.request.retrieveAutocodingStatus
+package v3.models.request.retrieveCodingOutStatus
 
 import api.models.domain.{Nino, TaxYear}
 
-case class RetrieveAutocodingStatusRequestData(nino: Nino, taxYear: TaxYear)
+case class RetrieveCodingOutStatusRequestData(nino: Nino, taxYear: TaxYear)

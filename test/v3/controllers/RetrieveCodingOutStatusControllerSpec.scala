@@ -22,43 +22,41 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
-import v3.controllers.validators.MockRetrieveAutocodingStatusValidatorFactory
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
-import v3.services.MockRetrieveAutocodingStatusService
-import v3.fixtures.retrieveAutocodingStatus.ResponseFixture.mtdResponse
+import v3.controllers.validators.MockRetrieveCodingOutStatusValidatorFactory
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
+import v3.services.MockRetrieveCodingOutStatusService
+import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.mtdResponseJson
 import v3.models.errors.BusinessPartnerNotExistError
-import v3.models.response.retrieveAutocodingStatus.RetrieveAutocodingStatusResponse
+import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-class RetrieveAutocodingStatusControllerSpec
+class RetrieveCodingOutStatusControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockRetrieveAutocodingStatusService
-    with MockRetrieveAutocodingStatusValidatorFactory
+    with MockRetrieveCodingOutStatusService
+    with MockRetrieveCodingOutStatusValidatorFactory
     with MockAppConfig {
 
-  override val nino   = "AA123456A"
+  override val nino   = "AB123456A"
   private val taxYear = "2023-24"
 
-  private val requestData = RetrieveAutocodingStatusRequestData(
+  private val requestData = RetrieveCodingOutStatusRequestData(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
-  private val mtdResponseJson = mtdResponse(nino, taxYear)
+  private val downstreamResponse: RetrieveCodingOutStatusResponse =
+    RetrieveCodingOutStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true)
 
-  private val downstreamResponse: RetrieveAutocodingStatusResponse =
-    RetrieveAutocodingStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true)
-
-  "RetrieveAutocodingStatusController" should {
+  "RetrieveCodingOutStatusController" should {
     "return OK" when {
       "happy path" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockedRetrieveAutocodingStatusService
-          .retrieveAutocodingStatus(requestData)
+        MockedRetrieveCodingOutStatusService
+          .retrieveCodingOutStatus(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, downstreamResponse))))
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
@@ -75,8 +73,8 @@ class RetrieveAutocodingStatusControllerSpec
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
 
-        MockedRetrieveAutocodingStatusService
-          .retrieveAutocodingStatus(requestData)
+        MockedRetrieveCodingOutStatusService
+          .retrieveCodingOutStatus(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, BusinessPartnerNotExistError))))
 
         runErrorTest(BusinessPartnerNotExistError)
@@ -86,15 +84,15 @@ class RetrieveAutocodingStatusControllerSpec
 
   private trait Test extends ControllerTest {
 
-    val controller = new RetrieveAutocodingStatusController(
+    val controller = new RetrieveCodingOutStatusController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      validatorFactory = mockRetrieveAutocodingStatusValidatorFactory,
-      service = mockRetrieveAutocodingStatusService,
+      validatorFactory = mockRetrieveCodingOutStatusValidatorFactory,
+      service = mockRetrieveCodingOutStatusService,
       cc = cc,
       idGenerator = mockIdGenerator)
 
-    protected def callController(): Future[Result] = controller.retrieveAutocodingStatus(nino, taxYear)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(nino, taxYear)(fakeGetRequest)
 
   }
 

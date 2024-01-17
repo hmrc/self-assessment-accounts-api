@@ -21,24 +21,24 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser._
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
-import v3.models.response.retrieveAutocodingStatus.RetrieveAutocodingStatusResponse
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
+import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveAutocodingStatusConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveCodingOutStatusConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
-  def retrieveAutocodingStatus(request: RetrieveAutocodingStatusRequestData)(implicit
-      hc: HeaderCarrier,
-      ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[RetrieveAutocodingStatusResponse]] = {
+  def retrieveCodingOutStatus(request: RetrieveCodingOutStatusRequestData)(implicit
+                                                                           hc: HeaderCarrier,
+                                                                           ec: ExecutionContext,
+                                                                           correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutStatusResponse]] = {
 
     import request._
 
     val downstreamUri =
-      Ifs1Uri[RetrieveAutocodingStatusResponse](s"income-tax/accounts/self-assessment/tax-code/opt-out/itsa/${nino.value}/${taxYear.year}")
+      Ifs1Uri[RetrieveCodingOutStatusResponse](s"income-tax/accounts/self-assessment/tax-code/opt-out/itsa/${nino.value}/${taxYear.year}")
 
     get(uri = downstreamUri)
   }

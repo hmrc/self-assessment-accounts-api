@@ -17,29 +17,28 @@
 package v3.controllers
 
 import api.controllers._
-import api.controllers.AuthorisedController
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
-import v3.controllers.validators.RetrieveAutocodingStatusValidatorFactory
-import v3.services.RetrieveAutocodingStatusService
+import v3.controllers.validators.RetrieveCodingOutStatusValidatorFactory
+import v3.services.RetrieveCodingOutStatusService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveAutocodingStatusController @Inject() (val authService: EnrolmentsAuthService,
-                                                    val lookupService: MtdIdLookupService,
-                                                    validatorFactory: RetrieveAutocodingStatusValidatorFactory,
-                                                    service: RetrieveAutocodingStatusService,
-                                                    cc: ControllerComponents,
-                                                    idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAuthService,
+                                                   val lookupService: MtdIdLookupService,
+                                                   validatorFactory: RetrieveCodingOutStatusValidatorFactory,
+                                                   service: RetrieveCodingOutStatusService,
+                                                   cc: ControllerComponents,
+                                                   idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(controllerName = "RetrieveAutocodingStatusController", endpointName = "retrieveAutocodingStatus")
+    EndpointLogContext(controllerName = "RetrieveCodingOutStatusController", endpointName = "retrieveCodingOutStatus")
 
-  def retrieveAutocodingStatus(nino: String, taxYear: String): Action[AnyContent] = {
+  def retrieveCodingOutStatus(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
       val validator                    = validatorFactory.validator(nino, taxYear)
@@ -47,9 +46,9 @@ class RetrieveAutocodingStatusController @Inject() (val authService: EnrolmentsA
       val requestHandler =
         RequestHandler
           .withValidator(validator)
-          .withService(service.retrieveAutocodingStatus)
+          .withService(service.retrieveCodingOutStatus)
           .withPlainJsonResult()
-      // .withHateoasResult(hateoasFactory)(RetrieveAutocodingHateoasData(nino, taxYear))
+      // .withHateoasResult(hateoasFactory)(RetrieveCodingOutHateoasData(nino, taxYear))
       requestHandler.handleRequest()
     }
   }

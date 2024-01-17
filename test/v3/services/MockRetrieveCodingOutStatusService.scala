@@ -21,20 +21,20 @@ import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
-import v3.models.response.retrieveAutocodingStatus.RetrieveAutocodingStatusResponse
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
+import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveAutocodingStatusService extends MockFactory {
-  val mockRetrieveAutocodingStatusService: RetrieveAutocodingStatusService = mock[RetrieveAutocodingStatusService]
+trait MockRetrieveCodingOutStatusService extends MockFactory {
+  val mockRetrieveCodingOutStatusService: RetrieveCodingOutStatusService = mock[RetrieveCodingOutStatusService]
 
-  object MockedRetrieveAutocodingStatusService {
+  object MockedRetrieveCodingOutStatusService {
 
-    def retrieveAutocodingStatus(request: RetrieveAutocodingStatusRequestData)
-        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveAutocodingStatusResponse]]]] = {
-      (mockRetrieveAutocodingStatusService
-        .retrieveAutocodingStatus(_: RetrieveAutocodingStatusRequestData)(_: RequestContext, _: ExecutionContext))
+    def retrieveCodingOutStatus(
+        request: RetrieveCodingOutStatusRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutStatusResponse]]]] = {
+      (mockRetrieveCodingOutStatusService
+        .retrieveCodingOutStatus(_: RetrieveCodingOutStatusRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(request, *, *)
     }
 

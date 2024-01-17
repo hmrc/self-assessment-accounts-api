@@ -20,23 +20,23 @@ import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
-import v3.models.response.retrieveAutocodingStatus.RetrieveAutocodingStatusResponse
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
+import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveAutocodingStatusConnector extends MockFactory {
+trait MockRetrieveCodingOutStatusConnector extends MockFactory {
 
-  val mockRetrieveAutocodingStatusConnector: RetrieveAutocodingStatusConnector =
-    mock[RetrieveAutocodingStatusConnector]
+  val mockRetrieveCodingOutStatusConnector: RetrieveCodingOutStatusConnector =
+    mock[RetrieveCodingOutStatusConnector]
 
-  object MockRetrieveAutocodingStatusConnector {
+  object MockRetrieveCodingOutStatusConnector {
 
-    def retrieveAutocodingStatus(
-        request: RetrieveAutocodingStatusRequestData): CallHandler[Future[DownstreamOutcome[RetrieveAutocodingStatusResponse]]] = {
+    def retrieveCodingOutStatus(
+        request: RetrieveCodingOutStatusRequestData): CallHandler[Future[DownstreamOutcome[RetrieveCodingOutStatusResponse]]] = {
       (
-        mockRetrieveAutocodingStatusConnector
-          .retrieveAutocodingStatus(_: RetrieveAutocodingStatusRequestData)(
+        mockRetrieveCodingOutStatusConnector
+          .retrieveCodingOutStatus(_: RetrieveCodingOutStatusRequestData)(
             _: HeaderCarrier,
             _: ExecutionContext,
             _: String

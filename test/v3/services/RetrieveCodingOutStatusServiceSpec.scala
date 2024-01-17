@@ -20,35 +20,35 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v3.connectors.MockRetrieveAutocodingStatusConnector
+import v3.connectors.MockRetrieveCodingOutStatusConnector
 import v3.models.errors.{BusinessPartnerNotExistError, ITSAContractObjectNotExistError}
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
-import v3.models.response.retrieveAutocodingStatus.RetrieveAutocodingStatusResponse
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
+import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.Future
 
-class RetrieveAutocodingStatusServiceSpec extends ServiceSpec {
+class RetrieveCodingOutStatusServiceSpec extends ServiceSpec {
 
   private val nino    = "AA123456A"
   private val taxYear = "2014"
 
-  private val requestData: RetrieveAutocodingStatusRequestData =
-    RetrieveAutocodingStatusRequestData(
+  private val requestData: RetrieveCodingOutStatusRequestData =
+    RetrieveCodingOutStatusRequestData(
       Nino(nino),
       TaxYear(taxYear)
     )
 
-  val retrieveAutocodingStatusResponse: RetrieveAutocodingStatusResponse =
-    RetrieveAutocodingStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear(taxYear), optOutIndicator = true)
+  val retrieveCodingOutStatusResponse: RetrieveCodingOutStatusResponse =
+    RetrieveCodingOutStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear(taxYear), optOutIndicator = true)
 
-  "RetrieveAutocodingStatusService" should {
+  "RetrieveCodingOutStatusService" should {
     "service call successful" when {
       "return mapped result" in new Test {
-        MockRetrieveAutocodingStatusConnector
-          .retrieveAutocodingStatus(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveAutocodingStatusResponse))))
+        MockRetrieveCodingOutStatusConnector
+          .retrieveCodingOutStatus(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveCodingOutStatusResponse))))
 
-        await(service.retrieveAutocodingStatus(requestData)) shouldBe Right(ResponseWrapper(correlationId, retrieveAutocodingStatusResponse))
+        await(service.retrieveCodingOutStatus(requestData)) shouldBe Right(ResponseWrapper(correlationId, retrieveCodingOutStatusResponse))
       }
     }
 
@@ -56,11 +56,11 @@ class RetrieveAutocodingStatusServiceSpec extends ServiceSpec {
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
         s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveAutocodingStatusConnector
-            .retrieveAutocodingStatus(requestData)
+          MockRetrieveCodingOutStatusConnector
+            .retrieveCodingOutStatus(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-          private val result = await(service.retrieveAutocodingStatus(requestData))
+          private val result = await(service.retrieveCodingOutStatus(requestData))
           result shouldBe Left(ErrorWrapper(correlationId, error))
         }
 
@@ -84,10 +84,10 @@ class RetrieveAutocodingStatusServiceSpec extends ServiceSpec {
 
   }
 
-  trait Test extends MockRetrieveAutocodingStatusConnector {
+  trait Test extends MockRetrieveCodingOutStatusConnector {
 
-    val service = new RetrieveAutocodingStatusService(
-      connector = mockRetrieveAutocodingStatusConnector
+    val service = new RetrieveCodingOutStatusService(
+      connector = mockRetrieveCodingOutStatusConnector
     )
 
   }

@@ -19,12 +19,12 @@ package v3.connectors
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
-import v3.models.response.retrieveAutocodingStatus.RetrieveAutocodingStatusResponse
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
+import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.Future
 
-class RetrieveAutocodingStatusConnectorSpec extends ConnectorSpec {
+class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
 
   val nino: String     = "AA123456A"
   val taxYear: TaxYear = TaxYear("2024")
@@ -34,26 +34,26 @@ class RetrieveAutocodingStatusConnectorSpec extends ConnectorSpec {
   trait Test {
     _: ConnectorTest =>
 
-    val response: RetrieveAutocodingStatusResponse =
-      RetrieveAutocodingStatusResponse(processingDate = processingDate, nino = nino, taxYear = taxYear, optOutIndicator = true)
+    val response: RetrieveCodingOutStatusResponse =
+      RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = taxYear, optOutIndicator = true)
 
-    protected val connector: RetrieveAutocodingStatusConnector = new RetrieveAutocodingStatusConnector(
+    protected val connector: RetrieveCodingOutStatusConnector = new RetrieveCodingOutStatusConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    protected def request(nino: Nino, taxYear: TaxYear): RetrieveAutocodingStatusRequestData = RetrieveAutocodingStatusRequestData(nino, taxYear)
+    protected def request(nino: Nino, taxYear: TaxYear): RetrieveCodingOutStatusRequestData = RetrieveCodingOutStatusRequestData(nino, taxYear)
 
   }
 
-  "RetrieveAutocodingStatusConnector" when {
-    "retrieveAutocodingStatus" must {
+  "RetrieveCodingOutStatusConnector" when {
+    "retrieveCodingOutStatus" must {
       "return a 200 status with a valid response" in new Ifs1Test with Test {
         private val outcome = Right(ResponseWrapper(correlationId, response))
         willGet(s"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/itsa/$nino/${taxYear.year}")
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveAutocodingStatus(request(Nino(nino), taxYear))) shouldEqual outcome
+        await(connector.retrieveCodingOutStatus(request(Nino(nino), taxYear))) shouldEqual outcome
       }
     }
   }

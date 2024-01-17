@@ -22,22 +22,22 @@ import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
 import config.AppConfig
-import v3.models.request.retrieveAutocodingStatus.RetrieveAutocodingStatusRequestData
+import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class RetrieveAutocodingStatusValidatorFactory @Inject() (appConfig: AppConfig) {
+class RetrieveCodingOutStatusValidatorFactory @Inject()(appConfig: AppConfig) {
 
-  def validator(nino: String, taxYear: String): Validator[RetrieveAutocodingStatusRequestData] =
-    new Validator[RetrieveAutocodingStatusRequestData] {
+  def validator(nino: String, taxYear: String): Validator[RetrieveCodingOutStatusRequestData] =
+    new Validator[RetrieveCodingOutStatusRequestData] {
       private val resolveTaxYear = DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
 
-      def validate: Validated[Seq[MtdError], RetrieveAutocodingStatusRequestData] =
+      def validate: Validated[Seq[MtdError], RetrieveCodingOutStatusRequestData] =
         (
           ResolveNino(nino),
           resolveTaxYear(taxYear)
-        ).mapN(RetrieveAutocodingStatusRequestData)
+        ).mapN(RetrieveCodingOutStatusRequestData)
 
     }
 
