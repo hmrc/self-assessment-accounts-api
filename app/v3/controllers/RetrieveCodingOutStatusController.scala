@@ -48,7 +48,6 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
           .withValidator(validator)
           .withService(service.retrieveCodingOutStatus)
           .withPlainJsonResult()
-      // .withHateoasResult(hateoasFactory)(RetrieveCodingOutHateoasData(nino, taxYear))
       requestHandler.handleRequest()
     }
   }

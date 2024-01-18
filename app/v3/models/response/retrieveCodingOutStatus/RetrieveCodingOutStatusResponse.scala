@@ -18,11 +18,17 @@ package v3.models.response.retrieveCodingOutStatus
 
 import api.models.domain.TaxYear
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import play.api.libs.json._
 
 case class RetrieveCodingOutStatusResponse(processingDate: String, nino: String, taxYear: TaxYear, optOutIndicator: Boolean)
 
 object RetrieveCodingOutStatusResponse {
+
+  implicit val downstreamIntToMtdFormat: Format[TaxYear] = Format(
+    implicitly[Reads[Int]].map(TaxYear.fromDownstreamInt),
+    implicitly[Writes[String]].contramap[TaxYear](_.asMtd)
+  )
+
   implicit val writes: OWrites[RetrieveCodingOutStatusResponse] = Json.writes[RetrieveCodingOutStatusResponse]
 
   implicit val reads: Reads[RetrieveCodingOutStatusResponse] = (

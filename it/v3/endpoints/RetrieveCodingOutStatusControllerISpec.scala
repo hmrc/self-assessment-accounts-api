@@ -115,7 +115,7 @@ class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
     protected val taxYear = "2023-24"
 
     def downstreamUrl: String = {
-      s"/income-tax/accounts/self-assessment/tax-code/opt-out/itsa/$nino/${TaxYear.fromMtd(taxYear).year}"
+      s"/income-tax/accounts/self-assessment/tax-code/opt-out/itsa/$nino/2024"
     }
 
     def setupStubs(): StubMapping

@@ -81,7 +81,7 @@ class RetrieveCodingOutStatusValidatorFactorySpec extends UnitSpec with MockAppC
         setupMocks()
 
         val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
-          validator(validNino, "2020-21").validateAndWrapResult()
+          validator(validNino, "2022-23").validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
       }

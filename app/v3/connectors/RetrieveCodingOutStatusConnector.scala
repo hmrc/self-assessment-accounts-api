@@ -38,7 +38,7 @@ class RetrieveCodingOutStatusConnector @Inject()(val http: HttpClient, val appCo
     import request._
 
     val downstreamUri =
-      Ifs1Uri[RetrieveCodingOutStatusResponse](s"income-tax/accounts/self-assessment/tax-code/opt-out/itsa/${nino.value}/${taxYear.year}")
+      Ifs1Uri[RetrieveCodingOutStatusResponse](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")
 
     get(uri = downstreamUri)
   }

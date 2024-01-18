@@ -48,10 +48,10 @@ class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
     "retrieveCodingOutStatus" must {
       "return a 200 status with a valid response" in new Ifs1Test with Test {
         private val outcome = Right(ResponseWrapper(correlationId, response))
-        willGet(s"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/itsa/$nino/${taxYear.year}")
+        willGet(s"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/$nino/2024")
           .returns(Future.successful(outcome))
 
-        await(connector.retrieveCodingOutStatus(request(Nino(nino), taxYear))) shouldEqual outcome
+        await(connector.retrieveCodingOutStatus(request(Nino(nino), TaxYear.fromMtd("2023-24")))) shouldEqual outcome
       }
     }
   }
