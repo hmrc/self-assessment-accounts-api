@@ -17,7 +17,7 @@
 package v3.models.response.retrieveCodingOutStatus
 
 import api.models.domain.TaxYear
-import play.api.libs.functional.syntax.toFunctionalBuilderOps
+//import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json._
 
 case class RetrieveCodingOutStatusResponse(processingDate: String, nino: String, taxYear: TaxYear, optOutIndicator: Boolean)
@@ -29,13 +29,6 @@ object RetrieveCodingOutStatusResponse {
     TaxYear.toMtdWrites
   )
 
-  implicit val writes: OWrites[RetrieveCodingOutStatusResponse] = Json.writes[RetrieveCodingOutStatusResponse]
-
-  implicit val reads: Reads[RetrieveCodingOutStatusResponse] = (
-    (JsPath \ "processingDate").read[String] and
-      (JsPath \ "nino").read[String] and
-      (JsPath \ "taxYear").read[TaxYear] and
-      (JsPath \ "optOutIndicator").read[Boolean]
-  )(RetrieveCodingOutStatusResponse.apply _)
+  implicit val format: OFormat[RetrieveCodingOutStatusResponse] = Json.format[RetrieveCodingOutStatusResponse]
 
 }
