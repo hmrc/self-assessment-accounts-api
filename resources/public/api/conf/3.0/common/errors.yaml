@@ -270,3 +270,28 @@ components:
       value:
         code: RULE_INCONSISTENT_QUERY_PARAMS
         message: Provide either paymentLot & paymentLotItem or fromDate & toDate.
+
+    #400
+    businessPartnerNotExist:
+      description: |
+        The remote endpoint has indicated that business partner does not exist for NINO.
+      value:
+        code: BUSINESS_PARTNER_NOT_EXIST
+        message: Provided NINO is not registered as business partner.
+
+    #400
+    itsaContractObjectNotExist:
+      description: |
+        The remote endpoint has indicated that ITSA contract object does not exist.
+      value:
+        code: ITSA_CONTRACT_OBJECT_NOT_EXIST
+        message: ITSA contract object does not exist.
+
+    #500
+    internalServerError:
+      description: |
+        The service is currently experiencing problems that require live service intervention.
+      value:
+        code: INTERNAL_SERVER_ERROR
+        message: Service unavailable
+

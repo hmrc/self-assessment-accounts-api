@@ -51,6 +51,7 @@ tags:
     description: These endpoints allow a developer to retrieve accounting information to be shown back to the customer. This includes listing payments the customer has made, how these payments have been allocated and details of any upcoming or outstanding liabilities. The data returned only relates to payments and liabilities arising for tax years since the customer joined the new service. There may also be outstanding liabilities and payment information a customer needs to view for the years prior to signing up to Making Tax Digital for Income Tax Self Assessment that can be viewed using their existing Personal Tax Account.<br><br>
   - name: Coding Out Underpayments and Debts
     description: Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts.<br><br>
+  - name: Opting out of Coding Out
 
 paths:
   /accounts/self-assessment/{nino}/charges/{transactionId}:
@@ -61,4 +62,6 @@ paths:
     $ref: "./self_assessment_payments_and_allocation_details_list.yaml"
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code:
     $ref: "./coding_out_underpayments.yaml"
+  /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/status:
+    $ref: "./coding_out_status_retrieve.yaml"
 
