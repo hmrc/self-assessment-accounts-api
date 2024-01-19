@@ -16,7 +16,6 @@
 
 package v3.endpoints
 
-import api.models.domain.TaxYear
 import api.models.errors._
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
@@ -115,7 +114,7 @@ class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
     protected val taxYear = "2023-24"
 
     def downstreamUrl: String = {
-      s"/income-tax/accounts/self-assessment/tax-code/opt-out/itsa/$nino/2024"
+      s"/income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/$nino/2024"
     }
 
     def setupStubs(): StubMapping
