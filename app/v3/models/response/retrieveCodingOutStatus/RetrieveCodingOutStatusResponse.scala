@@ -26,7 +26,7 @@ object RetrieveCodingOutStatusResponse {
 
   implicit val downstreamIntToMtdFormat: Format[TaxYear] = Format(
     implicitly[Reads[Int]].map(TaxYear.fromDownstreamInt),
-    implicitly[Writes[String]].contramap[TaxYear](_.asMtd)
+    TaxYear.toMtdWrites
   )
 
   implicit val writes: OWrites[RetrieveCodingOutStatusResponse] = Json.writes[RetrieveCodingOutStatusResponse]
