@@ -16,24 +16,45 @@
 
 package config
 
+import com.google.inject.ImplementedBy
 import org.apache.commons.lang3.BooleanUtils
 import play.api.Configuration
 import play.api.mvc.Request
 
-case class FeatureSwitches(featureSwitchConfig: Configuration) {
+import javax.inject.{Inject, Singleton}
+
+@ImplementedBy(classOf[FeatureSwitchesImpl])
+trait FeatureSwitches {
+
+  def isCl402Enabled: Boolean
+  def isTemporalValidationEnabled(implicit request: Request[_]): Boolean
+}
+
+@Singleton
+class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwitches {
+
+  @Inject
+  def this(appConfig: AppConfig) = this(appConfig.featureSwitches)
+
+  val isCl402Enabled: Boolean = isEnabled("cl402")
 
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
-    if (isEnabled("allowTemporalValidationSuspension.enabled")) {
+    if (isConfigTrue("allowTemporalValidationSuspension.enabled")) {
       request.headers.get("suspend-temporal-validations").forall(!BooleanUtils.toBoolean(_))
     } else {
       true
     }
   }
 
-  private def isEnabled(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
+  def isEnabled(key: String): Boolean = isConfigTrue(key + ".enabled")
 
+  private def isConfigTrue(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
+
+  def isReleasedInProduction(feature: String): Boolean = isConfigTrue(feature + ".released-in-production")
 }
 
 object FeatureSwitches {
-  def apply()(implicit appConfig: AppConfig): FeatureSwitches = FeatureSwitches(appConfig.featureSwitches)
+  def apply(configuration: Configuration): FeatureSwitches = new FeatureSwitchesImpl(configuration)
+
+  def apply(appConfig: AppConfig): FeatureSwitches = new FeatureSwitchesImpl(appConfig)
 }
