@@ -24,7 +24,7 @@ case class RetrieveCodingOutStatusResponse(processingDate: String, nino: String,
 
 object RetrieveCodingOutStatusResponse {
 
-  implicit val downstreamIntToMtdFormat: Format[TaxYear] = Format(
+  private implicit val downstreamIntToMtdFormat: Format[TaxYear] = Format(
     implicitly[Reads[Int]].map(TaxYear.fromDownstreamInt),
     TaxYear.toMtdWrites
   )
