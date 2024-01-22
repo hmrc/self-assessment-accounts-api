@@ -29,7 +29,7 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
 
     "checking if rewrite is needed" should {
       "indicate rewrite needed for grouped endpoints yaml file" in {
-        val result = checkAndRewrite.check("any-version", "business_details.yaml")
+        val result = checkAndRewrite.check("any-version", "coding_out.yaml")
         result shouldBe true
       }
 
@@ -46,23 +46,23 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
 
     "rewrite" should {
       "return the rewritten summaries when the 'maybeTestOnly' helper is present" in {
-        MockedAppConfig.endpointReleasedInProduction("2.0", "employment-expenses-create-and-amend") returns false
-        MockedAppConfig.endpointReleasedInProduction("2.0", "employment-expenses-retrieve") returns true
-        MockedAppConfig.endpointReleasedInProduction("2.0", "employment-expenses-delete") returns false
+        MockedAppConfig.endpointReleasedInProduction("2.0", "coding-out-create-and-amend") returns false
+        MockedAppConfig.endpointReleasedInProduction("2.0", "coding-out-retrieve") returns true
+        MockedAppConfig.endpointReleasedInProduction("2.0", "coding-out-delete") returns false
 
         val yaml =
           """
                   |put:
-                  |  $ref: "./business_details_create_and_amend.yaml"
-                  |  summary: Create and Amend Business Details{{#maybeTestOnly "2.0 employment-expenses-create-and-amend"}}{{/maybeTestOnly}}
+                  |  $ref: "./coding_out_create_and_amend.yaml"
+                  |  summary: Create and Amend Coding Out{{#maybeTestOnly "2.0 coding-out-create-and-amend"}}{{/maybeTestOnly}}
                   |  security:
                   |    - User-Restricted:
                   |        - write:self-assessment
                   |
                   |
                   |get:
-                  |  $ref: "./business_details_retrieve.yaml"
-                  |  summary: Retrieve Business Details{{#maybeTestOnly "2.0 employment-expenses-retrieve"}}{{/maybeTestOnly}}
+                  |  $ref: "./coding_out_retrieve.yaml"
+                  |  summary: Retrieve Coding Out{{#maybeTestOnly "2.0 coding-out-retrieve"}}{{/maybeTestOnly}}
                   |  security:
                   |    - User-Restricted:
                   |        - read:self-assessment
@@ -70,8 +70,8 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
                   |    - $ref: './common/queryParameters.yaml#/components/parameters/source'
                   |
                   |delete:
-                  |  $ref: "./business_details_delete.yaml"
-                  |  summary: Delete Business Details{{#maybeTestOnly "2.0 employment-expenses-delete"}}{{/maybeTestOnly}}
+                  |  $ref: "./coding_out_delete.yaml"
+                  |  summary: Delete Coding Out{{#maybeTestOnly "2.0 coding-out-delete"}}{{/maybeTestOnly}}
                   |  security:
                   |    - User-Restricted:
                   |        - write:self-assessment
@@ -81,16 +81,16 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
         val expected =
           """
                   |put:
-                  |  $ref: "./business_details_create_and_amend.yaml"
-                  |  summary: Create and Amend Business Details [test only]
+                  |  $ref: "./coding_out_create_and_amend.yaml"
+                  |  summary: Create and Amend Coding Out [test only]
                   |  security:
                   |    - User-Restricted:
                   |        - write:self-assessment
                   |
                   |
                   |get:
-                  |  $ref: "./business_details_retrieve.yaml"
-                  |  summary: Retrieve Business Details
+                  |  $ref: "./coding_out_retrieve.yaml"
+                  |  summary: Retrieve Coding Out
                   |  security:
                   |    - User-Restricted:
                   |        - read:self-assessment
@@ -98,15 +98,15 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
                   |    - $ref: './common/queryParameters.yaml#/components/parameters/source'
                   |
                   |delete:
-                  |  $ref: "./business_details_delete.yaml"
-                  |  summary: Delete Business Details [test only]
+                  |  $ref: "./coding_out_delete.yaml"
+                  |  summary: Delete Coding Out [test only]
                   |  security:
                   |    - User-Restricted:
                   |        - write:self-assessment
                   |
                   |""".stripMargin
 
-        val result = checkAndRewrite.rewrite(path = "/public/api/conf/1.0", filename = "business_details.yaml", yaml)
+        val result = checkAndRewrite.rewrite(path = "/public/api/conf/2.0", filename = "coding_out.yaml", yaml)
         result shouldBe expected
       }
 
@@ -114,16 +114,16 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
         val yaml =
           """
             |put:
-            |  $ref: "./business_details_create_and_amend.yaml"
-            |  summary: Create and Amend Business Details
+            |  $ref: "./coding_out_create_and_amend.yaml"
+            |  summary: Create or Amend Coding Out Underpayments and Debt Amounts
             |  security:
             |    - User-Restricted:
             |        - write:self-assessment
             |
             |
             |get:
-            |  $ref: "./business_details_retrieve.yaml"
-            |  summary: Retrieve Business Details
+            |  $ref: "./coding_out_retrieve.yaml"
+            |  summary: Retrieve Coding Out Status
             |  security:
             |    - User-Restricted:
             |        - read:self-assessment
@@ -131,15 +131,15 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
             |    - $ref: './common/queryParameters.yaml#/components/parameters/source'
             |
             |delete:
-            |  $ref: "./business_details_delete.yaml"
-            |  summary: Delete Business Details
+            |  $ref: "./coding_out_delete.yaml"
+            |  summary: Delete Coding Out
             |  security:
             |    - User-Restricted:
             |        - write:self-assessment
             |
             |""".stripMargin
 
-        val result = checkAndRewrite.rewrite("/public/api/conf/1.0", "business_details.yaml", yaml)
+        val result = checkAndRewrite.rewrite("/public/api/conf/2.0", "coding_out.yaml", yaml)
         result shouldBe yaml
 
       }
@@ -149,8 +149,8 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
         val yaml =
           s"""
              |put:
-             |  $$ref: "./business_details_create_and_amend.yaml"
-             |  summary: Create and Amend Business Details{{#maybeTestOnly "$endpointDetails"}}{{/maybeTestOnly}}
+             |  $$ref: "./coding_out_create_and_amend.yaml"
+             |  summary: Create and Amend Coding Out{{#maybeTestOnly "$endpointDetails"}}{{/maybeTestOnly}}
              |  security:
              |    - User-Restricted:
              |        - write:self-assessment
@@ -158,7 +158,7 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
              |""".stripMargin
 
         val exception = intercept[HandlebarsException] {
-          checkAndRewrite.rewrite("/public/api/conf/1.0", "business_details.yaml", yaml)
+          checkAndRewrite.rewrite("/public/api/conf/1.0", "coding_out.yaml", yaml)
         }
 
         val cause = exception.getCause

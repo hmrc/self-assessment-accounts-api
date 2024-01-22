@@ -44,7 +44,7 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
       ).foreach { case (enabled, enabledInProd) =>
         val (check, _) = setupCheckAndRewrite(oasFeatureEnabled = enabled, oasFeatureReleasedInProd = enabledInProd)
 
-        val result = check("1.0", "any-file.yaml")
+        val result = check("2.0", "any-file.yaml")
         result shouldBe true
       }
     }
@@ -54,10 +54,10 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
 
     val yaml =
       """
-        |summary: Retrieve Business Details
+        |summary: Retrieve Coding Out Underpayments and Debt Amounts
         |description: |
-        |  This endpoint enables you to retrieve existing employment expenses.
-        |  A National Insurance number and tax year must be provided.
+        |  This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted
+        |  amended coding out amounts for a previous tax year and given National Insurance number.
         |
         |  ### Test data
         |  {{#if (enabled "oasFeature")}}
@@ -65,7 +65,7 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
         |  {{/if}}
         |
         |tags:
-        |  - Employment Expenses
+        |  - Coding Out Underpayments and Debts
         |""".stripMargin
 
     "show the field without [Test Only]" when {
@@ -74,10 +74,10 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
 
         val expected =
           s"""
-             |summary: Retrieve Business Details
+             |summary: Retrieve Coding Out Underpayments and Debt Amounts
              |description: |
-             |  This endpoint enables you to retrieve existing employment expenses.
-             |  A National Insurance number and tax year must be provided.
+             |  This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted
+             |  amended coding out amounts for a previous tax year and given National Insurance number.
              |
              |  ### Test data
              |${" "}${" "}
@@ -85,7 +85,7 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
              |${" "}${" "}
              |
              |tags:
-             |  - Employment Expenses
+             |  - Coding Out Underpayments and Debts
              |""".stripMargin
 
         val result = rewrite("/...", "something.yaml", yaml)
@@ -99,10 +99,10 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
 
         val expected =
           s"""
-             |summary: Retrieve Business Details
+             |summary: Retrieve Coding Out Underpayments and Debt Amounts
              |description: |
-             |  This endpoint enables you to retrieve existing employment expenses.
-             |  A National Insurance number and tax year must be provided.
+             |  This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted
+             |  amended coding out amounts for a previous tax year and given National Insurance number.
              |
              |  ### Test data
              |${" "}${" "}
@@ -110,7 +110,7 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
              |${" "}${" "}
              |
              |tags:
-             |  - Employment Expenses
+             |  - Coding Out Underpayments and Debts
              |""".stripMargin
 
         val result = rewrite("/...", "something.yaml", yaml)
@@ -124,16 +124,16 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
 
         val expected =
           s"""
-             |summary: Retrieve Business Details
+             |summary: Retrieve Coding Out Underpayments and Debt Amounts
              |description: |
-             |  This endpoint enables you to retrieve existing employment expenses.
-             |  A National Insurance number and tax year must be provided.
+             |  This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted
+             |  amended coding out amounts for a previous tax year and given National Insurance number.
              |
              |  ### Test data
              |${" "}${" "}
              |
              |tags:
-             |  - Employment Expenses
+             |  - Coding Out Underpayments and Debts
              |""".stripMargin
 
         val result = rewrite("/...", "something.yaml", yaml)
@@ -145,16 +145,16 @@ class OasFeatureRewriterSpec extends UnitSpec with MockAppConfig {
 
         val expected =
           s"""
-             |summary: Retrieve Business Details
+             |summary: Retrieve Coding Out Underpayments and Debt Amounts
              |description: |
-             |  This endpoint enables you to retrieve existing employment expenses.
-             |  A National Insurance number and tax year must be provided.
+             |  This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted
+             |  amended coding out amounts for a previous tax year and given National Insurance number.
              |
              |  ### Test data
              |${" "}${" "}
              |
              |tags:
-             |  - Employment Expenses
+             |  - Coding Out Underpayments and Debts
              |""".stripMargin
 
         val result = rewrite("/...", "something.yaml", yaml)

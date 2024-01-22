@@ -54,8 +54,8 @@ class ApiVersionTitleRewriterSpec extends UnitSpec with MockAppConfig {
                     |openapi: "3.0.3"
                     |
                     |info:
-                    |  version: "1.0"
-                    |  title: Business Details (MTD)
+                    |  version: "3.0"
+                    |  title: Self Assessment Accounts (MTD)
                     |  description: |
                     |    # Send fraud prevention data
                     |    HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters.
@@ -69,8 +69,8 @@ class ApiVersionTitleRewriterSpec extends UnitSpec with MockAppConfig {
                     |openapi: "3.0.3"
                     |
                     |info:
-                    |  version: "1.0"
-                    |  title: "Business Details (MTD) [test only]"
+                    |  version: "3.0"
+                    |  title: "Self Assessment Accounts (MTD) [test only]"
                     |  description: |
                     |    # Send fraud prevention data
                     |    HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters.
