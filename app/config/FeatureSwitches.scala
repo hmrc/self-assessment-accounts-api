@@ -26,8 +26,9 @@ import javax.inject.{Inject, Singleton}
 @ImplementedBy(classOf[FeatureSwitchesImpl])
 trait FeatureSwitches {
 
-  def isCl402Enabled: Boolean
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean
+  def isEnabled(key: String): Boolean
+  def isReleasedInProduction(feature: String): Boolean
 }
 
 @Singleton
@@ -35,8 +36,6 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
 
   @Inject
   def this(appConfig: AppConfig) = this(appConfig.featureSwitches)
-
-  val isCl402Enabled: Boolean = isEnabled("cl402")
 
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension")) {

@@ -1,5 +1,5 @@
 get:
-  summary: Retrieve Coding Out Status
+  summary: Retrieve Coding Out Status{{#unless (releasedInProduction 'cl402')}} [Test only]{{/unless}}
   description: |
     This endpoint enables you to retrieve opt-out of coding out status for a specified customer (identified by a National Insurance number) and tax year.
     
@@ -50,8 +50,8 @@ get:
           examples:
             FORMAT_NINO:
               $ref: "./common/errors.yaml#/components/examples/formatNino"
-#            FORMAT_TAX_YEAR:
-#              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
+            FORMAT_TAX_YEAR:
+              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
             RULE_TAX_YEAR_NOT_SUPPORTED:
               $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
             RULE_TAX_YEAR_RANGE_INVALID:

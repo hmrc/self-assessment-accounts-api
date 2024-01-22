@@ -76,7 +76,7 @@ class FeatureSwitchesSpec extends UnitSpec {
 
         val featureSwitches = FeatureSwitches(config)
 
-        featureSwitches.isCl402Enabled shouldBe true
+        featureSwitches.isEnabled("cl402") shouldBe true
       }
 
       "the feature switch is not present in the config" in {
@@ -84,7 +84,7 @@ class FeatureSwitchesSpec extends UnitSpec {
 
         val featureSwitches = FeatureSwitches(config)
 
-        featureSwitches.isCl402Enabled shouldBe true
+        featureSwitches.isEnabled("cl402") shouldBe true
       }
     }
 
@@ -96,7 +96,7 @@ class FeatureSwitchesSpec extends UnitSpec {
 
         val featureSwitches = FeatureSwitches(config)
 
-        featureSwitches.isCl402Enabled shouldBe false
+        featureSwitches.isEnabled("cl402") shouldBe false
       }
     }
   }

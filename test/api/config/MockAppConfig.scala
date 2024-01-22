@@ -39,7 +39,7 @@ trait MockAppConfig extends MockFactory {
     def ifs1Token: CallHandler0[String]                           = (() => mockAppConfig.ifs1Token: String).expects()
     def ifs1Environment: CallHandler0[String]                     = (() => mockAppConfig.ifs1Env: String).expects()
     def ifs1EnvironmentHeaders: CallHandler0[Option[Seq[String]]] = (() => mockAppConfig.ifs1EnvironmentHeaders: Option[Seq[String]]).expects()
-    def ifsDownstreamConfig: CallHandler0[DownstreamConfig]      = (() => mockAppConfig.ifs1DownstreamConfig: DownstreamConfig).expects()
+    def ifsDownstreamConfig: CallHandler0[DownstreamConfig]       = (() => mockAppConfig.ifs1DownstreamConfig: DownstreamConfig).expects()
 
     // IFS2 Config
     def ifs2BaseUrl: CallHandler0[String]                         = (() => mockAppConfig.ifs2BaseUrl: String).expects()
@@ -64,10 +64,16 @@ trait MockAppConfig extends MockFactory {
     def featureSwitches: CallHandler[Configuration]              = (() => mockAppConfig.featureSwitches: Configuration).expects()
     def apiGatewayContext: CallHandler[String]                   = (() => mockAppConfig.apiGatewayContext: String).expects()
     def apiStatus(status: Version): CallHandler[String]          = (mockAppConfig.apiStatus: Version => String).expects(status)
-    def endpointsEnabled(version: Version): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled: Version => Boolean).expects(version)
+    def endpointsEnabled(version: Version): CallHandler[Boolean] = (mockAppConfig.endpointsEnabled(_: Version)).expects(version)
+    def endpointsEnabled(version: String): CallHandler[Boolean]  = (mockAppConfig.endpointsEnabled(_: String)).expects(version)
 
-    def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] =
-      (() => mockAppConfig.confidenceLevelConfig: ConfidenceLevelConfig).expects()
+    def confidenceLevelCheckEnabled: CallHandler[ConfidenceLevelConfig] = (() => mockAppConfig.confidenceLevelConfig: ConfidenceLevelConfig).expects()
+
+    def apiVersionReleasedInProduction(version: String): CallHandler[Boolean] =
+      (mockAppConfig.apiVersionReleasedInProduction: String => Boolean).expects(version)
+
+    def endpointReleasedInProduction(version: String, key: String): CallHandler[Boolean] =
+      (mockAppConfig.endpointReleasedInProduction: (String, String) => Boolean).expects(version, key)
 
   }
 
