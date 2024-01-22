@@ -130,7 +130,7 @@ object TaxYear {
     new TaxYear(taxYear.toString)
   }
 
-  implicit val writes: Writes[TaxYear] = implicitly[Writes[String]].contramap(_.asMtd)
+  val toMtdWrites: Writes[TaxYear] = implicitly[Writes[String]].contramap(_.asMtd)
 }
 
 @Singleton
