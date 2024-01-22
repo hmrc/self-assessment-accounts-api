@@ -33,15 +33,15 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuthService,
-                                                 val lookupService: MtdIdLookupService,
-                                                 appConfig: AppConfig,
-                                                 validatorFactory: CreateOrAmendCodingOutValidatorFactory,
-                                                 service: CreateOrAmendCodingOutService,
-                                                 hateoasFactory: HateoasFactory,
-                                                 auditService: AuditService,
-                                                 cc: ControllerComponents,
-                                                 idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAuthService,
+                                                  val lookupService: MtdIdLookupService,
+                                                  appConfig: AppConfig,
+                                                  validatorFactory: CreateOrAmendCodingOutValidatorFactory,
+                                                  service: CreateOrAmendCodingOutService,
+                                                  hateoasFactory: HateoasFactory,
+                                                  auditService: AuditService,
+                                                  cc: ControllerComponents,
+                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -50,28 +50,25 @@ class CreateOrAmendCodingOutController @Inject()(val authService: EnrolmentsAuth
 
   def createOrAmendCodingOut(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-        implicit val apiVersion: Version = Version.from(request, orElse = Version2)
-        implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+      implicit val apiVersion: Version = Version.from(request, orElse = Version2)
+      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-        val validator = validatorFactory.validator(
-          nino,
-          taxYear,
-          request.body,
-          temporalValidationEnabled = FeatureSwitches()(appConfig).isTemporalValidationEnabled)
+      val validator =
+        validatorFactory.validator(nino, taxYear, request.body, temporalValidationEnabled = FeatureSwitches(appConfig).isTemporalValidationEnabled)
 
-        val requestHandler =
-          RequestHandler
-            .withValidator(validator)
-            .withService(service.amend)
-            .withHateoasResult(hateoasFactory)(CreateOrAmendCodingOutHateoasData(nino, taxYear))
-            .withAuditing(AuditHandler(
-              auditService,
-              auditType = "CreateAmendCodingOutUnderpayment",
-              transactionName = "create-amend-coding-out-underpayment",
-              apiVersion = apiVersion,
-              params = Map("nino" -> nino, "taxYear" -> taxYear),
-              requestBody = Some(request.body),
-              includeResponse = true
+      val requestHandler =
+        RequestHandler
+          .withValidator(validator)
+          .withService(service.amend)
+          .withHateoasResult(hateoasFactory)(CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "CreateAmendCodingOutUnderpayment",
+            transactionName = "create-amend-coding-out-underpayment",
+            apiVersion = apiVersion,
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            requestBody = Some(request.body),
+            includeResponse = true
           ))
 
       requestHandler.handleRequest()

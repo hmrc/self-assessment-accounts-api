@@ -113,7 +113,7 @@ class TaxYearSpec extends UnitSpec {
 
     "written to JSON" should {
       "return the expected JsValue" in {
-        Json.toJson(model) shouldBe requestJson
+        Json.toJson(model)(TaxYear.toMtdWrites) shouldBe requestJson
       }
     }
   }
