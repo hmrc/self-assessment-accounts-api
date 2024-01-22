@@ -39,7 +39,7 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
   val isCl402Enabled: Boolean = isEnabled("cl402")
 
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
-    if (isConfigTrue("allowTemporalValidationSuspension.enabled")) {
+    if (isEnabled("allowTemporalValidationSuspension")) {
       request.headers.get("suspend-temporal-validations").forall(!BooleanUtils.toBoolean(_))
     } else {
       true
