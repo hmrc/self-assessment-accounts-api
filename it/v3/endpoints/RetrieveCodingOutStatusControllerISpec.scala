@@ -95,7 +95,7 @@ class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
 
     val input = List(
       (BAD_REQUEST, "INVALID_TAXABLE_ENTITY_ID", BAD_REQUEST, NinoFormatError),
-      (BAD_REQUEST, "INVALID_TAX_YEAR", BAD_REQUEST, TaxYearFormatError),
+      (BAD_REQUEST, "INVALID_TAX_YEAR", INTERNAL_SERVER_ERROR, InternalError),
       (BAD_REQUEST, "INVALID_REGIME", INTERNAL_SERVER_ERROR, InternalError),
       (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
       (BAD_REQUEST, "DUPLICATE_SUBMISSION", INTERNAL_SERVER_ERROR, InternalError),
