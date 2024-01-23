@@ -34,7 +34,7 @@ class RetrieveCodingOutStatusService @Inject()(connector: RetrieveCodingOutStatu
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_TAXABLE_ENTITY_ID"      -> NinoFormatError,
-      "INVALID_TAX_YEAR"               -> TaxYearFormatError,
+      "INVALID_TAX_YEAR"               -> InternalError,
       "INVALID_REGIME"                 -> InternalError,
       "INVALID_CORRELATIONID"          -> InternalError,
       "DUPLICATE_SUBMISSION"           -> InternalError,
