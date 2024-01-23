@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "processingDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "The date and time that the request was processed in the system."
+    },
+    "nino": {
+      "type": "string",
+      "description": "National Insurance number, in the format AA999999A."
+    },
+    "taxYear": {
+      "type": "string",
+      "description": "The tax year the data applies to, for example 2021-22. The start year and end year must not span two tax years. The minimum tax year is 2021-22. No gaps are allowed, for example, 2020-22 is not valid. (The minimum tax year in Sandbox is 2019-20.).",
+      "pattern": "^2[0-9]{3}-[0-9]{2}$"
+    },
+    "optOutIndicator": {
+      "type": "boolean",
+      "description": "Indicates the coding out status of the tax year.\n- true: Customer opted out of coding out for the tax year\n- false: Customer opted in to coding out for the tax year"
+    }
+  },
+  "required": [
+    "processingDate",
+    "nino",
+    "taxYear",
+    "optOutIndicator"
+  ],
+  "additionalProperties": false
+}

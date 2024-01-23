@@ -16,9 +16,9 @@
 
 package config
 
-import controllers.Assets
+import config.rewriters.DocumentationRewriters
+import controllers.RewriteableAssets
 import definition.ApiDefinitionFactory
-import play.api.http.HttpErrorHandler
 import play.api.libs.json.Json
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
@@ -27,17 +27,21 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class DocumentationController @Inject() (selfAssessmentApiDefinition: ApiDefinitionFactory,
-                                         cc: ControllerComponents,
-                                         assets: Assets,
-                                         errorHandler: HttpErrorHandler)
+                                         docRewriters: DocumentationRewriters,
+                                         assets: RewriteableAssets,
+                                         cc: ControllerComponents)
     extends BackendController(cc) {
 
   def definition(): Action[AnyContent] = Action {
     Ok(Json.toJson(selfAssessmentApiDefinition.definition))
   }
 
-  def asset(version: String, file: String): Action[AnyContent] = {
-    assets.at(s"/public/api/conf/$version", file)
+  def asset(version: String, filename: String): Action[AnyContent] = {
+    val path = s"/public/api/conf/$version"
+    val rewriters = docRewriters.rewriteables.flatMap {
+      _.maybeRewriter(version, filename)
+    }
+    assets.rewriteableAt(path, filename, rewriters)
   }
 
 }

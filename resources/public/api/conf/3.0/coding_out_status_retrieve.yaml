@@ -1,0 +1,75 @@
+get:
+  summary: Retrieve Coding Out Status{{#unless (releasedInProduction 'cl402')}} [Test only]{{/unless}}
+  description: |
+    This endpoint enables you to retrieve opt-out of coding out status for a specified customer (identified by a National Insurance number) and tax year.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario)        | Scenario                                                           |
+    |-----------------------------------------|--------------------------------------------------------------------|
+    | N/A - DEFAULT                           | Simulates a successful response with latest values.                |
+    | BUSINESS_PARTNER_NOT_EXIST              | Simulates a scenario where the business partner does not exist.    |
+    | ITSA_CONTRACT_OBJECT_NOT_EXIST          | Simulates a scenario where the ITSA contract object does not exist.|
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  tags:
+    - Opting out of Coding Out
+
+  parameters:
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/taxYear"
+
+  responses:
+    "200":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/retrieve_coding_out_status_response.json"
+          examples:
+            Request:
+              value:
+                $ref: "./examples/retrieveCodingOutStatus/retrieve_coding_out_status_response.json"
+
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_TAX_YEAR:
+              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid"
+            BUSINESS_PARTNER_NOT_EXIST:
+              $ref: "./common/errors.yaml#/components/examples/businessPartnerNotExist"
+            ITSA_CONTRACT_OBJECT_NOT_EXIST:
+              $ref: "./common/errors.yaml#/components/examples/itsaContractObjectNotExist"
+
+
+    "500":
+      description: Server Error
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            INTERNAL_SERVER_ERROR:
+              $ref: "./common/errors.yaml#/components/examples/internalServerError"
+
+
