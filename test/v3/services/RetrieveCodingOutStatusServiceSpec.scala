@@ -67,7 +67,7 @@ class RetrieveCodingOutStatusServiceSpec extends ServiceSpec {
       val errors: Seq[(String, MtdError)] =
         List(
           "INVALID_TAXABLE_ENTITY_ID"      -> NinoFormatError,
-          "INVALID_TAX_YEAR"               -> TaxYearFormatError,
+          "INVALID_TAX_YEAR"               -> InternalError,
           "INVALID_REGIME"                 -> InternalError,
           "INVALID_CORRELATIONID"          -> InternalError,
           "DUPLICATE_SUBMISSION"           -> InternalError,

@@ -66,3 +66,4 @@ paths:
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/status:
     $ref: "./coding_out_status_retrieve.yaml"
 # {{/if}}
+
