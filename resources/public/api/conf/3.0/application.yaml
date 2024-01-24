@@ -62,6 +62,7 @@ paths:
     $ref: "./self_assessment_payments_and_allocation_details_list.yaml"
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code:
     $ref: "./coding_out_underpayments.yaml"
+# {{#if (enabled 'cl402')}}
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/status:
     $ref: "./coding_out_status_retrieve.yaml"
-
+# {{/if}}
