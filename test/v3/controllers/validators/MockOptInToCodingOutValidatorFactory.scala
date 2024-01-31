@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package v3.models.errors
+package v3.controllers.validators
 
-import api.models.errors.MtdError
-import play.api.http.Status.BAD_REQUEST
+import api.controllers.validators.Validator
+import org.scalamock.handlers.CallHandler
+import v3.models.request.optInToCodingOut.OptInToCodingOutRequestData
 
-object RuleBusinessPartnerNotExistError
-    extends MtdError("RULE_BUSINESS_PARTNER_NOT_EXIST", "Provided NINO is not registered as business partner", BAD_REQUEST)
+trait MockOptInToCodingOutValidatorFactory extends MockValidatorFactory[OptInToCodingOutRequestData] {
 
-object RuleItsaContractObjectNotExistError
-    extends MtdError("RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST", "ITSA contract object does not exist", BAD_REQUEST)
+  val mockOptInToCodingOutValidatorFactory: OptInToCodingOutValidatorFactory = mock[OptInToCodingOutValidatorFactory]
 
-object RuleAlreadyOptedInError
-  extends MtdError("RULE_ALREADY_OPTED_IN", "Customer is already opted in to coding out", BAD_REQUEST)
+  def validator(): CallHandler[Validator[OptInToCodingOutRequestData]] =
+    (mockOptInToCodingOutValidatorFactory.validator(_: String, _: String)).expects(*, *)
+
+}
