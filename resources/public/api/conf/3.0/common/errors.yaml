@@ -272,19 +272,19 @@ components:
         message: Provide either paymentLot & paymentLotItem or fromDate & toDate.
 
     #400
-    businessPartnerNotExist:
+    ruleBusinessPartnerNotExist:
       description: |
         The remote endpoint has indicated that business partner does not exist for NINO.
       value:
-        code: BUSINESS_PARTNER_NOT_EXIST
+        code: RULE_BUSINESS_PARTNER_NOT_EXIST
         message: Provided NINO is not registered as business partner.
 
     #400
-    itsaContractObjectNotExist:
+    ruleItsaContractObjectNotExist:
       description: |
         The remote endpoint has indicated that ITSA contract object does not exist.
       value:
-        code: ITSA_CONTRACT_OBJECT_NOT_EXIST
+        code: RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST
         message: ITSA contract object does not exist.
 
     #500

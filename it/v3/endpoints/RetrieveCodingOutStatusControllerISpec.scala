@@ -26,7 +26,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.{downstreamResponseJson, mtdResponseJson}
-import v3.models.errors.{BusinessPartnerNotExistError, ITSAContractObjectNotExistError}
+import v3.models.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 
 class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
 
@@ -99,8 +99,8 @@ class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
       (BAD_REQUEST, "INVALID_REGIME", INTERNAL_SERVER_ERROR, InternalError),
       (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
       (BAD_REQUEST, "DUPLICATE_SUBMISSION", INTERNAL_SERVER_ERROR, InternalError),
-      (BAD_REQUEST, "BUSINESS_PARTNER_NOT_EXIST", BAD_REQUEST, BusinessPartnerNotExistError),
-      (BAD_REQUEST, "ITSA_CONTRACT_OBJECT_NOT_EXIST", BAD_REQUEST, ITSAContractObjectNotExistError),
+      (BAD_REQUEST, "BUSINESS_PARTNER_NOT_EXIST", BAD_REQUEST, RuleBusinessPartnerNotExistError),
+      (BAD_REQUEST, "ITSA_CONTRACT_OBJECT_NOT_EXIST", BAD_REQUEST, RuleItsaContractObjectNotExistError),
       (BAD_REQUEST, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, InternalError),
       (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
       (BAD_REQUEST, "BAD_GATEWAY", INTERNAL_SERVER_ERROR, InternalError),
