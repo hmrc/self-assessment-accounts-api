@@ -17,7 +17,7 @@ get:
         - read:self-assessment
 
   tags:
-    - Opting out of Coding Out
+    - Coding Out Status
 
   parameters:
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
