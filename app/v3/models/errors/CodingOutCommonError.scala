@@ -19,8 +19,8 @@ package v3.models.errors
 import api.models.errors.MtdError
 import play.api.http.Status.BAD_REQUEST
 
-object BusinessPartnerNotExistError
-    extends MtdError("BUSINESS_PARTNER_NOT_EXIST", "The remote endpoint has indicated that business partner does not exist for NINO.", BAD_REQUEST)
+object RuleBusinessPartnerNotExistError
+    extends MtdError("RULE_BUSINESS_PARTNER_NOT_EXIST", "The remote endpoint has indicated that business partner does not exist for NINO.", BAD_REQUEST)
 
-object ITSAContractObjectNotExistError
-    extends MtdError("ITSA_CONTRACT_OBJECT_NOT_EXIST", "The remote endpoint has indicated that ITSA Contract Object does not exist.", BAD_REQUEST)
+object RuleItsaContractObjectNotExistError
+    extends MtdError("RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST", "The remote endpoint has indicated that ITSA Contract Object does not exist.", BAD_REQUEST)

@@ -26,7 +26,7 @@ import v3.controllers.validators.MockRetrieveCodingOutStatusValidatorFactory
 import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
 import v3.services.MockRetrieveCodingOutStatusService
 import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.mtdResponseJson
-import v3.models.errors.BusinessPartnerNotExistError
+import v3.models.errors.RuleBusinessPartnerNotExistError
 import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -76,9 +76,9 @@ class RetrieveCodingOutStatusControllerSpec
 
         MockedRetrieveCodingOutStatusService
           .retrieveCodingOutStatus(requestData)
-          .returns(Future.successful(Left(ErrorWrapper(correlationId, BusinessPartnerNotExistError))))
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleBusinessPartnerNotExistError))))
 
-        runErrorTest(BusinessPartnerNotExistError)
+        runErrorTest(RuleBusinessPartnerNotExistError)
       }
     }
   }

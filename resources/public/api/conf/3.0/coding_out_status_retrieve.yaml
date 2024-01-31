@@ -17,7 +17,7 @@ get:
         - read:self-assessment
 
   tags:
-    - Opting out of Coding Out
+    - Coding Out Status
 
   parameters:
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
@@ -56,10 +56,10 @@ get:
               $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
             RULE_TAX_YEAR_RANGE_INVALID:
               $ref: "./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid"
-            BUSINESS_PARTNER_NOT_EXIST:
-              $ref: "./common/errors.yaml#/components/examples/businessPartnerNotExist"
-            ITSA_CONTRACT_OBJECT_NOT_EXIST:
-              $ref: "./common/errors.yaml#/components/examples/itsaContractObjectNotExist"
+            RULE_BUSINESS_PARTNER_NOT_EXIST:
+              $ref: "./common/errors.yaml#/components/examples/ruleBusinessPartnerNotExist"
+            RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST:
+              $ref: "./common/errors.yaml#/components/examples/ruleItsaContractObjectNotExist"
 
 
     "500":

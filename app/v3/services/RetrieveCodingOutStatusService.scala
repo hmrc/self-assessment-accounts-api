@@ -21,7 +21,7 @@ import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v3.connectors.RetrieveCodingOutStatusConnector
-import v3.models.errors.{BusinessPartnerNotExistError, ITSAContractObjectNotExistError}
+import v3.models.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
 import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
@@ -38,8 +38,8 @@ class RetrieveCodingOutStatusService @Inject()(connector: RetrieveCodingOutStatu
       "INVALID_REGIME"                 -> InternalError,
       "INVALID_CORRELATIONID"          -> InternalError,
       "DUPLICATE_SUBMISSION"           -> InternalError,
-      "BUSINESS_PARTNER_NOT_EXIST"     -> BusinessPartnerNotExistError,
-      "ITSA_CONTRACT_OBJECT_NOT_EXIST" -> ITSAContractObjectNotExistError,
+      "BUSINESS_PARTNER_NOT_EXIST"     -> RuleBusinessPartnerNotExistError,
+      "ITSA_CONTRACT_OBJECT_NOT_EXIST" -> RuleItsaContractObjectNotExistError,
       "REQUEST_NOT_PROCESSED"          -> InternalError,
       "SERVER_ERROR"                   -> InternalError,
       "BAD_GATEWAY"                    -> InternalError,
