@@ -16,42 +16,16 @@
 
 package v2.controllers.validators
 
-import api.controllers.validators.Validator
-import api.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.JsValue
 import v2.models.request.createOrAmendCodingOut.CreateOrAmendCodingOutRequestData
 
-trait MockCreateOrAmendCodingOutValidatorFactory extends MockFactory {
+trait MockCreateOrAmendCodingOutValidatorFactory extends MockValidatorFactory[CreateOrAmendCodingOutRequestData] {
 
   val mockCreateOrAmendCodingOutValidatorFactory: CreateOrAmendCodingOutValidatorFactory = mock[CreateOrAmendCodingOutValidatorFactory]
 
-  object MockedCreateOrAmendCodingOutValidatorFactory {
-
-    def validator(): CallHandler[Validator[CreateOrAmendCodingOutRequestData]] =
-      (mockCreateOrAmendCodingOutValidatorFactory.validator(_: String, _: String, _: JsValue, _: Boolean)).expects(*, *, *, *)
-
-  }
-
-  def willUseValidator(use: Validator[CreateOrAmendCodingOutRequestData]): CallHandler[Validator[CreateOrAmendCodingOutRequestData]] = {
-    MockedCreateOrAmendCodingOutValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: CreateOrAmendCodingOutRequestData): Validator[CreateOrAmendCodingOutRequestData] =
-    new Validator[CreateOrAmendCodingOutRequestData] {
-      def validate: Validated[Seq[MtdError], CreateOrAmendCodingOutRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[CreateOrAmendCodingOutRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[CreateOrAmendCodingOutRequestData] = new Validator[CreateOrAmendCodingOutRequestData] {
-    def validate: Validated[Seq[MtdError], CreateOrAmendCodingOutRequestData] = Invalid(result)
-  }
+  def validator(): CallHandler[Validator[CreateOrAmendCodingOutRequestData]] =
+    (mockCreateOrAmendCodingOutValidatorFactory.validator(_: String, _: String, _: JsValue, _: Boolean)).expects(*, *, *, *)
 
 }

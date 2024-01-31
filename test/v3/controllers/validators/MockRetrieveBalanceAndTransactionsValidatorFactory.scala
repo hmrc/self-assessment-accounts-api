@@ -16,59 +16,31 @@
 
 package v3.controllers.validators
 
-import api.controllers.validators.Validator
-import api.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import v3.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 
-trait MockRetrieveBalanceAndTransactionsValidatorFactory extends MockFactory {
+trait MockRetrieveBalanceAndTransactionsValidatorFactory extends MockValidatorFactory[RetrieveBalanceAndTransactionsRequestData] {
 
   val mockRetrieveBalanceAndTransactionsValidatorFactory: RetrieveBalanceAndTransactionsValidatorFactory =
     mock[RetrieveBalanceAndTransactionsValidatorFactory]
 
-  object MockedRetrieveBalanceAndTransactionsValidatorFactory {
-
-    def validator(): CallHandler[Validator[RetrieveBalanceAndTransactionsRequestData]] =
-      (
-        mockRetrieveBalanceAndTransactionsValidatorFactory
-          .validator(
-            _: String,
-            _: Option[String],
-            _: Option[String],
-            _: Option[String],
-            _: Option[String],
-            _: Option[String],
-            _: Option[String],
-            _: Option[String],
-            _: Option[String],
-            _: Option[String]
-          )
+  def validator(): CallHandler[Validator[RetrieveBalanceAndTransactionsRequestData]] =
+    (
+      mockRetrieveBalanceAndTransactionsValidatorFactory
+        .validator(
+          _: String,
+          _: Option[String],
+          _: Option[String],
+          _: Option[String],
+          _: Option[String],
+          _: Option[String],
+          _: Option[String],
+          _: Option[String],
+          _: Option[String],
+          _: Option[String]
         )
-        .expects(*, *, *, *, *, *, *, *, *, *)
-
-  }
-
-  def willUseValidator(
-      use: Validator[RetrieveBalanceAndTransactionsRequestData]): CallHandler[Validator[RetrieveBalanceAndTransactionsRequestData]] = {
-    MockedRetrieveBalanceAndTransactionsValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: RetrieveBalanceAndTransactionsRequestData): Validator[RetrieveBalanceAndTransactionsRequestData] =
-    new Validator[RetrieveBalanceAndTransactionsRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveBalanceAndTransactionsRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[RetrieveBalanceAndTransactionsRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[RetrieveBalanceAndTransactionsRequestData] =
-    new Validator[RetrieveBalanceAndTransactionsRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveBalanceAndTransactionsRequestData] = Invalid(result)
-    }
+      )
+      .expects(*, *, *, *, *, *, *, *, *, *)
 
 }

@@ -16,46 +16,18 @@
 
 package v2.controllers.validators
 
-import api.controllers.validators.Validator
-import api.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 
-trait MockListPaymentsAndAllocationDetailsValidatorFactory extends MockFactory {
+trait MockListPaymentsAndAllocationDetailsValidatorFactory extends MockValidatorFactory[ListPaymentsAndAllocationDetailsRequestData] {
 
   val mockListPaymentsAndAllocationDetailsValidatorFactory: ListPaymentsAndAllocationDetailsValidatorFactory =
     mock[ListPaymentsAndAllocationDetailsValidatorFactory]
 
-  object MockedListPaymentsAndAllocationDetailsValidatorFactory {
-
-    def validator(): CallHandler[Validator[ListPaymentsAndAllocationDetailsRequestData]] =
-      (mockListPaymentsAndAllocationDetailsValidatorFactory
-        .validator(_: String, _: Option[String], _: Option[String], _: Option[String], _: Option[String]))
-        .expects(*, *, *, *, *)
-
-  }
-
-  def willUseValidator(
-      use: Validator[ListPaymentsAndAllocationDetailsRequestData]): CallHandler[Validator[ListPaymentsAndAllocationDetailsRequestData]] = {
-    MockedListPaymentsAndAllocationDetailsValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: ListPaymentsAndAllocationDetailsRequestData): Validator[ListPaymentsAndAllocationDetailsRequestData] =
-    new Validator[ListPaymentsAndAllocationDetailsRequestData] {
-      def validate: Validated[Seq[MtdError], ListPaymentsAndAllocationDetailsRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[ListPaymentsAndAllocationDetailsRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[ListPaymentsAndAllocationDetailsRequestData] =
-    new Validator[ListPaymentsAndAllocationDetailsRequestData] {
-      def validate: Validated[Seq[MtdError], ListPaymentsAndAllocationDetailsRequestData] = Invalid(result)
-    }
+  def validator(): CallHandler[Validator[ListPaymentsAndAllocationDetailsRequestData]] =
+    (mockListPaymentsAndAllocationDetailsValidatorFactory
+      .validator(_: String, _: Option[String], _: Option[String], _: Option[String], _: Option[String]))
+      .expects(*, *, *, *, *)
 
 }

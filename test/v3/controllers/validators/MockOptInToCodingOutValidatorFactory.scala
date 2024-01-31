@@ -16,7 +16,7 @@
 
 package v3.controllers.validators
 
-import api.controllers.validators.Validator
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
 import v3.models.request.optInToCodingOut.OptInToCodingOutRequestData
 

@@ -16,42 +16,15 @@
 
 package v2.controllers.validators
 
-import api.controllers.validators.Validator
-import api.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 
-trait MockRetrieveCodingOutValidatorFactory extends MockFactory {
+trait MockRetrieveCodingOutValidatorFactory extends MockValidatorFactory[RetrieveCodingOutRequestData] {
 
   val mockRetrieveCodingOutValidatorFactory: RetrieveCodingOutValidatorFactory = mock[RetrieveCodingOutValidatorFactory]
 
-  object MockedRetrieveCodingOutValidatorFactory {
-
-    def validator(): CallHandler[Validator[RetrieveCodingOutRequestData]] =
-      (mockRetrieveCodingOutValidatorFactory.validator(_: String, _: String, _: Option[String])).expects(*, *, *)
-
-  }
-
-  def willUseValidator(use: Validator[RetrieveCodingOutRequestData]): CallHandler[Validator[RetrieveCodingOutRequestData]] = {
-    MockedRetrieveCodingOutValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: RetrieveCodingOutRequestData): Validator[RetrieveCodingOutRequestData] =
-    new Validator[RetrieveCodingOutRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[RetrieveCodingOutRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[RetrieveCodingOutRequestData] =
-    new Validator[RetrieveCodingOutRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] = Invalid(result)
-    }
+  def validator(): CallHandler[Validator[RetrieveCodingOutRequestData]] =
+    (mockRetrieveCodingOutValidatorFactory.validator(_: String, _: String, _: Option[String])).expects(*, *, *)
 
 }
