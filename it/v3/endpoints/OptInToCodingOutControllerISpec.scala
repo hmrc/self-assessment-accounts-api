@@ -21,7 +21,7 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
-import play.api.libs.ws.{WSRequest, WSResponse}
+import play.api.libs.ws.{EmptyBody, WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
@@ -39,7 +39,7 @@ class OptInToCodingOutControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUrl, NO_CONTENT)
         }
 
-        val response: WSResponse = await(request.get())
+        val response: WSResponse = await(request.post(EmptyBody))
         response.status shouldBe NO_CONTENT
         response.header("Content-Type") shouldBe None
       }
@@ -59,7 +59,7 @@ class OptInToCodingOutControllerISpec extends IntegrationBaseSpec {
           MtdIdLookupStub.ninoFound(nino)
         }
 
-        val response: WSResponse = await(request.get())
+        val response: WSResponse = await(request.post(EmptyBody))
         response.status shouldBe expectedStatus
         response.json shouldBe Json.toJson(expectedBody)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -83,7 +83,7 @@ class OptInToCodingOutControllerISpec extends IntegrationBaseSpec {
             DownstreamStub.onError(DownstreamStub.DELETE, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request.get())
+          val response: WSResponse = await(request.post(EmptyBody))
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
