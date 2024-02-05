@@ -1,4 +1,4 @@
-get:
+post:
   summary: Opt In to Coding Out{{#unless (releasedInProduction 'cl402')}} [Test only]{{/unless}}
   description: |
     This endpoint enables a specified customer (identified by a National Insurance number) and tax year to opt in to coding out.
@@ -6,12 +6,12 @@ get:
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
     
-    | Header Value (Gov-Test-Scenario) | Scenario                                                                                                                                                |
-    |----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
-    | N/A - DEFAULT                    | Simulates a successful response with latest values.                                                                                                     |
-    | BUSINESS_PARTNER_NOT_EXIST       | Simulates a scenario where the NINO is valid but is not registered with ITSD as a business partner.                                                     |
-    | ITSA_CONTRACT_OBJECT_NOT_EXIST   | Simulates a scenario where the is NINO valid and is registered with ITSD as a business partner, but the ITSA contract object does not exist for the NINO|
-    | ALREADY_OPTED_IN                 | Customer cannot be opted in to coding out when they are already opted in to coding out.                                                                 |
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                                                                                                 |
+    |----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with latest values.                                                                                                      |
+    | BUSINESS_PARTNER_NOT_EXIST       | Simulates a scenario where the NINO is valid but is not registered with ITSD as a business partner.                                                      |
+    | ITSA_CONTRACT_OBJECT_NOT_EXIST   | Simulates a scenario where the NINO is valid and is registered with ITSD as a business partner, but the ITSA contract object does not exist for the NINO.|
+    | ALREADY_OPTED_IN                 | Simulates a scenario where the customer cannot be opted in because they are already opted in.                                                            |
 
   security:
     - User-Restricted:
