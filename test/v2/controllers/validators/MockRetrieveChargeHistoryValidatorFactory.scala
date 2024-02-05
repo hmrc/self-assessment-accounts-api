@@ -16,42 +16,15 @@
 
 package v2.controllers.validators
 
-import api.controllers.validators.Validator
-import api.models.errors.MtdError
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 
-trait MockRetrieveChargeHistoryValidatorFactory extends MockFactory {
+trait MockRetrieveChargeHistoryValidatorFactory extends MockValidatorFactory[RetrieveChargeHistoryRequestData] {
 
   val mockRetrieveChargeHistoryValidatorFactory: RetrieveChargeHistoryValidatorFactory = mock[RetrieveChargeHistoryValidatorFactory]
 
-  object MockedRetrieveChargeHistoryValidatorFactory {
-
-    def validator(): CallHandler[Validator[RetrieveChargeHistoryRequestData]] =
-      (mockRetrieveChargeHistoryValidatorFactory.validator(_: String, _: String)).expects(*, *)
-
-  }
-
-  def willUseValidator(use: Validator[RetrieveChargeHistoryRequestData]): CallHandler[Validator[RetrieveChargeHistoryRequestData]] = {
-    MockedRetrieveChargeHistoryValidatorFactory
-      .validator()
-      .anyNumberOfTimes()
-      .returns(use)
-  }
-
-  def returningSuccess(result: RetrieveChargeHistoryRequestData): Validator[RetrieveChargeHistoryRequestData] =
-    new Validator[RetrieveChargeHistoryRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveChargeHistoryRequestData] = Valid(result)
-    }
-
-  def returning(result: MtdError*): Validator[RetrieveChargeHistoryRequestData] = returningErrors(result)
-
-  def returningErrors(result: Seq[MtdError]): Validator[RetrieveChargeHistoryRequestData] =
-    new Validator[RetrieveChargeHistoryRequestData] {
-      def validate: Validated[Seq[MtdError], RetrieveChargeHistoryRequestData] = Invalid(result)
-    }
+  def validator(): CallHandler[Validator[RetrieveChargeHistoryRequestData]] =
+    (mockRetrieveChargeHistoryValidatorFactory.validator(_: String, _: String)).expects(*, *)
 
 }
