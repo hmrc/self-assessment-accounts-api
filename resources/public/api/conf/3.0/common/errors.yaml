@@ -287,11 +287,11 @@ components:
         code: RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST
         message: ITSA contract object does not exist.
 
-    #500
-    internalServerError:
+    #400
+    ruleAlreadyOptedIn:
       description: |
-        The service is currently experiencing problems that require live service intervention.
+        The remote endpoint has indicated that customer is already opted in to coding out.
       value:
-        code: INTERNAL_SERVER_ERROR
-        message: Service unavailable
+        code: RULE_ALREADY_OPTED_IN
+        message: Customer is already opted in to coding out
 

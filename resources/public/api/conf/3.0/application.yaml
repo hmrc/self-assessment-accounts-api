@@ -68,4 +68,6 @@ paths:
 # {{#if (enabled 'cl402')}}
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/status:
     $ref: "./coding_out_status_retrieve.yaml"
+  /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/opt-in:
+    $ref: "./opt_in_to_coding_out.yaml"
 # {{/if}}
