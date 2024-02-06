@@ -295,11 +295,3 @@ components:
         code: RULE_ALREADY_OPTED_IN
         message: Customer is already opted in to coding out
 
-    #500
-    internalServerError:
-      description: |
-        The service is currently experiencing problems that require live service intervention.
-      value:
-        code: INTERNAL_SERVER_ERROR
-        message: Service unavailable
-

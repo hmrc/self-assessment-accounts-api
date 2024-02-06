@@ -61,15 +61,3 @@ get:
             RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST:
               $ref: "./common/errors.yaml#/components/examples/ruleItsaContractObjectNotExist"
 
-
-    "500":
-      description: Server Error
-      content:
-        application/json:
-          schema:
-            $ref: './schemas/error-response.yaml'
-          examples:
-            INTERNAL_SERVER_ERROR:
-              $ref: "./common/errors.yaml#/components/examples/internalServerError"
-
-
