@@ -30,3 +30,12 @@ components:
         type: string
         example: X92AM39DLE3D
       required: true
+    codingOutTaxYear:
+      name: taxYear
+      in: path
+      description: |
+        The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. No gaps are allowed, for example, 2020-22 is not valid.
+      schema:
+        type: string
+        example: 2021-22
+      required: true
