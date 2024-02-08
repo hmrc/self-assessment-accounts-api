@@ -77,14 +77,6 @@ class RetrieveCodingOutStatusValidatorFactorySpec extends UnitSpec with MockAppC
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearRangeInvalidError))
       }
 
-      "an invalid tax year, before the minimum, is supplied" in {
-        setupMocks()
-
-        val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
-          validator(validNino, "2022-23").validateAndWrapResult()
-
-        result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
-      }
     }
 
     "return multiple errors" when {
