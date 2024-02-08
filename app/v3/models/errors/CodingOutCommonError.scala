@@ -22,8 +22,8 @@ import play.api.http.Status.BAD_REQUEST
 object RuleBusinessPartnerNotExistError
     extends MtdError("RULE_BUSINESS_PARTNER_NOT_EXIST", "Provided NINO is not registered as business partner", BAD_REQUEST)
 
-object RuleItsaContractObjectNotExistError
-    extends MtdError("RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST", "ITSA contract object does not exist", BAD_REQUEST)
+object RuleItsaContractObjectNotExistError extends MtdError("RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST", "ITSA contract object does not exist", BAD_REQUEST)
 
-object RuleAlreadyOptedInError
-  extends MtdError("RULE_ALREADY_OPTED_IN", "Customer is already opted in to coding out", BAD_REQUEST)
+object RuleAlreadyOptedInError extends MtdError("RULE_ALREADY_OPTED_IN", "Customer is already opted in to coding out", BAD_REQUEST)
+
+object RuleAlreadyOptedOutError extends MtdError("RULE_ALREADY_OPTED_OUT", "Customer is already opted out of coding out", BAD_REQUEST)
