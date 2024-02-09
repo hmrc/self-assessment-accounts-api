@@ -295,3 +295,11 @@ components:
         code: RULE_ALREADY_OPTED_IN
         message: Customer is already opted in to coding out
 
+    #400
+    ruleAlreadyOptedOut:
+      description: |
+        The opt-out indicator cannot be set to the same value it currently holds.
+      value:
+        code: RULE_ALREADY_OPTED_OUT
+        message: Customer is already opted out of coding out
+

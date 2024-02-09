@@ -1,0 +1,63 @@
+post:
+  summary: Opt Out of Coding Out{{#unless (releasedInProduction 'cl402')}} [Test only]{{/unless}}
+  description: |
+    This endpoint enables a specified customer (identified by a National Insurance number) and tax year to opt out of coding out. Opt-out status can be changed up to and including 30 December following the end of the specified tax year. Opt-out status cannot be changed after the customer has made a final declaration for the specified tax year.
+        
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                                                                                                                                 |
+    |----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates a successful response with latest values.                                                                                                      |
+    | BUSINESS_PARTNER_NOT_EXIST       | Simulates a scenario where the NINO is valid but is not registered with ITSD as a business partner.                                                      |
+    | ITSA_CONTRACT_OBJECT_NOT_EXIST   | Simulates a scenario where the NINO is valid and is registered with ITSD as a business partner, but the ITSA contract object does not exist for the NINO.|
+    | ALREADY_OPTED_OUT                | Simulates a scenario where the customer cannot be opted out because they are already opted out.                                                          |
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  tags:
+    - Coding Out Status
+
+  parameters:
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/codingOutTaxYear"
+
+  responses:
+    "204":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_TAX_YEAR:
+              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
+            RULE_BUSINESS_PARTNER_NOT_EXIST:
+              $ref: "./common/errors.yaml#/components/examples/ruleBusinessPartnerNotExist"
+            RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST:
+              $ref: "./common/errors.yaml#/components/examples/ruleItsaContractObjectNotExist"
+            RULE_ALREADY_OPTED_OUT:
+              $ref: "./common/errors.yaml#/components/examples/ruleAlreadyOptedOut"
+
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
