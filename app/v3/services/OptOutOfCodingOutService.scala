@@ -20,16 +20,15 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-import v3.connectors.RetrieveCodingOutStatusConnector
-import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
-import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
-import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
+import v3.connectors.CreateOrAmendCodingOutOptOutConnector
+import v3.models.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import v3.models.request.optOutOfCodingOut.OptOutOfCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutStatusService @Inject() (connector: RetrieveCodingOutStatusConnector) extends BaseService {
+class OptOutOfCodingOutService @Inject() (connector: CreateOrAmendCodingOutOptOutConnector) extends BaseService {
 
   private val errorMap: Map[String, MtdError] =
     Map(
@@ -41,17 +40,15 @@ class RetrieveCodingOutStatusService @Inject() (connector: RetrieveCodingOutStat
       "ITSA_CONTRACT_OBJECT_NOT_EXIST" -> RuleItsaContractObjectNotExistError,
       "REQUEST_NOT_PROCESSED"          -> InternalError,
       "DUPLICATE_ACKNOWLEDGEMENT_REF"  -> InternalError,
-      "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedOutError,
+      "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedInError,
       "SERVER_ERROR"                   -> InternalError,
       "BAD_GATEWAY"                    -> InternalError,
       "SERVICE_UNAVAILABLE"            -> InternalError
     )
 
-  def retrieveCodingOutStatus(request: RetrieveCodingOutStatusRequestData)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveCodingOutStatusResponse]] = {
+  def optOutOfCodingOut(request: OptOutOfCodingOutRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
-    connector.retrieveCodingOutStatus(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.amendCodingOutOptOut(request.nino, request.taxYear).map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
 }

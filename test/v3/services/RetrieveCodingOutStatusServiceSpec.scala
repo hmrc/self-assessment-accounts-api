@@ -21,25 +21,24 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v3.connectors.MockRetrieveCodingOutStatusConnector
-import v3.models.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
 import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.Future
 
 class RetrieveCodingOutStatusServiceSpec extends ServiceSpec {
-
   private val nino    = "AA123456A"
   private val taxYear = "2014"
+
+  val retrieveCodingOutStatusResponse: RetrieveCodingOutStatusResponse =
+    RetrieveCodingOutStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear(taxYear), optOutIndicator = true)
 
   private val requestData: RetrieveCodingOutStatusRequestData =
     RetrieveCodingOutStatusRequestData(
       Nino(nino),
       TaxYear(taxYear)
     )
-
-  val retrieveCodingOutStatusResponse: RetrieveCodingOutStatusResponse =
-    RetrieveCodingOutStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear(taxYear), optOutIndicator = true)
 
   "RetrieveCodingOutStatusService" should {
     "service call successful" when {
@@ -70,10 +69,11 @@ class RetrieveCodingOutStatusServiceSpec extends ServiceSpec {
           "INVALID_TAX_YEAR"               -> InternalError,
           "INVALID_REGIME"                 -> InternalError,
           "INVALID_CORRELATIONID"          -> InternalError,
-          "DUPLICATE_SUBMISSION"           -> InternalError,
           "BUSINESS_PARTNER_NOT_EXIST"     -> RuleBusinessPartnerNotExistError,
           "ITSA_CONTRACT_OBJECT_NOT_EXIST" -> RuleItsaContractObjectNotExistError,
           "REQUEST_NOT_PROCESSED"          -> InternalError,
+          "DUPLICATE_ACKNOWLEDGEMENT_REF"  -> InternalError,
+          "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedOutError,
           "SERVER_ERROR"                   -> InternalError,
           "BAD_GATEWAY"                    -> InternalError,
           "SERVICE_UNAVAILABLE"            -> InternalError

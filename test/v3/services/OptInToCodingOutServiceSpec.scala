@@ -26,14 +26,14 @@ import v3.models.request.optInToCodingOut.OptInToCodingOutRequestData
 
 import scala.concurrent.Future
 
-class OutInToCodingOutServiceSpec extends ServiceSpec {
+class OptInToCodingOutServiceSpec extends ServiceSpec {
 
   private val nino    = Nino("AA123456A")
   private val taxYear = TaxYear("2014")
 
   private val requestData = OptInToCodingOutRequestData(nino, taxYear)
 
-  "OutInToCodingOutService" when {
+  "OptInToCodingOutService" when {
     "service call successful" must {
       "return success" in new Test {
         MockDeleteCodingOutOptOutConnector.deleteCodingOutOptOut(nino, taxYear) returns
