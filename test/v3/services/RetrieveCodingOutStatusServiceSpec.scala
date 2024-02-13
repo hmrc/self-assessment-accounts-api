@@ -21,7 +21,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v3.connectors.MockRetrieveCodingOutStatusConnector
-import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import v3.models.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
 import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 
@@ -69,11 +69,10 @@ class RetrieveCodingOutStatusServiceSpec extends ServiceSpec {
           "INVALID_TAX_YEAR"               -> InternalError,
           "INVALID_REGIME"                 -> InternalError,
           "INVALID_CORRELATIONID"          -> InternalError,
+          "DUPLICATE_SUBMISSION"           -> InternalError,
           "BUSINESS_PARTNER_NOT_EXIST"     -> RuleBusinessPartnerNotExistError,
           "ITSA_CONTRACT_OBJECT_NOT_EXIST" -> RuleItsaContractObjectNotExistError,
           "REQUEST_NOT_PROCESSED"          -> InternalError,
-          "DUPLICATE_ACKNOWLEDGEMENT_REF"  -> InternalError,
-          "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedOutError,
           "SERVER_ERROR"                   -> InternalError,
           "BAD_GATEWAY"                    -> InternalError,
           "SERVICE_UNAVAILABLE"            -> InternalError
