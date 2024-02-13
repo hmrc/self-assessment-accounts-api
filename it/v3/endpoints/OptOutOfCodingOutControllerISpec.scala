@@ -25,7 +25,7 @@ import play.api.libs.ws.{EmptyBody, WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v3.models.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 
 class OptOutOfCodingOutControllerISpec extends IntegrationBaseSpec {
 
@@ -99,7 +99,7 @@ class OptOutOfCodingOutControllerISpec extends IntegrationBaseSpec {
         (UNPROCESSABLE_ENTITY, "ITSA_CONTRACT_OBJECT_NOT_EXIST", BAD_REQUEST, RuleItsaContractObjectNotExistError),
         (UNPROCESSABLE_ENTITY, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "DUPLICATE_ACKNOWLEDGEMENT_REF", INTERNAL_SERVER_ERROR, InternalError),
-        (UNPROCESSABLE_ENTITY, "OPT_OUT_IND_ALREADY_SET", BAD_REQUEST, RuleAlreadyOptedInError),
+        (UNPROCESSABLE_ENTITY, "OPT_OUT_IND_ALREADY_SET", BAD_REQUEST, RuleAlreadyOptedOutError),
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (BAD_GATEWAY, "BAD_GATEWAY", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
