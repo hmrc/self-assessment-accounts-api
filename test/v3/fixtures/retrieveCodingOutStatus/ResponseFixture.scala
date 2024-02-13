@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,16 @@ object ResponseFixture {
          |  "nino": "AB123456A",
          |  "taxYear": 2024,
          |  "optOutIndicator": true
+         |}
+     """.stripMargin
+    )
+    .as[JsObject]
+
+  val downstreamOptOutOfCodingOutResponseJson: JsObject = Json
+    .parse(
+      s"""
+         |{
+         |  "processingDate": "2020-12-17T09:30:47Z"
          |}
      """.stripMargin
     )

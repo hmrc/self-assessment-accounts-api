@@ -22,6 +22,7 @@ import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import api.models.domain.{EmptyJsonBody, Nino, TaxYear}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.models.response.optOutOfCodingOut.OptOutOfCodingOutResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -32,9 +33,12 @@ class CreateOrAmendCodingOutOptOutConnector @Inject() (val http: HttpClient, val
   def amendCodingOutOptOut(nino: Nino, taxYear: TaxYear)(implicit
       hc: HeaderCarrier,
       ec: ExecutionContext,
-      correlationId: String): Future[DownstreamOutcome[Unit]] = {
+      correlationId: String): Future[DownstreamOutcome[OptOutOfCodingOutResponse]] = {
 
-    put(EmptyJsonBody, uri = Ifs1Uri[Unit](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}"))
+    put(
+      EmptyJsonBody,
+      uri = Ifs1Uri[OptOutOfCodingOutResponse](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")
+    )
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.models.request.optOutOfCodingOut.OptOutOfCodingOutRequestData
+import v3.models.response.optOutOfCodingOut.OptOutOfCodingOutResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -30,7 +31,8 @@ trait MockOptOutOfCodingOutService extends MockFactory {
 
   object MockedOptOutOfCodingOutService {
 
-    def optOutOfCodingOut(request: OptOutOfCodingOutRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] = {
+    def optOutOfCodingOut(
+        request: OptOutOfCodingOutRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[OptOutOfCodingOutResponse]]]] = {
       (mockOptOutOfCodingOutService
         .optOutOfCodingOut(_: OptOutOfCodingOutRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(request, *, *)
