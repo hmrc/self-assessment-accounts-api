@@ -23,6 +23,7 @@ import cats.implicits._
 import v3.connectors.CreateOrAmendCodingOutOptOutConnector
 import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.models.request.optOutOfCodingOut.OptOutOfCodingOutRequestData
+import v3.models.response.optOutOfCodingOut.OptOutOfCodingOutResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -46,7 +47,9 @@ class OptOutOfCodingOutService @Inject() (connector: CreateOrAmendCodingOutOptOu
       "SERVICE_UNAVAILABLE"            -> InternalError
     )
 
-  def optOutOfCodingOut(request: OptOutOfCodingOutRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+  def optOutOfCodingOut(request: OptOutOfCodingOutRequestData)(implicit
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[ServiceOutcome[OptOutOfCodingOutResponse]] = {
 
     connector.amendCodingOutOptOut(request.nino, request.taxYear).map(_.leftMap(mapDownstreamErrors(errorMap)))
   }

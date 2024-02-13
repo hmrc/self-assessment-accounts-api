@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import play.api.libs.ws.{EmptyBody, WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
+import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.downstreamOptOutOfCodingOutResponseJson
 import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 
 class OptOutOfCodingOutControllerISpec extends IntegrationBaseSpec {
@@ -36,7 +37,7 @@ class OptOutOfCodingOutControllerISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, NO_CONTENT)
+          DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUrl, OK, downstreamOptOutOfCodingOutResponseJson)
         }
 
         val response: WSResponse = await(request.post(EmptyBody))

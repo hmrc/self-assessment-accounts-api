@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import play.api.mvc.Result
 import v3.controllers.validators.MockOptOutOfCodingOutValidatorFactory
 import v3.models.errors.RuleBusinessPartnerNotExistError
 import v3.models.request.optOutOfCodingOut.OptOutOfCodingOutRequestData
+import v3.models.response.optOutOfCodingOut.OptOutOfCodingOutResponse
 import v3.services.MockOptOutOfCodingOutService
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,7 +44,7 @@ class OptOutOfCodingOutControllerSpec
         willUseValidator(returningSuccess(requestData))
 
         MockedOptOutOfCodingOutService.optOutOfCodingOut(requestData) returns
-          Future.successful(Right(ResponseWrapper(correlationId, ())))
+          Future.successful(Right(ResponseWrapper(correlationId, response)))
 
         runOkTest(expectedStatus = NO_CONTENT)
       }
@@ -74,6 +75,8 @@ class OptOutOfCodingOutControllerSpec
       nino = Nino(nino),
       taxYear = TaxYear.fromMtd(taxYear)
     )
+
+    protected val response = OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
     private val controller = new OptOutOfCodingOutController(
       authService = mockEnrolmentsAuthService,

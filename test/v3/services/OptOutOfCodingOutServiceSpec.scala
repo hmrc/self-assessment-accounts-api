@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,22 +23,24 @@ import api.services.ServiceSpec
 import v3.connectors.MockCreateOrAmendCodingOutOptOutConnector
 import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.models.request.optOutOfCodingOut.OptOutOfCodingOutRequestData
+import v3.models.response.optOutOfCodingOut.OptOutOfCodingOutResponse
 
 import scala.concurrent.Future
 
 class OptOutOfCodingOutServiceSpec extends ServiceSpec {
 
-  private val nino        = Nino("AA123456A")
-  private val taxYear     = TaxYear("2014")
-  private val requestData = OptOutOfCodingOutRequestData(nino, taxYear)
+  private val nino               = Nino("AA123456A")
+  private val taxYear            = TaxYear("2014")
+  private val requestData        = OptOutOfCodingOutRequestData(nino, taxYear)
+  private val downstreamResponse = OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
   "OptOutOfCodingOutService" when {
     "service call successful" must {
       "return success" in new Test {
         MockCreateOrAmendCodingOutOptOutConnector.amendCodingOutOptOut(nino, taxYear) returns
-          Future.successful(Right(ResponseWrapper(correlationId, ())))
+          Future.successful(Right(ResponseWrapper(correlationId, downstreamResponse)))
 
-        await(service.optOutOfCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, ()))
+        await(service.optOutOfCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, downstreamResponse))
       }
     }
 
