@@ -21,7 +21,7 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v3.connectors.MockCreateOrAmendCodingOutOptOutConnector
-import v3.models.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.models.request.optOutOfCodingOut.OptOutOfCodingOutRequestData
 
 import scala.concurrent.Future
@@ -63,7 +63,7 @@ class OptOutOfCodingOutServiceSpec extends ServiceSpec {
             "ITSA_CONTRACT_OBJECT_NOT_EXIST" -> RuleItsaContractObjectNotExistError,
             "REQUEST_NOT_PROCESSED"          -> InternalError,
             "DUPLICATE_ACKNOWLEDGEMENT_REF"  -> InternalError,
-            "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedInError,
+            "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedOutError,
             "BAD_GATEWAY"                    -> InternalError,
             "SERVER_ERROR"                   -> InternalError,
             "SERVICE_UNAVAILABLE"            -> InternalError

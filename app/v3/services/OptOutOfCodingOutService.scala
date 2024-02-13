@@ -21,7 +21,7 @@ import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
 import v3.connectors.CreateOrAmendCodingOutOptOutConnector
-import v3.models.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.models.request.optOutOfCodingOut.OptOutOfCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -40,7 +40,7 @@ class OptOutOfCodingOutService @Inject() (connector: CreateOrAmendCodingOutOptOu
       "ITSA_CONTRACT_OBJECT_NOT_EXIST" -> RuleItsaContractObjectNotExistError,
       "REQUEST_NOT_PROCESSED"          -> InternalError,
       "DUPLICATE_ACKNOWLEDGEMENT_REF"  -> InternalError,
-      "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedInError,
+      "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedOutError,
       "SERVER_ERROR"                   -> InternalError,
       "BAD_GATEWAY"                    -> InternalError,
       "SERVICE_UNAVAILABLE"            -> InternalError
