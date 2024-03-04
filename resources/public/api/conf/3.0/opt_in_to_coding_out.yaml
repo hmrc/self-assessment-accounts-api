@@ -12,6 +12,8 @@ post:
     | BUSINESS_PARTNER_NOT_EXIST       | Simulates a scenario where the NINO is valid but is not registered with ITSD as a business partner.                                                      |
     | ITSA_CONTRACT_OBJECT_NOT_EXIST   | Simulates a scenario where the NINO is valid and is registered with ITSD as a business partner, but the ITSA contract object does not exist for the NINO.|
     | ALREADY_OPTED_IN                 | Simulates a scenario where the customer cannot be opted in because they are already opted in.                                                            |
+    | STATEFUL                         | Performs a stateful Opt In to Coding Out.                                                                                                                |
+
 
   security:
     - User-Restricted:

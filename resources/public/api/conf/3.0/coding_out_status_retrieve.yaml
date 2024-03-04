@@ -11,6 +11,8 @@ get:
     | N/A - DEFAULT                           | Simulates a successful response with latest values.                |
     | BUSINESS_PARTNER_NOT_EXIST              | Simulates a scenario where the business partner does not exist.    |
     | ITSA_CONTRACT_OBJECT_NOT_EXIST          | Simulates a scenario where the ITSA contract object does not exist.|
+    | STATEFUL                                | Performs a stateful Retrieve Coding Out Status.                    |
+
 
   security:
     - User-Restricted:
