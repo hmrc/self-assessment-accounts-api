@@ -51,10 +51,10 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
     val connector: RetrieveChargeHistoryConnector =
       new RetrieveChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
   }
 
   "RetrieveChargeHistoryConnector" when {

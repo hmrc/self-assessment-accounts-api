@@ -18,8 +18,9 @@ package v2.controllers
 
 import api.controllers._
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import routing.{Version, Version2}
+import routing.Version
 import utils.IdGenerator
 import v2.controllers.validators.DeleteCodingOutValidatorFactory
 import v2.services.DeleteCodingOutService
@@ -34,7 +35,7 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
                                            service: DeleteCodingOutService,
                                            auditService: AuditService,
                                            cc: ControllerComponents,
-                                           idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                           idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =
@@ -55,7 +56,7 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
             auditService,
             auditType = "DeleteCodingOutUnderpayments",
             transactionName = "delete-coding-out-underpayments",
-            apiVersion = Version.from(request, orElse = Version2),
+            apiVersion = Version(request),
             params = Map("nino" -> nino, "taxYear" -> taxYear)
           ))
 
