@@ -41,7 +41,7 @@ object ResponseFixture {
          |{
          |  "processingDate": "2023-12-17T09:30:47Z",
          |  "nino": "AB123456A",
-         |  "taxYear": 2024,
+         |  "taxYear": "2024",
          |  "optOutIndicator": true
          |}
      """.stripMargin
