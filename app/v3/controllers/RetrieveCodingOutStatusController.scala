@@ -17,8 +17,9 @@
 package v3.controllers
 
 import api.controllers._
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import routing.{Version, Version3}
 import utils.IdGenerator
 import v3.controllers.validators.RetrieveCodingOutStatusValidatorFactory
 import v3.services.RetrieveCodingOutStatusService
@@ -31,6 +32,7 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
                                                    val lookupService: MtdIdLookupService,
                                                    validatorFactory: RetrieveCodingOutStatusValidatorFactory,
                                                    service: RetrieveCodingOutStatusService,
+                                                   auditService: AuditService,
                                                    cc: ControllerComponents,
                                                    idGenerator: IdGenerator)(implicit ec: ExecutionContext)
     extends AuthorisedController(cc) {
@@ -41,15 +43,24 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
   def retrieveCodingOutStatus(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
-      val validator                    = validatorFactory.validator(nino, taxYear)
+
+      val validator = validatorFactory.validator(nino, taxYear)
 
       val requestHandler =
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieveCodingOutStatus)
           .withPlainJsonResult()
+          .withAuditing(
+            AuditHandler(
+              auditService,
+              auditType = "RetrieveCodingOutStatus",
+              transactionName = "retrieve-coding-out-status",
+              apiVersion = Version.from(request, orElse = Version3),
+              params = Map("nino" -> nino, "taxYear" -> taxYear),
+              includeResponse = true
+            ))
       requestHandler.handleRequest()
     }
   }
-
 }

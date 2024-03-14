@@ -84,6 +84,7 @@ class DeleteCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
+
     override protected def callController(): Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
