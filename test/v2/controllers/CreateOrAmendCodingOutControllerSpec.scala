@@ -164,7 +164,6 @@ class CreateOrAmendCodingOutControllerSpec
     private val controller = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
-      appConfig = mockAppConfig,
       validatorFactory = mockCreateOrAmendCodingOutValidatorFactory,
       service = mockCreateOrAmendCodingOutService,
       hateoasFactory = mockHateoasFactory,
@@ -173,7 +172,7 @@ class CreateOrAmendCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
+    MockAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
 
     protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
 
@@ -182,7 +181,7 @@ class CreateOrAmendCodingOutControllerSpec
         auditType = "CreateAmendCodingOutUnderpayment",
         transactionName = "create-amend-coding-out-underpayment",
         detail = GenericAuditDetail(
-          versionNumber = "2.0",
+          versionNumber = apiVersion.name,
           userType = "Individual",
           agentReferenceNumber = None,
           params = Map("nino" -> nino, "taxYear" -> taxYear),

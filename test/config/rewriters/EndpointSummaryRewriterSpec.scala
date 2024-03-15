@@ -28,7 +28,7 @@ class EndpointSummaryRewriterSpec extends UnitSpec with MockAppConfig {
 
     "check() is given coding_out_create_and_amend.yaml with the endpoint API docs disabled (assuming in production)" should {
       "indicate rewrite needed" in {
-        MockedAppConfig.endpointReleasedInProduction("2.0", "coding-out-create-and-amend") returns false
+        MockAppConfig.endpointReleasedInProduction("2.0", "coding-out-create-and-amend") returns false
         val result = check("2.0", "coding_out_create_and_amend.yaml")
         result shouldBe true
       }
@@ -36,7 +36,7 @@ class EndpointSummaryRewriterSpec extends UnitSpec with MockAppConfig {
 
     "check() is given any other combination" should {
       "indicate rewrite not needed" in {
-        MockedAppConfig.endpointReleasedInProduction("2.0", "coding-out-create-and-amend") returns true
+        MockAppConfig.endpointReleasedInProduction("2.0", "coding-out-create-and-amend") returns true
         val result = check("2.0", "coding_out_create_and_amend.yaml")
         result shouldBe false
       }

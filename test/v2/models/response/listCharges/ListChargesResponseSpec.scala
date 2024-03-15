@@ -51,7 +51,7 @@ class ListChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   "LinksFactory.itemLinks" should {
     "return the expected links" in {
-      MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
+      MockAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
 
       val result = ListChargesResponse.LinksFactory.itemLinks(
         mockAppConfig,
@@ -67,7 +67,7 @@ class ListChargesResponseSpec extends UnitSpec with MockAppConfig {
 
   "LinksFactory.links" should {
     "return the expected links" in {
-      MockedAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
+      MockAppConfig.apiGatewayContext.returns("context").anyNumberOfTimes()
 
       val result = ListChargesResponse.LinksFactory.links(
         mockAppConfig,

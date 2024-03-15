@@ -119,7 +119,7 @@ class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with JsonError
   private def validator(nino: String, taxYear: String, body: JsValue) =
     validatorFactory.validator(nino, taxYear, body, temporalValidationEnabled = true)
 
-  private def setupMocks(): Unit = (MockedAppConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
+  private def setupMocks(): Unit = (MockAppConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
 
   "running a validation" should {
     "return the parsed domain object" when {

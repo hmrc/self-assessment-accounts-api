@@ -18,6 +18,7 @@ package v2.controllers
 
 import api.controllers._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v2.controllers.validators.ListPaymentsAndAllocationDetailsValidatorFactory
@@ -32,7 +33,7 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                                                             validatorFactory: ListPaymentsAndAllocationDetailsValidatorFactory,
                                                             service: ListPaymentsAndAllocationDetailsService,
                                                             cc: ControllerComponents,
-                                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =

@@ -18,6 +18,7 @@ package v3.controllers
 
 import api.controllers._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v3.controllers.validators.OptInToCodingOutValidatorFactory
@@ -32,7 +33,7 @@ class OptInToCodingOutController @Inject() (val authService: EnrolmentsAuthServi
                                             validatorFactory: OptInToCodingOutValidatorFactory,
                                             service: OptInToCodingOutService,
                                             cc: ControllerComponents,
-                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =

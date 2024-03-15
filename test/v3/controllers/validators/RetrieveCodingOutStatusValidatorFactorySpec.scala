@@ -35,7 +35,7 @@ class RetrieveCodingOutStatusValidatorFactorySpec extends UnitSpec with MockAppC
 
   private def validator(nino: String, taxYear: String) = validatorFactory.validator(nino, taxYear)
 
-  private def setupMocks(): Unit = (MockedAppConfig.minimumPermittedTaxYear returns 2024).anyNumberOfTimes()
+  private def setupMocks(): Unit = (MockAppConfig.minimumPermittedTaxYear returns 2024).anyNumberOfTimes()
 
   "validator" should {
     "return the parsed domain object" when {

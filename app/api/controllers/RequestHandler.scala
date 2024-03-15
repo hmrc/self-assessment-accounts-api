@@ -22,22 +22,23 @@ import api.models.errors.{ErrorWrapper, InternalError}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceOutcome
 import cats.data.EitherT
+import cats.data.Validated.Valid
 import cats.implicits._
+import config.AppConfig
+import config.Deprecation.Deprecated
 import play.api.http.Status
 import play.api.libs.json.{JsValue, Writes}
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
+import routing.Version
+import utils.DateUtils.longDateTimestampGmt
 import utils.Logging
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait RequestHandler {
 
-  def handleRequest()(implicit
-      ctx: RequestContext,
-      request: UserRequest[_],
-      ec: ExecutionContext
-  ): Future[Result]
+  def handleRequest()(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext, appConfig: AppConfig): Future[Result]
 
 }
 
@@ -61,7 +62,7 @@ object RequestHandler {
       auditHandler: Option[AuditHandler] = None
   ) extends RequestHandler {
 
-    def handleRequest()(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext): Future[Result] =
+    def handleRequest()(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext, appConfig: AppConfig): Future[Result] =
       Delegate.handleRequest()
 
     def withErrorHandling(errorHandling: ErrorHandling): RequestHandlerBuilder[Input, Output] =
@@ -113,7 +114,7 @@ object RequestHandler {
     // Scoped as a private delegate so as to keep the logic completely separate from the configuration
     private object Delegate extends RequestHandler with Logging with RequestContextImplicits {
 
-      implicit class Response(result: Result) {
+      implicit class Response(result: Result)(implicit appConfig: AppConfig, apiVersion: Version) {
 
         def withApiHeaders(correlationId: String, responseHeaders: (String, String)*): Result = {
           val headers =
@@ -121,18 +122,33 @@ object RequestHandler {
               List(
                 "X-CorrelationId"        -> correlationId,
                 "X-Content-Type-Options" -> "nosniff"
-              )
+              ) ++
+              withDeprecationHeaders
 
           result.copy(header = result.header.copy(headers = result.header.headers ++ headers))
         }
 
+        private def withDeprecationHeaders: List[(String, String)] = {
+
+          appConfig.deprecationFor(apiVersion) match {
+            case Valid(Deprecated(deprecatedOn, Some(sunsetDate))) =>
+              List(
+                "Deprecation" -> longDateTimestampGmt(deprecatedOn),
+                "Sunset"      -> longDateTimestampGmt(sunsetDate),
+                "Link"        -> appConfig.apiDocumentationUrl
+              )
+            case Valid(Deprecated(deprecatedOn, None)) =>
+              List(
+                "Deprecation" -> longDateTimestampGmt(deprecatedOn),
+                "Link"        -> appConfig.apiDocumentationUrl
+              )
+            case _ => Nil
+          }
+        }
+
       }
 
-      def handleRequest()(implicit
-          ctx: RequestContext,
-          request: UserRequest[_],
-          ec: ExecutionContext
-      ): Future[Result] = {
+      def handleRequest()(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext, appConfig: AppConfig): Future[Result] = {
 
         logger.info(
           message = s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] " +
@@ -158,8 +174,11 @@ object RequestHandler {
       private def handleSuccess(parsedRequest: Input, serviceResponse: ResponseWrapper[Output])(implicit
           ctx: RequestContext,
           request: UserRequest[_],
-          ec: ExecutionContext
-      ): Result = {
+          ec: ExecutionContext,
+          appConfig: AppConfig): Result = {
+
+        implicit val apiVersion: Version = Version(request)
+
         logger.info(
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
             s"Success response received with CorrelationId: ${ctx.correlationId}")
@@ -172,11 +191,11 @@ object RequestHandler {
         result
       }
 
-      private def handleFailure(errorWrapper: ErrorWrapper)(implicit
-          ctx: RequestContext,
-          request: UserRequest[_],
-          ec: ExecutionContext
-      ): Result = {
+      private def handleFailure(
+          errorWrapper: ErrorWrapper)(implicit ctx: RequestContext, request: UserRequest[_], ec: ExecutionContext, appConfig: AppConfig): Result = {
+
+        implicit val apiVersion: Version = Version(request)
+
         logger.warn(
           s"[${ctx.endpointLogContext.controllerName}][${ctx.endpointLogContext.endpointName}] - " +
             s"Error response received with CorrelationId: ${ctx.correlationId}")
@@ -187,20 +206,20 @@ object RequestHandler {
         result
       }
 
-      private def unhandledError(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
-        logger.error(
-          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
-            s"Unhandled error: $errorWrapper")
-        InternalServerError(InternalError.asJson)
-      }
-
-      def auditIfRequired(httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
+      private def auditIfRequired(httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit
           ctx: RequestContext,
           request: UserRequest[_],
           ec: ExecutionContext): Unit =
         auditHandler.foreach { creator =>
           creator.performAudit(request.userDetails, httpStatus, response)
         }
+
+      private def unhandledError(errorWrapper: ErrorWrapper)(implicit endpointLogContext: EndpointLogContext): Result = {
+        logger.error(
+          s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] - " +
+            s"Unhandled error: $errorWrapper")
+        InternalServerError(InternalError.asJson)
+      }
 
     }
 

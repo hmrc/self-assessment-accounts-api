@@ -114,7 +114,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
     "if the request ends with a trailing slash" when {
       "handler found" should {
         "use it" in new Test {
-          MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
 
           requestHandler.routeRequest(buildRequest(s"$path/")) shouldBe Some(handler)
         }
@@ -122,7 +122,7 @@ class VersionRoutingRequestHandlerSpec extends UnitSpec with Inside with MockApp
 
       "handler not found" should {
         "try without the trailing slash" in new Test {
-          MockedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
 
           requestHandler.routeRequest(buildRequest(s"$path")) shouldBe Some(handler)
         }

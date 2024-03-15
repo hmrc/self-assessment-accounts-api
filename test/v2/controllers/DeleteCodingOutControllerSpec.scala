@@ -93,7 +93,7 @@ class DeleteCodingOutControllerSpec
         detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          versionNumber = "2.0",
+          versionNumber = apiVersion.name,
           params = Map("nino" -> nino, "taxYear" -> taxYear),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
