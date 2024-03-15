@@ -46,9 +46,9 @@ class EndpointSummaryGroupRewriterSpec extends UnitSpec with MockAppConfig {
 
     "rewrite" should {
       "return the rewritten summaries when the 'maybeTestOnly' helper is present" in {
-        MockedAppConfig.endpointReleasedInProduction("2.0", "coding-out-create-and-amend") returns false
-        MockedAppConfig.endpointReleasedInProduction("2.0", "coding-out-retrieve") returns true
-        MockedAppConfig.endpointReleasedInProduction("2.0", "coding-out-delete") returns false
+        MockAppConfig.endpointReleasedInProduction("2.0", "coding-out-create-and-amend") returns false
+        MockAppConfig.endpointReleasedInProduction("2.0", "coding-out-retrieve") returns true
+        MockAppConfig.endpointReleasedInProduction("2.0", "coding-out-delete") returns false
 
         val yaml =
           """

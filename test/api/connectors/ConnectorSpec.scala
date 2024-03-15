@@ -179,10 +179,10 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     protected lazy val requiredHeaders: Seq[(String, String)] = requiredDesHeaders
 
-    MockedAppConfig.desBaseUrl returns baseUrl
-    MockedAppConfig.desToken returns "des-token"
-    MockedAppConfig.desEnvironment returns "des-environment"
-    MockedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockAppConfig.desBaseUrl returns baseUrl
+    MockAppConfig.desToken returns "des-token"
+    MockAppConfig.desEnvironment returns "des-environment"
+    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
 
   }
 
@@ -190,10 +190,10 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     protected lazy val requiredHeaders: Seq[(String, String)] = requiredIfs1Headers
 
-    MockedAppConfig.ifs1BaseUrl returns baseUrl
-    MockedAppConfig.ifs1Token returns "ifs1-token"
-    MockedAppConfig.ifs1Environment returns "ifs1-environment"
-    MockedAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
+    MockAppConfig.ifs1BaseUrl returns baseUrl
+    MockAppConfig.ifs1Token returns "ifs1-token"
+    MockAppConfig.ifs1Environment returns "ifs1-environment"
+    MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
 
   }
 
@@ -201,10 +201,10 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     protected lazy val requiredHeaders: Seq[(String, String)] = requiredIfs2Headers
 
-    MockedAppConfig.ifs2BaseUrl returns baseUrl
-    MockedAppConfig.ifs2Token returns "ifs2-token"
-    MockedAppConfig.ifs2Environment returns "ifs2-environment"
-    MockedAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
+    MockAppConfig.ifs2BaseUrl returns baseUrl
+    MockAppConfig.ifs2Token returns "ifs2-token"
+    MockAppConfig.ifs2Environment returns "ifs2-environment"
+    MockAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
 
   }
 
@@ -212,10 +212,10 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     protected lazy val requiredHeaders: Seq[(String, String)] = requiredTysIfsHeaders
 
-    MockedAppConfig.tysIfsBaseUrl returns baseUrl
-    MockedAppConfig.tysIfsToken returns "TYS-IFS-token"
-    MockedAppConfig.tysIfsEnvironment returns "TYS-IFS-environment"
-    MockedAppConfig.tysIfsEnvironmentHeaders returns Some(allowedTysIfsHeaders)
+    MockAppConfig.tysIfsBaseUrl returns baseUrl
+    MockAppConfig.tysIfsToken returns "TYS-IFS-token"
+    MockAppConfig.tysIfsEnvironment returns "TYS-IFS-environment"
+    MockAppConfig.tysIfsEnvironmentHeaders returns Some(allowedTysIfsHeaders)
 
   }
 

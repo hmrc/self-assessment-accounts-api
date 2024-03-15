@@ -16,6 +16,7 @@
 
 package v2.controllers
 
+import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
@@ -32,6 +33,7 @@ import scala.concurrent.Future
 class RetrieveBalanceAndTransactionsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
+    with MockAppConfig
     with MockRetrieveBalanceAndTransactionsService
     with MockRetrieveBalanceAndTransactionsValidatorFactory {
 

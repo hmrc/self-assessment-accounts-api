@@ -247,7 +247,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
     val authRetrievals: Retrieval[Option[AffinityGroup] ~ Enrolments] = affinityGroup and authorisedEnrolments
 
     def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean = true, confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200): Unit = {
-      MockedAppConfig.confidenceLevelCheckEnabled.returns(
+      MockAppConfig.confidenceLevelCheckEnabled.returns(
         ConfidenceLevelConfig(
           confidenceLevel = confidenceLevel,
           definitionEnabled = true,

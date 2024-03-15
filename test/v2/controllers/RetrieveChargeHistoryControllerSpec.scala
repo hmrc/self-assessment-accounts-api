@@ -16,6 +16,7 @@
 
 package v2.controllers
 
+import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.GET
@@ -39,6 +40,7 @@ class RetrieveChargeHistoryControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveChargeHistoryService
+    with MockAppConfig
     with MockHateoasFactory
     with MockRetrieveChargeHistoryValidatorFactory {
 

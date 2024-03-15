@@ -41,7 +41,7 @@ class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockAppConfig {
   private val validatorFactory = new DeleteCodingOutValidatorFactory
 
   private def validator(nino: String, taxYear: String) = {
-    MockedAppConfig.minimumPermittedTaxYear returns 2022
+    MockAppConfig.minimumPermittedTaxYear returns 2022
     validatorFactory.validator(nino, taxYear)
   }
 

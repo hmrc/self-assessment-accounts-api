@@ -43,8 +43,7 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
   def retrieveCodingOutStatus(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
-
-      val validator = validatorFactory.validator(nino, taxYear)
+      val validator                    = validatorFactory.validator(nino, taxYear)
 
       val requestHandler =
         RequestHandler
@@ -63,4 +62,5 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
       requestHandler.handleRequest()
     }
   }
+
 }

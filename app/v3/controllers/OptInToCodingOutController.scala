@@ -34,7 +34,7 @@ class OptInToCodingOutController @Inject() (val authService: EnrolmentsAuthServi
                                             service: OptInToCodingOutService,
                                             auditService: AuditService,
                                             cc: ControllerComponents,
-                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   implicit val endpointLogContext: EndpointLogContext =

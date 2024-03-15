@@ -22,7 +22,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import routing.{Version, Version2}
+import routing.Version
 import utils.{IdGenerator, Logging}
 import v2.controllers.validators.CreateOrAmendCodingOutValidatorFactory
 import v2.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
@@ -35,13 +35,12 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAuthService,
                                                   val lookupService: MtdIdLookupService,
-                                                  appConfig: AppConfig,
                                                   validatorFactory: CreateOrAmendCodingOutValidatorFactory,
                                                   service: CreateOrAmendCodingOutService,
                                                   hateoasFactory: HateoasFactory,
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
-                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext)
+                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -50,7 +49,7 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
 
   def createOrAmendCodingOut(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val apiVersion: Version = Version.from(request, orElse = Version2)
+      implicit val apiVersion: Version = Version(request)
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator =

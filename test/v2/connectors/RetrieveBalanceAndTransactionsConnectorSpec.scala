@@ -77,10 +77,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     val connector: RetrieveBalanceAndTransactionsConnector =
       new RetrieveBalanceAndTransactionsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    MockedAppConfig.ifs2BaseUrl returns baseUrl
-    MockedAppConfig.ifs2Token returns "ifs2-token"
-    MockedAppConfig.ifs2Environment returns "ifs2-environment"
-    MockedAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
+    MockAppConfig.ifs2BaseUrl returns baseUrl
+    MockAppConfig.ifs2Token returns "ifs2-token"
+    MockAppConfig.ifs2Environment returns "ifs2-environment"
+    MockAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
 
     def connectorRequest(request: RetrieveBalanceAndTransactionsRequestData,
                          response: RetrieveBalanceAndTransactionsResponse,

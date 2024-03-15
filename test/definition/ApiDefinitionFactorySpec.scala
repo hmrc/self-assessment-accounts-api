@@ -18,7 +18,9 @@ package definition
 
 import api.config.MockAppConfig
 import api.connectors.MockHttpClient
+import cats.implicits.catsSyntaxValidatedId
 import config.ConfidenceLevelConfig
+import config.Deprecation.NotDeprecated
 import definition.APIStatus.{ALPHA, BETA}
 import play.api.Configuration
 import routing.{Version2, Version3}
@@ -31,19 +33,20 @@ class ApiDefinitionFactorySpec extends UnitSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
     val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
-    MockedAppConfig.apiGatewayContext returns "api.gateway.context"
+    MockAppConfig.apiGatewayContext returns "api.gateway.context"
   }
 
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
-        MockedAppConfig.featureSwitches returns Configuration.empty
-        MockedAppConfig.apiStatus(Version2) returns "BETA"
-        MockedAppConfig.apiStatus(Version3) returns "BETA"
-        MockedAppConfig.endpointsEnabled(Version2).returns(true).anyNumberOfTimes()
-        MockedAppConfig.endpointsEnabled(Version3).returns(true).anyNumberOfTimes()
+        MockAppConfig.featureSwitches returns Configuration.empty
+        Seq(Version2, Version3).foreach { version =>
+          MockAppConfig.apiStatus(version) returns "BETA"
+          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
+        }
 
-        MockedAppConfig.confidenceLevelCheckEnabled
+        MockAppConfig.confidenceLevelCheckEnabled
           .returns(ConfidenceLevelConfig(confidenceLevel = confidenceLevel, definitionEnabled = true, authValidationEnabled = true))
           .anyNumberOfTimes()
 
@@ -98,7 +101,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     ).foreach { case (definitionEnabled, configCL, expectedDefinitionCL) =>
       s"confidence-level-check.definition.enabled is $definitionEnabled and confidence-level = $configCL" should {
         s"return confidence level $expectedDefinitionCL" in new Test {
-          MockedAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
+          MockAppConfig.confidenceLevelCheckEnabled returns ConfidenceLevelConfig(
             confidenceLevel = configCL,
             definitionEnabled = definitionEnabled,
             authValidationEnabled = true)
@@ -115,7 +118,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
         (Version3, BETA)
       ).foreach { case (version, status) =>
         s"return the correct $status for $version " in new Test {
-          MockedAppConfig.apiStatus(version) returns status.toString
+          MockAppConfig.apiStatus(version) returns status.toString
+          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
           apiDefinitionFactory.buildAPIStatus(version) shouldBe status
         }
       }
@@ -124,8 +128,28 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     "the 'apiStatus' parameter is present and invalid" should {
       Seq(Version2, Version3).foreach { version =>
         s"default to alpha for $version " in new Test {
-          MockedAppConfig.apiStatus(version) returns "ALPHO"
+          MockAppConfig.apiStatus(version) returns "ALPHO"
+          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
           apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
+        }
+      }
+    }
+
+    "the 'deprecatedOn' parameter is missing for a deprecated version" should {
+      Seq(Version2, Version3).foreach { version =>
+        s"throw exception for $version" in new Test {
+          MockAppConfig.apiStatus(version) returns "DEPRECATED"
+          MockAppConfig
+            .deprecationFor(version)
+            .returns(s"deprecatedOn date is required for a deprecated version $version".invalid)
+            .anyNumberOfTimes()
+
+          val exception: Exception = intercept[Exception] {
+            apiDefinitionFactory.buildAPIStatus(version)
+          }
+
+          val exceptionMessage: String = exception.getMessage
+          exceptionMessage shouldBe s"deprecatedOn date is required for a deprecated version $version"
         }
       }
     }

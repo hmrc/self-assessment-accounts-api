@@ -16,6 +16,7 @@
 
 package v2.controllers
 
+import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.{DateRange, Nino}
 import api.models.errors._
@@ -33,6 +34,7 @@ import scala.concurrent.Future
 class ListPaymentsAndAllocationDetailsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
+    with MockAppConfig
     with MockListPaymentsAndAllocationDetailsValidatorFactory
     with MockListPaymentsAndAllocationDetailsService {
 
