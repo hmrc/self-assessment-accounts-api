@@ -16,10 +16,11 @@
 
 package v3.controllers
 
-import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.controllers._
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import routing.Version
 import utils.IdGenerator
 import v3.controllers.validators.OptOutOfCodingOutValidatorFactory
 import v3.services.OptOutOfCodingOutService
@@ -32,6 +33,7 @@ class OptOutOfCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              val lookupService: MtdIdLookupService,
                                              validatorFactory: OptOutOfCodingOutValidatorFactory,
                                              service: OptOutOfCodingOutService,
+                                             auditService: AuditService,
                                              cc: ControllerComponents,
                                              idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
@@ -49,6 +51,13 @@ class OptOutOfCodingOutController @Inject() (val authService: EnrolmentsAuthServ
           .withValidator(validator)
           .withService(service.optOutOfCodingOut)
           .withNoContentResult()
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "OptOutOfCodingOut",
+            transactionName = "opt-out-of-coding-out",
+            apiVersion = Version(request),
+            params = Map("nino" -> nino, "taxYear" -> taxYear)
+          ))
 
       requestHandler.handleRequest()
     }

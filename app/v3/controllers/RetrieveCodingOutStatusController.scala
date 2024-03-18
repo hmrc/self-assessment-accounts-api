@@ -17,9 +17,10 @@
 package v3.controllers
 
 import api.controllers._
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import routing.Version
 import utils.IdGenerator
 import v3.controllers.validators.RetrieveCodingOutStatusValidatorFactory
 import v3.services.RetrieveCodingOutStatusService
@@ -32,6 +33,7 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
                                                    val lookupService: MtdIdLookupService,
                                                    validatorFactory: RetrieveCodingOutStatusValidatorFactory,
                                                    service: RetrieveCodingOutStatusService,
+                                                   auditService: AuditService,
                                                    cc: ControllerComponents,
                                                    idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
@@ -49,6 +51,15 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
           .withValidator(validator)
           .withService(service.retrieveCodingOutStatus)
           .withPlainJsonResult()
+          .withAuditing(
+            AuditHandler(
+              auditService,
+              auditType = "RetrieveCodingOutStatus",
+              transactionName = "retrieve-coding-out-status",
+              apiVersion = Version(request),
+              params = Map("nino" -> nino, "taxYear" -> taxYear),
+              includeResponse = true
+            ))
       requestHandler.handleRequest()
     }
   }

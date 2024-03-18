@@ -18,9 +18,11 @@ package v3.controllers
 
 import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v3.controllers.validators.MockRetrieveCodingOutStatusValidatorFactory
 import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
@@ -83,17 +85,33 @@ class RetrieveCodingOutStatusControllerSpec
     }
   }
 
-  private trait Test extends ControllerTest {
+  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     val controller = new RetrieveCodingOutStatusController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveCodingOutStatusValidatorFactory,
       service = mockRetrieveCodingOutStatusService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator)
 
     protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(nino, taxYear)(fakeGetRequest)
+
+    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "RetrieveCodingOutStatus",
+        transactionName = "retrieve-coding-out-status",
+        detail = GenericAuditDetail(
+          userType = "Agent",
+          agentReferenceNumber = Some("123456"),
+          versionNumber = "3.0",
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          requestBody = maybeRequestBody,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
+      )
 
   }
 

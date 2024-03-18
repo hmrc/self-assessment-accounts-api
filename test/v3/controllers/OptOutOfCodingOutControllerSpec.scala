@@ -18,9 +18,11 @@ package v3.controllers
 
 import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import v3.controllers.validators.MockOptOutOfCodingOutValidatorFactory
 import v3.models.errors.RuleBusinessPartnerNotExistError
@@ -68,7 +70,7 @@ class OptOutOfCodingOutControllerSpec
     }
   }
 
-  private trait Test extends ControllerTest {
+  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
     private val taxYear = "2023-24"
 
     protected val requestData: OptOutOfCodingOutRequestData = OptOutOfCodingOutRequestData(
@@ -83,10 +85,26 @@ class OptOutOfCodingOutControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockOptOutOfCodingOutValidatorFactory,
       service = mockOptOutOfCodingOutService,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator)
 
     protected def callController(): Future[Result] = controller.optOutOfCodingOut(nino, taxYear)(fakeGetRequest)
+
+    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "OptOutOfCodingOut",
+        transactionName = "opt-out-of-coding-out",
+        detail = GenericAuditDetail(
+          userType = "Agent",
+          agentReferenceNumber = Some("123456"),
+          versionNumber = "3.0",
+          params = Map("nino" -> nino, taxYear -> taxYear),
+          requestBody = None,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
+      )
 
   }
 
