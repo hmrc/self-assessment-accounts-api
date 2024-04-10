@@ -16,6 +16,7 @@
 
 package v2.endpoints
 
+import api.models.domain.TaxYear
 import api.models.errors._
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
@@ -217,9 +218,10 @@ class RetrieveCodingOutControllerISpec extends IntegrationBaseSpec {
 
   private trait TysIfsTest extends Test {
 
-    def taxYear: String = "2023-24"
+    val downstreamTaxYear: String = TaxYear.now().asTysDownstream
+    def taxYear: String           = TaxYear.now().asMtd
 
-    def downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/23-24/$nino"
+    def downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$downstreamTaxYear/$nino"
 
   }
 
