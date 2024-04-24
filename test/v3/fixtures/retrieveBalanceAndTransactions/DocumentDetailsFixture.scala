@@ -64,7 +64,8 @@ object DocumentDetailsFixture {
     effectiveDateOfPayment = Some("2021-04-05"),
     latePaymentInterest = Some(latePaymentInterest),
     amountCodedOut = Some(5.99),
-    reducedCharge = Some(reducedCharge)
+    reducedCharge = Some(reducedCharge),
+    poaRelevantAmount = Some(5.99)
   )
 
   val documentDetailsWithoutDocDueDate: DocumentDetails = documentDetails.copy(documentDueDate = None)
@@ -83,6 +84,7 @@ object DocumentDetailsFixture {
     None,
     isChargeEstimate = false,
     isCodedOut = false,
+    None,
     None,
     None,
     None,
@@ -143,7 +145,8 @@ object DocumentDetailsFixture {
        |  "effectiveDateOfPayment": "2021-04-05",
        |  "latePaymentInterest": $latePaymentInterestJson,
        |  "amountCodedOut": 5.99,
-       |  "reducedCharge": $reducedChargeJson
+       |  "reducedCharge": $reducedChargeJson,
+       |  "poaRelevantAmount":5.99
        |}
        |""".stripMargin)
       .as[JsObject]
@@ -198,7 +201,8 @@ object DocumentDetailsFixture {
        |  "latePaymentInterestID": "1234567890123456",
        |  "lpiWithDunningLock": 7.99,
        |  "latePaymentInterestAmount": 8.99,
-       |  "interestOutstandingAmount": 9.99
+       |  "interestOutstandingAmount": 9.99,
+       |  "poaRelevantAmount":5.99
        |}
        |""".stripMargin)
   }

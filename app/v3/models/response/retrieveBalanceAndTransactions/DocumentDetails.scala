@@ -95,7 +95,8 @@ case class DocumentDetails(taxYear: Option[String],
                            effectiveDateOfPayment: Option[String],
                            latePaymentInterest: Option[LatePaymentInterest],
                            amountCodedOut: Option[BigDecimal],
-                           reducedCharge: Option[ReducedCharge])
+                           reducedCharge: Option[ReducedCharge],
+                           poaRelevantAmount: Option[BigDecimal])
 
 object DocumentDetails {
   val informationCode: Option[String] => Boolean = _.exists(_.nonEmpty)
@@ -132,7 +133,8 @@ object DocumentDetails {
         (JsPath \ "effectiveDateOfPayment").readNullable[String] and
         JsPath.readNullable[LatePaymentInterest].map(replaceWithNoneIfEmpty[LatePaymentInterest]) and
         (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
-        JsPath.readNullable[ReducedCharge].map(replaceWithNoneIfEmpty[ReducedCharge])
+        JsPath.readNullable[ReducedCharge].map(replaceWithNoneIfEmpty[ReducedCharge]) and
+        (JsPath \ "poaRelevantAmount").readNullable[BigDecimal]
     )(DocumentDetails.apply _)
 
   implicit val writes: OWrites[DocumentDetails] = Json.writes[DocumentDetails]
