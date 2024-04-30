@@ -68,6 +68,7 @@ object DocumentDetailsFixture {
     poaRelevantAmount = Some(5.99)
   )
 
+
   val documentDetailsWithoutDocDueDate: DocumentDetails = documentDetails.copy(documentDueDate = None)
 
   val documentDetailsMinimal: DocumentDetails = DocumentDetails(
@@ -145,13 +146,42 @@ object DocumentDetailsFixture {
        |  "effectiveDateOfPayment": "2021-04-05",
        |  "latePaymentInterest": $latePaymentInterestJson,
        |  "amountCodedOut": 5.99,
-       |  "reducedCharge": $reducedChargeJson,
-       |  "poaRelevantAmount":5.99
+       |  "reducedCharge": $reducedChargeJson
        |}
        |""".stripMargin)
       .as[JsObject]
 
+  val documentDetailsMtdResponseWithPOARelevantAmountJson: JsObject =
+    Json
+      .parse(
+        s"""
+           |{
+           |  "taxYear": "2020-21",
+           |  "documentId": "1455",
+           |  "formBundleNumber": "88888888",
+           |  "creditReason": "Voluntary Payment",
+           |  "documentDate": "2018-04-05",
+           |  "documentText": "ITSA- Bal Charge",
+           |  "documentDueDate": "2021-04-05",
+           |  "documentDescription": "ITSA- POA 1",
+           |  "originalAmount": 1.99,
+           |  "outstandingAmount": 2.99,
+           |  "lastClearing": $lastClearingJson,
+           |  "isChargeEstimate": true,
+           |  "isCodedOut": true,
+           |  "paymentLot": "AB1023456789",
+           |  "paymentLotItem": "000001",
+           |  "effectiveDateOfPayment": "2021-04-05",
+           |  "latePaymentInterest": $latePaymentInterestJson,
+           |  "amountCodedOut": 5.99,
+           |  "reducedCharge": $reducedChargeJson,
+           |  "poaRelevantAmount":5.99
+           |}
+           |""".stripMargin)
+      .as[JsObject]
+
   val documentDetailsWithoutDocDueDateMtdResponseJson: JsObject = documentDetailsMtdResponseJson - "documentDueDate"
+  val poaRelevantAmountWithoutDocDueDateMtdResponseJson: JsObject = documentDetailsMtdResponseWithPOARelevantAmountJson - "documentDueDate"
 
   val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
   val documentDetailsWithoutDocDueDateDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = None)

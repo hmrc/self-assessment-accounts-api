@@ -51,7 +51,7 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
   "RetrieveBalanceAndTransactionsResponse.writes" should {
     "produce the expected JSON" in {
-      Json.toJson(response) shouldBe mtdResponseJson
+      Json.toJson(response) shouldBe mtdResponseWithPOARelevantAmountJson
     }
   }
 

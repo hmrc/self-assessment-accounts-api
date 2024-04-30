@@ -20,10 +20,11 @@ import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import play.api.Configuration
 import play.api.mvc.Result
 import v3.controllers.validators.MockRetrieveBalanceAndTransactionsValidatorFactory
 import v3.fixtures.retrieveBalanceAndTransactions.RequestFixture._
-import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
+import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, mtdResponseWithPOARelevantAmountJson, response}
 import v3.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v3.services.MockRetrieveBalanceAndTransactionsService
 
@@ -42,6 +43,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
   "retrieveBalanceAndTransactions" should {
     "return OK" when {
       "the request is valid" in new Test {
+
+        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> false)).anyNumberOfTimes()
         willUseValidator(returningSuccess(requestData))
 
         MockedRetrieveBalanceAndTransactionsService
@@ -50,16 +53,31 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
         runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
+
+      "the request is valid when isPOARelevantAmount switch is enabled" in new Test {
+
+        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
+        willUseValidator(returningSuccess(requestData))
+
+        MockedRetrieveBalanceAndTransactionsService
+          .retrieveBalanceAndTransactions(requestData)
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
+
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseWithPOARelevantAmountJson))
+      }
+
     }
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
+        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returning(NinoFormatError))
 
         runErrorTest(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
+        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returningSuccess(requestData))
 
         MockedRetrieveBalanceAndTransactionsService
@@ -73,7 +91,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
   trait Test extends ControllerTest {
 
-    val controller = new RetrieveBalanceAndTransactionsController(
+    lazy val controller = new RetrieveBalanceAndTransactionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveBalanceAndTransactionsValidatorFactory,
