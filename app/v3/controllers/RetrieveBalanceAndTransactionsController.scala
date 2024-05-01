@@ -18,10 +18,11 @@ package v3.controllers
 
 import api.controllers._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
+import config.{AppConfig, FeatureSwitches}
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
 import v3.controllers.validators.RetrieveBalanceAndTransactionsValidatorFactory
+import v3.models.response.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsResponse
 import v3.services.RetrieveBalanceAndTransactionsService
 
 import javax.inject.{Inject, Singleton}
@@ -68,6 +69,7 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieveBalanceAndTransactions)
+          .withModelHandling { response: RetrieveBalanceAndTransactionsResponse => response.adjustFields(FeatureSwitches(appConfig)) }
           .withPlainJsonResult()
 
       requestHandler.handleRequest()

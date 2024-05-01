@@ -16,6 +16,8 @@
 
 package v3.models.response.retrieveBalanceAndTransactions
 
+import config.FeatureSwitches
+import play.api.Configuration
 import play.api.libs.json.Json
 import support.UnitSpec
 import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture._
@@ -55,4 +57,23 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
     }
   }
 
+  "RetrieveBalanceAndTransactionsResponse.adjustField" should {
+    implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
+    val response = downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse]
+    val responseWithoutPOAAmount = downstreamResponseWithoutPOAAmountJson.as[RetrieveBalanceAndTransactionsResponse]
+
+    def featureSwitchesWith(enabled: Boolean) =
+      FeatureSwitches(Configuration("isPOARelevantAmount.enabled" -> enabled))
+
+    "the request is adjusted when isPOARelevantAmount switch is enabled" in {
+      val featureSwitches = featureSwitchesWith(enabled = true)
+      response.adjustFields(featureSwitches) shouldBe response
+    }
+
+    "the request is adjusted when isPOARelevantAmount switch is not enabled" in {
+
+      val featureSwitches = featureSwitchesWith(enabled = false)
+      response.adjustFields(featureSwitches) shouldBe responseWithoutPOAAmount
+    }
+  }
 }

@@ -29,6 +29,7 @@ trait FeatureSwitches {
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean
   def isEnabled(key: String): Boolean
   def isReleasedInProduction(feature: String): Boolean
+  def isPOARelevantAmountEnabled : Boolean
 }
 
 @Singleton
@@ -50,6 +51,7 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
   private def isConfigTrue(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
 
   def isReleasedInProduction(feature: String): Boolean = isConfigTrue(feature + ".released-in-production")
+  def isPOARelevantAmountEnabled: Boolean = isEnabled("isPOARelevantAmount")
 }
 
 object FeatureSwitches {

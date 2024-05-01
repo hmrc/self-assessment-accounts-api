@@ -16,6 +16,7 @@
 
 package v3.models.response.retrieveBalanceAndTransactions
 
+import config.FeatureSwitches
 import play.api.libs.json.{Json, OWrites, Reads}
 
 case class RetrieveBalanceAndTransactionsResponse(
@@ -23,7 +24,18 @@ case class RetrieveBalanceAndTransactionsResponse(
     codingDetails: Option[Seq[CodingDetails]],
     documentDetails: Option[Seq[DocumentDetails]],
     financialDetails: Option[Seq[FinancialDetails]]
-)
+){
+
+  def adjustFields(featureSwitches: FeatureSwitches): RetrieveBalanceAndTransactionsResponse = {
+
+    def documentDetailAdditionalField(response: RetrieveBalanceAndTransactionsResponse): RetrieveBalanceAndTransactionsResponse = {
+      if (featureSwitches.isPOARelevantAmountEnabled) response else response.withoutPOARelevantAmountField
+    }
+    documentDetailAdditionalField(this)
+  }
+  def withoutPOARelevantAmountField: RetrieveBalanceAndTransactionsResponse =
+    this.copy(documentDetails = documentDetails.map(_.map(_.copy(poaRelevantAmount = None))))
+}
 
 object RetrieveBalanceAndTransactionsResponse {
 

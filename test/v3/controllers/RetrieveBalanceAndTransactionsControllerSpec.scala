@@ -20,6 +20,7 @@ import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import play.api.Configuration
 import play.api.mvc.Result
 import v3.controllers.validators.MockRetrieveBalanceAndTransactionsValidatorFactory
 import v3.fixtures.retrieveBalanceAndTransactions.RequestFixture._
@@ -42,6 +43,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
   "retrieveBalanceAndTransactions" should {
     "return OK" when {
       "the request is valid" in new Test {
+
+        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returningSuccess(requestData))
 
         MockedRetrieveBalanceAndTransactionsService
@@ -54,12 +57,14 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
+        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returning(NinoFormatError))
 
         runErrorTest(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
+        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returningSuccess(requestData))
 
         MockedRetrieveBalanceAndTransactionsService
@@ -73,7 +78,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
   trait Test extends ControllerTest {
 
-    val controller = new RetrieveBalanceAndTransactionsController(
+    lazy val controller = new RetrieveBalanceAndTransactionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveBalanceAndTransactionsValidatorFactory,

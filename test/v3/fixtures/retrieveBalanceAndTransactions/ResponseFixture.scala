@@ -32,6 +32,7 @@ object ResponseFixture {
     RetrieveBalanceAndTransactionsResponse(minimalBalanceDetails, None, None, None)
 
   val mtdResponseJson: JsValue             = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
+  val mtdResponseWithoutPOARelevantAmountJson: JsValue   = mtdResponseJsonWithoutPOAAmount(mtdFinancialDetailsFullJson)
   val mtdResponseWithoutLocksJson: JsValue = mtdResponseJsonWith(mtdFinancialDetailsWithoutLocksJson)
 
   val downstreamResponseJson: JsValue = Json.parse(s"""
@@ -43,6 +44,22 @@ object ResponseFixture {
         |    "documentDetails": [
         |        $documentDetailsDownstreamResponseJson,
         |        $documentDetailsWithoutDocDueDateDownstreamResponseJson
+        |    ],
+        |    "financialDetails": [
+        |        $downstreamFinancialDetailsFullJson
+        |    ]
+        |  }
+        |""".stripMargin)
+
+  val downstreamResponseWithoutPOAAmountJson: JsValue = Json.parse(s"""
+        |  {
+        |    "balanceDetails": $balanceDetailsDownstreamResponseJson,
+        |    "codingDetails": [
+        |        $codingDetailsDownstreamResponseJson
+        |    ],
+        |    "documentDetails": [
+        |        $documentDetailsWithoutPOAAmountDownstreamResponseJson,
+        |        $documentDetailsWithoutPOAAmntAndDocDueDateDownstreamResponseJson
         |    ],
         |    "financialDetails": [
         |        $downstreamFinancialDetailsFullJson
@@ -73,6 +90,22 @@ object ResponseFixture {
        |    "documentDetails": [
        |        $documentDetailsMtdResponseJson,
        |        $documentDetailsWithoutDocDueDateMtdResponseJson
+       |    ],
+       |    "financialDetails": [
+       |        $financialDefails
+       |    ]
+       |  }
+       |""".stripMargin)
+
+  private def mtdResponseJsonWithoutPOAAmount(financialDefails: JsValue) = Json.parse(s"""
+       |  {
+       |    "balanceDetails": $balanceDetailsMtdResponseJson,
+       |    "codingDetails": [
+       |        $codingDetailsMtdResponseJson
+       |    ],
+       |    "documentDetails": [
+       |        $documentDetailsMtdResponseWithoutPOARelevantAmountJson,
+       |        $documentDetailWithoutPoaRelevantAmountAndDocDueDateMtdResponseJson
        |    ],
        |    "financialDetails": [
        |        $financialDefails
