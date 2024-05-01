@@ -40,8 +40,6 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveBalanceAndTransactionsController", endpointName = "retrieveBalanceAndTransactions")
 
-  private val featureSwitches : FeatureSwitches = FeatureSwitches(appConfig)
-
   def retrieveBalanceAndTransactions(nino: String,
                                      docNumber: Option[String],
                                      fromDate: Option[String],
@@ -71,11 +69,10 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieveBalanceAndTransactions)
-          .withModelHandling { response: RetrieveBalanceAndTransactionsResponse => documentDetailAdditionalField(response) }
+          .withModelHandling { response: RetrieveBalanceAndTransactionsResponse => response.adjustFields(FeatureSwitches(appConfig)) }
           .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }
-  private def documentDetailAdditionalField(response: RetrieveBalanceAndTransactionsResponse): RetrieveBalanceAndTransactionsResponse =
-    if (featureSwitches.isPOARelevantAmountEnabled) response else response.withoutPOARelevantAmountField
+
 }

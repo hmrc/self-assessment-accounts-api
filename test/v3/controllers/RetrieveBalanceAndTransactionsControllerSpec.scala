@@ -24,7 +24,7 @@ import play.api.Configuration
 import play.api.mvc.Result
 import v3.controllers.validators.MockRetrieveBalanceAndTransactionsValidatorFactory
 import v3.fixtures.retrieveBalanceAndTransactions.RequestFixture._
-import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, mtdResponseWithPOARelevantAmountJson, response}
+import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJsonWithoutPOAAmountJson, response}
 import v3.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v3.services.MockRetrieveBalanceAndTransactionsService
 
@@ -51,21 +51,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
           .retrieveBalanceAndTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJsonWithoutPOAAmountJson))
       }
-
-      "the request is valid when isPOARelevantAmount switch is enabled" in new Test {
-
-        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
-        willUseValidator(returningSuccess(requestData))
-
-        MockedRetrieveBalanceAndTransactionsService
-          .retrieveBalanceAndTransactions(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
-
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseWithPOARelevantAmountJson))
-      }
-
     }
 
     "return the error as per spec" when {

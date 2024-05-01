@@ -31,9 +31,9 @@ object ResponseFixture {
   val minimalResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(minimalBalanceDetails, None, None, None)
 
-  val mtdResponseJson: JsValue             = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
-  val mtdResponseWithPOARelevantAmountJson: JsValue   = mtdResponseJsonWithPOARelevantAmount(mtdFinancialDetailsFullJson)
-  val mtdResponseWithoutLocksJson: JsValue = mtdResponseJsonWithPOARelevantAmount(mtdFinancialDetailsWithoutLocksJson)
+  val mtdResponseJsonWithoutPOAAmountJson: JsValue             = mtdResponseJsonWithoutPOAAmount(mtdFinancialDetailsFullJson)
+  val mtdResponseJson: JsValue   = mtdResponseJson(mtdFinancialDetailsFullJson)
+  val mtdResponseWithoutLocksJson: JsValue = mtdResponseJson(mtdFinancialDetailsWithoutLocksJson)
 
   val downstreamResponseJson: JsValue = Json.parse(s"""
         |  {
@@ -65,7 +65,7 @@ object ResponseFixture {
       Some(List(financialDetails))
     )
 
-  private def mtdResponseJsonWith(financialDefails: JsValue) = Json.parse(s"""
+  private def mtdResponseJsonWithoutPOAAmount(financialDefails: JsValue) = Json.parse(s"""
        |  {
        |    "balanceDetails": $balanceDetailsMtdResponseJson,
        |    "codingDetails": [
@@ -81,7 +81,7 @@ object ResponseFixture {
        |  }
        |""".stripMargin)
 
-  private def mtdResponseJsonWithPOARelevantAmount(financialDetails: JsValue) = Json.parse(s"""
+  private def mtdResponseJson(financialDetails: JsValue) = Json.parse(s"""
   |   {
   |   "balanceDetails": $balanceDetailsMtdResponseJson,
   |   "codingDetails": [
