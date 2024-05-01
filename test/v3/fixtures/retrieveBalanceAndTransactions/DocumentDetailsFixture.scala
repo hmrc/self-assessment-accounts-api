@@ -70,6 +70,7 @@ object DocumentDetailsFixture {
 
 
   val documentDetailsWithoutDocDueDate: DocumentDetails = documentDetails.copy(documentDueDate = None)
+  val documentDetailsWithoutPOAAmount: DocumentDetails = documentDetails.copy(poaRelevantAmount = None)
 
   val documentDetailsMinimal: DocumentDetails = DocumentDetails(
     None,
@@ -124,7 +125,7 @@ object DocumentDetailsFixture {
        |}
        |""".stripMargin)
 
-  val documentDetailsMtdResponseJson: JsObject =
+  val documentDetailsMtdResponseWithoutPOARelevantAmountJson: JsObject =
     Json
       .parse(s"""
        |{
@@ -151,7 +152,7 @@ object DocumentDetailsFixture {
        |""".stripMargin)
       .as[JsObject]
 
-  val documentDetailsMtdResponseWithPOARelevantAmountJson: JsObject =
+  val documentDetailsMtdResponseJson: JsObject =
     Json
       .parse(
         s"""
@@ -181,10 +182,13 @@ object DocumentDetailsFixture {
       .as[JsObject]
 
   val documentDetailsWithoutDocDueDateMtdResponseJson: JsObject = documentDetailsMtdResponseJson - "documentDueDate"
-  val poaRelevantAmountWithoutDocDueDateMtdResponseJson: JsObject = documentDetailsMtdResponseWithPOARelevantAmountJson - "documentDueDate"
+  val documentDetailWithoutPoaRelevantAmountAndDocDueDateMtdResponseJson: JsObject = documentDetailsMtdResponseWithoutPOARelevantAmountJson - "documentDueDate"
 
   val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
   val documentDetailsWithoutDocDueDateDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = None)
+
+  val documentDetailsWithoutPOAAmountDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsWithoutPOAAmountJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
+  val documentDetailsWithoutPOAAmntAndDocDueDateDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsWithoutPOAAmountJson("2021", maybeDocumentDueDate = None)
 
   val documentDetailsDownstreamResponseMinimalJson: JsValue = Json.parse(s"""
        |{
@@ -233,6 +237,46 @@ object DocumentDetailsFixture {
        |  "latePaymentInterestAmount": 8.99,
        |  "interestOutstandingAmount": 9.99,
        |  "poaRelevantAmount":5.99
+       |}
+       |""".stripMargin)
+  }
+
+  def newDownstreamDocumentDetailsWithoutPOAAmountJson(taxYear: String, maybeDocumentDueDate: Option[String]): JsValue = {
+    val docDueDateLine = maybeDocumentDueDate.map(date => s"""  "documentDueDate": "$date",""").getOrElse("")
+
+    Json.parse(s"""
+       |{
+       |  "taxYear": "$taxYear",
+       |  "taxYearReducedCharge": "2018",
+       |  "documentId": "1455",
+       |  "documentNumberReducedCharge": "???",
+       |  "formBundleNumber": "88888888",
+       |  "documentDate": "2018-04-05",
+       |  "documentText": "ITSA- Bal Charge",
+       |  "effectiveDateOfPayment": "2021-04-05",
+       |  $docDueDateLine
+       |  "documentDescription": "ITSA- POA 1",
+       |  "totalAmount": 1.99,
+       |  "documentOutstandingAmount": 2.99,
+       |  "lastClearingDate": "2018-04-05",
+       |  "lastClearingReason": "Incoming Payment",
+       |  "lastClearedAmount": 3.99,
+       |  "statisticalFlag": true,
+       |  "informationCode": "k",
+       |  "paymentLot": "AB1023456789",
+       |  "paymentLotItem": "000001",
+       |  "accruingInterestAmount": 4.99,
+       |  "amendmentDateReducedCharge": "2018-04-05",
+       |  "amountCodedOut": 5.99,
+       |  "chargeTypeReducedCharge": "???",
+       |  "creditReason": "Voluntary Payment",
+       |  "interestRate": 6.99,
+       |  "interestFromDate": "2020-04-01",
+       |  "interestEndDate": "2020-04-05",
+       |  "latePaymentInterestID": "1234567890123456",
+       |  "lpiWithDunningLock": 7.99,
+       |  "latePaymentInterestAmount": 8.99,
+       |  "interestOutstandingAmount": 9.99
        |}
        |""".stripMargin)
   }

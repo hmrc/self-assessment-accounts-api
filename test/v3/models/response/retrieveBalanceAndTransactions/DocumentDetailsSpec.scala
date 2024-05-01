@@ -77,7 +77,7 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
     "return the expected JSON document" when {
       "given a DocumentDetails object" in {
         val result = Json.toJson(documentDetails)
-        result shouldBe documentDetailsMtdResponseWithPOARelevantAmountJson
+        result shouldBe documentDetailsMtdResponseJson
       }
     }
   }

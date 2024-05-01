@@ -24,7 +24,7 @@ import play.api.Configuration
 import play.api.mvc.Result
 import v3.controllers.validators.MockRetrieveBalanceAndTransactionsValidatorFactory
 import v3.fixtures.retrieveBalanceAndTransactions.RequestFixture._
-import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJsonWithoutPOAAmountJson, response}
+import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
 import v3.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v3.services.MockRetrieveBalanceAndTransactionsService
 
@@ -44,14 +44,14 @@ class RetrieveBalanceAndTransactionsControllerSpec
     "return OK" when {
       "the request is valid" in new Test {
 
-        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> false)).anyNumberOfTimes()
+        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returningSuccess(requestData))
 
         MockedRetrieveBalanceAndTransactionsService
           .retrieveBalanceAndTransactions(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJsonWithoutPOAAmountJson))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
       }
     }
 
