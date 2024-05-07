@@ -37,7 +37,7 @@ Run integration tests: `sbt it:test`
 To view documentation locally ensure the Self Assessment Accounts API is running, and run api-documentation-frontend:
 `./run_local_with_dependencies.sh`
 Then go to http://localhost:9680/api-documentation/docs/openapi/preview and use this port and version:
-`http://localhost:9792/api/conf/2.0/application.yaml`
+`http://localhost:9792/api/conf/3.0/application.yaml`
 
 ## Changelog
 
