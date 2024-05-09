@@ -57,6 +57,7 @@ lazy val microservice = Project(appName, file("."))
 
 Global / excludeLintKeys += update / evictionWarningOptions
 
+dependencyUpdatesFilter -= moduleFilter(name = "bootstrap-backend-play-30")
 dependencyUpdatesFilter -= moduleFilter(organization = "org.playframework")
 dependencyUpdatesFilter -= moduleFilter(name = "scala-library")
 dependencyUpdatesFilter -= moduleFilter(name = "flexmark-all")
