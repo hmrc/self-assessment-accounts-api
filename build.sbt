@@ -30,7 +30,7 @@ lazy val microservice = Project(appName, file("."))
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test(),
     retrieveManaged                 := true,
     update / evictionWarningOptions := EvictionWarningOptions.default.withWarnScalaVersionEviction(false),
-    scalaVersion                    := "2.13.8",
+    scalaVersion                    := "2.13.12",
     scalacOptions ++= Seq("-Xfatal-warnings", "-Wconf:src=routes/.*:silent", "-feature", "-language:higherKinds", "-Wconf:cat=lint-byname-implicit:s")
   )
   .settings(
@@ -57,8 +57,8 @@ lazy val microservice = Project(appName, file("."))
 
 Global / excludeLintKeys += update / evictionWarningOptions
 
-dependencyUpdatesFilter -= moduleFilter(name = "bootstrap-backend-play-28")
-dependencyUpdatesFilter -= moduleFilter(organization = "com.typesafe.play")
+dependencyUpdatesFilter -= moduleFilter(name = "bootstrap-backend-play-30")
+dependencyUpdatesFilter -= moduleFilter(organization = "org.playframework")
 dependencyUpdatesFilter -= moduleFilter(name = "scala-library")
 dependencyUpdatesFilter -= moduleFilter(name = "flexmark-all")
 dependencyUpdatesFilter -= moduleFilter(name = "scalatestplus-play")
