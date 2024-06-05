@@ -15,7 +15,11 @@
         "properties": {
           "documentId": {
             "type": "string",
-            "description": "A unique ID is used to reference the document of which this is a subitem.\nMust conform to the regular expression: ^[0-9a-zA-Z]{1,30}$",
+            {{#if (enabled 'cl401')}}
+            "description": "DocumentID may contain SAP document number or Form Bundle Number for zero-amount documents. Must conform to the regular expression ^[0-9a-zA-Z]{1,12}$",
+            {{else}}
+            "description": "DocumentID may contain SAP document number or Form Bundle Number for zero-amount documents. Must conform to the regular expression ^[0-9a-zA-Z]{1,30}$",
+            {{/if}}
             "example": "XAIS12345678910"
           },
           "documentType": {
