@@ -12,7 +12,11 @@
         "example": "2020-21"
       },
       "documentId": {
+        {{#if (enabled 'documentId12CharLimit')}}
+        "description": "DocumentID may contain SAP document number or Form Bundle Number for zero-amount documents. Must conform to the regular expression ^[0-9a-zA-Z]{1,12}$",
+        {{else}}
         "description": "DocumentID may contain SAP document number or Form Bundle Number for zero-amount documents. Must conform to the regular expression ^[0-9a-zA-Z]{1,30}$",
+        {{/if}}
         "type": "string",
         "example": "1455"
       },
