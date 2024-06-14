@@ -82,7 +82,7 @@
     {
       "taxYear": "2016-17",
       "chargeDetail": {
-        "documentId": "12345678901234568",
+        "documentId": "123456789012",
         "documentType": "1234",
         "documentTypeDescription": "Income Tax Estimate",
         "chargeType": "5678",
