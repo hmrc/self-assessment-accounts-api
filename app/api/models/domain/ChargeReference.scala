@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveChargeHistory
+package api.models.domain
 
-import api.models.domain.{ChargeReference, Nino, TransactionId}
+case class ChargeReference(chargeReference: String) {
+  require(ChargeReference.isValid(chargeReference), s"$chargeReference is not a valid charge reference.")
 
-case class RetrieveChargeHistoryRequestData(nino: Nino, transactionId: TransactionId, chargeReference: Option[ChargeReference])
+  override def toString: String = chargeReference
+}
+
+object ChargeReference extends (String => ChargeReference) {
+  private val validChargeReferenceFormat = "^[0-9A-Za-z]{1,12}$"
+
+  def isValid(chargeReference: String): Boolean = chargeReference != null && chargeReference.matches(validChargeReferenceFormat)
+}

@@ -47,7 +47,7 @@ class RetrieveChargeHistoryControllerSpec
   private val transactionId = "anId"
 
   private val requestData: RetrieveChargeHistoryRequestData =
-    RetrieveChargeHistoryRequestData(nino = Nino(nino), transactionId = TransactionId(transactionId))
+    RetrieveChargeHistoryRequestData(nino = Nino(nino), transactionId = TransactionId(transactionId), chargeReference = None)
 
   val chargeHistoryLink: Link =
     hateoas.Link(
@@ -113,7 +113,7 @@ class RetrieveChargeHistoryControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    protected def callController(): Future[Result] = controller.retrieveChargeHistory(nino, transactionId)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieveChargeHistory(nino, transactionId, None)(fakeGetRequest)
   }
 
 }

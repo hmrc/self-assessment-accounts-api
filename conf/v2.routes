@@ -1,5 +1,5 @@
 # V2 endpoints
-GET        /:nino/charges/:transactionId                   v2.controllers.RetrieveChargeHistoryController.retrieveChargeHistory(nino: String, transactionId: String)
+GET        /:nino/charges/:transactionId                   v2.controllers.RetrieveChargeHistoryController.retrieveChargeHistory(nino: String, transactionId: String, chargeReference: Option[String])
 GET        /:nino/balance-and-transactions                 v2.controllers.RetrieveBalanceAndTransactionsController.retrieveBalanceAndTransactions(nino: String, docNumber: Option[String], fromDate: Option[String], toDate: Option[String], onlyOpenItems: Option[String], includeLocks: Option[String], calculateAccruedInterest: Option[String], removePOA: Option[String], customerPaymentInformation: Option[String], includeEstimatedCharges: Option[String])
 GET        /:nino/payments-and-allocations                 v2.controllers.ListPaymentsAndAllocationDetailsController.listPayments(nino: String, fromDate: Option[String], toDate: Option[String], paymentLot: Option[String], paymentLotItem: Option[String])
 
