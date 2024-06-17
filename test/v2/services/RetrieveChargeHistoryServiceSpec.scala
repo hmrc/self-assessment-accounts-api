@@ -16,7 +16,7 @@
 
 package v2.services
 
-import api.models.domain.{Nino, TransactionId}
+import api.models.domain.{ChargeReference, Nino, TransactionId}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
@@ -36,7 +36,8 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       description = "Balancing Charge Debit",
       totalAmount = 600.01,
       changeDate = "2019-06-05",
-      changeReason = "Example reason"
+      changeReason = "Example reason",
+      poaAdjustmentReason = Some("001")
     )
 
   val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
@@ -46,11 +47,13 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
 
   private val nino          = Nino("AA123456A")
   private val transactionId = TransactionId("anId")
+  private val chargeReference = ChargeReference("anId")
 
   private val requestData: RetrieveChargeHistoryRequestData =
     RetrieveChargeHistoryRequestData(
       nino = nino,
-      transactionId = transactionId
+      transactionId = transactionId,
+      chargeReference = Some(chargeReference)
     )
 
   "RetrieveChargeHistoryService" should {
@@ -82,7 +85,7 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       val errors: Seq[(String, MtdError)] =
         List(
           "INVALID_CORRELATIONID" -> InternalError,
-          "INVALID_IDTYPE"        -> InternalError,
+          "INVALID_ID_TYPE"        -> InternalError,
           "INVALID_IDVALUE"       -> NinoFormatError,
           "INVALID_REGIME_TYPE"   -> InternalError,
           "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,

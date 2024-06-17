@@ -26,7 +26,8 @@ case class ChargeHistoryDetail(taxYear: Option[String],
                                description: String,
                                totalAmount: BigDecimal,
                                changeDate: String,
-                               changeReason: String)
+                               changeReason: String,
+                               poaAdjustmentReason: Option[String])
 
 object ChargeHistoryDetail {
 
@@ -37,7 +38,8 @@ object ChargeHistoryDetail {
       (JsPath \ "documentDescription").read[String] and
       (JsPath \ "totalAmount").read[BigDecimal] and
       (JsPath \ "reversalDate").read[String] and
-      (JsPath \ "reversalReason").read[String])(ChargeHistoryDetail.apply _)
+      (JsPath \ "reversalReason").read[String] and
+      (JsPath \ "poaAdjustmentReason").readNullable[String])(ChargeHistoryDetail.apply _)
 
   implicit val writes: OWrites[ChargeHistoryDetail] = Json.writes[ChargeHistoryDetail]
 }

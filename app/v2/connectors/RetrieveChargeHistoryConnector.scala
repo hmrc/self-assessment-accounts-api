@@ -16,7 +16,7 @@
 
 package v2.connectors
 
-import api.connectors.DownstreamUri.DesUri
+import api.connectors.DownstreamUri.Ifs1Uri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -37,10 +37,14 @@ class RetrieveChargeHistoryConnector @Inject() (val http: HttpClient, val appCon
 
     val nino          = request.nino.nino
     val transactionId = request.transactionId
+    val chargeReference = request.chargeReference
 
-    val queryParams = Seq("docNumber" -> transactionId.toString)
+    val queryParams = chargeReference match {
+      case Some(value) => Seq("docNumber" -> transactionId.toString, "chargeReference" -> value.chargeReference)
+      case None => Seq("docNumber" -> transactionId.toString)
+    }
 
-    get(DesUri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+    get(Ifs1Uri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
   }
 
 }
