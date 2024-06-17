@@ -17,22 +17,19 @@
 package api.controllers.validators.resolvers
 
 import api.models.domain.ChargeReference
-import api.models.errors.{MtdError, ChargeReferenceFormatError}
+import api.models.errors.{ChargeReferenceFormatError, MtdError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 
-object ResolveChargeReference extends Resolver[Option[String], Option[ChargeReference]] {
+object ResolveChargeReference extends Resolver[String, ChargeReference] {
 
   private val chargeReferenceRegex = "^[0-9A-Za-z]{1,12}$".r
 
-  def apply(value: Option[String], maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], Option[ChargeReference]] = {
-    value match {
-      case Some(value) => if (chargeReferenceRegex.matches(value))
-        Valid(Some(ChargeReference(value)))
-      else
-        Invalid(List(maybeError.getOrElse(ChargeReferenceFormatError).maybeWithExtraPath(errorPath)))
-      case None => Valid(None)
-    }
+  def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], ChargeReference] = {
+    if (chargeReferenceRegex.matches (value) )
+    Valid (ChargeReference (value) )
+    else
+    Invalid (List (error.getOrElse (ChargeReferenceFormatError).maybeWithExtraPath (path) ) )
   }
 
 }
