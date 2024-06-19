@@ -18,7 +18,7 @@ package v2.connectors
 
 import api.config.MockAppConfig
 import api.connectors.{ConnectorSpec, MockHttpClient}
-import api.models.domain.{Nino, TransactionId}
+import api.models.domain.{ChargeReference, Nino, TransactionId}
 import api.models.outcomes.ResponseWrapper
 import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory._
@@ -27,8 +27,9 @@ import scala.concurrent.Future
 
 class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
 
-  val nino: String          = "AA123456A"
+  val nino: String = "AA123456A"
   val transactionId: String = "anId"
+  val testChargeReference = "TESTCHARGE1"
 
   val chargeHistoryDetails: ChargeHistoryDetail =
     ChargeHistoryDetail(
@@ -38,7 +39,8 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
       description = "Balancing Charge Debit",
       totalAmount = 600.01,
       changeDate = "2019-06-05",
-      changeReason = "Example reason"
+      changeReason = "Example reason",
+      poaAdjustmentReason = Some("002")
     )
 
   val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
@@ -51,18 +53,18 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
     val connector: RetrieveChargeHistoryConnector =
       new RetrieveChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    MockAppConfig.desBaseUrl returns baseUrl
-    MockAppConfig.desToken returns "des-token"
-    MockAppConfig.desEnvironment returns "des-environment"
-    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+    MockAppConfig.ifs1BaseUrl returns baseUrl
+    MockAppConfig.ifs1Token returns "ifs1-token"
+    MockAppConfig.ifs1Environment returns "ifs1-environment"
+    MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
   }
 
   "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      val request: RetrieveChargeHistoryRequestData = RetrieveChargeHistoryRequestData(Nino(nino), TransactionId(transactionId))
 
       "return a valid response" in new Test {
 
+        val request: RetrieveChargeHistoryRequestData = RetrieveChargeHistoryRequestData(Nino(nino), TransactionId(transactionId), None)
         private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
         MockedHttpClient
@@ -70,7 +72,26 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
             s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
             dummyHeaderCarrierConfig,
             parameters = List("docNumber" -> transactionId),
-            requiredDesHeaders,
+            requiredIfs1Headers,
+            List("AnotherHeader" -> "HeaderValue")
+          )
+          .returns(Future.successful(outcome))
+
+        await(connector.retrieveChargeHistory(request)) shouldBe outcome
+      }
+
+      "return a valid response when the charge reference is supplied" in new Test {
+
+        val request: RetrieveChargeHistoryRequestData =
+          RetrieveChargeHistoryRequestData(Nino(nino), TransactionId(transactionId), Some(ChargeReference(testChargeReference)))
+        private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
+
+        MockedHttpClient
+          .get(
+            s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+            dummyHeaderCarrierConfig,
+            parameters = List("docNumber" -> transactionId, "chargeReference" -> testChargeReference),
+            requiredIfs1Headers,
             List("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))

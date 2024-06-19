@@ -16,14 +16,4 @@
 
 package api.models.domain
 
-case class ChargeReference(chargeReference: String) {
-  require(ChargeReference.isValid(chargeReference), s"$chargeReference is not a valid charge reference.")
-
-  override def toString: String = chargeReference
-}
-
-object ChargeReference extends (String => ChargeReference) {
-  private val validChargeReferenceFormat = "^[0-9A-Za-z]{1,12}$"
-
-  def isValid(chargeReference: String): Boolean = chargeReference != null && chargeReference.matches(validChargeReferenceFormat)
-}
+case class ChargeReference(chargeReference: String)

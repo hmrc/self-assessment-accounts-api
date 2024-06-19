@@ -22,6 +22,7 @@ get:
   parameters:
     - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
     - $ref: "./common/pathParameters.yaml#/components/parameters/transactionId"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/chargeReference"
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
     - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
     - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
@@ -58,6 +59,8 @@ get:
               $ref: "./common/errors.yaml#/components/examples/formatNino"
             FORMAT_TRANSACTION_ID:
               $ref: "./common/errors.yaml#/components/examples/formatTransactionId"
+            FORMAT_CHARGE_REFERENCE:
+              $ref: "./common/errors.yaml#/components/examples/formatChargeReference"
             RULE_INCORRECT_GOV_TEST_SCENARIO:
               $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
 

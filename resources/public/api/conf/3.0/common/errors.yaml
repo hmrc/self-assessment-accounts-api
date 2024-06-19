@@ -303,3 +303,10 @@ components:
         code: RULE_ALREADY_OPTED_OUT
         message: Customer is already opted out of coding out
 
+    #400
+    formatChargeReference:
+      description: |
+        The format of the supplied charge reference field is not valid.
+      value:
+        code: FORMAT_CHARGE_REFERENCE
+        message: The charge reference format is invalid
