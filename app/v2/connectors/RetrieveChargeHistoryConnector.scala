@@ -40,7 +40,7 @@ class RetrieveChargeHistoryConnector @Inject() (val http: HttpClient, val appCon
     val chargeReference = request.chargeReference
 
     val queryParams = chargeReference match {
-      case Some(value) => Seq("docNumber" -> transactionId.toString, "chargeReference" -> value.chargeReference)
+      case Some(chargeRef) => Seq("docNumber" -> transactionId.toString, "chargeReference" -> chargeRef.value)
       case None => Seq("docNumber" -> transactionId.toString)
     }
 

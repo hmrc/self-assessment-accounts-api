@@ -16,4 +16,4 @@
 
 package api.models.domain
 
-case class ChargeReference(chargeReference: String)
+case class ChargeReference(value: String)
