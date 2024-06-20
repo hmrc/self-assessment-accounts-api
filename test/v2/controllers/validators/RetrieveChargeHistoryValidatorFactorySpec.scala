@@ -26,9 +26,8 @@ class RetrieveChargeHistoryValidatorFactorySpec extends UnitSpec {
 
   private val validNino            = "AA123456A"
   private val validTransactionId   = "717f3agW678f"
-  private val chargeReferenceValue      = "testCharge23"
-  private val maybeChargeReference = Some(chargeReferenceValue)
-  private val validChargeReference = Some(ChargeReference(chargeReferenceValue))
+  private val validChargeReference      = "testCharge23"
+  private val chargeReference = ChargeReference(validChargeReference)
 
   private val parsedNino          = Nino(validNino)
   private val parsedTransactionId = TransactionId(validTransactionId)
