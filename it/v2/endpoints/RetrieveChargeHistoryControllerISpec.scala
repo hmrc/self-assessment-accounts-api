@@ -40,10 +40,12 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
     def setupStubs(): StubMapping
 
-    def request: WSRequest = {
+    val docNumberQueryParam: Map[String, String] = Map("docNumber" -> transactionId)
+
+    def request(queryParams: Map[String, String]): WSRequest = {
       setupStubs()
       buildRequest(uri)
-        .withQueryStringParameters(("docNumber", transactionId))
+        .withQueryStringParameters(queryParams.toSeq: _*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.2.0+json"),
           (AUTHORIZATION, "Bearer 123")
@@ -72,7 +74,24 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
         }
 
-        val response: WSResponse = await(request.get())
+        val response: WSResponse = await(request(docNumberQueryParam).get())
+        response.status shouldBe OK
+        response.json shouldBe mtdResponseWithHateoas
+        response.header("Content-Type") shouldBe Some("application/json")
+      }
+
+      "any valid request is made with the chargeReference query param" in new Test {
+
+        override def setupStubs(): StubMapping = {
+          AuthStub.authorised()
+          MtdIdLookupStub.ninoFound(nino)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
+        }
+
+        val chargeReferenceQueryParam: Map[String, String] = Map("chargeReference" -> "testCharge23")
+        val queryParams: Map[String, String]                     = chargeReferenceQueryParam ++ docNumberQueryParam
+
+        val response: WSResponse                           = await(request(queryParams).get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseWithHateoas
         response.header("Content-Type") shouldBe Some("application/json")
@@ -104,7 +123,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, BAD_REQUEST, multipleErrors)
         }
 
-        val response: WSResponse = await(request.get())
+        val response: WSResponse = await(request(docNumberQueryParam).get())
         response.status shouldBe INTERNAL_SERVER_ERROR
         response.json shouldBe Json.toJson(InternalError)
         response.header("Content-Type") shouldBe Some("application/json")
@@ -123,7 +142,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request.get())
+          val response: WSResponse = await(request(docNumberQueryParam).get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -147,7 +166,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
             DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
           }
 
-          val response: WSResponse = await(request.get())
+          val response: WSResponse = await(request(docNumberQueryParam).get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
