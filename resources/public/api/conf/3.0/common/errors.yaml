@@ -306,7 +306,7 @@ components:
     #400
     formatChargeReference:
       description: |
-        The format of the supplied charge reference field is not valid.
+        The format of the supplied charge reference is not valid.
       value:
         code: FORMAT_CHARGE_REFERENCE
         message: The charge reference format is invalid
