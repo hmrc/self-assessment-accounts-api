@@ -35,7 +35,7 @@ object PaymentIdFormatError extends MtdError(code = "FORMAT_PAYMENT_ID", message
 
 object TransactionIdFormatError extends MtdError(code = "FORMAT_TRANSACTION_ID", message = "The transaction ID format is invalid", BAD_REQUEST)
 
-object ChargeReferenceFormatError extends MtdError(code = "FORMAT_CHARGE_REFERENCE", message = "The charge reference format is invalid", BAD_REQUEST)
+object ChargeReferenceFormatError extends MtdError(code = "FORMAT_CHARGE_REFERENCE", message = "The provided charge reference is invalid", BAD_REQUEST)
 
 object IdFormatError extends MtdError(code = "FORMAT_ID", message = "The ID format is invalid", BAD_REQUEST)
 

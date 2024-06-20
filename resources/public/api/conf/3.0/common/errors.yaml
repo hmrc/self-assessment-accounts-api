@@ -309,4 +309,4 @@ components:
         The format of the supplied charge reference is not valid.
       value:
         code: FORMAT_CHARGE_REFERENCE
-        message: The charge reference format is invalid
+        message: The provided charge reference is invalid
