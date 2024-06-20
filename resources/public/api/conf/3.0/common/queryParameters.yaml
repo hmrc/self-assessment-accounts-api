@@ -126,3 +126,16 @@ components:
       schema:
         type: string
       required: false
+    chargeReference:
+      name: chargeReference
+      in: query
+      description: |
+        This field will be used when the need is to view a specific document with help of Charge Reference number 
+
+        Must conform to the regular expression
+        ^[0-9A-Za-z]{1,12}$
+      schema:
+        type: string
+        example: C924KK9DLE3D
+      required: false
+

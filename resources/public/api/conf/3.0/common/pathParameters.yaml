@@ -39,15 +39,3 @@ components:
         type: string
         example: 2021-22
       required: true
-    chargeReference:
-      name: chargeReference
-      in: path
-      description: |
-        This field will be used when the need is to view a specific document with help of Charge Reference number 
-
-        Must conform to the regular expression
-        ^[0-9A-Za-z]{1,12}$
-      schema:
-        type: string
-        example: C924KK9DLE3D
-      required: false
