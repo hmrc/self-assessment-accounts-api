@@ -30,6 +30,7 @@ trait FeatureSwitches {
   def isEnabled(key: String): Boolean
   def isReleasedInProduction(feature: String): Boolean
   def isPOARelevantAmountEnabled : Boolean
+  def isChargeReferencePoaAdjustmentChangesEnabled : Boolean
 }
 
 @Singleton
@@ -52,6 +53,7 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
 
   def isReleasedInProduction(feature: String): Boolean = isConfigTrue(feature + ".released-in-production")
   def isPOARelevantAmountEnabled: Boolean = isEnabled("isPOARelevantAmount")
+  def isChargeReferencePoaAdjustmentChangesEnabled: Boolean = isEnabled("isChargeReferencePoaAdjustmentChanges")
 }
 
 object FeatureSwitches {

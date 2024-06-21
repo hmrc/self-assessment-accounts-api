@@ -16,7 +16,7 @@
 
 package v2.connectors
 
-import api.connectors.DownstreamUri.Ifs1Uri
+import api.connectors.DownstreamUri.{DesUri, Ifs1Uri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -35,16 +35,21 @@ class RetrieveChargeHistoryConnector @Inject() (val http: HttpClient, val appCon
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
-    val nino          = request.nino.nino
-    val transactionId = request.transactionId
+    val nino            = request.nino.nino
+    val transactionId   = request.transactionId
     val chargeReference = request.chargeReference
 
-    val queryParams = chargeReference match {
-      case Some(chargeRef) => Seq("docNumber" -> transactionId.toString, "chargeReference" -> chargeRef.value)
-      case None => Seq("docNumber" -> transactionId.toString)
+    val queryParams = if (chargeReference.isDefined && featureSwitches.isChargeReferencePoaAdjustmentChangesEnabled) {
+      Seq("docNumber" -> transactionId.toString, "chargeReference" -> chargeReference.get.value)
+    } else {
+      Seq("docNumber" -> transactionId.toString)
     }
 
-    get(Ifs1Uri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+    if (featureSwitches.isChargeReferencePoaAdjustmentChangesEnabled) {
+      get(Ifs1Uri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+    } else {
+      get(DesUri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+    }
   }
 
 }
