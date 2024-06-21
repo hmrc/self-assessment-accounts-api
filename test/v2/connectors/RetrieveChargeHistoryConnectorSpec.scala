@@ -56,7 +56,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
       new RetrieveChargeHistoryConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.featureSwitches returns Configuration("isChargeReferencePoaAdjustmentChanges.enabled" -> true)
+      MockAppConfig.featureSwitches returns Configuration("chargeReferencePoaAdjustmentChanges.enabled" -> true)
       MockAppConfig.ifs1BaseUrl returns baseUrl
       MockAppConfig.ifs1Token returns "ifs1-token"
       MockAppConfig.ifs1Environment returns "ifs1-environment"
@@ -64,7 +64,7 @@ class RetrieveChargeHistoryConnectorSpec extends ConnectorSpec {
     }
 
     def setUpDesMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.featureSwitches returns Configuration("isChargeReferencePoaAdjustmentChanges.enabled" -> false)
+      MockAppConfig.featureSwitches returns Configuration("chargeReferencePoaAdjustmentChanges.enabled" -> false)
       MockAppConfig.desBaseUrl returns baseUrl
       MockAppConfig.desToken returns "des-token"
       MockAppConfig.desEnvironment returns "des-environment"

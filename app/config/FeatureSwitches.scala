@@ -53,7 +53,7 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
 
   def isReleasedInProduction(feature: String): Boolean = isConfigTrue(feature + ".released-in-production")
   def isPOARelevantAmountEnabled: Boolean = isEnabled("isPOARelevantAmount")
-  def isChargeReferencePoaAdjustmentChangesEnabled: Boolean = isEnabled("isChargeReferencePoaAdjustmentChanges")
+  def isChargeReferencePoaAdjustmentChangesEnabled: Boolean = isEnabled("chargeReferencePoaAdjustmentChanges")
 }
 
 object FeatureSwitches {

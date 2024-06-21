@@ -130,7 +130,7 @@ components:
       name: chargeReference
       in: query
       description: |
-        This field will be used when the need is to view a specific document with help of Charge Reference number 
+        This field will be used when the need is to view a specific document with help of Charge Reference number{{#unless (releasedInProduction 'chargeReferencePoaAdjustmentChanges')}} [test only]{{/unless}} 
 
         Must conform to the regular expression
         ^[0-9A-Za-z]{1,12}$

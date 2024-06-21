@@ -132,7 +132,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
 
     "return error according to spec" when {
 
-      def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+      def validationErrorTest(requestNino: String, chargeReference: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
           override val nino: String = requestNino
@@ -142,7 +142,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
             MtdIdLookupStub.ninoFound(nino)
           }
 
-          val response: WSResponse = await(request(docNumberQueryParam).get())
+          val response: WSResponse = await(request(docNumberQueryParam ++ Map("chargeReference" -> chargeReference)).get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
           response.header("Content-Type") shouldBe Some("application/json")
@@ -150,7 +150,8 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = Seq(
-        ("AA1123A", BAD_REQUEST, NinoFormatError)
+        ("AA1123A", "gdChargeRef", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "veryBadChargeRef", BAD_REQUEST, ChargeReferenceFormatError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
