@@ -51,7 +51,7 @@
           }
           {{#if (enabled 'chargeReferencePoaAdjustmentChanges')}}
           ,"poaAdjustmentReason": {
-            "description": "A numeric code indicating the reason for adjustment to Payments on Account.\n\nThe possible values (with their meanings) are:\n\n001: Profits for the business are down/the business has ceased\n\n002: Other income has gone down\n\n003: Tax Allowances and reliefs have gone up\n\n004: Tax deducted at source is more than previous year\n\n005: Increasing the PoA after a prior adjustment\n\nFor example: 004",
+            "description": "A numeric code indicating the reason for adjustment to Payments on Account{{#unless (releasedInProduction 'chargeReferencePoaAdjustmentChanges')}} [test only]{{/unless}}. \n\nThe possible values (with their meanings) are:\n\n001: Profits for the business are down/the business has ceased\n\n002: Other income has gone down\n\n003: Tax Allowances and reliefs have gone up\n\n004: Tax deducted at source is more than previous year\n\n005: Increasing the PoA after a prior adjustment\n\nFor example: 004",
             "type": "string",
             "example": "004"
           }
