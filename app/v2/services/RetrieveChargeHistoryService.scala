@@ -42,7 +42,7 @@ class RetrieveChargeHistoryService @Inject() (connector: RetrieveChargeHistoryCo
   private val errorMap: Map[String, MtdError] =
     Map(
       "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_IDTYPE"        -> InternalError,
+      "INVALID_ID_TYPE"        -> InternalError,
       "INVALID_IDVALUE"       -> NinoFormatError,
       "INVALID_REGIME_TYPE"   -> InternalError,
       "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,

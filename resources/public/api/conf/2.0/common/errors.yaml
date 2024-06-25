@@ -270,3 +270,11 @@ components:
       value:
         code: RULE_INCONSISTENT_QUERY_PARAMS
         message: Provide either paymentLot & paymentLotItem or fromDate & toDate.
+
+    #400
+    formatChargeReference:
+      description: |
+        The format of the supplied charge reference is not valid.
+      value:
+        code: FORMAT_CHARGE_REFERENCE
+        message: The provided charge reference is invalid

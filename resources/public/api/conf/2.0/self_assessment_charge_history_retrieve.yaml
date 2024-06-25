@@ -22,6 +22,9 @@ get:
   parameters:
     - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
     - $ref: "./common/pathParameters.yaml#/components/parameters/transactionId"
+      # {{#if (enabled 'chargeReferencePoaAdjustmentChanges')}}
+    - $ref: "./common/queryParameters.yaml#/components/parameters/chargeReference"
+      # {{/if}}
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
     - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
     - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
@@ -58,6 +61,10 @@ get:
               $ref: "./common/errors.yaml#/components/examples/formatNino"
             FORMAT_TRANSACTION_ID:
               $ref: "./common/errors.yaml#/components/examples/formatTransactionId"
+            # {{#if (enabled 'chargeReferencePoaAdjustmentChanges')}}
+            FORMAT_CHARGE_REFERENCE:
+              $ref: "./common/errors.yaml#/components/examples/formatChargeReference"
+           # {{/if}}
             RULE_INCORRECT_GOV_TEST_SCENARIO:
               $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
 

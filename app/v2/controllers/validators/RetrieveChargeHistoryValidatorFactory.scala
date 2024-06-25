@@ -17,7 +17,7 @@
 package v2.controllers.validators
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTransactionId}
+import api.controllers.validators.resolvers.{ResolveChargeReference, ResolveNino, ResolveTransactionId}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
@@ -28,13 +28,14 @@ import javax.inject.Singleton
 @Singleton
 class RetrieveChargeHistoryValidatorFactory {
 
-  def validator(nino: String, transactionId: String): Validator[RetrieveChargeHistoryRequestData] =
+  def validator(nino: String, transactionId: String, chargeReference: Option[String]): Validator[RetrieveChargeHistoryRequestData] =
     new Validator[RetrieveChargeHistoryRequestData] {
 
       def validate: Validated[Seq[MtdError], RetrieveChargeHistoryRequestData] =
         (
           ResolveNino(nino),
-          ResolveTransactionId(transactionId)
+          ResolveTransactionId(transactionId),
+          ResolveChargeReference(chargeReference)
         ).mapN(RetrieveChargeHistoryRequestData)
 
     }

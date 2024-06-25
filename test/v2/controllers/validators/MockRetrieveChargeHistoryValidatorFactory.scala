@@ -25,6 +25,6 @@ trait MockRetrieveChargeHistoryValidatorFactory extends MockValidatorFactory[Ret
   val mockRetrieveChargeHistoryValidatorFactory: RetrieveChargeHistoryValidatorFactory = mock[RetrieveChargeHistoryValidatorFactory]
 
   def validator(): CallHandler[Validator[RetrieveChargeHistoryRequestData]] =
-    (mockRetrieveChargeHistoryValidatorFactory.validator(_: String, _: String)).expects(*, *)
+    (mockRetrieveChargeHistoryValidatorFactory.validator(_: String, _: String, _:Option[String])).expects(*, *, *)
 
 }

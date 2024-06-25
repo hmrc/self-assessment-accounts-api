@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-package v2.models.request.retrieveChargeHistory
+package api.models.domain
 
-import api.models.domain.{ChargeReference, Nino, TransactionId}
-
-case class RetrieveChargeHistoryRequestData(nino: Nino, transactionId: TransactionId, chargeReference: Option[ChargeReference])
+case class ChargeReference(value: String)

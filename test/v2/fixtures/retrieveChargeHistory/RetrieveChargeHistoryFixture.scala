@@ -28,7 +28,8 @@ object RetrieveChargeHistoryFixture {
     description = "Balancing Charge",
     totalAmount = 54321.12,
     changeDate = "2020-02-24",
-    changeReason = "amended return"
+    changeReason = "amended return",
+    poaAdjustmentReason = Some("001")
   )
 
   val validChargeHistoryResponseObject: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(
@@ -43,7 +44,8 @@ object RetrieveChargeHistoryFixture {
       |  "documentDescription": "${validChargeHistoryDetailObject.description}",
       |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
       |  "reversalDate": "${validChargeHistoryDetailObject.changeDate}",
-      |  "reversalReason": "${validChargeHistoryDetailObject.changeReason}"
+      |  "reversalReason": "${validChargeHistoryDetailObject.changeReason}",
+      |  "poaAdjustmentReason": "001"
       |}
       |""".stripMargin
   )
@@ -79,7 +81,8 @@ object RetrieveChargeHistoryFixture {
       |  "description": "${validChargeHistoryDetailObject.description}",
       |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
       |  "changeDate": "${validChargeHistoryDetailObject.changeDate}",
-      |  "changeReason": "${validChargeHistoryDetailObject.changeReason}"
+      |  "changeReason": "${validChargeHistoryDetailObject.changeReason}",
+      |  "poaAdjustmentReason": "001"
       |}
       |""".stripMargin
     )

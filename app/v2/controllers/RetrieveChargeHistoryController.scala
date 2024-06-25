@@ -42,11 +42,11 @@ class RetrieveChargeHistoryController @Inject() (val authService: EnrolmentsAuth
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveChargeHistoryController", endpointName = "retrieveChargeHistory")
 
-  def retrieveChargeHistory(nino: String, transactionId: String): Action[AnyContent] =
+  def retrieveChargeHistory(nino: String, transactionId: String, chargeReference: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, transactionId)
+      val validator = validatorFactory.validator(nino, transactionId, chargeReference)
 
       val requestHandler =
         RequestHandler
