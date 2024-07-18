@@ -35,7 +35,8 @@ object PaymentIdFormatError extends MtdError(code = "FORMAT_PAYMENT_ID", message
 
 object TransactionIdFormatError extends MtdError(code = "FORMAT_TRANSACTION_ID", message = "The transaction ID format is invalid", BAD_REQUEST)
 
-object ChargeReferenceFormatError extends MtdError(code = "FORMAT_CHARGE_REFERENCE", message = "The provided charge reference is invalid", BAD_REQUEST)
+object ChargeReferenceFormatError
+    extends MtdError(code = "FORMAT_CHARGE_REFERENCE", message = "The provided charge reference is invalid", BAD_REQUEST)
 
 object IdFormatError extends MtdError(code = "FORMAT_ID", message = "The ID format is invalid", BAD_REQUEST)
 
@@ -74,11 +75,9 @@ object InvalidTaxYearParameterError
 
 //Authentication/Authorisation errors
 
-object ClientNotAuthenticatedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The client or agent is not authorised", UNAUTHORIZED)
-
-/** Authentication OK but not allowed access to the requested resource
-  */
-object ClientNotAuthorisedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The client or agent is not authorised", FORBIDDEN)
+object ClientOrAgentNotAuthorisedError extends MtdError("CLIENT_OR_AGENT_NOT_AUTHORISED", "The client or agent is not authorised", FORBIDDEN) {
+  def withStatus401: MtdError = copy(httpStatus = UNAUTHORIZED)
+}
 
 object InvalidBearerTokenError extends MtdError("UNAUTHORIZED", "Bearer token is missing or not authorized", UNAUTHORIZED)
 

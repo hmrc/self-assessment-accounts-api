@@ -18,7 +18,7 @@ package api.services
 
 import api.config.MockAppConfig
 import api.models.auth.UserDetails
-import api.models.errors.{ClientNotAuthorisedError, InternalError}
+import api.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
 import config.ConfidenceLevelConfig
 import org.scalamock.handlers.CallHandler
 import uk.gov.hmrc.auth.core._
@@ -190,7 +190,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
         mockConfidenceLevelCheckConfig(authValidationEnabled = false)
 
-        val expected = Left(ClientNotAuthorisedError)
+        val expected = Left(ClientOrAgentNotAuthorisedError)
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)
@@ -207,7 +207,7 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
 
         mockConfidenceLevelCheckConfig(authValidationEnabled = false)
 
-        val expected = Left(ClientNotAuthorisedError)
+        val expected = Left(ClientOrAgentNotAuthorisedError)
 
         MockedAuthConnector
           .authorised(EmptyPredicate, authRetrievals)
@@ -242,8 +242,8 @@ class EnrolmentsAuthServiceSpec extends ServiceSpec with MockAppConfig {
   }
 
   trait Test {
-    lazy val target = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
-    val mockAuthConnector: AuthConnector = mock[AuthConnector]
+    lazy val target                                                   = new EnrolmentsAuthService(mockAuthConnector, mockAppConfig)
+    val mockAuthConnector: AuthConnector                              = mock[AuthConnector]
     val authRetrievals: Retrieval[Option[AffinityGroup] ~ Enrolments] = affinityGroup and authorisedEnrolments
 
     def mockConfidenceLevelCheckConfig(authValidationEnabled: Boolean = true, confidenceLevel: ConfidenceLevel = ConfidenceLevel.L200): Unit = {

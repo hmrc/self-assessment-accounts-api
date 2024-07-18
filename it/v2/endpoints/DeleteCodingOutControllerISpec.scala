@@ -67,7 +67,7 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
       }
 
       val input = List(
-        ("AA123456", "2021-22", BAD_REQUEST, NinoFormatError),
+        ("invalidNino", "2021-22", BAD_REQUEST, NinoFormatError),
         ("AA123456A", "203100", BAD_REQUEST, TaxYearFormatError),
         ("AA123456A", "2018-19", BAD_REQUEST, RuleTaxYearNotSupportedError),
         ("AA123456A", "2018-20", BAD_REQUEST, RuleTaxYearRangeInvalidError)
@@ -136,9 +136,9 @@ class DeleteCodingOutControllerISpec extends IntegrationBaseSpec {
   }
 
   private trait NonTysTest extends Test {
-    def taxYear: String = "2019-20"
+    def taxYear: String = "2021-22"
 
-    def downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/2019-20"
+    def downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
   }
 
   private trait TysIfsTest extends Test {
