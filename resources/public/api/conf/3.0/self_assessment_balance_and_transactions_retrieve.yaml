@@ -42,11 +42,11 @@ get:
       content:
         application/json:
           schema:
-            $ref: "./schemas/retrieveBalanceAndTransactions.json"
+            $ref: "./schemas/retrieveBalanceAndTransactions/response.json"
           examples:
             Request:
               value:
-                $ref: "./examples/retrieveBalanceAndTransactions/retrieveBalanceAndTransactionsFullResponse.json"
+                $ref: "./examples/retrieveBalanceAndTransactions/fullResponse.json"
 
       headers:
         X-CorrelationId:

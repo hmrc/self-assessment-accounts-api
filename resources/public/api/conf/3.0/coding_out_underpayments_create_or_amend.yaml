@@ -29,12 +29,12 @@ requestBody:
   content:
     application/json:
       schema:
-        $ref: './schemas/create_or_amend_coding_out_underpayments_request.json'
+        $ref: './schemas/createOrAmendCodingOutUnderpayments/request.json'
       examples:
         example-1:
           description: Default Example
           value:
-            $ref: './examples/createOrAmendCodingOutUnderpayments/create_or_amend_coding_out_underpayments_request.json'
+            $ref: './examples/createOrAmendCodingOutUnderpayments/request.json'
 
 responses:
   "200":
@@ -51,11 +51,11 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "./schemas/create_or_amend_coding_out_underpayments_response.json"
+          $ref: "./schemas/createOrAmendCodingOutUnderpayments/response.json"
         examples:
           Request:
             value:
-              $ref: "./examples/createOrAmendCodingOutUnderpayments/create_or_amend_coding_out_underpayments_response.json"
+              $ref: "./examples/createOrAmendCodingOutUnderpayments/response.json"
 
   "400":
     description: Bad request

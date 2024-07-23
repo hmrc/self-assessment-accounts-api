@@ -26,7 +26,7 @@ class ResolveChargeReferenceSpec extends UnitSpec {
   "ResolveChargeReference" should {
     "return no errors" when {
       "given a valid Charge Reference" in {
-        val value  = "1234567890AB"
+        val value  = "AB123456789012"
         val result = ResolveChargeReference(Some(value))
         result shouldBe Valid(Some(ChargeReference(value)))
       }

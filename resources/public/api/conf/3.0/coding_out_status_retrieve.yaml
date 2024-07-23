@@ -43,11 +43,11 @@ get:
       content:
         application/json:
           schema:
-            $ref: "./schemas/retrieve_coding_out_status_response.json"
+            $ref: "./schemas/retrieveCodingOutStatus/response.json"
           examples:
             Request:
               value:
-                $ref: "./examples/retrieveCodingOutStatus/retrieve_coding_out_status_response.json"
+                $ref: "./examples/retrieveCodingOutStatus/response.json"
 
     "400":
       description: Bad request
