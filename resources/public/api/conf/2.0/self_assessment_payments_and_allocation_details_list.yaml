@@ -36,11 +36,11 @@ get:
       content:
         application/json:
           schema:
-            $ref: "schemas/list_self_assessment_payments_and_allocation_details_schema.json"
+            $ref: "schemas/listSelfAssessmentPaymentsAndAllocationDetails/response.json"
           examples:
             Request:
               value:
-                $ref: "examples/listSelfAssessmentPaymentsAndAllocationDetails/listSelfAssessmentPaymentsAndAllocationDetails.json"
+                $ref: "examples/listSelfAssessmentPaymentsAndAllocationDetails/response.json"
 
       headers:
         X-CorrelationId:

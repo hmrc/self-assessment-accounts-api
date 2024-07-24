@@ -5,16 +5,16 @@
   "type": "object",
   "properties": {
     "balanceDetails": {
-      "$ref": "retrieveBalanceAndTransactions/balanceDetails_response.json"
+      "$ref": "balanceDetails.json"
     },
     "codingDetails": {
-      "$ref": "retrieveBalanceAndTransactions/codingDetails.json"
+      "$ref": "codingDetails.json"
     },
     "documentDetails": {
-      "$ref": "retrieveBalanceAndTransactions/documentDetails.json"
+      "$ref": "documentDetails.json"
     },
     "financialDetails": {
-      "$ref": "retrieveBalanceAndTransactions/financialDetails.json"
+      "$ref": "financialDetails.json"
     }
   },
   "required": [

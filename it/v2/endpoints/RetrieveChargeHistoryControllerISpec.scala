@@ -88,7 +88,7 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
         }
 
-        val chargeReferenceQueryParam: Map[String, String] = Map("chargeReference" -> "testCharge23")
+        val chargeReferenceQueryParam: Map[String, String] = Map("chargeReference" -> "Ab123456789012")
         val queryParams: Map[String, String]                     = chargeReferenceQueryParam ++ docNumberQueryParam
 
         val response: WSResponse                           = await(request(queryParams).get())

@@ -23,7 +23,7 @@ import cats.data.Validated.{Invalid, Valid}
 
 object ResolveChargeReference extends Resolver[String, ChargeReference] {
 
-  private val chargeReferenceRegex = "^[0-9A-Za-z]{1,12}$".r
+  private val chargeReferenceRegex = "^[A-Za-z]{2}[0-9]{12}$".r
 
   def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], ChargeReference] = {
     if (chargeReferenceRegex.matches (value) )
