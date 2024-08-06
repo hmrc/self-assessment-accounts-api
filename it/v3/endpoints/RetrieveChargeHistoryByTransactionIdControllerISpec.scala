@@ -131,7 +131,7 @@ class RetrieveChargeHistoryByTransactionIdControllerISpec extends IntegrationBas
 
       val input = Seq(
         ("AA1123A", "transactionId", BAD_REQUEST, NinoFormatError),
-        ("AA123456", "invalidTransactionId", BAD_REQUEST, TransactionIdFormatError)
+        ("AA123456A", "invalidTransactionId", BAD_REQUEST, TransactionIdFormatError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
