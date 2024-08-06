@@ -16,4 +16,6 @@
 
 package api.models.domain
 
-case class ChargeReference(value: String)
+case class ChargeReference(value: String) {
+  override def toString: String = value
+}

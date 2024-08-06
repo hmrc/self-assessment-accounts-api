@@ -1,8 +1,8 @@
 get:
-  summary: Retrieve History of a Self Assessment Charge
+  summary: Retrieve History of a Self Assessment Charge by Charge Reference
 
   description: |
-    This endpoint enables you to retrieve the history of changes to an individual charge. A National Insurance number and transaction ID must be provided. You can get the transaction ID using the Retrieve Self Assessment Balance and Transactions endpoint - it is returned as documentId in the documentDetails array.
+    This endpoint enables you to retrieve the history of a Self Assessment charge made by HMRC using a charge reference number. A National Insurance number and charge reference number must be provided.
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
@@ -21,7 +21,7 @@ get:
 
   parameters:
     - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
-    - $ref: "./common/pathParameters.yaml#/components/parameters/transactionId"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/chargeReference"
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
     - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
     - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
@@ -56,8 +56,8 @@ get:
           examples:
             FORMAT_NINO:
               $ref: "./common/errors.yaml#/components/examples/formatNino"
-            FORMAT_TRANSACTION_ID:
-              $ref: "./common/errors.yaml#/components/examples/formatTransactionId"
+            FORMAT_CHARGE_REFERENCE:
+              $ref: "./common/errors.yaml#/components/examples/formatChargeReference"
             RULE_INCORRECT_GOV_TEST_SCENARIO:
               $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
 

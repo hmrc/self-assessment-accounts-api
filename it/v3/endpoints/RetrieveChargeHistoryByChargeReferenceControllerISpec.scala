@@ -27,18 +27,20 @@ import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
 
-class RetrieveChargeHistoryByTransactionIdControllerISpec extends IntegrationBaseSpec {
+class RetrieveChargeHistoryByChargeReferenceControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
-    protected val transactionId = "23456789"
-    protected val nino          = "AA123456A"
+    protected val chargeReference = "XD000024425799"
+    protected val nino            = "AA123456A"
 
-    protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, transactionId)
+    protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, chargeReference)
 
     def downstreamUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
 
     def setupStubs(): StubMapping
+
+    val chargeReferenceQueryParam: Map[String, String] = Map("chargeReference" -> chargeReference)
 
     def request: WSRequest = {
       setupStubs()
@@ -49,7 +51,7 @@ class RetrieveChargeHistoryByTransactionIdControllerISpec extends IntegrationBas
         )
     }
 
-    def uri: String = s"/$nino/charges/transactionId/$transactionId"
+    def uri: String = s"/$nino/charges/chargeReference/$chargeReference"
 
     def errorBody(code: String): String =
       s"""
@@ -83,18 +85,18 @@ class RetrieveChargeHistoryByTransactionIdControllerISpec extends IntegrationBas
 
         val multipleErrors: String =
           """
-                |{
-                |   "failures": [
-                |        {
-                |            "code": "INVALID_IDTYPE",
-                |            "reason": "The provided id type is invalid
-                |        },
-                |        {
-                |            "code": "INVALID_REGIME_TYPE",
-                |            "reason": "The provided regime type is invalid"
-                |        }
-                |    ]
-                |}
+            |{
+            |   "failures": [
+            |        {
+            |            "code": "INVALID_IDTYPE",
+            |            "reason": "The provided id type is invalid
+            |        },
+            |        {
+            |            "code": "INVALID_REGIME_TYPE",
+            |            "reason": "The provided regime type is invalid"
+            |        }
+            |    ]
+            |}
           """.stripMargin
 
         override def setupStubs(): StubMapping = {
@@ -111,11 +113,12 @@ class RetrieveChargeHistoryByTransactionIdControllerISpec extends IntegrationBas
     }
 
     "return error according to spec" when {
-      def validationErrorTest(requestNino: String, requestTransactionId: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+
+      def validationErrorTest(requestNino: String, requestChargeReference: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"validation fails with ${expectedBody.code} error" in new Test {
 
-          override val nino: String          = requestNino
-          override val transactionId: String = requestTransactionId
+          override val nino: String            = requestNino
+          override val chargeReference: String = requestChargeReference
 
           override def setupStubs(): StubMapping = {
             AuthStub.authorised()
@@ -130,8 +133,8 @@ class RetrieveChargeHistoryByTransactionIdControllerISpec extends IntegrationBas
       }
 
       val input = Seq(
-        ("AA1123A", "transactionId", BAD_REQUEST, NinoFormatError),
-        ("AA123456", "invalidTransactionId", BAD_REQUEST, TransactionIdFormatError)
+        ("AA1123A", "XD000024425799", BAD_REQUEST, NinoFormatError),
+        ("AA123456A", "veryBadChargeRef", BAD_REQUEST, ChargeReferenceFormatError)
       )
       input.foreach(args => (validationErrorTest _).tupled(args))
     }
