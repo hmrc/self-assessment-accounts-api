@@ -35,8 +35,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
-    val nino          = request.nino.nino
-    val transactionId = request.transactionId
+    import request._
 
     val queryParams = Seq("docNumber" -> transactionId.toString)
 

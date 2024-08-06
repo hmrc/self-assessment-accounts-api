@@ -32,8 +32,8 @@ trait MockRetrieveChargeHistoryByTransactionIdService extends MockFactory {
 
   object MockRetrieveChargeHistoryByTransactionIdService {
 
-    def retrieveChargeHistoryByTransactionId(
-        request: RetrieveChargeHistoryByTransactionIdRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
+    def retrieveChargeHistoryByTransactionId(request: RetrieveChargeHistoryByTransactionIdRequestData)
+        : CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveChargeHistoryResponse]]]] = {
       (
         mockRetrieveChargeHistoryByTransactionIdService
           .retrieveChargeHistoryByTransactionId(_: RetrieveChargeHistoryByTransactionIdRequestData)(

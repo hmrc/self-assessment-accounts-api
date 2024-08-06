@@ -34,7 +34,7 @@ class RetrieveChargeHistoryByTransactionIdValidatorFactory {
       def validate: Validated[Seq[MtdError], RetrieveChargeHistoryByTransactionIdRequestData] =
         (
           ResolveNino(nino),
-          ResolveTransactionId(transactionId),
+          ResolveTransactionId(transactionId)
         ).mapN(RetrieveChargeHistoryByTransactionIdRequestData)
 
     }

@@ -1,4 +1,3 @@
-# V2 endpoints
 GET           /:nino/charges/:transactionId                                v3.controllers.RetrieveChargeHistoryByTransactionIdController.retrieveChargeHistoryByTransactionId(nino: String, transactionId: String)
 GET           /:nino/charges/transactionId/:transactionId                  v3.controllers.RetrieveChargeHistoryByTransactionIdController.retrieveChargeHistoryByTransactionId(nino: String, transactionId: String)
 GET           /:nino/charges/chargeReference/:chargeReference              v3.controllers.RetrieveChargeHistoryByChargeReferenceController.retrieveChargeHistoryByChargeReference(nino: String, chargeReference: String)
@@ -7,13 +6,10 @@ GET           /:nino/balance-and-transactions                              v3.co
 
 GET           /:nino/payments-and-allocations                              v2.controllers.ListPaymentsAndAllocationDetailsController.listPayments(nino: String, fromDate: Option[String], toDate: Option[String], paymentLot: Option[String], paymentLotItem: Option[String])
 
-# Coding Out endpoints routed from V2
 PUT           /:nino/:taxYear/collection/tax-code                          v2.controllers.CreateOrAmendCodingOutController.createOrAmendCodingOut(nino, taxYear)
 GET           /:nino/:taxYear/collection/tax-code                          v2.controllers.RetrieveCodingOutController.retrieveCodingOut(nino: String, taxYear: String, source: Option[String])
 DELETE        /:nino/:taxYear/collection/tax-code                          v2.controllers.DeleteCodingOutController.handleRequest(nino: String, taxYear: String)
 
-
-# Opting In/Out of Coding Out endpoints
 GET           /:nino/:taxYear/collection/tax-code/coding-out/status        v3.controllers.RetrieveCodingOutStatusController.retrieveCodingOutStatus(nino: String, taxYear: String)
 POST          /:nino/:taxYear/collection/tax-code/coding-out/opt-in        v3.controllers.OptInToCodingOutController.optInToCodingOut(nino: String, taxYear: String)
 POST          /:nino/:taxYear/collection/tax-code/coding-out/opt-out       v3.controllers.OptOutOfCodingOutController.optOutOfCodingOut(nino: String, taxYear: String)

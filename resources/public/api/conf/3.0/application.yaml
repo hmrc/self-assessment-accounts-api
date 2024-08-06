@@ -60,7 +60,7 @@ tags:
 
 paths:
   /accounts/self-assessment/{nino}/charges/{transactionId}:
-    $ref: "./self_assessment_charge_history_by_transactionId_retrieve.yaml"
+    $ref: "./self_assessment_charge_history_retrieve.yaml"
 # {{#if (enabled 'chargeReferenceEndpoint')}}
   /accounts/self-assessment/{nino}/charges/transactionId/{transactionId}:
     $ref: "./self_assessment_charge_history_by_transactionId_retrieve.yaml"

@@ -40,8 +40,6 @@ class RetrieveChargeHistoryByChargeReferenceControllerISpec extends IntegrationB
 
     def setupStubs(): StubMapping
 
-    val chargeReferenceQueryParam: Map[String, String] = Map("chargeReference" -> chargeReference)
-
     def request: WSRequest = {
       setupStubs()
       buildRequest(uri)

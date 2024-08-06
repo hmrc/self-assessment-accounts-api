@@ -24,10 +24,10 @@ import v3.models.request.retrieveChargeHistory.RetrieveChargeHistoryByTransactio
 class RetrieveChargeHistoryByTransactionIdValidatorFactorySpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
-  private val validNino = "AA123456A"
+  private val validNino          = "AA123456A"
   private val validTransactionId = "717f3agW678f"
 
-  private val parsedNino = Nino(validNino)
+  private val parsedNino          = Nino(validNino)
   private val parsedTransactionId = TransactionId(validTransactionId)
 
   private val validatorFactory = new RetrieveChargeHistoryByTransactionIdValidatorFactory()
