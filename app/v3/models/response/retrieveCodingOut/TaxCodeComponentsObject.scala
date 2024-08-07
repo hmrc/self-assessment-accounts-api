@@ -14,8 +14,15 @@
  * limitations under the License.
  */
 
-package api.models.domain
+package v3.models.response.retrieveCodingOut
 
-case class ChargeReference(value: String) {
-  override def toString: String = value
+import play.api.libs.json.{Json, OFormat}
+
+case class TaxCodeComponentsObject(selfAssessmentUnderpayment: Option[Seq[TaxCodeComponents]],
+                                   payeUnderpayment: Option[Seq[TaxCodeComponents]],
+                                   debt: Option[Seq[TaxCodeComponents]],
+                                   inYearAdjustment: Option[TaxCodeComponents])
+
+object TaxCodeComponentsObject {
+  implicit val format: OFormat[TaxCodeComponentsObject] = Json.format[TaxCodeComponentsObject]
 }

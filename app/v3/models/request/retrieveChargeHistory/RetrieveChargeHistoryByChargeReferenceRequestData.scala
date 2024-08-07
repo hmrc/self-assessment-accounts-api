@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-package api.models.domain
+package v3.models.request.retrieveChargeHistory
 
-case class ChargeReference(value: String) {
-  override def toString: String = value
-}
+import api.models.domain.{ChargeReference, Nino}
+
+case class RetrieveChargeHistoryByChargeReferenceRequestData(nino: Nino, chargeReference: ChargeReference)

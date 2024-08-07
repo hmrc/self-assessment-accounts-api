@@ -39,3 +39,15 @@ components:
         type: string
         example: 2021-22
       required: true
+    chargeReference:
+      name: chargeReference
+      in: path
+      description: |
+        This field will be used when the need is to view a specific document with help of Charge Reference number{{#unless (releasedInProduction 'chargeReferencePoaAdjustmentChanges')}} [test only]{{/unless}} 
+
+        Must conform to the regular expression
+        ^[A-Za-z]{2}[0-9]{12}$
+      schema:
+        type: string
+        example: Ck106547829351
+      required: true

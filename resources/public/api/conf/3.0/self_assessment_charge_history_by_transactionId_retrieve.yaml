@@ -1,11 +1,8 @@
 get:
-  summary: Retrieve History of a Self Assessment Charge (Deprecated)
+  summary: Retrieve History of a Self Assessment Charge by Transaction ID
 
   description: |
-    This endpoint enables you to retrieve the history of changes to an individual charge. A National Insurance number and transaction ID must be provided. 
-    You can get the transaction ID using the Retrieve Self Assessment Balance and Transactions endpoint - it is returned as documentId in the documentDetails array.
-    
-    __Note: this endpoint will be removed in a future version. Update your code to use the "Retrieve History of a Self Assessment Charge by Transaction ID" endpoint instead.__
+    This endpoint enables you to retrieve the history of a Self Assessment charge made by HMRC using a transaction ID. A National Insurance number and transaction ID must be provided.
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.

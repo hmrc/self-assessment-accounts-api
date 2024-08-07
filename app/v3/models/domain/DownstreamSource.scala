@@ -14,8 +14,24 @@
  * limitations under the License.
  */
 
-package api.models.domain
+package v3.models.domain
 
-case class ChargeReference(value: String) {
-  override def toString: String = value
+import play.api.libs.json
+import utils.enums.Enums
+
+sealed trait DownstreamSource {
+  def toMtdSource: String
+}
+
+object DownstreamSource {
+
+  case object `HMRC HELD` extends DownstreamSource {
+    override def toMtdSource: String = "hmrcHeld"
+  }
+
+  case object `CUSTOMER` extends DownstreamSource {
+    override def toMtdSource: String = "user"
+  }
+
+  implicit val format: json.Format[DownstreamSource] = Enums.format[DownstreamSource]
 }

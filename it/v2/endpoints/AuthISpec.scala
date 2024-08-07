@@ -44,7 +44,7 @@ class AuthISpec extends IntegrationBaseSpec {
         )
     }
 
-    def uri: String = s"/$nino/$taxYear/collection/tax-code "
+    def uri: String = s"/$nino/$taxYear/collection/tax-code"
   }
 
   "Calling the sample endpoint" when {
