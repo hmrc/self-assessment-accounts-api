@@ -124,8 +124,7 @@ object RequestHandler {
           val headers =
             responseHeaders ++
               List(
-                "X-CorrelationId"        -> correlationId,
-                "X-Content-Type-Options" -> "nosniff"
+                "X-CorrelationId" -> correlationId
               ) ++
               withDeprecationHeaders
 
