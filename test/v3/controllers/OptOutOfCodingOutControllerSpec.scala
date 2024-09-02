@@ -48,7 +48,7 @@ class OptOutOfCodingOutControllerSpec
         MockedOptOutOfCodingOutService.optOutOfCodingOut(requestData) returns
           Future.successful(Right(ResponseWrapper(correlationId, response)))
 
-        runOkTest(expectedStatus = NO_CONTENT)
+        runOkTestWithAudit(expectedStatus = NO_CONTENT)
       }
     }
 
@@ -56,7 +56,7 @@ class OptOutOfCodingOutControllerSpec
       "the parser validation fails" in new Test {
         willUseValidator(returning(NinoFormatError))
 
-        runErrorTest(NinoFormatError)
+        runErrorTestWithAudit(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
@@ -65,7 +65,7 @@ class OptOutOfCodingOutControllerSpec
         MockedOptOutOfCodingOutService.optOutOfCodingOut(requestData) returns
           Future.successful(Left(ErrorWrapper(correlationId, RuleBusinessPartnerNotExistError)))
 
-        runErrorTest(RuleBusinessPartnerNotExistError)
+        runErrorTestWithAudit(RuleBusinessPartnerNotExistError)
       }
     }
   }
@@ -96,10 +96,10 @@ class OptOutOfCodingOutControllerSpec
         auditType = "OptOutOfCodingOut",
         transactionName = "opt-out-of-coding-out",
         detail = GenericAuditDetail(
-          userType = "Agent",
-          agentReferenceNumber = Some("123456"),
+          userType = "Individual",
+          agentReferenceNumber = None,
           versionNumber = "3.0",
-          params = Map("nino" -> nino, taxYear -> taxYear),
+          params = Map("nino" -> nino, "taxYear" -> taxYear),
           requestBody = None,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

@@ -62,7 +62,7 @@ class RetrieveCodingOutStatusControllerSpec
           .retrieveCodingOutStatus(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, downstreamResponse))))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson), maybeAuditResponseBody = Some(mtdResponseJson))
       }
     }
 
@@ -70,7 +70,7 @@ class RetrieveCodingOutStatusControllerSpec
       "the parser validation fails" in new Test {
         willUseValidator(returning(NinoFormatError))
 
-        runErrorTest(NinoFormatError)
+        runErrorTestWithAudit(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
@@ -80,7 +80,7 @@ class RetrieveCodingOutStatusControllerSpec
           .retrieveCodingOutStatus(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleBusinessPartnerNotExistError))))
 
-        runErrorTest(RuleBusinessPartnerNotExistError)
+        runErrorTestWithAudit(RuleBusinessPartnerNotExistError)
       }
     }
   }
@@ -103,8 +103,8 @@ class RetrieveCodingOutStatusControllerSpec
         auditType = "RetrieveCodingOutStatus",
         transactionName = "retrieve-coding-out-status",
         detail = GenericAuditDetail(
-          userType = "Agent",
-          agentReferenceNumber = Some("123456"),
+          userType = "Individual",
+          agentReferenceNumber = None,
           versionNumber = "3.0",
           params = Map("nino" -> nino, "taxYear" -> taxYear),
           requestBody = maybeRequestBody,
