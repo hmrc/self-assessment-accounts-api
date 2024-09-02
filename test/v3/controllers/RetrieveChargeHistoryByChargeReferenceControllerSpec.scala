@@ -22,9 +22,11 @@ import api.hateoas
 import api.hateoas.Method.GET
 import api.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{ChargeReference, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
 import v3.controllers.validators.MockRetrieveChargeHistoryByChargeReferenceValidatorFactory
 import v3.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
@@ -84,9 +86,11 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
                 transactionDetailsLink
               )))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdMultipleResponseWithHateoas(nino, chargeReference)))
+        val responseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, chargeReference)
+        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(responseWithHateoas),maybeAuditResponseBody = Some(responseWithHateoas))
       }
     }
+
     "return the error as per spec" when {
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
@@ -95,13 +99,13 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
           .retrieveChargeHistoryByChargeReference(requestData)
           .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
 
-        runErrorTest(NinoFormatError)
+        runErrorTestWithAudit(NinoFormatError)
       }
     }
 
   }
 
-  private trait Test extends ControllerTest {
+  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
     private val controller = new RetrieveChargeHistoryByChargeReferenceController(
       authService = mockEnrolmentsAuthService,
@@ -109,11 +113,28 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
       validatorFactory = mockRetrieveChargeHistoryByChargeReferenceValidatorFactory,
       service = mockRetrieveChargeHistoryByChargeReferenceService,
       hateoasFactory = mockHateoasFactory,
+      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
 
     protected def callController(): Future[Result] = controller.retrieveChargeHistoryByChargeReference(nino, chargeReference)(fakeGetRequest)
+
+    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
+      AuditEvent(
+        auditType = "RetrieveAChargeHistoryByChargeReference",
+        transactionName = "retrieve-a-charge-history-by-charge-reference",
+        detail = GenericAuditDetail(
+          userType = "Individual",
+          agentReferenceNumber = None,
+          versionNumber = apiVersion.name,
+          params = Map("nino" -> nino, "chargeReference" -> chargeReference),
+          requestBody = maybeRequestBody,
+          `X-CorrelationId` = correlationId,
+          auditResponse = auditResponse
+        )
+      )
+
   }
 
 }
