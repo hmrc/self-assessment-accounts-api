@@ -18,9 +18,10 @@ package v3.controllers
 
 import api.controllers._
 import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import routing.Version
 import utils.IdGenerator
 import v3.controllers.validators.RetrieveChargeHistoryByChargeReferenceValidatorFactory
 import v3.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
@@ -35,6 +36,7 @@ class RetrieveChargeHistoryByChargeReferenceController @Inject() (val authServic
                                                                   validatorFactory: RetrieveChargeHistoryByChargeReferenceValidatorFactory,
                                                                   service: RetrieveChargeHistoryByChargeReferenceService,
                                                                   hateoasFactory: HateoasFactory,
+                                                                  auditService: AuditService,
                                                                   cc: ControllerComponents,
                                                                   idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
@@ -53,6 +55,14 @@ class RetrieveChargeHistoryByChargeReferenceController @Inject() (val authServic
           .withValidator(validator)
           .withService(service.retrieveChargeHistoryByChargeReference)
           .withHateoasResult(hateoasFactory)(RetrieveChargeHistoryHateoasData(nino, chargeReference))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "RetrieveAChargeHistoryByChargeReference",
+            transactionName = "retrieve-a-charge-history-by-charge-reference",
+            apiVersion = Version(request),
+            params = Map("nino" -> nino, "chargeReference" -> chargeReference),
+            includeResponse = true
+          ))
 
       requestHandler.handleRequest()
     }
