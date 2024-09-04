@@ -18,14 +18,14 @@ package api.hateoas
 
 import api.hateoas
 import Method.GET
-import api.config.MockAppConfig
+import config.MockAppConfig
 import cats.Functor
 import config.AppConfig
 import support.UnitSpec
 
 class HateoasFactorySpec extends UnitSpec with MockAppConfig {
 
-  val hateoasFactory = new HateoasFactory(mockAppConfig)
+  val hateoasFactory     = new HateoasFactory(mockAppConfig)
   val response: Response = Response("X")
 
   case class Response(foo: String)
@@ -74,7 +74,9 @@ class HateoasFactorySpec extends UnitSpec with MockAppConfig {
 
     "work" in new Test {
       hateoasFactory.wrapList(ListResponse(Seq(response)), Data1("id")) shouldBe
-        HateoasWrapper(ListResponse(Seq(HateoasWrapper(response, Seq(hateoas.Link("context/id/X", GET, "item"))))), Seq(hateoas.Link("context/id", GET, "rel")))
+        HateoasWrapper(
+          ListResponse(Seq(HateoasWrapper(response, Seq(hateoas.Link("context/id/X", GET, "item"))))),
+          Seq(hateoas.Link("context/id", GET, "rel")))
     }
   }
 

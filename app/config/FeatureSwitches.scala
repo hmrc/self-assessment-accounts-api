@@ -29,9 +29,9 @@ trait FeatureSwitches {
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean
   def isEnabled(key: String): Boolean
   def isReleasedInProduction(feature: String): Boolean
-  def isPOARelevantAmountEnabled : Boolean
-  def isChargeReferencePoaAdjustmentChangesEnabled : Boolean
-  def ischargeReferenceEndpointEnabled : Boolean
+  def isPOARelevantAmountEnabled: Boolean
+  def isChargeReferencePoaAdjustmentChangesEnabled: Boolean
+  def supportingAgentsAccessControlEnabled: Boolean
 }
 
 @Singleton
@@ -52,10 +52,11 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
 
   private def isConfigTrue(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
 
-  def isReleasedInProduction(feature: String): Boolean = isConfigTrue(feature + ".released-in-production")
-  def isPOARelevantAmountEnabled: Boolean = isEnabled("isPOARelevantAmount")
+  def isReleasedInProduction(feature: String): Boolean      = isConfigTrue(feature + ".released-in-production")
+  def isPOARelevantAmountEnabled: Boolean                   = isEnabled("isPOARelevantAmount")
   def isChargeReferencePoaAdjustmentChangesEnabled: Boolean = isEnabled("chargeReferencePoaAdjustmentChanges")
-  def ischargeReferenceEndpointEnabled: Boolean = isEnabled("chargeReferenceEndpoint")
+  def ischargeReferenceEndpointEnabled: Boolean             = isEnabled("chargeReferenceEndpoint")
+  val supportingAgentsAccessControlEnabled: Boolean         = isEnabled("supporting-agents-access-control")
 }
 
 object FeatureSwitches {

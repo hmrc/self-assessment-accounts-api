@@ -16,7 +16,7 @@
 
 package v3.connectors
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.connectors.{ConnectorSpec, MockHttpClient}
 import api.models.domain.{Nino, TransactionId}
 import api.models.outcomes.ResponseWrapper

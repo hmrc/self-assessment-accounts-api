@@ -68,9 +68,8 @@ object DocumentDetailsFixture {
     poaRelevantAmount = Some(5.99)
   )
 
-
   val documentDetailsWithoutDocDueDate: DocumentDetails = documentDetails.copy(documentDueDate = None)
-  val documentDetailsWithoutPOAAmount: DocumentDetails = documentDetails.copy(poaRelevantAmount = None)
+  val documentDetailsWithoutPOAAmount: DocumentDetails  = documentDetails.copy(poaRelevantAmount = None)
 
   val documentDetailsMinimal: DocumentDetails = DocumentDetails(
     None,
@@ -154,8 +153,7 @@ object DocumentDetailsFixture {
 
   val documentDetailsMtdResponseJson: JsObject =
     Json
-      .parse(
-        s"""
+      .parse(s"""
            |{
            |  "taxYear": "2020-21",
            |  "documentId": "1455",
@@ -182,13 +180,18 @@ object DocumentDetailsFixture {
       .as[JsObject]
 
   val documentDetailsWithoutDocDueDateMtdResponseJson: JsObject = documentDetailsMtdResponseJson - "documentDueDate"
-  val documentDetailWithoutPoaRelevantAmountAndDocDueDateMtdResponseJson: JsObject = documentDetailsMtdResponseWithoutPOARelevantAmountJson - "documentDueDate"
+
+  val documentDetailWithoutPoaRelevantAmountAndDocDueDateMtdResponseJson: JsObject =
+    documentDetailsMtdResponseWithoutPOARelevantAmountJson - "documentDueDate"
 
   val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
   val documentDetailsWithoutDocDueDateDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = None)
 
-  val documentDetailsWithoutPOAAmountDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsWithoutPOAAmountJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
-  val documentDetailsWithoutPOAAmntAndDocDueDateDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsWithoutPOAAmountJson("2021", maybeDocumentDueDate = None)
+  val documentDetailsWithoutPOAAmountDownstreamResponseJson: JsValue =
+    newDownstreamDocumentDetailsWithoutPOAAmountJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
+
+  val documentDetailsWithoutPOAAmntAndDocDueDateDownstreamResponseJson: JsValue =
+    newDownstreamDocumentDetailsWithoutPOAAmountJson("2021", maybeDocumentDueDate = None)
 
   val documentDetailsDownstreamResponseMinimalJson: JsValue = Json.parse(s"""
        |{

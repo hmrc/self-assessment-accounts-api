@@ -30,6 +30,7 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
   val mapping: DownstreamResponseMappingSupport with Logging = new DownstreamResponseMappingSupport with Logging {}
 
   val correlationId = "someCorrelationId"
+
   val errorCodeMap: PartialFunction[String, MtdError] = {
     case "ERR1" => Error1
     case "ERR2" => Error2
@@ -72,7 +73,8 @@ class DownstreamResponseMappingSupportSpec extends UnitSpec {
 
       "downstream returns UNMATCHED_STUB_ERROR" must {
         "return an RuleIncorrectGovTestScenario error" in {
-          mapping.mapDownstreamErrors(errorCodeMap)(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("UNMATCHED_STUB_ERROR")))) shouldBe
+          mapping.mapDownstreamErrors(errorCodeMap)(
+            ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode("UNMATCHED_STUB_ERROR")))) shouldBe
             ErrorWrapper(correlationId, RuleIncorrectGovTestScenarioError)
         }
       }

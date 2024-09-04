@@ -16,7 +16,7 @@
 
 package v3.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.GET
@@ -26,12 +26,14 @@ import api.models.domain.{ChargeReference, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
+import play.api.Configuration
 import v3.controllers.validators.MockRetrieveChargeHistoryByChargeReferenceValidatorFactory
 import v3.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
 import v3.models.request.retrieveChargeHistory.RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v3.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 import v3.services.MockRetrieveChargeHistoryByChargeReferenceService
+import routing.{Version, Version3}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,6 +45,8 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
     with MockAppConfig
     with MockHateoasFactory
     with MockRetrieveChargeHistoryByChargeReferenceValidatorFactory {
+
+  override val apiVersion: Version = Version3
 
   private val chargeReference = "anChargeReference"
 
@@ -103,7 +107,7 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
 
   private trait Test extends ControllerTest {
 
-    private val controller = new RetrieveChargeHistoryByChargeReferenceController(
+    override protected val controller = new RetrieveChargeHistoryByChargeReferenceController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveChargeHistoryByChargeReferenceValidatorFactory,
@@ -112,6 +116,9 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveChargeHistoryByChargeReference(nino, chargeReference)(fakeGetRequest)
   }

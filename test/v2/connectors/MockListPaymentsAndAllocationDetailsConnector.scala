@@ -32,8 +32,8 @@ trait MockListPaymentsAndAllocationDetailsConnector extends MockFactory {
 
   object MockListPaymentsAndAllocationDetailsConnector {
 
-    def listPaymentsAndAllocationDetails(
-        requestData: ListPaymentsAndAllocationDetailsRequestData): CallHandler[Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]]] = {
+    def listPaymentsAndAllocationDetails(requestData: ListPaymentsAndAllocationDetailsRequestData)
+        : CallHandler[Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]]] = {
       (
         mockListPaymentsAndAllocationDetailsConnector
           .listPaymentsAndAllocationDetails(_: ListPaymentsAndAllocationDetailsRequestData)(

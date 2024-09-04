@@ -16,7 +16,7 @@
 
 package config.rewriters
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import com.github.jknack.handlebars.HandlebarsException
 import support.UnitSpec
 

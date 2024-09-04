@@ -16,7 +16,7 @@
 
 package v2.models.response.listCharges
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.hateoas.Link
 import api.hateoas.Method.GET
 import play.api.libs.json.{JsError, Json}

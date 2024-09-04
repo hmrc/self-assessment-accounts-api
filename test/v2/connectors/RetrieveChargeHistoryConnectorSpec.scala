@@ -16,7 +16,7 @@
 
 package v2.connectors
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.connectors.{ConnectorSpec, MockHttpClient}
 import api.models.domain.{ChargeReference, Nino, TransactionId}
 import api.models.outcomes.ResponseWrapper

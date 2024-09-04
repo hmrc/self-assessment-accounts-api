@@ -16,7 +16,7 @@
 
 package v3.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
@@ -24,10 +24,12 @@ import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import play.api.Configuration
 import v3.controllers.validators.MockOptInToCodingOutValidatorFactory
 import v3.models.errors.RuleBusinessPartnerNotExistError
 import v3.models.request.optInToCodingOut.OptInToCodingOutRequestData
 import v3.services.MockOptInToCodingOutService
+import routing.{Version, Version3}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,6 +40,8 @@ class OptInToCodingOutControllerSpec
     with MockOptInToCodingOutService
     with MockOptInToCodingOutValidatorFactory
     with MockAppConfig {
+
+  override val apiVersion: Version = Version3
 
   "OptInToCodingOutController" should {
     "return 204 NO_CONTENT" when {
@@ -71,7 +75,7 @@ class OptInToCodingOutControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new OptInToCodingOutController(
+    override protected val controller = new OptInToCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockOptInToCodingOutValidatorFactory,
@@ -86,6 +90,9 @@ class OptInToCodingOutControllerSpec
       nino = Nino(nino),
       taxYear = TaxYear.fromMtd(taxYear)
     )
+
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.optInToCodingOut(nino, taxYear)(fakeGetRequest)
 

@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class OptInToCodingOutService @Inject()(connector: DeleteCodingOutOptOutConnector) extends BaseService {
+class OptInToCodingOutService @Inject() (connector: DeleteCodingOutOptOutConnector) extends BaseService {
 
   private val errorMap: Map[String, MtdError] =
     Map(
@@ -46,9 +46,7 @@ class OptInToCodingOutService @Inject()(connector: DeleteCodingOutOptOutConnecto
       "SERVICE_UNAVAILABLE"            -> InternalError
     )
 
-  def optInToCodingOut(request: OptInToCodingOutRequestData)(implicit
-                                                                           ctx: RequestContext,
-                                                                           ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
+  def optInToCodingOut(request: OptInToCodingOutRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
     connector.deleteCodingOutOptOut(request.nino, request.taxYear).map(_.leftMap(mapDownstreamErrors(errorMap)))
   }

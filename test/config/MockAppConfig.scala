@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package api.config
+package config
 
 import cats.data.Validated
 import config.{AppConfig, ConfidenceLevelConfig, Deprecation, DownstreamConfig}
@@ -78,6 +78,12 @@ trait MockAppConfig extends MockFactory {
 
     def endpointReleasedInProduction(version: String, key: String): CallHandler[Boolean] =
       (mockAppConfig.endpointReleasedInProduction: (String, String) => Boolean).expects(version, key)
+
+    def confidenceLevelConfig: CallHandler0[ConfidenceLevelConfig] =
+      (() => mockAppConfig.confidenceLevelConfig).expects()
+
+    def endpointAllowsSupportingAgents(endpointName: String): CallHandler[Boolean] =
+      (mockAppConfig.endpointAllowsSupportingAgents(_: String)).expects(endpointName)
 
   }
 

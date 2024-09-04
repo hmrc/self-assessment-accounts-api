@@ -16,17 +16,18 @@
 
 package v3.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import play.api.Configuration
 import play.api.mvc.Result
+import play.api.Configuration
 import v3.controllers.validators.MockRetrieveBalanceAndTransactionsValidatorFactory
 import v3.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
 import v3.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v3.services.MockRetrieveBalanceAndTransactionsService
+import routing.{Version, Version3}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -37,6 +38,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
     with MockAppConfig
     with MockRetrieveBalanceAndTransactionsService
     with MockRetrieveBalanceAndTransactionsValidatorFactory {
+
+  override val apiVersion: Version = Version3
 
   private val requestData: RetrieveBalanceAndTransactionsRequestData = requestEverythingTrue
 
@@ -78,7 +81,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
   trait Test extends ControllerTest {
 
-    lazy val controller = new RetrieveBalanceAndTransactionsController(
+    override protected val controller = new RetrieveBalanceAndTransactionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveBalanceAndTransactionsValidatorFactory,
@@ -86,6 +89,9 @@ class RetrieveBalanceAndTransactionsControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = {
       controller.retrieveBalanceAndTransactions(

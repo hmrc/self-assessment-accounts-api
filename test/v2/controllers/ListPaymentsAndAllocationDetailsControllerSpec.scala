@@ -16,16 +16,18 @@
 
 package v2.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.{DateRange, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
+import play.api.Configuration
 import v2.controllers.validators.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures._
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.services.MockListPaymentsAndAllocationDetailsService
+import routing.{Version, Version2}
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -37,6 +39,8 @@ class ListPaymentsAndAllocationDetailsControllerSpec
     with MockAppConfig
     with MockListPaymentsAndAllocationDetailsValidatorFactory
     with MockListPaymentsAndAllocationDetailsService {
+
+  override val apiVersion: Version = Version2
 
   private val requestData =
     ListPaymentsAndAllocationDetailsRequestData(
@@ -79,7 +83,7 @@ class ListPaymentsAndAllocationDetailsControllerSpec
 
   private trait Test extends ControllerTest {
 
-    private val controller = new ListPaymentsAndAllocationDetailsController(
+    override protected val controller = new ListPaymentsAndAllocationDetailsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockListPaymentsAndAllocationDetailsValidatorFactory,
@@ -87,6 +91,9 @@ class ListPaymentsAndAllocationDetailsControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator
     )
+
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.listPayments(nino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)

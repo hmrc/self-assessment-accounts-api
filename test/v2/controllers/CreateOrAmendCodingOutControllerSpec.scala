@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.{DELETE, GET, PUT}
@@ -33,6 +33,7 @@ import v2.controllers.validators.MockCreateOrAmendCodingOutValidatorFactory
 import v2.models.request.createOrAmendCodingOut._
 import v2.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
 import v2.services.MockCreateOrAmendCodingOutService
+import routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,6 +46,8 @@ class CreateOrAmendCodingOutControllerSpec
     with MockAuditService
     with MockAppConfig
     with MockHateoasFactory {
+
+  override val apiVersion: Version = Version2
 
   private val taxYear = "2019-20"
 
@@ -161,7 +164,7 @@ class CreateOrAmendCodingOutControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    private val controller = new CreateOrAmendCodingOutController(
+    override protected val controller = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockCreateOrAmendCodingOutValidatorFactory,
@@ -173,6 +176,7 @@ class CreateOrAmendCodingOutControllerSpec
     )
 
     MockAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
 

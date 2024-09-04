@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.{DELETE, GET, PUT}
@@ -26,11 +26,13 @@ import api.models.domain.{MtdSource, Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.mvc.Result
+import play.api.Configuration
 import v2.controllers.validators.MockRetrieveCodingOutValidatorFactory
 import v2.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 import v2.models.response.retrieveCodingOut._
 import v2.services.MockRetrieveCodingOutService
+import routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,8 +45,9 @@ class RetrieveCodingOutControllerSpec
     with MockAppConfig
     with MockHateoasFactory {
 
-  private val taxYear = "2021-22"
-  private val source  = "hmrcHeld"
+  override val apiVersion: Version = Version2
+  private val taxYear              = "2021-22"
+  private val source               = "hmrcHeld"
 
   private val requestData = RetrieveCodingOutRequestData(
     nino = Nino(nino),
@@ -155,7 +158,7 @@ class RetrieveCodingOutControllerSpec
 
   private trait Test extends ControllerTest {
 
-    val controller = new RetrieveCodingOutController(
+    override protected val controller = new RetrieveCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveCodingOutValidatorFactory,
@@ -165,6 +168,8 @@ class RetrieveCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
     protected def callController(): Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)
   }
 

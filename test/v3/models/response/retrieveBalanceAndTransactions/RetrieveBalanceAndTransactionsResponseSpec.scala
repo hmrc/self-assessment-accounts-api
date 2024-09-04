@@ -59,8 +59,8 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
   "RetrieveBalanceAndTransactionsResponse.adjustField" should {
     implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
-    val response = downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse]
-    val responseWithoutPOAAmount = downstreamResponseWithoutPOAAmountJson.as[RetrieveBalanceAndTransactionsResponse]
+    val response                                           = downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse]
+    val responseWithoutPOAAmount                           = downstreamResponseWithoutPOAAmountJson.as[RetrieveBalanceAndTransactionsResponse]
 
     def featureSwitchesWith(enabled: Boolean) =
       FeatureSwitches(Configuration("isPOARelevantAmount.enabled" -> enabled))
@@ -76,4 +76,5 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
       response.adjustFields(featureSwitches) shouldBe responseWithoutPOAAmount
     }
   }
+
 }

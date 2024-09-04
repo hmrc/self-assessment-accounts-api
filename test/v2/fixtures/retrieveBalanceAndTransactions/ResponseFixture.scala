@@ -18,8 +18,16 @@ package v2.fixtures.retrieveBalanceAndTransactions
 
 import play.api.libs.json.{JsValue, Json}
 import v2.fixtures.retrieveBalanceAndTransactions.BalanceDetailsFixture._
-import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.{codingDetails, codingDetailsDownstreamResponseJson, codingDetailsMtdResponseJson}
-import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{documentDetails, documentDetailsDownstreamResponseJson, documentDetailsMtdResponseJson}
+import v2.fixtures.retrieveBalanceAndTransactions.CodingDetailsFixture.{
+  codingDetails,
+  codingDetailsDownstreamResponseJson,
+  codingDetailsMtdResponseJson
+}
+import v2.fixtures.retrieveBalanceAndTransactions.DocumentDetailsFixture.{
+  documentDetails,
+  documentDetailsDownstreamResponseJson,
+  documentDetailsMtdResponseJson
+}
 import v2.fixtures.retrieveBalanceAndTransactions.FinancialDetailsFixture._
 import v2.models.response.retrieveBalanceAndTransactions.{FinancialDetails, RetrieveBalanceAndTransactionsResponse}
 
@@ -27,6 +35,7 @@ object ResponseFixture {
 
   val response: RetrieveBalanceAndTransactionsResponse             = responseWith(financialDetailsFull)
   val responseWithoutLocks: RetrieveBalanceAndTransactionsResponse = responseWith(financialDetailsWithoutLocks)
+
   val minimalResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(
       minimalBalanceDetails,
@@ -34,8 +43,10 @@ object ResponseFixture {
       None,
       None
     )
-  val mtdResponseJson: JsValue = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
+
+  val mtdResponseJson: JsValue             = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
   val mtdResponseWithoutLocksJson: JsValue = mtdResponseJsonWith(mtdFinancialDetailsWithoutLocksJson)
+
   val downstreamResponseJson: JsValue = Json.parse(s"""
         |  {
         |    "balanceDetails": $balanceDetailsDownstreamResponseJson,
@@ -50,6 +61,7 @@ object ResponseFixture {
         |    ]
         |  }
         |""".stripMargin)
+
   val minimalDownstreamResponseJson: JsValue = Json.parse(s"""
         |  {
         |    "balanceDetails": $minimalBalanceDetailsDownstreamResponseJson

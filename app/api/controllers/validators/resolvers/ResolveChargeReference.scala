@@ -26,10 +26,10 @@ object ResolveChargeReference extends Resolver[String, ChargeReference] {
   private val chargeReferenceRegex = "^[A-Za-z]{2}[0-9]{12}$".r
 
   def apply(value: String, error: Option[MtdError], path: Option[String]): Validated[Seq[MtdError], ChargeReference] = {
-    if (chargeReferenceRegex.matches (value) )
-    Valid (ChargeReference (value) )
+    if (chargeReferenceRegex.matches(value))
+      Valid(ChargeReference(value))
     else
-    Invalid (List (error.getOrElse (ChargeReferenceFormatError).maybeWithExtraPath (path) ) )
+      Invalid(List(error.getOrElse(ChargeReferenceFormatError).maybeWithExtraPath(path)))
   }
 
 }

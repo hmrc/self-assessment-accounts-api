@@ -16,7 +16,7 @@
 
 package v3.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
@@ -24,12 +24,14 @@ import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import play.api.Configuration
 import v3.controllers.validators.MockRetrieveCodingOutStatusValidatorFactory
 import v3.models.request.retrieveCodingOutStatus.RetrieveCodingOutStatusRequestData
 import v3.services.MockRetrieveCodingOutStatusService
 import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.mtdResponseJson
 import v3.models.errors.RuleBusinessPartnerNotExistError
 import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
+import routing.{Version, Version3}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,6 +42,8 @@ class RetrieveCodingOutStatusControllerSpec
     with MockRetrieveCodingOutStatusService
     with MockRetrieveCodingOutStatusValidatorFactory
     with MockAppConfig {
+
+  override val apiVersion: Version = Version3
 
   override val nino                  = "AB123456A"
   private val taxYear                = "2023-24"
@@ -87,7 +91,7 @@ class RetrieveCodingOutStatusControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new RetrieveCodingOutStatusController(
+    override protected val controller = new RetrieveCodingOutStatusController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveCodingOutStatusValidatorFactory,
@@ -95,6 +99,9 @@ class RetrieveCodingOutStatusControllerSpec
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator)
+
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(nino, taxYear)(fakeGetRequest)
 

@@ -23,7 +23,7 @@ import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.{downstreamResponseJson, mtdResponseJson}
 import v3.models.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}

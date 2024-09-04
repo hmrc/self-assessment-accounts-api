@@ -16,7 +16,7 @@
 
 package config.rewriters
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import config.rewriters.DocumentationRewriters.CheckRewrite
 import controllers.Rewriter
 import play.api.Configuration

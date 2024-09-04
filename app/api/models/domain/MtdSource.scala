@@ -34,9 +34,10 @@ object MtdSource {
     override def toDownstreamSource: String = "CUSTOMER"
   }
 
-  implicit val format: Format[MtdSource]         = Enums.format[MtdSource]
+  implicit val format: Format[MtdSource] = Enums.format[MtdSource]
 
   case object latest extends MtdSource {
     override def toDownstreamSource: String = "LATEST"
   }
+
 }

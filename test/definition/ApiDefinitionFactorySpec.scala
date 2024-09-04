@@ -16,7 +16,7 @@
 
 package definition
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.connectors.MockHttpClient
 import cats.implicits.catsSyntaxValidatedId
 import config.ConfidenceLevelConfig

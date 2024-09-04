@@ -31,9 +31,9 @@ object ResponseFixture {
   val minimalResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(minimalBalanceDetails, None, None, None)
 
-  val mtdResponseJson: JsValue             = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
-  val mtdResponseWithoutPOARelevantAmountJson: JsValue   = mtdResponseJsonWithoutPOAAmount(mtdFinancialDetailsFullJson)
-  val mtdResponseWithoutLocksJson: JsValue = mtdResponseJsonWith(mtdFinancialDetailsWithoutLocksJson)
+  val mtdResponseJson: JsValue                         = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
+  val mtdResponseWithoutPOARelevantAmountJson: JsValue = mtdResponseJsonWithoutPOAAmount(mtdFinancialDetailsFullJson)
+  val mtdResponseWithoutLocksJson: JsValue             = mtdResponseJsonWith(mtdFinancialDetailsWithoutLocksJson)
 
   val downstreamResponseJson: JsValue = Json.parse(s"""
         |  {

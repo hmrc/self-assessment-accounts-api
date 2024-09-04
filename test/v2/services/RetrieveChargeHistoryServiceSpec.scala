@@ -45,8 +45,8 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       chargeHistoryDetails = List(chargeHistoryDetails)
     )
 
-  private val nino          = Nino("AA123456A")
-  private val transactionId = TransactionId("anId")
+  private val nino            = Nino("AA123456A")
+  private val transactionId   = TransactionId("anId")
   private val chargeReference = ChargeReference("anId")
 
   private val requestData: RetrieveChargeHistoryRequestData =
@@ -85,7 +85,7 @@ class RetrieveChargeHistoryServiceSpec extends ServiceSpec {
       val errors: Seq[(String, MtdError)] =
         List(
           "INVALID_CORRELATIONID" -> InternalError,
-          "INVALID_ID_TYPE"        -> InternalError,
+          "INVALID_ID_TYPE"       -> InternalError,
           "INVALID_IDVALUE"       -> NinoFormatError,
           "INVALID_REGIME_TYPE"   -> InternalError,
           "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,

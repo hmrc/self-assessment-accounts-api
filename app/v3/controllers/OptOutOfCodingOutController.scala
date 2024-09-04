@@ -38,6 +38,8 @@ class OptOutOfCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  val endpointName: String = "opt-out-of-coding-out"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "OptOutOfCodingOutController", endpointName = "optOutOfCodingOut")
 

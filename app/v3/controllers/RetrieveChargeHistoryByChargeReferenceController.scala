@@ -39,6 +39,8 @@ class RetrieveChargeHistoryByChargeReferenceController @Inject() (val authServic
                                                                   idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  val endpointName: String = "retrieve-charge-history-by-charge-reference"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveChargeHistoryByChargeReferenceController", endpointName = "retrieveChargeHistoryByChargeReference")
 

@@ -16,7 +16,7 @@
 
 package v3.controllers.validators
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import support.UnitSpec

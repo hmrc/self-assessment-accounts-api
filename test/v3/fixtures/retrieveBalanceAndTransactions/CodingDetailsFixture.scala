@@ -25,8 +25,10 @@ object CodingDetailsFixture {
   private val taxYear: TaxYear = TaxYear("2022")
 
   val coded: Coded = Coded(charge = Some(123.45), initiationDate = Some("2022-10-13"))
+
   val codingDetails: CodingDetails =
     CodingDetails(returnTaxYear = Some(taxYear.asMtd), totalLiabilityAmount = Some(123.45), codingTaxYear = Some(taxYear.asMtd), coded = Some(coded))
+
   val codingDetailsDownstreamResponseJson: JsValue = Json.parse(
     s"""
        |{
@@ -40,6 +42,7 @@ object CodingDetailsFixture {
        |}
        |""".stripMargin
   )
+
   val codingDetailsMtdResponseJson: JsValue = Json.parse(
     s"""
        |{

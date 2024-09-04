@@ -28,11 +28,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends BaseService {
+class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOutConnector) extends BaseService {
 
   def amend(request: CreateOrAmendCodingOutRequestData)(implicit
-                                                        ctx: RequestContext,
-                                                        ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
 
     connector
       .amendCodingOut(request)

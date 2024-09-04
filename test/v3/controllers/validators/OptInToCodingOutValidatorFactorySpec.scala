@@ -21,7 +21,7 @@ import api.models.errors._
 import support.UnitSpec
 import v3.models.request.optInToCodingOut.OptInToCodingOutRequestData
 
-class OptInToCodingOutValidatorFactorySpec extends UnitSpec  {
+class OptInToCodingOutValidatorFactorySpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"

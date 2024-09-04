@@ -70,11 +70,11 @@ object AuditHandlerOld {
     )
 
   private class AuditHandlerOldImpl[A: Writes](auditService: AuditService,
-                                            auditType: String,
-                                            transactionName: String,
-                                            auditDetailCreator: AuditDetailCreator[A],
-                                            requestBody: Option[JsValue],
-                                            responseBodyMap: Option[JsValue] => Option[JsValue])
+                                               auditType: String,
+                                               transactionName: String,
+                                               auditDetailCreator: AuditDetailCreator[A],
+                                               requestBody: Option[JsValue],
+                                               responseBodyMap: Option[JsValue] => Option[JsValue])
       extends AuditHandlerOld {
 
     def performAudit(userDetails: UserDetails, httpStatus: Int, response: Either[ErrorWrapper, Option[JsValue]])(implicit

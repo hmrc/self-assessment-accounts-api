@@ -16,7 +16,7 @@
 
 package config.rewriters
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import support.UnitSpec
 
 class EndpointSummaryRewriterSpec extends UnitSpec with MockAppConfig {
