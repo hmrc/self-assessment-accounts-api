@@ -25,8 +25,8 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v3.fixtures.retrieveBalanceAndTransactions.RequestFixture._
-import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture._
+import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
+import v3.retrieveBalanceAndTransactions.def1.model.ResponseFixture._
 
 class RetrieveBalanceAndTransactionsControllerISpec extends IntegrationBaseSpec {
 

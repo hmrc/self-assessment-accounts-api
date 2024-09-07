@@ -25,8 +25,7 @@ import play.api.libs.ws.{EmptyBody, WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.downstreamOptOutOfCodingOutResponseJson
-import v3.models.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import v3.retrieveCodingOutStatus.model.responses.ResponseFixture.downstreamOptOutOfCodingOutResponseJson
 
 class OptOutOfCodingOutControllerISpec extends IntegrationBaseSpec {
 

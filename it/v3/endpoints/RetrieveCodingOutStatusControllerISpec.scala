@@ -25,8 +25,7 @@ import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
-import v3.fixtures.retrieveCodingOutStatus.ResponseFixture.{downstreamResponseJson, mtdResponseJson}
-import v3.models.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import v3.retrieveCodingOutStatus.model.responses.ResponseFixture.{downstreamResponseJson, mtdResponseJson}
 
 class RetrieveCodingOutStatusControllerISpec extends IntegrationBaseSpec {
 
