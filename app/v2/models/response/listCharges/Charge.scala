@@ -36,7 +36,7 @@ object Charge {
       (JsPath \ "documentDescription").readNullable[String] and
       (JsPath \ "totalAmount").read[BigDecimal] and
       (JsPath \ "documentOutstandingAmount").read[BigDecimal]
-    )(Charge.apply _)
+  )(Charge.apply _)
 
   implicit val writes: OWrites[Charge] = Json.writes[Charge]
 

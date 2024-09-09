@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
@@ -24,9 +24,11 @@ import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import play.api.Configuration
 import v2.controllers.validators.MockDeleteCodingOutValidatorFactory
 import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 import v2.services.MockDeleteCodingOutService
+import routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -37,6 +39,8 @@ class DeleteCodingOutControllerSpec
     with MockAppConfig
     with MockDeleteCodingOutService
     with MockDeleteCodingOutValidatorFactory {
+
+  override val apiVersion: Version = Version2
 
   private val taxYear     = "2019-20"
   private val requestData = DeleteCodingOutRequestData(Nino(nino), TaxYear.fromMtd(taxYear))
@@ -74,7 +78,7 @@ class DeleteCodingOutControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new DeleteCodingOutController(
+    override protected val controller = new DeleteCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockDeleteCodingOutValidatorFactory,
@@ -84,6 +88,8 @@ class DeleteCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     override protected def callController(): Future[Result] = controller.handleRequest(nino, taxYear)(fakeRequest)
 

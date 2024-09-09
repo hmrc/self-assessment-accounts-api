@@ -80,7 +80,8 @@ class RetrieveChargeHistoryValidatorFactorySpec extends UnitSpec {
         val result: Either[ErrorWrapper, RetrieveChargeHistoryRequestData] =
           validator("invalidNino", "abcdefghijklmn", Some("f8324rg231489g21+_2")).validateAndWrapResult()
 
-        result shouldBe Left(ErrorWrapper(correlationId, BadRequestError, Some(List(ChargeReferenceFormatError, NinoFormatError, TransactionIdFormatError))))
+        result shouldBe Left(
+          ErrorWrapper(correlationId, BadRequestError, Some(List(ChargeReferenceFormatError, NinoFormatError, TransactionIdFormatError))))
       }
     }
   }

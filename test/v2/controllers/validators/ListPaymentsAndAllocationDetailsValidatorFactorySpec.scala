@@ -16,7 +16,7 @@
 
 package v2.controllers.validators
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.models.domain.{DateRange, Nino}
 import api.models.errors._
 import support.UnitSpec

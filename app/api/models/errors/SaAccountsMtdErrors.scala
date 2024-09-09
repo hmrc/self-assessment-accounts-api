@@ -21,8 +21,8 @@ import play.api.http.Status.{BAD_REQUEST, NOT_FOUND}
 // MtdError types that are common to SA Accounts API.
 
 // Format Errors
-object SourceFormatError      extends MtdError(code = "FORMAT_SOURCE", message = "The format of the supplied source is not valid", BAD_REQUEST)
-object PaymentLotFormatError  extends MtdError(code = "FORMAT_PAYMENT_LOT", message = "The provided paymentLot value is invalid", BAD_REQUEST)
+object SourceFormatError     extends MtdError(code = "FORMAT_SOURCE", message = "The format of the supplied source is not valid", BAD_REQUEST)
+object PaymentLotFormatError extends MtdError(code = "FORMAT_PAYMENT_LOT", message = "The provided paymentLot value is invalid", BAD_REQUEST)
 
 object PaymentLotItemFormatError
     extends MtdError(code = "FORMAT_PAYMENT_LOT_ITEM", message = "The provided paymentLotItem value is invalid", BAD_REQUEST)

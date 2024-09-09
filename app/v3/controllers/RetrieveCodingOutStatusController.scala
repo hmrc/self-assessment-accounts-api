@@ -38,6 +38,8 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
                                                    idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  val endpointName: String = "retrieve-coding-out-status"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveCodingOutStatusController", endpointName = "retrieveCodingOutStatus")
 
@@ -51,15 +53,14 @@ class RetrieveCodingOutStatusController @Inject() (val authService: EnrolmentsAu
           .withValidator(validator)
           .withService(service.retrieveCodingOutStatus)
           .withPlainJsonResult()
-          .withAuditing(
-            AuditHandler(
-              auditService,
-              auditType = "RetrieveCodingOutStatus",
-              transactionName = "retrieve-coding-out-status",
-              apiVersion = Version(request),
-              params = Map("nino" -> nino, "taxYear" -> taxYear),
-              includeResponse = true
-            ))
+          .withAuditing(AuditHandler(
+            auditService,
+            auditType = "RetrieveCodingOutStatus",
+            transactionName = "retrieve-coding-out-status",
+            apiVersion = Version(request),
+            params = Map("nino" -> nino, "taxYear" -> taxYear),
+            includeResponse = true
+          ))
       requestHandler.handleRequest()
     }
   }

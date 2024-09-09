@@ -16,7 +16,7 @@
 
 package v2.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.GET
@@ -25,6 +25,7 @@ import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.models.domain.{Nino, TransactionId}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import play.api.Configuration
 import play.api.mvc.Result
 import v2.controllers.validators.MockRetrieveChargeHistoryValidatorFactory
 import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
@@ -32,6 +33,7 @@ import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 import v2.services.MockRetrieveChargeHistoryService
+import routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -44,7 +46,8 @@ class RetrieveChargeHistoryControllerSpec
     with MockHateoasFactory
     with MockRetrieveChargeHistoryValidatorFactory {
 
-  private val transactionId = "anId"
+  override val apiVersion: Version = Version2
+  private val transactionId        = "anId"
 
   private val requestData: RetrieveChargeHistoryRequestData =
     RetrieveChargeHistoryRequestData(nino = Nino(nino), transactionId = TransactionId(transactionId), chargeReference = None)
@@ -103,7 +106,7 @@ class RetrieveChargeHistoryControllerSpec
 
   private trait Test extends ControllerTest {
 
-    private val controller = new RetrieveChargeHistoryController(
+    override protected val controller = new RetrieveChargeHistoryController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveChargeHistoryValidatorFactory,
@@ -113,6 +116,8 @@ class RetrieveChargeHistoryControllerSpec
       idGenerator = mockIdGenerator
     )
 
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
     protected def callController(): Future[Result] = controller.retrieveChargeHistory(nino, transactionId, None)(fakeGetRequest)
   }
 

@@ -25,10 +25,10 @@ import play.api.{Application, Environment, Mode}
 
 trait IntegrationBaseSpec extends UnitSpec with WireMockHelper with GuiceOneServerPerSuite with BeforeAndAfterEach with BeforeAndAfterAll {
   lazy val client: WSClient = app.injector.instanceOf[WSClient]
-  val mockHost: String = WireMockHelper.host
-  val mockPort: String = WireMockHelper.wireMockPort.toString
+  val mockHost: String      = WireMockHelper.host
+  val mockPort: String      = WireMockHelper.wireMockPort.toString
 
-  def servicesConfig: Map[String, String] = Map(
+  def servicesConfig: Map[String, Any] = Map(
     "microservice.services.des.host"           -> mockHost,
     "microservice.services.des.port"           -> mockPort,
     "microservice.services.ifs1.host"          -> mockHost,

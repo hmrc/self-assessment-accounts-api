@@ -23,7 +23,7 @@ import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.stubs.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v2.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
 
@@ -89,9 +89,9 @@ class RetrieveChargeHistoryControllerISpec extends IntegrationBaseSpec {
         }
 
         val chargeReferenceQueryParam: Map[String, String] = Map("chargeReference" -> "Ab123456789012")
-        val queryParams: Map[String, String]                     = chargeReferenceQueryParam ++ docNumberQueryParam
+        val queryParams: Map[String, String]               = chargeReferenceQueryParam ++ docNumberQueryParam
 
-        val response: WSResponse                           = await(request(queryParams).get())
+        val response: WSResponse = await(request(queryParams).get())
         response.status shouldBe OK
         response.json shouldBe mtdResponseWithHateoas
         response.header("Content-Type") shouldBe Some("application/json")

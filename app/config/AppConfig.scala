@@ -84,9 +84,11 @@ trait AppConfig {
   def apiGatewayContext: String
   def apiStatus(version: Version): String
   def featureSwitches: Configuration
-  def endpointsEnabled(version: Version): Boolean
   def endpointsEnabled(version: String): Boolean
+  def endpointsEnabled(version: Version): Boolean
   def confidenceLevelConfig: ConfidenceLevelConfig
+
+  def safeEndpointsEnabled(version: String): Boolean
 
   def mtdIdBaseUrl: String
   def minimumPermittedTaxYear: Int
@@ -94,6 +96,8 @@ trait AppConfig {
   /** Currently only for OAS documentation.
     */
   def apiVersionReleasedInProduction(version: String): Boolean
+
+  def endpointAllowsSupportingAgents(endpointName: String): Boolean
 
   /** Currently only for OAS documentation.
     */
@@ -103,7 +107,7 @@ trait AppConfig {
 }
 
 @Singleton
-class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configuration) extends AppConfig {
+class AppConfigImpl @Inject() (config: ServicesConfig, protected[config] val configuration: Configuration) extends AppConfig {
   // API Name
   val appName: String = config.getString("appName")
 
@@ -147,6 +151,13 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
 
   def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
+  /** Like endpointsEnabled, but will return false if version doesn't exist.
+    */
+  def safeEndpointsEnabled(version: String): Boolean =
+    configuration
+      .getOptional[Boolean](s"api.$version.endpoints.enabled")
+      .getOrElse(false)
+
   def endpointReleasedInProduction(version: String, name: String): Boolean = {
     val versionReleasedInProd = apiVersionReleasedInProduction(version)
     val path                  = s"api.$version.endpoints.released-in-production.$name"
@@ -154,6 +165,14 @@ class AppConfigImpl @Inject() (config: ServicesConfig, configuration: Configurat
     val conf = configuration.underlying
     if (versionReleasedInProd && conf.hasPath(path)) config.getBoolean(path) else versionReleasedInProd
   }
+
+  def endpointAllowsSupportingAgents(endpointName: String): Boolean =
+    supportingAgentEndpoints.getOrElse(endpointName, false)
+
+  private val supportingAgentEndpoints: Map[String, Boolean] =
+    configuration
+      .getOptional[Map[String, Boolean]]("api.supporting-agent-endpoints")
+      .getOrElse(Map.empty)
 
   def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
 

@@ -16,7 +16,7 @@
 
 package api.connectors
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.connectors.DownstreamUri.{DesUri, Ifs1Uri, Ifs2Uri, TaxYearSpecificIfsUri}
 import api.models.outcomes.ResponseWrapper
 import config.AppConfig

@@ -39,6 +39,8 @@ class RetrieveChargeHistoryByTransactionIdController @Inject() (val authService:
                                                                 idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  val endpointName = "retrieve-charge-history-by-transaction-id"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveChargeHistoryByTransactionIdController", endpointName = "retrieveChargeHistoryByTransactionId")
 

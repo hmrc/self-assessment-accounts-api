@@ -37,6 +37,8 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
                                                           idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  val endpointName: String = "retrieve-balance-and-transactions"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveBalanceAndTransactionsController", endpointName = "retrieveBalanceAndTransactions")
 

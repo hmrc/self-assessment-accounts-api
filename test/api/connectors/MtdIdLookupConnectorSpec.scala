@@ -16,7 +16,7 @@
 
 package api.connectors
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.connectors.MtdIdLookupConnector.Outcome
 
 import scala.concurrent.Future

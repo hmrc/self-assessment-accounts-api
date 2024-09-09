@@ -148,6 +148,7 @@ object DocumentDetailsFixture {
 
   // Downstream response JSON:
   val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021")
+
   val documentDetailsDownstreamResponseMinimalJson: JsValue = Json.parse(s"""
        |{
        |  "documentId": "1455",

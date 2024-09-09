@@ -44,6 +44,7 @@ object BalanceDetailsFixture {
     secondPendingAmountRequested = Some(13.45),
     availableCredit = Some(235.99)
   )
+
   val minimalBalanceDetails: BalanceDetails = BalanceDetails(
     payableAmount = 124.20,
     payableDueDate = None,
@@ -62,6 +63,7 @@ object BalanceDetailsFixture {
     secondPendingAmountRequested = None,
     availableCredit = None
   )
+
   val downstreamDetailSingleYearJson: JsValue = Json.parse(
     s"""
        |{
@@ -70,6 +72,7 @@ object BalanceDetailsFixture {
        |}
        |""".stripMargin
   )
+
   val mtdDetailSingleYearJson: JsValue = Json.parse(
     s"""
        |{
@@ -78,6 +81,7 @@ object BalanceDetailsFixture {
        |}
        |""".stripMargin
   )
+
   val balanceDetailsDownstreamResponseJson: JsValue = Json.parse(
     s"""
        |{
@@ -102,6 +106,7 @@ object BalanceDetailsFixture {
        |  }
        |""".stripMargin
   )
+
   val minimalBalanceDetailsDownstreamResponseJson: JsValue = Json.parse(
     s"""
        |{
@@ -112,6 +117,7 @@ object BalanceDetailsFixture {
        |  }
        |""".stripMargin
   )
+
   val balanceDetailsMtdResponseJson: JsValue = Json.parse(
     s"""
        |{

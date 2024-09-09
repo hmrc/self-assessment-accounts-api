@@ -81,6 +81,7 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
        |}
        |""".stripMargin
   )
+
   val mtdChargeDetailJson: JsValue = Json.parse(s"""
       |{
       |"documentId": "123456",
@@ -90,7 +91,8 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
       |"chargeTypeDescription" : "PAYE"
       |}
       |""".stripMargin)
-  val mtdFinancialDetailsFullJson: JsValue = mtdFinancialDetailsWith(financialDetailsItemMtdJson)
+
+  val mtdFinancialDetailsFullJson: JsValue         = mtdFinancialDetailsWith(financialDetailsItemMtdJson)
   val mtdFinancialDetailsWithoutLocksJson: JsValue = mtdFinancialDetailsWith(financialDetailsItemWithoutLocksMtdJson)
 
   private def mtdFinancialDetailsWith(items: JsValue): JsValue = Json.parse(s"""

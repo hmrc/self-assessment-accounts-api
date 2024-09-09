@@ -35,14 +35,12 @@ class TaxCodeComponentsSpec extends UnitSpec {
       | }
       |""".stripMargin)
 
-  private val downstreamJson = Json.parse(
-    """
+  private val downstreamJson = Json.parse("""
       | {
       |   "payeUnderpayment": [{"componentIdentifier":"1", "amount":1.1}],
       |   "selfAssessmentUnderpayment": [{"componentIdentifier":"2", "amount":2.2}]
       | }
       |""".stripMargin)
-
 
   "TaxCodeComponents" should {
 

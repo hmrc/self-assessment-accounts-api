@@ -17,9 +17,9 @@
 package api.controllers.validators.resolvers
 
 import api.models.domain.CalculationId
-import api.models.errors.{ CalculationIdFormatError, MtdError }
+import api.models.errors.{CalculationIdFormatError, MtdError}
 import cats.data.Validated
-import cats.data.Validated.{ Invalid, Valid }
+import cats.data.Validated.{Invalid, Valid}
 
 object ResolveCalculationId extends Resolver[String, CalculationId] {
 
@@ -33,4 +33,3 @@ object ResolveCalculationId extends Resolver[String, CalculationId] {
   }
 
 }
-

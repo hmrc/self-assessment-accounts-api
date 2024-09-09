@@ -22,6 +22,7 @@ import support.UnitSpec
 class JsonUtilsSpec extends UnitSpec {
 
   private val testData: TestClass = TestClass("value1", "value2")
+
   private val removedFieldJson: JsValue = Json.parse(
     """
       |{
@@ -29,6 +30,7 @@ class JsonUtilsSpec extends UnitSpec {
       |}
     """.stripMargin
   )
+
   private val fullJson: JsValue = Json.parse(
     """
       |{

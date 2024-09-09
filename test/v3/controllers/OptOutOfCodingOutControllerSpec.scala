@@ -16,7 +16,7 @@
 
 package v3.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
@@ -24,11 +24,13 @@ import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import play.api.Configuration
 import v3.controllers.validators.MockOptOutOfCodingOutValidatorFactory
 import v3.models.errors.RuleBusinessPartnerNotExistError
 import v3.models.request.optOutOfCodingOut.OptOutOfCodingOutRequestData
 import v3.models.response.optOutOfCodingOut.OptOutOfCodingOutResponse
 import v3.services.MockOptOutOfCodingOutService
+import routing.{Version, Version3}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,6 +41,7 @@ class OptOutOfCodingOutControllerSpec
     with MockOptOutOfCodingOutService
     with MockOptOutOfCodingOutValidatorFactory
     with MockAppConfig {
+  override val apiVersion: Version = Version3
 
   "OptOutOfCodingOutController" should {
     "return 204 NO_CONTENT" when {
@@ -80,7 +83,7 @@ class OptOutOfCodingOutControllerSpec
 
     protected val response = OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
-    private val controller = new OptOutOfCodingOutController(
+    override protected val controller = new OptOutOfCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockOptOutOfCodingOutValidatorFactory,
@@ -88,6 +91,9 @@ class OptOutOfCodingOutControllerSpec
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator)
+
+    MockAppConfig.featureSwitches returns Configuration.empty
+    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.optOutOfCodingOut(nino, taxYear)(fakeGetRequest)
 

@@ -16,32 +16,24 @@
 
 package api.controllers
 
-import api.config.MockAppConfig
 import api.controllers.ControllerTestRunner.validNino
 import api.models.audit.{AuditError, AuditEvent, AuditResponse}
 import api.models.errors.MtdError
 import api.services.{MockAuditService, MockEnrolmentsAuthService, MockMtdIdLookupService}
-import api.utils.MockIdGenerator
+import config.{MockAppConfig, RealAppConfig}
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{AnyContentAsEmpty, ControllerComponents, Result}
 import play.api.test.Helpers.stubControllerComponents
 import play.api.test.{FakeRequest, ResultExtractors}
-import routing.{Version, Version3}
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
+import api.utils.MockIdGenerator
+import routing.{Version, Version3}
 
 import scala.concurrent.Future
 
-class ControllerBaseSpec
-    extends UnitSpec
-    with Status
-    with MimeTypes
-    with HeaderNames
-    with ResultExtractors
-    with MockAppConfig
-    with MockAuditService
-    with ControllerSpecHateoasSupport {
+abstract class ControllerBaseSpec extends UnitSpec with Status with MimeTypes with HeaderNames with ResultExtractors with MockAuditService {
 
   val apiVersion: Version = Version3
 
@@ -55,14 +47,22 @@ class ControllerBaseSpec
   )
 
   def fakePostRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
+
+  def fakePutRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
 }
 
-trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLookupService with MockIdGenerator { _: ControllerBaseSpec =>
+trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLookupService with MockIdGenerator with RealAppConfig with MockAppConfig {
+  _: ControllerBaseSpec =>
+
   protected val nino: String  = validNino
   protected val correlationId = "X-123"
 
   trait ControllerTest {
     protected val hc: HeaderCarrier = HeaderCarrier()
+
+    protected val controller: AuthorisedController
+
+    protected def callController(): Future[Result]
 
     MockedMtdIdLookupService.lookup(nino).returns(Future.successful(Right("test-mtd-id")))
     MockedEnrolmentsAuthService.authoriseUser()
@@ -79,6 +79,8 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
         case Some(jsBody) => contentAsJson(result) shouldBe jsBody
         case None         => contentType(result) shouldBe empty
       }
+
+      checkEmaConfig()
     }
 
     protected def runErrorTest(expectedError: MtdError): Unit = {
@@ -90,7 +92,19 @@ trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLooku
       contentAsJson(result) shouldBe Json.toJson(expectedError)
     }
 
-    protected def callController(): Future[Result]
+    private def checkEmaConfig(): Unit = {
+      val endpoints: Map[String, Boolean] = emaEndpoints
+
+      val endpointSupportingAgentsAllowed: Boolean =
+        endpoints
+          .getOrElse(
+            controller.endpointName,
+            fail(s"Controller endpoint name \"${controller.endpointName}\" not found in application.conf.")
+          )
+
+      realAppConfig.endpointAllowsSupportingAgents(controller.endpointName) shouldBe endpointSupportingAgentsAllowed
+    }
+
   }
 
   trait AuditEventChecking[DETAIL] {

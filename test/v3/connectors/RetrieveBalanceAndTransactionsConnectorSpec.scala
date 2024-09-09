@@ -16,7 +16,7 @@
 
 package v3.connectors
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.connectors.{ConnectorSpec, DownstreamOutcome, MockHttpClient}
 import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper

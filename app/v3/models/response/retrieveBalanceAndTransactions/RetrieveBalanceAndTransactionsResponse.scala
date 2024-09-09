@@ -24,7 +24,7 @@ case class RetrieveBalanceAndTransactionsResponse(
     codingDetails: Option[Seq[CodingDetails]],
     documentDetails: Option[Seq[DocumentDetails]],
     financialDetails: Option[Seq[FinancialDetails]]
-){
+) {
 
   def adjustFields(featureSwitches: FeatureSwitches): RetrieveBalanceAndTransactionsResponse = {
 
@@ -33,8 +33,10 @@ case class RetrieveBalanceAndTransactionsResponse(
     }
     documentDetailAdditionalField(this)
   }
+
   def withoutPOARelevantAmountField: RetrieveBalanceAndTransactionsResponse =
     this.copy(documentDetails = documentDetails.map(_.map(_.copy(poaRelevantAmount = None))))
+
 }
 
 object RetrieveBalanceAndTransactionsResponse {

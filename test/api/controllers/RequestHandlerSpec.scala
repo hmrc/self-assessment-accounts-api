@@ -16,7 +16,7 @@
 
 package api.controllers
 
-import api.config.MockAppConfig
+import config.MockAppConfig
 import api.controllers.validators.Validator
 import api.hateoas._
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
