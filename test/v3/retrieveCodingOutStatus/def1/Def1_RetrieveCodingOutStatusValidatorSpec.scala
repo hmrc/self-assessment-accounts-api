@@ -16,13 +16,14 @@
 
 package v3.retrieveCodingOutStatus.def1
 
-import config.MockAppConfig
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
+import config.MockAppConfig
 import support.UnitSpec
+import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 
-class Def1RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockAppConfig {
+class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -43,7 +44,7 @@ class Def1RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockAppConf
         val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
-        result shouldBe Right(RetrieveCodingOutStatusRequestData(parsedNino, parsedTaxYear))
+        result shouldBe Right(Def1_RetrieveCodingOutStatusRequestData(parsedNino, parsedTaxYear))
       }
     }
 

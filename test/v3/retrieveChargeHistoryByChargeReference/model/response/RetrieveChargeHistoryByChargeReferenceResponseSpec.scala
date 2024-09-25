@@ -25,7 +25,7 @@ class RetrieveChargeHistoryByChargeReferenceResponseSpec extends UnitSpec {
   val validObjectSingle: RetrieveChargeHistoryResponse   = RetrieveChargeHistoryResponse(List(validChargeHistoryDetailObject))
   val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
-  "RetrieveChargeHistoryResponse" when {
+  "Def1_RetrieveChargeHistoryResponse" when {
     "reading valid JSON" should {
       "return the expected object" in {
         downstreamResponse.as[RetrieveChargeHistoryResponse] shouldBe validObjectSingle
@@ -33,7 +33,7 @@ class RetrieveChargeHistoryByChargeReferenceResponseSpec extends UnitSpec {
     }
   }
 
-  "RetrieveChargeHistoryResponse" when {
+  "Def1_RetrieveChargeHistoryResponse" when {
     "reading valid JSON with multiple charge history details" should {
       "return the expected object" in {
         downstreamResponseMultiple.as[RetrieveChargeHistoryResponse] shouldBe validObjectMultiple

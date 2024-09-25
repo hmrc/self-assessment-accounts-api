@@ -21,6 +21,7 @@ import api.controllers.validators.resolvers.{ResolveChargeReference, ResolveNino
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
+import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
 import javax.inject.Singleton
@@ -35,6 +36,6 @@ class Def1_RetrieveChargeHistoryByChargeReferenceValidator(
         (
           ResolveNino(nino),
           ResolveChargeReference(chargeReference)
-        ).mapN(RetrieveChargeHistoryByChargeReferenceRequestData)
+        ).mapN(Def1_RetrieveChargeHistoryByChargeReferenceRequestData)
 
 }

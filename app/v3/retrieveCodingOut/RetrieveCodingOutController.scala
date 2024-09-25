@@ -38,6 +38,8 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  override val endpointName: String = "retrieve-coding-out"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "RetrieveCodingOutController",

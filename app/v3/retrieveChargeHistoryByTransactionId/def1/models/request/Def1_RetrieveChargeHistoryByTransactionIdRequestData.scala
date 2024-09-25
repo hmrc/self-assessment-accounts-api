@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package v3.retrieveChargeHistoryByChargeReference.model.request
+package v3.retrieveChargeHistoryByTransactionId.def1.models.request
 
-import api.models.domain.{ChargeReference, Nino}
-import v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema
+import api.models.domain.{Nino, TransactionId}
+import v3.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactionIdSchema
+import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 
-trait RetrieveChargeHistoryByChargeReferenceRequestData{
-  val nino: Nino
-  val chargeReference: ChargeReference
-
-  val schema: RetrieveChargeHistoryByChargeReferenceSchema
+case class Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino: Nino, transactionId: TransactionId)
+  extends RetrieveChargeHistoryByTransactionIdRequestData {
+  override val schema: RetrieveChargeHistoryByTransactionIdSchema = RetrieveChargeHistoryByTransactionIdSchema.Def1
 }

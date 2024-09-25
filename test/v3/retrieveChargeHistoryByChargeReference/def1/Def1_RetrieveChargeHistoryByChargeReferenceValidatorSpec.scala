@@ -19,9 +19,10 @@ package v3.retrieveChargeHistoryByChargeReference.def1
 import api.models.domain.{ChargeReference, Nino}
 import api.models.errors._
 import support.UnitSpec
+import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
-class Def1RetrieveChargeHistoryByChargeReferenceValidatorSpec extends UnitSpec {
+class Def1_RetrieveChargeHistoryByChargeReferenceValidatorSpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino            = "AA123456A"
@@ -40,7 +41,7 @@ class Def1RetrieveChargeHistoryByChargeReferenceValidatorSpec extends UnitSpec {
         val result: Either[ErrorWrapper, RetrieveChargeHistoryByChargeReferenceRequestData] =
           validator(validNino, validChargeReference).validateAndWrapResult()
 
-        result shouldBe Right(RetrieveChargeHistoryByChargeReferenceRequestData(parsedNino, parsedChargeReference))
+        result shouldBe Right(Def1_RetrieveChargeHistoryByChargeReferenceRequestData(parsedNino, parsedChargeReference))
       }
 
     }

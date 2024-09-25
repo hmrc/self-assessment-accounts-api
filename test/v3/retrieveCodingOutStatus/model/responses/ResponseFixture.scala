@@ -18,7 +18,7 @@ package v3.retrieveCodingOutStatus.model.responses
 
 import api.models.domain.TaxYear
 import play.api.libs.json.{JsObject, Json}
-import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
+import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 
 object ResponseFixture {
 
@@ -58,7 +58,7 @@ object ResponseFixture {
     )
     .as[JsObject]
 
-  val responseModel: RetrieveCodingOutStatusResponse =
-    RetrieveCodingOutStatusResponse("2023-12-17T09:30:47Z", "AB123456A", TaxYear("2024"), true)
+  val def1ResponseModel: Def1_RetrieveCodingOutStatusResponse =
+    Def1_RetrieveCodingOutStatusResponse("2023-12-17T09:30:47Z", "AB123456A", TaxYear("2024"), true)
 
 }

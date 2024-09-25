@@ -16,14 +16,17 @@
 
 package v3.optInToCodingOut
 
-import api.config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, RuleBusinessPartnerNotExistError}
 import api.models.outcomes.ResponseWrapper
+import config.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import routing.{Version, Version3}
+import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -81,7 +84,7 @@ class OptInToCodingOutControllerSpec
 
     private val taxYear = "2023-24"
 
-    protected val requestData: OptInToCodingOutRequestData = OptInToCodingOutRequestData(
+    protected val requestData: OptInToCodingOutRequestData = Def1_OptInToCodingOutRequestData(
       nino = Nino(nino),
       taxYear = TaxYear.fromMtd(taxYear)
     )

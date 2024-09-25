@@ -16,12 +16,13 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import config.MockAppConfig
 import api.connectors.{ConnectorSpec, MockHttpClient}
 import api.models.domain.{ChargeReference, Nino}
 import api.models.outcomes.ResponseWrapper
+import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
 import play.api.Configuration
+import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
@@ -80,7 +81,7 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
 
         setUpIfsMocks()
         val request: RetrieveChargeHistoryByChargeReferenceRequestData =
-          RetrieveChargeHistoryByChargeReferenceRequestData(Nino(nino), ChargeReference(chargeReference))
+          Def1_RetrieveChargeHistoryByChargeReferenceRequestData(Nino(nino), ChargeReference(chargeReference))
         private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
         MockedHttpClient
@@ -100,7 +101,7 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
 
           setUpDesMocks()
           val request: RetrieveChargeHistoryByChargeReferenceRequestData =
-            RetrieveChargeHistoryByChargeReferenceRequestData(Nino(nino), ChargeReference(chargeReference))
+            Def1_RetrieveChargeHistoryByChargeReferenceRequestData(Nino(nino), ChargeReference(chargeReference))
           private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
           MockedHttpClient

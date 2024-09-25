@@ -16,18 +16,20 @@
 
 package v3.retrieveCodingOutStatus
 
-import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.{ErrorWrapper, NinoFormatError, RuleBusinessPartnerNotExistError}
 import api.models.outcomes.ResponseWrapper
+import config.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
-import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
-import v3.retrieveCodingOutStatus.model.responses.ResponseFixture.mtdResponseJson
 import routing.{Version, Version3}
+import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
+import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
+import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
+import v3.retrieveCodingOutStatus.model.responses.ResponseFixture.mtdResponseJson
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -45,13 +47,13 @@ class RetrieveCodingOutStatusControllerSpec
   private val taxYear                = "2023-24"
   private val processingDate: String = "2023-12-17T09:30:47Z"
 
-  private val requestData = RetrieveCodingOutStatusRequestData(
+  private val requestData = Def1_RetrieveCodingOutStatusRequestData(
     nino = Nino(nino),
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
   private val downstreamResponse: RetrieveCodingOutStatusResponse =
-    RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true)
+    Def1_RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true)
 
   "RetrieveCodingOutStatusController" should {
     "return OK" when {

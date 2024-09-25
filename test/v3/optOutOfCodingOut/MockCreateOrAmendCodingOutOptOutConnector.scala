@@ -17,28 +17,28 @@
 package v3.optOutOfCodingOut
 
 import api.connectors.DownstreamOutcome
-import api.models.domain.{Nino, TaxYear}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
+import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
 trait MockCreateOrAmendCodingOutOptOutConnector extends MockFactory {
 
-  val mockCreateOrAmendCodingOutOptOutConnector: CreateOrAmendCodingOutOptOutConnector = mock[CreateOrAmendCodingOutOptOutConnector]
+  val mockCreateOrAmendCodingOutOptOutConnector: OptOutOfCodingOutConnector = mock[OptOutOfCodingOutConnector]
 
   object MockCreateOrAmendCodingOutOptOutConnector {
 
-    def amendCodingOutOptOut(nino: Nino, taxYear: TaxYear): CallHandler[Future[DownstreamOutcome[OptOutOfCodingOutResponse]]] =
+    def amendCodingOutOptOut(requestData: OptOutOfCodingOutRequestData): CallHandler[Future[DownstreamOutcome[OptOutOfCodingOutResponse]]] =
       (mockCreateOrAmendCodingOutOptOutConnector
-        .amendCodingOutOptOut(_: Nino, _: TaxYear)(
+        .amendCodingOutOptOut(_: OptOutOfCodingOutRequestData)(
           _: HeaderCarrier,
           _: ExecutionContext,
           _: String
         ))
-        .expects(nino, taxYear, *, *, *)
+        .expects(requestData, *, *, *)
 
   }
 

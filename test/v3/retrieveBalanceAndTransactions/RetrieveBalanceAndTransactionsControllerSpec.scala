@@ -16,17 +16,12 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import play.api.mvc.Result
+import config.MockAppConfig
 import play.api.Configuration
-import v3.controllers.validators.MockRetrieveBalanceAndTransactionsValidatorFactory
-import v3.fixtures.retrieveBalanceAndTransactions.RequestFixture._
-import v3.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
-import v3.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
-import v3.services.MockRetrieveBalanceAndTransactionsService
+import play.api.mvc.Result
 import routing.{Version, Version3}
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.def1.model.ResponseFixture.{mtdResponseJson, response}

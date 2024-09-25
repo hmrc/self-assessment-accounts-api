@@ -36,13 +36,14 @@ class RetrieveChargeHistoryByChargeReferenceConnector @Inject() (val http: HttpC
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
     import request._
+    import schema._
 
     val queryParams = List("chargeReference" -> chargeReference.value)
 
     if (featureSwitches.isChargeReferencePoaAdjustmentChangesEnabled) {
-      get(Ifs1Uri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+      get(Ifs1Uri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
     } else {
-      get(DesUri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+      get(DesUri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
     }
 
   }

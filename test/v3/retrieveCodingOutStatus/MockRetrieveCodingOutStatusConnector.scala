@@ -20,8 +20,8 @@ import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
+import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

@@ -20,8 +20,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
-import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
+import v3.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
+import v3.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 
 import scala.concurrent.Future
 
@@ -29,13 +29,13 @@ class OptOutOfCodingOutServiceSpec extends ServiceSpec {
 
   private val nino               = Nino("AA123456A")
   private val taxYear            = TaxYear("2014")
-  private val requestData        = OptOutOfCodingOutRequestData(nino, taxYear)
-  private val downstreamResponse = OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
+  private val requestData        = Def1_OptOutOfCodingOutRequestData(nino, taxYear)
+  private val downstreamResponse = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
   "OptOutOfCodingOutService" when {
     "service call successful" must {
       "return success" in new Test {
-        MockCreateOrAmendCodingOutOptOutConnector.amendCodingOutOptOut(nino, taxYear) returns
+        MockCreateOrAmendCodingOutOptOutConnector.amendCodingOutOptOut(requestData) returns
           Future.successful(Right(ResponseWrapper(correlationId, downstreamResponse)))
 
         await(service.optOutOfCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, downstreamResponse))
@@ -47,7 +47,7 @@ class OptOutOfCodingOutServiceSpec extends ServiceSpec {
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
           s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-            MockCreateOrAmendCodingOutOptOutConnector.amendCodingOutOptOut(nino, taxYear) returns
+            MockCreateOrAmendCodingOutOptOutConnector.amendCodingOutOptOut(requestData) returns
               Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode)))))
 
             await(service.optOutOfCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))

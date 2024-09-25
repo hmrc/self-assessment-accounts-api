@@ -42,6 +42,8 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
     extends AuthorisedController(cc)
     with Logging {
 
+  override val endpointName: String = "create-amend-coding-out-underpayment"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "CreateOrAmendCodingOutController", endpointName = "CreateOrAmendCodingOut")
 
@@ -70,5 +72,4 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
 
       requestHandler.handleRequest()
     }
-
 }

@@ -16,10 +16,10 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import config.MockAppConfig
 import api.connectors.{ConnectorSpec, DownstreamOutcome, MockHttpClient}
 import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
+import config.MockAppConfig
 import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
 import v3.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
 import v3.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.{documentDetails, documentDetailsWithoutDocDueDate}

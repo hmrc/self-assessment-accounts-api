@@ -19,7 +19,7 @@ package v3.optInToCodingOut.def1
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import support.UnitSpec
-import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
+import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 
 class Def1OptInToCodingOutValidatorSpec extends UnitSpec  {
   private implicit val correlationId: String = "1234"
@@ -36,7 +36,7 @@ class Def1OptInToCodingOutValidatorSpec extends UnitSpec  {
     "return the parsed domain object" when {
       "passed a valid request" in {
         validator(validNino, validTaxYear).validateAndWrapResult() shouldBe
-          Right(OptInToCodingOutRequestData(parsedNino, parsedTaxYear))
+          Right(Def1_OptInToCodingOutRequestData(parsedNino, parsedTaxYear))
       }
     }
 

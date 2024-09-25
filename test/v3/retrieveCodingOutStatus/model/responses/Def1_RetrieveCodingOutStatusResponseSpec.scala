@@ -18,21 +18,21 @@ package v3.retrieveCodingOutStatus.model.responses
 
 import play.api.libs.json.Json
 import support.UnitSpec
-import ResponseFixture._
-import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
+import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
+import v3.retrieveCodingOutStatus.model.responses.ResponseFixture._
 
-class RetrieveCodingOutStatusResponseSpec extends UnitSpec {
+class Def1_RetrieveCodingOutStatusResponseSpec extends UnitSpec {
 
   "Def1_RetrieveCodingOutStatusResponse" when {
     "read from valid JSON" should {
       "produce the expected Def1_RetrieveCodingOutStatusResponse object" in {
-        downstreamResponseJson.as[RetrieveCodingOutStatusResponse] shouldBe responseModel
+        downstreamResponseJson.as[Def1_RetrieveCodingOutStatusResponse] shouldBe def1ResponseModel
       }
     }
 
     "written to JSON" should {
       "produce the expected JSON object" in {
-        Json.toJson(responseModel) shouldBe mtdResponseJson
+        Json.toJson(def1ResponseModel) shouldBe mtdResponseJson
       }
     }
   }

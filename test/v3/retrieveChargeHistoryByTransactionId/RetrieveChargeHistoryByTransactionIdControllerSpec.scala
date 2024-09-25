@@ -16,7 +16,6 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.GET
@@ -25,16 +24,12 @@ import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import api.models.domain.{Nino, TransactionId}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
-import play.api.mvc.Result
+import config.MockAppConfig
 import play.api.Configuration
-import v3.controllers.validators.MockRetrieveChargeHistoryByTransactionIdValidatorFactory
-import v3.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
-import v3.models.request.retrieveChargeHistory.RetrieveChargeHistoryByTransactionIdRequestData
-import v3.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
-import v3.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
-import v3.services.MockRetrieveChargeHistoryByTransactionIdService
+import play.api.mvc.Result
 import routing.{Version, Version3}
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
+import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
@@ -55,7 +50,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
   private val transactionId = "anId"
 
   private val requestData: RetrieveChargeHistoryByTransactionIdRequestData =
-    RetrieveChargeHistoryByTransactionIdRequestData(nino = Nino(nino), transactionId = TransactionId(transactionId))
+    Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino = Nino(nino), transactionId = TransactionId(transactionId))
 
   val chargeHistoryLink: Link =
     hateoas.Link(

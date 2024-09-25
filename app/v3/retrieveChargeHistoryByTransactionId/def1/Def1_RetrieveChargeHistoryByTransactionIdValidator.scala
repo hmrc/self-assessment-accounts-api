@@ -21,6 +21,7 @@ import api.controllers.validators.resolvers.{ResolveNino, ResolveTransactionId}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
+import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 
 import javax.inject.Singleton
@@ -35,7 +36,7 @@ class Def1_RetrieveChargeHistoryByTransactionIdValidator(
         (
           ResolveNino(nino),
           ResolveTransactionId(transactionId)
-        ).mapN(RetrieveChargeHistoryByTransactionIdRequestData)
+        ).mapN(Def1_RetrieveChargeHistoryByTransactionIdRequestData)
 
 
 }

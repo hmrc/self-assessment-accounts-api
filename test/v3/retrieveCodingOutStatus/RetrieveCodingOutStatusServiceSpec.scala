@@ -20,8 +20,10 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
+import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
+import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
+import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.Future
 
@@ -30,10 +32,10 @@ class RetrieveCodingOutStatusServiceSpec extends ServiceSpec {
   private val taxYear = "2014"
 
   val retrieveCodingOutStatusResponse: RetrieveCodingOutStatusResponse =
-    RetrieveCodingOutStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear(taxYear), optOutIndicator = true)
+    Def1_RetrieveCodingOutStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear(taxYear), optOutIndicator = true)
 
   private val requestData: RetrieveCodingOutStatusRequestData =
-    RetrieveCodingOutStatusRequestData(
+    Def1_RetrieveCodingOutStatusRequestData(
       Nino(nino),
       TaxYear(taxYear)
     )

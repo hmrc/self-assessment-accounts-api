@@ -25,7 +25,13 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class RetrieveChargeHistoryByTransactionIdValidatorFactory @Inject() {
 
-  def validator(nino: String, taxYear: String): Validator[RetrieveChargeHistoryByTransactionIdRequestData] =
-    new Def1_RetrieveChargeHistoryByTransactionIdValidator(nino, taxYear)
+  def validator(nino: String, taxYear: String): Validator[RetrieveChargeHistoryByTransactionIdRequestData] = {
 
+    val schema = RetrieveChargeHistoryByTransactionIdSchema.schemaFor(nino, taxYear)
+
+    schema match {
+      case RetrieveChargeHistoryByTransactionIdSchema.Def1 => new Def1_RetrieveChargeHistoryByTransactionIdValidator(nino, taxYear)
+    }
+
+  }
 }

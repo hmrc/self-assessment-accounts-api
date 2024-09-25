@@ -20,6 +20,7 @@ import api.models.domain.{ChargeReference, Nino}
 import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
@@ -49,7 +50,7 @@ class RetrieveChargeHistoryByChargeReferenceServiceSpec extends ServiceSpec {
   private val chargeReference = ChargeReference("anId")
 
   private val requestData: RetrieveChargeHistoryByChargeReferenceRequestData =
-    RetrieveChargeHistoryByChargeReferenceRequestData(
+    Def1_RetrieveChargeHistoryByChargeReferenceRequestData(
       nino = nino,
       chargeReference = chargeReference
     )

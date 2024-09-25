@@ -16,7 +16,6 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import config.MockAppConfig
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
 import api.hateoas.Method.GET
@@ -26,16 +25,12 @@ import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{ChargeReference, Nino}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
+import config.MockAppConfig
+import play.api.Configuration
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
-import play.api.Configuration
-import v3.controllers.validators.MockRetrieveChargeHistoryByChargeReferenceValidatorFactory
-import v3.fixtures.retrieveChargeHistory.RetrieveChargeHistoryFixture._
-import v3.models.request.retrieveChargeHistory.RetrieveChargeHistoryByChargeReferenceRequestData
-import v3.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
-import v3.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
-import v3.services.MockRetrieveChargeHistoryByChargeReferenceService
 import routing.{Version, Version3}
+import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
@@ -57,7 +52,7 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
   private val chargeReference = "anChargeReference"
 
   private val requestData: RetrieveChargeHistoryByChargeReferenceRequestData =
-    RetrieveChargeHistoryByChargeReferenceRequestData(nino = Nino(nino), chargeReference = ChargeReference(chargeReference))
+    Def1_RetrieveChargeHistoryByChargeReferenceRequestData(nino = Nino(nino), chargeReference = ChargeReference(chargeReference))
 
   val chargeHistoryLink: Link =
     hateoas.Link(

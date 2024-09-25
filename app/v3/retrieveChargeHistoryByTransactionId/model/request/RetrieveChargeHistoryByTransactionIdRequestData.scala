@@ -17,5 +17,12 @@
 package v3.retrieveChargeHistoryByTransactionId.model.request
 
 import api.models.domain.{Nino, TransactionId}
+import v3.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactionIdSchema
 
-case class RetrieveChargeHistoryByTransactionIdRequestData(nino: Nino, transactionId: TransactionId)
+trait RetrieveChargeHistoryByTransactionIdRequestData{
+
+  val nino: Nino
+  val transactionId: TransactionId
+
+  val schema: RetrieveChargeHistoryByTransactionIdSchema
+}

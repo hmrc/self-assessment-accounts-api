@@ -18,7 +18,6 @@ package v2.models.response.retrieveCodingOut
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v2.retrieveChargeHistory.def1.model.response.{TaxCodeComponents, TaxCodeComponentsObject}
 
 class TaxCodeComponentsObject1Spec extends UnitSpec {
 

@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package v3.retrieveChargeHistoryByChargeReference
+package v3.retrieveChargeHistoryByChargeReference.def1.model.request
 
-import api.controllers.validators.Validator
-import v3.retrieveChargeHistoryByChargeReference.def1.Def1_RetrieveChargeHistoryByChargeReferenceValidator
+import api.models.domain.{ChargeReference, Nino}
+import v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
-import javax.inject.{Inject, Singleton}
+case class Def1_RetrieveChargeHistoryByChargeReferenceRequestData(nino: Nino, chargeReference: ChargeReference)
+  extends RetrieveChargeHistoryByChargeReferenceRequestData {
 
-@Singleton
-class RetrieveChargeHistoryByChargeReferenceValidatorFactory @Inject() {
-
-  def validator(nino: String, taxYear: String): Validator[RetrieveChargeHistoryByChargeReferenceRequestData] = {
-
-    val schema = RetrieveChargeHistoryByChargeReferenceSchema.schemaFor(nino, taxYear)
-
-    schema match {
-      case RetrieveChargeHistoryByChargeReferenceSchema.Def1 => new Def1_RetrieveChargeHistoryByChargeReferenceValidator(nino, taxYear)
-    }
-  }
-
+  override val schema: RetrieveChargeHistoryByChargeReferenceSchema = RetrieveChargeHistoryByChargeReferenceSchema.Def1
 }

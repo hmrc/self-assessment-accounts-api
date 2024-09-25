@@ -19,8 +19,10 @@ package v3.retrieveCodingOutStatus
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
-import v3.models.response.retrieveCodingOutStatus.RetrieveCodingOutStatusResponse
+import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
+import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
+import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.Future
 
@@ -34,14 +36,14 @@ class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
     _: ConnectorTest =>
 
     val response: RetrieveCodingOutStatusResponse =
-      RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = taxYear, optOutIndicator = true)
+      Def1_RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = taxYear, optOutIndicator = true)
 
     protected val connector: RetrieveCodingOutStatusConnector = new RetrieveCodingOutStatusConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    protected def request(nino: Nino, taxYear: TaxYear): RetrieveCodingOutStatusRequestData = RetrieveCodingOutStatusRequestData(nino, taxYear)
+    protected def request(nino: Nino, taxYear: TaxYear): RetrieveCodingOutStatusRequestData = Def1_RetrieveCodingOutStatusRequestData(nino, taxYear)
   }
 
   "RetrieveCodingOutStatusConnector" when {

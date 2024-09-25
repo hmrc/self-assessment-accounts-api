@@ -19,6 +19,7 @@ package v3.retrieveChargeHistoryByTransactionId.def1
 import api.models.domain.{Nino, TransactionId}
 import api.models.errors._
 import support.UnitSpec
+import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 
 class Def1RetrieveChargeHistoryByTransactionIdValidatorSpec extends UnitSpec {
@@ -39,7 +40,7 @@ class Def1RetrieveChargeHistoryByTransactionIdValidatorSpec extends UnitSpec {
         val result: Either[ErrorWrapper, RetrieveChargeHistoryByTransactionIdRequestData] =
           validator(validNino, validTransactionId).validateAndWrapResult()
 
-        result shouldBe Right(RetrieveChargeHistoryByTransactionIdRequestData(parsedNino, parsedTransactionId))
+        result shouldBe Right(Def1_RetrieveChargeHistoryByTransactionIdRequestData(parsedNino, parsedTransactionId))
       }
 
     }

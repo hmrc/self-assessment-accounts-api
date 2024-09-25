@@ -34,6 +34,8 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                                                             idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
+  override val endpointName: String = "list-payments-and-allocation-details"
+
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListPaymentsAndAllocationDetailsController", endpointName = "listPaymentsAndAllocationDetails")
 
