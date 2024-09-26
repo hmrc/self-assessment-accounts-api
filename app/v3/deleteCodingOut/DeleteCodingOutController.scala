@@ -36,7 +36,7 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
-  override val endpointName: String = "delete-coding-out-underpayments"
+  override val endpointName: String = "delete-coding-out"
 
   implicit val endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "DeleteCodingOutController", endpointName = "deleteCodingOut")
