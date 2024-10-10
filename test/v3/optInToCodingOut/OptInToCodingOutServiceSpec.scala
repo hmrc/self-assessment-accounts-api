@@ -20,6 +20,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors._
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import v3.common.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 
 import scala.concurrent.Future
@@ -73,10 +74,10 @@ class OptInToCodingOutServiceSpec extends ServiceSpec {
     }
   }
 
-  trait Test extends MockDeleteCodingOutOptOutConnector {
+  trait Test extends MockOptInToCodingOutConnector {
 
     val service = new OptInToCodingOutService(
-      connector = mockDeleteCodingOutOptOutConnector
+      connector = mockOptInToCodingOutConnector
     )
 
   }

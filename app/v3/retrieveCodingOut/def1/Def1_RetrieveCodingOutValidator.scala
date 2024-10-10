@@ -17,11 +17,12 @@
 package v3.retrieveCodingOut.def1
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{DetailedResolveTaxYear, ResolveNino, ResolveSource}
+import api.controllers.validators.resolvers.{DetailedResolveTaxYear, ResolveNino}
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits._
 import config.AppConfig
+import v3.common.resolvers
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
@@ -37,7 +38,7 @@ class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Opt
         (
           ResolveNino(nino),
           resolveTaxYear(taxYear),
-          ResolveSource(source)
+          resolvers.ResolveSource(source)
         ).mapN(Def1_RetrieveCodingOutRequestData)
 
 }

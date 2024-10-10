@@ -31,8 +31,8 @@ import routing.{Version, Version2}
 import v3.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
 import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
-import v3.retrieveCodingOut.def1.model.response.{TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
-import v3.retrieveCodingOut.model.response.{RetrieveCodingOutHateoasData, RetrieveCodingOutResponse}
+import v3.retrieveCodingOut.def1.model.response._
+import v3.retrieveCodingOut.model.response.RetrieveCodingOutHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -105,8 +105,8 @@ class RetrieveCodingOutControllerSpec
       Some(unmatchedCustomerSubmissions)
     )
 
-  val retrieveCodingOutResponse: RetrieveCodingOutResponse =
-    RetrieveCodingOutResponse(
+  val retrieveCodingOutResponse: Def1_RetrieveCodingOutResponse =
+    Def1_RetrieveCodingOutResponse(
       Some(taxCodeComponentObject),
       Some(unmatchedCustomerSubmissionsObject)
     )

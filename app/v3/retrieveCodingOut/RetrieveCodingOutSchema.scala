@@ -18,12 +18,19 @@ package v3.retrieveCodingOut
 
 import api.controllers.validators.resolvers.ResolveTaxYear
 import api.models.domain.TaxYear
+import api.schema.DownstreamReadable
+import play.api.libs.json.Reads
+import v3.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
+import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
-sealed trait RetrieveCodingOutSchema
+sealed trait RetrieveCodingOutSchema extends DownstreamReadable[RetrieveCodingOutResponse]
 
 object RetrieveCodingOutSchema {
 
-  case object Def1 extends RetrieveCodingOutSchema
+  case object Def1 extends RetrieveCodingOutSchema {
+    override type DownstreamResp = Def1_RetrieveCodingOutResponse
+    override implicit def connectorReads: Reads[DownstreamResp] = Def1_RetrieveCodingOutResponse.reads
+  }
 
   private val defaultSchema = Def1
 

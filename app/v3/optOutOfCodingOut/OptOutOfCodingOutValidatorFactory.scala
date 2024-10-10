@@ -17,6 +17,7 @@
 package v3.optOutOfCodingOut
 
 import api.controllers.validators.Validator
+import v3.optOutOfCodingOut.OptOutOfCodingOutSchema.Def1
 import v3.optOutOfCodingOut.def1.Def1_OptOutOfCodingOutValidator
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 
@@ -30,7 +31,7 @@ class OptOutOfCodingOutValidatorFactory @Inject() {
     val schema = OptOutOfCodingOutSchema.schemaFor(taxYear)
 
     schema match {
-      case OptOutOfCodingOutSchema.Def1 =>  new Def1_OptOutOfCodingOutValidator(nino, taxYear)
+      case Def1 =>  new Def1_OptOutOfCodingOutValidator(nino, taxYear)
     }
 
   }

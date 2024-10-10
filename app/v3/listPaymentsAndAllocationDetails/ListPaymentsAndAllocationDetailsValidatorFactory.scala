@@ -17,6 +17,7 @@
 package v3.listPaymentsAndAllocationDetails
 
 import api.controllers.validators.Validator
+import v3.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsSchema.Def1
 import v3.listPaymentsAndAllocationDetails.def1.Def1_ListPaymentsAndAllocationDetailsValidator
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 
@@ -31,7 +32,7 @@ class ListPaymentsAndAllocationDetailsValidatorFactory @Inject() {
     val schema = ListPaymentsAndAllocationDetailsSchema.schemaFor(fromDate, toDate)
 
     schema match {
-      case ListPaymentsAndAllocationDetailsSchema.Def1 => new Def1_ListPaymentsAndAllocationDetailsValidator(nino, fromDate, toDate, paymentLot, paymentLotItem)
+      case Def1 => new Def1_ListPaymentsAndAllocationDetailsValidator(nino, fromDate, toDate, paymentLot, paymentLotItem)
     }
   }
 

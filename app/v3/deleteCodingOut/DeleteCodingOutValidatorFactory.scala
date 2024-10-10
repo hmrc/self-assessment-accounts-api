@@ -18,6 +18,7 @@ package v3.deleteCodingOut
 
 import api.controllers.validators.Validator
 import config.AppConfig
+import v3.deleteCodingOut.DeleteCodingOutSchema.Def1
 import v3.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
@@ -31,7 +32,7 @@ class DeleteCodingOutValidatorFactory @Inject() {
     val schema = DeleteCodingOutSchema.schemaFor(taxYear)
 
     schema match {
-      case DeleteCodingOutSchema.Def1 => new Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: AppConfig)
+      case Def1 => new Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: AppConfig)
     }
 
   }

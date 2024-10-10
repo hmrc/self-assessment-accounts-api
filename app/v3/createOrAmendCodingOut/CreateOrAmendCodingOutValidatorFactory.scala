@@ -19,6 +19,7 @@ package v3.createOrAmendCodingOut
 import api.controllers.validators.Validator
 import config.AppConfig
 import play.api.libs.json.JsValue
+import v3.createOrAmendCodingOut.CreateOrAmendCodingOutSchema.Def1
 import v3.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
@@ -33,7 +34,7 @@ class CreateOrAmendCodingOutValidatorFactory @Inject() {
     val schema = CreateOrAmendCodingOutSchema.schemaFor(taxYear)
 
     schema match {
-      case CreateOrAmendCodingOutSchema.Def1 => new Def1_CreateOrAmendCodingOutValidator(nino, taxYear, body, temporalValidationEnabled, appConfig)
+      case Def1 => new Def1_CreateOrAmendCodingOutValidator(nino, taxYear, body, temporalValidationEnabled, appConfig)
     }
 
   }

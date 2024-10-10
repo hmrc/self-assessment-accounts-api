@@ -16,7 +16,7 @@
 
 package v3.retrieveChargeHistoryByTransactionId.def1.models.response
 
-import api.models.domain.DownstreamSource
+import v3.common.models.DownstreamSource
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 

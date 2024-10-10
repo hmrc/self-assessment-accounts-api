@@ -20,13 +20,14 @@ import api.controllers.RequestContext
 import api.models.errors._
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
+import v3.common.errors._
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class OptInToCodingOutService @Inject() (connector: DeleteCodingOutOptOutConnector) extends BaseService {
+class OptInToCodingOutService @Inject() (connector: OptInToCodingOutConnector) extends BaseService {
 
   private val errorMap: Map[String, MtdError] =
     Map(
@@ -46,7 +47,7 @@ class OptInToCodingOutService @Inject() (connector: DeleteCodingOutOptOutConnect
 
   def optInToCodingOut(request: OptInToCodingOutRequestData)(implicit ctx: RequestContext, ec: ExecutionContext): Future[ServiceOutcome[Unit]] = {
 
-    connector.deleteCodingOutOptOut(request.nino, request.taxYear).map(_.leftMap(mapDownstreamErrors(errorMap)))
+    connector.optInToCodingOut(request.nino, request.taxYear).map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
 }

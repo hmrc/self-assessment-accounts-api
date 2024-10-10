@@ -18,16 +18,17 @@ package v3.retrieveCodingOut.model.response
 
 import api.hateoas.{HateoasData, HateoasLinks, HateoasLinksFactory, Link}
 import config.AppConfig
-import play.api.libs.json.{Json, OFormat}
-import v3.retrieveCodingOut.def1.model.response.{TaxCodeComponentsObject, UnmatchedCustomerSubmissionsObject}
+import play.api.libs.json.{JsObject, Json, OWrites}
+import utils.JsonWritesUtil
+import v3.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 
-case class RetrieveCodingOutResponse(taxCodeComponents: Option[TaxCodeComponentsObject],
-                                     unmatchedCustomerSubmissions: Option[UnmatchedCustomerSubmissionsObject])
+trait RetrieveCodingOutResponse
 
-object RetrieveCodingOutResponse extends HateoasLinks {
+object RetrieveCodingOutResponse extends JsonWritesUtil with HateoasLinks {
 
-  implicit val format: OFormat[RetrieveCodingOutResponse] = Json.format[RetrieveCodingOutResponse]
-
+  implicit val writes: OWrites[RetrieveCodingOutResponse] = writesFrom {
+    case def1: Def1_RetrieveCodingOutResponse => Json.toJson(def1).as[JsObject]
+  }
   implicit object RetrieveCodingOutLinksFactory extends HateoasLinksFactory[RetrieveCodingOutResponse, RetrieveCodingOutHateoasData] {
 
     override def links(appConfig: AppConfig, data: RetrieveCodingOutHateoasData): Seq[Link] = {

@@ -22,6 +22,7 @@ import api.models.errors.{ErrorWrapper, InternalError}
 import api.models.outcomes.ResponseWrapper
 import api.services.DownstreamResponseMappingSupport
 import utils.Logging
+import v3.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
 trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
@@ -37,7 +38,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
       )
 
     desResponseWrapper.responseData match {
-      case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse if taxYear.isTaxYearComplete && idsMissing(retrieveCodingOutDetailsResponse) =>
+      case retrieveCodingOutDetailsResponse: Def1_RetrieveCodingOutResponse if taxYear.isTaxYearComplete && idsMissing(retrieveCodingOutDetailsResponse) =>
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId")
@@ -49,7 +50,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
     }
   }
 
-  def idsMissing(response: RetrieveCodingOutResponse): Boolean = {
+  def idsMissing(response: Def1_RetrieveCodingOutResponse): Boolean = {
     import response._
 
     lazy val taxCodeComponentsIdsMissing = taxCodeComponents.fold(false)(taxCodeComponents => {

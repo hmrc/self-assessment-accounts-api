@@ -17,6 +17,7 @@
 package v3.retrieveChargeHistoryByTransactionId
 
 import api.controllers.validators.Validator
+import v3.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactionIdSchema.Def1
 import v3.retrieveChargeHistoryByTransactionId.def1.Def1_RetrieveChargeHistoryByTransactionIdValidator
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 
@@ -30,7 +31,7 @@ class RetrieveChargeHistoryByTransactionIdValidatorFactory @Inject() {
     val schema = RetrieveChargeHistoryByTransactionIdSchema.schemaFor(nino, taxYear)
 
     schema match {
-      case RetrieveChargeHistoryByTransactionIdSchema.Def1 => new Def1_RetrieveChargeHistoryByTransactionIdValidator(nino, taxYear)
+      case Def1 => new Def1_RetrieveChargeHistoryByTransactionIdValidator(nino, taxYear)
     }
 
   }

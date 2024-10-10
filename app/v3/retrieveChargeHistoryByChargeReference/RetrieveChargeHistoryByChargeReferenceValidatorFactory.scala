@@ -17,6 +17,7 @@
 package v3.retrieveChargeHistoryByChargeReference
 
 import api.controllers.validators.Validator
+import v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema.Def1
 import v3.retrieveChargeHistoryByChargeReference.def1.Def1_RetrieveChargeHistoryByChargeReferenceValidator
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
@@ -30,7 +31,7 @@ class RetrieveChargeHistoryByChargeReferenceValidatorFactory @Inject() {
     val schema = RetrieveChargeHistoryByChargeReferenceSchema.schemaFor(nino, taxYear)
 
     schema match {
-      case RetrieveChargeHistoryByChargeReferenceSchema.Def1 => new Def1_RetrieveChargeHistoryByChargeReferenceValidator(nino, taxYear)
+      case Def1 => new Def1_RetrieveChargeHistoryByChargeReferenceValidator(nino, taxYear)
     }
   }
 

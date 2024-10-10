@@ -18,7 +18,7 @@ package v3.retrieveCodingOut.def1.model.reponse
 
 import play.api.libs.json.{JsValue, Json}
 import support.UnitSpec
-import v3.retrieveCodingOut.def1.model.response.{TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
+import v3.retrieveCodingOut.def1.model.response.{Def1_RetrieveCodingOutResponse, TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
 class Def1_RetrieveCodingOutResponseSpec extends UnitSpec {
@@ -198,15 +198,15 @@ class Def1_RetrieveCodingOutResponseSpec extends UnitSpec {
     )
 
   val responseModel: RetrieveCodingOutResponse =
-    RetrieveCodingOutResponse(
+    Def1_RetrieveCodingOutResponse(
       Some(taxCodeComponentObject),
       Some(unmatchedCustomerSubmissionsObject)
     )
 
-  "RetrieveCodingOutResponse" when {
+  "Def1_RetrieveCodingOutResponse" when {
     "read from valid JSON" should {
-      "produce the expected RetrieveCodingOutResponse object" in {
-        desResponse.as[RetrieveCodingOutResponse] shouldBe responseModel
+      "produce the expected Def1_RetrieveCodingOutResponse object" in {
+        desResponse.as[Def1_RetrieveCodingOutResponse] shouldBe responseModel
       }
     }
 

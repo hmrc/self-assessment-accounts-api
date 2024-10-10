@@ -18,6 +18,7 @@ package v3.retrieveCodingOut
 
 import api.controllers.validators.Validator
 import config.AppConfig
+import v3.retrieveCodingOut.RetrieveCodingOutSchema.Def1
 import v3.retrieveCodingOut.def1.Def1_RetrieveCodingOutValidator
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
@@ -31,7 +32,7 @@ class RetrieveCodingOutValidatorFactory @Inject() {
     val schema = RetrieveCodingOutSchema.schemaFor(taxYear)
 
     schema match {
-      case RetrieveCodingOutSchema.Def1 => new Def1_RetrieveCodingOutValidator(nino, taxYear, source, appConfig)
+      case Def1 => new Def1_RetrieveCodingOutValidator(nino, taxYear, source, appConfig)
     }
   }
 

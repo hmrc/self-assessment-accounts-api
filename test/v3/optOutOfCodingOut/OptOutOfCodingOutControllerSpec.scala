@@ -19,13 +19,14 @@ package v3.optOutOfCodingOut
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError, RuleBusinessPartnerNotExistError}
+import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import routing.{Version, Version3}
+import v3.common.errors.RuleBusinessPartnerNotExistError
 import v3.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
 import v3.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
