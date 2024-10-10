@@ -42,11 +42,12 @@ get:
       content:
         application/json:
           schema:
-            $ref: "./schemas/retrieveSelfAssementChargeHistory/response.json"
+            oneOf:
+            - $ref: "./schemas/retrieveSelfAssementChargeHistory/def1/response.json"
           examples:
             Request:
               value:
-                $ref: "./examples/retrieveSelfAssementChargeHistory/response.json"
+                $ref: "./examples/retrieveSelfAssementChargeHistory/def1/response.json"
 
     "400":
       description: Bad request

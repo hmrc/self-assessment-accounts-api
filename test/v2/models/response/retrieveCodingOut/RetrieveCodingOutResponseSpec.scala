@@ -201,9 +201,9 @@ class RetrieveCodingOutResponseSpec extends UnitSpec {
       Some(unmatchedCustomerSubmissionsObject)
     )
 
-  "RetrieveCodingOutResponse" when {
+  "Def1_RetrieveCodingOutResponse" when {
     "read from valid JSON" should {
-      "produce the expected RetrieveCodingOutResponse object" in {
+      "produce the expected Def1_RetrieveCodingOutResponse object" in {
         desResponse.as[RetrieveCodingOutResponse] shouldBe responseModel
       }
     }

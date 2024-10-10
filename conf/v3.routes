@@ -1,15 +1,15 @@
-GET           /:nino/charges/:transactionId                                v3.controllers.RetrieveChargeHistoryByTransactionIdController.retrieveChargeHistoryByTransactionId(nino: String, transactionId: String)
-GET           /:nino/charges/transactionId/:transactionId                  v3.controllers.RetrieveChargeHistoryByTransactionIdController.retrieveChargeHistoryByTransactionId(nino: String, transactionId: String)
-GET           /:nino/charges/chargeReference/:chargeReference              v3.controllers.RetrieveChargeHistoryByChargeReferenceController.retrieveChargeHistoryByChargeReference(nino: String, chargeReference: String)
+GET           /:nino/charges/:transactionId                                v3.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactionIdController.retrieveChargeHistoryByTransactionId(nino: String, transactionId: String)
+GET           /:nino/charges/transactionId/:transactionId                  v3.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactionIdController.retrieveChargeHistoryByTransactionId(nino: String, transactionId: String)
+GET           /:nino/charges/chargeReference/:chargeReference              v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceController.retrieveChargeHistoryByChargeReference(nino: String, chargeReference: String)
 
-GET           /:nino/balance-and-transactions                              v3.controllers.RetrieveBalanceAndTransactionsController.retrieveBalanceAndTransactions(nino: String, docNumber: Option[String], fromDate: Option[String], toDate: Option[String], onlyOpenItems: Option[String], includeLocks: Option[String], calculateAccruedInterest: Option[String], removePOA: Option[String], customerPaymentInformation: Option[String], includeEstimatedCharges: Option[String])
+GET           /:nino/balance-and-transactions                              v3.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsController.retrieveBalanceAndTransactions(nino: String, docNumber: Option[String], fromDate: Option[String], toDate: Option[String], onlyOpenItems: Option[String], includeLocks: Option[String], calculateAccruedInterest: Option[String], removePOA: Option[String], customerPaymentInformation: Option[String], includeEstimatedCharges: Option[String])
 
-GET           /:nino/payments-and-allocations                              v2.controllers.ListPaymentsAndAllocationDetailsController.listPayments(nino: String, fromDate: Option[String], toDate: Option[String], paymentLot: Option[String], paymentLotItem: Option[String])
+GET           /:nino/payments-and-allocations                              v3.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsController.listPayments(nino: String, fromDate: Option[String], toDate: Option[String], paymentLot: Option[String], paymentLotItem: Option[String])
 
-PUT           /:nino/:taxYear/collection/tax-code                          v2.controllers.CreateOrAmendCodingOutController.createOrAmendCodingOut(nino, taxYear)
-GET           /:nino/:taxYear/collection/tax-code                          v2.controllers.RetrieveCodingOutController.retrieveCodingOut(nino: String, taxYear: String, source: Option[String])
-DELETE        /:nino/:taxYear/collection/tax-code                          v2.controllers.DeleteCodingOutController.handleRequest(nino: String, taxYear: String)
+PUT           /:nino/:taxYear/collection/tax-code                          v3.createOrAmendCodingOut.CreateOrAmendCodingOutController.createOrAmendCodingOut(nino, taxYear)
+GET           /:nino/:taxYear/collection/tax-code                          v3.retrieveCodingOut.RetrieveCodingOutController.retrieveCodingOut(nino: String, taxYear: String, source: Option[String])
+DELETE        /:nino/:taxYear/collection/tax-code                          v3.deleteCodingOut.DeleteCodingOutController.handleRequest(nino: String, taxYear: String)
 
-GET           /:nino/:taxYear/collection/tax-code/coding-out/status        v3.controllers.RetrieveCodingOutStatusController.retrieveCodingOutStatus(nino: String, taxYear: String)
-POST          /:nino/:taxYear/collection/tax-code/coding-out/opt-in        v3.controllers.OptInToCodingOutController.optInToCodingOut(nino: String, taxYear: String)
-POST          /:nino/:taxYear/collection/tax-code/coding-out/opt-out       v3.controllers.OptOutOfCodingOutController.optOutOfCodingOut(nino: String, taxYear: String)
+GET           /:nino/:taxYear/collection/tax-code/coding-out/status        v3.retrieveCodingOutStatus.RetrieveCodingOutStatusController.retrieveCodingOutStatus(nino: String, taxYear: String)
+POST          /:nino/:taxYear/collection/tax-code/coding-out/opt-in        v3.optInToCodingOut.OptInToCodingOutController.optInToCodingOut(nino: String, taxYear: String)
+POST          /:nino/:taxYear/collection/tax-code/coding-out/opt-out       v3.optOutOfCodingOut.OptOutOfCodingOutController.optOutOfCodingOut(nino: String, taxYear: String)
