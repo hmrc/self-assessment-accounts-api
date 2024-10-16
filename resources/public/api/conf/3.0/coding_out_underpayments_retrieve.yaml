@@ -43,11 +43,12 @@ responses:
     content:
       application/json:
         schema:
-          $ref: "./schemas/retrieveCodingOutUnderpayments/response.json"
+          oneOf:
+            - $ref: "./schemas/retrieveCodingOutUnderpayments/def1/response.json"
         examples:
           Request:
             value:
-              $ref: "./examples/retrieveCodingOutUnderpayments/response.json"
+              $ref: "./examples/retrieveCodingOutUnderpayments/def1/response.json"
 
   "400":
     description: Bad request
