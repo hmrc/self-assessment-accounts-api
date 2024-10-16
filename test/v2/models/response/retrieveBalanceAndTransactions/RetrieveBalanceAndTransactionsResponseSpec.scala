@@ -22,7 +22,7 @@ import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture._
 
 class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
-  "RetrieveBalanceAndTransactionsResponse.reads" when {
+  "Def1_RetrieveBalanceAndTransactionsResponse.reads" when {
     "locks are included" when {
       implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
 
@@ -49,7 +49,7 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
   }
 
-  "RetrieveBalanceAndTransactionsResponse.writes" should {
+  "Def1_RetrieveBalanceAndTransactionsResponse.writes" should {
     "produce the expected JSON" in {
       Json.toJson(response) shouldBe mtdResponseJson
     }

@@ -34,8 +34,14 @@ class RetrieveBalanceAndTransactionsValidatorFactory @Inject() {
                 calculateAccruedInterest: Option[String],
                 removePOA: Option[String],
                 customerPaymentInformation: Option[String],
-                includeEstimatedCharges: Option[String]): Validator[RetrieveBalanceAndTransactionsRequestData] =
-    new Def1_RetrieveBalanceAndTransactionsValidator(
-      nino, docNumber, fromDate, toDate, onlyOpenItems, includeLocks, calculateAccruedInterest, removePOA, customerPaymentInformation, includeEstimatedCharges)
+                includeEstimatedCharges: Option[String]): Validator[RetrieveBalanceAndTransactionsRequestData] = {
+
+    val schema = RetrieveBalanceAndTransactionsSchema.schemaFor()
+
+    schema match {
+      case RetrieveBalanceAndTransactionsSchema.Def1 => new Def1_RetrieveBalanceAndTransactionsValidator(
+        nino, docNumber, fromDate, toDate, onlyOpenItems, includeLocks, calculateAccruedInterest, removePOA, customerPaymentInformation, includeEstimatedCharges)
+    }
+  }
 
 }

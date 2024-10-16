@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
-package v3.retrieveBalanceAndTransactions.model.request
+package v3.retrieveBalanceAndTransactions.def1.model.requests
 
 import api.models.domain.{DateRange, Nino}
+import v3.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsSchema
+import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
-case class RetrieveBalanceAndTransactionsRequestData(
+case class Def1_RetrieveBalanceAndTransactionsRequestData(
     nino: Nino,
     docNumber: Option[String],
     fromAndToDates: Option[DateRange],
@@ -28,4 +30,6 @@ case class RetrieveBalanceAndTransactionsRequestData(
     removePOA: Boolean,
     customerPaymentInformation: Boolean,
     includeEstimatedCharges: Boolean
-)
+) extends RetrieveBalanceAndTransactionsRequestData {
+  val schema: RetrieveBalanceAndTransactionsSchema = RetrieveBalanceAndTransactionsSchema.Def1
+}

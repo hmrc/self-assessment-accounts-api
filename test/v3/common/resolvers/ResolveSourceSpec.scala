@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-package v2.controllers.validators.resolvers
+package v3.common.resolvers
 
+import api.models.domain.MtdSource
+import api.models.errors.SourceFormatError
 import cats.data.Validated.{Invalid, Valid}
-import shared.UnitSpec
-import shared.models.domain.Source
-import shared.models.errors.RuleSourceInvalidError
-import v2.controllers.validators.resolvers
+import support.UnitSpec
 
 class ResolveSourceSpec extends UnitSpec {
 
   "ResolveSource" should {
     "return no errors" when {
       "passed a valid Source" in {
-        ResolveSource("all") shouldBe Valid(Source.`all`)
-        ResolveSource("customer") shouldBe Valid(Source.`customer`)
-        ResolveSource("contractor") shouldBe Valid(Source.`contractor`)
+        ResolveSource("hmrcHeld") shouldBe Valid(MtdSource.`hmrcHeld`)
+        ResolveSource("user") shouldBe Valid(MtdSource.`user`)
+        ResolveSource("latest") shouldBe Valid(MtdSource.`latest`)
       }
     }
 
     "return an error" when {
       "passed an invalid source" in {
-        resolvers.ResolveSource("notASource") shouldBe Invalid(List(RuleSourceInvalidError))
+       ResolveSource("notASource") shouldBe Invalid(List(SourceFormatError))
       }
     }
   }

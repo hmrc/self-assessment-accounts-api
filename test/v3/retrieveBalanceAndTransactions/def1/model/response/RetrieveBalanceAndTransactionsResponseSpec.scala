@@ -25,7 +25,7 @@ import v3.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransa
 
 class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
-  "RetrieveBalanceAndTransactionsResponse.reads" when {
+  "Def1_RetrieveBalanceAndTransactionsResponse.reads" when {
     "locks are included" when {
       implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
 
@@ -52,13 +52,13 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
   }
 
-  "RetrieveBalanceAndTransactionsResponse.writes" should {
+  "Def1_RetrieveBalanceAndTransactionsResponse.writes" should {
     "produce the expected JSON" in {
       Json.toJson(response) shouldBe mtdResponseJson
     }
   }
 
-  "RetrieveBalanceAndTransactionsResponse.adjustField" should {
+  "Def1_RetrieveBalanceAndTransactionsResponse.adjustField" should {
     implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
     val response                                           = downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse]
     val responseWithoutPOAAmount                           = downstreamResponseWithoutPOAAmountJson.as[RetrieveBalanceAndTransactionsResponse]

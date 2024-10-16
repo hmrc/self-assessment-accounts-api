@@ -17,15 +17,18 @@
 package v3.retrieveBalanceAndTransactions.model.request
 
 import api.models.domain.{DateRange, Nino}
+import v3.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsSchema
 
-case class RetrieveBalanceAndTransactionsRequestData(
-    nino: Nino,
-    docNumber: Option[String],
-    fromAndToDates: Option[DateRange],
-    onlyOpenItems: Boolean,
-    includeLocks: Boolean,
-    calculateAccruedInterest: Boolean,
-    removePOA: Boolean,
-    customerPaymentInformation: Boolean,
-    includeEstimatedCharges: Boolean
-)
+trait RetrieveBalanceAndTransactionsRequestData {
+  val nino: Nino
+  val docNumber: Option[String]
+  val fromAndToDates: Option[DateRange]
+  val onlyOpenItems: Boolean
+  val includeLocks: Boolean
+  val calculateAccruedInterest: Boolean
+  val removePOA: Boolean
+  val customerPaymentInformation: Boolean
+  val includeEstimatedCharges: Boolean
+
+  val schema: RetrieveBalanceAndTransactionsSchema
+}

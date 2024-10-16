@@ -16,34 +16,19 @@
 
 package v3.retrieveBalanceAndTransactions.model.response
 
-import config.FeatureSwitches
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.json.{JsObject, Json, OWrites, Reads}
+import utils.JsonWritesUtil.writesFrom
 import v3.retrieveBalanceAndTransactions.def1.model.response._
 
-case class RetrieveBalanceAndTransactionsResponse(
-    balanceDetails: BalanceDetails,
-    codingDetails: Option[Seq[CodingDetails]],
-    documentDetails: Option[Seq[DocumentDetails]],
-    financialDetails: Option[Seq[FinancialDetails]]
-) {
-
-  def adjustFields(featureSwitches: FeatureSwitches): RetrieveBalanceAndTransactionsResponse = {
-
-    def documentDetailAdditionalField(response: RetrieveBalanceAndTransactionsResponse): RetrieveBalanceAndTransactionsResponse = {
-      if (featureSwitches.isPOARelevantAmountEnabled) response else response.withoutPOARelevantAmountField
-    }
-    documentDetailAdditionalField(this)
-  }
-
-  def withoutPOARelevantAmountField: RetrieveBalanceAndTransactionsResponse =
-    this.copy(documentDetails = documentDetails.map(_.map(_.copy(poaRelevantAmount = None))))
-
-}
+trait RetrieveBalanceAndTransactionsResponse
 
 object RetrieveBalanceAndTransactionsResponse {
 
-  implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
+  implicit def reads: Reads[RetrieveBalanceAndTransactionsResponse] =
     Json.reads[RetrieveBalanceAndTransactionsResponse]
 
-  implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
+  implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = writesFrom {
+    case def1: Def1_RetrieveBalanceAndTransactionsResponse => Json.toJson(def1).as[JsObject]
+
+  }
 }

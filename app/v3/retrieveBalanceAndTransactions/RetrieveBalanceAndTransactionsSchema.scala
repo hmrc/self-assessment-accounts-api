@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,43 +14,28 @@
  * limitations under the License.
  */
 
-package v3.optOutOfCodingOut
+package v3.retrieveBalanceAndTransactions
 
-import api.controllers.RequestContext
-import api.models.errors._
-import api.services.{BaseService, ServiceOutcome}
-import cats.implicits._
-import v3.common.errors._
-import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
-import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
+import api.schema.DownstreamReadable
+import play.api.libs.json.Reads
+import v3.retrieveBalanceAndTransactions.def1.model.response.{Def1_RetrieveBalanceAndTransactionsResponse, FinancialDetailsItem}
+import v3.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 
-import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+sealed trait RetrieveBalanceAndTransactionsSchema extends DownstreamReadable[RetrieveBalanceAndTransactionsResponse]
 
-@Singleton
-class OptOutOfCodingOutService @Inject() (connector: OptOutOfCodingOutConnector) extends BaseService {
+object RetrieveBalanceAndTransactionsSchema {
 
-  private val errorMap: Map[String, MtdError] =
-    Map(
-      "INVALID_TAXABLE_ENTITY_ID"      -> NinoFormatError,
-      "INVALID_TAX_YEAR"               -> InternalError,
-      "INVALID_REGIME"                 -> InternalError,
-      "INVALID_CORRELATIONID"          -> InternalError,
-      "BUSINESS_PARTNER_NOT_EXIST"     -> RuleBusinessPartnerNotExistError,
-      "ITSA_CONTRACT_OBJECT_NOT_EXIST" -> RuleItsaContractObjectNotExistError,
-      "REQUEST_NOT_PROCESSED"          -> InternalError,
-      "DUPLICATE_ACKNOWLEDGEMENT_REF"  -> InternalError,
-      "OPT_OUT_IND_ALREADY_SET"        -> RuleAlreadyOptedOutError,
-      "SERVER_ERROR"                   -> InternalError,
-      "BAD_GATEWAY"                    -> InternalError,
-      "SERVICE_UNAVAILABLE"            -> InternalError
-    )
+  case object Def1 extends RetrieveBalanceAndTransactionsSchema{
+    override type DownstreamResp = Def1_RetrieveBalanceAndTransactionsResponse
+    implicit def connectorRead(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[DownstreamResp] = Def1_RetrieveBalanceAndTransactionsResponse.reads
 
-  def optOutOfCodingOut(request: OptOutOfCodingOutRequestData)(implicit
-      ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[OptOutOfCodingOutResponse]] = {
+    override implicit def connectorReads: Reads[Def1_RetrieveBalanceAndTransactionsResponse] = ???
+  }
 
-    connector.amendCodingOutOptOut(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
+  val defaultSchema = Def1
+
+  def schemaFor(): RetrieveBalanceAndTransactionsSchema = {
+    defaultSchema
   }
 
 }

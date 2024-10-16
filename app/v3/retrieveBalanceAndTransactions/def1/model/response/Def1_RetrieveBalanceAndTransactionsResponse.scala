@@ -14,36 +14,36 @@
  * limitations under the License.
  */
 
-package v3.retrieveBalanceAndTransactions.model.response
+package v3.retrieveBalanceAndTransactions.def1.model.response
 
 import config.FeatureSwitches
 import play.api.libs.json.{Json, OWrites, Reads}
-import v3.retrieveBalanceAndTransactions.def1.model.response._
+import v3.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 
-case class RetrieveBalanceAndTransactionsResponse(
+case class Def1_RetrieveBalanceAndTransactionsResponse(
     balanceDetails: BalanceDetails,
     codingDetails: Option[Seq[CodingDetails]],
     documentDetails: Option[Seq[DocumentDetails]],
     financialDetails: Option[Seq[FinancialDetails]]
-) {
+) extends RetrieveBalanceAndTransactionsResponse{
 
-  def adjustFields(featureSwitches: FeatureSwitches): RetrieveBalanceAndTransactionsResponse = {
+  def adjustFields(featureSwitches: FeatureSwitches): Def1_RetrieveBalanceAndTransactionsResponse = {
 
-    def documentDetailAdditionalField(response: RetrieveBalanceAndTransactionsResponse): RetrieveBalanceAndTransactionsResponse = {
+    def documentDetailAdditionalField(response: Def1_RetrieveBalanceAndTransactionsResponse): Def1_RetrieveBalanceAndTransactionsResponse = {
       if (featureSwitches.isPOARelevantAmountEnabled) response else response.withoutPOARelevantAmountField
     }
     documentDetailAdditionalField(this)
   }
 
-  def withoutPOARelevantAmountField: RetrieveBalanceAndTransactionsResponse =
+  def withoutPOARelevantAmountField: Def1_RetrieveBalanceAndTransactionsResponse =
     this.copy(documentDetails = documentDetails.map(_.map(_.copy(poaRelevantAmount = None))))
 
 }
 
-object RetrieveBalanceAndTransactionsResponse {
+object Def1_RetrieveBalanceAndTransactionsResponse {
 
-  implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
-    Json.reads[RetrieveBalanceAndTransactionsResponse]
+  implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[Def1_RetrieveBalanceAndTransactionsResponse] =
+    Json.reads[Def1_RetrieveBalanceAndTransactionsResponse]
 
-  implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
+  implicit val writes: OWrites[Def1_RetrieveBalanceAndTransactionsResponse] = Json.writes[Def1_RetrieveBalanceAndTransactionsResponse]
 }

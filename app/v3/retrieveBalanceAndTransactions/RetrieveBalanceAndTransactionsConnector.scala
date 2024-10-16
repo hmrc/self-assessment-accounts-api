@@ -21,6 +21,7 @@ import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsSchema.Def1.DownstreamResp
 import v3.retrieveBalanceAndTransactions.def1.model.response.FinancialDetailsItem
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 import v3.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
@@ -60,7 +61,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
     // So that we don't read locks into result unless we've asked for them
     implicit val jsonReadLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(request.includeLocks)
 
-    get(Ifs2Uri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
+    get(Ifs2Uri[DownstreamResp](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
   }
 
 }
