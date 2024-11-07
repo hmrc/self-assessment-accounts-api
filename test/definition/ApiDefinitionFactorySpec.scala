@@ -16,13 +16,13 @@
 
 package definition
 
-import config.MockAppConfig
 import api.connectors.MockHttpClient
 import cats.implicits.catsSyntaxValidatedId
 import config.Deprecation.NotDeprecated
+import config.MockAppConfig
 import definition.APIStatus.{ALPHA, BETA}
 import play.api.Configuration
-import routing.{Version2, Version3}
+import routing.Version3
 import support.UnitSpec
 
 class ApiDefinitionFactorySpec extends UnitSpec {
@@ -37,7 +37,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
       "return a valid Definition case class" in new Test {
 
         MockAppConfig.featureSwitches returns Configuration.empty
-        Seq(Version2, Version3).foreach { version =>
+        Seq(Version3).foreach { version =>
           MockAppConfig.apiStatus(version) returns "BETA"
           MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
           MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
@@ -51,11 +51,6 @@ class ApiDefinitionFactorySpec extends UnitSpec {
               context = "api.gateway.context",
               categories = Seq("INCOME_TAX_MTD"),
               versions = Seq(
-                APIVersion(
-                  version = Version2,
-                  status = BETA,
-                  endpointsEnabled = true
-                ),
                 APIVersion(
                   version = Version3,
                   status = BETA,
@@ -71,8 +66,8 @@ class ApiDefinitionFactorySpec extends UnitSpec {
 
   "buildAPIStatus" when {
     "the 'apiStatus' parameter is present and valid" should {
+      // leaving test structure as-is to account for future versions
       Seq(
-        (Version2, BETA),
         (Version3, BETA)
       ).foreach { case (version, status) =>
         s"return the correct $status for $version " in new Test {
@@ -84,7 +79,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
 
     "the 'apiStatus' parameter is present and invalid" should {
-      Seq(Version2, Version3).foreach { version =>
+      Seq(Version3).foreach { version =>
         s"default to alpha for $version " in new Test {
           MockAppConfig.apiStatus(version) returns "ALPHO"
           MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
@@ -94,7 +89,7 @@ class ApiDefinitionFactorySpec extends UnitSpec {
     }
 
     "the 'deprecatedOn' parameter is missing for a deprecated version" should {
-      Seq(Version2, Version3).foreach { version =>
+      Seq(Version3).foreach { version =>
         s"throw exception for $version" in new Test {
           MockAppConfig.apiStatus(version) returns "DEPRECATED"
           MockAppConfig
