@@ -27,7 +27,6 @@ import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import routing.{Version, Version2}
 import v3.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
 import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
@@ -45,9 +44,8 @@ class RetrieveCodingOutControllerSpec
     with MockAppConfig
     with MockHateoasFactory {
 
-  override val apiVersion: Version = Version2
-  private val taxYear              = "2021-22"
-  private val source               = "hmrcHeld"
+  private val taxYear = "2021-22"
+  private val source  = "hmrcHeld"
 
   private val requestData = Def1_RetrieveCodingOutRequestData(
     nino = Nino(nino),

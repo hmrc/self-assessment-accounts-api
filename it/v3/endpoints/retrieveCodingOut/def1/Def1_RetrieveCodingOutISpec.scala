@@ -25,8 +25,7 @@ import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import support.IntegrationBaseSpec
-import v2.fixtures.RetrieveCodingOutFixture._
-
+import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, ZoneOffset}
 
