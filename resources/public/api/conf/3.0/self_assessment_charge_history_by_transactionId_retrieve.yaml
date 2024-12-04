@@ -42,8 +42,7 @@ get:
       content:
         application/json:
           schema:
-            oneOf:
-              - $ref: "./schemas/retrieveSelfAssementChargeHistory/def1/response.json"
+            $ref: "./schemas/retrieveSelfAssementChargeHistory/def1/response.json"
           examples:
             Request:
               value:

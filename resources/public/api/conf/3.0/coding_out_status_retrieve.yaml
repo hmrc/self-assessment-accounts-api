@@ -43,8 +43,7 @@ get:
       content:
         application/json:
           schema:
-            oneOf:
-              - $ref: "./schemas/retrieveCodingOutStatus/def1/response.json"
+            $ref: "./schemas/retrieveCodingOutStatus/def1/response.json"
           examples:
             Request:
               value:
