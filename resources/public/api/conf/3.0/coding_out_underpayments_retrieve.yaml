@@ -43,8 +43,7 @@ responses:
     content:
       application/json:
         schema:
-          oneOf:
-            - $ref: "./schemas/retrieveCodingOutUnderpayments/def1/response.json"
+          $ref: "./schemas/retrieveCodingOutUnderpayments/def1/response.json"
         examples:
           Request:
             value:

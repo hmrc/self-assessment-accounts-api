@@ -42,8 +42,7 @@ get:
       content:
         application/json:
           schema:
-            oneOf:
-              - $ref: "./schemas/retrieveBalanceAndTransactions/def1/response.json"
+            $ref: "./schemas/retrieveBalanceAndTransactions/def1/response.json"
           examples:
             Request:
               value:
