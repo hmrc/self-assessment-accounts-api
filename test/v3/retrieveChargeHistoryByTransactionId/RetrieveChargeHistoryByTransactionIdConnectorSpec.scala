@@ -21,7 +21,6 @@ import api.models.domain.{Nino, TransactionId}
 import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
-import play.api.Configuration
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -57,7 +56,6 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
       new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.featureSwitches returns Configuration("chargeReferencePoaAdjustmentChanges.enabled" -> true)
       MockAppConfig.ifs1BaseUrl returns baseUrl
       MockAppConfig.ifs1Token returns "ifs1-token"
       MockAppConfig.ifs1Environment returns "ifs1-environment"
