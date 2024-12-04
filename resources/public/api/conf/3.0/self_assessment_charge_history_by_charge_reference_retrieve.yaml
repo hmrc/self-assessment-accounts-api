@@ -1,5 +1,5 @@
 get:
-  summary: Retrieve History of a Self Assessment Charge by Charge Reference {{#unless (releasedInProduction "chargeReferenceEndpoint")}}[Test Only] {{/unless}}
+  summary: Retrieve History of a Self Assessment Charge by Charge Reference
 
   description: |
     This endpoint enables you to retrieve the history of a Self Assessment charge made by HMRC using a charge reference number. A National Insurance number and charge reference number must be provided.

@@ -1,5 +1,5 @@
 get:
-  summary: Retrieve History of a Self Assessment Charge by Transaction ID {{#unless (releasedInProduction "chargeReferenceEndpoint")}}[Test Only] {{/unless}}
+  summary: Retrieve History of a Self Assessment Charge by Transaction ID
 
 
   description: |
