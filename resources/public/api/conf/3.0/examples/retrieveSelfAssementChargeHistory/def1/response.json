@@ -7,10 +7,8 @@
     "description": "POA1, Balancing charge",
     "totalAmount": 600.00,
     "changeDate": "2018-04-05",
-    "changeReason": "Amended return, Customer Request"
-    {{#if (enabled 'chargeReferencePoaAdjustmentChanges')}}
-    ,"poaAdjustmentReason": "004"
-    {{/if}}
+    "changeReason": "Amended return, Customer Request",
+    "poaAdjustmentReason": "004"
     }
   ]
 }

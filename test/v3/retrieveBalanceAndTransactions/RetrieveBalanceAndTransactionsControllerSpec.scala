@@ -45,7 +45,6 @@ class RetrieveBalanceAndTransactionsControllerSpec
     "return OK" when {
       "the request is valid" in new Test {
 
-        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returningSuccess(requestData))
 
         MockedRetrieveBalanceAndTransactionsService
@@ -58,14 +57,12 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
     "return the error as per spec" when {
       "the parser validation fails" in new Test {
-        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returning(NinoFormatError))
 
         runErrorTest(NinoFormatError)
       }
 
       "the service returns an error" in new Test {
-        MockAppConfig.featureSwitches.returns(Configuration("isPOARelevantAmount.enabled" -> true)).anyNumberOfTimes()
         willUseValidator(returningSuccess(requestData))
 
         MockedRetrieveBalanceAndTransactionsService
