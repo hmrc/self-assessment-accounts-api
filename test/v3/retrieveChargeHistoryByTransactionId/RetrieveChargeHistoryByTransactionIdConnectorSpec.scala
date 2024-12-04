@@ -64,14 +64,6 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
       MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
     }
 
-    def setUpDesMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.featureSwitches returns Configuration("chargeReferencePoaAdjustmentChanges.enabled" -> false)
-      MockAppConfig.desBaseUrl returns baseUrl
-      MockAppConfig.desToken returns "des-token"
-      MockAppConfig.desEnvironment returns "des-environment"
-      MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
-    }
-
   }
 
   "RetrieveChargeHistoryConnector" when {
@@ -94,28 +86,6 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(outcome))
 
         await(connector.retrieveChargeHistoryByTransactionId(request)) shouldBe outcome
-      }
-
-      "return a valid response using DES config" when {
-        "isChargeReferencePoaAdjustmentChanges is false" in new Test {
-
-          setUpDesMocks()
-          val request: RetrieveChargeHistoryByTransactionIdRequestData =
-            Def1_RetrieveChargeHistoryByTransactionIdRequestData(Nino(nino), TransactionId(transactionId))
-          private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
-
-          MockedHttpClient
-            .get(
-              s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-              dummyHeaderCarrierConfig,
-              parameters = List("docNumber" -> transactionId),
-              requiredDesHeaders,
-              List("AnotherHeader" -> "HeaderValue")
-            )
-            .returns(Future.successful(outcome))
-
-          await(connector.retrieveChargeHistoryByTransactionId(request)) shouldBe outcome
-        }
       }
     }
   }

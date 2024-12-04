@@ -16,7 +16,7 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import api.connectors.DownstreamUri.{DesUri, Ifs1Uri}
+import api.connectors.DownstreamUri.Ifs1Uri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import config.AppConfig
@@ -40,11 +40,7 @@ class RetrieveChargeHistoryByChargeReferenceConnector @Inject() (val http: HttpC
 
     val queryParams = List("chargeReference" -> chargeReference.value)
 
-    if (featureSwitches.isChargeReferencePoaAdjustmentChangesEnabled) {
-      get(Ifs1Uri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
-    } else {
-      get(DesUri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
-    }
+    get(Ifs1Uri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
 
   }
 

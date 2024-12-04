@@ -18,10 +18,9 @@ package v3.retrieveBalanceAndTransactions
 
 import api.controllers._
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.{AppConfig, FeatureSwitches}
+import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import utils.IdGenerator
-import v3.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -69,7 +68,6 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieveBalanceAndTransactions)
-          .withModelHandling { response: RetrieveBalanceAndTransactionsResponse => response.adjustFields(FeatureSwitches(appConfig)) }
           .withPlainJsonResult()
 
       requestHandler.handleRequest()
