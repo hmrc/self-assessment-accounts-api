@@ -67,4 +67,38 @@ class FeatureSwitchesSpec extends UnitSpec {
 
   }
 
+  "FeatureSwitches" should {
+    "return true" when {
+      "the feature switch is set to true" in {
+        val config = Configuration(
+          "random-feature-switch.enabled" -> true
+        )
+
+        val featureSwitches = FeatureSwitches(config)
+
+        featureSwitches.isEnabled("random-feature-switch") shouldBe true
+      }
+
+      "the feature switch is not present in the config" in {
+        val config = Configuration.empty
+
+        val featureSwitches = FeatureSwitches(config)
+
+        featureSwitches.isEnabled("random-feature-switch") shouldBe true
+      }
+    }
+
+    "return false" when {
+      "the feature switch is set to false" in {
+        val config = Configuration(
+          "random-feature-switch.enabled" -> false
+        )
+
+        val featureSwitches = FeatureSwitches(config)
+
+        featureSwitches.isEnabled("random-feature-switch") shouldBe false
+      }
+    }
+  }
+
 }
