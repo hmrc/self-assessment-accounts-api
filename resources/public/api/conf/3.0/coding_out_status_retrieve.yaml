@@ -1,5 +1,5 @@
 get:
-  summary: Retrieve Coding Out Status{{#unless (releasedInProduction 'cl402')}} [Test only]{{/unless}}
+  summary: Retrieve Coding Out Status
   description: |
     This endpoint enables you to retrieve opt-out of coding out status for a specified customer (identified by a National Insurance number) and tax year.
     
