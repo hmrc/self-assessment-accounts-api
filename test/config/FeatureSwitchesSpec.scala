@@ -71,12 +71,12 @@ class FeatureSwitchesSpec extends UnitSpec {
     "return true" when {
       "the feature switch is set to true" in {
         val config = Configuration(
-          "cl402.enabled" -> true
+          "random-feature-switch.enabled" -> true
         )
 
         val featureSwitches = FeatureSwitches(config)
 
-        featureSwitches.isEnabled("cl402") shouldBe true
+        featureSwitches.isEnabled("random-feature-switch") shouldBe true
       }
 
       "the feature switch is not present in the config" in {
@@ -84,19 +84,19 @@ class FeatureSwitchesSpec extends UnitSpec {
 
         val featureSwitches = FeatureSwitches(config)
 
-        featureSwitches.isEnabled("cl402") shouldBe true
+        featureSwitches.isEnabled("random-feature-switch") shouldBe true
       }
     }
 
     "return false" when {
       "the feature switch is set to false" in {
         val config = Configuration(
-          "cl402.enabled" -> false
+          "random-feature-switch.enabled" -> false
         )
 
         val featureSwitches = FeatureSwitches(config)
 
-        featureSwitches.isEnabled("cl402") shouldBe false
+        featureSwitches.isEnabled("random-feature-switch") shouldBe false
       }
     }
   }

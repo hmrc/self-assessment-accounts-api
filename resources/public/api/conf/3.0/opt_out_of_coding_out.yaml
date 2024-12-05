@@ -1,5 +1,5 @@
 post:
-  summary: Opt Out of Coding Out{{#unless (releasedInProduction 'cl402')}} [Test only]{{/unless}}
+  summary: Opt Out of Coding Out
   description: |
     This endpoint enables a specified customer (identified by a National Insurance number) and tax year to opt out of coding out. Opt-out status can be changed up to and including 30 December following the end of the specified tax year. Opt-out status cannot be changed after the customer has made a final declaration for the specified tax year.
         
