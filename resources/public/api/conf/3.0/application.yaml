@@ -3,6 +3,9 @@ info:
   title: Self Assessment Accounts (MTD)
   version: "3.0"
   description: |
+    The following group of endpoints is stateful in the Sandbox:
+    * <a href="#tag/Coding-Out-Underpayments-and-Debts">Coding Out Underpayments and Debts</a>
+    
     # Send fraud prevention data
     HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters. 
 
