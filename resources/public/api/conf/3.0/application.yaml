@@ -1,7 +1,8 @@
-openapi: 3.0.3
+openapi: "3.0.3"
+
 info:
-  title: Self Assessment Accounts (MTD)
   version: "3.0"
+  title: Self Assessment Accounts (MTD)
   description: |
     # Send fraud prevention data
     HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters. 
@@ -53,7 +54,7 @@ tags:
     description: These endpoints allow a developer to retrieve accounting information to be shown back to the customer. This includes listing payments the customer has made, how these payments have been allocated and details of any upcoming or outstanding liabilities. The data returned only relates to payments and liabilities arising for tax years since the customer joined the new service. There may also be outstanding liabilities and payment information a customer needs to view for the years prior to signing up to Making Tax Digital for Income Tax Self Assessment that can be viewed using their existing Personal Tax Account.<br><br>
   - name: Coding Out Underpayments and Debts
     description: Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts.<br><br>
-# {{#if (enabled 'cl402')}}
+  # {{#if (enabled 'cl402')}}
   - name: Coding Out Status
 # {{/if}}
 
@@ -61,19 +62,19 @@ tags:
 paths:
   /accounts/self-assessment/{nino}/charges/{transactionId}:
     $ref: "./self_assessment_charge_history_retrieve.yaml"
-# {{#if (enabled 'chargeReferenceEndpoint')}}
+  # {{#if (enabled 'chargeReferenceEndpoint')}}
   /accounts/self-assessment/{nino}/charges/transactionId/{transactionId}:
     $ref: "./self_assessment_charge_history_by_transactionId_retrieve.yaml"
   /accounts/self-assessment/{nino}/charges/chargeReference/{chargeReference}:
     $ref: "./self_assessment_charge_history_by_charge_reference_retrieve.yaml"
-# {{/if}}
+  # {{/if}}
   /accounts/self-assessment/{nino}/balance-and-transactions:
     $ref: "./self_assessment_balance_and_transactions_retrieve.yaml"
   /accounts/self-assessment/{nino}/payments-and-allocations:
     $ref: "./self_assessment_payments_and_allocation_details_list.yaml"
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code:
     $ref: "./coding_out_underpayments.yaml"
-# {{#if (enabled 'cl402')}}
+  # {{#if (enabled 'cl402')}}
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/opt-out:
     $ref: "./opt_out_of_coding_out.yaml"
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/status:
