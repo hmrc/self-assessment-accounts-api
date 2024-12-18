@@ -1,7 +1,8 @@
-openapi: 3.0.3
+openapi: "3.0.3"
+
 info:
-  title: Self Assessment Accounts (MTD)
   version: "3.0"
+  title: Self Assessment Accounts (MTD)
   description: |
     The following group of endpoints is stateful in the Sandbox:
     * <a href="#tag/Coding-Out-Underpayments-and-Debts">Coding Out Underpayments and Debts</a>
