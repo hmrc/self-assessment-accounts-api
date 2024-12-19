@@ -25,10 +25,10 @@ import play.api.Configuration
 import routing.{Version2, Version3}
 import support.UnitSpec
 
-class ApiDefinitionFactorySpec extends UnitSpec {
+class SaAccountsDefinitionFactorySpec extends UnitSpec {
 
   class Test extends MockHttpClient with MockAppConfig {
-    val apiDefinitionFactory = new ApiDefinitionFactory(mockAppConfig)
+    val apiDefinitionFactory = new SaAccountsDefinitionFactory(mockAppConfig)
     MockAppConfig.apiGatewayContext returns "api.gateway.context"
   }
 
