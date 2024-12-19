@@ -16,31 +16,32 @@
 
 package definition
 
-import config.MockAppConfig
-import api.connectors.MockHttpClient
 import cats.implicits.catsSyntaxValidatedId
-import config.Deprecation.NotDeprecated
-import definition.APIStatus.{ALPHA, BETA}
 import play.api.Configuration
-import routing.{Version2, Version3}
-import support.UnitSpec
+import shared.config.Deprecation.NotDeprecated
+import shared.config.MockSharedAppConfig
+import shared.definition.APIStatus.BETA
+import shared.definition._
+import shared.mocks.MockHttpClient
+import shared.routing.{Version2, Version3}
+import shared.utils.UnitSpec
 
 class SaAccountsDefinitionFactorySpec extends UnitSpec {
-
-  class Test extends MockHttpClient with MockAppConfig {
-    val apiDefinitionFactory = new SaAccountsDefinitionFactory(mockAppConfig)
-    MockAppConfig.apiGatewayContext returns "api.gateway.context"
+  
+  class Test extends MockHttpClient with MockSharedAppConfig {
+    MockedSharedAppConfig.apiGatewayContext returns "api.gateway.context"
+    val apiDefinitionFactory = new SaAccountsDefinitionFactory(mockSharedAppConfig)
   }
 
   "definition" when {
     "called" should {
       "return a valid Definition case class" in new Test {
 
-        MockAppConfig.featureSwitches returns Configuration.empty
+        MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
         Seq(Version2, Version3).foreach { version =>
-          MockAppConfig.apiStatus(version) returns "BETA"
-          MockAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
-          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
+          MockedSharedAppConfig.apiStatus(version) returns "BETA"
+          MockedSharedAppConfig.endpointsEnabled(version).returns(true).anyNumberOfTimes()
+          MockedSharedAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
         }
 
         apiDefinitionFactory.definition shouldBe
@@ -67,51 +68,6 @@ class SaAccountsDefinitionFactorySpec extends UnitSpec {
           )
       }
     }
-  }
-
-  "buildAPIStatus" when {
-    "the 'apiStatus' parameter is present and valid" should {
-      Seq(
-        (Version2, BETA),
-        (Version3, BETA)
-      ).foreach { case (version, status) =>
-        s"return the correct $status for $version " in new Test {
-          MockAppConfig.apiStatus(version) returns status.toString
-          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
-          apiDefinitionFactory.buildAPIStatus(version) shouldBe status
-        }
-      }
-    }
-
-    "the 'apiStatus' parameter is present and invalid" should {
-      Seq(Version2, Version3).foreach { version =>
-        s"default to alpha for $version " in new Test {
-          MockAppConfig.apiStatus(version) returns "ALPHO"
-          MockAppConfig.deprecationFor(version).returns(NotDeprecated.valid).anyNumberOfTimes()
-          apiDefinitionFactory.buildAPIStatus(version) shouldBe ALPHA
-        }
-      }
-    }
-
-    "the 'deprecatedOn' parameter is missing for a deprecated version" should {
-      Seq(Version2, Version3).foreach { version =>
-        s"throw exception for $version" in new Test {
-          MockAppConfig.apiStatus(version) returns "DEPRECATED"
-          MockAppConfig
-            .deprecationFor(version)
-            .returns(s"deprecatedOn date is required for a deprecated version $version".invalid)
-            .anyNumberOfTimes()
-
-          val exception: Exception = intercept[Exception] {
-            apiDefinitionFactory.buildAPIStatus(version)
-          }
-
-          val exceptionMessage: String = exception.getMessage
-          exceptionMessage shouldBe s"deprecatedOn date is required for a deprecated version $version"
-        }
-      }
-    }
-
   }
 
 }

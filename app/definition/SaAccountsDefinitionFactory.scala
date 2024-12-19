@@ -16,15 +16,16 @@
 
 package definition
 
-import cats.data.Validated.Invalid
-import config.AppConfig
-import routing.{Version, Version2, Version3}
-import utils.Logging
+
+import shared.config.SharedAppConfig
+import shared.definition._
+import shared.routing.{Version2, Version3}
+
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class SaAccountsDefinitionFactory @Inject()(appConfig: AppConfig) extends Logging {
+class SaAccountsDefinitionFactory @Inject()(protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
 
   lazy val definition: Definition =
     Definition(
@@ -49,19 +50,5 @@ class SaAccountsDefinitionFactory @Inject()(appConfig: AppConfig) extends Loggin
       )
     )
 
-  private[definition] def buildAPIStatus(version: Version): APIStatus = {
-    checkDeprecationConfigFor(version)
-    APIStatus.parser
-      .lift(appConfig.apiStatus(version))
-      .getOrElse {
-        logger.error(s"[ApiDefinition][buildApiStatus] no API Status found in config.  Reverting to Alpha")
-        APIStatus.ALPHA
-      }
-  }
-
-  private def checkDeprecationConfigFor(version: Version): Unit = appConfig.deprecationFor(version) match {
-    case Invalid(error) => throw new Exception(error)
-    case _              => ()
-  }
 
 }
