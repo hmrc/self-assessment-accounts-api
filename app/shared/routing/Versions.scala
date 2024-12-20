@@ -24,17 +24,9 @@ import play.api.mvc.RequestHeader
 object Version {
 
   def apply(request: RequestHeader): Version =
-<<<<<<<< HEAD:app/shared/routing/Versions.scala
     Versions
       .getFromRequest(request)
       .getOrElse(throw new Exception("Missing or unsupported version found in request accept header"))
-========
-    Versions.getFromRequest(request).getOrElse(throw new Exception("Missing or unsupported version found in request accept header"))
-
-  implicit object VersionWrites extends Writes[Version] {
-
-    def writes(version: Version): JsValue = Json.toJson(version.name)
->>>>>>>> origin/main:app/routing/Versions.scala
 
   object VersionWrites extends Writes[Version] {
     def writes(version: Version): JsValue = version.asJson
@@ -46,7 +38,6 @@ object Version {
       *   expecting a JsString e.g. "1.0"
       */
     override def reads(version: JsValue): JsResult[Version] =
-<<<<<<<< HEAD:app/shared/routing/Versions.scala
       version
         .validate[String]
         .flatMap(name =>
@@ -54,12 +45,6 @@ object Version {
             case Left(_)        => JsError("Version not recognised")
             case Right(version) => JsSuccess(version)
           })
-========
-      version.validate[String].flatMap {
-        case Version3.name => JsSuccess(Version3)
-        case _             => JsError("Unrecognised version")
-      }
->>>>>>>> origin/main:app/routing/Versions.scala
 
   }
 
@@ -74,7 +59,6 @@ sealed trait Version {
   override def toString: String = name
 }
 
-<<<<<<<< HEAD:app/shared/routing/Versions.scala
 case object Version1 extends Version {
   val name = "1.0"
 }
@@ -83,8 +67,6 @@ case object Version2 extends Version {
   val name = "2.0"
 }
 
-========
->>>>>>>> origin/main:app/routing/Versions.scala
 case object Version3 extends Version {
   val name = "3.0"
 }
@@ -116,7 +98,6 @@ case object Version9 extends Version {
 object Versions {
 
   private val versionsByName: Map[String, Version] = Map(
-<<<<<<<< HEAD:app/shared/routing/Versions.scala
     Version1.name -> Version1,
     Version2.name -> Version2,
     Version3.name -> Version3,
@@ -126,9 +107,6 @@ object Versions {
     Version7.name -> Version7,
     Version8.name -> Version8,
     Version9.name -> Version9
-========
-    Version3.name -> Version3
->>>>>>>> origin/main:app/routing/Versions.scala
   )
 
   private val versionRegex = """application/vnd.hmrc.(\d.\d)\+json""".r
