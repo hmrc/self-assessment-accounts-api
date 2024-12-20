@@ -32,7 +32,7 @@ import v2.fixtures.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v2.models.request.retrieveCodingOut.RetrieveCodingOutRequestData
 import v2.models.response.retrieveCodingOut._
 import v2.services.MockRetrieveCodingOutService
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

@@ -29,7 +29,7 @@ import play.api.test.{FakeRequest, ResultExtractors}
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import api.utils.MockIdGenerator
-import routing.{Version, Version3}
+import shared.routing.{Version, Version3}
 
 import scala.concurrent.Future
 

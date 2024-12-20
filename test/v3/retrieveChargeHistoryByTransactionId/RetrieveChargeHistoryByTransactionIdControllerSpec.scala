@@ -27,7 +27,7 @@ import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import routing.{Version, Version3}
+import shared.routing.{Version, Version3}
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData

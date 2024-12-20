@@ -25,7 +25,7 @@ import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import routing.{Version, Version3}
+import shared.routing.{Version, Version3}
 import v3.common.errors.RuleBusinessPartnerNotExistError
 import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData

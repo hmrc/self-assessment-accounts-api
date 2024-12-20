@@ -27,7 +27,7 @@ import v2.controllers.validators.MockListPaymentsAndAllocationDetailsValidatorFa
 import v2.fixtures.listPaymentsAndAllocationDetails.ResponseFixtures._
 import v2.models.request.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsRequestData
 import v2.services.MockListPaymentsAndAllocationDetailsService
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -28,7 +28,7 @@ import play.api.Configuration
 import v2.controllers.validators.MockDeleteCodingOutValidatorFactory
 import v2.models.request.deleteCodingOut.DeleteCodingOutRequestData
 import v2.services.MockDeleteCodingOutService
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

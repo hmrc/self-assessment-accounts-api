@@ -22,7 +22,7 @@ import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import routing.{Version, Version3}
+import shared.routing.{Version, Version3}
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.def1.model.ResponseFixture.{mtdResponseJson, response}
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData

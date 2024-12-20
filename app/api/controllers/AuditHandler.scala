@@ -22,7 +22,7 @@ import api.models.errors.ErrorWrapper
 import api.services.AuditService
 import cats.syntax.either._
 import play.api.libs.json.{JsValue, Writes}
-import routing.Version
+import shared.routing.Version
 
 import scala.Function.const
 import scala.concurrent.ExecutionContext

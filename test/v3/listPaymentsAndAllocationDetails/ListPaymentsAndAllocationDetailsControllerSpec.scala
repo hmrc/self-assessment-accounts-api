@@ -23,7 +23,7 @@ import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 import v3.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.{mtdResponseJson, responseObject}

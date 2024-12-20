@@ -29,7 +29,7 @@ import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 import v3.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent, TaxCodeComponents}
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData

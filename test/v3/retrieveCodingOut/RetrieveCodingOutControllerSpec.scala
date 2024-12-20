@@ -27,7 +27,7 @@ import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 import v3.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
 import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData

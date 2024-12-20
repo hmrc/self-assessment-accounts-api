@@ -17,7 +17,8 @@
 package routing
 
 import com.google.inject.ImplementedBy
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.routing._
 import play.api.routing.Router
 
 import javax.inject.Inject
@@ -31,8 +32,13 @@ trait VersionRoutingMap {
   final def versionRouter(version: Version): Option[Router] = map.get(version)
 }
 
-case class VersionRoutingMapImpl @Inject() (defaultRouter: Router, v2Routes: v2.Routes, v3Routes: v3.Routes, appConfig: AppConfig)
-    extends VersionRoutingMap {
+case class VersionRoutingMapImpl @Inject() (
+    defaultRouter: Router,
+    v2Routes: v2.Routes,
+    v3Routes: v3.Routes,
+    appConfig: SharedAppConfig
+) extends VersionRoutingMap {
+
 
   val map: Map[Version, Router] = {
     Map(

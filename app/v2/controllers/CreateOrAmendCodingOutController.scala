@@ -22,7 +22,7 @@ import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import config.{AppConfig, FeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import routing.Version
+import shared.routing.Version
 import utils.{IdGenerator, Logging}
 import v2.controllers.validators.CreateOrAmendCodingOutValidatorFactory
 import v2.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData

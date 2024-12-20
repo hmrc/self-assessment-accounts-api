@@ -33,7 +33,7 @@ import v2.controllers.validators.MockCreateOrAmendCodingOutValidatorFactory
 import v2.models.request.createOrAmendCodingOut._
 import v2.models.response.createOrAmendCodingOut.CreateOrAmendCodingOutHateoasData
 import v2.services.MockCreateOrAmendCodingOutService
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

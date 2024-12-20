@@ -27,7 +27,7 @@ import v2.fixtures.retrieveBalanceAndTransactions.RequestFixture._
 import v2.fixtures.retrieveBalanceAndTransactions.ResponseFixture.{mtdResponseJson, response}
 import v2.models.request.retrieveBalanceAndTransactions.RetrieveBalanceAndTransactionsRequestData
 import v2.services.MockRetrieveBalanceAndTransactionsService
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

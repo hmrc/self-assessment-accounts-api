@@ -33,7 +33,7 @@ import v2.models.request.retrieveChargeHistory.RetrieveChargeHistoryRequestData
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse
 import v2.models.response.retrieveChargeHistory.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 import v2.services.MockRetrieveChargeHistoryService
-import routing.{Version, Version2}
+import shared.routing.{Version, Version2}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
