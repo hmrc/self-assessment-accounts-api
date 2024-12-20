@@ -29,8 +29,7 @@ requestBody:
   content:
     application/json:
       schema:
-        oneOf:
-          - $ref:  './schemas/createOrAmendCodingOutUnderpayments/def1/request.json'
+        $ref:  './schemas/createOrAmendCodingOutUnderpayments/def1/request.json'
       examples:
         example-1:
           description: Default Example
@@ -52,8 +51,7 @@ responses:
     content:
       application/json:
         schema:
-          oneOf:
-            - $ref: "./schemas/createOrAmendCodingOutUnderpayments/def1/response.json"
+          $ref: "./schemas/createOrAmendCodingOutUnderpayments/def1/response.json"
         examples:
           Request:
             value:

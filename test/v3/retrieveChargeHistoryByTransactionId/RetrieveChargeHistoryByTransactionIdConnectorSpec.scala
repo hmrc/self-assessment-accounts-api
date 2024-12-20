@@ -21,7 +21,6 @@ import api.models.domain.{Nino, TransactionId}
 import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
-import play.api.Configuration
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -57,19 +56,10 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
       new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.featureSwitches returns Configuration("chargeReferencePoaAdjustmentChanges.enabled" -> true)
       MockAppConfig.ifs1BaseUrl returns baseUrl
       MockAppConfig.ifs1Token returns "ifs1-token"
       MockAppConfig.ifs1Environment returns "ifs1-environment"
       MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
-    }
-
-    def setUpDesMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.featureSwitches returns Configuration("chargeReferencePoaAdjustmentChanges.enabled" -> false)
-      MockAppConfig.desBaseUrl returns baseUrl
-      MockAppConfig.desToken returns "des-token"
-      MockAppConfig.desEnvironment returns "des-environment"
-      MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
     }
 
   }
@@ -94,28 +84,6 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
           .returns(Future.successful(outcome))
 
         await(connector.retrieveChargeHistoryByTransactionId(request)) shouldBe outcome
-      }
-
-      "return a valid response using DES config" when {
-        "isChargeReferencePoaAdjustmentChanges is false" in new Test {
-
-          setUpDesMocks()
-          val request: RetrieveChargeHistoryByTransactionIdRequestData =
-            Def1_RetrieveChargeHistoryByTransactionIdRequestData(Nino(nino), TransactionId(transactionId))
-          private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
-
-          MockedHttpClient
-            .get(
-              s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-              dummyHeaderCarrierConfig,
-              parameters = List("docNumber" -> transactionId),
-              requiredDesHeaders,
-              List("AnotherHeader" -> "HeaderValue")
-            )
-            .returns(Future.successful(outcome))
-
-          await(connector.retrieveChargeHistoryByTransactionId(request)) shouldBe outcome
-        }
       }
     }
   }

@@ -16,7 +16,6 @@
 
 package api.controllers
 
-import config.MockAppConfig
 import api.controllers.validators.Validator
 import api.hateoas._
 import api.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}
@@ -29,13 +28,13 @@ import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits.catsSyntaxValidatedId
 import config.Deprecation.{Deprecated, NotDeprecated}
-import config.{AppConfig, Deprecation}
+import config.{AppConfig, Deprecation, MockAppConfig}
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, Status}
 import play.api.libs.json.{JsString, Json, OWrites}
 import play.api.mvc.{AnyContent, AnyContentAsEmpty}
 import play.api.test.{FakeRequest, ResultExtractors}
-import routing.{Version, Version2}
+import routing.{Version, Version3}
 import support.UnitSpec
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.audit.http.connector.AuditResult
@@ -263,7 +262,7 @@ class RequestHandlerSpec
         mockAuditService,
         auditType = auditType,
         transactionName = txName,
-        apiVersion = Version2,
+        apiVersion = Version3,
         params = params,
         requestBody = requestBody,
         includeResponse = includeResponse
@@ -287,7 +286,7 @@ class RequestHandlerSpec
             GenericAuditDetail(
               userDetails,
               params = params,
-              apiVersion = Version2.name,
+              apiVersion = Version3.name,
               requestBody = requestBody,
               `X-CorrelationId` = correlationId,
               auditResponse = auditResponse)

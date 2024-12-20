@@ -25,22 +25,6 @@ trait HateoasLinks {
 
   // Payments and Liabilities links
 
-  // L1
-  def retrieveBalance(appConfig: AppConfig, nino: String, isSelf: Boolean): Link =
-    hateoas.Link(
-      href = s"/${appConfig.apiGatewayContext}/$nino/balance",
-      method = GET,
-      rel = if (isSelf) SELF else RETRIEVE_BALANCE
-    )
-
-  // L2
-  def listTransactions(appConfig: AppConfig, nino: String, from: String, to: String, isSelf: Boolean): Link =
-    hateoas.Link(
-      href = s"/${appConfig.apiGatewayContext}/$nino/transactions?from=$from&to=$to",
-      method = GET,
-      rel = if (isSelf) SELF else LIST_TRANSACTIONS
-    )
-
   // L3
   def retrieveTransactionDetails(appConfig: AppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
     hateoas.Link(
@@ -49,36 +33,12 @@ trait HateoasLinks {
       rel = if (isSelf) SELF else RETRIEVE_TRANSACTION_DETAILS
     )
 
-  // L4
-  def listCharges(appConfig: AppConfig, nino: String, from: String, to: String, isSelf: Boolean): Link =
-    hateoas.Link(
-      href = s"/${appConfig.apiGatewayContext}/$nino/charges?from=$from&to=$to",
-      method = GET,
-      rel = if (isSelf) SELF else LIST_CHARGES
-    )
-
   // L5
   def retrieveChargeHistory(appConfig: AppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
     hateoas.Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/charges/$transactionId",
       method = GET,
       rel = if (isSelf) SELF else RETRIEVE_CHARGE_HISTORY
-    )
-
-  // L6
-  def listPayments(appConfig: AppConfig, nino: String, from: String, to: String, isSelf: Boolean): Link =
-    hateoas.Link(
-      href = s"/${appConfig.apiGatewayContext}/$nino/payments?from=$from&to=$to",
-      method = GET,
-      rel = if (isSelf) SELF else LIST_PAYMENTS
-    )
-
-  // L7
-  def retrievePaymentAllocations(appConfig: AppConfig, nino: String, paymentId: String, isSelf: Boolean): Link =
-    hateoas.Link(
-      href = s"/${appConfig.apiGatewayContext}/$nino/payments/$paymentId",
-      method = GET,
-      rel = if (isSelf) SELF else RETRIEVE_PAYMENT_ALLOCATIONS
     )
 
   // Coding Out Underpayments and Debts links

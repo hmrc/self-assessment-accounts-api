@@ -36,8 +36,7 @@ get:
       content:
         application/json:
           schema:
-            oneOf:
-              - $ref: "schemas/listSelfAssessmentPaymentsAndAllocationDetails/def1/response.json"
+            $ref: "schemas/listSelfAssessmentPaymentsAndAllocationDetails/def1/response.json"
           examples:
             Request:
               value:

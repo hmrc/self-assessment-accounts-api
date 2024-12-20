@@ -21,7 +21,6 @@ import play.api.http.Status
 import play.api.http.Status.OK
 import play.api.libs.json.Json
 import play.api.libs.ws.WSResponse
-import routing.{Version2, Version3}
 import support.IntegrationBaseSpec
 
 import scala.util.Try
@@ -36,11 +35,6 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
       |    "context":"accounts/self-assessment",
       |    "categories":["INCOME_TAX_MTD"],
       |    "versions":[
-      |      {
-      |        "version":"2.0",
-      |        "status":"DEPRECATED",
-      |        "endpointsEnabled":true
-      |      },
       |      {
       |        "version":"3.0",
       |        "status":"BETA",
@@ -60,33 +54,31 @@ class DocumentationControllerISpec extends IntegrationBaseSpec {
   }
 
   "an OAS documentation request" must {
-    List(Version2, Version3).foreach { version =>
-      s"return the documentation for $version" in {
-        val response = get(s"/api/conf/${version.name}/application.yaml")
+    s"return the documentation for 3.0" in {
+      val response = get(s"/api/conf/3.0/application.yaml")
 
-        val body         = response.body
-        val parserResult = Try(new OpenAPIV3Parser().readContents(body)).getOrElse(fail("openAPI couldn't read contents"))
+      val body         = response.body
+      val parserResult = Try(new OpenAPIV3Parser().readContents(body)).getOrElse(fail("openAPI couldn't read contents"))
 
-        val openAPI = Option(parserResult.getOpenAPI).getOrElse(fail("openAPI wasn't defined"))
-        openAPI.getOpenapi shouldBe "3.0.3"
-        withClue(s"If v${version.name} endpoints are enabled in application.conf, remove the [test only] from this test: ") {
-          openAPI.getInfo.getTitle shouldBe "Self Assessment Accounts (MTD)"
-        }
-        openAPI.getInfo.getVersion shouldBe version.toString
+      val openAPI = Option(parserResult.getOpenAPI).getOrElse(fail("openAPI wasn't defined"))
+      openAPI.getOpenapi shouldBe "3.0.3"
+      withClue(s"If v3.0 endpoints are enabled in application.conf, remove the [test only] from this test: ") {
+        openAPI.getInfo.getTitle shouldBe "Self Assessment Accounts (MTD)"
       }
+      openAPI.getInfo.getVersion shouldBe "3.0"
+    }
 
-      s"return the documentation with the correct accept header for version $version" in {
-        val response = get(s"/api/conf/${version.name}/common/headers.yaml")
-        val body     = response.body
+    s"return the documentation with the correct accept header for version 3.0" in {
+      val response = get(s"/api/conf/3.0/common/headers.yaml")
+      val body     = response.body
 
-        val headerRegex = """(?s).*?application/vnd\.hmrc\.(\d+\.\d+)\+json.*?""".r
-        val header      = headerRegex.findFirstMatchIn(body)
-        header.isDefined shouldBe true
+      val headerRegex = """(?s).*?application/vnd\.hmrc\.(\d+\.\d+)\+json.*?""".r
+      val header      = headerRegex.findFirstMatchIn(body)
+      header.isDefined shouldBe true
 
-        val versionFromHeader = header.get.group(1)
-        versionFromHeader shouldBe version.name
+      val versionFromHeader = header.get.group(1)
+      versionFromHeader shouldBe "3.0"
 
-      }
     }
   }
 
