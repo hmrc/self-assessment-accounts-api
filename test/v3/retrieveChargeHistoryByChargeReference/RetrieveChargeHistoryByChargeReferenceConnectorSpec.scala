@@ -21,7 +21,6 @@ import api.models.domain.{ChargeReference, Nino}
 import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
-import play.api.Configuration
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
@@ -57,20 +56,10 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
       new RetrieveChargeHistoryByChargeReferenceConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.featureSwitches returns Configuration("chargeReferencePoaAdjustmentChanges.enabled" -> true)
-      MockAppConfig.featureSwitches returns Configuration("chargeReferenceEndpoint.enabled" -> true)
       MockAppConfig.ifs1BaseUrl returns baseUrl
       MockAppConfig.ifs1Token returns "ifs1-token"
       MockAppConfig.ifs1Environment returns "ifs1-environment"
       MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
-    }
-
-    def setUpDesMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.featureSwitches returns Configuration("chargeReferencePoaAdjustmentChanges.enabled" -> false)
-      MockAppConfig.desBaseUrl returns baseUrl
-      MockAppConfig.desToken returns "des-token"
-      MockAppConfig.desEnvironment returns "des-environment"
-      MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
     }
 
   }
@@ -96,28 +85,6 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
 
         await(connector.retrieveChargeHistoryByChargeReference(request)) shouldBe outcome
       }
-      "return a valid response using DES config" when {
-        "isChargeReferencePoaAdjustmentChanges is false" in new Test {
-
-          setUpDesMocks()
-          val request: RetrieveChargeHistoryByChargeReferenceRequestData =
-            Def1_RetrieveChargeHistoryByChargeReferenceRequestData(Nino(nino), ChargeReference(chargeReference))
-          private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
-
-          MockedHttpClient
-            .get(
-              s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-              dummyHeaderCarrierConfig,
-              parameters = List("chargeReference" -> chargeReference),
-              requiredDesHeaders,
-              List("AnotherHeader" -> "HeaderValue")
-            )
-            .returns(Future.successful(outcome))
-
-          await(connector.retrieveChargeHistoryByChargeReference(request)) shouldBe outcome
-        }
-      }
-
     }
   }
 

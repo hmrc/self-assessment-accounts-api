@@ -1,5 +1,5 @@
 post:
-  summary: Opt In to Coding Out{{#unless (releasedInProduction 'cl402')}} [Test only]{{/unless}}
+  summary: Opt In to Coding Out
   description: |
     This endpoint enables a specified customer (identified by a National Insurance number) and tax year to opt in to coding out.
     

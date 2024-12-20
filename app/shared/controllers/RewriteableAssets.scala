@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2024 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,15 +33,15 @@ trait Rewriter {
 
 @Singleton
 class RewriteableAssets @Inject() (errorHandler: HttpErrorHandler, meta: AssetsMetadata, env: Environment)(implicit ec: ExecutionContext)
-    extends Assets(errorHandler, meta, env) {
+  extends Assets(errorHandler, meta, env) {
   import meta._
 
   /** Retrieves the requested asset and runs it through the rewriters if any..
-    * @param path
-    *   e.g. "/public/api/conf/1.0"
-    * @param filename
-    *   e.g. "schemas/retrieve_other_expenses_response.json" or "employment_expenses_delete.yaml"
-    */
+   * @param path
+   *   e.g. "/public/api/conf/1.0"
+   * @param filename
+   *   e.g. "schemas/retrieve_other_expenses_response.json" or "employment_expenses_delete.yaml"
+   */
   def rewriteableAt(path: String, filename: String, rewriters: Seq[Rewriter]): Action[AnyContent] = {
     Action.async { implicit request =>
       assetAt(path, filename, rewriters)
@@ -50,7 +50,7 @@ class RewriteableAssets @Inject() (errorHandler: HttpErrorHandler, meta: AssetsM
 
   // Mostly copied from the private method in Assets:
   private def assetAt(path: String, filename: String, rewrites: Seq[Rewriter])(implicit
-      request: RequestHeader
+                                                                               request: RequestHeader
   ): Future[Result] = {
 
     def serveAsset(assetName: Option[String]): Future[Result] = {
@@ -86,7 +86,7 @@ class RewriteableAssets @Inject() (errorHandler: HttpErrorHandler, meta: AssetsM
       pendingResult.recoverWith { case NonFatal(e) =>
         // $COVERAGE-OFF$
         recover(e)
-      // $COVERAGE-ON$
+        // $COVERAGE-ON$
       }
     }
 
