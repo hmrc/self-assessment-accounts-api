@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package controllers
+package shared.controllers
 
 import play.api.Environment
 import play.api.http.{AcceptEncoding, HttpErrorHandler}
