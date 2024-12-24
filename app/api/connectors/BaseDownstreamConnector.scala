@@ -17,7 +17,7 @@
 package api.connectors
 
 import api.connectors.DownstreamUri.{DesUri, Ifs1Uri, Ifs2Uri, TaxYearSpecificIfsUri}
-import config.{AppConfig, FeatureSwitches}
+import shared.config.{SharedAppConfig, FeatureSwitches}
 import play.api.http.{HeaderNames, MimeTypes}
 import play.api.libs.json.Writes
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}

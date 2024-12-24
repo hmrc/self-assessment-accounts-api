@@ -135,4 +135,4 @@ class RewriteableAssets @Inject() (errorHandler: HttpErrorHandler, meta: AssetsM
     // $COVERAGE-ON$
   }
 
-}}
+}

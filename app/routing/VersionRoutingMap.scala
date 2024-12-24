@@ -34,7 +34,6 @@ trait VersionRoutingMap {
 
 case class VersionRoutingMapImpl @Inject() (
     defaultRouter: Router,
-    v2Routes: v2.Routes,
     v3Routes: v3.Routes,
     appConfig: SharedAppConfig
 ) extends VersionRoutingMap {
@@ -42,7 +41,6 @@ case class VersionRoutingMapImpl @Inject() (
 
   val map: Map[Version, Router] = {
     Map(
-      Version2 -> v2Routes,
       Version3 -> v3Routes
     )
   }
