@@ -16,11 +16,11 @@
 
 package v3.retrieveChargeHistoryByTransactionId.model.response
 
-import api.hateoas.{HateoasData, HateoasLinksFactory, Link}
-import config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import shared.config.SharedAppConfig
+import shared.hateoas.{HateoasLinksFactory, Link}
+import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse.{retrieveChargeHistory, retrieveTransactionDetails}
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
-import v3.retrieveChargeHistoryByTransactionId.def1.models.response.RetrieveCodingOutResponse.{retrieveChargeHistory, retrieveTransactionDetails}
 
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
 
@@ -35,7 +35,7 @@ object RetrieveChargeHistoryResponse {
 
   implicit object RetrieveChargeHistoryLinksFactory extends HateoasLinksFactory[RetrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData] {
 
-    override def links(appConfig: AppConfig, data: RetrieveChargeHistoryHateoasData): Seq[Link] = {
+    override def links(appConfig: SharedAppConfig, data: RetrieveChargeHistoryHateoasData): Seq[Link] = {
       import data._
       Seq(
         retrieveChargeHistory(appConfig, nino, transactionId, isSelf = true),

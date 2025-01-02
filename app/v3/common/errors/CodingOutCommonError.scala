@@ -16,8 +16,8 @@
 
 package v3.common.errors
 
-import api.models.errors.MtdError
 import play.api.http.Status.BAD_REQUEST
+import shared.models.errors.MtdError
 
 object RuleBusinessPartnerNotExistError
     extends MtdError("RULE_BUSINESS_PARTNER_NOT_EXIST", "Provided NINO is not registered as business partner", BAD_REQUEST)

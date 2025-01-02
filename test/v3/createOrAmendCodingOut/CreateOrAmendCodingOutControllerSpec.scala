@@ -18,12 +18,7 @@ package v3.createOrAmendCodingOut
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
-import api.hateoas.Method.{DELETE, GET, PUT}
-import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import api.hateoas.MockHateoasFactory
 import api.services.MockAuditService
 import config.MockAppConfig
 import play.api.Configuration

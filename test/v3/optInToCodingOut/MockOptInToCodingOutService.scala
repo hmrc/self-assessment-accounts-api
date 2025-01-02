@@ -16,9 +16,6 @@
 
 package v3.optInToCodingOut
 
-import api.controllers.RequestContext
-import api.models.errors.ErrorWrapper
-import api.models.outcomes.ResponseWrapper
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData

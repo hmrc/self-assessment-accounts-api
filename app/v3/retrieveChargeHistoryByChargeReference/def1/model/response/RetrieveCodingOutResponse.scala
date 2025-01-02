@@ -16,9 +16,10 @@
 
 package v3.retrieveChargeHistoryByChargeReference.def1.model.response
 
-import api.hateoas.{HateoasData, HateoasLinks, HateoasLinksFactory, Link}
-import config.AppConfig
 import play.api.libs.json.{Json, OFormat}
+import shared.config.SharedAppConfig
+import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
+import v3.hateoas.HateoasLinks
 
 case class RetrieveCodingOutResponse(taxCodeComponents: Option[TaxCodeComponentsObject],
                                      unmatchedCustomerSubmissions: Option[UnmatchedCustomerSubmissionsObject])
@@ -29,7 +30,7 @@ object RetrieveCodingOutResponse extends HateoasLinks {
 
   implicit object RetrieveCodingOutLinksFactory extends HateoasLinksFactory[RetrieveCodingOutResponse, RetrieveCodingOutHateoasData] {
 
-    override def links(appConfig: AppConfig, data: RetrieveCodingOutHateoasData): Seq[Link] = {
+    override def links(appConfig: SharedAppConfig, data: RetrieveCodingOutHateoasData): Seq[Link] = {
       import data._
       Seq(
         createOrAmendCodingOut(appConfig, nino, taxYear),

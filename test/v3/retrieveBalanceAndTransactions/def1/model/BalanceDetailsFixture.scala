@@ -16,7 +16,6 @@
 
 package v3.retrieveBalanceAndTransactions.def1.model
 
-import api.models.domain.TaxYear
 import play.api.libs.json.{JsValue, Json}
 import v3.retrieveBalanceAndTransactions.def1.model.response.{BalanceDetails, BalancePerYear}
 

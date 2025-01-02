@@ -16,8 +16,6 @@
 
 package v3.retrieveChargeHistoryByChargeReference.def1
 
-import api.models.domain.{ChargeReference, Nino}
-import api.models.errors._
 import support.UnitSpec
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData

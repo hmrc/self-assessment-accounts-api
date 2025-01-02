@@ -18,12 +18,7 @@ package v3.retrieveCodingOut
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
-import api.hateoas.Method.{DELETE, GET, PUT}
-import api.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
-import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.models.domain.{MtdSource, Nino, TaxYear}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import api.hateoas.MockHateoasFactory
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result

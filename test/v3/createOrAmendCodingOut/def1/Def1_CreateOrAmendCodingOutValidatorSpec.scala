@@ -16,8 +16,6 @@
 
 package v3.createOrAmendCodingOut.def1
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
 import api.models.utils.JsonErrorValidators
 import config.MockAppConfig
 import play.api.libs.json.{JsObject, JsPath, JsValue, Json}

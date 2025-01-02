@@ -16,11 +16,11 @@
 
 package v3.createOrAmendCodingOut
 
-import api.controllers.RequestContext
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
 import cats.implicits._
+import shared.controllers.RequestContext
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
+import shared.services.BaseService
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -29,14 +29,6 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends BaseService {
 
-  def amend(request: CreateOrAmendCodingOutRequestData)(implicit
-                                                             ctx: RequestContext,
-                                                             ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-
-    connector
-      .amendCodingOut(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
 
   private val errorMap = {
     val errors = Map(
@@ -56,6 +48,14 @@ class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutC
     )
 
     errors ++ extraTysErrors
+  }
+
+  def amend(request: CreateOrAmendCodingOutRequestData)(implicit
+                                                        ctx: RequestContext,
+                                                        ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+    connector
+      .amendCodingOut(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
 }

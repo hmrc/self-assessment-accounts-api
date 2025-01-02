@@ -17,8 +17,6 @@
 package v3.retrieveChargeHistoryByChargeReference
 
 import api.connectors.{ConnectorSpec, MockHttpClient}
-import api.models.domain.{ChargeReference, Nino}
-import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData

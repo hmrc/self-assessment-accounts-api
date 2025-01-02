@@ -16,7 +16,6 @@
 
 package v3.endpoints.retrieveCodingOutStatus.def1
 
-import api.models.errors._
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT

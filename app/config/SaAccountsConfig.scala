@@ -16,218 +16,26 @@
 
 package config
 
-import cats.data.Validated
-import cats.implicits.catsSyntaxValidatedId
-import com.typesafe.config.Config
-import config.Deprecation.{Deprecated, NotDeprecated}
-import play.api.{ConfigLoader, Configuration}
+import play.api.Configuration
+import shared.config.{AppConfigBase, FeatureSwitches}
+import shared.models.errors.{MtdError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError}
 import shared.routing.Version
-import uk.gov.hmrc.auth.core.ConfidenceLevel
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
-import java.time.LocalDateTime
-import java.time.format.{DateTimeFormatter, DateTimeFormatterBuilder}
-import java.time.temporal.ChronoField
 import javax.inject.{Inject, Singleton}
 
-trait AppConfig {
-
-  // DES Config
-  def desBaseUrl: String
-
-  def desEnv: String
-
-  def desToken: String
-
-  def desEnvironmentHeaders: Option[Seq[String]]
-
-  lazy val desDownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = desBaseUrl, env = desEnv, token = desToken, environmentHeaders = desEnvironmentHeaders)
-
-  // IFS1 Config
-  def ifs1BaseUrl: String
-
-  def ifs1Env: String
-
-  def ifs1Token: String
-
-  def ifs1EnvironmentHeaders: Option[Seq[String]]
-
-  lazy val ifs1DownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = ifs1BaseUrl, env = ifs1Env, token = ifs1Token, environmentHeaders = ifs1EnvironmentHeaders)
-
-  // IFS2 Config
-  def ifs2BaseUrl: String
-
-  def ifs2Env: String
-
-  def ifs2Token: String
-
-  def ifs2EnvironmentHeaders: Option[Seq[String]]
-
-  lazy val ifs2DownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = ifs2BaseUrl, env = ifs2Env, token = ifs2Token, environmentHeaders = ifs2EnvironmentHeaders)
-
-  // TYS IFS Config
-  def tysIfsBaseUrl: String
-
-  def tysIfsEnv: String
-
-  def tysIfsToken: String
-
-  def tysIfsEnvironmentHeaders: Option[Seq[String]]
-
-  lazy val tysIfsDownstreamConfig: DownstreamConfig =
-    DownstreamConfig(baseUrl = tysIfsBaseUrl, env = tysIfsEnv, token = tysIfsToken, environmentHeaders = tysIfsEnvironmentHeaders)
-
-  // API Config
-  def apiGatewayContext: String
-  def apiStatus(version: Version): String
-  def featureSwitches: Configuration
-  def endpointsEnabled(version: String): Boolean
-  def endpointsEnabled(version: Version): Boolean
-  def confidenceLevelConfig: ConfidenceLevelConfig
-
-  def safeEndpointsEnabled(version: String): Boolean
-
-  def mtdIdBaseUrl: String
-  def minimumPermittedTaxYear: Int
-
-  /** Currently only for OAS documentation.
-    */
-  def apiVersionReleasedInProduction(version: String): Boolean
-
-  def endpointAllowsSupportingAgents(endpointName: String): Boolean
-
-  /** Currently only for OAS documentation.
-    */
-  def endpointReleasedInProduction(version: String, name: String): Boolean
-  def apiDocumentationUrl: String
-  def deprecationFor(version: Version): Validated[String, Deprecation]
-}
 
 @Singleton
-class AppConfigImpl @Inject() (config: ServicesConfig, protected[config] val configuration: Configuration) extends AppConfig {
-  // API Name
-  val appName: String = config.getString("appName")
+class SaAccountsConfig @Inject() (val config: ServicesConfig, val configuration: Configuration) extends AppConfigBase {
 
-  val mtdIdBaseUrl: String = config.baseUrl("mtd-id-lookup")
+  def featureSwitchConfig: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
 
-  // DES config
-  val desBaseUrl: String                         = config.baseUrl("des")
-  val desEnv: String                             = config.getString("microservice.services.des.env")
-  val desToken: String                           = config.getString("microservice.services.des.token")
-  val desEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.des.environmentHeaders")
-
-  // IFS1 config
-  val ifs1BaseUrl: String                         = config.baseUrl("ifs1")
-  val ifs1Env: String                             = config.getString("microservice.services.ifs1.env")
-  val ifs1Token: String                           = config.getString("microservice.services.ifs1.token")
-  val ifs1EnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs1.environmentHeaders")
-
-  // IFS2 config
-  val ifs2BaseUrl: String                         = config.baseUrl("ifs2")
-  val ifs2Env: String                             = config.getString("microservice.services.ifs2.env")
-  val ifs2Token: String                           = config.getString("microservice.services.ifs2.token")
-  val ifs2EnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.ifs2.environmentHeaders")
-
-  // Tax Year Specific (TYS) IFS Config
-  val tysIfsBaseUrl: String                         = config.baseUrl("tys-ifs")
-  val tysIfsEnv: String                             = config.getString("microservice.services.tys-ifs.env")
-  val tysIfsToken: String                           = config.getString("microservice.services.tys-ifs.token")
-  val tysIfsEnvironmentHeaders: Option[Seq[String]] = configuration.getOptional[Seq[String]]("microservice.services.tys-ifs.environmentHeaders")
-
-  val minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
-
-  // API Config
-  val apiGatewayContext: String                    = config.getString("api.gateway.context")
-  val confidenceLevelConfig: ConfidenceLevelConfig = configuration.get[ConfidenceLevelConfig](s"api.confidence-level-check")
-
-  def apiStatus(version: Version): String = config.getString(s"api.${version.name}.status")
-
-  def featureSwitches: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
+  def featureSwitches: FeatureSwitches = SaAccountsFeatureSwitches(featureSwitchConfig)
 
   def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
-  def endpointsEnabled(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+  def minimumPermittedTaxYear: String    = config.getString("minimumPermittedTaxYear")
 
-  /** Like endpointsEnabled, but will return false if version doesn't exist.
-    */
-  def safeEndpointsEnabled(version: String): Boolean =
-    configuration
-      .getOptional[Boolean](s"api.$version.endpoints.enabled")
-      .getOrElse(false)
-
-  def endpointReleasedInProduction(version: String, name: String): Boolean = {
-    val versionReleasedInProd = apiVersionReleasedInProduction(version)
-    val path                  = s"api.$version.endpoints.released-in-production.$name"
-
-    val conf = configuration.underlying
-    if (versionReleasedInProd && conf.hasPath(path)) config.getBoolean(path) else versionReleasedInProd
-  }
-
-  def endpointAllowsSupportingAgents(endpointName: String): Boolean =
-    supportingAgentEndpoints.getOrElse(endpointName, false)
-
-  private val supportingAgentEndpoints: Map[String, Boolean] =
-    configuration
-      .getOptional[Map[String, Boolean]]("api.supporting-agent-endpoints")
-      .getOrElse(Map.empty)
-
-  def apiVersionReleasedInProduction(version: String): Boolean = config.getBoolean(s"api.$version.endpoints.api-released-in-production")
-
-  def apiDocumentationUrl: String = configuration
-    .get[Option[String]]("api.documentation-url")
-    .getOrElse(s"https://developer.service.hmrc.gov.uk/api-documentation/docs/api/service/$appName")
-
-  private val DATE_FORMATTER = new DateTimeFormatterBuilder()
-    .append(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-    .parseDefaulting(ChronoField.HOUR_OF_DAY, 23)
-    .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 59)
-    .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 59)
-    .toFormatter()
-
-  def deprecationFor(version: Version): Validated[String, Deprecation] = {
-    val isApiDeprecated: Boolean = apiStatus(version) == "DEPRECATED"
-
-    val deprecatedOn: Option[LocalDateTime] =
-      configuration
-        .getOptional[String](s"api.$version.deprecatedOn")
-        .map(value => LocalDateTime.parse(value, DATE_FORMATTER))
-
-    val sunsetDate: Option[LocalDateTime] =
-      configuration
-        .getOptional[String](s"api.$version.sunsetDate")
-        .map(value => LocalDateTime.parse(value, DATE_FORMATTER))
-
-    val isSunsetEnabled: Boolean =
-      configuration.getOptional[Boolean](s"api.$version.sunsetEnabled").getOrElse(true)
-
-    if (isApiDeprecated) {
-      (deprecatedOn, sunsetDate, isSunsetEnabled) match {
-        case (Some(dO), Some(sD), true) =>
-          if (sD.isAfter(dO)) Deprecated(dO, Some(sD)).valid
-          else s"sunsetDate must be later than deprecatedOn date for a deprecated version $version".invalid
-        case (Some(dO), None, true) => Deprecated(dO, Some(dO.plusMonths(6).plusDays(1))).valid
-        case (Some(dO), _, false)   => Deprecated(dO, None).valid
-        case _                      => s"deprecatedOn date is required for a deprecated version $version".invalid
-      }
-    } else NotDeprecated.valid
-  }
 
 }
 
-case class ConfidenceLevelConfig(confidenceLevel: ConfidenceLevel, definitionEnabled: Boolean, authValidationEnabled: Boolean)
-
-object ConfidenceLevelConfig {
-
-  implicit val configLoader: ConfigLoader[ConfidenceLevelConfig] = (rootConfig: Config, path: String) => {
-    val config = rootConfig.getConfig(path)
-    ConfidenceLevelConfig(
-      confidenceLevel = ConfidenceLevel.fromInt(config.getInt("confidence-level")).getOrElse(ConfidenceLevel.L200),
-      definitionEnabled = config.getBoolean("definition.enabled"),
-      authValidationEnabled = config.getBoolean("auth-validation.enabled")
-    )
-  }
-
-}

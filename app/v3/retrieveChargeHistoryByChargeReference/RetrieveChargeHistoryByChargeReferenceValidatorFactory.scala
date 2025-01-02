@@ -16,7 +16,7 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import api.controllers.validators.Validator
+import shared.controllers.validators.Validator
 import v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema.Def1
 import v3.retrieveChargeHistoryByChargeReference.def1.Def1_RetrieveChargeHistoryByChargeReferenceValidator
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData

@@ -16,8 +16,7 @@
 
 package v3.retrieveCodingOut.def1
 
-import api.controllers.validators.{MockValidatorFactory, Validator}
-import config.AppConfig
+import api.controllers.validators.MockValidatorFactory
 import org.scalamock.handlers.CallHandler
 import v3.retrieveCodingOut.RetrieveCodingOutValidatorFactory
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData

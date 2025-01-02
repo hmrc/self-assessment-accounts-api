@@ -16,12 +16,13 @@
 
 package v3.listPaymentsAndAllocationDetails.def1
 
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveDateRange, ResolveNino, ResolveStringPattern}
-import api.models.errors._
 import cats.data.Validated
 import cats.data.Validated._
+import common.errors.{MissingPaymentLotError, MissingPaymentLotItemError, PaymentLotFormatError, PaymentLotItemFormatError}
+import shared.controllers.validators.Validator
 import cats.implicits._
+import shared.controllers.validators.resolvers._
+import shared.models.errors.{FromDateFormatError, MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 
@@ -41,8 +42,8 @@ class Def1_ListPaymentsAndAllocationDetailsValidator(nino: String,
   private val resolvePaymentLot     = new ResolveStringPattern("^[0-9A-Za-z]{1,12}".r, PaymentLotFormatError)
   private val resolvePaymentLotItem = new ResolveStringPattern("^[0-9A-Za-z]{1,6}".r, PaymentLotItemFormatError)
 
-  private val resolveDateRange = ResolveDateRange
-    .withLimits(minYear, maxYear, FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)
+  private val resolveDateRange = ResolveDateRange()
+    .withYearsLimitedTo(minYear, maxYear)
 
   def validate: Validated[Seq[MtdError], Def1_ListPaymentsAndAllocationDetailsRequestData] = {
 

@@ -16,8 +16,7 @@
 
 package v3.createOrAmendCodingOut.def1
 
-import api.controllers.validators.{MockValidatorFactory, Validator}
-import config.AppConfig
+import api.controllers.validators.MockValidatorFactory
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
 import v3.createOrAmendCodingOut.CreateOrAmendCodingOutValidatorFactory

@@ -17,8 +17,6 @@
 package v3.listPaymentsAndAllocationDetails
 
 import api.connectors.{ConnectorSpec, MockHttpClient}
-import api.models.domain.{DateRange, Nino}
-import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject

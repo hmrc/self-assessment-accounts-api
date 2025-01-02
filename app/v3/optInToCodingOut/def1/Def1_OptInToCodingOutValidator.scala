@@ -16,11 +16,11 @@
 
 package v3.optInToCodingOut.def1
 
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
-import api.models.errors.MtdError
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.catsSyntaxTuple2Semigroupal
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
+import shared.models.errors.MtdError
 import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
 

@@ -21,7 +21,6 @@ import shared.config.SharedAppConfig
 import shared.definition._
 import shared.routing.{Version2, Version3}
 
-
 import javax.inject.{Inject, Singleton}
 
 @Singleton

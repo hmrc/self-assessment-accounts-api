@@ -16,7 +16,6 @@
 
 package api.services
 
-import api.models.audit.AuditEvent
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import play.api.libs.json.Writes

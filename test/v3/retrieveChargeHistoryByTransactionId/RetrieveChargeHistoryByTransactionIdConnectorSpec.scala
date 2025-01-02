@@ -17,8 +17,6 @@
 package v3.retrieveChargeHistoryByTransactionId
 
 import api.connectors.{ConnectorSpec, MockHttpClient}
-import api.models.domain.{Nino, TransactionId}
-import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData

@@ -17,7 +17,7 @@
 package v3.common.models
 
 import play.api.libs.json
-import utils.enums.Enums
+import shared.utils.enums.Enums
 
 sealed trait DownstreamSource {
   def toMtdSource: String

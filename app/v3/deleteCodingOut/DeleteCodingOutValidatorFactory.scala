@@ -16,8 +16,8 @@
 
 package v3.deleteCodingOut
 
-import api.controllers.validators.Validator
 import shared.config.SharedAppConfig
+import shared.controllers.validators.Validator
 import v3.deleteCodingOut.DeleteCodingOutSchema.Def1
 import v3.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData

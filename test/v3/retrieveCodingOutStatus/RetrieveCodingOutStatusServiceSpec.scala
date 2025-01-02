@@ -16,9 +16,6 @@
 
 package v3.retrieveCodingOutStatus
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import v3.common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData

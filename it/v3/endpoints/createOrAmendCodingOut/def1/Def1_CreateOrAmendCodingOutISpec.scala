@@ -16,7 +16,6 @@
 
 package v3.endpoints.createOrAmendCodingOut.def1
 
-import api.models.errors._
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._

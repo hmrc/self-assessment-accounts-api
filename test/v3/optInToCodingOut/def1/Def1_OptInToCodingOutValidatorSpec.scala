@@ -16,8 +16,6 @@
 
 package v3.optInToCodingOut.def1
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
 import support.UnitSpec
 import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 

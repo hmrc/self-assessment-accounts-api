@@ -16,14 +16,15 @@
 
 package v3.createOrAmendCodingOut
 
-import api.controllers._
-import api.hateoas.HateoasFactory
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.{AppConfig, FeatureSwitches}
+import config.SaAccountsFeatureSwitches
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
+import shared.config.SharedAppConfig
+import shared.controllers.{AuditHandler, AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import shared.hateoas.HateoasFactory
 import shared.routing.Version
-import utils.{IdGenerator, Logging}
+import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.{IdGenerator, Logging}
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse._
 
@@ -38,7 +39,7 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
                                                   hateoasFactory: HateoasFactory,
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
-                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -53,7 +54,11 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator =
-        validatorFactory.validator(nino, taxYear, request.body, temporalValidationEnabled = FeatureSwitches(appConfig).isTemporalValidationEnabled, appConfig)
+        validatorFactory.validator(nino,
+          taxYear,
+          request.body,
+          temporalValidationEnabled = SaAccountsFeatureSwitches().isTemporalValidationEnabled,
+          appConfig)
 
       val requestHandler =
         RequestHandler

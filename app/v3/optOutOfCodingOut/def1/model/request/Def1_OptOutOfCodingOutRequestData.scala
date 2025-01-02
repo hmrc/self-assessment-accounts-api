@@ -16,7 +16,7 @@
 
 package v3.optOutOfCodingOut.def1.model.request
 
-import api.models.domain.{Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 import v3.optOutOfCodingOut.OptOutOfCodingOutSchema
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 

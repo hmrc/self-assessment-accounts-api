@@ -16,7 +16,6 @@
 
 package api.models.domain
 
-import api.models.domain.MtdSource.{hmrcHeld, latest, user}
 import support.UnitSpec
 import utils.enums.EnumJsonSpecSupport
 

@@ -18,12 +18,7 @@ package v3.retrieveChargeHistoryByTransactionId
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
-import api.hateoas.Method.GET
-import api.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import api.models.domain.{Nino, TransactionId}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import api.hateoas.MockHateoasFactory
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result

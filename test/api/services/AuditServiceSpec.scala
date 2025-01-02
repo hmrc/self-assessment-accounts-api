@@ -16,7 +16,6 @@
 
 package api.services
 
-import api.models.audit.AuditEvent
 import play.api.Configuration
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier

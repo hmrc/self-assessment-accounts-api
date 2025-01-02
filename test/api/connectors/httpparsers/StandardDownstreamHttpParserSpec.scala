@@ -31,8 +31,6 @@ class StandardDownstreamHttpParserSpec extends UnitSpec with HttpParserSpec {
 
   val correlationId = "a1e8057e-fbbc-47a8-a8b4-78d9f015c253"
 
-  import api.connectors.httpparsers.StandardDownstreamHttpParser._
-
   val httpReads: HttpReads[DownstreamOutcome[Unit]] = implicitly
 
   val data                  = "someData"

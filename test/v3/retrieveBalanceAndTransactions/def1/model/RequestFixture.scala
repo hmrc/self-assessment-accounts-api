@@ -17,7 +17,6 @@
 package v3.retrieveBalanceAndTransactions.def1.model
 
 import api.controllers.ControllerTestRunner.validNino
-import api.models.domain.{DateRange, Nino}
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import java.time.LocalDate

@@ -16,10 +16,7 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import api.models.domain.{DateRange, Nino}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
-import api.models.outcomes.ResponseWrapper
-import api.services.{ServiceOutcome, ServiceSpec}
+import api.services.ServiceSpec
 import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
 import v3.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
 import v3.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.{documentDetails, documentDetailsWithoutDocDueDate}

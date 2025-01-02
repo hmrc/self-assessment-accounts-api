@@ -16,7 +16,7 @@
 
 package shared.connectors
 
-import shared.config.{SharedAppConfig, DownstreamConfig}
+import shared.config.{DownstreamConfig, SharedAppConfig}
 
 case class DownstreamUri[+Resp](
     path: String,

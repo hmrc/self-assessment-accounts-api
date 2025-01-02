@@ -16,20 +16,20 @@
 
 package v3.retrieveCodingOut
 
-import api.controllers.EndpointLogContext
-import api.models.domain.{TaxYear, TodaySupplier}
-import api.models.errors.{ErrorWrapper, InternalError}
-import api.models.outcomes.ResponseWrapper
-import api.services.DownstreamResponseMappingSupport
-import utils.Logging
+import shared.controllers.EndpointLogContext
+import shared.models.domain.TaxYear
+import shared.models.errors.ErrorWrapper
+import shared.models.outcomes.ResponseWrapper
+import shared.services.DownstreamResponseMappingSupport
+import shared.utils.Logging
 import v3.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
 trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
   self: Logging =>
 
-  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[RetrieveCodingOutResponse], taxYear: TaxYear)(implicit
-      todaySupplier: TodaySupplier): Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]] = {
+  final def validateCodingOutResponse[T](desResponseWrapper: ResponseWrapper[RetrieveCodingOutResponse],
+                                         taxYear: TaxYear): Either[ErrorWrapper, ResponseWrapper[RetrieveCodingOutResponse]] = {
 
     implicit val endpointLogContext: EndpointLogContext =
       EndpointLogContext(
@@ -38,7 +38,8 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
       )
 
     desResponseWrapper.responseData match {
-      case retrieveCodingOutDetailsResponse: Def1_RetrieveCodingOutResponse if taxYear.isTaxYearComplete && idsMissing(retrieveCodingOutDetailsResponse) =>
+      case retrieveCodingOutDetailsResponse: Def1_RetrieveCodingOutResponse
+          if taxYear.isTaxYearComplete && idsMissing(retrieveCodingOutDetailsResponse) =>
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId")

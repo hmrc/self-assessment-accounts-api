@@ -17,10 +17,6 @@
 package v3.optOutOfCodingOut
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError}
-import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue

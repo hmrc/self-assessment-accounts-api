@@ -16,7 +16,6 @@
 
 package utils
 
-import api.models.errors._
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.http.Status
@@ -33,7 +32,6 @@ import uk.gov.hmrc.play.audit.model.{DataEvent, TruncationLog}
 import uk.gov.hmrc.play.bootstrap.config.HttpAuditEvent
 
 import java.time.Instant
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.control.NoStackTrace
 

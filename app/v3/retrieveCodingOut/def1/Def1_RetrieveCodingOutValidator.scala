@@ -16,28 +16,30 @@
 
 package v3.retrieveCodingOut.def1
 
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{DetailedResolveTaxYear, ResolveNino}
-import api.models.errors.MtdError
 import cats.data.Validated
-import cats.implicits._
-import config.AppConfig
+import cats.implicits.catsSyntaxTuple3Semigroupal
+import config.SaAccountsConfig
+import shared.config.SharedAppConfig
+import shared.controllers.validators.resolvers.{ResolveExclusiveJsonProperty, ResolveNino, ResolveNonEmptyJsonObject, ResolveTaxYear, ResolveTaxYearMinimum, ResolverSupport}
+import shared.controllers.validators.Validator
+import shared.models.errors.MtdError
 import v3.common.resolvers
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
 import javax.inject.Singleton
 
+
 @Singleton
-class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String], appConfig: AppConfig)
+class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String], appConfig: SaAccountsConfig)
   extends Validator[RetrieveCodingOutRequestData] {
 
-      private val resolveTaxYear = DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
-
+  //would this be replaced with taxyearminimum in shared?
+  //private val resolveTaxYear = DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
       def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] =
         (
           ResolveNino(nino),
-          resolveTaxYear(taxYear),
+          ResolveTaxYear(taxYear),
           resolvers.ResolveSource(source)
         ).mapN(Def1_RetrieveCodingOutRequestData)
 

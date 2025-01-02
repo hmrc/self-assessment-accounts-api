@@ -16,8 +16,6 @@
 
 package v3.retrieveCodingOut.def1
 
-import api.models.domain.{MtdSource, Nino, TaxYear}
-import api.models.errors._
 import config.MockAppConfig
 import support.UnitSpec
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData

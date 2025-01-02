@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-package api.connectors.httpparsers
-
-import api.connectors.MtdIdLookupConnector
-import api.connectors.httpparsers.MtdIdLookupHttpParser.mtdIdLookupHttpReads
+package api.connectors.httpparsers .mtdIdLookupHttpReads
 import play.api.http.Status.IM_A_TEAPOT
 import play.api.libs.json.Writes.StringWrites
 import play.api.libs.json.{JsResultException, Json}

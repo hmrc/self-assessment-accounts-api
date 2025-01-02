@@ -16,8 +16,6 @@
 
 package v3.optInToCodingOut
 
-import api.connectors.DownstreamOutcome
-import api.models.domain.{Nino, TaxYear}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import uk.gov.hmrc.http.HeaderCarrier

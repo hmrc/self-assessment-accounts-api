@@ -16,8 +16,6 @@
 
 package v3.common.resolvers
 
-import api.models.domain.MtdSource
-import api.models.errors.SourceFormatError
 import cats.data.Validated.{Invalid, Valid}
 import support.UnitSpec
 

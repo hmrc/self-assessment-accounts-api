@@ -16,8 +16,6 @@
 
 package v3.listPaymentsAndAllocationDetails.def1
 
-import api.models.domain.{DateRange, Nino}
-import api.models.errors._
 import config.MockAppConfig
 import support.UnitSpec
 import v3.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory

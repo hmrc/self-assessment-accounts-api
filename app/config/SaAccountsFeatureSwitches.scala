@@ -16,27 +16,18 @@
 
 package config
 
-import com.google.inject.ImplementedBy
 import org.apache.commons.lang3.BooleanUtils
 import play.api.Configuration
 import play.api.mvc.Request
+import shared.config.{FeatureSwitches, SharedAppConfig}
+import javax.inject.Singleton
 
-import javax.inject.{Inject, Singleton}
 
-@ImplementedBy(classOf[FeatureSwitchesImpl])
-trait FeatureSwitches {
 
-  def isTemporalValidationEnabled(implicit request: Request[_]): Boolean
-  def isEnabled(key: String): Boolean
-  def isReleasedInProduction(feature: String): Boolean
-  def supportingAgentsAccessControlEnabled: Boolean
-}
 
-@Singleton
-class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwitches {
-
-  @Inject
-  def this(appConfig: AppConfig) = this(appConfig.featureSwitches)
+case class SaAccountsFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
+  def isIfsEnabled: Boolean      = isEnabled("ifs")
+  def isIfsInProduction: Boolean = isReleasedInProduction("ifs")
 
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension")) {
@@ -45,17 +36,8 @@ class FeatureSwitchesImpl(featureSwitchConfig: Configuration) extends FeatureSwi
       true
     }
   }
-
-  def isEnabled(key: String): Boolean = isConfigTrue(key + ".enabled")
-
-  private def isConfigTrue(key: String): Boolean = featureSwitchConfig.getOptional[Boolean](key).getOrElse(true)
-
-  def isReleasedInProduction(feature: String): Boolean      = isConfigTrue(feature + ".released-in-production")
-  val supportingAgentsAccessControlEnabled: Boolean         = isEnabled("supporting-agents-access-control")
 }
 
-object FeatureSwitches {
-  def apply(configuration: Configuration): FeatureSwitches = new FeatureSwitchesImpl(configuration)
-
-  def apply(appConfig: AppConfig): FeatureSwitches = new FeatureSwitchesImpl(appConfig)
+object SaAccountsFeatureSwitches {
+  def apply()(implicit appConfig: SharedAppConfig): SaAccountsFeatureSwitches = SaAccountsFeatureSwitches(appConfig.featureSwitchConfig)
 }

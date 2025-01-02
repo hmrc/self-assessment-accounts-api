@@ -16,10 +16,10 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import api.connectors.DownstreamUri.Ifs1Uri
-import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieveChargeHistoryByTransactionId(request: RetrieveChargeHistoryByTransactionIdRequestData)(implicit
       hc: HeaderCarrier,
@@ -36,11 +36,10 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
     import request._
-    import schema._
 
     val queryParams = Seq("docNumber" -> transactionId.toString)
 
-    get(Ifs1Uri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+    get(IfsUri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
 
   }
 

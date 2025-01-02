@@ -16,25 +16,25 @@
 
 package v3.optInToCodingOut
 
-import api.connectors.DownstreamUri.Ifs1Uri
-import api.connectors.httpparsers.StandardDownstreamHttpParser._
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.models.domain.{Nino, TaxYear}
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import shared.models.domain.{Nino, TaxYear}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class OptInToCodingOutConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class OptInToCodingOutConnector @Inject()(val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def optInToCodingOut(nino: Nino, taxYear: TaxYear)(implicit
                                                      hc: HeaderCarrier,
                                                      ec: ExecutionContext,
                                                      correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    delete(uri = Ifs1Uri[Unit](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}"))
+    delete(uri = IfsUri[Unit](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}"))
   }
 
 }

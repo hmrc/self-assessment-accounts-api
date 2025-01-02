@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,32 @@
 
 package v3.common.resolvers
 
-import api.controllers.validators.resolvers.Resolver
-import api.models.domain.MtdSource
-import api.models.errors.{MtdError, SourceFormatError}
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
+import common.errors.SourceFormatError
+import shared.controllers.validators.resolvers.ResolverSupport
+import shared.models.errors.MtdError
+import v3.common.models.MtdSource
 
-object ResolveSource extends Resolver[String, MtdSource] {
+import scala.util.{Failure, Success, Try}
 
-  def apply(value: String, maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], MtdSource] = {
+//object ResolveSource extends Resolver[String, MtdSource] {
+//
+//  def apply(value: String, maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], MtdSource] = {
+//    def useError = maybeError.getOrElse(SourceFormatError).maybeWithExtraPath(errorPath)
+//
+//    MtdSource.parser
+//      .lift(value)
+//      .map(parsed => Valid(parsed))
+//      .getOrElse(Invalid(List(useError)))
+//  }
+//
+//}
+
+
+object ResolveSource extends ResolverSupport{
+
+def apply(value: String, maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], MtdSource] = {
     def useError = maybeError.getOrElse(SourceFormatError).maybeWithExtraPath(errorPath)
 
     MtdSource.parser
@@ -32,5 +49,6 @@ object ResolveSource extends Resolver[String, MtdSource] {
       .map(parsed => Valid(parsed))
       .getOrElse(Invalid(List(useError)))
   }
+
 
 }

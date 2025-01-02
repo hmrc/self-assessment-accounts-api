@@ -16,14 +16,14 @@
 
 package v3.createOrAmendCodingOut.def1
 
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers._
-import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits._
-import config.AppConfig
 import play.api.libs.json.JsValue
+import shared.config.SharedAppConfig
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveParsedNumber, ResolveTaxYear}
+import shared.models.errors.MtdError
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent}
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
@@ -31,21 +31,20 @@ import javax.inject.Singleton
 import scala.annotation.nowarn
 
 @Singleton
-class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean, appConfig: AppConfig)
+class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean, appConfig: SharedAppConfig)
     extends Validator[CreateOrAmendCodingOutRequestData] {
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[Def1_CreateOrAmendCodingOutRequestBody]()
 
-  private val validatePayeUnderpayments = ResolveParsedNumber()
 
-  private val resolveTaxYear =
-    DetailedResolveTaxYear(allowIncompleteTaxYear = !temporalValidationEnabled, maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
+  private val resolveTaxYear = ResolveTaxYear.resolver
+
 
   def validate: Validated[Seq[MtdError], Def1_CreateOrAmendCodingOutRequestData] =
     (
       ResolveNino(nino),
-      resolveTaxYear(taxYear, None, None),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def1_CreateOrAmendCodingOutRequestData) andThen validatedParsedBody
 
@@ -56,8 +55,10 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
         case Some(components) =>
           components.zipWithIndex.traverse_ { case (component, i) =>
             combine(
-              validatePayeUnderpayments(component.amount, path = s"/taxCodeComponents/$subPath/$i/amount"),
-              ResolveParsedNumericId(component.id, path = s"/taxCodeComponents/$subPath/$i/id")
+              ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
+              (component.amount, path = s"/taxCodeComponents/$subPath/$i/amount"),
+                ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
+                (component.id, path = s"/taxCodeComponents/$subPath/$i/id")
             )
           }
 
@@ -69,8 +70,10 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
       maybeComponent match {
         case Some(component) =>
           combine(
-            validatePayeUnderpayments(component.amount, path = s"/taxCodeComponents/$subPath/amount"),
-            ResolveParsedNumericId(component.id, path = s"/taxCodeComponents/$subPath/id")
+            ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
+            (component.amount, path = s"/taxCodeComponents/$subPath/amount"),
+            ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
+            (component.id, path = s"/taxCodeComponents/$subPath/id")
           )
 
         case None =>

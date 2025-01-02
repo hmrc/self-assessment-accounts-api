@@ -17,8 +17,6 @@
 package v3.optInToCodingOut
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
-import api.models.outcomes.ResponseWrapper
 
 import scala.concurrent.Future
 

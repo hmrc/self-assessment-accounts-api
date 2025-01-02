@@ -16,14 +16,13 @@
 
 package v3.retrieveCodingOut
 
-import api.controllers._
-import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.IdGenerator
+import shared.config.SharedAppConfig
+import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import shared.hateoas.HateoasFactory
+import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.IdGenerator
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutHateoasData
-
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -35,7 +34,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              service: RetrieveCodingOutService,
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
-                                             idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                             idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "retrieve-coding-out"

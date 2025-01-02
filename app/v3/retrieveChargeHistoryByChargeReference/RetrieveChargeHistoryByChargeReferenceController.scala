@@ -16,13 +16,13 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import api.controllers._
-import api.hateoas.HateoasFactory
-import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
+import shared.config.SharedAppConfig
+import shared.controllers.{AuditHandler, AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import shared.hateoas.HateoasFactory
 import shared.routing.Version
-import utils.IdGenerator
+import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.IdGenerator
 import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 
 import javax.inject.{Inject, Singleton}
@@ -36,7 +36,7 @@ class RetrieveChargeHistoryByChargeReferenceController @Inject() (val authServic
                                                                   hateoasFactory: HateoasFactory,
                                                                   auditService: AuditService,
                                                                   cc: ControllerComponents,
-                                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName: String = "retrieve-charge-history-by-charge-reference"

@@ -17,7 +17,6 @@
 package config
 
 import cats.data.Validated
-import config.{AppConfig, ConfidenceLevelConfig, Deprecation, DownstreamConfig}
 import org.scalamock.handlers.{CallHandler, CallHandler0}
 import org.scalamock.scalatest.MockFactory
 import play.api.Configuration

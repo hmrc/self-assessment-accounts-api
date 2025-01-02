@@ -16,10 +16,9 @@
 
 package v3.listPaymentsAndAllocationDetails
 
-import api.connectors.DownstreamUri.DesUri
-import api.connectors.httpparsers.StandardDownstreamHttpParser._
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.DesUri
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
@@ -28,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def listPaymentsAndAllocationDetails(request: ListPaymentsAndAllocationDetailsRequestData)(implicit
       hc: HeaderCarrier,
@@ -36,7 +35,6 @@ class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClient,
       correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
     import request._
-    import schema._
 
     val dateFrom = fromAndToDates.map(_.startDate.toString)
     val dateTo   = fromAndToDates.map(_.endDate.toString)

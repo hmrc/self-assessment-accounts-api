@@ -16,7 +16,6 @@
 
 package api.hateoas
 
-import Method.GET
 import play.api.libs.json.{Json, OWrites}
 import support.UnitSpec
 

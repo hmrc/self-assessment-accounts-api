@@ -16,7 +16,7 @@
 
 package v3.retrieveCodingOutStatus.def1.model.request
 
-import api.models.domain.{Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 import v3.retrieveCodingOutStatus.RetrieveCodingOutStatusSchema
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 

@@ -17,8 +17,6 @@
 package v3.retrieveCodingOutStatus
 
 import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
-import api.models.outcomes.ResponseWrapper
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData

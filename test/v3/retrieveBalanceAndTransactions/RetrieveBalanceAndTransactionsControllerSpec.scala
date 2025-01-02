@@ -17,8 +17,6 @@
 package v3.retrieveBalanceAndTransactions
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result

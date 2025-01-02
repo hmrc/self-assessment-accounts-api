@@ -16,8 +16,8 @@
 
 package shared.models.audit
 
-import shared.models.audit.AuditResponseFixture.{auditResponseJsonWithErrors, auditResponseModelWithBody, auditResponseModelWithErrors}
 import play.api.libs.json.{JsValue, Json}
+import shared.models.audit.AuditResponseFixture.{auditResponseJsonWithErrors, auditResponseModelWithBody, auditResponseModelWithErrors}
 
 object GenericAuditDetailFixture {
 

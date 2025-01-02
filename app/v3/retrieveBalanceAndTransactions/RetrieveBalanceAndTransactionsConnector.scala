@@ -16,10 +16,10 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import api.connectors.DownstreamUri.Ifs2Uri
-import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.retrieveBalanceAndTransactions.def1.model.response.FinancialDetailsItem
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
@@ -29,7 +29,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieveBalanceAndTransactions(request: RetrieveBalanceAndTransactionsRequestData)(implicit
       hc: HeaderCarrier,
@@ -60,7 +60,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
     // So that we don't read locks into result unless we've asked for them
     implicit val jsonReadLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(request.includeLocks)
 
-    get(Ifs2Uri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
+    get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
   }
 
 }

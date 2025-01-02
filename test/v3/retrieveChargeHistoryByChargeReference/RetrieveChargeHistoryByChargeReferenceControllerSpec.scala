@@ -18,13 +18,7 @@ package v3.retrieveChargeHistoryByChargeReference
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.hateoas
-import api.hateoas.Method.GET
-import api.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{ChargeReference, Nino}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
+import api.hateoas.MockHateoasFactory
 import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsObject, JsValue}
