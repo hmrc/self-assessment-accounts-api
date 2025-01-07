@@ -21,6 +21,7 @@ import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import play.api.http.Status.BAD_REQUEST
+import shared.models.domain.TaxYear
 import support.UnitSpec
 
 class RulesValidatorSpec extends UnitSpec {

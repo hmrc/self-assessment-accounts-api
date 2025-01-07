@@ -27,12 +27,12 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DeleteCodingOutValidatorFactory @Inject() {
 
-  def validator(nino: String, taxYear: String, appConfig: SharedAppConfig): Validator[DeleteCodingOutRequestData] = {
+  def validator(nino: String, taxYear: String): Validator[DeleteCodingOutRequestData] = {
 
     val schema = DeleteCodingOutSchema.schemaFor(taxYear)
 
     schema match {
-      case Def1 => new Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: SharedAppConfig)
+      case Def1 => new Def1_DeleteCodingOutValidator(nino: String, taxYear: String)
     }
 
   }

@@ -18,27 +18,26 @@ package v3.deleteCodingOut.def1
 
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple2Semigroupal
-import config.DetailedResolveTaxYear
-import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
-import shared.models.errors.MtdError
+import shared.controllers.validators.resolvers.{ResolveIncompleteTaxYear, ResolveNino, ResolveTaxYearMinimum}
+import shared.models.domain.TaxYear
+import shared.models.errors.{MtdError, RuleTaxYearNotEndedError}
 import v3.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
+import java.time.Clock
 import javax.inject.Singleton
 
 @Singleton
-class Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: SharedAppConfig) extends Validator[DeleteCodingOutRequestData] {
+class Def1_DeleteCodingOutValidator(nino: String, taxYear: String) extends Validator[DeleteCodingOutRequestData] {
 
-      private val resolveTaxYear = ResolveTaxYear.resolver
-//  private val resolveTaxYear =
-//    DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
+  private val resolveTaxYear =
+    DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
 
-      def validate: Validated[Seq[MtdError], DeleteCodingOutRequestData] =
-        (
-          ResolveNino(nino),
-          resolveTaxYear(taxYear)
-        ).mapN(Def1_DeleteCodingOutRequestData)
+  def validate: Validated[Seq[MtdError], DeleteCodingOutRequestData] =
+    (
+      ResolveNino(nino),
+      resolveTaxYear(taxYear)
+    ).mapN(Def1_DeleteCodingOutRequestData)
 
 }

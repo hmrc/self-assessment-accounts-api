@@ -18,7 +18,7 @@ package v3.retrieveCodingOut
 
 import shared.controllers.EndpointLogContext
 import shared.models.domain.TaxYear
-import shared.models.errors.ErrorWrapper
+import shared.models.errors.{ErrorWrapper, InternalError}
 import shared.models.outcomes.ResponseWrapper
 import shared.services.DownstreamResponseMappingSupport
 import shared.utils.Logging
@@ -39,7 +39,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
 
     desResponseWrapper.responseData match {
       case retrieveCodingOutDetailsResponse: Def1_RetrieveCodingOutResponse
-          if taxYear.isTaxYearComplete && idsMissing(retrieveCodingOutDetailsResponse) =>
+          if taxYear == TaxYear.currentTaxYear() && idsMissing(retrieveCodingOutDetailsResponse) =>
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId")

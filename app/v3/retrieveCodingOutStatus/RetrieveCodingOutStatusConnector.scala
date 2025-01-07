@@ -18,6 +18,7 @@ package v3.retrieveCodingOutStatus
 
 import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
@@ -35,6 +36,7 @@ class RetrieveCodingOutStatusConnector @Inject() (val http: HttpClient, val appC
       correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutStatusResponse]] = {
 
     import request._
+    import schema._
 
     val downstreamUri =
       IfsUri[DownstreamResp](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")

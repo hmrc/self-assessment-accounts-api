@@ -21,8 +21,9 @@ import cats.data.Validated._
 import common.errors.{MissingPaymentLotError, MissingPaymentLotItemError, PaymentLotFormatError, PaymentLotItemFormatError}
 import shared.controllers.validators.Validator
 import cats.implicits._
-import shared.controllers.validators.resolvers._
-import shared.models.errors.{FromDateFormatError, MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
+import shared.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
+import shared.models.errors.{MissingFromDateError, MtdError, RuleMissingToDateError}
+import v3.common.resolvers.ResolveStringPattern
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 

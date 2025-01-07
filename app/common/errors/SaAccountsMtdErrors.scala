@@ -62,3 +62,6 @@ object IncludeEstimatedChargesFormatError
 
 object CodingOutNotFoundError
     extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Coded out amounts could not be found for the supplied nino and taxYear", NOT_FOUND)
+
+object ChargeReferenceFormatError
+    extends MtdError(code = "FORMAT_CHARGE_REFERENCE", message = "The provided charge reference is invalid", BAD_REQUEST)

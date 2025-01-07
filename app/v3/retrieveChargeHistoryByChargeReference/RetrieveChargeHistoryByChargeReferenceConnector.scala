@@ -36,6 +36,7 @@ class RetrieveChargeHistoryByChargeReferenceConnector @Inject() (val http: HttpC
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
     import request._
+    import schema._
 
     val queryParams = List("chargeReference" -> chargeReference.value)
 

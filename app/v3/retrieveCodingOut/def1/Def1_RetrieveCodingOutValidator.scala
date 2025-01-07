@@ -22,6 +22,7 @@ import config.SaAccountsConfig
 import shared.config.SharedAppConfig
 import shared.controllers.validators.resolvers.{ResolveExclusiveJsonProperty, ResolveNino, ResolveNonEmptyJsonObject, ResolveTaxYear, ResolveTaxYearMinimum, ResolverSupport}
 import shared.controllers.validators.Validator
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v3.common.resolvers
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
@@ -31,16 +32,16 @@ import javax.inject.Singleton
 
 
 @Singleton
-class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String], appConfig: SaAccountsConfig)
+class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String])
   extends Validator[RetrieveCodingOutRequestData] {
 
-  //would this be replaced with taxyearminimum in shared?
+  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2019-20"))
   //private val resolveTaxYear = DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
+
       def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] =
         (
           ResolveNino(nino),
-          ResolveTaxYear(taxYear),
+          resolveTaxYear(taxYear),
           resolvers.ResolveSource(source)
         ).mapN(Def1_RetrieveCodingOutRequestData)
-
 }

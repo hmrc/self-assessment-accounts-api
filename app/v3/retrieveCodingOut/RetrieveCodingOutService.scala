@@ -28,8 +28,9 @@ import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
+//todaysupplier was within taxyear model but isnt in shared code
 @Singleton
-class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit todaySupplier: TodaySupplier = new TodaySupplier)
+class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
     extends BaseService
     with MappingSupportDownstream {
 

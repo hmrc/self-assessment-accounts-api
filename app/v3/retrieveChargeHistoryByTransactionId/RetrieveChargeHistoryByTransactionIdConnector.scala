@@ -36,7 +36,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
     import request._
-
+    import schema._
     val queryParams = Seq("docNumber" -> transactionId.toString)
 
     get(IfsUri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
