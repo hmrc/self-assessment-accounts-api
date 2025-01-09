@@ -56,7 +56,7 @@ trait ResolverSupport {
     def validateOptionally: Validator[Option[A]] = _.flatMap(validator)
   }
 
-  /** Use to lift a a Validator to a Resolver that validates. E.g.
+  /** Use to lift a Validator to a Resolver that validates. E.g.
     * {{{
     * resolveValid[Int] thenValidate satisfiesMax(1000, someError)
     * }}}

@@ -18,9 +18,7 @@ package v3.retrieveCodingOut.def1
 
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple3Semigroupal
-import config.SaAccountsConfig
-import shared.config.SharedAppConfig
-import shared.controllers.validators.resolvers.{ResolveExclusiveJsonProperty, ResolveNino, ResolveNonEmptyJsonObject, ResolveTaxYear, ResolveTaxYearMinimum, ResolverSupport}
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import shared.controllers.validators.Validator
 import shared.models.domain.TaxYear
 import shared.models.errors.MtdError

@@ -22,7 +22,8 @@ import cats.implicits._
 import play.api.libs.json.JsValue
 import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveParsedNumber, ResolveTaxYear}
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveParsedNumber, ResolveTaxYear, ResolveTaxYearMinimum}
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent}
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
@@ -38,7 +39,11 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
   private val resolveJson = new ResolveNonEmptyJsonObject[Def1_CreateOrAmendCodingOutRequestBody]()
 
 
-  private val resolveTaxYear = ResolveTaxYear.resolver
+  //private val resolveTaxYear = ResolveTaxYear.resolver
+  private val resolveTaxYear =
+    DetailedResolveTaxYear(allowIncompleteTaxYear = !temporalValidationEnabled, maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
+  //private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2023-24"))
+
 
 
   def validate: Validated[Seq[MtdError], Def1_CreateOrAmendCodingOutRequestData] =

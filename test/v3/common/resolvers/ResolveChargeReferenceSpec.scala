@@ -16,31 +16,26 @@
 
 package v3.common.resolvers
 
-import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import shared.controllers.validators.resolvers.ResolverSupport
-import shared.models.errors.MtdError
+import support.UnitSpec
 
-import scala.util.matching.Regex
+class ResolveChargeReferenceSpec extends UnitSpec {
 
-
-class ResolveStringPattern(regexFormat: Regex, error: MtdError) extends ResolverSupport {
-
-
-  def apply(value: Option[String]): Validated[Seq[MtdError], Option[String]] =
-    value match {
-      case Some(value) => resolver(value).map(Some(_))
-      case None        => Valid(None)
+  "ResolveChargeReference" should {
+    "return no errors" when {
+      "given a valid Charge Reference" in {
+        val value  = "AB123456789012"
+        val result = ResolveChargeReference(Some(value))
+        result shouldBe Valid(Some(ChargeReference(value)))
+      }
     }
 
-
-  val resolver: Resolver[String, String] = value =>
-    if (regexFormat.matches(value)) {
-      Valid(value)
-    } else {
-      Invalid(List(error))
+    "return an error" when {
+      "given an invalid ChargeReference" in {
+        val result = ResolveChargeReference(Some("not-a-transaction-id"))
+        result shouldBe Invalid(List(ChargeReferenceFormatError))
+      }
     }
+  }
 
 }
-
-
