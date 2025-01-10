@@ -17,22 +17,24 @@
 package v3.common.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
-import support.UnitSpec
+import common.errors.SourceFormatError
+import shared.utils.UnitSpec
+import v3.common.models.MtdSource
 
 class ResolveSourceSpec extends UnitSpec {
 
   "ResolveSource" should {
     "return no errors" when {
       "passed a valid Source" in {
-        ResolveSource("hmrcHeld") shouldBe Valid(MtdSource.`hmrcHeld`)
-        ResolveSource("user") shouldBe Valid(MtdSource.`user`)
-        ResolveSource("latest") shouldBe Valid(MtdSource.`latest`)
+        ResolveSource(Option("hmrcHeld")) shouldBe Valid(MtdSource.`hmrcHeld`)
+        ResolveSource(Option("user")) shouldBe Valid(MtdSource.`user`)
+        ResolveSource(Option("latest")) shouldBe Valid(MtdSource.`latest`)
       }
     }
 
     "return an error" when {
       "passed an invalid source" in {
-        ResolveSource("notASource") shouldBe Invalid(List(SourceFormatError))
+        ResolveSource(Option("notASource")) shouldBe Invalid(List(SourceFormatError))
       }
     }
   }

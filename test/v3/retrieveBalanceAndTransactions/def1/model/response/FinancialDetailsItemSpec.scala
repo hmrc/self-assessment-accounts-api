@@ -17,7 +17,7 @@
 package v3.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.{JsError, JsObject, JsValue, Json}
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v3.retrieveBalanceAndTransactions.def1.model.FinancialDetailsItemFixture
 
 class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture {

@@ -16,7 +16,10 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import api.services.ServiceSpec
+import shared.models.domain.{Nino, TransactionId}
+import shared.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, MtdError, NinoFormatError, NotFoundError, TransactionIdFormatError, InternalError}
+import shared.models.outcomes.ResponseWrapper
+import shared.services.ServiceSpec
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData

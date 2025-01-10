@@ -16,7 +16,10 @@
 
 package v3.optInToCodingOut
 
-import api.services.ServiceSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.services.ServiceSpec
 import v3.common.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 

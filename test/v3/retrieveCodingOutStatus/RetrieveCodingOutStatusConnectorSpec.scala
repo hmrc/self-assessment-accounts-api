@@ -16,7 +16,9 @@
 
 package v3.retrieveCodingOutStatus
 
-import api.connectors.ConnectorSpec
+import shared.connectors.ConnectorSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.outcomes.ResponseWrapper
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
@@ -38,7 +40,7 @@ class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
 
     protected val connector: RetrieveCodingOutStatusConnector = new RetrieveCodingOutStatusConnector(
       http = mockHttpClient,
-      appConfig = mockAppConfig
+      appConfig = mockSharedAppConfig
     )
 
     protected def request(nino: Nino, taxYear: TaxYear): RetrieveCodingOutStatusRequestData = Def1_RetrieveCodingOutStatusRequestData(nino, taxYear)
@@ -46,7 +48,7 @@ class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
 
   "RetrieveCodingOutStatusConnector" when {
     "retrieveCodingOutStatus" must {
-      "return a 200 status with a valid response" in new Ifs1Test with Test {
+      "return a 200 status with a valid response" in new IfsTest with Test {
         private val outcome = Right(ResponseWrapper(correlationId, response))
         willGet(s"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/$nino/2024")
           .returns(Future.successful(outcome))

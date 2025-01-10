@@ -16,8 +16,11 @@
 
 package v3.listPaymentsAndAllocationDetails
 
-import api.connectors.{ConnectorSpec, MockHttpClient}
-import config.MockAppConfig
+import shared.config.MockSharedAppConfig
+import shared.connectors.ConnectorSpec
+import shared.mocks.MockHttpClient
+import shared.models.domain.{DateRange, Nino}
+import shared.models.outcomes.ResponseWrapper
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
@@ -41,15 +44,15 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       Some(paymentLot),
       Some(paymentLotItem))
 
-  class Test extends MockHttpClient with MockAppConfig {
+  class Test extends MockHttpClient with MockSharedAppConfig {
 
     val connector: ListPaymentsAndAllocationDetailsConnector =
-      new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockAppConfig)
+      new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
-    MockAppConfig.desBaseUrl returns baseUrl
-    MockAppConfig.desToken returns "des-token"
-    MockAppConfig.desEnvironment returns "des-environment"
-    MockAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
+//    MockSharedAppConfig.desBaseUrl returns baseUrl
+//    MockSharedAppConfig.desToken returns "des-token"
+//    MockSharedAppConfig.desEnvironment returns "des-environment"
+//    MockSharedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
 
     def connectorRequest(request: ListPaymentsAndAllocationDetailsRequestData,
                          response: ListPaymentsAndAllocationDetailsResponse,
@@ -62,7 +65,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
           s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
           dummyHeaderCarrierConfig,
           parameters = queryParams,
-          requiredDesHeaders,
+          ???,
           List("AnotherHeader" -> "HeaderValue")
         )
         .returns(Future.successful(outcome))

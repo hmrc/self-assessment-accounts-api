@@ -16,10 +16,14 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import config.MockAppConfig
+import common.errors.DocNumberFormatError
 import play.api.Configuration
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.GenericAuditDetailFixture.nino
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.def1.model.ResponseFixture.{mtdResponseJson, response}
@@ -31,7 +35,7 @@ import scala.concurrent.Future
 class RetrieveBalanceAndTransactionsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockAppConfig
+    with MockSharedAppConfig
     with MockRetrieveBalanceAndTransactionsService
     with MockRetrieveBalanceAndTransactionsValidatorFactory {
 
@@ -83,8 +87,8 @@ class RetrieveBalanceAndTransactionsControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+ MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = {
       controller.retrieveBalanceAndTransactions(

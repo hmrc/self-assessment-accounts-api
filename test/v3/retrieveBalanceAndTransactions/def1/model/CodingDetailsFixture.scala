@@ -17,6 +17,7 @@
 package v3.retrieveBalanceAndTransactions.def1.model
 
 import play.api.libs.json.{JsValue, Json}
+import shared.models.domain.TaxYear
 import v3.retrieveBalanceAndTransactions.def1.model.response.{Coded, CodingDetails}
 
 object CodingDetailsFixture {

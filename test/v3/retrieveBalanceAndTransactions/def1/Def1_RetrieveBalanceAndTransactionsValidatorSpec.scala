@@ -16,15 +16,16 @@
 
 package v3.retrieveBalanceAndTransactions.def1
 
-import api.controllers.ControllerTestRunner.validNino
-import support.UnitSpec
+import common.errors._
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
   private implicit val correlationId: String = "1234"
-
+  private val validNino    = "AA123456A"
   private def validator(nino: String,
                         docNumber: Option[String],
                         fromDate: Option[String],

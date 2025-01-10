@@ -18,6 +18,9 @@ package v3.optInToCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.controllers.RequestContext
+import shared.models.errors.ErrorWrapper
+import shared.models.outcomes.ResponseWrapper
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 import scala.concurrent.{ExecutionContext, Future}

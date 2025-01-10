@@ -16,7 +16,6 @@
 
 package shared.definition
 
-<<<<<<<< HEAD:test/shared/definition/ApiDefinitionSpec.scala
 import shared.routing.Version3
 import shared.utils.UnitSpec
 
@@ -24,14 +23,6 @@ class ApiDefinitionSpec extends UnitSpec {
 
   private val apiVersion: APIVersion       = APIVersion(Version3, APIStatus.ALPHA, endpointsEnabled = true)
   private val apiDefinition: APIDefinition = APIDefinition("b", "c", "d", List("category"), List(apiVersion), Some(false))
-========
-import support.UnitSpec
-
-class ApiDefinitionSpec extends UnitSpec {
-
-  lazy val apiVersion: APIVersion  = APIVersion(Version3, ALPHA, endpointsEnabled = false)
-  val apiDefinition: APIDefinition = APIDefinition("b", "c", "d", Seq("e"), Seq(apiVersion), Some(false))
->>>>>>>> origin/main:test/definition/ApiDefinitionSpec.scala
 
   "APIDefinition" when {
     "the 'name' parameter is empty" should {

@@ -16,14 +16,21 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas
-import api.hateoas.MockHateoasFactory
-import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.{JsObject, JsValue}
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.hateoas.Method.GET
+import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import shared.models.audit.GenericAuditDetailFixture.nino
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.Nino
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
+import v3.common.models.ChargeReference
+import v3.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
@@ -37,7 +44,7 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveChargeHistoryByChargeReferenceService
-    with MockAppConfig
+    with MockSharedAppConfig
     with MockHateoasFactory
     with MockRetrieveChargeHistoryByChargeReferenceValidatorFactory {
 
@@ -48,15 +55,13 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
   private val requestData: RetrieveChargeHistoryByChargeReferenceRequestData =
     Def1_RetrieveChargeHistoryByChargeReferenceRequestData(nino = Nino(nino), chargeReference = ChargeReference(chargeReference))
 
-  val chargeHistoryLink: Link =
-    hateoas.Link(
+  val chargeHistoryLink: Link = Link(
       href = s"/accounts/self-assessment/$nino/charges/$chargeReference",
       method = GET,
       rel = SELF
     )
 
-  val transactionDetailsLink: Link =
-    hateoas.Link(
+  val transactionDetailsLink: Link = Link(
       href = s"/accounts/self-assessment/$nino/transactions/$chargeReference",
       method = GET,
       rel = RETRIEVE_TRANSACTION_DETAILS
@@ -115,8 +120,8 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+ MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveChargeHistoryByChargeReference(nino, chargeReference)(fakeGetRequest)
 

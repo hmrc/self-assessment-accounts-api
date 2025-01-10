@@ -16,13 +16,18 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas
-import api.hateoas.MockHateoasFactory
-import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.hateoas.Method.GET
+import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import shared.models.audit.GenericAuditDetailFixture.nino
+import shared.models.domain.{Nino, TransactionId}
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
+import v3.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -36,7 +41,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveChargeHistoryByTransactionIdService
-    with MockAppConfig
+    with MockSharedAppConfig
     with MockHateoasFactory
     with MockRetrieveChargeHistoryByTransactionIdValidatorFactory {
 
@@ -47,15 +52,13 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
   private val requestData: RetrieveChargeHistoryByTransactionIdRequestData =
     Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino = Nino(nino), transactionId = TransactionId(transactionId))
 
-  val chargeHistoryLink: Link =
-    hateoas.Link(
+  val chargeHistoryLink = Link(
       href = s"/accounts/self-assessment/$nino/charges/$transactionId",
       method = GET,
       rel = SELF
     )
 
-  val transactionDetailsLink: Link =
-    hateoas.Link(
+  val transactionDetailsLink = Link(
       href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
       method = GET,
       rel = RETRIEVE_TRANSACTION_DETAILS
@@ -111,8 +114,8 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveChargeHistoryByTransactionId(nino, transactionId)(fakeGetRequest)
   }

@@ -16,7 +16,11 @@
 
 package v3.retrieveChargeHistoryByChargeReference.def1
 
-import support.UnitSpec
+import common.errors.ChargeReferenceFormatError
+import shared.models.domain.Nino
+import shared.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError}
+import shared.utils.UnitSpec
+import v3.common.models.ChargeReference
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 

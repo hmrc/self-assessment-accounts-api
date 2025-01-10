@@ -16,9 +16,10 @@
 
 package v3.createOrAmendCodingOut.def1
 
-import api.controllers.validators.MockValidatorFactory
+import config.SaAccountsConfig
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.createOrAmendCodingOut.CreateOrAmendCodingOutValidatorFactory
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
@@ -28,6 +29,6 @@ trait MockCreateOrAmendCodingOutValidatorFactory extends MockValidatorFactory[Cr
   val mockCreateOrAmendCodingOutValidatorFactory: CreateOrAmendCodingOutValidatorFactory = mock[CreateOrAmendCodingOutValidatorFactory]
 
   def validator(): CallHandler[Validator[CreateOrAmendCodingOutRequestData]] =
-    (mockCreateOrAmendCodingOutValidatorFactory.validator(_: String, _: String, _: JsValue, _: Boolean, _: AppConfig)).expects(*, *, *, *, *)
+    (mockCreateOrAmendCodingOutValidatorFactory.validator(_: String, _: String, _: JsValue, _: Boolean, _: SaAccountsConfig)).expects(*, *, *, *, *)
 
 }

@@ -16,11 +16,16 @@
 
 package v3.optOutOfCodingOut
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.GenericAuditDetailFixture.nino
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
 import v3.common.errors.RuleBusinessPartnerNotExistError
 import v3.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
@@ -35,7 +40,7 @@ class OptOutOfCodingOutControllerSpec
     with ControllerTestRunner
     with MockOptOutOfCodingOutService
     with MockOptOutOfCodingOutValidatorFactory
-    with MockAppConfig {
+    with MockSharedAppConfig {
   override val apiVersion: Version = Version3
 
   "OptOutOfCodingOutController" should {
@@ -87,8 +92,8 @@ class OptOutOfCodingOutControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator)
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.optOutOfCodingOut(nino, taxYear)(fakeGetRequest)
 

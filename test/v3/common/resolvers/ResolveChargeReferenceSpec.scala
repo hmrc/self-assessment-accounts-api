@@ -17,7 +17,9 @@
 package v3.common.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
-import support.UnitSpec
+import common.errors.ChargeReferenceFormatError
+import shared.utils.UnitSpec
+import v3.common.models.ChargeReference
 
 class ResolveChargeReferenceSpec extends UnitSpec {
 
@@ -25,14 +27,14 @@ class ResolveChargeReferenceSpec extends UnitSpec {
     "return no errors" when {
       "given a valid Charge Reference" in {
         val value  = "AB123456789012"
-        val result = ResolveChargeReference(Some(value))
+        val result = ResolveChargeReference(None, None)(value)
         result shouldBe Valid(Some(ChargeReference(value)))
       }
     }
 
     "return an error" when {
       "given an invalid ChargeReference" in {
-        val result = ResolveChargeReference(Some("not-a-transaction-id"))
+        val result = ResolveChargeReference(None, None)("not-a-transaction-id")
         result shouldBe Invalid(List(ChargeReferenceFormatError))
       }
     }

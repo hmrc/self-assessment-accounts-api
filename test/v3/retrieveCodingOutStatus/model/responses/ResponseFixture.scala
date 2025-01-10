@@ -17,6 +17,7 @@
 package v3.retrieveCodingOutStatus.model.responses
 
 import play.api.libs.json.{JsObject, Json}
+import shared.models.domain.TaxYear
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 
 object ResponseFixture {

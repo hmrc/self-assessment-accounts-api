@@ -16,11 +16,15 @@
 
 package v3.retrieveCodingOutStatus
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import config.MockAppConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
 import v3.common.errors.RuleBusinessPartnerNotExistError
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
@@ -36,11 +40,11 @@ class RetrieveCodingOutStatusControllerSpec
     with ControllerTestRunner
     with MockRetrieveCodingOutStatusService
     with MockRetrieveCodingOutStatusValidatorFactory
-    with MockAppConfig {
+    with MockSharedAppConfig {
 
   override val apiVersion: Version = Version3
 
-  override val nino                  = "AB123456A"
+  val nino                  = "AB123456A"
   private val taxYear                = "2023-24"
   private val processingDate: String = "2023-12-17T09:30:47Z"
 
@@ -95,8 +99,8 @@ class RetrieveCodingOutStatusControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator)
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(nino, taxYear)(fakeGetRequest)
 

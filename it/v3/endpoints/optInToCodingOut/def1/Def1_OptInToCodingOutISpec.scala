@@ -16,13 +16,14 @@
 
 package v3.endpoints.optInToCodingOut.def1
 
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{EmptyBody, WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 import v3.common.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 

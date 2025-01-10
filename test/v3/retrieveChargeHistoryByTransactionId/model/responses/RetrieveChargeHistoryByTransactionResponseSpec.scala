@@ -17,7 +17,7 @@
 package v3.retrieveChargeHistoryByTransactionId.model.responses
 
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 

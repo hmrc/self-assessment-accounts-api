@@ -16,8 +16,8 @@
 
 package v3.retrieveCodingOutStatus
 
-import api.models.utils.JsonErrorValidators
-import support.UnitSpec
+import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.retrieveCodingOutStatus.def1.Def1_RetrieveCodingOutStatusValidator
 
 class RetrieveCodingOutStatusValidatorFactorySpec extends UnitSpec with JsonErrorValidators {

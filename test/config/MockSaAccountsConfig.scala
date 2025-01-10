@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package api.services
+package config
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.Status._
-import support.WireMockMethods
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
 
-object AuditStub extends WireMockMethods {
+trait MockSaAccountsConfig extends MockFactory {
 
-  private val auditUri: String = s"/write/audit.*"
+  implicit val mockSaAccountsConfig: SaAccountsConfig = mock[SaAccountsConfig]
 
-  def audit(): StubMapping = {
-    when(method = POST, uri = auditUri)
-      .thenReturn(status = NO_CONTENT)
+  object MockedSaAccountsConfig {
+
+    def minimumPermittedTaxYear: CallHandler[Int] = (() => mockSaAccountsConfig.minimumPermittedTaxYear).expects()
+
+
   }
-
 }

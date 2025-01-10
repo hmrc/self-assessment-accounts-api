@@ -16,9 +16,13 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import api.connectors.{ConnectorSpec, MockHttpClient}
-import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
+import shared.config.MockSharedAppConfig
+import shared.connectors.ConnectorSpec
+import shared.mocks.MockHttpClient
+import shared.models.domain.Nino
+import shared.models.outcomes.ResponseWrapper
+import v3.common.models.ChargeReference
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
@@ -48,16 +52,17 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
       chargeHistoryDetails = List(chargeHistoryDetails)
     )
 
-  class Test extends MockHttpClient with MockAppConfig {
+  class Test extends MockHttpClient with MockSharedAppConfig {
 
     val connector: RetrieveChargeHistoryByChargeReferenceConnector =
-      new RetrieveChargeHistoryByChargeReferenceConnector(http = mockHttpClient, appConfig = mockAppConfig)
+      new RetrieveChargeHistoryByChargeReferenceConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
-    def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.ifs1BaseUrl returns baseUrl
-      MockAppConfig.ifs1Token returns "ifs1-token"
-      MockAppConfig.ifs1Environment returns "ifs1-environment"
-      MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
+    def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {???
+     // MockedSharedAppConfig.ifsDownstreamConfig.
+     // MockSharedAppConfig.ifsBaseUrl returns baseUrl
+     // MockSharedAppConfig.ifs1Token returns "ifs1-token"
+     // MockSharedAppConfig.ifs1Environment returns "ifs1-environment"
+      //MockSharedAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
     }
 
   }
@@ -76,7 +81,7 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
             s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
             dummyHeaderCarrierConfig,
             parameters = List("chargeReference" -> chargeReference),
-            requiredIfs1Headers,
+            ???,
             List("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))

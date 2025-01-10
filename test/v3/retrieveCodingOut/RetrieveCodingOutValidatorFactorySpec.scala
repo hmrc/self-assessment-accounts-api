@@ -16,12 +16,12 @@
 
 package v3.retrieveCodingOut
 
-import api.models.utils.JsonErrorValidators
-import config.MockAppConfig
-import support.UnitSpec
+import shared.config.MockSharedAppConfig
+import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.retrieveCodingOut.def1.Def1_RetrieveCodingOutValidator
 
-class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockAppConfig {
+class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockSharedAppConfig {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2019-20"
@@ -33,8 +33,8 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with JsonErrorValid
   "running a validation" should {
     "return the parsed domain object" when {
       "given a valid request" in {
-        MockAppConfig.minimumPermittedTaxYear returns 2020
-        val result = validatorFactory.validator(validNino, validTaxYear, source, mockAppConfig)
+
+        val result = validatorFactory.validator(validNino, validTaxYear, source, mockSharedAppConfig)
         result shouldBe a[Def1_RetrieveCodingOutValidator]
 
       }

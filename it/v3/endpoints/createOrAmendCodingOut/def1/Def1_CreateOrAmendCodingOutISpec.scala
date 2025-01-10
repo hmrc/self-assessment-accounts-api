@@ -16,12 +16,13 @@
 
 package v3.endpoints.createOrAmendCodingOut.def1
 
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
+import shared.models.errors._
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import support.IntegrationBaseSpec
 
 class Def1_CreateOrAmendCodingOutISpec extends IntegrationBaseSpec {

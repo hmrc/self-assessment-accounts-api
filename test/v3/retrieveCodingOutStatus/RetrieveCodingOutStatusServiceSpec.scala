@@ -16,7 +16,10 @@
 
 package v3.retrieveCodingOutStatus
 
-import api.services.ServiceSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.services.ServiceSpec
 import v3.common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse

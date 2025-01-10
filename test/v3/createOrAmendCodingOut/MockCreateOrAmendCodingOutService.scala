@@ -18,6 +18,9 @@ package v3.createOrAmendCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import shared.controllers.RequestContext
+import shared.models.errors.ErrorWrapper
+import shared.models.outcomes.ResponseWrapper
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
 import scala.concurrent.{ExecutionContext, Future}

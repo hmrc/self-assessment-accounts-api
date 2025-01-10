@@ -16,14 +16,17 @@
 
 package v3.listPaymentsAndAllocationDetails.def1
 
-import config.MockAppConfig
-import support.UnitSpec
+import common.errors.{MissingPaymentLotError, MissingPaymentLotItemError, PaymentLotFormatError, PaymentLotItemFormatError}
+import shared.config.MockSharedAppConfig
+import shared.models.domain.{DateRange, Nino}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v3.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 
 import java.time.LocalDate
 
-class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAppConfig {
+class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockSharedAppConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino           = "AA999999A"

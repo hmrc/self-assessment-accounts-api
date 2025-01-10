@@ -16,7 +16,7 @@
 
 package v3.retrieveBalanceAndTransactions.def1.model
 
-import api.controllers.ControllerTestRunner.validNino
+import shared.models.domain.{DateRange, Nino}
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import java.time.LocalDate
@@ -25,7 +25,7 @@ object RequestFixture {
   val validDocNumber = "1234"
   val validFromDate  = "2022-08-15"
   val validToDate    = "2022-09-15"
-
+   val validNino    = "AA123456A"
   val requestDocNumber: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
     nino = Nino(validNino),
     docNumber = Some(validDocNumber),

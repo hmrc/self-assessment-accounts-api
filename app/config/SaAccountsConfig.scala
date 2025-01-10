@@ -18,7 +18,6 @@ package config
 
 import play.api.Configuration
 import shared.config.{AppConfigBase, FeatureSwitches}
-import shared.routing.Version
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
@@ -31,7 +30,7 @@ class SaAccountsConfig @Inject() (val config: ServicesConfig, val configuration:
 
   def featureSwitches: FeatureSwitches = SaAccountsFeatureSwitches(featureSwitchConfig)
 
-  def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
+
 
   def minimumPermittedTaxYear: Int    = config.getInt("minimumPermittedTaxYear")
 

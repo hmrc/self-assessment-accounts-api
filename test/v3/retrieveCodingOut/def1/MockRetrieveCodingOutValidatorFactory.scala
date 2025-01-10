@@ -16,16 +16,18 @@
 
 package v3.retrieveCodingOut.def1
 
-import api.controllers.validators.MockValidatorFactory
+
 import org.scalamock.handlers.CallHandler
+import shared.config.SharedAppConfig
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.retrieveCodingOut.RetrieveCodingOutValidatorFactory
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
-trait MockRetrieveCodingOutValidatorFactory extends MockValidatorFactory[RetrieveCodingOutRequestData] {
+trait MockRetrieveCodingOutValidatorFactory extends MockValidatorFactory[RetrieveCodingOutRequestData]{
 
   val mockRetrieveCodingOutValidatorFactory: RetrieveCodingOutValidatorFactory = mock[RetrieveCodingOutValidatorFactory]
 
   def validator(): CallHandler[Validator[RetrieveCodingOutRequestData]] =
-    (mockRetrieveCodingOutValidatorFactory.validator(_: String, _: String, _: Option[String], _: AppConfig)).expects(*, *, *, *)
+    (mockRetrieveCodingOutValidatorFactory.validator(_: String, _: String, _: Option[String], _: SharedAppConfig)).expects(*, *, *, *)
 
 }

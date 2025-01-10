@@ -16,7 +16,11 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import api.services.ServiceSpec
+import common.errors._
+import shared.models.domain.{DateRange, Nino}
+import shared.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, FromDateFormatError, InternalError, MtdError, NinoFormatError, NotFoundError, RuleInvalidDateRangeError, ToDateFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.services.{ServiceOutcome, ServiceSpec}
 import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
 import v3.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
 import v3.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.{documentDetails, documentDetailsWithoutDocDueDate}

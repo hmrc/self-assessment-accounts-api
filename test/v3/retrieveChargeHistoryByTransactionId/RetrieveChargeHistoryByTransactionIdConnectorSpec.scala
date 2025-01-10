@@ -16,9 +16,12 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import api.connectors.{ConnectorSpec, MockHttpClient}
-import config.MockAppConfig
 import org.scalamock.handlers.CallHandler0
+import shared.config.MockSharedAppConfig
+import shared.connectors.ConnectorSpec
+import shared.mocks.MockHttpClient
+import shared.models.domain.{Nino, TransactionId}
+import shared.models.outcomes.ResponseWrapper
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -48,16 +51,17 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
       chargeHistoryDetails = List(chargeHistoryDetails)
     )
 
-  class Test extends MockHttpClient with MockAppConfig {
+  class Test extends MockHttpClient with MockSharedAppConfig {
 
     val connector: RetrieveChargeHistoryByTransactionIdConnector =
-      new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockAppConfig)
+      new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
     def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.ifs1BaseUrl returns baseUrl
-      MockAppConfig.ifs1Token returns "ifs1-token"
-      MockAppConfig.ifs1Environment returns "ifs1-environment"
-      MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
+//      MockSharedAppConfig.ifs1BaseUrl returns baseUrl
+//      MockSharedAppConfig.ifs1Token returns "ifs1-token"
+//      MockSharedAppConfig.ifs1Environment returns "ifs1-environment"
+//      MockSharedAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
+      ???
     }
 
   }
@@ -76,7 +80,7 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
             s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
             dummyHeaderCarrierConfig,
             parameters = List("docNumber" -> transactionId),
-            requiredIfs1Headers,
+            ???,
             List("AnotherHeader" -> "HeaderValue")
           )
           .returns(Future.successful(outcome))

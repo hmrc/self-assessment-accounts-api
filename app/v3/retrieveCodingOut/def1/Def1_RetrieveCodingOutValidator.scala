@@ -35,7 +35,6 @@ class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Opt
   extends Validator[RetrieveCodingOutRequestData] {
 
   private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2019-20"))
-  //private val resolveTaxYear = DetailedResolveTaxYear(maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
 
       def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] =
         (

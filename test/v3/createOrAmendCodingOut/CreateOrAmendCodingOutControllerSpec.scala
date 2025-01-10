@@ -16,15 +16,22 @@
 
 package v3.createOrAmendCodingOut
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas
-import api.hateoas.MockHateoasFactory
-import api.services.MockAuditService
-import config.MockAppConfig
+import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.hateoas
+import shared.hateoas.Method.{DELETE, GET, PUT}
+import shared.hateoas.{HateoasWrapper, MockHateoasFactory}
+import shared.models.audit.GenericAuditDetailFixture.nino
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version2}
+import shared.services.MockAuditService
 import v3.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent, TaxCodeComponents}
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
@@ -38,8 +45,9 @@ class CreateOrAmendCodingOutControllerSpec
     with MockCreateOrAmendCodingOutService
     with MockCreateOrAmendCodingOutValidatorFactory
     with MockAuditService
-    with MockAppConfig
-    with MockHateoasFactory {
+    with MockSharedAppConfig
+    with MockHateoasFactory
+    with MockSaAccountsConfig{
 
   override val apiVersion: Version = Version2
 
@@ -169,8 +177,8 @@ class CreateOrAmendCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
 

@@ -16,7 +16,9 @@
 
 package v3.retrieveChargeHistoryByTransactionId.def1
 
-import support.UnitSpec
+import shared.models.domain.{Nino, TransactionId}
+import shared.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, TransactionIdFormatError}
+import shared.utils.UnitSpec
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 

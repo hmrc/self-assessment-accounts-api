@@ -17,19 +17,24 @@
 package v3.common.resolvers
 
 import cats.data.Validated
+import cats.data.Validated.{Invalid, Valid}
 import common.errors.ChargeReferenceFormatError
-import shared.controllers.validators.resolvers.{ResolveStringPattern, ResolverSupport}
+import shared.controllers.validators.resolvers.ResolverSupport
 import shared.models.errors.MtdError
 import v3.common.models.ChargeReference
 
-object ResolveChargeReference extends ResolverSupport {
+case class ResolveChargeReference(error: Option[MtdError], path: Option[String]) extends ResolverSupport {
 
   private val chargeReferenceRegex = "^[A-Za-z]{2}[0-9]{12}$".r
 
   def apply(value: String): Validated[Seq[MtdError], ChargeReference] = resolver(value)
 
-  val resolver: Resolver[String, ChargeReference] =
-    ResolveStringPattern(chargeReferenceRegex, ChargeReferenceFormatError).resolver.map(ChargeReference)
+  val resolver: Resolver[String, ChargeReference] = value => {
+    if (chargeReferenceRegex.matches(value))
+      Valid(ChargeReference(value))
+    else
+      Invalid(List(error.getOrElse(ChargeReferenceFormatError).maybeWithExtraPath(path)))
+  }
 
 
 }

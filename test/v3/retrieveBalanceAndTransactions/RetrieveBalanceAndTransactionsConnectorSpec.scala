@@ -16,8 +16,11 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import api.connectors.{ConnectorSpec, MockHttpClient}
-import config.MockAppConfig
+import shared.config.MockSharedAppConfig
+import shared.connectors.{ConnectorSpec, DownstreamOutcome}
+import shared.mocks.MockHttpClient
+import shared.models.domain.{DateRange, Nino}
+import shared.models.outcomes.ResponseWrapper
 import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
 import v3.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
 import v3.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.{documentDetails, documentDetailsWithoutDocDueDate}
@@ -108,15 +111,15 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     }
   }
 
-  private trait Test extends MockHttpClient with MockAppConfig {
+  private trait Test extends MockHttpClient with MockSharedAppConfig {
 
     val connector: RetrieveBalanceAndTransactionsConnector =
-      new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockAppConfig)
+      new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockSharedAppConfig)
 
-    MockAppConfig.ifs2BaseUrl returns baseUrl
-    MockAppConfig.ifs2Token returns "ifs2-token"
-    MockAppConfig.ifs2Environment returns "ifs2-environment"
-    MockAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
+//    MockSharedAppConfig.ifs2BaseUrl returns baseUrl
+//    MockSharedAppConfig.ifs2Token returns "ifs2-token"
+//    MockSharedAppConfig.ifs2Environment returns "ifs2-environment"
+//    MockSharedAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
 
     def connectorRequest(request: RetrieveBalanceAndTransactionsRequestData,
                          response: RetrieveBalanceAndTransactionsResponse,
@@ -129,7 +132,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
           url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
           config = dummyHeaderCarrierConfig,
           parameters = queryParams,
-          requiredHeaders = requiredIfs2Headers,
+          requiredHeaders = ???,
           excludedHeaders = List("AnotherHeader" -> "HeaderValue")
         )
         .returns(Future.successful(outcome))

@@ -16,8 +16,8 @@
 
 package v3.common.models
 
-import support.UnitSpec
-import utils.enums.EnumJsonSpecSupport
+import shared.utils.UnitSpec
+import shared.utils.enums.EnumJsonSpecSupport
 import v3.common.models.DownstreamSource._
 
 class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {

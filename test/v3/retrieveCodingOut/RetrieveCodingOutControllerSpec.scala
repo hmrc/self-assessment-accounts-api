@@ -16,13 +16,20 @@
 
 package v3.retrieveCodingOut
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas
-import api.hateoas.MockHateoasFactory
-import config.MockAppConfig
+import common.errors.CodingOutNotFoundError
 import play.api.Configuration
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.hateoas.Method.{DELETE, GET, PUT}
+import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import shared.models.audit.GenericAuditDetailFixture.nino
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version2}
+import v3.common.models.MtdSource
+import v3.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import v3.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
 import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
@@ -37,7 +44,7 @@ class RetrieveCodingOutControllerSpec
     with ControllerTestRunner
     with MockRetrieveCodingOutService
     with MockRetrieveCodingOutValidatorFactory
-    with MockAppConfig
+    with MockSharedAppConfig
     with MockHateoasFactory {
 
   override val apiVersion: Version = Version2
@@ -50,19 +57,21 @@ class RetrieveCodingOutControllerSpec
     source = Some(MtdSource.parser(source))
   )
 
-  private val createOrAmendCodingOutLink = hateoas.Link(
+
+
+  private val createOrAmendCodingOutLink = Link(
     href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
     method = PUT,
     rel = CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS
   )
 
-  private val retrieveCodingOutLink = hateoas.Link(
+  private val retrieveCodingOutLink = Link(
     href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
     method = GET,
     rel = SELF
   )
 
-  private val deleteCodingOutLink = hateoas.Link(
+  private val deleteCodingOutLink= Link(
     href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
     method = DELETE,
     rel = DELETE_CODING_OUT_UNDERPAYMENTS
@@ -163,8 +172,8 @@ class RetrieveCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
     protected def callController(): Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)
   }
 

@@ -36,7 +36,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceValidator(
       def validate: Validated[Seq[MtdError], RetrieveChargeHistoryByChargeReferenceRequestData] =
         (
           ResolveNino(nino),
-          ResolveChargeReference(chargeReference)
+          ResolveChargeReference(None,None)(chargeReference)
         ).mapN(Def1_RetrieveChargeHistoryByChargeReferenceRequestData)
 
 }

@@ -16,10 +16,15 @@
 
 package v3.listPaymentsAndAllocationDetails
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import config.MockAppConfig
+import common.errors.PaymentLotFormatError
 import play.api.Configuration
 import play.api.mvc.Result
+import shared.config.MockSharedAppConfig
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.GenericAuditDetailFixture.nino
+import shared.models.domain.{DateRange, Nino}
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version2}
 import v3.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
@@ -32,7 +37,7 @@ import scala.concurrent.Future
 class ListPaymentsAndAllocationDetailsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockAppConfig
+    with MockSharedAppConfig
     with MockListPaymentsAndAllocationDetailsValidatorFactory
     with MockListPaymentsAndAllocationDetailsService {
 
@@ -88,8 +93,8 @@ class ListPaymentsAndAllocationDetailsControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.listPayments(nino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)

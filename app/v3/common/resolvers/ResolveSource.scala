@@ -23,19 +23,6 @@ import shared.controllers.validators.resolvers.ResolverSupport
 import shared.models.errors.MtdError
 import v3.common.models.MtdSource
 
-//object ResolveSource extends Resolver[String, MtdSource] {
-//
-//  def apply(value: String, maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], MtdSource] = {
-//    def useError = maybeError.getOrElse(SourceFormatError).maybeWithExtraPath(errorPath)
-//
-//    MtdSource.parser
-//      .lift(value)
-//      .map(parsed => Valid(parsed))
-//      .getOrElse(Invalid(List(useError)))
-//  }
-//
-//}
-
 object ResolveSource extends ResolverSupport{
 
   def apply(value: Option[String]): Validated[Seq[MtdError], Option[MtdSource]] = resolver.resolveOptionally(value)
@@ -48,16 +35,3 @@ object ResolveSource extends ResolverSupport{
 }
 
 
-//object ResolveSource extends ResolverSupport{
-//
-//def apply(value: String, maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], MtdSource] = {
-//    def useError = maybeError.getOrElse(SourceFormatError).maybeWithExtraPath(errorPath)
-//
-//    MtdSource.parser
-//      .lift(value)
-//      .map(parsed => Valid(parsed))
-//      .getOrElse(Invalid(List(useError)))
-//  }
-//
-//
-//}

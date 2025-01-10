@@ -17,7 +17,8 @@
 package v3.common.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
-import support.UnitSpec
+import shared.models.errors.TaxYearFormatError
+import shared.utils.UnitSpec
 
 class ResolveStringPatternSpec extends UnitSpec {
 
@@ -26,27 +27,18 @@ class ResolveStringPatternSpec extends UnitSpec {
   "ResolveStringPattern" should {
     "return the input value" when {
       "given a matching string" in {
-        val result = resolveTaxYearPattern("2024-25")
+        val result = resolveTaxYearPattern(Option("2024-25"))
         result shouldBe Valid("2024-25")
       }
 
-//      "return the input value" when {
-//        "given a matching string" in {
-//          val result = resolveTaxYearPattern("2024-25")
-//          result shouldBe Valid("2024-25")
-//        }
     }
 
     "return the correct error" when {
-      "given a non-matching string and no override error" in {
-        val result = resolveTaxYearPattern("does-not-match-regex")
+      "given a non-matching string" in {
+        val result = resolveTaxYearPattern(Option("does-not-match-regex"))
         result shouldBe Invalid(List(TaxYearFormatError))
       }
 
-      "given a non-matching string and a different, overriding error" in {
-        val result = resolveTaxYearPattern("does-not-match-regex", BVRError)
-        result shouldBe Invalid(List(BVRError))
-      }
     }
 
   }

@@ -27,6 +27,7 @@ import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse._
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
