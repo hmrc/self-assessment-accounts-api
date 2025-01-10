@@ -21,11 +21,10 @@ import cats.data.Validated.Valid
 import cats.implicits._
 import common.errors._
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers._
-import shared.models.errors._
-import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
+import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
 import shared.models.domain.DateRange
-
+import shared.models.errors.{MissingFromDateError, MtdError, RuleMissingToDateError}
+import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.Singleton
 
@@ -48,6 +47,12 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
   private val resolveDateRange = ResolveDateRange()
     .withYearsLimitedTo(minYear, maxYear)
 
+  def optionToString(value: Option[String]): String = {
+    value match {
+      case Some(value) => value
+      case None => "false"
+    }
+  }
   def validate: Validated[Seq[MtdError], RetrieveBalanceAndTransactionsRequestData] =
     (
       ResolveNino(nino),
@@ -60,12 +65,12 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
           }
           .getOrElse(Valid(None))
       },
-      ResolveBoolean.apply(onlyOpenItems, OnlyOpenItemsFormatError),
-      ResolveBoolean(includeLocks, defaultValue = false, IncludeLocksFormatError),
-      ResolveBoolean(calculateAccruedInterest, defaultValue = false, CalculateAccruedInterestFormatError),
-      ResolveBoolean(removePOA, defaultValue = false, RemovePaymentOnAccountFormatError),
-      ResolveBoolean(customerPaymentInformation, defaultValue = false, CustomerPaymentInformationFormatError),
-      ResolveBoolean(includeEstimatedCharges, defaultValue = false, IncludeEstimatedChargesFormatError)
+      ResolveBoolean(optionToString(onlyOpenItems), OnlyOpenItemsFormatError),
+      ResolveBoolean(optionToString(includeLocks), IncludeLocksFormatError),
+      ResolveBoolean(optionToString(calculateAccruedInterest), CalculateAccruedInterestFormatError),
+      ResolveBoolean(optionToString(removePOA), RemovePaymentOnAccountFormatError),
+      ResolveBoolean(optionToString(customerPaymentInformation), CustomerPaymentInformationFormatError),
+      ResolveBoolean(optionToString(includeEstimatedCharges), IncludeEstimatedChargesFormatError)
     ).mapN(RetrieveBalanceAndTransactionsRequestData) andThen validateParameterRules
 
   private def resolveDocNumber(docNumber: Option[String]): Validated[Seq[MtdError], Option[String]] = {

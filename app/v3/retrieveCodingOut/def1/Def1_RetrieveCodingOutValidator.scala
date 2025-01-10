@@ -18,8 +18,9 @@ package v3.retrieveCodingOut.def1
 
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple3Semigroupal
-import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
+import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v3.common.resolvers
@@ -30,7 +31,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String])
+class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String], appConfig: SharedAppConfig)
   extends Validator[RetrieveCodingOutRequestData] {
 
   private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2019-20"))

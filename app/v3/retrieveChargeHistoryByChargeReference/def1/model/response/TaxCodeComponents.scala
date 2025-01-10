@@ -16,9 +16,9 @@
 
 package v3.retrieveChargeHistoryByChargeReference.def1.model.response
 
-import v3.common.models.DownstreamSource
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import v3.common.models.DownstreamSource
 
 case class TaxCodeComponents(amount: BigDecimal, relatedTaxYear: Option[String], submittedOn: String, source: String, id: Option[BigInt])
 

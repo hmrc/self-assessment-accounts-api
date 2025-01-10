@@ -19,12 +19,12 @@ package v3.createOrAmendCodingOut.def1
 import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits._
+import config.SaAccountsConfig
 import play.api.libs.json.JsValue
-import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveParsedNumber, ResolveTaxYear, ResolveTaxYearMinimum}
-import shared.models.domain.TaxYear
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveParsedNumber}
 import shared.models.errors.MtdError
+import v3.common.resolvers.DetailedResolveTaxYear
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent}
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
@@ -32,24 +32,21 @@ import javax.inject.Singleton
 import scala.annotation.nowarn
 
 @Singleton
-class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean, appConfig: SharedAppConfig)
+class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean, appConfig: SaAccountsConfig)
     extends Validator[CreateOrAmendCodingOutRequestData] {
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[Def1_CreateOrAmendCodingOutRequestBody]()
 
-
-  //private val resolveTaxYear = ResolveTaxYear.resolver
-  private val resolveTaxYear =
+  private val resolveTaxYear = {
     DetailedResolveTaxYear(allowIncompleteTaxYear = !temporalValidationEnabled, maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
-  //private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2023-24"))
-
+  }
 
 
   def validate: Validated[Seq[MtdError], Def1_CreateOrAmendCodingOutRequestData] =
     (
       ResolveNino(nino),
-      resolveTaxYear(taxYear),
+      resolveTaxYear(taxYear, None, None),
       resolveJson(body)
     ).mapN(Def1_CreateOrAmendCodingOutRequestData) andThen validatedParsedBody
 

@@ -18,9 +18,9 @@ package v3.listPaymentsAndAllocationDetails.def1
 
 import cats.data.Validated
 import cats.data.Validated._
+import cats.implicits._
 import common.errors.{MissingPaymentLotError, MissingPaymentLotItemError, PaymentLotFormatError, PaymentLotItemFormatError}
 import shared.controllers.validators.Validator
-import cats.implicits._
 import shared.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
 import shared.models.errors.{MissingFromDateError, MtdError, RuleMissingToDateError}
 import v3.common.resolvers.ResolveStringPattern

@@ -16,7 +16,6 @@
 
 package v3.retrieveCodingOut
 
-import config.SaAccountsConfig
 import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
 import v3.retrieveCodingOut.RetrieveCodingOutSchema.Def1

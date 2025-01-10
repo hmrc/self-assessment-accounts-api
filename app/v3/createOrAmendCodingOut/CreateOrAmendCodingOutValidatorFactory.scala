@@ -17,8 +17,8 @@
 package v3.createOrAmendCodingOut
 
 
+import config.SaAccountsConfig
 import play.api.libs.json.JsValue
-import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
 import v3.createOrAmendCodingOut.CreateOrAmendCodingOutSchema.Def1
 import v3.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
@@ -30,7 +30,7 @@ import javax.inject.{Inject, Singleton}
 class CreateOrAmendCodingOutValidatorFactory @Inject() {
 
   def validator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean,
-                appConfig: SharedAppConfig): Validator[CreateOrAmendCodingOutRequestData] = {
+                appConfig: SaAccountsConfig): Validator[CreateOrAmendCodingOutRequestData] = {
 
     val schema = CreateOrAmendCodingOutSchema.schemaFor(taxYear)
 

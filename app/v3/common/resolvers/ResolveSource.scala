@@ -23,8 +23,6 @@ import shared.controllers.validators.resolvers.ResolverSupport
 import shared.models.errors.MtdError
 import v3.common.models.MtdSource
 
-import scala.util.{Failure, Success, Try}
-
 //object ResolveSource extends Resolver[String, MtdSource] {
 //
 //  def apply(value: String, maybeError: Option[MtdError], errorPath: Option[String]): Validated[Seq[MtdError], MtdSource] = {

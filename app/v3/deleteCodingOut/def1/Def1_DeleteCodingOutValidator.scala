@@ -19,13 +19,12 @@ package v3.deleteCodingOut.def1
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple2Semigroupal
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ ResolveNino, ResolveTaxYearMinimum}
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
 import v3.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
-import java.time.Clock
 import javax.inject.Singleton
 
 @Singleton

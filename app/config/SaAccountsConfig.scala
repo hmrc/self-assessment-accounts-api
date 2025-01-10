@@ -18,7 +18,6 @@ package config
 
 import play.api.Configuration
 import shared.config.{AppConfigBase, FeatureSwitches}
-import shared.models.errors.{MtdError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError}
 import shared.routing.Version
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
@@ -34,7 +33,7 @@ class SaAccountsConfig @Inject() (val config: ServicesConfig, val configuration:
 
   def endpointsEnabled(version: Version): Boolean = config.getBoolean(s"api.$version.endpoints.enabled")
 
-  def minimumPermittedTaxYear: String    = config.getString("minimumPermittedTaxYear")
+  def minimumPermittedTaxYear: Int    = config.getInt("minimumPermittedTaxYear")
 
 
 }

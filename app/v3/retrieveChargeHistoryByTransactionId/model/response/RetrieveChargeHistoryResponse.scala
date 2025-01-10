@@ -18,7 +18,7 @@ package v3.retrieveChargeHistoryByTransactionId.model.response
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import shared.config.SharedAppConfig
-import shared.hateoas.{HateoasLinksFactory, Link}
+import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse.{retrieveChargeHistory, retrieveTransactionDetails}
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 

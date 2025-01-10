@@ -18,9 +18,11 @@ package v3.optOutOfCodingOut
 
 import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import shared.models.domain.EmptyJsonBody
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.optOutOfCodingOut.OptOutOfCodingOutSchema.Def1.DownstreamResp
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 

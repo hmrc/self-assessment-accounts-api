@@ -16,18 +16,17 @@
 
 package v3.createOrAmendCodingOut
 
-import config.SaAccountsFeatureSwitches
+import config.{SaAccountsConfig, SaAccountsFeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers.{AuditHandler, AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import shared.controllers._
 import shared.hateoas.HateoasFactory
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse._
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -39,7 +38,7 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
                                                   hateoasFactory: HateoasFactory,
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
-                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, SharedConfig: SharedAppConfig, appConfig: SaAccountsConfig)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -58,7 +57,7 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
           taxYear,
           request.body,
           temporalValidationEnabled = SaAccountsFeatureSwitches().isTemporalValidationEnabled,
-          appConfig)
+          appConfig )
 
       val requestHandler =
         RequestHandler

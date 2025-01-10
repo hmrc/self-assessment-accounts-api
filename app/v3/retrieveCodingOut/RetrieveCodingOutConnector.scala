@@ -18,8 +18,10 @@ package v3.retrieveCodingOut
 
 import shared.config.SharedAppConfig
 import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
+import v3.retrieveCodingOut.RetrieveCodingOutSchema.Def1.DownstreamResp
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 

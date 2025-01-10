@@ -17,7 +17,6 @@
 package v3.common.resolvers
 
 import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
 import common.errors.ChargeReferenceFormatError
 import shared.controllers.validators.resolvers.{ResolveStringPattern, ResolverSupport}
 import shared.models.errors.MtdError
