@@ -44,15 +44,10 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       Some(paymentLot),
       Some(paymentLotItem))
 
-  class Test extends MockHttpClient with MockSharedAppConfig {
+  trait Test extends MockHttpClient with MockSharedAppConfig { _: ConnectorTest =>
 
     val connector: ListPaymentsAndAllocationDetailsConnector =
       new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
-
-//    MockSharedAppConfig.desBaseUrl returns baseUrl
-//    MockSharedAppConfig.desToken returns "des-token"
-//    MockSharedAppConfig.desEnvironment returns "des-environment"
-//    MockSharedAppConfig.desEnvironmentHeaders returns Some(allowedDesHeaders)
 
     def connectorRequest(request: ListPaymentsAndAllocationDetailsRequestData,
                          response: ListPaymentsAndAllocationDetailsResponse,
@@ -60,15 +55,10 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
       val outcome = Right(ResponseWrapper(correlationId, response))
 
-      MockedHttpClient
-        .get(
-          s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
-          dummyHeaderCarrierConfig,
-          parameters = queryParams,
-          ???,
-          List("AnotherHeader" -> "HeaderValue")
-        )
-        .returns(Future.successful(outcome))
+      willGet(
+        url = s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+        parameters = queryParams
+      ).returns(Future.successful(outcome))
 
       val result = await(connector.listPaymentsAndAllocationDetails(request))
       result shouldBe outcome
@@ -78,7 +68,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
   "ListPaymentsAndAllocationDetailsConnector" should {
     "return a valid response" when {
-      "a valid request is supplied" in new Test {
+      "a valid request is supplied" in new DesTest with Test {
         val queryParams: Seq[(String, String)] =
           List(
             "dateFrom"       -> s"$dateFrom",

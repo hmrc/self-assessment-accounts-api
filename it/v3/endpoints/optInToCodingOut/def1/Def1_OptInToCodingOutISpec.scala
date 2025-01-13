@@ -34,8 +34,10 @@ class Def1_OptInToCodingOutISpec extends IntegrationBaseSpec {
       "return a 204 No Content status code" in new Test {
 
         override def setupStubs(): StubMapping = {
+          AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
+
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUrl, NO_CONTENT)
         }
 

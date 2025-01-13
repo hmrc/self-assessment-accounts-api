@@ -28,7 +28,7 @@ class ResolveStringPatternSpec extends UnitSpec {
     "return the input value" when {
       "given a matching string" in {
         val result = resolveTaxYearPattern(Option("2024-25"))
-        result shouldBe Valid("2024-25")
+        result shouldBe Valid(Some("2024-25"))
       }
 
     }

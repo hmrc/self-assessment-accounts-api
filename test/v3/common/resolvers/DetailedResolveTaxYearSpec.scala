@@ -29,7 +29,7 @@ class DetailedResolveTaxYearSpec extends UnitSpec {
       val resolveTaxYear = DetailedResolveTaxYear()
 
       "accept a tax year < a reasonable minimum" in {
-        val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2010-12", None, None)
+        val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2010-11", None, None)
         result shouldBe Valid(TaxYear.fromMtd("2010-11"))
       }
     }

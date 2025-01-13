@@ -25,6 +25,8 @@ import shared.models.audit.GenericAuditDetailFixture.nino
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
+import shared.services.{MockEnrolmentsAuthService, MockMtdIdLookupService}
+import shared.utils.MockIdGenerator
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.def1.model.ResponseFixture.{mtdResponseJson, response}
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
@@ -33,8 +35,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveBalanceAndTransactionsControllerSpec
-    extends ControllerBaseSpec
+  extends ControllerBaseSpec
     with ControllerTestRunner
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockIdGenerator
     with MockSharedAppConfig
     with MockRetrieveBalanceAndTransactionsService
     with MockRetrieveBalanceAndTransactionsValidatorFactory {
