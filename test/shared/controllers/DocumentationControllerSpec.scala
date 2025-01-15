@@ -23,7 +23,7 @@ import play.api.mvc.Result
 import play.api.{Configuration, Environment}
 import shared.config.rewriters.DocumentationRewriters.CheckAndRewrite
 import shared.config.rewriters._
-import shared.config.{MockSharedAppConfig, RealAppConfig, SharedAppConfig}
+import shared.config.{SharedAppConfig, MockSharedAppConfig, RealAppConfig}
 import shared.definition._
 import shared.routing.{Version, Versions}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -158,7 +158,7 @@ class DocumentationControllerSpec extends ControllerBaseSpec with MockSharedAppC
         status(response) shouldBe OK
 
         val result: String = contentAsString(response)
-        result shouldBe actualApplicationYaml
+        result.replaceAll("\r", "") shouldBe actualApplicationYaml.replaceAll("\r", "")
       }
     }
   }

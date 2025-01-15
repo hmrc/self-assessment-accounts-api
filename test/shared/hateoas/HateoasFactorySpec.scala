@@ -17,7 +17,7 @@
 package shared.hateoas
 
 import cats.Functor
-import shared.config.{MockSharedAppConfig, SharedAppConfig}
+import shared.config.{SharedAppConfig, MockSharedAppConfig}
 import shared.hateoas.Method.GET
 import shared.utils.UnitSpec
 

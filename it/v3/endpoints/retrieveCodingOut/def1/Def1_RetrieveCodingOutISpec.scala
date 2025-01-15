@@ -25,7 +25,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.services.{AuthStub, DownstreamStub, MtdIdLookupStub}
-import support.IntegrationBaseSpec
+import shared.support.IntegrationBaseSpec
 import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
 
 import java.time.format.DateTimeFormatter

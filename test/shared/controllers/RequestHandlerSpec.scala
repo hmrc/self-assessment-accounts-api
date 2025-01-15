@@ -25,7 +25,7 @@ import play.api.libs.json.{JsString, Json, OWrites}
 import play.api.mvc.{AnyContent, AnyContentAsEmpty}
 import play.api.test.{FakeRequest, ResultExtractors}
 import shared.config.Deprecation.{Deprecated, NotDeprecated}
-import shared.config.{Deprecation, MockSharedAppConfig, SharedAppConfig}
+import shared.config.{SharedAppConfig, Deprecation, MockSharedAppConfig}
 import shared.controllers.validators.Validator
 import shared.hateoas._
 import shared.models.audit.{AuditError, AuditEvent, AuditResponse, GenericAuditDetail}

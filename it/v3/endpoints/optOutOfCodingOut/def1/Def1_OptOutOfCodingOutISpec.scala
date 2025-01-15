@@ -24,7 +24,7 @@ import play.api.libs.ws.{EmptyBody, WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import support.IntegrationBaseSpec
+import shared.support.IntegrationBaseSpec
 import v3.common.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.retrieveCodingOutStatus.model.responses.ResponseFixture.downstreamOptOutOfCodingOutResponseJson
 
