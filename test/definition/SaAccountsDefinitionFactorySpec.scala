@@ -53,11 +53,6 @@ class SaAccountsDefinitionFactorySpec extends UnitSpec {
               categories = Seq("INCOME_TAX_MTD"),
               versions = Seq(
                 APIVersion(
-                  version = Version2,
-                  status = BETA,
-                  endpointsEnabled = true
-                ),
-                APIVersion(
                   version = Version3,
                   status = BETA,
                   endpointsEnabled = true

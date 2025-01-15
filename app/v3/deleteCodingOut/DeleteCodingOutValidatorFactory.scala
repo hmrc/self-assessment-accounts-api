@@ -16,6 +16,7 @@
 
 package v3.deleteCodingOut
 
+import config.SaAccountsConfig
 import shared.controllers.validators.Validator
 import v3.deleteCodingOut.DeleteCodingOutSchema.Def1
 import v3.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
@@ -26,12 +27,12 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class DeleteCodingOutValidatorFactory @Inject() {
 
-  def validator(nino: String, taxYear: String): Validator[DeleteCodingOutRequestData] = {
+  def validator(nino: String, taxYear: String, appConfig: SaAccountsConfig): Validator[DeleteCodingOutRequestData] = {
 
     val schema = DeleteCodingOutSchema.schemaFor(taxYear)
 
     schema match {
-      case Def1 => new Def1_DeleteCodingOutValidator(nino: String, taxYear: String)
+      case Def1 => new Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: SaAccountsConfig)
     }
 
   }

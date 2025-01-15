@@ -26,9 +26,9 @@ class ResolveSourceSpec extends UnitSpec {
   "ResolveSource" should {
     "return no errors" when {
       "passed a valid Source" in {
-        ResolveSource(Option("hmrcHeld")) shouldBe Valid(MtdSource.`hmrcHeld`)
-        ResolveSource(Option("user")) shouldBe Valid(MtdSource.`user`)
-        ResolveSource(Option("latest")) shouldBe Valid(MtdSource.`latest`)
+        ResolveSource(Option("hmrcHeld")) shouldBe Valid(Some(MtdSource.`hmrcHeld`))
+        ResolveSource(Option("user")) shouldBe Valid(Some(MtdSource.`user`))
+        ResolveSource(Option("latest")) shouldBe Valid(Some(MtdSource.`latest`))
       }
     }
 

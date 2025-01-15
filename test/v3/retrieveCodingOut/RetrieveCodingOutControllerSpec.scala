@@ -23,7 +23,6 @@ import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.{DELETE, GET, PUT}
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import shared.models.audit.GenericAuditDetailFixture.nino
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
@@ -52,27 +51,28 @@ class RetrieveCodingOutControllerSpec
   private val source               = "hmrcHeld"
 
   private val requestData = Def1_RetrieveCodingOutRequestData(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear),
+    nino = Nino(validNino),
+    taxYear = TaxYear.currentTaxYear()
+,
     source = Some(MtdSource.parser(source))
   )
 
 
 
   private val createOrAmendCodingOutLink = Link(
-    href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+    href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
     method = PUT,
     rel = CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS
   )
 
   private val retrieveCodingOutLink = Link(
-    href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+    href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
     method = GET,
     rel = SELF
   )
 
   private val deleteCodingOutLink= Link(
-    href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+    href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
     method = DELETE,
     rel = DELETE_CODING_OUT_UNDERPAYMENTS
   )
@@ -115,7 +115,7 @@ class RetrieveCodingOutControllerSpec
       Some(unmatchedCustomerSubmissionsObject)
     )
 
-  private val mtdResponseJson = mtdResponseWithHateoas(nino, taxYear, source)
+  private val mtdResponseJson = mtdResponseWithHateoas(validNino, taxYear, source)
 
   "RetrieveCodingOutController" should {
     "return OK" when {
@@ -127,7 +127,7 @@ class RetrieveCodingOutControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))))
 
         MockHateoasFactory
-          .wrap(retrieveCodingOutResponse, RetrieveCodingOutHateoasData(nino, taxYear))
+          .wrap(retrieveCodingOutResponse, RetrieveCodingOutHateoasData(validNino, taxYear))
           .returns(
             HateoasWrapper(
               retrieveCodingOutResponse,
@@ -174,7 +174,7 @@ class RetrieveCodingOutControllerSpec
 
     MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
-    protected def callController(): Future[Result] = controller.retrieveCodingOut(nino, taxYear, Some(source))(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieveCodingOut(validNino, taxYear, Some(source))(fakeGetRequest)
   }
 
 }

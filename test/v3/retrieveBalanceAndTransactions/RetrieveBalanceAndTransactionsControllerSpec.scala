@@ -21,7 +21,6 @@ import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.GenericAuditDetailFixture.nino
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
@@ -97,7 +96,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
     protected def callController(): Future[Result] = {
       controller.retrieveBalanceAndTransactions(
-        nino = nino,
+        nino = validNino,
         docNumber = Some(validDocNumber),
         fromDate = None,
         toDate = None,

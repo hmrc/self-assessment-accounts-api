@@ -16,8 +16,9 @@
 
 package v3.retrieveBalanceAndTransactions.def1
 
-import common.errors._
-import shared.models.errors._
+
+import common.errors.{CalculateAccruedInterestFormatError, CustomerPaymentInformationFormatError, DocNumberFormatError, IncludeEstimatedChargesFormatError, IncludeLocksFormatError, OnlyOpenItemsFormatError, RemovePaymentOnAccountFormatError, RuleInconsistentQueryParamsError}
+import shared.models.errors.{BadRequestError, ErrorWrapper, FromDateFormatError, MissingFromDateError, NinoFormatError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
 import shared.utils.UnitSpec
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
@@ -125,7 +126,7 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
       "an invalid from date is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, fromDate = Some("invalid"), Some(validToDate), None, None, None, None, None, None).validateAndWrapResult()
+          validator(validNino, None, fromDate = Some("invalid"), toDate = Some(validToDate), None, None, None, None, None, None).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, FromDateFormatError)
@@ -152,7 +153,7 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
       "a to date after 2100 is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, Some(validFromDate), toDate = Some("2100-01-21"), None, None, None, None, None, None).validateAndWrapResult()
+          validator(validNino, None, Some(validFromDate), toDate = Some("2110-01-21"), None, None, None, None, None, None).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, ToDateFormatError)

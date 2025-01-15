@@ -21,7 +21,6 @@ import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.GenericAuditDetailFixture.nino
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
@@ -77,8 +76,9 @@ class OptOutOfCodingOutControllerSpec
     private val taxYear = "2023-24"
 
     protected val requestData: OptOutOfCodingOutRequestData = Def1_OptOutOfCodingOutRequestData(
-      nino = Nino(nino),
-      taxYear = TaxYear.fromMtd(taxYear)
+      nino = Nino(validNino),
+      taxYear = TaxYear.currentTaxYear()
+
     )
 
     protected val response = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
@@ -95,7 +95,7 @@ class OptOutOfCodingOutControllerSpec
     MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    protected def callController(): Future[Result] = controller.optOutOfCodingOut(nino, taxYear)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.optOutOfCodingOut(validNino, taxYear)(fakeGetRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -105,7 +105,7 @@ class OptOutOfCodingOutControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           versionNumber = "3.0",
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           requestBody = None,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

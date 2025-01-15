@@ -22,7 +22,7 @@ import cats.implicits._
 import common.errors.{MissingPaymentLotError, MissingPaymentLotItemError, PaymentLotFormatError, PaymentLotItemFormatError}
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
-import shared.models.errors.{MissingFromDateError, MtdError, RuleMissingToDateError}
+import shared.models.errors.{FromDateFormatError, MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
 import v3.common.resolvers.ResolveStringPattern
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
@@ -43,7 +43,7 @@ class Def1_ListPaymentsAndAllocationDetailsValidator(nino: String,
   private val resolvePaymentLot     = new ResolveStringPattern("^[0-9A-Za-z]{1,12}".r, PaymentLotFormatError)
   private val resolvePaymentLotItem = new ResolveStringPattern("^[0-9A-Za-z]{1,6}".r, PaymentLotItemFormatError)
 
-  private val resolveDateRange = ResolveDateRange()
+  private val resolveDateRange = ResolveDateRange(FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)
     .withYearsLimitedTo(minYear, maxYear)
 
   def validate: Validated[Seq[MtdError], Def1_ListPaymentsAndAllocationDetailsRequestData] = {

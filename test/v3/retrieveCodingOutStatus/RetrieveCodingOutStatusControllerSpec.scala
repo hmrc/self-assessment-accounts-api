@@ -44,17 +44,19 @@ class RetrieveCodingOutStatusControllerSpec
 
   override val apiVersion: Version = Version3
 
-  val nino                  = "AB123456A"
+  private val nino = "AB123456A"
   private val taxYear                = "2023-24"
   private val processingDate: String = "2023-12-17T09:30:47Z"
 
   private val requestData = Def1_RetrieveCodingOutStatusRequestData(
-    nino = Nino(nino),
-    taxYear = TaxYear.fromMtd(taxYear)
+    nino = Nino(validNino),
+    taxYear = TaxYear.currentTaxYear()
+
   )
 
   private val downstreamResponse: RetrieveCodingOutStatusResponse =
-    Def1_RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true)
+    Def1_RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = TaxYear.fromMtd(taxYear)
+, optOutIndicator = true)
 
   "RetrieveCodingOutStatusController" should {
     "return OK" when {
@@ -102,7 +104,7 @@ class RetrieveCodingOutStatusControllerSpec
     MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(nino, taxYear)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(validNino, taxYear)(fakeGetRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -112,7 +114,7 @@ class RetrieveCodingOutStatusControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           versionNumber = "3.0",
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

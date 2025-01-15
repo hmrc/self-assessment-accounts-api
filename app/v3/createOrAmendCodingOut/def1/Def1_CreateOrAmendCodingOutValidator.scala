@@ -22,7 +22,7 @@ import cats.implicits._
 import config.SaAccountsConfig
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveNino, ResolveNonEmptyJsonObject, ResolveParsedNumber}
+import shared.controllers.validators.resolvers._
 import shared.models.errors.MtdError
 import v3.common.resolvers.DetailedResolveTaxYear
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent}
@@ -37,6 +37,8 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
 
   @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[Def1_CreateOrAmendCodingOutRequestBody]()
+
+  private val validatePayeUnderpayments = ResolveParsedNumber()
 
   private val resolveTaxYear = {
     DetailedResolveTaxYear(allowIncompleteTaxYear = !temporalValidationEnabled, maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
@@ -57,10 +59,10 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
         case Some(components) =>
           components.zipWithIndex.traverse_ { case (component, i) =>
             combine(
-              ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
-              (component.amount, path = s"/taxCodeComponents/$subPath/$i/amount"),
-                ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
-                (component.id, path = s"/taxCodeComponents/$subPath/$i/id")
+              validatePayeUnderpayments(component.amount, path = s"/taxCodeComponents/$subPath/$i/amount"),
+              validatePayeUnderpayments(component.id, path = s"/taxCodeComponents/$subPath/id")
+
+
             )
           }
 
@@ -72,10 +74,8 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
       maybeComponent match {
         case Some(component) =>
           combine(
-            ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
-            (component.amount, path = s"/taxCodeComponents/$subPath/amount"),
-            ResolveParsedNumber(min = -99999999999.99, disallowZero = true)
-            (component.id, path = s"/taxCodeComponents/$subPath/id")
+            validatePayeUnderpayments(component.amount, path = s"/taxCodeComponents/$subPath/amount"),
+            validatePayeUnderpayments(component.id, path = s"/taxCodeComponents/$subPath/id")
           )
 
         case None =>

@@ -16,10 +16,7 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import org.scalamock.handlers.CallHandler0
-import shared.config.MockSharedAppConfig
 import shared.connectors.ConnectorSpec
-import shared.mocks.MockHttpClient
 import shared.models.domain.Nino
 import shared.models.outcomes.ResponseWrapper
 import v3.common.models.ChargeReference
@@ -52,40 +49,36 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
       chargeHistoryDetails = List(chargeHistoryDetails)
     )
 
-  class Test extends MockHttpClient with MockSharedAppConfig {
+  trait Test  { _: ConnectorTest =>
 
     val connector: RetrieveChargeHistoryByChargeReferenceConnector =
       new RetrieveChargeHistoryByChargeReferenceConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
-    def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {???
-     // MockedSharedAppConfig.ifsDownstreamConfig.
-     // MockSharedAppConfig.ifsBaseUrl returns baseUrl
-     // MockSharedAppConfig.ifs1Token returns "ifs1-token"
-     // MockSharedAppConfig.ifs1Environment returns "ifs1-environment"
-      //MockSharedAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
-    }
+
 
   }
 
   "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      "return a valid response" in new Test {
+      "return a valid response" in new IfsTest with Test {
 
-        setUpIfsMocks()
         val request: RetrieveChargeHistoryByChargeReferenceRequestData =
           Def1_RetrieveChargeHistoryByChargeReferenceRequestData(Nino(nino), ChargeReference(chargeReference))
         private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
-        MockedHttpClient
-          .get(
-            s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-            dummyHeaderCarrierConfig,
-            parameters = List("chargeReference" -> chargeReference),
-            ???,
-            List("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
-
+//        MockedHttpClient
+//          .get(
+//            s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+//            dummyHeaderCarrierConfig,
+//            parameters = List("chargeReference" -> chargeReference),
+//            ???,
+//            List("AnotherHeader" -> "HeaderValue")
+//          )
+//          .returns(Future.successful(outcome))
+        willGet(
+          url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+          parameters = List("chargeReference" -> chargeReference)
+        ).returns(Future.successful(outcome))
         await(connector.retrieveChargeHistoryByChargeReference(request)) shouldBe outcome
       }
     }

@@ -23,7 +23,7 @@ import common.errors._
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
 import shared.models.domain.DateRange
-import shared.models.errors.{MissingFromDateError, MtdError, RuleMissingToDateError}
+import shared.models.errors.{FromDateFormatError, MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.Singleton
@@ -44,7 +44,7 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
   private val minYear = 1900
   private val maxYear = 2100
 
-  private val resolveDateRange = ResolveDateRange()
+  private val resolveDateRange = ResolveDateRange(FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)
     .withYearsLimitedTo(minYear, maxYear)
 
   def optionToString(value: Option[String]): String = {

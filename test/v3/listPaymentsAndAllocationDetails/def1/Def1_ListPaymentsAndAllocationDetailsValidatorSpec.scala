@@ -139,7 +139,7 @@ class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with M
     }
 
     "a from date that procedes the maximum is supplied" in {
-      val result = validator(validNino, Some(validFromDate), Some("2100-01-21"), None, None).validateAndWrapResult()
+      val result = validator(validNino, Some(validFromDate), Some("2200-01-21"), None, None).validateAndWrapResult()
 
       result shouldBe Left(ErrorWrapper(correlationId, ToDateFormatError))
     }

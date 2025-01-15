@@ -21,7 +21,6 @@ import play.api.Configuration
 import play.api.mvc.Result
 import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.GenericAuditDetailFixture.nino
 import shared.models.domain.{DateRange, Nino}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -45,7 +44,7 @@ class ListPaymentsAndAllocationDetailsControllerSpec
 
   private val requestData =
     Def1_ListPaymentsAndAllocationDetailsRequestData(
-      Nino(nino),
+      Nino(validNino),
       Some(DateRange(LocalDate.parse("2022-08-15"), LocalDate.parse("2022-09-15"))),
       Some("paymentLot"),
       Some("paymentLotItem"))
@@ -97,7 +96,7 @@ class ListPaymentsAndAllocationDetailsControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.listPayments(nino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
+      controller.listPayments(validNino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
 
   }
 

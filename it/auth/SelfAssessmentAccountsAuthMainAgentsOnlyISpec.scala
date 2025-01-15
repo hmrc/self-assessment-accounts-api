@@ -32,7 +32,13 @@ class SelfAssessmentAccountsAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyIS
 
   override val mtdUrl: String = s"/$nino/$taxYear/collection/tax-code"
 
-  def sendMtdRequest(request: WSRequest): WSResponse = await(request.delete())
+  def sendMtdRequest(request: WSRequest): WSResponse = {
+
+    println(s"floppydisk = $request")
+
+
+    await(request.delete())
+  }
 
   override val downstreamUri: String = s"/income-tax/accounts/self-assessment/collection/tax-code/$nino/$taxYear"
 

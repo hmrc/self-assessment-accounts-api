@@ -18,6 +18,7 @@ package v3.deleteCodingOut.def1
 
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple2Semigroupal
+import config.SaAccountsConfig
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear
@@ -28,9 +29,9 @@ import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
 import javax.inject.Singleton
 
 @Singleton
-class Def1_DeleteCodingOutValidator(nino: String, taxYear: String) extends Validator[DeleteCodingOutRequestData] {
+class Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: SaAccountsConfig) extends Validator[DeleteCodingOutRequestData] {
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2023-24"))
+  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.ending(appConfig.minimumPermittedTaxYear))
 
   def validate: Validated[Seq[MtdError], DeleteCodingOutRequestData] =
     (

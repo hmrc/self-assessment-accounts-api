@@ -16,10 +16,7 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import org.scalamock.handlers.CallHandler0
-import shared.config.MockSharedAppConfig
 import shared.connectors.ConnectorSpec
-import shared.mocks.MockHttpClient
 import shared.models.domain.{Nino, TransactionId}
 import shared.models.outcomes.ResponseWrapper
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
@@ -51,39 +48,28 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
       chargeHistoryDetails = List(chargeHistoryDetails)
     )
 
-  class Test extends MockHttpClient with MockSharedAppConfig {
+  trait Test {  _: ConnectorTest =>
 
     val connector: RetrieveChargeHistoryByTransactionIdConnector =
       new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
 
-    def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {
-//      MockSharedAppConfig.ifs1BaseUrl returns baseUrl
-//      MockSharedAppConfig.ifs1Token returns "ifs1-token"
-//      MockSharedAppConfig.ifs1Environment returns "ifs1-environment"
-//      MockSharedAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
-      ???
-    }
+
 
   }
 
   "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      "return a valid response" in new Test {
+      "return a valid response" in new IfsTest with Test {
 
-        setUpIfsMocks()
+
         val request: RetrieveChargeHistoryByTransactionIdRequestData =
           Def1_RetrieveChargeHistoryByTransactionIdRequestData(Nino(nino), TransactionId(transactionId))
         private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
-        MockedHttpClient
-          .get(
-            s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-            dummyHeaderCarrierConfig,
-            parameters = List("docNumber" -> transactionId),
-            ???,
-            List("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willGet(
+          url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+          parameters = List("docNumber" -> transactionId)
+        ).returns(Future.successful(outcome))
 
         await(connector.retrieveChargeHistoryByTransactionId(request)) shouldBe outcome
       }

@@ -27,11 +27,8 @@ import scala.util.matching.Regex
 class ResolveStringPattern(regexFormat: Regex, error: MtdError) extends ResolverSupport {
 
 
-  def apply(value: Option[String]): Validated[Seq[MtdError], Option[String]] =
-    value match {
-      case Some(value) => resolver(value).map(Some(_))
-      case None        => Valid(None)
-    }
+  def apply(value: Option[String]): Validated[Seq[MtdError], Option[String]] = resolver.resolveOptionally(value)
+
 
 
   val resolver: Resolver[String, String] = value =>

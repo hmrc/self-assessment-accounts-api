@@ -38,8 +38,6 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppCon
 
   private def validator(nino: String, taxYear: String, source: Option[String]) = new Def1_RetrieveCodingOutValidator(nino, taxYear, source, mockSharedAppConfig)
 
-  //private def setupMocks(): Unit = (ResolveTaxYearMinimum(TaxYear.fromMtd("2019-20") returns 2022).anyNumberOfTimes()
-
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request" in {
@@ -83,7 +81,7 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppCon
 
 
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
-          validator(validNino, "2020-21", validSource).validateAndWrapResult()
+          validator(validNino, "2017-18", validSource).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
       }
