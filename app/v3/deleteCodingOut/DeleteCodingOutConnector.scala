@@ -17,7 +17,7 @@
 package v3.deleteCodingOut
 
 import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri.{DesUri, TaxYearSpecificIfsUri}
+import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser._
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -42,8 +42,7 @@ class DeleteCodingOutConnector @Inject()(val http: HttpClient, val appConfig: Sh
         s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"
       )
     } else {
-      println(s"floppy1 $correlationId")
-      DesUri[Unit](
+      IfsUri[Unit](
         s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
       )
     }
