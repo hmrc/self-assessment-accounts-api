@@ -409,7 +409,6 @@ class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
 
           val response: WSResponse = await(request(version, None).get())
 
-          println(response.status)
           response.status shouldBe OK
           response.json shouldBe mtdResponseNoId
           response.header("X-CorrelationId").nonEmpty shouldBe true
@@ -518,7 +517,6 @@ class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
               DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponseNoId)
 
             val response: WSResponse = await(request(version, None).get())
-            println(s"yoshi $response")
             response.status shouldBe INTERNAL_SERVER_ERROR
             response.json shouldBe InternalError.asJson
             response.header("Content-Type") shouldBe Some("application/json")

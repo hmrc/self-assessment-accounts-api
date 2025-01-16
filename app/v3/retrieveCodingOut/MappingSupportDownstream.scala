@@ -39,7 +39,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
 
     desResponseWrapper.responseData match {
       case retrieveCodingOutDetailsResponse: Def1_RetrieveCodingOutResponse
-          if taxYear == TaxYear.currentTaxYear() && idsMissing(retrieveCodingOutDetailsResponse) =>
+        if taxYear.year < TaxYear.currentTaxYear().year && idsMissing(retrieveCodingOutDetailsResponse) =>
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId")
