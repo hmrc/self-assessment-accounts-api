@@ -49,6 +49,9 @@ object StandardDownstreamHttpParser extends HttpParser {
     val correlationId = retrieveCorrelationId(response)
 
     if (response.status != successCode.status) {
+      println(s"${response.status}")
+      println(s"${successCode.status}")
+
       logger.warn(
         "[StandardDownstreamHttpParser][read] - " +
           s"Error response received from downstream with status: ${response.status} and body\n" +

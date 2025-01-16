@@ -38,7 +38,9 @@ class SelfAssessmentAccountsAuthSupportingAgentsAllowedISpec extends AuthSupport
 
   val maybeDownstreamResponseJson: Option[JsValue] = None
 
-  override protected val expectedMtdSuccessStatus: Int = NO_CONTENT
+  override val expectedMtdSuccessStatus: Int = NO_CONTENT
+
+  override val downstreamSuccessStatus: Int = NO_CONTENT
 
   override val downstreamHttpMethod: DownstreamStub.HTTPMethod = DownstreamStub.DELETE
 }

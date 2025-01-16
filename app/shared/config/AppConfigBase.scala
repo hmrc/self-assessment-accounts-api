@@ -26,10 +26,6 @@ trait AppConfigBase {
   private def serviceKeyFor(serviceName: String) = s"microservice.services.$serviceName"
 
   protected def downstreamConfig(serviceName: String): DownstreamConfig = {
-    if (serviceName == "ifs")
-      {
-        println(s"floppy2")
-      }
 
     val baseUrl = config.baseUrl(serviceName)
 

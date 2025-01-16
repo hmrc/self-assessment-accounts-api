@@ -17,7 +17,7 @@
 package v3.retrieveCodingOut.def1
 
 import cats.data.Validated
-import cats.implicits.catsSyntaxTuple3Semigroupal
+import cats.implicits._
 import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
