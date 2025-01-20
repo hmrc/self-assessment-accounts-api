@@ -19,10 +19,10 @@ package shared.controllers.validators.resolvers
 import play.api.libs.json.{JsArray, JsObject, JsValue}
 import shapeless.labelled.FieldType
 import shapeless.{::, HList, HNil, LabelledGeneric, Lazy, Witness}
-import shared.controllers.validators.resolvers.UnexpectedJsonFieldsValidator.SchemaStructureSource
-import shared.models.domain.TaxYear
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.utils.Logging
+import UnexpectedJsonFieldsValidator.SchemaStructureSource
+import shared.models.domain.TaxYear
 
 class UnexpectedJsonFieldsValidator[A](implicit extraPathChecker: SchemaStructureSource[A]) extends ResolverSupport with Logging {
   import UnexpectedJsonFieldsValidator.SchemaStructure

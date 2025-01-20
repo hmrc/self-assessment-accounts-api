@@ -17,7 +17,7 @@
 package shared.connectors
 
 import com.google.common.base.Charsets
-import shared.config.{BasicAuthDownstreamConfig, ConfigFeatureSwitches, DownstreamConfig, SharedAppConfig}
+import shared.config.{SharedAppConfig, BasicAuthDownstreamConfig, ConfigFeatureSwitches, DownstreamConfig}
 
 import java.util.Base64
 import scala.concurrent.{ExecutionContext, Future}

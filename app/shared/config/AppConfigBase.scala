@@ -26,7 +26,6 @@ trait AppConfigBase {
   private def serviceKeyFor(serviceName: String) = s"microservice.services.$serviceName"
 
   protected def downstreamConfig(serviceName: String): DownstreamConfig = {
-
     val baseUrl = config.baseUrl(serviceName)
 
     val serviceKey = serviceKeyFor(serviceName)
