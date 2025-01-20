@@ -34,7 +34,8 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
                                            service: DeleteCodingOutService,
                                            auditService: AuditService,
                                            cc: ControllerComponents,
-                                           val idGenerator: IdGenerator)(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, appConfig: SaAccountsConfig)
+                                           idGenerator: IdGenerator
+                                          )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "delete-coding-out"
@@ -46,7 +47,7 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, taxYear, appConfig)
+      val validator = validatorFactory.validator(nino, taxYear, saAccountsConfig)
 
       val requestHandler =
         RequestHandler
@@ -59,7 +60,6 @@ class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthServic
             transactionName = "delete-coding-out-underpayments",
             apiVersion = Version(request),
             params = Map("nino" -> nino, "taxYear" -> taxYear)
-
           ))
 
       requestHandler.handleRequest()

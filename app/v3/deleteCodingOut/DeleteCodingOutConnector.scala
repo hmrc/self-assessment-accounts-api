@@ -36,7 +36,6 @@ class DeleteCodingOutConnector @Inject()(val http: HttpClient, val appConfig: Sh
 
     import request._
 
-
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](
         s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"

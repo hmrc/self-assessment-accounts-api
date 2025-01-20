@@ -16,17 +16,16 @@
 
 package v3.retrieveCodingOutStatus
 
+import common.errors.RuleBusinessPartnerNotExistError
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.{Nino, TaxYear}
+import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
-import v3.common.errors.RuleBusinessPartnerNotExistError
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
@@ -39,24 +38,23 @@ class RetrieveCodingOutStatusControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveCodingOutStatusService
-    with MockRetrieveCodingOutStatusValidatorFactory
-    with MockSharedAppConfig {
+    with MockRetrieveCodingOutStatusValidatorFactory {
 
   override val apiVersion: Version = Version3
 
-  private val nino = "AB123456A"
+  override val validNino             = "AB123456A"
   private val taxYear                = "2023-24"
   private val processingDate: String = "2023-12-17T09:30:47Z"
 
   private val requestData = Def1_RetrieveCodingOutStatusRequestData(
-    nino = Nino(validNino),
-    taxYear = TaxYear.currentTaxYear()
-
+    nino = parsedNino,
+    taxYear = TaxYear.fromMtd(taxYear)
   )
 
   private val downstreamResponse: RetrieveCodingOutStatusResponse =
-    Def1_RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = TaxYear.fromMtd(taxYear)
-, optOutIndicator = true)
+    Def1_RetrieveCodingOutStatusResponse(
+      processingDate = processingDate, nino = validNino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true
+    )
 
   "RetrieveCodingOutStatusController" should {
     "return OK" when {

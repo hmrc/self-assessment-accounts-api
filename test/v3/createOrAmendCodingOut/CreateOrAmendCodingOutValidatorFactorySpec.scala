@@ -18,11 +18,10 @@ package v3.createOrAmendCodingOut
 
 import config.MockSaAccountsConfig
 import play.api.libs.json.Json
-import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v3.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
 
-class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockSaAccountsConfig {
+class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2019-20"

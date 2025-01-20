@@ -17,7 +17,7 @@
 package v3.optOutOfCodingOut.def1
 
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError, RuleTaxYearRangeInvalidError, TaxYearFormatError}
+import shared.models.errors._
 import shared.utils.UnitSpec
 import v3.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
 

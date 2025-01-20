@@ -18,10 +18,10 @@ package v3.retrieveChargeHistoryByChargeReference.def1
 
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple2Semigroupal
+import common.resolvers.ResolveChargeReference
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.ResolveNino
 import shared.models.errors.MtdError
-import v3.common.resolvers.ResolveChargeReference
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
@@ -36,7 +36,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceValidator(
       def validate: Validated[Seq[MtdError], RetrieveChargeHistoryByChargeReferenceRequestData] =
         (
           ResolveNino(nino),
-          ResolveChargeReference(None,None)(chargeReference)
+          ResolveChargeReference(chargeReference)
         ).mapN(Def1_RetrieveChargeHistoryByChargeReferenceRequestData)
 
 }

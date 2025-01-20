@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package v3.common.models
+package common.hateoas
 
-import shared.utils.UnitSpec
+object RelType {
+  val SELF = "self"
 
+  val RETRIEVE_TRANSACTION_DETAILS = "retrieve-transaction-details"
+  val RETRIEVE_CHARGE_HISTORY      = "retrieve-charge-history"
 
-class ChargeReferenceSpec extends UnitSpec {
-
-  "toString" should {
-    "return the BusinessId value" in {
-      val chargeReference = ChargeReference("some ref")
-      chargeReference.toString shouldBe "some ref"
-    }
-  }
-
+  val CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS = "create-or-amend-coding-out-underpayments"
+  val DELETE_CODING_OUT_UNDERPAYMENTS          = "delete-coding-out-underpayments"
 }

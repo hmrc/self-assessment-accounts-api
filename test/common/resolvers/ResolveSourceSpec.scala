@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-package v3.common.resolvers
+package common.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
-import common.errors.ChargeReferenceFormatError
+import common.errors.SourceFormatError
+import common.models.MtdSource
 import shared.utils.UnitSpec
-import v3.common.models.ChargeReference
 
-class ResolveChargeReferenceSpec extends UnitSpec {
+class ResolveSourceSpec extends UnitSpec {
 
-  "ResolveChargeReference" should {
+  "ResolveSource" should {
     "return no errors" when {
-      "given a valid Charge Reference" in {
-        val value  = "AB123456789012"
-        val result = ResolveChargeReference(None, None)(value)
-        result shouldBe Valid(ChargeReference(value))
+      "passed a valid source" in {
+        ResolveSource(Some("hmrcHeld")) shouldBe Valid(Some(MtdSource.`hmrcHeld`))
+        ResolveSource(Some("user")) shouldBe Valid(Some(MtdSource.`user`))
+        ResolveSource(Some("latest")) shouldBe Valid(Some(MtdSource.`latest`))
+      }
+
+      "no source is provided" in {
+        ResolveSource(None) shouldBe Valid(None)
       }
     }
 
     "return an error" when {
-      "given an invalid ChargeReference" in {
-        val result = ResolveChargeReference(None, None)("not-a-transaction-id")
-        result shouldBe Invalid(List(ChargeReferenceFormatError))
+      "passed an invalid source" in {
+        ResolveSource(Some("notASource")) shouldBe Invalid(List(SourceFormatError))
       }
     }
   }

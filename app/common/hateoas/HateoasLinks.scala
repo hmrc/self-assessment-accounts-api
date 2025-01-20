@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package v3.hateoas
+package common.hateoas
 
 import shared.config.SharedAppConfig
 import shared.hateoas.Link
 import shared.hateoas.Method.{DELETE, GET, PUT}
-import v3.hateoas.RelType._
+import RelType._
 
 trait HateoasLinks {
 
   // Payments and Liabilities links
 
-  // L3
+  // L1
   def retrieveTransactionDetails(appConfig: SharedAppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/transactions/$transactionId",
@@ -33,7 +33,7 @@ trait HateoasLinks {
       rel = if (isSelf) SELF else RETRIEVE_TRANSACTION_DETAILS
     )
 
-  // L5
+  // L2
   def retrieveChargeHistory(appConfig: SharedAppConfig, nino: String, transactionId: String, isSelf: Boolean): Link =
     Link(
       href = s"/${appConfig.apiGatewayContext}/$nino/charges/$transactionId",

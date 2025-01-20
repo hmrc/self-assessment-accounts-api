@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package config
+package common.models
 
-import play.api.Configuration
-import shared.config.FeatureSwitchesBehaviour
-import shared.utils.UnitSpec
+import play.api.libs.json
+import shared.utils.enums.Enums
 
-class SaAccountsFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[SaAccountsFeatureSwitches] {
-  override def featureSwitches(configuration: Configuration): SaAccountsFeatureSwitches = SaAccountsFeatureSwitches(configuration)
+sealed trait DownstreamSource {
+  def toMtdSource: String
+}
 
-  "supportingAgentsAccessControlEnabled" should {
-    behave like aFeatureSwitchWithKey("supporting-agents-access-control.enabled", _.supportingAgentsAccessControlEnabled)
+object DownstreamSource {
+
+  case object `HMRC HELD` extends DownstreamSource {
+    override def toMtdSource: String = "hmrcHeld"
   }
+
+  case object `CUSTOMER` extends DownstreamSource {
+    override def toMtdSource: String = "user"
+  }
+
+  implicit val format: json.Format[DownstreamSource] = Enums.format[DownstreamSource]
 }

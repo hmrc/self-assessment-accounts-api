@@ -16,8 +16,7 @@
 
 package v3.listPaymentsAndAllocationDetails.def1
 
-import common.errors.{MissingPaymentLotError, MissingPaymentLotItemError, PaymentLotFormatError, PaymentLotItemFormatError}
-import shared.config.MockSharedAppConfig
+import common.errors._
 import shared.models.domain.{DateRange, Nino}
 import shared.models.errors._
 import shared.utils.UnitSpec
@@ -26,7 +25,7 @@ import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsA
 
 import java.time.LocalDate
 
-class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockSharedAppConfig {
+class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino           = "AA999999A"
@@ -139,9 +138,17 @@ class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with M
     }
 
     "a from date that procedes the maximum is supplied" in {
-      val result = validator(validNino, Some(validFromDate), Some("2200-01-21"), None, None).validateAndWrapResult()
+      val result = validator(validNino, Some(validFromDate), Some("2100-01-21"), None, None).validateAndWrapResult()
 
       result shouldBe Left(ErrorWrapper(correlationId, ToDateFormatError))
+    }
+
+    "the same dates are supplied" in {
+      val result = validator(validNino, Some(validFromDate), Some(validFromDate), None, None).validateAndWrapResult()
+
+      result shouldBe Left(
+        ErrorWrapper(correlationId, RangeToDateBeforeFromDateError)
+      )
     }
   }
 

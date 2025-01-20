@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package v3.common.models
+package common.models
 
 import play.api.libs.json.Format
 import shared.utils.enums.Enums
-
 
 sealed trait MtdSource {
   def toDownstreamSource: String

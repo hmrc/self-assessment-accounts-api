@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package v3.retrieveChargeHistoryByTransactionId.def1.models.response
+package common.resolvers
 
-import play.api.libs.json.{Json, OFormat}
+import cats.data.Validated
+import cats.data.Validated.cond
+import shared.controllers.validators.resolvers.ResolverSupport
+import shared.models.errors.{IdFormatError, MtdError}
 
-case class TaxCodeComponentsObject(selfAssessmentUnderpayment: Option[Seq[TaxCodeComponents]],
-                                   payeUnderpayment: Option[Seq[TaxCodeComponents]],
-                                   debt: Option[Seq[TaxCodeComponents]],
-                                   inYearAdjustment: Option[TaxCodeComponents])
+object ResolveParsedNumericId extends ResolverSupport {
 
-object TaxCodeComponentsObject {
-  implicit val format: OFormat[TaxCodeComponentsObject] = Json.format[TaxCodeComponentsObject]
+  def apply(value: BigDecimal, path: String): Validated[Seq[MtdError], BigDecimal] = resolver(path)(value)
+
+  def resolver(path: => String): Resolver[BigDecimal, BigDecimal] = value =>
+    cond(value > 0 && value < 1000000000000000.00 && value.scale <= 0, value, List(IdFormatError.withPath(path)))
 }

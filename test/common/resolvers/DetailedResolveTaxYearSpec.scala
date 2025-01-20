@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.common.resolvers
+package common.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
@@ -24,12 +24,11 @@ import shared.utils.UnitSpec
 
 class DetailedResolveTaxYearSpec extends UnitSpec {
 
-  "validateMinimumTaxYear" when {
+  "DetailedResolveTaxYear" when {
     "a minimum tax year isn't specified" should {
-      val resolveTaxYear = DetailedResolveTaxYear()
-
       "accept a tax year < a reasonable minimum" in {
-        val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2010-11", None, None)
+        val resolveTaxYear = DetailedResolveTaxYear()
+        val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2010-11")
         result shouldBe Valid(TaxYear.fromMtd("2010-11"))
       }
     }
@@ -38,30 +37,27 @@ class DetailedResolveTaxYearSpec extends UnitSpec {
       val resolveTaxYear = DetailedResolveTaxYear(maybeMinimumTaxYear = Some(2019))
 
       "accept a tax year >= the minimum" in {
-        val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2018-19", None, None)
+        val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2018-19")
         result shouldBe Valid(TaxYear.fromMtd("2018-19"))
       }
 
       "reject a tax year < the minimum" in {
-        val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2017-18", None, None)
+        val result: Validated[Seq[MtdError], TaxYear] = resolveTaxYear("2017-18")
         result shouldBe Invalid(List(RuleTaxYearNotSupportedError))
       }
     }
-  }
 
-  "validateIncompleteTaxYear" should {
-
-    "accept an incomplete tax year if allowed" in {
-      val resolveTaxYear = DetailedResolveTaxYear()
-      val result         = resolveTaxYear("2090-91", None, None)
-      result shouldBe Valid(TaxYear.fromMtd("2090-91"))
-    }
-
-    "reject an incomplete tax year if not allowed" in {
-      val resolveTaxYear = DetailedResolveTaxYear(allowIncompleteTaxYear = false)
-      val result         = resolveTaxYear("2090-91", None, None)
-      result shouldBe Invalid(List(RuleTaxYearNotEndedError))
+    Seq(
+      (true, "accept", Valid(TaxYear.fromMtd("2090-91"))),
+      (false, "reject", Invalid(List(RuleTaxYearNotEndedError)))
+    ).foreach { case (allowIncomplete, scenario, expectedResult) =>
+      s"allowIncompleteTaxYear is $allowIncomplete" should {
+        s"$scenario an incomplete tax year" in {
+          val resolveTaxYear = DetailedResolveTaxYear(allowIncompleteTaxYear = allowIncomplete)
+          val result         = resolveTaxYear("2090-91")
+          result shouldBe expectedResult
+        }
+      }
     }
   }
-
 }

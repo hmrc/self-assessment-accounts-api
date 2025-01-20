@@ -24,9 +24,6 @@ trait MockSaAccountsConfig extends MockFactory {
   implicit val mockSaAccountsConfig: SaAccountsConfig = mock[SaAccountsConfig]
 
   object MockedSaAccountsConfig {
-
     def minimumPermittedTaxYear: CallHandler[Int] = (() => mockSaAccountsConfig.minimumPermittedTaxYear).expects()
-
-
   }
 }

@@ -21,13 +21,7 @@ import play.api.Configuration
 import play.api.mvc.Request
 import shared.config.{FeatureSwitches, SharedAppConfig}
 
-
-
-
-
 case class SaAccountsFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
-  def isIfsEnabled: Boolean      = isEnabled("ifs")
-  def isIfsInProduction: Boolean = isReleasedInProduction("ifs")
 
   def isTemporalValidationEnabled(implicit request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension")) {

@@ -16,9 +16,8 @@
 
 package v3.retrieveBalanceAndTransactions.def1
 
-
-import common.errors.{CalculateAccruedInterestFormatError, CustomerPaymentInformationFormatError, DocNumberFormatError, IncludeEstimatedChargesFormatError, IncludeLocksFormatError, OnlyOpenItemsFormatError, RemovePaymentOnAccountFormatError, RuleInconsistentQueryParamsError}
-import shared.models.errors.{BadRequestError, ErrorWrapper, FromDateFormatError, MissingFromDateError, NinoFormatError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
+import common.errors._
+import shared.models.errors._
 import shared.utils.UnitSpec
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
@@ -26,7 +25,8 @@ import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransac
 class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
   private implicit val correlationId: String = "1234"
-  private val validNino    = "AA123456A"
+  private val validNino: String              = "AA123456A"
+
   private def validator(nino: String,
                         docNumber: Option[String],
                         fromDate: Option[String],
@@ -153,10 +153,19 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
       "a to date after 2100 is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, Some(validFromDate), toDate = Some("2110-01-21"), None, None, None, None, None, None).validateAndWrapResult()
+          validator(validNino, None, Some(validFromDate), toDate = Some("2100-01-21"), None, None, None, None, None, None).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, ToDateFormatError)
+        )
+      }
+
+      "the same dates are supplied" in {
+        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+          validator(validNino, None, Some(validFromDate), toDate = Some(validFromDate), None, None, None, None, None, None).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RangeToDateBeforeFromDateError)
         )
       }
 

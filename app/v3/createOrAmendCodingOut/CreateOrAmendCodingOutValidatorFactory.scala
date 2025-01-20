@@ -16,7 +16,6 @@
 
 package v3.createOrAmendCodingOut
 
-
 import config.SaAccountsConfig
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator

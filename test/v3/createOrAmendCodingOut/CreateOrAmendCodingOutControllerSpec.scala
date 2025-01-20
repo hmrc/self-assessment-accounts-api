@@ -20,19 +20,16 @@ import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas
 import shared.hateoas.Method.{DELETE, GET, PUT}
-import shared.hateoas.{HateoasWrapper, MockHateoasFactory}
+import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.{Nino, TaxYear}
+import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version2}
-import shared.services.MockAuditService
+import shared.routing.{Version, Version3}
 import v3.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
-import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent, TaxCodeComponents}
+import v3.createOrAmendCodingOut.def1.model.request._
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -43,22 +40,20 @@ class CreateOrAmendCodingOutControllerSpec
     with ControllerTestRunner
     with MockCreateOrAmendCodingOutService
     with MockCreateOrAmendCodingOutValidatorFactory
-    with MockAuditService
-    with MockSharedAppConfig
     with MockHateoasFactory
-    with MockSaAccountsConfig{
+    with MockSaAccountsConfig {
 
-  override val apiVersion: Version = Version2
+  override val apiVersion: Version = Version3
 
   private val taxYear = "2019-20"
 
   private val testHateoasLinks = List(
-    hateoas.Link(
+    Link(
       href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
       method = PUT,
       rel = "create-or-amend-coding-out-underpayments"),
-    hateoas.Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = GET, rel = "self"),
-    hateoas.Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = DELETE, rel = "delete-coding-out-underpayments")
+    Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = GET, rel = "self"),
+    Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = DELETE, rel = "delete-coding-out-underpayments")
   )
 
   private val requestJson = Json.parse(
@@ -98,8 +93,7 @@ class CreateOrAmendCodingOutControllerSpec
     inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
   ))
 
-  private val requestData = Def1_CreateOrAmendCodingOutRequestData(Nino(validNino), TaxYear.currentTaxYear()
-, requestBody)
+  private val requestData = Def1_CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear), requestBody)
 
   val mtdResponseJson: JsValue =
     Json.parse(s"""{

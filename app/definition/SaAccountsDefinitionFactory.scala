@@ -16,7 +16,6 @@
 
 package definition
 
-
 import shared.config.SharedAppConfig
 import shared.definition._
 import shared.routing.Version3
@@ -34,7 +33,6 @@ class SaAccountsDefinitionFactory @Inject()(protected val appConfig: SharedAppCo
         context = appConfig.apiGatewayContext,
         categories = List("INCOME_TAX_MTD"),
         versions = List(
-
           APIVersion(
             version = Version3,
             status = buildAPIStatus(Version3),
@@ -44,6 +42,4 @@ class SaAccountsDefinitionFactory @Inject()(protected val appConfig: SharedAppCo
         requiresTrust = None
       )
     )
-
-
 }

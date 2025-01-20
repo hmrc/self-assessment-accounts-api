@@ -16,11 +16,11 @@
 
 package v3.retrieveCodingOutStatus
 
+import common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.{DownstreamErrorCode, DownstreamErrors, ErrorWrapper, InternalError, MtdError, NinoFormatError}
+import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
-import v3.common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData

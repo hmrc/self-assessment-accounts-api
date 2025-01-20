@@ -16,9 +16,7 @@
 
 package v3.listPaymentsAndAllocationDetails
 
-import shared.config.MockSharedAppConfig
 import shared.connectors.ConnectorSpec
-import shared.mocks.MockHttpClient
 import shared.models.domain.{DateRange, Nino}
 import shared.models.outcomes.ResponseWrapper
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
@@ -44,7 +42,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       Some(paymentLot),
       Some(paymentLotItem))
 
-  trait Test extends MockHttpClient with MockSharedAppConfig { _: ConnectorTest =>
+  trait Test { _: ConnectorTest =>
 
     val connector: ListPaymentsAndAllocationDetailsConnector =
       new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)

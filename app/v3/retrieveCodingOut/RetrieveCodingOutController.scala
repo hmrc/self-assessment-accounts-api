@@ -16,6 +16,7 @@
 
 package v3.retrieveCodingOut
 
+import config.SaAccountsConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
@@ -34,7 +35,8 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              service: RetrieveCodingOutService,
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
-                                             idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+                                             idGenerator: IdGenerator
+                                            )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAppConfig: SaAccountsConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "retrieve-coding-out"
@@ -49,7 +51,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, taxYear, source, appConfig)
+      val validator = validatorFactory.validator(nino, taxYear, source, saAppConfig)
 
       val requestHandler =
         RequestHandler

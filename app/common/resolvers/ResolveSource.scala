@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-package v3.common.resolvers
+package common.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import common.errors.ChargeReferenceFormatError
+import common.errors.SourceFormatError
+import common.models.MtdSource
 import shared.controllers.validators.resolvers.ResolverSupport
 import shared.models.errors.MtdError
-import v3.common.models.ChargeReference
 
-case class ResolveChargeReference(error: Option[MtdError], path: Option[String]) extends ResolverSupport {
+object ResolveSource extends ResolverSupport {
 
-  private val chargeReferenceRegex = "^[A-Za-z]{2}[0-9]{12}$".r
+  def apply(value: Option[String]): Validated[Seq[MtdError], Option[MtdSource]] = resolver.resolveOptionally(value)
 
-  def apply(value: String): Validated[Seq[MtdError], ChargeReference] = resolver(value)
-
-  val resolver: Resolver[String, ChargeReference] = value => {
-    if (chargeReferenceRegex.matches(value))
-      Valid(ChargeReference(value))
-    else
-      Invalid(List(error.getOrElse(ChargeReferenceFormatError).maybeWithExtraPath(path)))
-  }
-
-
+  val resolver: Resolver[String, MtdSource] = value =>
+    MtdSource.parser
+      .lift(value)
+      .map(parsed => Valid(parsed))
+      .getOrElse(Invalid(List(SourceFormatError)))
 }
-

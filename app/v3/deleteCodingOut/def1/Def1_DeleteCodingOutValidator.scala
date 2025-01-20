@@ -20,10 +20,9 @@ import cats.data.Validated
 import cats.implicits.catsSyntaxTuple2Semigroupal
 import config.SaAccountsConfig
 import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.ResolveNino
-
+import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
+import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
-import v3.common.resolvers.DetailedResolveTaxYear
 import v3.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
@@ -32,13 +31,12 @@ import javax.inject.Singleton
 @Singleton
 class Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: SaAccountsConfig) extends Validator[DeleteCodingOutRequestData] {
 
-  private val resolveTaxYear = {
-    DetailedResolveTaxYear( maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
-  }
+  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.ending(appConfig.minimumPermittedTaxYear))
+
   def validate: Validated[Seq[MtdError], DeleteCodingOutRequestData] =
     (
       ResolveNino(nino),
-      resolveTaxYear(taxYear, None, None)
+      resolveTaxYear(taxYear)
     ).mapN(Def1_DeleteCodingOutRequestData)
 
 }

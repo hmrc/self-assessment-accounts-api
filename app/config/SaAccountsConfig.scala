@@ -16,24 +16,11 @@
 
 package config
 
-import play.api.Configuration
-import shared.config.{AppConfigBase, FeatureSwitches}
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
 
-
 @Singleton
-class SaAccountsConfig @Inject() (val config: ServicesConfig, val configuration: Configuration) extends AppConfigBase {
-
-  def featureSwitchConfig: Configuration = configuration.getOptional[Configuration](s"feature-switch").getOrElse(Configuration.empty)
-
-  def featureSwitches: FeatureSwitches = SaAccountsFeatureSwitches(featureSwitchConfig)
-
-
-
-  def minimumPermittedTaxYear: Int    = config.getInt("minimumPermittedTaxYear")
-
-
+class SaAccountsConfig @Inject() (val config: ServicesConfig) {
+  def minimumPermittedTaxYear: Int = config.getInt("minimumPermittedTaxYear")
 }
-

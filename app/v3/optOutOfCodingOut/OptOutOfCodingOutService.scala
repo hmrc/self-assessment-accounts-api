@@ -17,10 +17,10 @@
 package v3.optOutOfCodingOut
 
 import cats.implicits._
+import common.errors._
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
-import v3.common.errors._
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 

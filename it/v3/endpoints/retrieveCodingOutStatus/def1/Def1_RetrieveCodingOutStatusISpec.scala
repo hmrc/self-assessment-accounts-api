@@ -17,6 +17,7 @@
 package v3.endpoints.retrieveCodingOutStatus.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -25,7 +26,6 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v3.common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v3.retrieveCodingOutStatus.model.responses.ResponseFixture.{downstreamResponseJson, mtdResponseJson}
 
 class Def1_RetrieveCodingOutStatusISpec extends IntegrationBaseSpec {

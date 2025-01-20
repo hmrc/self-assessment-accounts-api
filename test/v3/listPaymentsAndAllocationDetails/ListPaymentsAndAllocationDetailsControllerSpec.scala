@@ -19,12 +19,11 @@ package v3.listPaymentsAndAllocationDetails
 import common.errors.PaymentLotFormatError
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.{DateRange, Nino}
+import shared.models.domain.DateRange
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version2}
+import shared.routing.{Version, Version3}
 import v3.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.{mtdResponseJson, responseObject}
@@ -36,15 +35,14 @@ import scala.concurrent.Future
 class ListPaymentsAndAllocationDetailsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockSharedAppConfig
     with MockListPaymentsAndAllocationDetailsValidatorFactory
     with MockListPaymentsAndAllocationDetailsService {
 
-  override val apiVersion: Version = Version2
+  override val apiVersion: Version = Version3
 
   private val requestData =
     Def1_ListPaymentsAndAllocationDetailsRequestData(
-      Nino(validNino),
+      parsedNino,
       Some(DateRange(LocalDate.parse("2022-08-15"), LocalDate.parse("2022-09-15"))),
       Some("paymentLot"),
       Some("paymentLotItem"))

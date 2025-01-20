@@ -16,14 +16,13 @@
 
 package v3.retrieveCodingOutStatus.def1
 
-import shared.config.MockSharedAppConfig
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors._
 import shared.utils.UnitSpec
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 
-class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockSharedAppConfig {
+class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -34,12 +33,9 @@ class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockShared
 
   private def validator(nino: String, taxYear: String) = new Def1_RetrieveCodingOutStatusValidator(nino, taxYear)
 
-
-
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request" in {
-
 
         val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
@@ -51,7 +47,6 @@ class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockShared
     "should return a single error" when {
       "an invalid nino is supplied" in {
 
-
         val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator("invalidNino", validTaxYear).validateAndWrapResult()
 
@@ -60,7 +55,6 @@ class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockShared
 
       "an incorrectly formatted taxYear is supplied" in {
 
-
         val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, "202324").validateAndWrapResult()
 
@@ -68,7 +62,6 @@ class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockShared
       }
 
       "an invalid tax year range is supplied" in {
-
 
         val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, "2022-24").validateAndWrapResult()
@@ -80,7 +73,6 @@ class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec with MockShared
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {
-
 
         val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator("invalidNino", "invalidTaxYear").validateAndWrapResult()

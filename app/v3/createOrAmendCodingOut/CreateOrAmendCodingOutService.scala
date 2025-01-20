@@ -29,6 +29,13 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends BaseService {
 
+  def amend(request: CreateOrAmendCodingOutRequestData)(implicit
+                                                        ctx: RequestContext,
+                                                        ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+    connector
+      .amendCodingOut(request)
+      .map(_.leftMap(mapDownstreamErrors(errorMap)))
+  }
 
   private val errorMap = {
     val errors = Map(
@@ -48,14 +55,6 @@ class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutC
     )
 
     errors ++ extraTysErrors
-  }
-
-  def amend(request: CreateOrAmendCodingOutRequestData)(implicit
-                                                        ctx: RequestContext,
-                                                        ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
-    connector
-      .amendCodingOut(request)
-      .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
 }

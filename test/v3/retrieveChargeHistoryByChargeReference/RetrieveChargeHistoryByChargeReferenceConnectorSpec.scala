@@ -16,10 +16,10 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
+import common.models.ChargeReference
 import shared.connectors.ConnectorSpec
 import shared.models.domain.Nino
 import shared.models.outcomes.ResponseWrapper
-import v3.common.models.ChargeReference
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
@@ -53,9 +53,6 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
 
     val connector: RetrieveChargeHistoryByChargeReferenceConnector =
       new RetrieveChargeHistoryByChargeReferenceConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
-
-
-
   }
 
   "RetrieveChargeHistoryConnector" when {
@@ -66,15 +63,6 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
           Def1_RetrieveChargeHistoryByChargeReferenceRequestData(Nino(nino), ChargeReference(chargeReference))
         private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
-//        MockedHttpClient
-//          .get(
-//            s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-//            dummyHeaderCarrierConfig,
-//            parameters = List("chargeReference" -> chargeReference),
-//            ???,
-//            List("AnotherHeader" -> "HeaderValue")
-//          )
-//          .returns(Future.successful(outcome))
         willGet(
           url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
           parameters = List("chargeReference" -> chargeReference)

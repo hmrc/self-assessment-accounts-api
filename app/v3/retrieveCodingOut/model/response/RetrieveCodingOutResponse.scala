@@ -16,11 +16,11 @@
 
 package v3.retrieveCodingOut.model.response
 
+import common.hateoas.HateoasLinks
 import play.api.libs.json.{JsObject, Json, OWrites}
 import shared.config.SharedAppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.utils.JsonWritesUtil
-import v3.hateoas.HateoasLinks
 import v3.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 
 trait RetrieveCodingOutResponse

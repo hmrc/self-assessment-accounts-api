@@ -18,14 +18,12 @@ package v3.createOrAmendCodingOut.def1
 
 import config.MockSaAccountsConfig
 import play.api.libs.json.{JsObject, JsPath, JsValue, Json}
-import shared.config.MockSharedAppConfig
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors._
-import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponents}
 
-class Def1_CreateOrAmendCodingOutValidatorSpec extends UnitSpec with JsonErrorValidators with MockSharedAppConfig with MockSaAccountsConfig {
+class Def1_CreateOrAmendCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
 
   private implicit val correlationId: String = "1234"
 

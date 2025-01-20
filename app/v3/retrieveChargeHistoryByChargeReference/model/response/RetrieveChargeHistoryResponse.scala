@@ -16,16 +16,15 @@
 
 package v3.retrieveChargeHistoryByChargeReference.model.response
 
-
+import common.hateoas.HateoasLinks
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import shared.config.SharedAppConfig
 import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
-import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse.{retrieveChargeHistory, retrieveTransactionDetails}
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
 
-object RetrieveChargeHistoryResponse {
+object RetrieveChargeHistoryResponse extends HateoasLinks {
 
   implicit val reads: Reads[RetrieveChargeHistoryResponse] =
     (JsPath \ "chargeHistoryDetails")

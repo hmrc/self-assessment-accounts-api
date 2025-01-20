@@ -52,15 +52,11 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
 
     val connector: RetrieveChargeHistoryByTransactionIdConnector =
       new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
-
-
-
   }
 
   "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
       "return a valid response" in new IfsTest with Test {
-
 
         val request: RetrieveChargeHistoryByTransactionIdRequestData =
           Def1_RetrieveChargeHistoryByTransactionIdRequestData(Nino(nino), TransactionId(transactionId))

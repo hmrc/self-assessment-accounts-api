@@ -14,30 +14,24 @@
  * limitations under the License.
  */
 
-package v3.common.resolvers
+package common.models
 
-import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
-import shared.controllers.validators.resolvers.ResolverSupport
-import shared.models.errors.MtdError
+import common.models.DownstreamSource.{`CUSTOMER`, `HMRC HELD`}
+import shared.utils.UnitSpec
+import shared.utils.enums.EnumJsonSpecSupport
 
-import scala.util.matching.Regex
+class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {
 
+  testRoundTrip[DownstreamSource](
+    ("HMRC HELD", `HMRC HELD`),
+    ("CUSTOMER", `CUSTOMER`)
+  )
 
-class ResolveStringPattern(regexFormat: Regex, error: MtdError) extends ResolverSupport {
-
-
-  def apply(value: Option[String]): Validated[Seq[MtdError], Option[String]] = resolver.resolveOptionally(value)
-
-
-
-  val resolver: Resolver[String, String] = value =>
-    if (regexFormat.matches(value)) {
-      Valid(value)
-    } else {
-      Invalid(List(error))
+  "toMtdSource" should {
+    "return the correct identifier value" in {
+      DownstreamSource.`HMRC HELD`.toMtdSource shouldBe "hmrcHeld"
+      DownstreamSource.`CUSTOMER`.toMtdSource shouldBe "user"
     }
+  }
 
 }
-
-

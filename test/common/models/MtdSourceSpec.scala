@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package v3.common.models
+package common.models
 
+import common.models.MtdSource.{hmrcHeld, latest, user}
 import shared.utils.UnitSpec
 import shared.utils.enums.EnumJsonSpecSupport
-import v3.common.models.DownstreamSource._
 
-class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {
+class MtdSourceSpec extends UnitSpec with EnumJsonSpecSupport {
 
-  testRoundTrip[DownstreamSource](
-    ("HMRC HELD", `HMRC HELD`),
-    ("CUSTOMER", `CUSTOMER`)
+  testRoundTrip[MtdSource](
+    ("hmrcHeld", hmrcHeld),
+    ("user", user),
+    ("latest", latest)
   )
 
   "toMtdSource" should {
     "return the correct identifier value" in {
-      DownstreamSource.`HMRC HELD`.toMtdSource shouldBe "hmrcHeld"
-      DownstreamSource.`CUSTOMER`.toMtdSource shouldBe "user"
+      MtdSource.hmrcHeld.toDownstreamSource shouldBe "HMRC-HELD"
+      MtdSource.user.toDownstreamSource shouldBe "CUSTOMER"
+      MtdSource.latest.toDownstreamSource shouldBe "LATEST"
     }
   }
 

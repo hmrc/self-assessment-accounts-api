@@ -18,28 +18,27 @@ package v3.retrieveCodingOut.def1
 
 import cats.data.Validated
 import cats.implicits._
-import shared.config.SharedAppConfig
+import common.resolvers.ResolveSource
+import config.SaAccountsConfig
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear
 import shared.models.errors.MtdError
-import v3.common.resolvers
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
 import javax.inject.Singleton
 
-
 @Singleton
-class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String], appConfig: SharedAppConfig)
+class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String], appConfig: SaAccountsConfig)
   extends Validator[RetrieveCodingOutRequestData] {
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.fromMtd("2019-20"))
+  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.ending(appConfig.minimumPermittedTaxYear))
 
-      def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] =
-        (
-          ResolveNino(nino),
-          resolveTaxYear(taxYear),
-          resolvers.ResolveSource(source)
-        ).mapN(Def1_RetrieveCodingOutRequestData)
+  def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] =
+    (
+      ResolveNino(nino),
+      resolveTaxYear(taxYear),
+      ResolveSource(source)
+    ).mapN(Def1_RetrieveCodingOutRequestData)
 }

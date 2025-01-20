@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package v3.common.models
+package common.utils
 
-import play.api.libs.json
-import shared.utils.enums.Enums
+import cats.data.Validated
+import cats.data.Validated.cond
+import shared.models.domain.DateRange
+import shared.models.errors.{MtdError, RangeToDateBeforeFromDateError}
 
-sealed trait DownstreamSource {
-  def toMtdSource: String
-}
+object DateValidator {
 
-object DownstreamSource {
-
-  case object `HMRC HELD` extends DownstreamSource {
-    override def toMtdSource: String = "hmrcHeld"
-  }
-
-  case object `CUSTOMER` extends DownstreamSource {
-    override def toMtdSource: String = "user"
-  }
-
-  implicit val format: json.Format[DownstreamSource] = Enums.format[DownstreamSource]
+  def validateSameDates(parsedRange: DateRange): Validated[Seq[MtdError], DateRange] =
+    cond(!parsedRange.startDate.isEqual(parsedRange.endDate), parsedRange, List(RangeToDateBeforeFromDateError))
 }

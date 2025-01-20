@@ -17,6 +17,7 @@
 package v3.endpoints.optInToCodingOut.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
@@ -25,7 +26,6 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v3.common.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 
 class Def1_OptInToCodingOutISpec extends IntegrationBaseSpec {
 
@@ -37,7 +37,6 @@ class Def1_OptInToCodingOutISpec extends IntegrationBaseSpec {
           AuditStub.audit()
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-
           DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUrl, NO_CONTENT)
         }
 

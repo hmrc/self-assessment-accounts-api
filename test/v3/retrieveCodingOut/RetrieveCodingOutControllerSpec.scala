@@ -17,18 +17,18 @@
 package v3.retrieveCodingOut
 
 import common.errors.CodingOutNotFoundError
+import common.models.MtdSource
+import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.{DELETE, GET, PUT}
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import shared.models.domain.{Nino, TaxYear}
+import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version2}
-import v3.common.models.MtdSource
-import v3.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
+import shared.routing.{Version, Version3}
+import common.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import v3.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
 import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.mtdResponseWithHateoas
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
@@ -43,21 +43,18 @@ class RetrieveCodingOutControllerSpec
     with ControllerTestRunner
     with MockRetrieveCodingOutService
     with MockRetrieveCodingOutValidatorFactory
-    with MockSharedAppConfig
+    with MockSaAccountsConfig
     with MockHateoasFactory {
 
-  override val apiVersion: Version = Version2
+  override val apiVersion: Version = Version3
   private val taxYear              = "2021-22"
   private val source               = "hmrcHeld"
 
   private val requestData = Def1_RetrieveCodingOutRequestData(
-    nino = Nino(validNino),
-    taxYear = TaxYear.currentTaxYear()
-,
+    nino = parsedNino,
+    taxYear = TaxYear.fromMtd(taxYear),
     source = Some(MtdSource.parser(source))
   )
-
-
 
   private val createOrAmendCodingOutLink = Link(
     href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
@@ -71,7 +68,7 @@ class RetrieveCodingOutControllerSpec
     rel = SELF
   )
 
-  private val deleteCodingOutLink= Link(
+  private val deleteCodingOutLink = Link(
     href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
     method = DELETE,
     rel = DELETE_CODING_OUT_UNDERPAYMENTS

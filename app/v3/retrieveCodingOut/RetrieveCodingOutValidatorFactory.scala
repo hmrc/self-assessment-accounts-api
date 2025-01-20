@@ -16,7 +16,7 @@
 
 package v3.retrieveCodingOut
 
-import shared.config.SharedAppConfig
+import config.SaAccountsConfig
 import shared.controllers.validators.Validator
 import v3.retrieveCodingOut.RetrieveCodingOutSchema.Def1
 import v3.retrieveCodingOut.def1.Def1_RetrieveCodingOutValidator
@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class RetrieveCodingOutValidatorFactory @Inject() {
 
-  def validator(nino: String, taxYear: String, source: Option[String], appConfig: SharedAppConfig): Validator[RetrieveCodingOutRequestData] = {
+  def validator(nino: String, taxYear: String, source: Option[String], appConfig: SaAccountsConfig): Validator[RetrieveCodingOutRequestData] = {
 
     val schema = RetrieveCodingOutSchema.schemaFor(taxYear)
 

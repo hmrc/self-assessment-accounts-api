@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
-package v3.common.models
+package common.resolvers
 
-case class ChargeReference(value: String) {
-  override def toString: String = value
+import cats.data.Validated
+import cats.data.Validated.cond
+import shared.controllers.validators.resolvers.ResolverSupport
+import shared.models.errors.MtdError
+
+import scala.util.matching.Regex
+
+class ResolveStringPattern(regexFormat: Regex, error: MtdError) extends ResolverSupport {
+
+  def apply(value: Option[String]): Validated[Seq[MtdError], Option[String]] = resolver.resolveOptionally(value)
+
+  val resolver: Resolver[String, String] = value => cond(regexFormat.matches(value), value, List(error))
 }

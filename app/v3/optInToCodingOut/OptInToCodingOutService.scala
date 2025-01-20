@@ -17,10 +17,10 @@
 package v3.optInToCodingOut
 
 import cats.implicits._
+import common.errors._
 import shared.controllers.RequestContext
-import shared.models.errors.{MtdError, _}
+import shared.models.errors._
 import shared.services.{BaseService, ServiceOutcome}
-import v3.common.errors._
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}

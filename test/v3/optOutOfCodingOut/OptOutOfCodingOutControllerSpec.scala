@@ -16,17 +16,16 @@
 
 package v3.optOutOfCodingOut
 
+import common.errors.RuleBusinessPartnerNotExistError
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.{Nino, TaxYear}
+import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
-import v3.common.errors.RuleBusinessPartnerNotExistError
 import v3.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
 import v3.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
@@ -38,8 +37,8 @@ class OptOutOfCodingOutControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockOptOutOfCodingOutService
-    with MockOptOutOfCodingOutValidatorFactory
-    with MockSharedAppConfig {
+    with MockOptOutOfCodingOutValidatorFactory {
+
   override val apiVersion: Version = Version3
 
   "OptOutOfCodingOutController" should {
@@ -76,12 +75,12 @@ class OptOutOfCodingOutControllerSpec
     private val taxYear = "2023-24"
 
     protected val requestData: OptOutOfCodingOutRequestData = Def1_OptOutOfCodingOutRequestData(
-      nino = Nino(validNino),
-      taxYear = TaxYear.currentTaxYear()
+      nino = parsedNino,
+      taxYear = TaxYear.fromMtd(taxYear)
 
     )
 
-    protected val response = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
+    protected val response: Def1_OptOutOfCodingOutResponse = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
     override protected val controller = new OptOutOfCodingOutController(
       authService = mockEnrolmentsAuthService,

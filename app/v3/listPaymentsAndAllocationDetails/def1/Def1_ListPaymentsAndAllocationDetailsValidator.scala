@@ -19,11 +19,12 @@ package v3.listPaymentsAndAllocationDetails.def1
 import cats.data.Validated
 import cats.data.Validated._
 import cats.implicits._
-import common.errors.{MissingPaymentLotError, MissingPaymentLotItemError, PaymentLotFormatError, PaymentLotItemFormatError}
+import common.errors._
+import common.resolvers.ResolveStringPattern
+import common.utils.DateValidator.validateSameDates
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
-import shared.models.errors.{FromDateFormatError, MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
-import v3.common.resolvers.ResolveStringPattern
+import shared.models.errors._
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 
@@ -38,7 +39,7 @@ class Def1_ListPaymentsAndAllocationDetailsValidator(nino: String,
     extends Validator[ListPaymentsAndAllocationDetailsRequestData] {
 
   private val minYear = 1900
-  private val maxYear = 2100
+  private val maxYear = 2099
 
   private val resolvePaymentLot     = new ResolveStringPattern("^[0-9A-Za-z]{1,12}".r, PaymentLotFormatError)
   private val resolvePaymentLotItem = new ResolveStringPattern("^[0-9A-Za-z]{1,6}".r, PaymentLotItemFormatError)
@@ -55,7 +56,7 @@ class Def1_ListPaymentsAndAllocationDetailsValidator(nino: String,
         ResolveNino(nino),
         maybeFromAndTo
           .map { case (from, to) =>
-            resolveDateRange(from -> to)
+            resolveDateRange(from -> to).andThen(validateSameDates)
               .map(Some(_))
           }
           .getOrElse(Valid(None)),

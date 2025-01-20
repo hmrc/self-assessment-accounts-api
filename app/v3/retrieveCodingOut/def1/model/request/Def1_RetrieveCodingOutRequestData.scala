@@ -16,8 +16,8 @@
 
 package v3.retrieveCodingOut.def1.model.request
 
+import common.models.MtdSource
 import shared.models.domain.{Nino, TaxYear}
-import v3.common.models.MtdSource
 import v3.retrieveCodingOut.RetrieveCodingOutSchema
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 

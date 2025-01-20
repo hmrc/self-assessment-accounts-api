@@ -25,7 +25,7 @@ object RequestFixture {
   val validDocNumber = "1234"
   val validFromDate  = "2022-08-15"
   val validToDate    = "2022-09-15"
-   val validNino    = "AA123456A"
+  val validNino      = "AA123456A"
   val requestDocNumber: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
     nino = Nino(validNino),
     docNumber = Some(validDocNumber),

@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package v3.common.resolvers
+package common.resolvers
 
 import cats.data.Validated
-import cats.data.Validated.{Invalid, Valid}
+import cats.data.Validated.cond
+import common.errors.ChargeReferenceFormatError
+import common.models.ChargeReference
 import shared.controllers.validators.resolvers.ResolverSupport
-import shared.models.errors.{IdFormatError, MtdError}
+import shared.models.errors.MtdError
 
-case class ResolveParsedNumericId() extends ResolverSupport {
+object ResolveChargeReference extends ResolverSupport {
 
-  def apply(value: BigDecimal, path: String): Validated[Seq[MtdError], BigDecimal] = resolver(path)(value)
+  private val chargeReferenceRegex = "^[A-Za-z]{2}[0-9]{12}$".r
 
-  def resolver(path: => String): Resolver[BigDecimal, BigDecimal] = value =>{
-    if (value > 0 && value < 1000000000000000.00 && value.scale <= 0)
-      Valid(value)
-    else
-      Invalid(List(IdFormatError.withPath(path)))
-  }
+  def apply(value: String): Validated[Seq[MtdError], ChargeReference] = resolver(value)
 
+  val resolver: Resolver[String, ChargeReference] = value =>
+    cond(
+      chargeReferenceRegex.matches(value),
+      ChargeReference(value),
+      List(ChargeReferenceFormatError)
+    )
 }

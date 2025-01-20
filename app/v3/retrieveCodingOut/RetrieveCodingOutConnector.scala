@@ -21,7 +21,6 @@ import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
-import v3.retrieveCodingOut.RetrieveCodingOutSchema.Def1.DownstreamResp
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
@@ -37,6 +36,7 @@ class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig:
       correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
 
     import request._
+    import schema._
 
     val queryParams = Seq("view" -> source).collect { case (key, Some(value)) =>
       key -> value.toDownstreamSource

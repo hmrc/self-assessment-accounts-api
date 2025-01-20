@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.common.resolvers
+package common.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
 import shared.models.errors.TaxYearFormatError
@@ -25,22 +25,23 @@ class ResolveStringPatternSpec extends UnitSpec {
   private val resolveTaxYearPattern = new ResolveStringPattern("20[1-9][0-9]-[1-9][0-9]".r, TaxYearFormatError)
 
   "ResolveStringPattern" should {
-    "return the input value" when {
+    "return a valid result" when {
       "given a matching string" in {
-        val result = resolveTaxYearPattern(Option("2024-25"))
+        val result = resolveTaxYearPattern(Some("2024-25"))
         result shouldBe Valid(Some("2024-25"))
       }
 
+      "no value is provided" in {
+        val result = resolveTaxYearPattern(None)
+        result shouldBe Valid(None)
+      }
     }
 
     "return the correct error" when {
       "given a non-matching string" in {
-        val result = resolveTaxYearPattern(Option("does-not-match-regex"))
+        val result = resolveTaxYearPattern(Some("does-not-match-regex"))
         result shouldBe Invalid(List(TaxYearFormatError))
       }
-
     }
-
   }
-
 }

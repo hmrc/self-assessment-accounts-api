@@ -25,7 +25,6 @@ import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 
-
 class Def1_CreateOrAmendCodingOutISpec extends IntegrationBaseSpec {
 
   private trait Test {

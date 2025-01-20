@@ -22,10 +22,10 @@ import v3.deleteCodingOut.DeleteCodingOutSchema.Def1
 import v3.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Singleton
 
 @Singleton
-class DeleteCodingOutValidatorFactory @Inject() {
+class DeleteCodingOutValidatorFactory {
 
   def validator(nino: String, taxYear: String, appConfig: SaAccountsConfig): Validator[DeleteCodingOutRequestData] = {
 

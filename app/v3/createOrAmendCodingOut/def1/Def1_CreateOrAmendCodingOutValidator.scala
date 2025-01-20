@@ -19,12 +19,12 @@ package v3.createOrAmendCodingOut.def1
 import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits._
+import common.resolvers.{DetailedResolveTaxYear, ResolveParsedNumericId}
 import config.SaAccountsConfig
 import play.api.libs.json.JsValue
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers._
 import shared.models.errors.MtdError
-import v3.common.resolvers.{DetailedResolveTaxYear, ResolveParsedNumericId}
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent}
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
@@ -39,18 +39,14 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
   private val resolveJson = new ResolveNonEmptyJsonObject[Def1_CreateOrAmendCodingOutRequestBody]()
 
   private val validatePayeUnderpayments = ResolveParsedNumber()
-  private val validatePayeUnderpaymentsID = ResolveParsedNumericId()
 
-
-  private val resolveTaxYear = {
+  private val resolveTaxYear =
     DetailedResolveTaxYear(allowIncompleteTaxYear = !temporalValidationEnabled, maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
-  }
-
 
   def validate: Validated[Seq[MtdError], Def1_CreateOrAmendCodingOutRequestData] =
     (
       ResolveNino(nino),
-      resolveTaxYear(taxYear, None, None),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def1_CreateOrAmendCodingOutRequestData) andThen validatedParsedBody
 
@@ -62,9 +58,7 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
           components.zipWithIndex.traverse_ { case (component, i) =>
             combine(
               validatePayeUnderpayments(component.amount, path = s"/taxCodeComponents/$subPath/$i/amount"),
-              validatePayeUnderpaymentsID(component.id, path = s"/taxCodeComponents/$subPath/$i/id")
-
-
+              ResolveParsedNumericId(component.id, path = s"/taxCodeComponents/$subPath/$i/id")
             )
           }
 
@@ -77,7 +71,7 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
         case Some(component) =>
           combine(
             validatePayeUnderpayments(component.amount, path = s"/taxCodeComponents/$subPath/amount"),
-            validatePayeUnderpaymentsID(component.id, path = s"/taxCodeComponents/$subPath/id")
+            ResolveParsedNumericId(component.id, path = s"/taxCodeComponents/$subPath/id")
           )
 
         case None =>

@@ -17,15 +17,15 @@
 package v3.retrieveCodingOut.def1
 
 import common.errors.SourceFormatError
-import shared.config.MockSharedAppConfig
+import common.models.MtdSource
+import config.MockSaAccountsConfig
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors._
 import shared.utils.UnitSpec
-import v3.common.models.MtdSource
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
-class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppConfig {
+class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -36,11 +36,15 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppCon
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
   private val parsedSource  = Some(MtdSource.parser("hmrcHeld"))
 
-  private def validator(nino: String, taxYear: String, source: Option[String]) = new Def1_RetrieveCodingOutValidator(nino, taxYear, source, mockSharedAppConfig)
+  private def validator(nino: String, taxYear: String, source: Option[String]) =
+    new Def1_RetrieveCodingOutValidator(nino, taxYear, source, mockSaAccountsConfig)
+
+  private def setupMocks(): Unit = (MockedSaAccountsConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
 
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request" in {
+        setupMocks()
 
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, validTaxYear, validSource).validateAndWrapResult()
@@ -51,7 +55,7 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppCon
 
     "should return a single error" when {
       "an invalid nino is supplied" in {
-
+        setupMocks()
 
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator("invalidNino", validTaxYear, validSource).validateAndWrapResult()
@@ -60,7 +64,7 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppCon
       }
 
       "an incorrectly formatted taxYear is supplied" in {
-
+        setupMocks()
 
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, "202122", validSource).validateAndWrapResult()
@@ -69,7 +73,7 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppCon
       }
 
       "an invalid tax year range is supplied" in {
-
+        setupMocks()
 
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, "2020-22", validSource).validateAndWrapResult()
@@ -78,16 +82,16 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppCon
       }
 
       "an invalid tax year, before the minimum, is supplied" in {
-
+        setupMocks()
 
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
-          validator(validNino, "2017-18", validSource).validateAndWrapResult()
+          validator(validNino, "2020-21", validSource).validateAndWrapResult()
 
         result shouldBe Left(ErrorWrapper(correlationId, RuleTaxYearNotSupportedError))
       }
 
       "invalid source is supplied" in {
-
+        setupMocks()
 
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, validTaxYear, Some("badSource")).validateAndWrapResult()
@@ -98,7 +102,7 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSharedAppCon
 
     "return multiple errors" when {
       "request supplied has multiple errors" in {
-
+        setupMocks()
 
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator("invalidNino", "invalidTaxYear", Some("badSource")).validateAndWrapResult()

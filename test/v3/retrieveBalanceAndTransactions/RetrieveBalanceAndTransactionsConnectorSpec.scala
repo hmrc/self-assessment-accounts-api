@@ -75,7 +75,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
     "return a valid response" when {
 
-      "a valid request containing both docNumber and fromDate and dateTo is supplied" in new IfsTest with Test  {
+      "a valid request containing both docNumber and fromDate and dateTo is supplied" in new IfsTest with Test {
         val queryParams: Seq[(String, String)] =
           commonQueryParams ++ List(
             "docNumber" -> docNumber,
@@ -111,7 +111,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
   private trait Test { _: ConnectorTest =>
 
-    val connector: RetrieveBalanceAndTransactionsConnector =
+    private val connector: RetrieveBalanceAndTransactionsConnector =
       new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockSharedAppConfig)
 
     def connectorRequest(request: RetrieveBalanceAndTransactionsRequestData,
@@ -119,7 +119,6 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
                          queryParams: Seq[(String, String)]): Unit = {
 
       val outcome = Right(ResponseWrapper(correlationId, response))
-
 
       willGet(
         url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",

@@ -408,7 +408,6 @@ class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
             DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUri, OK, downstreamResponseNoId)
 
           val response: WSResponse = await(request(version, None).get())
-
           response.status shouldBe OK
           response.json shouldBe mtdResponseNoId
           response.header("X-CorrelationId").nonEmpty shouldBe true

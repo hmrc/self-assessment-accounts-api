@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package v3.retrieveChargeHistoryByChargeReference.def1.model.response
+package common.models
 
-import play.api.libs.json.{Json, OFormat}
+import shared.utils.UnitSpec
 
-case class TaxCodeComponentsObject(selfAssessmentUnderpayment: Option[Seq[TaxCodeComponents]],
-                                   payeUnderpayment: Option[Seq[TaxCodeComponents]],
-                                   debt: Option[Seq[TaxCodeComponents]],
-                                   inYearAdjustment: Option[TaxCodeComponents])
+class ChargeReferenceSpec extends UnitSpec {
 
-object TaxCodeComponentsObject {
-  implicit val format: OFormat[TaxCodeComponentsObject] = Json.format[TaxCodeComponentsObject]
+  "toString" should {
+    "return the BusinessId value" in {
+      val chargeReference = ChargeReference("some ref")
+      chargeReference.toString shouldBe "some ref"
+    }
+  }
+
 }

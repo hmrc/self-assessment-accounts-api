@@ -31,9 +31,7 @@ class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
   "Calling the delete endpoint" should {
     "return a 204 status code for a non-TYS request" when {
       "sent a valid request" in new NonTysTest {
-        override def setupStubs(): Unit = {
-          DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
-        }
+        DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
         val response: WSResponse = await(newRequest.delete())
         response.status shouldBe NO_CONTENT
         response.header("X-CorrelationId") shouldBe defined
@@ -114,15 +112,12 @@ class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
 
     protected def downstreamUri: String
 
-    def setupStubs(): Unit = ()
-
     protected def mtdUri: String = s"/$nino/$taxYear/collection/tax-code"
 
     protected def newRequest: WSRequest = {
       AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
-      setupStubs()
       buildRequest(mtdUri)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),

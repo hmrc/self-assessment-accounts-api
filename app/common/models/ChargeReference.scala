@@ -14,26 +14,8 @@
  * limitations under the License.
  */
 
-package v3.common.models
+package common.models
 
-import shared.utils.UnitSpec
-import shared.utils.enums.EnumJsonSpecSupport
-import v3.common.models.MtdSource.{hmrcHeld, latest, user}
-
-class MtdSourceSpec extends UnitSpec with EnumJsonSpecSupport {
-
-  testRoundTrip[MtdSource](
-    ("hmrcHeld", hmrcHeld),
-    ("user", user),
-    ("latest", latest)
-  )
-
-  "toMtdSource" should {
-    "return the correct identifier value" in {
-      MtdSource.hmrcHeld.toDownstreamSource shouldBe "HMRC-HELD"
-      MtdSource.user.toDownstreamSource shouldBe "CUSTOMER"
-      MtdSource.latest.toDownstreamSource shouldBe "LATEST"
-    }
-  }
-
+case class ChargeReference(value: String) {
+  override def toString: String = value
 }

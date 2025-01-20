@@ -39,7 +39,8 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
                                                   hateoasFactory: HateoasFactory,
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
-                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, SharedConfig: SharedAppConfig, appConfig: SaAccountsConfig)
+                                                  idGenerator: IdGenerator
+                                                 )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -58,7 +59,8 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
           taxYear,
           request.body,
           temporalValidationEnabled = SaAccountsFeatureSwitches().isTemporalValidationEnabled,
-          appConfig )
+          saAccountsConfig
+        )
 
       val requestHandler =
         RequestHandler

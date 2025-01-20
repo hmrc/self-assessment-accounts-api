@@ -18,15 +18,14 @@ package v3.retrieveChargeHistoryByTransactionId
 
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.config.MockSharedAppConfig
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.hateoas.Method.GET
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import shared.models.domain.{Nino, TransactionId}
+import shared.models.domain.TransactionId
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
-import v3.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
+import common.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -40,7 +39,6 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveChargeHistoryByTransactionIdService
-    with MockSharedAppConfig
     with MockHateoasFactory
     with MockRetrieveChargeHistoryByTransactionIdValidatorFactory {
 
@@ -49,19 +47,19 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
   private val transactionId = "anId"
 
   private val requestData: RetrieveChargeHistoryByTransactionIdRequestData =
-    Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino = Nino(validNino), transactionId = TransactionId(transactionId))
+    Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino = parsedNino, transactionId = TransactionId(transactionId))
 
-  val chargeHistoryLink = Link(
-      href = s"/accounts/self-assessment/$validNino/charges/$transactionId",
-      method = GET,
-      rel = SELF
-    )
+  val chargeHistoryLink: Link = Link(
+    href = s"/accounts/self-assessment/$validNino/charges/$transactionId",
+    method = GET,
+    rel = SELF
+  )
 
-  val transactionDetailsLink = Link(
-      href = s"/accounts/self-assessment/$validNino/transactions/$transactionId",
-      method = GET,
-      rel = RETRIEVE_TRANSACTION_DETAILS
-    )
+  val transactionDetailsLink: Link = Link(
+    href = s"/accounts/self-assessment/$validNino/transactions/$transactionId",
+    method = GET,
+    rel = RETRIEVE_TRANSACTION_DETAILS
+  )
 
   val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
