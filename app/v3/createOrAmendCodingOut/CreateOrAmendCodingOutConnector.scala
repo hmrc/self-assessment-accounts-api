@@ -16,10 +16,10 @@
 
 package v3.createOrAmendCodingOut
 
-import api.connectors.DownstreamUri.{Ifs1Uri, TaxYearSpecificIfsUri}
-import api.connectors.httpparsers.StandardDownstreamHttpParser.readsEmpty
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import shared.connectors.httpparsers.StandardDownstreamHttpParser._
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
@@ -27,7 +27,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutConnector @Inject()(val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class CreateOrAmendCodingOutConnector @Inject()(val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def amendCodingOut(request: CreateOrAmendCodingOutRequestData)(implicit
                                                                       hc: HeaderCarrier,
@@ -39,7 +39,7 @@ class CreateOrAmendCodingOutConnector @Inject()(val http: HttpClient, val appCon
     val uri = if (taxYear.useTaxYearSpecificApi) {
       TaxYearSpecificIfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino")
     } else {
-      Ifs1Uri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}")
+      IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}")
     }
 
     put(request.body, uri)

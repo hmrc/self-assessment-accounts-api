@@ -16,18 +16,16 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas
-import api.hateoas.Method.GET
-import api.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
-import api.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
-import api.models.domain.{Nino, TransactionId}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import config.MockAppConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import routing.{Version, Version3}
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.hateoas.Method.GET
+import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import shared.models.domain.TransactionId
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.routing.{Version, Version3}
+import common.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -41,7 +39,6 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveChargeHistoryByTransactionIdService
-    with MockAppConfig
     with MockHateoasFactory
     with MockRetrieveChargeHistoryByTransactionIdValidatorFactory {
 
@@ -50,21 +47,19 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
   private val transactionId = "anId"
 
   private val requestData: RetrieveChargeHistoryByTransactionIdRequestData =
-    Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino = Nino(nino), transactionId = TransactionId(transactionId))
+    Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino = parsedNino, transactionId = TransactionId(transactionId))
 
-  val chargeHistoryLink: Link =
-    hateoas.Link(
-      href = s"/accounts/self-assessment/$nino/charges/$transactionId",
-      method = GET,
-      rel = SELF
-    )
+  val chargeHistoryLink: Link = Link(
+    href = s"/accounts/self-assessment/$validNino/charges/$transactionId",
+    method = GET,
+    rel = SELF
+  )
 
-  val transactionDetailsLink: Link =
-    hateoas.Link(
-      href = s"/accounts/self-assessment/$nino/transactions/$transactionId",
-      method = GET,
-      rel = RETRIEVE_TRANSACTION_DETAILS
-    )
+  val transactionDetailsLink: Link = Link(
+    href = s"/accounts/self-assessment/$validNino/transactions/$transactionId",
+    method = GET,
+    rel = RETRIEVE_TRANSACTION_DETAILS
+  )
 
   val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
@@ -78,7 +73,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
         MockHateoasFactory
-          .wrap(response, RetrieveChargeHistoryHateoasData(nino, transactionId))
+          .wrap(response, RetrieveChargeHistoryHateoasData(validNino, transactionId))
           .returns(
             HateoasWrapper(
               response,
@@ -87,7 +82,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
                 transactionDetailsLink
               )))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdMultipleResponseWithHateoas(nino, transactionId)))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdMultipleResponseWithHateoas(validNino, transactionId)))
       }
     }
     "return the error as per spec" when {
@@ -116,10 +111,10 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    protected def callController(): Future[Result] = controller.retrieveChargeHistoryByTransactionId(nino, transactionId)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieveChargeHistoryByTransactionId(validNino, transactionId)(fakeGetRequest)
   }
 
 }

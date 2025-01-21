@@ -16,10 +16,11 @@
 
 package auth
 
-import api.services.DownstreamStub
 import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
+import shared.auth.AuthMainAgentsOnlyISpec
+import shared.services.DownstreamStub
 
 class SelfAssessmentAccountsAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 
@@ -40,5 +41,7 @@ class SelfAssessmentAccountsAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyIS
   override val downstreamHttpMethod: DownstreamStub.HTTPMethod = DownstreamStub.DELETE
 
   override val expectedMtdSuccessStatus: Int = NO_CONTENT
+
+  override val downstreamSuccessStatus: Int = NO_CONTENT
 
 }

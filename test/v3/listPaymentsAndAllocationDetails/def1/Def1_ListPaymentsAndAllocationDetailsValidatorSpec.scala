@@ -16,16 +16,16 @@
 
 package v3.listPaymentsAndAllocationDetails.def1
 
-import api.models.domain.{DateRange, Nino}
-import api.models.errors._
-import config.MockAppConfig
-import support.UnitSpec
+import common.errors._
+import shared.models.domain.{DateRange, Nino}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v3.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 
 import java.time.LocalDate
 
-class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with MockAppConfig {
+class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino           = "AA999999A"
@@ -141,6 +141,14 @@ class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec with M
       val result = validator(validNino, Some(validFromDate), Some("2100-01-21"), None, None).validateAndWrapResult()
 
       result shouldBe Left(ErrorWrapper(correlationId, ToDateFormatError))
+    }
+
+    "the same dates are supplied" in {
+      val result = validator(validNino, Some(validFromDate), Some(validFromDate), None, None).validateAndWrapResult()
+
+      result shouldBe Left(
+        ErrorWrapper(correlationId, RangeToDateBeforeFromDateError)
+      )
     }
   }
 

@@ -16,7 +16,7 @@
 
 package v3.retrieveCodingOut.def1.model.response
 
-import v3.common.models.DownstreamSource
+import common.models.DownstreamSource
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
 

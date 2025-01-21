@@ -16,11 +16,11 @@
 
 package v3.optInToCodingOut
 
-import api.controllers.RequestContext
-import api.models.errors._
-import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
-import v3.common.errors._
+import common.errors._
+import shared.controllers.RequestContext
+import shared.models.errors._
+import shared.services.{BaseService, ServiceOutcome}
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}

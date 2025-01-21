@@ -16,7 +16,7 @@
 
 package v3.deleteCodingOut.def1.model.request
 
-import api.models.domain.{Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 import v3.deleteCodingOut.DeleteCodingOutSchema
 import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
 

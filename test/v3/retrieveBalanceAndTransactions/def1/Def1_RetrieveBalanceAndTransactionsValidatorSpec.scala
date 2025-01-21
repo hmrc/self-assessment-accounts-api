@@ -16,15 +16,16 @@
 
 package v3.retrieveBalanceAndTransactions.def1
 
-import api.controllers.ControllerTestRunner.validNino
-import api.models.errors._
-import support.UnitSpec
+import common.errors._
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
   private implicit val correlationId: String = "1234"
+  private val validNino: String              = "AA123456A"
 
   private def validator(nino: String,
                         docNumber: Option[String],
@@ -125,7 +126,7 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
       "an invalid from date is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, fromDate = Some("invalid"), Some(validToDate), None, None, None, None, None, None).validateAndWrapResult()
+          validator(validNino, None, fromDate = Some("invalid"), toDate = Some(validToDate), None, None, None, None, None, None).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, FromDateFormatError)
@@ -156,6 +157,15 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
         result shouldBe Left(
           ErrorWrapper(correlationId, ToDateFormatError)
+        )
+      }
+
+      "the same dates are supplied" in {
+        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+          validator(validNino, None, Some(validFromDate), toDate = Some(validFromDate), None, None, None, None, None, None).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RangeToDateBeforeFromDateError)
         )
       }
 

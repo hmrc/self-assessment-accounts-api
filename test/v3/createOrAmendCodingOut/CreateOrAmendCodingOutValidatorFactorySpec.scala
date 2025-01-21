@@ -16,13 +16,12 @@
 
 package v3.createOrAmendCodingOut
 
-import api.models.utils.JsonErrorValidators
-import config.MockAppConfig
+import config.MockSaAccountsConfig
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v3.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
 
-class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with JsonErrorValidators with MockAppConfig {
+class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {
 
   private val validNino = "AA123456A"
   private val validTaxYear = "2019-20"
@@ -63,8 +62,8 @@ class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with JsonError
   "running a validation" should {
     "return the parsed domain object" when {
       "given a valid request" in {
-        MockAppConfig.minimumPermittedTaxYear returns 2020
-        val result = validatorFactory.validator(validNino, validTaxYear, validBody, temporalValidationEnabled, mockAppConfig)
+        MockedSaAccountsConfig.minimumPermittedTaxYear returns 2020
+        val result = validatorFactory.validator(validNino, validTaxYear, validBody, temporalValidationEnabled, mockSaAccountsConfig)
         result shouldBe a[Def1_CreateOrAmendCodingOutValidator]
 
       }

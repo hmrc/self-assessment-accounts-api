@@ -17,7 +17,7 @@
 package v3.retrieveCodingOut.def1.model.reponse
 
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v3.retrieveCodingOut.def1.model.response.UnmatchedCustomerSubmissions
 
 

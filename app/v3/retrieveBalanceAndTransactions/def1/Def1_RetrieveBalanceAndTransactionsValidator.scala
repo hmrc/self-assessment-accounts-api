@@ -16,13 +16,15 @@
 
 package v3.retrieveBalanceAndTransactions.def1
 
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
-import api.models.domain.DateRange
-import api.models.errors._
 import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits._
+import common.errors._
+import common.utils.DateValidator.validateSameDates
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
+import shared.models.domain.DateRange
+import shared.models.errors.{FromDateFormatError, MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.Singleton
@@ -41,10 +43,12 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
     extends Validator[RetrieveBalanceAndTransactionsRequestData] {
 
   private val minYear = 1900
-  private val maxYear = 2100
+  private val maxYear = 2099
 
-  private val resolveDateRange = ResolveDateRange
-    .withLimits(minYear, maxYear, FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)
+  private val resolveDateRange = ResolveDateRange(FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)
+    .withYearsLimitedTo(minYear, maxYear)
+
+  private def optionWithDefaultString(value: Option[String]): String = value.getOrElse("false")
 
   def validate: Validated[Seq[MtdError], RetrieveBalanceAndTransactionsRequestData] =
     (
@@ -53,17 +57,17 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
       validateDateRange(fromDate, toDate) andThen { maybeFromAndTo =>
         maybeFromAndTo
           .map { case (from, to) =>
-            resolveDateRange(from -> to)
+            resolveDateRange(from -> to).andThen(validateSameDates)
               .map(Some(_))
           }
           .getOrElse(Valid(None))
       },
-      ResolveBoolean(onlyOpenItems, defaultValue = false, OnlyOpenItemsFormatError),
-      ResolveBoolean(includeLocks, defaultValue = false, IncludeLocksFormatError),
-      ResolveBoolean(calculateAccruedInterest, defaultValue = false, CalculateAccruedInterestFormatError),
-      ResolveBoolean(removePOA, defaultValue = false, RemovePaymentOnAccountFormatError),
-      ResolveBoolean(customerPaymentInformation, defaultValue = false, CustomerPaymentInformationFormatError),
-      ResolveBoolean(includeEstimatedCharges, defaultValue = false, IncludeEstimatedChargesFormatError)
+      ResolveBoolean(optionWithDefaultString(onlyOpenItems), OnlyOpenItemsFormatError),
+      ResolveBoolean(optionWithDefaultString(includeLocks), IncludeLocksFormatError),
+      ResolveBoolean(optionWithDefaultString(calculateAccruedInterest), CalculateAccruedInterestFormatError),
+      ResolveBoolean(optionWithDefaultString(removePOA), RemovePaymentOnAccountFormatError),
+      ResolveBoolean(optionWithDefaultString(customerPaymentInformation), CustomerPaymentInformationFormatError),
+      ResolveBoolean(optionWithDefaultString(includeEstimatedCharges), IncludeEstimatedChargesFormatError)
     ).mapN(RetrieveBalanceAndTransactionsRequestData) andThen validateParameterRules
 
   private def resolveDocNumber(docNumber: Option[String]): Validated[Seq[MtdError], Option[String]] = {

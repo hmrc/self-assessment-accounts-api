@@ -16,10 +16,10 @@
 
 package v3.retrieveCodingOutStatus
 
-import api.connectors.DownstreamUri.Ifs1Uri
-import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutStatusConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveCodingOutStatusConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieveCodingOutStatus(request: RetrieveCodingOutStatusRequestData)(implicit
       hc: HeaderCarrier,
@@ -39,7 +39,7 @@ class RetrieveCodingOutStatusConnector @Inject() (val http: HttpClient, val appC
     import schema._
 
     val downstreamUri =
-      Ifs1Uri[DownstreamResp](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")
+      IfsUri[DownstreamResp](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")
 
     get(uri = downstreamUri)
   }

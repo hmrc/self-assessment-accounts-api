@@ -16,10 +16,11 @@
 
 package v3.listPaymentsAndAllocationDetails
 
-import api.models.domain.Nino
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
-import api.models.outcomes.ResponseWrapper
-import api.services.{ServiceOutcome, ServiceSpec}
+import common.errors.{PaymentLotFormatError, PaymentLotItemFormatError, RuleInconsistentQueryParamsErrorListSA}
+import shared.models.domain.Nino
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
+import shared.services.{ServiceOutcome, ServiceSpec}
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData

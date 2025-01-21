@@ -16,17 +16,16 @@
 
 package v3.optOutOfCodingOut
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError}
-import api.models.outcomes.ResponseWrapper
-import config.MockAppConfig
+import common.errors.RuleBusinessPartnerNotExistError
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import routing.{Version, Version3}
-import v3.common.errors.RuleBusinessPartnerNotExistError
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.TaxYear
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.routing.{Version, Version3}
 import v3.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
 import v3.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
@@ -38,8 +37,8 @@ class OptOutOfCodingOutControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockOptOutOfCodingOutService
-    with MockOptOutOfCodingOutValidatorFactory
-    with MockAppConfig {
+    with MockOptOutOfCodingOutValidatorFactory {
+
   override val apiVersion: Version = Version3
 
   "OptOutOfCodingOutController" should {
@@ -76,11 +75,12 @@ class OptOutOfCodingOutControllerSpec
     private val taxYear = "2023-24"
 
     protected val requestData: OptOutOfCodingOutRequestData = Def1_OptOutOfCodingOutRequestData(
-      nino = Nino(nino),
+      nino = parsedNino,
       taxYear = TaxYear.fromMtd(taxYear)
+
     )
 
-    protected val response = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
+    protected val response: Def1_OptOutOfCodingOutResponse = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
     override protected val controller = new OptOutOfCodingOutController(
       authService = mockEnrolmentsAuthService,
@@ -91,10 +91,10 @@ class OptOutOfCodingOutControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator)
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    protected def callController(): Future[Result] = controller.optOutOfCodingOut(nino, taxYear)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.optOutOfCodingOut(validNino, taxYear)(fakeGetRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -104,7 +104,7 @@ class OptOutOfCodingOutControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           versionNumber = "3.0",
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           requestBody = None,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

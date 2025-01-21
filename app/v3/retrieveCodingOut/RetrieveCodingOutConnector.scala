@@ -16,10 +16,10 @@
 
 package v3.retrieveCodingOut
 
-import api.connectors.DownstreamUri.{Ifs1Uri, TaxYearSpecificIfsUri}
-import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.{IfsUri, TaxYearSpecificIfsUri}
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
@@ -28,7 +28,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def retrieveCodingOut(request: RetrieveCodingOutRequestData)(implicit
       hc: HeaderCarrier,
@@ -46,7 +46,7 @@ class RetrieveCodingOutConnector @Inject() (val http: HttpClient, val appConfig:
       TaxYearSpecificIfsUri[DownstreamResp](
         s"income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/${nino.value}")
     } else {
-      Ifs1Uri[DownstreamResp](s"income-tax/accounts/self-assessment/collection/tax-code/${nino.value}/${taxYear.asMtd}")
+      IfsUri[DownstreamResp](s"income-tax/accounts/self-assessment/collection/tax-code/${nino.value}/${taxYear.asMtd}")
     }
 
     get(uri = downstreamUri, queryParams = queryParams)

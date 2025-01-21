@@ -16,21 +16,20 @@
 
 package v3.createOrAmendCodingOut
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.hateoas
-import api.hateoas.Method.{DELETE, GET, PUT}
-import api.hateoas.{HateoasWrapper, MockHateoasFactory}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.MockAuditService
-import config.MockAppConfig
+import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.hateoas.Method.{DELETE, GET, PUT}
+import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.TaxYear
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
+import shared.routing.{Version, Version3}
 import v3.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
-import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent, TaxCodeComponents}
+import v3.createOrAmendCodingOut.def1.model.request._
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -41,19 +40,20 @@ class CreateOrAmendCodingOutControllerSpec
     with ControllerTestRunner
     with MockCreateOrAmendCodingOutService
     with MockCreateOrAmendCodingOutValidatorFactory
-    with MockAuditService
-    with MockAppConfig
-    with MockHateoasFactory {
+    with MockHateoasFactory
+    with MockSaAccountsConfig {
+
+  override val apiVersion: Version = Version3
 
   private val taxYear = "2019-20"
 
   private val testHateoasLinks = List(
-    hateoas.Link(
-      href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+    Link(
+      href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
       method = PUT,
       rel = "create-or-amend-coding-out-underpayments"),
-    hateoas.Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = GET, rel = "self"),
-    hateoas.Link(href = s"/accounts/self-assessment/$nino/$taxYear/collection/tax-code", method = DELETE, rel = "delete-coding-out-underpayments")
+    Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = GET, rel = "self"),
+    Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = DELETE, rel = "delete-coding-out-underpayments")
   )
 
   private val requestJson = Json.parse(
@@ -93,23 +93,23 @@ class CreateOrAmendCodingOutControllerSpec
     inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
   ))
 
-  private val requestData = Def1_CreateOrAmendCodingOutRequestData(Nino(nino), TaxYear.fromMtd(taxYear), requestBody)
+  private val requestData = Def1_CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear), requestBody)
 
   val mtdResponseJson: JsValue =
     Json.parse(s"""{
                   |  "links": [
                   |    {
-                  |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+                  |      "href": "/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
                   |      "method": "PUT",
                   |      "rel": "create-or-amend-coding-out-underpayments"
                   |    },
                   |    {
-                  |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+                  |      "href": "/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
                   |      "method": "GET",
                   |      "rel": "self"
                   |    },
                   |    {
-                  |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
+                  |      "href": "/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
                   |      "method": "DELETE",
                   |      "rel": "delete-coding-out-underpayments"
                   |    }
@@ -128,7 +128,7 @@ class CreateOrAmendCodingOutControllerSpec
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
         MockHateoasFactory
-          .wrap((), CreateOrAmendCodingOutHateoasData(nino, taxYear))
+          .wrap((), CreateOrAmendCodingOutHateoasData(validNino, taxYear))
           .returns(HateoasWrapper((), testHateoasLinks))
 
         runOkTestWithAudit(
@@ -171,10 +171,10 @@ class CreateOrAmendCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    protected def callController(): Future[Result] = controller.createOrAmendCodingOut(nino, taxYear)(fakePostRequest(requestJson))
+    protected def callController(): Future[Result] = controller.createOrAmendCodingOut(validNino, taxYear)(fakePostRequest(requestJson))
 
     protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -184,7 +184,7 @@ class CreateOrAmendCodingOutControllerSpec
           versionNumber = apiVersion.name,
           userType = "Individual",
           agentReferenceNumber = None,
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

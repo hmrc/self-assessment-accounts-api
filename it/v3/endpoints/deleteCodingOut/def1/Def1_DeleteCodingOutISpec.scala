@@ -16,14 +16,15 @@
 
 package v3.endpoints.deleteCodingOut.def1
 
-import api.models.errors._
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import common.errors.CodingOutNotFoundError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import support.IntegrationBaseSpec
+import shared.models.errors._
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.support.IntegrationBaseSpec
 
 class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
 
@@ -31,7 +32,6 @@ class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
     "return a 204 status code for a non-TYS request" when {
       "sent a valid request" in new NonTysTest {
         DownstreamStub.onSuccess(DownstreamStub.DELETE, downstreamUri, NO_CONTENT, JsObject.empty)
-
         val response: WSResponse = await(newRequest.delete())
         response.status shouldBe NO_CONTENT
         response.header("X-CorrelationId") shouldBe defined

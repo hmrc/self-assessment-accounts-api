@@ -16,11 +16,9 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import api.connectors.{ConnectorSpec, MockHttpClient}
-import api.models.domain.{Nino, TransactionId}
-import api.models.outcomes.ResponseWrapper
-import config.MockAppConfig
-import org.scalamock.handlers.CallHandler0
+import shared.connectors.ConnectorSpec
+import shared.models.domain.{Nino, TransactionId}
+import shared.models.outcomes.ResponseWrapper
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -50,38 +48,24 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
       chargeHistoryDetails = List(chargeHistoryDetails)
     )
 
-  class Test extends MockHttpClient with MockAppConfig {
+  trait Test {  _: ConnectorTest =>
 
     val connector: RetrieveChargeHistoryByTransactionIdConnector =
-      new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockAppConfig)
-
-    def setUpIfsMocks(): CallHandler0[Option[Seq[String]]] = {
-      MockAppConfig.ifs1BaseUrl returns baseUrl
-      MockAppConfig.ifs1Token returns "ifs1-token"
-      MockAppConfig.ifs1Environment returns "ifs1-environment"
-      MockAppConfig.ifs1EnvironmentHeaders returns Some(allowedIfs1Headers)
-    }
-
+      new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
   }
 
   "RetrieveChargeHistoryConnector" when {
     "retrieveChargeHistory" must {
-      "return a valid response" in new Test {
+      "return a valid response" in new IfsTest with Test {
 
-        setUpIfsMocks()
         val request: RetrieveChargeHistoryByTransactionIdRequestData =
           Def1_RetrieveChargeHistoryByTransactionIdRequestData(Nino(nino), TransactionId(transactionId))
         private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
-        MockedHttpClient
-          .get(
-            s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-            dummyHeaderCarrierConfig,
-            parameters = List("docNumber" -> transactionId),
-            requiredIfs1Headers,
-            List("AnotherHeader" -> "HeaderValue")
-          )
-          .returns(Future.successful(outcome))
+        willGet(
+          url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+          parameters = List("docNumber" -> transactionId)
+        ).returns(Future.successful(outcome))
 
         await(connector.retrieveChargeHistoryByTransactionId(request)) shouldBe outcome
       }

@@ -16,14 +16,16 @@
 
 package v3.retrieveCodingOut.def1
 
-import api.models.domain.{MtdSource, Nino, TaxYear}
-import api.models.errors._
-import config.MockAppConfig
-import support.UnitSpec
+import common.errors.SourceFormatError
+import common.models.MtdSource
+import config.MockSaAccountsConfig
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
-class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockAppConfig {
+class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -34,9 +36,10 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockAppConfig {
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
   private val parsedSource  = Some(MtdSource.parser("hmrcHeld"))
 
-  private def validator(nino: String, taxYear: String, source: Option[String]) = new Def1_RetrieveCodingOutValidator(nino, taxYear, source, mockAppConfig)
+  private def validator(nino: String, taxYear: String, source: Option[String]) =
+    new Def1_RetrieveCodingOutValidator(nino, taxYear, source, mockSaAccountsConfig)
 
-  private def setupMocks(): Unit = (MockAppConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
+  private def setupMocks(): Unit = (MockedSaAccountsConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
 
   "validator" should {
     "return the parsed domain object" when {

@@ -16,9 +16,9 @@
 
 package v3.retrieveChargeHistoryByChargeReference.def1.model.response
 
-import api.models.domain.TaxYear
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import shared.models.domain.TaxYear
 
 case class ChargeHistoryDetail(taxYear: Option[String],
                                transactionId: String,

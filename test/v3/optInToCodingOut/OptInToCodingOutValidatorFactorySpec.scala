@@ -16,8 +16,8 @@
 
 package v3.optInToCodingOut
 
-import api.models.utils.JsonErrorValidators
-import support.UnitSpec
+import shared.models.utils.JsonErrorValidators
+import shared.utils.UnitSpec
 import v3.optInToCodingOut.def1.Def1_OptInToCodingOutValidator
 
 class OptInToCodingOutValidatorFactorySpec extends UnitSpec with JsonErrorValidators {

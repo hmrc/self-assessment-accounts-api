@@ -16,14 +16,15 @@
 
 package v3.createOrAmendCodingOut.def1
 
-import api.controllers.validators.Validator
-import api.controllers.validators.resolvers._
-import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits._
-import config.AppConfig
+import common.resolvers.{DetailedResolveTaxYear, ResolveParsedNumericId}
+import config.SaAccountsConfig
 import play.api.libs.json.JsValue
+import shared.controllers.validators.Validator
+import shared.controllers.validators.resolvers._
+import shared.models.errors.MtdError
 import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent}
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
@@ -31,7 +32,7 @@ import javax.inject.Singleton
 import scala.annotation.nowarn
 
 @Singleton
-class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean, appConfig: AppConfig)
+class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean, appConfig: SaAccountsConfig)
     extends Validator[CreateOrAmendCodingOutRequestData] {
 
   @nowarn("cat=lint-byname-implicit")
@@ -45,7 +46,7 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: 
   def validate: Validated[Seq[MtdError], Def1_CreateOrAmendCodingOutRequestData] =
     (
       ResolveNino(nino),
-      resolveTaxYear(taxYear, None, None),
+      resolveTaxYear(taxYear),
       resolveJson(body)
     ).mapN(Def1_CreateOrAmendCodingOutRequestData) andThen validatedParsedBody
 

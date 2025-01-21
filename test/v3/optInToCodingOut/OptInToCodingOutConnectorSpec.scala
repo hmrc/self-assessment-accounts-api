@@ -16,9 +16,9 @@
 
 package v3.optInToCodingOut
 
-import api.connectors.ConnectorSpec
-import api.models.domain.{Nino, TaxYear}
-import api.models.outcomes.ResponseWrapper
+import shared.connectors.ConnectorSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.outcomes.ResponseWrapper
 
 import scala.concurrent.Future
 
@@ -31,14 +31,14 @@ class OptInToCodingOutConnectorSpec extends ConnectorSpec {
 
     protected val connector: OptInToCodingOutConnector = new OptInToCodingOutConnector(
       http = mockHttpClient,
-      appConfig = mockAppConfig
+      appConfig = mockSharedAppConfig
     )
 
   }
 
   "DeleteCodingOutOptOutConnector" when {
     "downstream returns a successful response" must {
-      "return a successful result" in new Ifs1Test with Test {
+      "return a successful result" in new IfsTest with Test {
         private val outcome = Right(ResponseWrapper(correlationId, ()))
 
         willDelete(s"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/$nino/2024") returns

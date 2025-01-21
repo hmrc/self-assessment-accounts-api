@@ -16,10 +16,10 @@
 
 package v3.retrieveBalanceAndTransactions.def1.model.response
 
-import api.models.domain.TaxYear
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import utils.{EmptinessChecker, EmptyPathsResult}
+import shared.models.domain.TaxYear
+import shared.utils.{EmptinessChecker, EmptyPathsResult}
 
 case class LastClearing(lastClearingDate: Option[String], lastClearingReason: Option[String], lastClearedAmount: Option[BigDecimal])
 

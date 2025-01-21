@@ -16,11 +16,11 @@
 
 package v3.optOutOfCodingOut
 
-import api.connectors.DownstreamUri.Ifs1Uri
-import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
-import api.models.domain.EmptyJsonBody
-import config.AppConfig
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.IfsUri
+import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
+import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import shared.models.domain.EmptyJsonBody
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
@@ -29,7 +29,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class  OptOutOfCodingOutConnector @Inject() (val http: HttpClient, val appConfig: AppConfig) extends BaseDownstreamConnector {
+class  OptOutOfCodingOutConnector @Inject() (val http: HttpClient, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def amendCodingOutOptOut(request: OptOutOfCodingOutRequestData)(implicit
                                                                   hc: HeaderCarrier,
@@ -39,10 +39,9 @@ class  OptOutOfCodingOutConnector @Inject() (val http: HttpClient, val appConfig
     import request._
     import schema._
 
-
     put(
       EmptyJsonBody,
-      uri = Ifs1Uri[DownstreamResp](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")
+      uri = IfsUri[DownstreamResp](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")
     )
   }
 

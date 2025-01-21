@@ -16,17 +16,16 @@
 
 package v3.retrieveCodingOutStatus
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError}
-import api.models.outcomes.ResponseWrapper
-import config.MockAppConfig
+import common.errors.RuleBusinessPartnerNotExistError
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import routing.{Version, Version3}
-import v3.common.errors.RuleBusinessPartnerNotExistError
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.TaxYear
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.routing.{Version, Version3}
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
@@ -39,22 +38,23 @@ class RetrieveCodingOutStatusControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveCodingOutStatusService
-    with MockRetrieveCodingOutStatusValidatorFactory
-    with MockAppConfig {
+    with MockRetrieveCodingOutStatusValidatorFactory {
 
   override val apiVersion: Version = Version3
 
-  override val nino                  = "AB123456A"
+  override val validNino             = "AB123456A"
   private val taxYear                = "2023-24"
   private val processingDate: String = "2023-12-17T09:30:47Z"
 
   private val requestData = Def1_RetrieveCodingOutStatusRequestData(
-    nino = Nino(nino),
+    nino = parsedNino,
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
   private val downstreamResponse: RetrieveCodingOutStatusResponse =
-    Def1_RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true)
+    Def1_RetrieveCodingOutStatusResponse(
+      processingDate = processingDate, nino = validNino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true
+    )
 
   "RetrieveCodingOutStatusController" should {
     "return OK" when {
@@ -99,10 +99,10 @@ class RetrieveCodingOutStatusControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator)
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(nino, taxYear)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(validNino, taxYear)(fakeGetRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -112,7 +112,7 @@ class RetrieveCodingOutStatusControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           versionNumber = "3.0",
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

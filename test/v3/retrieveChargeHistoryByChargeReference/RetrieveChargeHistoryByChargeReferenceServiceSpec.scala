@@ -16,10 +16,11 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import api.models.domain.{ChargeReference, Nino}
-import api.models.errors.{DownstreamErrorCode, DownstreamErrors, MtdError, _}
-import api.models.outcomes.ResponseWrapper
-import api.services.ServiceSpec
+import common.models.ChargeReference
+import shared.models.domain.Nino
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
+import shared.services.ServiceSpec
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData

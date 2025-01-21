@@ -16,10 +16,10 @@
 
 package v3.retrieveBalanceAndTransactions.def1.model.response
 
-import api.models.domain.TaxYear
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.Format.GenericFormat
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import shared.models.domain.TaxYear
 
 case class BalancePerYear(bcdAmount: BigDecimal, taxYear: String)
 

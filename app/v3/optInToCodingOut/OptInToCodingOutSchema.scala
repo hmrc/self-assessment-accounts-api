@@ -16,8 +16,8 @@
 
 package v3.optInToCodingOut
 
-import api.controllers.validators.resolvers.ResolveTaxYear
-import api.models.domain.TaxYear
+import shared.controllers.validators.resolvers.ResolveTaxYear
+import shared.models.domain.TaxYear
 
 sealed trait OptInToCodingOutSchema
 

@@ -17,7 +17,7 @@
 package v3.retrieveCodingOutStatus.model.response
 
 import play.api.libs.json._
-import utils.JsonWritesUtil
+import shared.utils.JsonWritesUtil
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 
 trait RetrieveCodingOutStatusResponse

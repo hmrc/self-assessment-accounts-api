@@ -16,13 +16,14 @@
 
 package v3.listPaymentsAndAllocationDetails
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.domain.{DateRange, Nino}
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import config.MockAppConfig
+import common.errors.PaymentLotFormatError
 import play.api.Configuration
 import play.api.mvc.Result
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.domain.DateRange
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
+import shared.routing.{Version, Version3}
 import v3.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.{mtdResponseJson, responseObject}
@@ -34,13 +35,14 @@ import scala.concurrent.Future
 class ListPaymentsAndAllocationDetailsControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
-    with MockAppConfig
     with MockListPaymentsAndAllocationDetailsValidatorFactory
     with MockListPaymentsAndAllocationDetailsService {
 
+  override val apiVersion: Version = Version3
+
   private val requestData =
     Def1_ListPaymentsAndAllocationDetailsRequestData(
-      Nino(nino),
+      parsedNino,
       Some(DateRange(LocalDate.parse("2022-08-15"), LocalDate.parse("2022-09-15"))),
       Some("paymentLot"),
       Some("paymentLotItem"))
@@ -88,11 +90,11 @@ class ListPaymentsAndAllocationDetailsControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
-      controller.listPayments(nino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
+      controller.listPayments(validNino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
 
   }
 

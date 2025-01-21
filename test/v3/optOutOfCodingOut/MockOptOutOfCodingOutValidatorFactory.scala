@@ -16,8 +16,8 @@
 
 package v3.optOutOfCodingOut
 
-import api.controllers.validators.{MockValidatorFactory, Validator}
 import org.scalamock.handlers.CallHandler
+import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 
 trait MockOptOutOfCodingOutValidatorFactory extends MockValidatorFactory[OptOutOfCodingOutRequestData] {

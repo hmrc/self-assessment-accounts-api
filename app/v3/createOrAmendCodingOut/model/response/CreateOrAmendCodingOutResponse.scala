@@ -16,14 +16,15 @@
 
 package v3.createOrAmendCodingOut.model.response
 
-import api.hateoas.{HateoasData, HateoasLinks, HateoasLinksFactory, Link}
-import config.AppConfig
+import common.hateoas.HateoasLinks
+import shared.config.SharedAppConfig
+import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 
 object CreateOrAmendCodingOutResponse extends HateoasLinks {
 
   implicit object LinksFactory extends HateoasLinksFactory[Unit, CreateOrAmendCodingOutHateoasData] {
 
-    override def links(appConfig: AppConfig, data: CreateOrAmendCodingOutHateoasData): Seq[Link] = {
+    override def links(appConfig: SharedAppConfig, data: CreateOrAmendCodingOutHateoasData): Seq[Link] = {
       import data._
       Seq(
         createOrAmendCodingOut(appConfig, nino, taxYear),

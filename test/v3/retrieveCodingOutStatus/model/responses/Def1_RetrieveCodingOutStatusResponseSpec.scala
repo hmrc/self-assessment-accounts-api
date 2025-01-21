@@ -17,7 +17,7 @@
 package v3.retrieveCodingOutStatus.model.responses
 
 import play.api.libs.json.Json
-import support.UnitSpec
+import shared.utils.UnitSpec
 import v3.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v3.retrieveCodingOutStatus.model.responses.ResponseFixture._
 

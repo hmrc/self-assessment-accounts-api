@@ -16,17 +16,16 @@
 
 package v3.optInToCodingOut
 
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors.{ErrorWrapper, NinoFormatError}
-import api.models.outcomes.ResponseWrapper
-import config.MockAppConfig
+import common.errors.RuleBusinessPartnerNotExistError
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import routing.{Version, Version3}
-import v3.common.errors.RuleBusinessPartnerNotExistError
+import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import shared.models.domain.TaxYear
+import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.outcomes.ResponseWrapper
+import shared.routing.{Version, Version3}
 import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
@@ -37,8 +36,7 @@ class OptInToCodingOutControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockOptInToCodingOutService
-    with MockOptInToCodingOutValidatorFactory
-    with MockAppConfig {
+    with MockOptInToCodingOutValidatorFactory {
 
   override val apiVersion: Version = Version3
 
@@ -86,14 +84,14 @@ class OptInToCodingOutControllerSpec
     private val taxYear = "2023-24"
 
     protected val requestData: OptInToCodingOutRequestData = Def1_OptInToCodingOutRequestData(
-      nino = Nino(nino),
+      nino = parsedNino,
       taxYear = TaxYear.fromMtd(taxYear)
     )
 
-    MockAppConfig.featureSwitches returns Configuration.empty
-    MockAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
-    protected def callController(): Future[Result] = controller.optInToCodingOut(nino, taxYear)(fakeGetRequest)
+    protected def callController(): Future[Result] = controller.optInToCodingOut(validNino, taxYear)(fakeGetRequest)
 
     override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
       AuditEvent(
@@ -103,7 +101,7 @@ class OptInToCodingOutControllerSpec
           userType = "Individual",
           agentReferenceNumber = None,
           versionNumber = "3.0",
-          params = Map("nino" -> nino, "taxYear" -> taxYear),
+          params = Map("nino" -> validNino, "taxYear" -> taxYear),
           requestBody = None,
           `X-CorrelationId` = correlationId,
           auditResponse = auditResponse

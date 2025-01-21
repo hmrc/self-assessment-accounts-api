@@ -16,10 +16,11 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import api.controllers.RequestContext
-import api.models.errors._
-import api.services.{BaseService, ServiceOutcome}
 import cats.implicits._
+import common.errors._
+import shared.controllers.RequestContext
+import shared.models.errors._
+import shared.services.{BaseService, ServiceOutcome}
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 import v3.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 

@@ -16,8 +16,8 @@
 
 package v3.retrieveCodingOutStatus.def1.model.response
 
-import api.models.domain.TaxYear
 import play.api.libs.json._
+import shared.models.domain.TaxYear
 import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
 case class Def1_RetrieveCodingOutStatusResponse(processingDate: String,
@@ -29,7 +29,7 @@ object Def1_RetrieveCodingOutStatusResponse {
 
   private implicit val downstreamIntToMtdFormat: Format[TaxYear] = Format(
     implicitly[Reads[String]].map(TaxYear.fromDownstream),
-    TaxYear.toMtdWrites
+    TaxYear.writes
   )
 
   implicit val reads: Reads[Def1_RetrieveCodingOutStatusResponse] = Json.reads[Def1_RetrieveCodingOutStatusResponse]

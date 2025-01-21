@@ -16,10 +16,9 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import api.connectors.{ConnectorSpec, DownstreamOutcome, MockHttpClient}
-import api.models.domain.{DateRange, Nino}
-import api.models.outcomes.ResponseWrapper
-import config.MockAppConfig
+import shared.connectors.{ConnectorSpec, DownstreamOutcome}
+import shared.models.domain.{DateRange, Nino}
+import shared.models.outcomes.ResponseWrapper
 import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
 import v3.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
 import v3.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.{documentDetails, documentDetailsWithoutDocDueDate}
@@ -76,7 +75,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
     "return a valid response" when {
 
-      "a valid request containing both docNumber and fromDate and dateTo is supplied" in new Test {
+      "a valid request containing both docNumber and fromDate and dateTo is supplied" in new IfsTest with Test {
         val queryParams: Seq[(String, String)] =
           commonQueryParams ++ List(
             "docNumber" -> docNumber,
@@ -87,7 +86,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
         connectorRequest(validRequest, validResponse, queryParams)
       }
 
-      "a valid request containing docNumber and not fromDate or dateTo is supplied" in new Test {
+      "a valid request containing docNumber and not fromDate or dateTo is supplied" in new IfsTest with Test {
         val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
 
         val queryParams: Seq[(String, String)] =
@@ -96,7 +95,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
         connectorRequest(request, validResponse, queryParams)
       }
 
-      "a valid request containing fromDate and dateTo and no docNumber is supplied" in new Test {
+      "a valid request containing fromDate and dateTo and no docNumber is supplied" in new IfsTest with Test {
         val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
 
         val queryParams: Seq[(String, String)] =
@@ -110,15 +109,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     }
   }
 
-  private trait Test extends MockHttpClient with MockAppConfig {
+  private trait Test { _: ConnectorTest =>
 
-    val connector: RetrieveBalanceAndTransactionsConnector =
-      new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockAppConfig)
-
-    MockAppConfig.ifs2BaseUrl returns baseUrl
-    MockAppConfig.ifs2Token returns "ifs2-token"
-    MockAppConfig.ifs2Environment returns "ifs2-environment"
-    MockAppConfig.ifs2EnvironmentHeaders returns Some(allowedIfs2Headers)
+    private val connector: RetrieveBalanceAndTransactionsConnector =
+      new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockSharedAppConfig)
 
     def connectorRequest(request: RetrieveBalanceAndTransactionsRequestData,
                          response: RetrieveBalanceAndTransactionsResponse,
@@ -126,15 +120,10 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
       val outcome = Right(ResponseWrapper(correlationId, response))
 
-      MockedHttpClient
-        .get(
-          url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
-          config = dummyHeaderCarrierConfig,
-          parameters = queryParams,
-          requiredHeaders = requiredIfs2Headers,
-          excludedHeaders = List("AnotherHeader" -> "HeaderValue")
-        )
-        .returns(Future.successful(outcome))
+      willGet(
+        url = s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA",
+        parameters = queryParams
+      ).returns(Future.successful(outcome))
 
       val result: DownstreamOutcome[RetrieveBalanceAndTransactionsResponse] = await(connector.retrieveBalanceAndTransactions(request))
       result shouldBe outcome

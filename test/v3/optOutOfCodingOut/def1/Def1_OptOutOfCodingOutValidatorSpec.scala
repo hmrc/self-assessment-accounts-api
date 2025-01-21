@@ -16,9 +16,9 @@
 
 package v3.optOutOfCodingOut.def1
 
-import api.models.domain.{Nino, TaxYear}
-import api.models.errors._
-import support.UnitSpec
+import shared.models.domain.{Nino, TaxYear}
+import shared.models.errors._
+import shared.utils.UnitSpec
 import v3.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
 
 class Def1_OptOutOfCodingOutValidatorSpec extends UnitSpec  {

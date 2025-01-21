@@ -16,7 +16,7 @@
 
 package v3.optInToCodingOut.model.request
 
-import api.models.domain.{Nino, TaxYear}
+import shared.models.domain.{Nino, TaxYear}
 import v3.optInToCodingOut.OptInToCodingOutSchema
 
 trait OptInToCodingOutRequestData{

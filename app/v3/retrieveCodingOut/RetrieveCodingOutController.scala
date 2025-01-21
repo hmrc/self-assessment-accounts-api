@@ -16,14 +16,14 @@
 
 package v3.retrieveCodingOut
 
-import api.controllers._
-import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
+import config.SaAccountsConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.IdGenerator
+import shared.config.SharedAppConfig
+import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import shared.hateoas.HateoasFactory
+import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.IdGenerator
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutHateoasData
-
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -35,7 +35,8 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              service: RetrieveCodingOutService,
                                              hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
-                                             idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                             idGenerator: IdGenerator
+                                            )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAppConfig: SaAccountsConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "retrieve-coding-out"
@@ -50,7 +51,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
-      val validator = validatorFactory.validator(nino, taxYear, source, appConfig)
+      val validator = validatorFactory.validator(nino, taxYear, source, saAppConfig)
 
       val requestHandler =
         RequestHandler

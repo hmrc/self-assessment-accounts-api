@@ -16,12 +16,12 @@
 
 package v3.retrieveCodingOut
 
-import api.controllers.RequestContext
-import api.models.domain.TodaySupplier
-import api.models.errors._
-import api.models.outcomes.ResponseWrapper
-import api.services.BaseService
 import cats.data.EitherT
+import common.errors.{CodingOutNotFoundError, SourceFormatError}
+import shared.controllers.RequestContext
+import shared.models.errors._
+import shared.models.outcomes.ResponseWrapper
+import shared.services.BaseService
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
@@ -29,7 +29,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)(implicit todaySupplier: TodaySupplier = new TodaySupplier)
+class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
     extends BaseService
     with MappingSupportDownstream {
 

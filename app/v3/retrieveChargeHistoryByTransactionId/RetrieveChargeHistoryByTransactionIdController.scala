@@ -16,12 +16,12 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import api.controllers._
-import api.hateoas.HateoasFactory
-import api.services.{EnrolmentsAuthService, MtdIdLookupService}
-import config.AppConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import utils.IdGenerator
+import shared.config.SharedAppConfig
+import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import shared.hateoas.HateoasFactory
+import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
+import shared.utils.IdGenerator
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 
 import javax.inject.{Inject, Singleton}
@@ -34,7 +34,7 @@ class RetrieveChargeHistoryByTransactionIdController @Inject() (val authService:
                                                                 service: RetrieveChargeHistoryByTransactionIdService,
                                                                 hateoasFactory: HateoasFactory,
                                                                 cc: ControllerComponents,
-                                                                idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig)
+                                                                idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName = "retrieve-charge-history-by-transaction-id"

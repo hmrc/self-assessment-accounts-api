@@ -16,16 +16,16 @@
 
 package v3.endpoints.optOutOfCodingOut.def1
 
-import api.models.errors._
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
+import common.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
 import play.api.libs.json.Json
 import play.api.libs.ws.{EmptyBody, WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import support.IntegrationBaseSpec
-import v3.common.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
+import shared.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.support.IntegrationBaseSpec
 import v3.retrieveCodingOutStatus.model.responses.ResponseFixture.downstreamOptOutOfCodingOutResponseJson
 
 class Def1_OptOutOfCodingOutISpec extends IntegrationBaseSpec {
