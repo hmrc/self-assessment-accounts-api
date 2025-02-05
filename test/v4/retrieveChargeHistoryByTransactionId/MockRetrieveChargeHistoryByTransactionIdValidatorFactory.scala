@@ -18,7 +18,7 @@ package v4.retrieveChargeHistoryByTransactionId
 
 import org.scalamock.handlers.CallHandler
 import shared.controllers.validators.{MockValidatorFactory, Validator}
-import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
+import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 
 trait MockRetrieveChargeHistoryByTransactionIdValidatorFactory extends MockValidatorFactory[RetrieveChargeHistoryByTransactionIdRequestData] {
 

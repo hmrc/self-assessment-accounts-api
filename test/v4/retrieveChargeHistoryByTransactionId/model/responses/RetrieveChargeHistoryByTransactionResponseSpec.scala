@@ -18,8 +18,8 @@ package v4.retrieveChargeHistoryByTransactionId.model.responses
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
-import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
+import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
+import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
 class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec {
 

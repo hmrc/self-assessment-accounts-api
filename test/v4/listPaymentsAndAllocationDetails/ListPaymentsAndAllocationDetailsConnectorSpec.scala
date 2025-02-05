@@ -19,10 +19,10 @@ package v4.listPaymentsAndAllocationDetails
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{DateRange, Nino}
 import shared.models.outcomes.ResponseWrapper
-import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
-import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
-import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
-import v3.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
+import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
+import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
 
 import java.time.LocalDate
 import scala.concurrent.Future

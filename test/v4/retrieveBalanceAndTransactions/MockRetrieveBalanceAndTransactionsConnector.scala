@@ -21,7 +21,7 @@ import org.scalamock.scalatest.MockFactory
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
-import v3.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
+import v4.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

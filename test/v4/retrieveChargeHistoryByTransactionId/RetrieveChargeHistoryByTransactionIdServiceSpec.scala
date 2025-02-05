@@ -20,10 +20,10 @@ import shared.models.domain.{Nino, TransactionId}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
-import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
-import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
-import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
-import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
+import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
+import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
+import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
+import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.Future
 

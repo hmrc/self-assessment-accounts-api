@@ -25,7 +25,7 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
+import shared.routing.{Version, Version4}
 import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
@@ -40,7 +40,7 @@ class RetrieveCodingOutStatusControllerSpec
     with MockRetrieveCodingOutStatusService
     with MockRetrieveCodingOutStatusValidatorFactory {
 
-  override val apiVersion: Version = Version3
+  override val apiVersion: Version = Version4
 
   override val validNino             = "AB123456A"
   private val taxYear                = "2023-24"
@@ -53,7 +53,10 @@ class RetrieveCodingOutStatusControllerSpec
 
   private val downstreamResponse: RetrieveCodingOutStatusResponse =
     Def1_RetrieveCodingOutStatusResponse(
-      processingDate = processingDate, nino = validNino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true
+      processingDate = processingDate,
+      nino = validNino,
+      taxYear = TaxYear.fromMtd(taxYear),
+      optOutIndicator = true
     )
 
   "RetrieveCodingOutStatusController" should {

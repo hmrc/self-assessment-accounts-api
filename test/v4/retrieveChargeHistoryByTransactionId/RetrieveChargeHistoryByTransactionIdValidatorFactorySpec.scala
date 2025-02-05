@@ -18,7 +18,7 @@ package v4.retrieveChargeHistoryByTransactionId
 
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v3.retrieveChargeHistoryByTransactionId.def1.Def1_RetrieveChargeHistoryByTransactionIdValidator
+import v4.retrieveChargeHistoryByTransactionId.def1.Def1_RetrieveChargeHistoryByTransactionIdValidator
 
 class RetrieveChargeHistoryByTransactionIdValidatorFactorySpec extends UnitSpec with JsonErrorValidators{
 

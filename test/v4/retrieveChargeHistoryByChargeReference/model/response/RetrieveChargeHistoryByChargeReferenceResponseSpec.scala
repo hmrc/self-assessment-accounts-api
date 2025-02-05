@@ -18,7 +18,7 @@ package v4.retrieveChargeHistoryByChargeReference.model.response
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
+import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
 
 class RetrieveChargeHistoryByChargeReferenceResponseSpec extends UnitSpec {
 

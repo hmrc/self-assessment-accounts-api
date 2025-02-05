@@ -17,7 +17,7 @@
 package v4.listPaymentsAndAllocationDetails.def1.model.response
 
 import play.api.libs.json.{JsValue, Json}
-import v3.listPaymentsAndAllocationDetails.def1.model.response.ChargeDetailFixtures._
+import v4.listPaymentsAndAllocationDetails.def1.model.response.ChargeDetailFixtures._
 
 object AllocationFixtures {
 

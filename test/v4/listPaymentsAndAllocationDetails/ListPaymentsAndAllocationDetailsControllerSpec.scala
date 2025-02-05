@@ -24,9 +24,9 @@ import shared.models.domain.DateRange
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
-import v3.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
-import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
-import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.{mtdResponseJson, responseObject}
+import v4.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
+import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.{mtdResponseJson, responseObject}
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global

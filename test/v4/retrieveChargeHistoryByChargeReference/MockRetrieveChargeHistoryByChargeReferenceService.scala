@@ -21,8 +21,8 @@ import org.scalamock.scalatest.MockFactory
 import shared.controllers.RequestContext
 import shared.models.errors.ErrorWrapper
 import shared.models.outcomes.ResponseWrapper
-import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
-import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
+import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 

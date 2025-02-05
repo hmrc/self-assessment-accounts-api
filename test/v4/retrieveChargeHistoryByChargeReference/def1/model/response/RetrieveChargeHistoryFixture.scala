@@ -17,7 +17,7 @@
 package v4.retrieveChargeHistoryByChargeReference.def1.model.response
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 object RetrieveChargeHistoryFixture {
 

@@ -20,8 +20,8 @@ import common.errors._
 import shared.models.domain.{DateRange, Nino}
 import shared.models.errors._
 import shared.utils.UnitSpec
-import v3.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory
-import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory
+import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 
 import java.time.LocalDate
 

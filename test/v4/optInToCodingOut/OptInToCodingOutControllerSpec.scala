@@ -25,7 +25,7 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
+import shared.routing.{Version, Version4}
 import v4.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 import v4.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
@@ -38,7 +38,7 @@ class OptInToCodingOutControllerSpec
     with MockOptInToCodingOutService
     with MockOptInToCodingOutValidatorFactory {
 
-  override val apiVersion: Version = Version3
+  override val apiVersion: Version = Version4
 
   "OptInToCodingOutController" should {
     "return 204 NO_CONTENT" when {
