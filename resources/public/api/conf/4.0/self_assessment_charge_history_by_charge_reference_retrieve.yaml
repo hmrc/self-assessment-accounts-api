@@ -1,0 +1,82 @@
+get:
+  summary: Retrieve History of a Self Assessment Charge by Charge Reference
+
+  description: |
+    This endpoint enables you to retrieve the history of a Self Assessment charge made by HMRC using a charge reference number. A National Insurance number and charge reference number must be provided.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                       |
+    |----------------------------------|------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates success response.                    |
+    | NOT_FOUND                        | Simulates the scenario where no data is found. |   
+
+  tags:
+    - Payments and Liabilities
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  parameters:
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/chargeReference"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+
+  responses:
+    "200":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/retrieveSelfAssementChargeHistory/def1/response.json"
+          examples:
+            Request:
+              value:
+                $ref: "./examples/retrieveSelfAssementChargeHistory/def1/response.json"
+
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error-response.yaml"
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_CHARGE_REFERENCE:
+              $ref: "./common/errors.yaml#/components/examples/formatChargeReference"
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
+
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error-response.yaml"
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+
+    "404":
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error-response.yaml"
+          examples:
+            NOT_FOUND:
+              $ref: "./common/errors.yaml#/components/examples/notFound"

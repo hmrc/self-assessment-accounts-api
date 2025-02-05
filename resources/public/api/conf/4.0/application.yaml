@@ -1,0 +1,88 @@
+openapi: "3.0.3"
+
+info:
+  version: "4.0"
+  title: Self Assessment Accounts (MTD)
+  description: |
+    The following group of endpoints is stateful in the Sandbox:
+    * <a href="#tag/Coding-Out-Underpayments-and-Debts">Coding Out Underpayments and Debts</a>
+    * <a href="#tag/Coding-Out-Status">Coding Out Status</a>
+    
+    # Send fraud prevention data
+    HMRC monitors transactions to help protect your customers' confidential data from criminals and fraudsters. 
+
+    <div class="govuk-warning-text warning-icon-fix">
+      <span class="govuk-warning-text__icon warning-icon-ui-fix" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        You are required by law to submit header data for this API. This includes all associated APIs and endpoints.
+      </strong>
+    </div>
+
+    [Check the data you need to send](/guides/fraud-prevention/). You can also use the [Test API](/api-documentation/docs/api/service/txm-fph-validator-api/1.0) during initial development and as part of your quality assurance checks.
+
+    # Mapping APIs to Self Assessment tax return forms
+    Some parameters in this API map to box numbers in one or more Self Assessment tax return forms. To learn more and to download this mapping information as a CSV file, go to [income-tax-mtd-changelog/mapping](https://github.com/hmrc/income-tax-mtd-changelog?tab=readme-ov-file#mapping-apis-to-self-assessment-tax-return-forms) on GitHub.
+
+    # Changelog
+    You can find the changelog in the [income-tax-mtd-changelog](https://github.com/hmrc/income-tax-mtd-changelog/#readme) on GitHub.
+
+    # Support
+    * Raise non-technical or platform-related issues with the [Software Development Support Team (SDST)](https://developer.service.hmrc.gov.uk/developer/support).
+    * Raise technical issues on the [income-tax-mtd-changelog](https://github.com/hmrc/income-tax-mtd-changelog/issues) GitHub page.
+    * <a href="/contact/report-technical-problem?newTab=true&service=api-documentation-frontend" target="_blank">Is this page not working properly? (opens in new tab)</a>
+
+
+servers:
+  - url: https://test-api.service.hmrc.gov.uk
+    description: Sandbox
+  - url: https://api.service.hmrc.gov.uk
+    description: Production
+
+components:
+  securitySchemes:
+    User-Restricted:
+      type: oauth2
+      description: HMRC supports OAuth 2.0 for authenticating [User-restricted](https://developer.service.hmrc.gov.uk/api-documentation/docs/authorisation/user-restricted-endpoints) API requests
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.service.hmrc.gov.uk/oauth/authorize
+          tokenUrl: https://api.service.hmrc.gov.uk/oauth/token
+          refreshUrl: https://api.service.hmrc.gov.uk/oauth/refresh
+          scopes:
+            write:self-assessment: Grant write access
+            read:self-assessment: Grant read access
+
+tags:
+  - name: Payments and Liabilities
+    description: These endpoints allow a developer to retrieve accounting information to be shown back to the customer. This includes listing payments the customer has made, how these payments have been allocated and details of any upcoming or outstanding liabilities. The data returned only relates to payments and liabilities arising for tax years since the customer joined the new service. There may also be outstanding liabilities and payment information a customer needs to view for the years prior to signing up to Making Tax Digital for Income Tax Self Assessment that can be viewed using their existing Personal Tax Account.<br><br>
+  - name: Coding Out Underpayments and Debts
+    description: Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts.<br><br>
+    # {{#if (enabled 'cl402')}}
+  - name: Coding Out Status
+# {{/if}}
+
+
+paths:
+  /accounts/self-assessment/{nino}/charges/{transactionId}:
+    $ref: "./self_assessment_charge_history_retrieve.yaml"
+  # {{#if (enabled 'chargeReferenceEndpoint')}}
+  /accounts/self-assessment/{nino}/charges/transactionId/{transactionId}:
+    $ref: "./self_assessment_charge_history_by_transactionId_retrieve.yaml"
+  /accounts/self-assessment/{nino}/charges/chargeReference/{chargeReference}:
+    $ref: "./self_assessment_charge_history_by_charge_reference_retrieve.yaml"
+  # {{/if}}
+  /accounts/self-assessment/{nino}/balance-and-transactions:
+    $ref: "./self_assessment_balance_and_transactions_retrieve.yaml"
+  /accounts/self-assessment/{nino}/payments-and-allocations:
+    $ref: "./self_assessment_payments_and_allocation_details_list.yaml"
+  /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code:
+    $ref: "./coding_out_underpayments.yaml"
+  # {{#if (enabled 'cl402')}}
+  /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/opt-out:
+    $ref: "./opt_out_of_coding_out.yaml"
+  /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/status:
+    $ref: "./coding_out_status_retrieve.yaml"
+  /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/opt-in:
+    $ref: "./opt_in_to_coding_out.yaml"
+# {{/if}}

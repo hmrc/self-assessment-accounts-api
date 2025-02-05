@@ -1,0 +1,71 @@
+get:
+  summary: Retrieve Coding Out Status
+  description: |
+    This endpoint enables you to retrieve opt-out of coding out status for a specified customer (identified by a National Insurance number) and tax year.
+    
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario)        | Scenario                                                           |
+    |-----------------------------------------|--------------------------------------------------------------------|
+    | N/A - DEFAULT                           | Simulates a successful response with latest values.                |
+    | BUSINESS_PARTNER_NOT_EXIST              | Simulates a scenario where the business partner does not exist.    |
+    | ITSA_CONTRACT_OBJECT_NOT_EXIST          | Simulates a scenario where the ITSA contract object does not exist.|
+    | STATEFUL                                | Performs a stateful Retrieve Coding Out Status.                    |
+
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  tags:
+    - Coding Out Status
+
+  parameters:
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/pathParameters.yaml#/components/parameters/codingOutTaxYear"
+
+  responses:
+    "200":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/retrieveCodingOutStatus/def1/response.json"
+          examples:
+            Request:
+              value:
+                $ref: "./examples/retrieveCodingOutStatus/def1/response.json"
+
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: './schemas/error-response.yaml'
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_TAX_YEAR:
+              $ref: "./common/errors.yaml#/components/examples/formatTaxYear"
+            RULE_TAX_YEAR_NOT_SUPPORTED:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearNotSupported"
+            RULE_TAX_YEAR_RANGE_INVALID:
+              $ref: "./common/errors.yaml#/components/examples/ruleTaxYearRangeInvalid"
+            RULE_BUSINESS_PARTNER_NOT_EXIST:
+              $ref: "./common/errors.yaml#/components/examples/ruleBusinessPartnerNotExist"
+            RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST:
+              $ref: "./common/errors.yaml#/components/examples/ruleItsaContractObjectNotExist"
+

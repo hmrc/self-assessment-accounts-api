@@ -1,0 +1,141 @@
+openapi: 3.0.3
+components:
+  parameters:
+    fromDate:
+      name: fromDate
+      in: query
+      description: The inclusive start date of the period to filter payments. The maximum date range between fromDate and toDate should not exceed 732 days.
+      schema:
+        type: string
+        example: "2019-01-02"
+      required: false
+    toDate:
+      name: toDate
+      in: query
+      description: The inclusive end date of the period to filter payments. The maximum date range between fromDate and toDate should not exceed 732 days.
+      schema:
+        type: string
+        example: "2019-01-02"
+      required: false
+    docNumber:
+      name: docNumber
+      in: query
+      description: |
+        The docNumber is a unique number per tax grouping in the Account display.
+        (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) or doc number should be supplied.)
+      schema:
+        type: string
+        example: "3060013199"
+      required: false
+    onlyOpenItems:
+      name: onlyOpenItems
+      in: query
+      description: |
+        Limits the extraction to unpaid or not reversed charges.
+
+        (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) or docNumber should be supplied.)
+
+        Defaults to false
+      schema:
+        type: boolean
+        example: false
+      required: false
+    includeLocks:
+      name: includeLocks
+      in: query
+      description: |
+        Include additional information related to claim and debt management.
+
+        Defaults to false
+      schema:
+        type: boolean
+        example: true
+      required: false
+    calculateAccruedInterest:
+      name: calculateAccruedInterest
+      in: query
+      description: |
+        Calculate accrued interest. Accruing interest is the amount of interest calculated
+
+        a) To today’s date (or in the case of a created statement, to the statement date)
+
+        b) On any overdue interest-bearing liability
+
+        No interest charge is created for an amount of accruing interest. An interest charge is only created when the related liability is paid in full.
+      schema:
+        type: boolean
+        example: false
+      required: false
+    removePOA:
+      name: removePOA
+      in: query
+      description: |
+        Remove Payment on Account details. When true, details of any payments that the customer has made will not be returned.
+
+        Defaults to false.
+      schema:
+        type: boolean
+        example: false
+      required: false
+    includeEstimatedCharges:
+      name: includeEstimatedCharges
+      in: query
+      description: |
+        Include statistical (estimated) values for monthly payments.
+
+        Defaults to false.
+      schema:
+        type: boolean
+        example: true
+      required: false
+    paymentLot:
+      name: paymentLot
+      in: query
+      description: "An identifier for the batch process that processed the pagexyment and assigned it to the taxpayer's account."
+      schema:
+        type: string
+        example: "081203010024"
+      required: false
+    paymentLotItem:
+      name: paymentLotItem
+      in: query
+      description: "An identifier for each payment within a payment lot. paymentLot and paymentLotItem together uniquely identify a payment."
+      schema:
+        type: string
+        example: "000001"
+      required: false
+    customerPaymentInformation:
+      name: customerPaymentInformation
+      in: query
+      description: |
+        Include customer payment information in the response. When true, the following information is returned:
+        Payment Reference, Payment Amount, Payment Method, Payment Lot, Payment Lot Item, Clearing SAP Document.
+
+        Note that if removePOA is true, no information is returned even if customerPaymentInformation is true.
+
+        Defaults to false.
+      schema:
+        type: boolean
+        example: false
+      required: false
+    source:
+      name: source
+      in: query
+      description: |
+        Specifies the source of data to be returned. If source is not provided, the latest values will be returned.<p> Limited to the following possible values: <ul><li>`hmrcHeld`<li>`user`<li>`latest`</p>
+      schema:
+        type: string
+      required: false
+    chargeReference:
+      name: chargeReference
+      in: query
+      description: |
+        This field will be used when the need is to view a specific document with help of Charge Reference number 
+
+        Must conform to the regular expression
+        ^[A-Za-z]{2}[0-9]{12}$
+      schema:
+        type: string
+        example: Ck106547829351
+      required: false
+
