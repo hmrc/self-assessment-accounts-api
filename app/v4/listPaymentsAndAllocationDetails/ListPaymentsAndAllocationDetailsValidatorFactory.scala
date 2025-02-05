@@ -17,9 +17,9 @@
 package v4.listPaymentsAndAllocationDetails
 
 import shared.controllers.validators.Validator
-import v3.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsSchema.Def1
-import v3.listPaymentsAndAllocationDetails.def1.Def1_ListPaymentsAndAllocationDetailsValidator
-import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsSchema.Def1
+import v4.listPaymentsAndAllocationDetails.def1.Def1_ListPaymentsAndAllocationDetailsValidator
+import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 
 import javax.inject.{Inject, Singleton}
 

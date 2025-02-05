@@ -18,8 +18,8 @@ package v4.retrieveChargeHistoryByChargeReference.def1.model.request
 
 import common.models.ChargeReference
 import shared.models.domain.Nino
-import v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema
-import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
+import v4.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema
+import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
 case class Def1_RetrieveChargeHistoryByChargeReferenceRequestData(nino: Nino, chargeReference: ChargeReference)
   extends RetrieveChargeHistoryByChargeReferenceRequestData {

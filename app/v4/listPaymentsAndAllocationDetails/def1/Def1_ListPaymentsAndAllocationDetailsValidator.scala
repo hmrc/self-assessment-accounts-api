@@ -26,7 +26,7 @@ import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
 import shared.models.errors._
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
-import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 
 import javax.inject.Singleton
 

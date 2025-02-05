@@ -18,7 +18,7 @@ package v4.listPaymentsAndAllocationDetails.def1.model.request
 
 import shared.models.domain.{DateRange, Nino}
 import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsSchema
-import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 
 case class Def1_ListPaymentsAndAllocationDetailsRequestData(
     nino: Nino,

@@ -18,7 +18,7 @@ package v4.retrieveChargeHistoryByChargeReference
 
 import play.api.libs.json.Reads
 import shared.schema.DownstreamReadable
-import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 sealed trait RetrieveChargeHistoryByChargeReferenceSchema extends DownstreamReadable[RetrieveChargeHistoryResponse]
 

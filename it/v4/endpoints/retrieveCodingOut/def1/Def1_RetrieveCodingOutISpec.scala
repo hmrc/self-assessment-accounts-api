@@ -32,7 +32,7 @@ import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, ZoneOffset}
 
 class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
-  val versions: Seq[String] = Seq("3.0")
+  val versions: Seq[String] = Seq("4.0")
 
   private trait Test {
 

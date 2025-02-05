@@ -121,7 +121,7 @@ class Def1_OptInToCodingOutISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(s"/$nino/$taxYear/collection/tax-code/coding-out/opt-in")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (ACCEPT, "application/vnd.hmrc.4.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }

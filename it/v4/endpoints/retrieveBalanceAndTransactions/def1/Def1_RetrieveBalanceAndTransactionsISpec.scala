@@ -229,7 +229,7 @@ class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (ACCEPT, "application/vnd.hmrc.4.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }

@@ -18,7 +18,7 @@ package v4.listPaymentsAndAllocationDetails.model.response
 
 import play.api.libs.json._
 import shared.utils.JsonWritesUtil
-import v3.listPaymentsAndAllocationDetails.def1.model.response.Def1_ListPaymentsAndAllocationDetailsResponse
+import v4.listPaymentsAndAllocationDetails.def1.model.response.Def1_ListPaymentsAndAllocationDetailsResponse
 
 trait ListPaymentsAndAllocationDetailsResponse
 

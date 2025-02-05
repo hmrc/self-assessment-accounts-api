@@ -17,8 +17,8 @@
 package v4.retrieveChargeHistoryByTransactionId.def1.models.request
 
 import shared.models.domain.{Nino, TransactionId}
-import v3.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactionIdSchema
-import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
+import v4.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactionIdSchema
+import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 
 case class Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino: Nino, transactionId: TransactionId)
   extends RetrieveChargeHistoryByTransactionIdRequestData {

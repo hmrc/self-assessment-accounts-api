@@ -111,7 +111,7 @@ class RetrieveCodingOutStatusControllerSpec
         detail = GenericAuditDetail(
           userType = "Individual",
           agentReferenceNumber = None,
-          versionNumber = "3.0",
+          versionNumber = "4.0",
           params = Map("nino" -> validNino, "taxYear" -> taxYear),
           requestBody = maybeRequestBody,
           `X-CorrelationId` = correlationId,

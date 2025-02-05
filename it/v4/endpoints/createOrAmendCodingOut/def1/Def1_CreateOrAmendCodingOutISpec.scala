@@ -97,7 +97,7 @@ class Def1_CreateOrAmendCodingOutISpec extends IntegrationBaseSpec {
       setupStubs()
       buildRequest(s"/$nino/$taxYear/collection/tax-code")
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.3.0+json"),
+          (ACCEPT, "application/vnd.hmrc.4.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }

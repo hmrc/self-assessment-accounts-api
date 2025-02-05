@@ -18,7 +18,7 @@ package v4.retrieveChargeHistoryByChargeReference.model.request
 
 import common.models.ChargeReference
 import shared.models.domain.Nino
-import v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema
+import v4.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema
 
 trait RetrieveChargeHistoryByChargeReferenceRequestData{
   val nino: Nino
