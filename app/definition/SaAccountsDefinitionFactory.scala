@@ -18,7 +18,7 @@ package definition
 
 import shared.config.SharedAppConfig
 import shared.definition._
-import shared.routing.Version3
+import shared.routing.{Version3, Version4}
 
 import javax.inject.{Inject, Singleton}
 
@@ -37,6 +37,11 @@ class SaAccountsDefinitionFactory @Inject()(protected val appConfig: SharedAppCo
             version = Version3,
             status = buildAPIStatus(Version3),
             endpointsEnabled = appConfig.endpointsEnabled(Version3)
+          ),
+          APIVersion(
+            version = Version4,
+            status = buildAPIStatus(Version4),
+            endpointsEnabled = appConfig.endpointsEnabled(Version4)
           )
         ),
         requiresTrust = None
