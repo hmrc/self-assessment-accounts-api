@@ -27,7 +27,7 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
+import shared.routing.{Version, Version4}
 import v4.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
 import v4.createOrAmendCodingOut.def1.model.request._
 import v4.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
@@ -43,7 +43,7 @@ class CreateOrAmendCodingOutControllerSpec
     with MockHateoasFactory
     with MockSaAccountsConfig {
 
-  override val apiVersion: Version = Version3
+  override val apiVersion: Version = Version4
 
   private val taxYear = "2019-20"
 

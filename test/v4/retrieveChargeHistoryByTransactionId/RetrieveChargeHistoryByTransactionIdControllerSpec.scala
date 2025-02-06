@@ -24,7 +24,7 @@ import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.domain.TransactionId
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
+import shared.routing.{Version, Version4}
 import common.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
@@ -42,7 +42,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
     with MockHateoasFactory
     with MockRetrieveChargeHistoryByTransactionIdValidatorFactory {
 
-  override val apiVersion: Version = Version3
+  override val apiVersion: Version = Version4
 
   private val transactionId = "anId"
 

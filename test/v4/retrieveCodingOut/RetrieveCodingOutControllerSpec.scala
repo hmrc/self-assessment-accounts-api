@@ -27,7 +27,7 @@ import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
+import shared.routing.{Version, Version4}
 import common.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import v4.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
 import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.mtdResponseWithHateoas
@@ -46,7 +46,7 @@ class RetrieveCodingOutControllerSpec
     with MockSaAccountsConfig
     with MockHateoasFactory {
 
-  override val apiVersion: Version = Version3
+  override val apiVersion: Version = Version4
   private val taxYear              = "2021-22"
   private val source               = "hmrcHeld"
 

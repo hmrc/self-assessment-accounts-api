@@ -22,7 +22,7 @@ import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
+import shared.routing.{Version, Version4}
 import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v4.retrieveBalanceAndTransactions.def1.model.ResponseFixture.{mtdResponseJson, response}
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
@@ -36,7 +36,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
     with MockRetrieveBalanceAndTransactionsService
     with MockRetrieveBalanceAndTransactionsValidatorFactory {
 
-  override val apiVersion: Version = Version3
+  override val apiVersion: Version = Version4
 
   private val requestData: RetrieveBalanceAndTransactionsRequestData = requestEverythingTrue
 

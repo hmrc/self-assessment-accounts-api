@@ -26,7 +26,7 @@ import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
+import shared.routing.{Version, Version4}
 import common.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
@@ -44,7 +44,7 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
     with MockHateoasFactory
     with MockRetrieveChargeHistoryByChargeReferenceValidatorFactory {
 
-  override val apiVersion: Version = Version3
+  override val apiVersion: Version = Version4
 
   private val chargeReference = "anChargeReference"
 
