@@ -4,11 +4,12 @@ description: |
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario) | Scenario                                                                    |
-  |----------------------------------|-----------------------------------------------------------------------------|
-  | N/A - DEFAULT                    | Simulates success response.                                                 |
-  | DUPLICATE_ID_NOT_ALLOWED         | Simulates the scenario where the request data contains duplicate ID values. |
-  | STATEFUL                         | Performs a stateful create or update.                                       |
+  | Header Value (Gov-Test-Scenario) | Scenario                                                                                        |
+  |----------------------------------|-------------------------------------------------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response.                                                                     |
+  | DUPLICATE_ID_NOT_ALLOWED         | Simulates the scenario where the request data contains duplicate ID values.                     |
+  | OUTSIDE_AMENDMENT_WINDOW         | Simulates the scenario where request cannot be completed as it is outside the amendment window. |
+  | STATEFUL                         | Performs a stateful create or update.                                                           |
 
 security:
   - User-Restricted:

@@ -4,11 +4,12 @@ description: |
   ### Test data
   Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
   
-  | Header Value (Gov-Test-Scenario) | Scenario                                       |
-  |----------------------------------|------------------------------------------------|
-  | N/A - DEFAULT                    | Simulates success response.                    |
-  | NOT_FOUND                        | Simulates the scenario where no data is found. |   
-  | STATEFUL                         | Performs a stateful delete.                    |
+  | Header Value (Gov-Test-Scenario) | Scenario                                                                                        |
+  |----------------------------------|-------------------------------------------------------------------------------------------------|
+  | N/A - DEFAULT                    | Simulates success response.                                                                     |
+  | OUTSIDE_AMENDMENT_WINDOW         | Simulates the scenario where request cannot be completed as it is outside the amendment window. |
+  | NOT_FOUND                        | Simulates the scenario where no data is found.                                                  |
+  | STATEFUL                         | Performs a stateful delete.                                                                     |
 
 security:
   - User-Restricted:
