@@ -91,6 +91,8 @@ responses:
             $ref: "./common/errors.yaml#/components/examples/formatId"
           RULE_INCORRECT_OR_EMPTY_BODY_SUBMITTED:
             $ref: "./common/errors.yaml#/components/examples/incorrectOrEmptyBody"
+          RULE_OUTSIDE_AMENDMENT_WINDOW:
+            $ref: './common/errors.yaml#/components/examples/ruleOutsideAmendmentWindowError'
           RULE_INCORRECT_GOV_TEST_SCENARIO:
             $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
 

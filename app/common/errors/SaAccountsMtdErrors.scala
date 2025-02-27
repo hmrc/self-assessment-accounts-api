@@ -75,6 +75,8 @@ object RuleAlreadyOptedInError extends MtdError("RULE_ALREADY_OPTED_IN", "Custom
 
 object RuleAlreadyOptedOutError extends MtdError("RULE_ALREADY_OPTED_OUT", "Customer is already opted out of coding out", BAD_REQUEST)
 
+object RuleOutsideAmendmentWindowError extends MtdError("RULE_OUTSIDE_AMENDMENT_WINDOW", "You are outside the amendment window", BAD_REQUEST)
+
 // Other Errors
 object CodingOutNotFoundError
   extends MtdError("MATCHING_RESOURCE_NOT_FOUND", "Coded out amounts could not be found for the supplied nino and taxYear", NOT_FOUND)

@@ -17,6 +17,7 @@
 package v4.createOrAmendCodingOut
 
 import cats.implicits._
+import common.errors.RuleOutsideAmendmentWindowError
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -45,6 +46,7 @@ class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutC
       "INVALID_PAYLOAD"           -> InternalError,
       "INVALID_REQUEST_TAX_YEAR"  -> RuleTaxYearNotEndedError,
       "DUPLICATE_ID_NOT_ALLOWED"  -> RuleDuplicateIdError,
+      "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError,
       "SERVER_ERROR"              -> InternalError,
       "SERVICE_UNAVAILABLE"       -> InternalError
     )
