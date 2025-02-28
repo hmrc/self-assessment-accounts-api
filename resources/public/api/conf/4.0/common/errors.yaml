@@ -303,6 +303,13 @@ components:
         code: RULE_ALREADY_OPTED_OUT
         message: Customer is already opted out of coding out
 
+
+    ruleOutsideAmendmentWindowError:
+      description: The request cannot be completed as you are outside the amendment window.
+      value:
+        code: RULE_OUTSIDE_AMENDMENT_WINDOW
+        message: You are outside the amendment window
+
     #400
     formatChargeReference:
       description: |

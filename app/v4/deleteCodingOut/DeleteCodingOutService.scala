@@ -17,7 +17,7 @@
 package v4.deleteCodingOut
 
 import cats.implicits._
-import common.errors.CodingOutNotFoundError
+import common.errors.{CodingOutNotFoundError, RuleOutsideAmendmentWindowError}
 import shared.controllers.RequestContext
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
@@ -41,6 +41,7 @@ class DeleteCodingOutService @Inject() (connector: DeleteCodingOutConnector) ext
     val errors = Map(
       "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
       "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+      "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError,
       "INVALID_CORRELATIONID"     -> InternalError,
       "NO_DATA_FOUND"             -> CodingOutNotFoundError,
       "SERVER_ERROR"              -> InternalError,
