@@ -39,11 +39,12 @@ class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec {
   private val parsedFromDate       = LocalDate.parse(validFromDate)
   private val parsedParsedToDate   = LocalDate.parse(validToDate)
   private val parsedFromAndToDates = DateRange(parsedFromDate, parsedParsedToDate)
+  private val parsedSameFromAndToDates = DateRange(parsedFromDate, parsedFromDate)
 
   private val parsedPaymentLot     = validPaymentLot
   private val parsedPaymentLotItem = validPaymentLotItem
 
-  private val parsedRequest =
+  private def parsedRequest(parsedFromAndToDates: DateRange) =
     Def1_ListPaymentsAndAllocationDetailsRequestData(parsedNino, Some(parsedFromAndToDates), Some(parsedPaymentLot), Some(parsedPaymentLotItem))
 
   private val parsedRequestWithoutOptionals = Def1_ListPaymentsAndAllocationDetailsRequestData(parsedNino, None, None, None)
@@ -59,13 +60,19 @@ class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec {
         val result =
           validator(validNino, Some(validFromDate), Some(validToDate), Some(validPaymentLot), Some(validPaymentLotItem)).validateAndWrapResult()
 
-        result shouldBe Right(parsedRequest)
+        result shouldBe Right(parsedRequest(parsedFromAndToDates))
       }
 
       "passed a valid request with no optionals supplied" in {
         val result = validator(validNino, None, None, None, None).validateAndWrapResult()
 
         result shouldBe Right(parsedRequestWithoutOptionals)
+      }
+
+      "pass a valid request with the same toDate and fromDate" in {
+        val result =
+          validator(validNino, Some(validFromDate), Some(validFromDate), Some(validPaymentLot), Some(validPaymentLotItem)).validateAndWrapResult()
+        result shouldBe Right(parsedRequest(parsedSameFromAndToDates))
       }
     }
   }
@@ -141,14 +148,6 @@ class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec {
       val result = validator(validNino, Some(validFromDate), Some("2100-01-21"), None, None).validateAndWrapResult()
 
       result shouldBe Left(ErrorWrapper(correlationId, ToDateFormatError))
-    }
-
-    "the same dates are supplied" in {
-      val result = validator(validNino, Some(validFromDate), Some(validFromDate), None, None).validateAndWrapResult()
-
-      result shouldBe Left(
-        ErrorWrapper(correlationId, RangeToDateBeforeFromDateError)
-      )
     }
   }
 

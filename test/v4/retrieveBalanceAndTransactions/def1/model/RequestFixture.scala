@@ -50,6 +50,18 @@ object RequestFixture {
     includeEstimatedCharges = false
   )
 
+  val requestSameDateRange: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
+    nino = Nino(validNino),
+    docNumber = None,
+    fromAndToDates = Some(DateRange(LocalDate.parse(validFromDate), LocalDate.parse(validFromDate))),
+    onlyOpenItems = false,
+    includeLocks = false,
+    calculateAccruedInterest = false,
+    removePOA = false,
+    customerPaymentInformation = false,
+    includeEstimatedCharges = false
+  )
+
   val requestEverythingTrue: RetrieveBalanceAndTransactionsRequestData = RetrieveBalanceAndTransactionsRequestData(
     nino = Nino(validNino),
     docNumber = Some(validDocNumber),
