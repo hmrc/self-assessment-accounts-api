@@ -67,6 +67,15 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
           requestDateRange
         )
       }
+
+      "a valid request with the same date is supplied" in {
+        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+          validator(validNino, None, Some(validFromDate), Some(validFromDate), None, None, None, None, None, None).validateAndWrapResult()
+
+        result shouldBe Right(
+          requestSameDateRange
+        )
+      }
     }
 
     "return a parameter error" when {
@@ -157,15 +166,6 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
         result shouldBe Left(
           ErrorWrapper(correlationId, ToDateFormatError)
-        )
-      }
-
-      "the same dates are supplied" in {
-        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, Some(validFromDate), toDate = Some(validFromDate), None, None, None, None, None, None).validateAndWrapResult()
-
-        result shouldBe Left(
-          ErrorWrapper(correlationId, RangeToDateBeforeFromDateError)
         )
       }
 

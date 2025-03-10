@@ -21,7 +21,6 @@ import cats.data.Validated._
 import cats.implicits._
 import common.errors._
 import common.resolvers.ResolveStringPattern
-import common.utils.DateValidator.validateSameDates
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
 import shared.models.errors._
@@ -56,7 +55,7 @@ class Def1_ListPaymentsAndAllocationDetailsValidator(nino: String,
         ResolveNino(nino),
         maybeFromAndTo
           .map { case (from, to) =>
-            resolveDateRange(from -> to).andThen(validateSameDates)
+            resolveDateRange(from -> to)
               .map(Some(_))
           }
           .getOrElse(Valid(None)),

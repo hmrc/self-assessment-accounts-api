@@ -20,7 +20,6 @@ import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits._
 import common.errors._
-import common.utils.DateValidator.validateSameDates
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
 import shared.models.domain.DateRange
@@ -57,7 +56,7 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
       validateDateRange(fromDate, toDate) andThen { maybeFromAndTo =>
         maybeFromAndTo
           .map { case (from, to) =>
-            resolveDateRange(from -> to).andThen(validateSameDates)
+            resolveDateRange(from -> to)
               .map(Some(_))
           }
           .getOrElse(Valid(None))
