@@ -65,30 +65,6 @@ class Def1_CreateOrAmendCodingOutISpec extends IntegrationBaseSpec {
     """.stripMargin
     )
 
-    protected val responseBody: JsValue = Json.parse(
-      s"""
-         |{
-         |  "links": [
-         |    {
-         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-         |      "method": "PUT",
-         |      "rel": "create-or-amend-coding-out-underpayments"
-         |    },
-         |    {
-         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-         |      "method": "GET",
-         |      "rel": "self"
-         |    },
-         |    {
-         |      "href": "/accounts/self-assessment/$nino/$taxYear/collection/tax-code",
-         |      "method": "DELETE",
-         |      "rel": "delete-coding-out-underpayments"
-         |    }
-         |  ]
-         |}
-     """.stripMargin
-    )
-
     def setupStubs(): Unit = ()
 
     def request: WSRequest = {
@@ -136,8 +112,7 @@ class Def1_CreateOrAmendCodingOutISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT, JsObject.empty)
 
         val response: WSResponse = await(request.put(requestBodyJson))
-        response.status shouldBe OK
-        response.json shouldBe responseBody
+        response.status shouldBe NO_CONTENT
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
 
@@ -146,8 +121,7 @@ class Def1_CreateOrAmendCodingOutISpec extends IntegrationBaseSpec {
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT, JsObject.empty)
 
         val response: WSResponse = await(request.put(requestBodyJson))
-        response.status shouldBe OK
-        response.json shouldBe responseBody
+        response.status shouldBe NO_CONTENT
         response.header("X-CorrelationId").nonEmpty shouldBe true
       }
     }

@@ -172,8 +172,8 @@ class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
        """.stripMargin
     )
 
-    val mtdResponse: JsValue     = mtdResponseWithHateoas(nino, taxYear, mtdBodySource)
-    val mtdResponseNoId: JsValue = mtdResponseWithHateoasNoId(nino, taxYear, mtdBodySource)
+    val mtdResponse: JsValue     = retrieveCodingOutMtdResponse(taxYear, mtdBodySource)
+    val mtdResponseNoId: JsValue = retrieveCodingOutMtdResponseNoId(taxYear, mtdBodySource)
 
     def taxYear: String
 

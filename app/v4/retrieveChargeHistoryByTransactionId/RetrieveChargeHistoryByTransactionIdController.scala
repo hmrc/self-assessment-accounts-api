@@ -19,10 +19,9 @@ package v4.retrieveChargeHistoryByTransactionId
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
-import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
+//import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -32,7 +31,6 @@ class RetrieveChargeHistoryByTransactionIdController @Inject() (val authService:
                                                                 val lookupService: MtdIdLookupService,
                                                                 validatorFactory: RetrieveChargeHistoryByTransactionIdValidatorFactory,
                                                                 service: RetrieveChargeHistoryByTransactionIdService,
-                                                                hateoasFactory: HateoasFactory,
                                                                 cc: ControllerComponents,
                                                                 idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
@@ -52,7 +50,7 @@ class RetrieveChargeHistoryByTransactionIdController @Inject() (val authService:
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieveChargeHistoryByTransactionId)
-          .withHateoasResult(hateoasFactory)(RetrieveChargeHistoryHateoasData(nino, transactionId))
+          .withPlainJsonResult()
 
       requestHandler.handleRequest()
     }

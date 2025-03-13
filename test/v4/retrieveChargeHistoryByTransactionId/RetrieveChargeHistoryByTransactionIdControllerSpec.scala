@@ -19,18 +19,14 @@ package v4.retrieveChargeHistoryByTransactionId
 import play.api.Configuration
 import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.domain.TransactionId
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
-import common.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
-import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -39,7 +35,6 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveChargeHistoryByTransactionIdService
-    with MockHateoasFactory
     with MockRetrieveChargeHistoryByTransactionIdValidatorFactory {
 
   override val apiVersion: Version = Version4
@@ -48,18 +43,6 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
 
   private val requestData: RetrieveChargeHistoryByTransactionIdRequestData =
     Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino = parsedNino, transactionId = TransactionId(transactionId))
-
-  val chargeHistoryLink: Link = Link(
-    href = s"/accounts/self-assessment/$validNino/charges/$transactionId",
-    method = GET,
-    rel = SELF
-  )
-
-  val transactionDetailsLink: Link = Link(
-    href = s"/accounts/self-assessment/$validNino/transactions/$transactionId",
-    method = GET,
-    rel = RETRIEVE_TRANSACTION_DETAILS
-  )
 
   val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
@@ -72,17 +55,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
           .retrieveChargeHistoryByTransactionId(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        MockHateoasFactory
-          .wrap(response, RetrieveChargeHistoryHateoasData(validNino, transactionId))
-          .returns(
-            HateoasWrapper(
-              response,
-              List(
-                chargeHistoryLink,
-                transactionDetailsLink
-              )))
-
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdMultipleResponseWithHateoas(validNino, transactionId)))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdMultipleResponse))
       }
     }
     "return the error as per spec" when {
@@ -106,7 +79,6 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveChargeHistoryByTransactionIdValidatorFactory,
       service = mockRetrieveChargeHistoryByTransactionIdService,
-      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )

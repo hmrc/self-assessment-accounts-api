@@ -21,8 +21,6 @@ import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.{DELETE, GET, PUT}
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors._
@@ -30,7 +28,6 @@ import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
 import v4.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
 import v4.createOrAmendCodingOut.def1.model.request._
-import v4.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,21 +37,11 @@ class CreateOrAmendCodingOutControllerSpec
     with ControllerTestRunner
     with MockCreateOrAmendCodingOutService
     with MockCreateOrAmendCodingOutValidatorFactory
-    with MockHateoasFactory
     with MockSaAccountsConfig {
 
   override val apiVersion: Version = Version4
 
   private val taxYear = "2019-20"
-
-  private val testHateoasLinks = List(
-    Link(
-      href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
-      method = PUT,
-      rel = "create-or-amend-coding-out-underpayments"),
-    Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = GET, rel = "self"),
-    Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = DELETE, rel = "delete-coding-out-underpayments")
-  )
 
   private val requestJson = Json.parse(
     s"""|{
@@ -95,28 +82,6 @@ class CreateOrAmendCodingOutControllerSpec
 
   private val requestData = Def1_CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear), requestBody)
 
-  val mtdResponseJson: JsValue =
-    Json.parse(s"""{
-                  |  "links": [
-                  |    {
-                  |      "href": "/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
-                  |      "method": "PUT",
-                  |      "rel": "create-or-amend-coding-out-underpayments"
-                  |    },
-                  |    {
-                  |      "href": "/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
-                  |      "method": "GET",
-                  |      "rel": "self"
-                  |    },
-                  |    {
-                  |      "href": "/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
-                  |      "method": "DELETE",
-                  |      "rel": "delete-coding-out-underpayments"
-                  |    }
-                  |  ]
-                  |}
-                  |""".stripMargin)
-
   "handleRequest" should {
     "return OK" when {
 
@@ -127,15 +92,11 @@ class CreateOrAmendCodingOutControllerSpec
           .amend(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        MockHateoasFactory
-          .wrap((), CreateOrAmendCodingOutHateoasData(validNino, taxYear))
-          .returns(HateoasWrapper((), testHateoasLinks))
-
         runOkTestWithAudit(
-          expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdResponseJson),
+          expectedStatus = NO_CONTENT,
+          maybeExpectedResponseBody = None,
           maybeAuditRequestBody = Some(requestJson),
-          maybeAuditResponseBody = Some(mtdResponseJson)
+          maybeAuditResponseBody = None
         )
       }
     }
@@ -165,7 +126,6 @@ class CreateOrAmendCodingOutControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockCreateOrAmendCodingOutValidatorFactory,
       service = mockCreateOrAmendCodingOutService,
-      hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator

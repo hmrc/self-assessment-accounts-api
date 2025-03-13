@@ -16,33 +16,16 @@
 
 package v4.retrieveCodingOut.model.response
 
-import common.hateoas.HateoasLinks
 import play.api.libs.json.{JsObject, Json, OWrites}
-import shared.config.SharedAppConfig
-import shared.hateoas.{HateoasData, HateoasLinksFactory, Link}
 import shared.utils.JsonWritesUtil
 import v4.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 
 trait RetrieveCodingOutResponse
 
-object RetrieveCodingOutResponse extends JsonWritesUtil with HateoasLinks {
+object RetrieveCodingOutResponse extends JsonWritesUtil {
 
   implicit val writes: OWrites[RetrieveCodingOutResponse] = writesFrom {
     case def1: Def1_RetrieveCodingOutResponse => Json.toJson(def1).as[JsObject]
   }
-  implicit object RetrieveCodingOutLinksFactory extends HateoasLinksFactory[RetrieveCodingOutResponse, RetrieveCodingOutHateoasData] {
-
-    override def links(appConfig: SharedAppConfig, data: RetrieveCodingOutHateoasData): Seq[Link] = {
-      import data._
-      Seq(
-        createOrAmendCodingOut(appConfig, nino, taxYear),
-        retrieveCodingOut(appConfig, nino, taxYear),
-        deleteCodingOut(appConfig, nino, taxYear)
-      )
-    }
-
-  }
-
+  implicit object RetrieveCodingOutLinksFactory
 }
-
-case class RetrieveCodingOutHateoasData(nino: String, taxYear: String) extends HateoasData
