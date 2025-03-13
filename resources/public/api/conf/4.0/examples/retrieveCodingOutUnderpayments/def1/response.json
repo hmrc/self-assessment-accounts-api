@@ -62,22 +62,5 @@
       "submittedOn": "2021-07-06T09:37:17.000Z",
       "id": 1234567891
     }
-  },
-  "links": [
-    {
-      "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
-      "method": "PUT",
-      "rel": "create-or-amend-coding-out-underpayments"
-    },
-    {
-      "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
-      "method": "GET",
-      "rel": "self"
-    },
-    {
-      "href": "/accounts/self-assessment/TC663795B/2021-22/collection/tax-code",
-      "method": "DELETE",
-      "rel": "delete-coding-out-underpayments"
-    }
-  ]
+  }
 }

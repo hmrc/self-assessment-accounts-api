@@ -38,7 +38,7 @@ requestBody:
             $ref: './examples/createOrAmendCodingOutUnderpayments/def1/request.json'
 
 responses:
-  "200":
+  "204":
     description: Success
     headers:
       X-CorrelationId:
@@ -49,14 +49,6 @@ responses:
         $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
       Link:
         $ref: "./common/headers.yaml#/components/parameters/linkHeader"
-    content:
-      application/json:
-        schema:
-          $ref: "./schemas/createOrAmendCodingOutUnderpayments/def1/response.json"
-        examples:
-          Request:
-            value:
-              $ref: "./examples/createOrAmendCodingOutUnderpayments/def1/response.json"
 
   "400":
     description: Bad request

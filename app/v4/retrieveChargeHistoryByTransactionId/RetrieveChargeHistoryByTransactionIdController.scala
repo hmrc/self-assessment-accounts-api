@@ -21,7 +21,6 @@ import shared.config.SharedAppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
-//import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
