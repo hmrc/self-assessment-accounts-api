@@ -62,7 +62,6 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
         RequestHandler
           .withValidator(validator)
           .withService(service.amend)
-          .withNoContentResult()
           .withAuditing(AuditHandler(
             auditService,
             auditType = "CreateAmendCodingOutUnderpayment",

@@ -29,6 +29,4 @@ object RetrieveChargeHistoryResponse  {
       .map(items => RetrieveChargeHistoryResponse(items))
 
   implicit val writes: OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
-
-  implicit object RetrieveChargeHistoryLinksFactory
 }

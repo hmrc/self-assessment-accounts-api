@@ -27,5 +27,4 @@ object RetrieveCodingOutResponse extends JsonWritesUtil {
   implicit val writes: OWrites[RetrieveCodingOutResponse] = writesFrom {
     case def1: Def1_RetrieveCodingOutResponse => Json.toJson(def1).as[JsObject]
   }
-  implicit object RetrieveCodingOutLinksFactory
 }
