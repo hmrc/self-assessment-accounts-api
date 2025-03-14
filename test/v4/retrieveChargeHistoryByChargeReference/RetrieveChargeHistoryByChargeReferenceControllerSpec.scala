@@ -18,21 +18,17 @@ package v4.retrieveChargeHistoryByChargeReference
 
 import common.models.ChargeReference
 import play.api.Configuration
-import play.api.libs.json.{JsObject, JsValue}
+import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.GET
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
-import common.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
-import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -41,7 +37,6 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
     extends ControllerBaseSpec
     with ControllerTestRunner
     with MockRetrieveChargeHistoryByChargeReferenceService
-    with MockHateoasFactory
     with MockRetrieveChargeHistoryByChargeReferenceValidatorFactory {
 
   override val apiVersion: Version = Version4
@@ -50,18 +45,6 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
 
   private val requestData: RetrieveChargeHistoryByChargeReferenceRequestData =
     Def1_RetrieveChargeHistoryByChargeReferenceRequestData(nino = parsedNino, chargeReference = ChargeReference(chargeReference))
-
-  val chargeHistoryLink: Link = Link(
-    href = s"/accounts/self-assessment/$validNino/charges/$chargeReference",
-    method = GET,
-    rel = SELF
-  )
-
-  val transactionDetailsLink: Link = Link(
-    href = s"/accounts/self-assessment/$validNino/transactions/$chargeReference",
-    method = GET,
-    rel = RETRIEVE_TRANSACTION_DETAILS
-  )
 
   val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
@@ -74,18 +57,10 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
           .retrieveChargeHistoryByChargeReference(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        MockHateoasFactory
-          .wrap(response, RetrieveChargeHistoryHateoasData(validNino, chargeReference))
-          .returns(
-            HateoasWrapper(
-              response,
-              List(
-                chargeHistoryLink,
-                transactionDetailsLink
-              )))
-
-        val responseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(validNino, chargeReference)
-        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(responseWithHateoas),maybeAuditResponseBody = Some(responseWithHateoas))
+        runOkTestWithAudit(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(mtdMultipleResponse),
+          maybeAuditResponseBody = Some(mtdMultipleResponse))
       }
     }
 
@@ -110,7 +85,6 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveChargeHistoryByChargeReferenceValidatorFactory,
       service = mockRetrieveChargeHistoryByChargeReferenceService,
-      hateoasFactory = mockHateoasFactory,
       auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator

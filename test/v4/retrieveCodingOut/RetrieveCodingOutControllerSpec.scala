@@ -22,18 +22,14 @@ import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.hateoas.Method.{DELETE, GET, PUT}
-import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
-import common.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import v4.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
-import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.mtdResponseWithHateoas
+import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.retrieveCodingOutMtdResponse
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.def1.model.response._
-import v4.retrieveCodingOut.model.response.RetrieveCodingOutHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,8 +39,7 @@ class RetrieveCodingOutControllerSpec
     with ControllerTestRunner
     with MockRetrieveCodingOutService
     with MockRetrieveCodingOutValidatorFactory
-    with MockSaAccountsConfig
-    with MockHateoasFactory {
+    with MockSaAccountsConfig {
 
   override val apiVersion: Version = Version4
   private val taxYear              = "2021-22"
@@ -54,24 +49,6 @@ class RetrieveCodingOutControllerSpec
     nino = parsedNino,
     taxYear = TaxYear.fromMtd(taxYear),
     source = Some(MtdSource.parser(source))
-  )
-
-  private val createOrAmendCodingOutLink = Link(
-    href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
-    method = PUT,
-    rel = CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS
-  )
-
-  private val retrieveCodingOutLink = Link(
-    href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
-    method = GET,
-    rel = SELF
-  )
-
-  private val deleteCodingOutLink = Link(
-    href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
-    method = DELETE,
-    rel = DELETE_CODING_OUT_UNDERPAYMENTS
   )
 
   val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
@@ -112,8 +89,6 @@ class RetrieveCodingOutControllerSpec
       Some(unmatchedCustomerSubmissionsObject)
     )
 
-  private val mtdResponseJson = mtdResponseWithHateoas(validNino, taxYear, source)
-
   "RetrieveCodingOutController" should {
     "return OK" when {
       "happy path" in new Test {
@@ -123,18 +98,7 @@ class RetrieveCodingOutControllerSpec
           .retrieveCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))))
 
-        MockHateoasFactory
-          .wrap(retrieveCodingOutResponse, RetrieveCodingOutHateoasData(validNino, taxYear))
-          .returns(
-            HateoasWrapper(
-              retrieveCodingOutResponse,
-              List(
-                createOrAmendCodingOutLink,
-                retrieveCodingOutLink,
-                deleteCodingOutLink
-              )))
-
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdResponseJson))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(retrieveCodingOutMtdResponse(taxYear, source)))
       }
     }
 
@@ -164,7 +128,6 @@ class RetrieveCodingOutControllerSpec
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveCodingOutValidatorFactory,
       service = mockRetrieveCodingOutService,
-      hateoasFactory = mockHateoasFactory,
       cc = cc,
       idGenerator = mockIdGenerator
     )

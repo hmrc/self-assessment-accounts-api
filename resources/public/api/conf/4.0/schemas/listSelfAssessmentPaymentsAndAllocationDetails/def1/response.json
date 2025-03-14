@@ -132,42 +132,9 @@
           "allocations"
         ]
       }
-    },
-    "links": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "method": {
-            "type": "string",
-            "description": "The HTTP method type for the endpoint.",
-            "enum": [
-              "GET"
-            ]
-          },
-          "rel": {
-            "type": "string",
-            "description": "A label for the endpoint, which describes how it is related to the current resource. The ‘rel’ will be ‘self’ where the action is retrieval of the same resource.",
-            "enum": [
-              "self"
-            ]
-          },
-          "href": {
-            "type": "string",
-            "description": "The relative URL of the endpoint.",
-            "example": "/accounts/self-assessment/AA999999A/payments-and-allocations"
-          }
-        },
-        "required": [
-          "href",
-          "rel",
-          "method"
-        ]
-      }
     }
   },
   "required": [
-    "payments",
-    "links"
+    "payments"
   ]
 }
