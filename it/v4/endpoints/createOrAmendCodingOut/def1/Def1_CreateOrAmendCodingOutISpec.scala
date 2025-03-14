@@ -106,7 +106,7 @@ class Def1_CreateOrAmendCodingOutISpec extends IntegrationBaseSpec {
   }
 
   "The controller" should {
-    "return a 200 status code" when {
+    "return a 204 status code" when {
       "any valid request is made" in new NonTysTest {
         override def setupStubs(): Unit =
           DownstreamStub.onSuccess(DownstreamStub.PUT, downstreamUri, NO_CONTENT, JsObject.empty)
