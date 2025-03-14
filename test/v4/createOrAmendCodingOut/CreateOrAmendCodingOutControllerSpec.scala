@@ -83,7 +83,7 @@ class CreateOrAmendCodingOutControllerSpec
   private val requestData = Def1_CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear), requestBody)
 
   "handleRequest" should {
-    "return OK" when {
+    "return No Content" when {
 
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))

@@ -90,7 +90,7 @@ class RetrieveCodingOutControllerSpec
     )
 
   "RetrieveCodingOutController" should {
-    "return OK" when {
+    "return No Content" when {
       "happy path" in new Test {
         willUseValidator(returningSuccess(requestData))
 
