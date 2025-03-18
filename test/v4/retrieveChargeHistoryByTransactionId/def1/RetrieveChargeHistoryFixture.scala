@@ -16,7 +16,7 @@
 
 package v4.retrieveChargeHistoryByTransactionId.def1
 
-import play.api.libs.json.{JsObject, JsValue, Json}
+import play.api.libs.json.{JsValue, Json}
 import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
@@ -106,28 +106,5 @@ object RetrieveChargeHistoryFixture {
       |  ]
       | }
       |""".stripMargin)
-
-  def mtdMultipleResponseWithHateoas(nino: String, transactionId: String): JsObject = Json
-    .parse(s"""
-       |{
-       |   "chargeHistoryDetails": [
-       |      $mtdSingleJson,
-       |      $mtdSingleJson
-       |  ],
-       |   "links":[
-       |      {
-       |         "href":"/accounts/self-assessment/$nino/charges/$transactionId",
-       |         "method":"GET",
-       |         "rel":"self"
-       |      },
-       |      {
-       |         "href":"/accounts/self-assessment/$nino/transactions/$transactionId",
-       |         "method":"GET",
-       |         "rel":"retrieve-transaction-details"
-       |      }
-       |   ]
-       | }
-       |""".stripMargin)
-    .as[JsObject]
 
 }

@@ -20,16 +20,13 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.ChargeReferenceFormatError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status._
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.{
-  downstreamResponseMultiple,
-  mtdMultipleResponseWithHateoas
-}
+import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponse}
 
 class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSpec {
 
@@ -37,8 +34,6 @@ class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSp
 
     protected val chargeReference = "XD000024425799"
     protected val nino            = "AA123456A"
-
-    protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, chargeReference)
 
     def downstreamUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
 
@@ -77,7 +72,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSp
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdResponseWithHateoas
+        response.json shouldBe mtdMultipleResponse
         response.header("Content-Type") shouldBe Some("application/json")
       }
 

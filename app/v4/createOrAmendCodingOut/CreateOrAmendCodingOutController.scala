@@ -21,12 +21,9 @@ import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.SharedAppConfig
 import shared.controllers._
-import shared.hateoas.HateoasFactory
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
-import v4.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
-import v4.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse._
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -36,7 +33,6 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
                                                   val lookupService: MtdIdLookupService,
                                                   validatorFactory: CreateOrAmendCodingOutValidatorFactory,
                                                   service: CreateOrAmendCodingOutService,
-                                                  hateoasFactory: HateoasFactory,
                                                   auditService: AuditService,
                                                   cc: ControllerComponents,
                                                   idGenerator: IdGenerator
@@ -66,7 +62,6 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
         RequestHandler
           .withValidator(validator)
           .withService(service.amend)
-          .withHateoasResult(hateoasFactory)(CreateOrAmendCodingOutHateoasData(nino, taxYear))
           .withAuditing(AuditHandler(
             auditService,
             auditType = "CreateAmendCodingOutUnderpayment",

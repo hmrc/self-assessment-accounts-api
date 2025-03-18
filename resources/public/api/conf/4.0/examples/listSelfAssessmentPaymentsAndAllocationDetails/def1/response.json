@@ -46,13 +46,6 @@
         }
       ]
     }
-  ],
-  "links":[
-    {
-      "href":"/individuals/accounts/self-assessment/NS345678A/payments-and-allocations",
-      "rel": "self",
-      "method": "GET"
-    }
   ]
 }
 

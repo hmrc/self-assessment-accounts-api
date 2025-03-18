@@ -20,10 +20,8 @@ import config.SaAccountsConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
 import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import shared.hateoas.HateoasFactory
 import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
-import v4.retrieveCodingOut.model.response.RetrieveCodingOutHateoasData
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -33,7 +31,6 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
                                              val lookupService: MtdIdLookupService,
                                              validatorFactory: RetrieveCodingOutValidatorFactory,
                                              service: RetrieveCodingOutService,
-                                             hateoasFactory: HateoasFactory,
                                              cc: ControllerComponents,
                                              idGenerator: IdGenerator
                                             )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAppConfig: SaAccountsConfig)
@@ -57,7 +54,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
         RequestHandler
           .withValidator(validator)
           .withService(service.retrieveCodingOut)
-          .withHateoasResult(hateoasFactory)(RetrieveCodingOutHateoasData(nino, taxYear))
+          .withPlainJsonResult()
 
       requestHandler.handleRequest()
 
