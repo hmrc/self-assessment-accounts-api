@@ -1,3 +1,4 @@
+summary: Retrieve Coding Out Underpayments and Debt Amounts
 description: |
   This endpoint enables you to retrieve HMRC-held coding out underpayments and debt amounts or user submitted amended coding out amounts for a previous tax year and given National Insurance number.
   
