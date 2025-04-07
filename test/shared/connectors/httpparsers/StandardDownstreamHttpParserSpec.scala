@@ -66,11 +66,14 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
         httpReads.read(method, url, httpResponse) shouldBe Left(expected)
       }
 
-      handleErrorsCorrectly(httpReads)
-      handleInternalErrorsCorrectly(httpReads)
-      handleUnexpectedResponse(httpReads)
-      handleBvrsCorrectly(httpReads)
+
     }
+
+    handleErrorsCorrectly(httpReads)
+    handleInternalErrorsCorrectly(httpReads)
+    handleUnexpectedResponse(httpReads)
+    handleBvrsCorrectly(httpReads)
+    handleHipErrorsCorrectly(httpReads)
 
     "a success code is specified" should {
       "use that status code for success" in {
@@ -96,11 +99,13 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
         }
       }
 
-      handleErrorsCorrectly(httpReads)
-      handleInternalErrorsCorrectly(httpReads)
-      handleUnexpectedResponse(httpReads)
-      handleBvrsCorrectly(httpReads)
     }
+
+    handleErrorsCorrectly(httpReads)
+    handleInternalErrorsCorrectly(httpReads)
+    handleUnexpectedResponse(httpReads)
+    handleBvrsCorrectly(httpReads)
+    handleHipErrorsCorrectly(httpReads)
 
     "a success code is specified" should {
       implicit val successCode: SuccessCode             = SuccessCode(PARTIAL_CONTENT)
@@ -247,6 +252,34 @@ class StandardDownstreamHttpParserSpec extends UnitSpec {
         )
       }
     }
+  }
+
+  private def handleHipErrorsCorrectly[A](httpReads: HttpReads[DownstreamOutcome[A]]): Unit = {
+
+    def singleHipJson(code: String) = Json.parse(s"""
+                                       |{
+                                       |  "errors": {
+                                       |    "processingDate": "2022-01-31T09:26:17Z",
+                                       |    "code": "$code",
+                                       |    "text": "No match found for reference provided"
+                                       |  }
+                                       |}
+        """.stripMargin)
+
+    List("002", "003", "005", "015").foreach(code =>
+      s"receiving a response with HIP error code $code" should {
+        s"be able to parse the error" in {
+          val httpResponse = HttpResponse(UNPROCESSABLE_ENTITY, singleHipJson(code), Map("CorrelationId" -> List(correlationId)))
+          val result       = httpReads.read(method, url, httpResponse)
+
+          result shouldBe Left(
+            ResponseWrapper(
+              correlationId,
+              DownstreamErrors.single(DownstreamErrorCode(code))
+            )
+          )
+        }
+      })
   }
 
 }

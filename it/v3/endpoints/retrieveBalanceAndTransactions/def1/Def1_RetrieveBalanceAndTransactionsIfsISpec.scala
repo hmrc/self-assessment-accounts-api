@@ -29,7 +29,10 @@ import shared.support.IntegrationBaseSpec
 import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v3.retrieveBalanceAndTransactions.def1.model.ResponseFixture._
 
-class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
+class Def1_RetrieveBalanceAndTransactionsIfsISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1553.enabled" -> false) ++ super.servicesConfig
 
   "Calling the 'retrieve a charge history' endpoint" when {
     "any valid request is made with doc number, fromDate, toDate and all flag params as false" should {

@@ -16,8 +16,8 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri.IfsUri
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -38,7 +38,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
 
     import request._
 
-    val booleanQueryParams: Seq[(String, String)] =
+    val ifsBooleanQueryParams: Seq[(String, String)] =
       List(
         "onlyOpenItems"              -> onlyOpenItems,
         "includeLocks"               -> includeLocks,
@@ -48,19 +48,48 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
         "includeStatistical"         -> includeEstimatedCharges
       ).map { case (k, v) => k -> v.toString }
 
-    val optionalQueryParams: Seq[(String, String)] =
+    val ifsOptionalQueryParams: Seq[(String, String)] =
       List(
         "docNumber" -> docNumber,
         "dateFrom"  -> fromAndToDates.map(_.startDate.toString),
         "dateTo"    -> fromAndToDates.map(_.endDate.toString)
       ).collect { case (k, Some(v)) => k -> v }
 
-    val queryParams = booleanQueryParams ++ optionalQueryParams
+    val hipRequiredQueryParams: Seq[(String, String)] =
+      List(
+        "onlyOpenItems"              -> onlyOpenItems,
+        "includeLocks"               -> includeLocks,
+        "calculateAccruedInterest"   -> calculateAccruedInterest,
+        "removePaymentonAccount"     -> removePOA,
+        "customerPaymentInformation" -> customerPaymentInformation,
+        "includeStatistical"         -> includeEstimatedCharges,
+        "regimeType"                 -> "ITSA",
+        "idType"                     -> "NINO",
+        "idNumber"                   -> nino
+      ).map { case (k, v) => k -> v.toString }
+
+    val hipOptionalQueryParams: Seq[(String, String)] =
+      List(
+        "sapDocumentNumber" -> docNumber,
+        "dateFrom"          -> fromAndToDates.map(_.startDate.toString),
+        "dateTo"            -> fromAndToDates.map(_.endDate.toString)
+      ).collect { case (k, Some(v)) => k -> v }
+
+    val (queryParams, downStreamUri) = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1553")) {
+      (
+        hipRequiredQueryParams ++ hipOptionalQueryParams,
+        HipUri[RetrieveBalanceAndTransactionsResponse]("etmp/RESTAdapter/itsa/taxpayer/financial-details"))
+    } else {
+      (
+        ifsBooleanQueryParams ++ ifsOptionalQueryParams,
+        IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA")
+      )
+    }
 
     // So that we don't read locks into result unless we've asked for them
     implicit val jsonReadLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(request.includeLocks)
 
-    get(IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA"), queryParams)
+    get(downStreamUri, queryParams)
   }
 
 }
