@@ -185,13 +185,21 @@ object DocumentDetailsFixture {
     documentDetailsMtdResponseWithoutPOARelevantAmountJson - "documentDueDate"
 
   val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
+  val documentDetailsDownstreamResponseHipJson: JsValue = newDownstreamDocumentDetailsHipJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
   val documentDetailsWithoutDocDueDateDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = None)
+  val documentDetailsWithoutDocDueDateDownstreamResponseHipJson: JsValue = newDownstreamDocumentDetailsHipJson("2021", maybeDocumentDueDate = None)
 
   val documentDetailsWithoutPOAAmountDownstreamResponseJson: JsValue =
     newDownstreamDocumentDetailsWithoutPOAAmountJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
 
+  val documentDetailsWithoutPOAAmountDownstreamResponseHipJson: JsValue =
+    newDownstreamDocumentDetailsWithoutPOAAmountHipJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
+
   val documentDetailsWithoutPOAAmntAndDocDueDateDownstreamResponseJson: JsValue =
     newDownstreamDocumentDetailsWithoutPOAAmountJson("2021", maybeDocumentDueDate = None)
+
+  val documentDetailsWithoutPOAAmntAndDocDueDateDownstreamResponseHipJson: JsValue =
+    newDownstreamDocumentDetailsWithoutPOAAmountHipJson("2021", maybeDocumentDueDate = None)
 
   val documentDetailsDownstreamResponseMinimalJson: JsValue = Json.parse(s"""
        |{
@@ -200,6 +208,16 @@ object DocumentDetailsFixture {
        |  "totalAmount": 1.99,
        |  "documentOutstandingAmount": 2.99,
        |  "statisticalFlag": false
+       |}
+       |""".stripMargin)
+
+  val documentDetailsDownstreamResponseMinimalHipJson: JsValue = Json.parse(s"""
+       |{
+       |  "documentID": "1455",
+       |  "documentDate": "2018-04-05",
+       |  "totalAmount": 1.99,
+       |  "documentOutstandingAmount": 2.99,
+       |  "statisticalFlag": "Y"
        |}
        |""".stripMargin)
 
@@ -244,6 +262,47 @@ object DocumentDetailsFixture {
        |""".stripMargin)
   }
 
+  def newDownstreamDocumentDetailsHipJson(taxYear: String, maybeDocumentDueDate: Option[String]): JsValue = {
+    val docDueDateLine = maybeDocumentDueDate.map(date => s"""  "documentDueDate": "$date",""").getOrElse("")
+
+    Json.parse(s"""
+                  |{
+                  |  "taxYear": "$taxYear",
+                  |  "taxYearReducedCharge": "2018",
+                  |  "documentID": "1455",
+                  |  "documentNumberReducedCharge": "???",
+                  |  "formBundleNumber": "88888888",
+                  |  "documentDate": "2018-04-05",
+                  |  "documentText": "ITSA- Bal Charge",
+                  |  "effectiveDateOfPayment": "2021-04-05",
+                  |  $docDueDateLine
+                  |  "documentDescription": "ITSA- POA 1",
+                  |  "totalAmount": 1.99,
+                  |  "documentOutstandingAmount": 2.99,
+                  |  "lastClearingDate": "2018-04-05",
+                  |  "lastClearingReason": "Incoming Payment",
+                  |  "lastClearedAmount": 3.99,
+                  |  "statisticalFlag": "Y",
+                  |  "informationCode": "k",
+                  |  "paymentLot": "AB1023456789",
+                  |  "paymentLotItem": "000001",
+                  |  "accruingInterestAmount": 4.99,
+                  |  "amendmentDateReducedCharge": "2018-04-05",
+                  |  "amountCodedOut": 5.99,
+                  |  "chargeTypeReducedCharge": "???",
+                  |  "creditReason": "Voluntary Payment",
+                  |  "interestRate": 6.99,
+                  |  "interestFromDate": "2020-04-01",
+                  |  "interestEndDate": "2020-04-05",
+                  |  "latePaymentInterestID": "1234567890123456",
+                  |  "lpiWithDunningLock": 7.99,
+                  |  "latePaymentInterestAmount": 8.99,
+                  |  "interestOutstandingAmount": 9.99,
+                  |  "poaRelevantAmount":5.99
+                  |}
+                  |""".stripMargin)
+  }
+
   def newDownstreamDocumentDetailsWithoutPOAAmountJson(taxYear: String, maybeDocumentDueDate: Option[String]): JsValue = {
     val docDueDateLine = maybeDocumentDueDate.map(date => s"""  "documentDueDate": "$date",""").getOrElse("")
 
@@ -282,6 +341,46 @@ object DocumentDetailsFixture {
        |  "interestOutstandingAmount": 9.99
        |}
        |""".stripMargin)
+  }
+
+  def newDownstreamDocumentDetailsWithoutPOAAmountHipJson(taxYear: String, maybeDocumentDueDate: Option[String]): JsValue = {
+    val docDueDateLine = maybeDocumentDueDate.map(date => s"""  "documentDueDate": "$date",""").getOrElse("")
+
+    Json.parse(s"""
+                  |{
+                  |  "taxYear": "$taxYear",
+                  |  "taxYearReducedCharge": "2018",
+                  |  "documentID": "1455",
+                  |  "documentNumberReducedCharge": "???",
+                  |  "formBundleNumber": "88888888",
+                  |  "documentDate": "2018-04-05",
+                  |  "documentText": "ITSA- Bal Charge",
+                  |  "effectiveDateOfPayment": "2021-04-05",
+                  |  $docDueDateLine
+                  |  "documentDescription": "ITSA- POA 1",
+                  |  "totalAmount": 1.99,
+                  |  "documentOutstandingAmount": 2.99,
+                  |  "lastClearingDate": "2018-04-05",
+                  |  "lastClearingReason": "Incoming Payment",
+                  |  "lastClearedAmount": 3.99,
+                  |  "statisticalFlag": "Y",
+                  |  "informationCode": "k",
+                  |  "paymentLot": "AB1023456789",
+                  |  "paymentLotItem": "000001",
+                  |  "accruingInterestAmount": 4.99,
+                  |  "amendmentDateReducedCharge": "2018-04-05",
+                  |  "amountCodedOut": 5.99,
+                  |  "chargeTypeReducedCharge": "???",
+                  |  "creditReason": "Voluntary Payment",
+                  |  "interestRate": 6.99,
+                  |  "interestFromDate": "2020-04-01",
+                  |  "interestEndDate": "2020-04-05",
+                  |  "latePaymentInterestID": "1234567890123456",
+                  |  "lpiWithDunningLock": 7.99,
+                  |  "latePaymentInterestAmount": 8.99,
+                  |  "interestOutstandingAmount": 9.99
+                  |}
+                  |""".stripMargin)
   }
 
 }

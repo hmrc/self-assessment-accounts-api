@@ -132,7 +132,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
       "return a valid response" when {
 
-        "a valid request containing both docNumber and fromDate and dateTo is supplied" in new HipTest with Test {
+        "a valid request containing both docNumber and fromDate and dateTo is supplied" in new HipEtmpTest with Test {
 
           val queryParams: Seq[(String, String)] =
             commonQueryHipParams ++ List(
@@ -145,7 +145,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
           connectorRequest(validRequest, validResponse, queryParams, true)
         }
 
-        "a valid request containing docNumber and not fromDate or dateTo is supplied" in new HipTest with Test {
+        "a valid request containing docNumber and not fromDate or dateTo is supplied" in new HipEtmpTest with Test {
           val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
 
           val queryParams: Seq[(String, String)] =
@@ -155,7 +155,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
           connectorRequest(request, validResponse, queryParams, true)
         }
 
-        "a valid request containing fromDate and dateTo and no docNumber is supplied" in new HipTest with Test {
+        "a valid request containing fromDate and dateTo and no docNumber is supplied" in new HipEtmpTest with Test {
           val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
 
           val queryParams: Seq[(String, String)] =

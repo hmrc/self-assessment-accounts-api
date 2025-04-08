@@ -17,7 +17,7 @@
 package v3.retrieveBalanceAndTransactions
 
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
-import shared.connectors.DownstreamUri.{HipUri, IfsUri}
+import shared.connectors.DownstreamUri.{HipEtmpUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.{HeaderCarrier, HttpClient}
@@ -78,7 +78,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClient, v
     val (queryParams, downStreamUri) = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1553")) {
       (
         hipRequiredQueryParams ++ hipOptionalQueryParams,
-        HipUri[RetrieveBalanceAndTransactionsResponse]("etmp/RESTAdapter/itsa/taxpayer/financial-details"))
+        HipEtmpUri[RetrieveBalanceAndTransactionsResponse]("etmp/RESTAdapter/itsa/taxpayer/financial-details"))
     } else {
       (
         ifsBooleanQueryParams ++ ifsOptionalQueryParams,

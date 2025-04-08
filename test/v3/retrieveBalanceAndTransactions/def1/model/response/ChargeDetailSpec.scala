@@ -18,18 +18,25 @@ package v3.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v3.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{chargeDetail, downstreamFinancialDetailsFullJson, mtdChargeDetailJson}
+import v3.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{chargeDetail, downstreamFinancialDetailsFullHipJson, downstreamFinancialDetailsFullJson, mtdChargeDetailJson}
 
 class ChargeDetailSpec extends UnitSpec {
 
-  "reads" should {
-    "return a valid model with properties" when {
-      "valid JSON with all properties is supplied" in {
-        downstreamFinancialDetailsFullJson.as[ChargeDetail] shouldBe chargeDetail
+  "reads" when {
+    "the feature switch is disabled (IFS enabled)" should {
+      "return a valid model with properties" when {
+        "valid JSON with all properties is supplied" in {
+          downstreamFinancialDetailsFullJson.as[ChargeDetail] shouldBe chargeDetail
+        }
       }
-
     }
-
+    "the feature switch is enabled (HIP enabled)" should {
+      "return a valid model with properties" when {
+        "valid JSON with all properties is supplied" in {
+          downstreamFinancialDetailsFullHipJson.as[ChargeDetail] shouldBe chargeDetail
+        }
+      }
+    }
   }
 
   "writes" should {

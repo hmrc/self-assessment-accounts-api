@@ -29,7 +29,7 @@ import shared.support.IntegrationBaseSpec
 import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture._
 import v4.retrieveBalanceAndTransactions.def1.model.ResponseFixture._
 
-class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
+class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
 
   "Calling the 'retrieve a charge history' endpoint" when {
     "any valid request is made with doc number, fromDate, toDate and all flag params as false" should {
@@ -43,7 +43,7 @@ class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseJson)
         }
 
         val response: WSResponse = await(request.get())
@@ -59,7 +59,7 @@ class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseJson)
         }
 
         val response: WSResponse = await(request.get())
@@ -73,7 +73,7 @@ class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, ifsQueryParams, OK, downstreamResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseJson)
         }
 
         val response: WSResponse = await(request.get())
@@ -167,27 +167,10 @@ class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
     }
 
     val input = List(
-      (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
-      (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
-      (BAD_REQUEST, "INVALID_IDNUMBER", BAD_REQUEST, NinoFormatError),
-      (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, InternalError),
-      (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, DocNumberFormatError),
-      (BAD_REQUEST, "INVALID_ONLY_OPEN_ITEMS", BAD_REQUEST, OnlyOpenItemsFormatError),
-      (BAD_REQUEST, "INVALID_INCLUDE_LOCKS", BAD_REQUEST, IncludeLocksFormatError),
-      (BAD_REQUEST, "INVALID_CALCULATE_ACCRUED_INTEREST", BAD_REQUEST, CalculateAccruedInterestFormatError),
-      (BAD_REQUEST, "INVALID_CUSTOMER_PAYMENT_INFORMATION", BAD_REQUEST, CustomerPaymentInformationFormatError),
-      (BAD_REQUEST, "INVALID_DATE_FROM", BAD_REQUEST, FromDateFormatError),
-      (BAD_REQUEST, "INVALID_DATE_TO", BAD_REQUEST, ToDateFormatError),
-      (BAD_REQUEST, "INVALID_DATE_RANGE", BAD_REQUEST, RuleInvalidDateRangeError),
-      (BAD_REQUEST, "INVALID_REQUEST", BAD_REQUEST, RuleInconsistentQueryParamsError),
-      (BAD_REQUEST, "INVALID_REMOVE_PAYMENT_ON_ACCOUNT", BAD_REQUEST, RemovePaymentOnAccountFormatError),
-      (BAD_REQUEST, "INVALID_INCLUDE_STATISTICAL", BAD_REQUEST, IncludeEstimatedChargesFormatError),
-      (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, InternalError),
-      (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-      (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
-      (UNPROCESSABLE_ENTITY, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, InternalError),
-      (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-      (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
+      (UNPROCESSABLE_ENTITY, "002", INTERNAL_SERVER_ERROR, InternalError),
+      (UNPROCESSABLE_ENTITY, "003", INTERNAL_SERVER_ERROR, InternalError),
+      (UNPROCESSABLE_ENTITY, "005", NOT_FOUND, NotFoundError),
+      (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError),
     )
     input.foreach(args => (serviceErrorTest _).tupled(args))
   }
@@ -206,7 +189,7 @@ class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
     protected val customerPaymentInformation: Option[String] = Some("true")
     protected val includeEstimatedCharges: Option[String]    = Some("true")
 
-    def downstreamUrl: String = s"/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
+    def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/financial-details"
 
     def setupStubs(): StubMapping
 
@@ -244,18 +227,25 @@ class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
          |}
           """.stripMargin
 
-    def ifsQueryParams: Map[String, String] = Map(
-      "docNumber"                  -> docNumber,
+    def baseHipQueryParams: Map[String, String] = Map(
+      "sapDocumentNumber"          -> docNumber,
       "dateFrom"                   -> fromDate,
       "dateTo"                     -> toDate,
       "onlyOpenItems"              -> onlyOpenItems,
       "includeLocks"               -> includeLocks,
       "calculateAccruedInterest"   -> calculateAccruedInterest,
-      "removePOA"                  -> removePOA,
+      "removePaymentonAccount"     -> removePOA,
       "customerPaymentInformation" -> customerPaymentInformation,
       "includeStatistical"         -> includeEstimatedCharges
     ).collect { case (k, Some(v)) => (k, v) }
 
+    def extraHipQueryParams: Map[String, String] = Map(
+      "idNumber"   -> nino,
+      "idType"     -> "NINO",
+      "regimeType" -> "ITSA"
+    )
+
+    def hipQueryParams: Map[String, String] = baseHipQueryParams ++ extraHipQueryParams
   }
 
 }
