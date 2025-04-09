@@ -63,16 +63,19 @@ object BalanceDetails {
   }
 
   implicit val reads: Reads[BalanceDetails] = (
-    (JsPath \ "balanceDueWithin30Days").read[BigDecimal] and
-      (JsPath \ "nextPaymentDateForChargesDueIn30Days").readNullable[String] and
+    (JsPath \ "balanceDueWithin30Days").read[BigDecimal].orElse((JsPath \ "balanceDueWithin30days").read[BigDecimal]) and
+      (JsPath \ "nextPaymentDateForChargesDueIn30Days").read[String].map(s => Option(s))
+        .orElse((JsPath \ "nxtPymntDateChrgsDueIn30Days").readNullable[String]) and
       (JsPath \ "balanceNotDueIn30Days").read[BigDecimal] and
-      (JsPath \ "nextPaymentDateBalanceNotDue").readNullable[String] and
+      (JsPath \ "nextPaymentDateBalanceNotDue").read[String].map(s => Option(s))
+        .orElse((JsPath \ "nextPaymntDateBalnceNotDue").readNullable[String]) and
       (JsPath \ "overDueAmount").read[BigDecimal] and
       (JsPath \ "bcdBalancePerYear").readNullable[Seq[DownstreamBalancePerYear]].map {
         case Some(bs) => bs.collect(DownstreamBalancePerYear.asMtd)
         case None     => Nil
       } and
-      (JsPath \ "earliestPaymentDateOverDue").readNullable[String] and
+      (JsPath \ "earliestPaymentDateOverDue").read[String].map(s => Option(s))
+        .orElse((JsPath \ "earlistPymntDateOverDue").readNullable[String]) and
       (JsPath \ "totalBalance").read[BigDecimal] and
       (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
       (JsPath \ "totalBCDBalance").readNullable[BigDecimal] and
@@ -85,4 +88,5 @@ object BalanceDetails {
   )(BalanceDetails.apply _)
 
   implicit val writes: OWrites[BalanceDetails] = Json.writes[BalanceDetails]
+
 }

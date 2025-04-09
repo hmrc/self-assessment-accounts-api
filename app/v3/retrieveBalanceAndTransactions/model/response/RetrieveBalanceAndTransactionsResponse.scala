@@ -29,7 +29,7 @@ case class RetrieveBalanceAndTransactionsResponse(
 
 object RetrieveBalanceAndTransactionsResponse {
 
-  def innerReads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
+  private def innerReads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
     (
       (JsPath \ "balanceDetails").read[BalanceDetails] and
         (JsPath \ "codingDetails").readNullable[Seq[CodingDetails]] and

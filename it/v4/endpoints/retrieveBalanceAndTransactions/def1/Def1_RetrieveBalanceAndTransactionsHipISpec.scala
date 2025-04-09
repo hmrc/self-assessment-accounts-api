@@ -43,7 +43,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseHipJson)
         }
 
         val response: WSResponse = await(request.get())
@@ -59,7 +59,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseHipJson)
         }
 
         val response: WSResponse = await(request.get())
@@ -73,7 +73,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseJson)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseHipJson)
         }
 
         val response: WSResponse = await(request.get())
