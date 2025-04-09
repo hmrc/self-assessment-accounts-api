@@ -217,7 +217,7 @@ object DocumentDetailsFixture {
        |  "documentDate": "2018-04-05",
        |  "totalAmount": 1.99,
        |  "documentOutstandingAmount": 2.99,
-       |  "statisticalFlag": "Y"
+       |  "statisticalFlag": "N"
        |}
        |""".stripMargin)
 

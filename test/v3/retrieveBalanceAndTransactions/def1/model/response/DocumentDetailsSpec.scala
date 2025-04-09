@@ -24,7 +24,7 @@ import v3.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture._
 class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" when {
-    "the feature switch is disabled (IFS enabled)" should {
+    "the feature switch is disabled (IFS enabled)" when {
       "given a valid downstream JSON document" must {
         "return a DocumentDetails object" in {
           val result = documentDetailsDownstreamResponseJson.as[DocumentDetails]
@@ -73,7 +73,7 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
         }
       }
     }
-    "the feature switch is enabled (HIP enabled)" should {
+    "the feature switch is enabled (HIP enabled)" when {
       "given a valid downstream JSON document" must {
         "return a DocumentDetails object" in {
           val result = documentDetailsDownstreamResponseHipJson.as[DocumentDetails]
