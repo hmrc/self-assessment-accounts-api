@@ -32,5 +32,6 @@ object DateUtils {
 
   def longDateTimestampGmt(dateTime: LocalDateTime): String = longDateTimeFormatGmt.format(dateTime)
 
-  def isoTimeStamp: String = isoDatePattern.format(Instant.now())
+  def isoDateTimeStamp: String = isoDatePattern.format(Instant.now())
+
 }

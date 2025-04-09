@@ -75,6 +75,7 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
         result shouldBe Right(
           requestSameDateRange
         )
+      }
     }
 
     "return a parameter error" when {
@@ -143,7 +144,7 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
       "a from date before 1900 is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, fromDate = Some("1878-01-21"), Some(validToDate), None, None, None, None, None, None).validateAndWrapResult()
+          validator(validNino, None, fromDate = Some("1899-01-21"), Some("1900-01-21"), None, None, None, None, None, None).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, FromDateFormatError)
@@ -161,12 +162,29 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
       "a to date after 2100 is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, Some(validFromDate), toDate = Some("2100-01-21"), None, None, None, None, None, None).validateAndWrapResult()
+          validator(validNino, None, Some("2099-01-21"), toDate = Some("2100-01-21"), None, None, None, None, None, None).validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, ToDateFormatError)
         )
       }
+
+      "dates that exceed the maximum allowable range are supplied" in {
+        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+          validator(validNino, None, Some(validFromDate), Some("2025-08-15"), None, None, None, None, None, None).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleInvalidDateRangeError)
+        )
+      }
+
+      "dates that exceed the maximum allowable range and are outside of the allowable years are supplied" in {
+        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+          validator(validNino, None, Some("1899-01-21"), Some("2100-01-21"), None, None, None, None, None, None).validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, BadRequestError, Some(List(FromDateFormatError, ToDateFormatError, RuleInvalidDateRangeError)))
+        )
       }
 
       "an invalid remove POA is supplied" in {
@@ -224,6 +242,37 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
           ErrorWrapper(correlationId, BadRequestError, Some(List(FromDateFormatError, RemovePaymentOnAccountFormatError)))
         )
       }
+
+      "a request where docNumber is provided and onlyOpenItems is true" in {
+        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+          validator(validNino, Some(validDocNumber), None, None, Some("true"), None, None, None, None, None)
+            .validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleInconsistentQueryParamsError)
+        )
+      }
+
+      "a request where valid dates are provided and onlyOpenItems is true" in {
+        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+          validator(validNino, None, Some(validFromDate), Some(validToDate), Some("true"), None, None, None, None, None)
+            .validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleInconsistentQueryParamsError)
+        )
+      }
+
+//      TODO
+//      "a request where docNumber and valid dates are provided when onlyOpenItems is false" in {
+//        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+//          validator(validNino, Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, None, None)
+//            .validateAndWrapResult()
+//
+//        result shouldBe Left(
+//          ErrorWrapper(correlationId, RuleInconsistentQueryParamsError)
+//        )
+//      }
 
       "a request with everything true is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =

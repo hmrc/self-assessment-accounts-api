@@ -97,7 +97,7 @@ object DownstreamStrategy {
           "correlationId"         -> correlationId,
           "X-Message-Type"        -> "ETMPGetFinancialDetails",
           "X-Originating-System"  -> "MDTP",
-          "X-Receipt-Date"        -> DateUtils.isoTimeStamp,
+          "X-Receipt-Date"        -> DateUtils.isoDateTimeStamp,
           "X-Transmitting-System" -> "HIP"
         ))
     }

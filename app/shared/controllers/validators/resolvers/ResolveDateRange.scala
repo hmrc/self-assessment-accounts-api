@@ -20,16 +20,18 @@ import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits._
 import shared.models.domain.DateRange
-import shared.models.errors.{EndDateFormatError, MtdError, RuleEndBeforeStartDateError, StartDateFormatError}
+import shared.models.errors._
 
 import java.time.LocalDate
+import java.time.temporal.ChronoUnit
 import scala.math.Ordering.Implicits.infixOrderingOps
 
 case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatError,
                             endDateFormatError: MtdError = EndDateFormatError,
-                            endBeforeStartDateError: MtdError = RuleEndBeforeStartDateError)
+                            endBeforeStartDateError: MtdError = RuleEndBeforeStartDateError,
+                            invalidDateRangeError: MtdError = RuleInvalidDateRangeError)
     extends ResolverSupport {
-  import ResolveDateRange._
+  import shared.controllers.validators.resolvers.ResolveDateRange._
 
   val resolver: Resolver[(String, String), DateRange] = { case (startDate, endDate) =>
     (
@@ -45,6 +47,9 @@ case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatErro
 
   def withYearsLimitedTo(minYear: Int, maxYear: Int): Resolver[(String, String), DateRange] =
     resolver thenValidate yearsLimitedTo(minYear, startDateFormatError, maxYear, endDateFormatError)
+
+  def withYearsAndRangeLimitedTo(minYear: Int, maxYear: Int, maxDaysRange: Int): Resolver[(String, String), DateRange] =
+    resolver thenValidate yearsAndRangeLimitedTo(minYear, startDateFormatError, maxYear, endDateFormatError, maxDaysRange, invalidDateRangeError)
 
   private def resolveDateRange(parsedStartDate: LocalDate, parsedEndDate: LocalDate): Validated[Seq[MtdError], DateRange] =
     if (parsedEndDate < parsedStartDate)
@@ -70,5 +75,17 @@ object ResolveDateRange extends ResolverSupport {
 
     datesLimitedTo(yearStartDate(minYear), minError, yearEndDate(maxYear), maxError)
   }
+
+  def yearsAndRangeLimitedTo(minYear: Int, minError: => MtdError,
+                             maxYear: Int, maxError: => MtdError,
+                             maxDaysRange: Int, invalidRangeError: => MtdError): Validator[DateRange] = {
+    combinedValidator[DateRange](
+      yearsLimitedTo(minYear, minError, maxYear, maxError),
+      rangeLimitedTo(maxDaysRange, invalidRangeError)
+    )
+  }
+
+  def rangeLimitedTo(maxDaysRange: Int, invalidRangeError: => MtdError): Validator[DateRange] =
+    satisfies(invalidRangeError)(r => ChronoUnit.DAYS.between(r.startDate, r.endDate) <= maxDaysRange)
 
 }

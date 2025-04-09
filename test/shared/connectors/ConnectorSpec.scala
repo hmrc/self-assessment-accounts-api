@@ -175,7 +175,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
       "Gov-Test-Scenario"    -> "DEFAULT",
       "X-Message-Type"        -> "ETMPGetFinancialDetails",
       "X-Originating-System"  -> "MDTP",
-      "X-Receipt-Date"        -> DateUtils.isoTimeStamp,
+      "X-Receipt-Date"        -> DateUtils.isoDateTimeStamp,
       "X-Transmitting-System" -> "HIP"
     ) ++ intent.map("intent" -> _)
 
