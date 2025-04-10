@@ -66,7 +66,8 @@ object BalanceDetails {
     (JsPath \ "balanceDueWithin30Days").read[BigDecimal].orElse((JsPath \ "balanceDueWithin30days").read[BigDecimal]) and
       (JsPath \ "nextPaymentDateForChargesDueIn30Days").read[String].map(s => Option(s))
         .orElse((JsPath \ "nxtPymntDateChrgsDueIn30Days").readNullable[String]) and
-      (JsPath \ "balanceNotDueIn30Days").read[BigDecimal] and
+      (JsPath \ "balanceNotDueIn30Days").read[BigDecimal]
+        .orElse((JsPath \ "balanceNotDuein30Days").read[BigDecimal]) and
       (JsPath \ "nextPaymentDateBalanceNotDue").read[String].map(s => Option(s))
         .orElse((JsPath \ "nextPaymntDateBalnceNotDue").readNullable[String]) and
       (JsPath \ "overDueAmount").read[BigDecimal] and

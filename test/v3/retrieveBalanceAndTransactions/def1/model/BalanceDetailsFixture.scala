@@ -112,7 +112,7 @@ object BalanceDetailsFixture {
        |{
        |    "balanceDueWithin30days": 124.20,
        |    "nxtPymntDateChrgsDueIn30Days": "2022-03-03",
-       |    "balanceNotDueIn30Days": 0.12,
+       |    "balanceNotDuein30Days": 0.12,
        |    "nextPaymntDateBalnceNotDue": "2022-01-01",
        |    "overDueAmount": 12.65,
        |    "earlistPymntDateOverDue": "2022-05-05",
@@ -147,7 +147,7 @@ object BalanceDetailsFixture {
     """
       |{
       |    "balanceDueWithin30days": 124.20,
-      |    "balanceNotDueIn30Days": 0.12,
+      |    "balanceNotDuein30Days": 0.12,
       |    "overDueAmount": 12.65,
       |    "totalBalance": 1263.12
       |  }
