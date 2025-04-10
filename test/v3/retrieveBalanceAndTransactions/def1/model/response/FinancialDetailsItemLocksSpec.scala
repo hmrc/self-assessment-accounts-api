@@ -32,8 +32,13 @@ class FinancialDetailsItemLocksSpec extends UnitSpec with FinancialDetailsItemFi
 
     "read from downstream" when {
       "all fields present" must {
-        "work" in {
-          financialDetailsItemDownstreamJson.as[FinancialDetailsItemLocks] shouldBe financialDetailsItemLocks
+        "work" when {
+          "the feature switch is disabled (IFS enabled)" in {
+            financialDetailsItemDownstreamJson.as[FinancialDetailsItemLocks] shouldBe financialDetailsItemLocks
+          }
+          "the feature switch is enabled (HIP enabled)" in {
+            financialDetailsItemDownstreamHipJson.as[FinancialDetailsItemLocks] shouldBe financialDetailsItemLocks
+          }
         }
 
         "converting paymentLock to isChargeOnHold" must {

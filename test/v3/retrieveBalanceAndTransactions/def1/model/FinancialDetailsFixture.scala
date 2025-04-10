@@ -82,6 +82,36 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
        |""".stripMargin
   )
 
+  val downstreamFinancialDetailsFullHipJson: JsValue = Json.parse(
+    s"""
+       |{
+       |      "taxYear": "2022",
+       |      "documentID": "123456",
+       |      "chargeType": "PAYE",
+       |      "mainType": "Income Tax Estimate",
+       |      "periodKey": "13RL",
+       |      "periodKeyDescription": "abcde",
+       |      "taxPeriodFrom": "2022-01-01",
+       |      "taxPeriodTo": "2022-02-01",
+       |      "businessPartner": "6622334455",
+       |      "contractAccountCategory": "02",
+       |      "contractAccount": "X",
+       |      "contractObjectType": "ABCD",
+       |      "contractObject": "00000003000000002757",
+       |      "sapDocumentNumber": "1040000872",
+       |      "sapDocumentNumberItem": "XM01",
+       |      "chargeReference": "XM002610011594",
+       |      "mainTransaction": "1234",
+       |      "subTransaction": "5678",
+       |      "originalAmount": 3453.99,
+       |      "outstandingAmount": 452.11,
+       |      "clearedAmount": 3411.01,
+       |      "accruedInterest": 123.78,
+       |      "items":  [$financialDetailsItemDownstreamHipJson]
+       |}
+       |""".stripMargin
+  )
+
   val mtdChargeDetailJson: JsValue = Json.parse(s"""
       |{
       |"documentId": "123456",

@@ -23,8 +23,8 @@ import play.api.http.Status
 import play.api.libs.json.{JsValue, Writes}
 import play.api.mvc.Result
 import play.api.mvc.Results.InternalServerError
-import shared.config.SharedAppConfig
 import shared.config.Deprecation.Deprecated
+import shared.config.SharedAppConfig
 import shared.controllers.validators.Validator
 import shared.hateoas.{HateoasData, HateoasFactory, HateoasLinksFactory, HateoasWrapper}
 import shared.models.errors.{ErrorWrapper, InternalError, RuleRequestCannotBeFulfilledError}

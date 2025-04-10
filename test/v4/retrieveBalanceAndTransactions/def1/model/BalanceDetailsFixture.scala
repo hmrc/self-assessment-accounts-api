@@ -107,6 +107,31 @@ object BalanceDetailsFixture {
        |""".stripMargin
   )
 
+  val balanceDetailsDownstreamResponseHipJson: JsValue = Json.parse(
+    s"""
+       |{
+       |    "balanceDueWithin30days": 124.20,
+       |    "nxtPymntDateChrgsDueIn30Days": "2022-03-03",
+       |    "balanceNotDuein30Days": 0.12,
+       |    "nextPaymntDateBalnceNotDue": "2022-01-01",
+       |    "overDueAmount": 12.65,
+       |    "earlistPymntDateOverDue": "2022-05-05",
+       |    "totalBalance": 1263.12,
+       |    "bcdBalancePerYear": [
+       |      $downstreamDetailSingleYearJson
+       |    ],
+       |    "amountCodedOut": 12.12,
+       |    "totalBCDBalance": 99.10,
+       |    "unallocatedCredit": 8.56,
+       |    "allocatedCredit": 12.34,
+       |    "totalCredit": 8.34,
+       |    "firstPendingAmountRequested": 3.45,
+       |    "secondPendingAmountRequested": 13.45,
+       |    "availableCredit": 235.99
+       |  }
+       |""".stripMargin
+  )
+
   val minimalBalanceDetailsDownstreamResponseJson: JsValue = Json.parse(
     """
        |{
@@ -116,6 +141,17 @@ object BalanceDetailsFixture {
        |    "totalBalance": 1263.12
        |  }
        |""".stripMargin
+  )
+
+  val minimalBalanceDetailsDownstreamResponseHipJson: JsValue = Json.parse(
+    """
+      |{
+      |    "balanceDueWithin30days": 124.20,
+      |    "balanceNotDuein30Days": 0.12,
+      |    "overDueAmount": 12.65,
+      |    "totalBalance": 1263.12
+      |  }
+      |""".stripMargin
   )
 
   val balanceDetailsMtdResponseJson: JsValue = Json.parse(

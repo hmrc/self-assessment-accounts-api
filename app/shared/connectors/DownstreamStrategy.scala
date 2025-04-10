@@ -17,7 +17,8 @@
 package shared.connectors
 
 import com.google.common.base.Charsets
-import shared.config.{SharedAppConfig, BasicAuthDownstreamConfig, ConfigFeatureSwitches, DownstreamConfig}
+import shared.config.{BasicAuthDownstreamConfig, ConfigFeatureSwitches, DownstreamConfig, SharedAppConfig}
+import shared.utils.DateUtils
 
 import java.util.Base64
 import scala.concurrent.{ExecutionContext, Future}
@@ -77,6 +78,27 @@ object DownstreamStrategy {
           "Authorization" -> s"Basic $encodedToken",
           "Environment"   -> downstreamConfig.env,
           "CorrelationId" -> correlationId
+        ))
+    }
+
+    override def environmentHeaders: Seq[String] = downstreamConfig.environmentHeaders.getOrElse(Nil)
+  }
+
+  def hipEtmpAuthStrategy(downstreamConfig: BasicAuthDownstreamConfig): DownstreamStrategy = new DownstreamStrategy {
+    override def baseUrl: String = downstreamConfig.baseUrl
+
+    override def contractHeaders(correlationId: String)(implicit ec: ExecutionContext): Future[Seq[(String, String)]] = {
+      val encodedToken = Base64.getEncoder.encodeToString(s"${downstreamConfig.clientId}:${downstreamConfig.clientSecret}".getBytes(Charsets.UTF_8))
+
+      Future.successful(
+        List(
+          "Authorization"         -> s"Basic $encodedToken",
+          "Environment"           -> downstreamConfig.env,
+          "correlationId"         -> correlationId,
+          "X-Message-Type"        -> "ETMPGetFinancialDetails",
+          "X-Originating-System"  -> "MDTP",
+          "X-Receipt-Date"        -> DateUtils.isoDateTimeStamp,
+          "X-Transmitting-System" -> "HIP"
         ))
     }
 
