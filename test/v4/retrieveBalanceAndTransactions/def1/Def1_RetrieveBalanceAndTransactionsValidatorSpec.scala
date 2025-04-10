@@ -263,16 +263,15 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
         )
       }
 
-//      TODO
-//      "a request where docNumber and valid dates are provided when onlyOpenItems is false" in {
-//        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-//          validator(validNino, Some(validDocNumber), Some(validFromDate), Some(validToDate), None, None, None, None, None, None)
-//            .validateAndWrapResult()
-//
-//        result shouldBe Left(
-//          ErrorWrapper(correlationId, RuleInconsistentQueryParamsError)
-//        )
-//      }
+      "a request where neither a docNumber or dates are provided when onlyOpenItems is false" in {
+        val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
+          validator(validNino, None, None, None, None, None, None, None, None, None)
+            .validateAndWrapResult()
+
+        result shouldBe Left(
+          ErrorWrapper(correlationId, RuleInconsistentQueryParamsError)
+        )
+      }
 
       "a request with everything true is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =

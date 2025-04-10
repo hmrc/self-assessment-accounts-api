@@ -103,10 +103,11 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
                                     fromAndToDates: Option[DateRange]): Validated[Seq[MtdError], Unit] = {
     val otherQueryParamsDefined = docNumber.isDefined || fromAndToDates.isDefined
 
-    if (onlyOpenItems && otherQueryParamsDefined)
-      invalid(RuleInconsistentQueryParamsError)
-    else
-      Valid(())
+    (onlyOpenItems, otherQueryParamsDefined) match {
+      case (true, true)   => invalid(RuleInconsistentQueryParamsError)
+      case (false, false) => invalid(RuleInconsistentQueryParamsError)
+      case _              => Valid(())
+    }
   }
 
 }
