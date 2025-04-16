@@ -11,8 +11,6 @@ get:
     |----------------------------------|---------------------------------------------------------------------|
     | N/A - DEFAULT                    | Simulates success response.                                         |
     | NOT_FOUND                        | Simulates the scenario where no data is found.                      |
-    | INCONSISTENT_QUERY_PARAMS        | Simulates the scenario where the query parameters are inconsistent. |
-    | INVALID_DATE_RANGE               | Simulates the scenario where the provided date range is invalid.    |
 
   tags:
     - Payments and Liabilities

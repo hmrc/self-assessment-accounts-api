@@ -18,7 +18,7 @@ package v3.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v3.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{downstreamFinancialDetailsFullJson, financialDetailsFull, mtdFinancialDetailsFullJson}
+import v3.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{downstreamFinancialDetailsFullHipJson, downstreamFinancialDetailsFullJson, financialDetailsFull, mtdFinancialDetailsFullJson}
 
 class FinancialDetailsSpec extends UnitSpec {
 
@@ -26,8 +26,13 @@ class FinancialDetailsSpec extends UnitSpec {
 
   "reads" should {
     "return a valid model with all properties" when {
-      "valid JSON with all properties is supplied " in {
+      "valid JSON with all properties is supplied and the feature switch is disabled (IFS enabled)" in {
         downstreamFinancialDetailsFullJson.as[FinancialDetails] shouldBe financialDetailsFull
+      }
+    }
+    "return a valid model with all properties" when {
+      "valid JSON with all properties is supplied and the feature switch is enabled (HIP enabled)" in {
+        downstreamFinancialDetailsFullHipJson.as[FinancialDetails] shouldBe financialDetailsFull
       }
     }
   }
