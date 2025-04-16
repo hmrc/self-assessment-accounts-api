@@ -140,7 +140,8 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
         ("AA123456A", Some(validDocNumber), Some(validToDate), Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, RangeToDateBeforeFromDateError),
         ("AA123456A", Some(validDocNumber), Some(validToDate), None, None, None, None, None, None, None, BAD_REQUEST, RuleMissingToDateError),
         ("AA123456A", Some(validDocNumber), None, Some(validFromDate), None, None, None, None, None, None, BAD_REQUEST, MissingFromDateError),
-        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), Some("true"), None, None, None, None, None, BAD_REQUEST, RuleInconsistentQueryParamsError)
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(validToDate), Some("true"), None, None, None, None, None, BAD_REQUEST, RuleInconsistentQueryParamsError),
+        ("AA123456A", Some(validDocNumber), Some(validFromDate), Some(outOfRangeEndDate), None, None, None, None, None, None, BAD_REQUEST, RuleInvalidDateRangeError)
 
       )
       // format: on
