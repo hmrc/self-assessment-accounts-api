@@ -248,7 +248,7 @@ class Def1_CreateOrAmendCodingOutValidatorSpec extends UnitSpec with MockSaAccou
       "given a tax year that hasn't ended" in {
         setupMocks()
 
-        val result = validator(validNino, "2024-25", validJson).validateAndWrapResult()
+        val result = validator(validNino, TaxYear.currentTaxYear.asMtd, validJson).validateAndWrapResult()
         result shouldBe Left(
           ErrorWrapper(correlationId, RuleTaxYearNotEndedError)
         )

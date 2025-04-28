@@ -24,30 +24,56 @@ import v3.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransa
 class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
   "RetrieveBalanceAndTransactionsResponse.reads" when {
-    "locks are included" when {
-      implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
+    "the feature switch is disabled (IFS enabled)" when {
+      "locks are included" when {
+        implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
 
-      "passed a valid JSON document" should {
-        "return a fully populated object" in {
-          downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe response
+        "passed a valid JSON document" should {
+          "return a fully populated object" in {
+            downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe response
+          }
+
+          "return a minimally populated object" in {
+            minimalDownstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe minimalResponse
+          }
         }
+      }
 
-        "return a minimally populated object" in {
-          minimalDownstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe minimalResponse
+      "locks are included" should {
+        implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
+
+        "exclude locks" should {
+          "return the object without locks" in {
+            downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseWithoutLocks
+          }
         }
       }
     }
+    "the feature switch is enabled (HIP enabled)" when {
+      "locks are included" when {
+        implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
 
-    "locks are included" should {
-      implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
+        "passed a valid JSON document" should {
+          "return a fully populated object" in {
+            downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe response
+          }
 
-      "exclude locks" should {
-        "return the object without locks" in {
-          downstreamResponseJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseWithoutLocks
+          "return a minimally populated object" in {
+            minimalDownstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe minimalResponse
+          }
+        }
+      }
+
+      "locks are included" should {
+        implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
+
+        "exclude locks" should {
+          "return the object without locks" in {
+            downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseWithoutLocks
+          }
         }
       }
     }
-
   }
 
   "RetrieveBalanceAndTransactionsResponse.writes" should {

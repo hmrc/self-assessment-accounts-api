@@ -52,6 +52,24 @@ object ResponseFixture {
         |  }
         |""".stripMargin)
 
+  val downstreamResponseHipJson: JsValue = Json.parse(s"""
+        |{
+        |  "success":  {
+        |    "balanceDetails": $balanceDetailsDownstreamResponseHipJson,
+        |    "codingDetails": [
+        |        $codingDetailsDownstreamResponseJson
+        |    ],
+        |    "documentDetails": [
+        |        $documentDetailsDownstreamResponseHipJson,
+        |        $documentDetailsWithoutDocDueDateDownstreamResponseHipJson
+        |    ],
+        |    "financialDetailsItem": [
+        |        $downstreamFinancialDetailsFullHipJson
+        |    ]
+        |  }
+        |}
+        |""".stripMargin)
+
   val downstreamResponseWithoutPOAAmountJson: JsValue = Json.parse(s"""
         |  {
         |    "balanceDetails": $balanceDetailsDownstreamResponseJson,
@@ -68,11 +86,37 @@ object ResponseFixture {
         |  }
         |""".stripMargin)
 
+  val downstreamResponseWithoutPOAAmountHipJson: JsValue = Json.parse(s"""
+        |{
+        |  "success": {
+        |    "balanceDetails": $balanceDetailsDownstreamResponseHipJson,
+        |    "codingDetails": [
+        |        $codingDetailsDownstreamResponseJson
+        |    ],
+        |    "documentDetails": [
+        |        $documentDetailsWithoutPOAAmountDownstreamResponseHipJson,
+        |        $documentDetailsWithoutPOAAmntAndDocDueDateDownstreamResponseHipJson
+        |    ],
+        |    "financialDetailsItem": [
+        |        $downstreamFinancialDetailsFullHipJson
+        |    ]
+        |  }
+        |}
+        |""".stripMargin)
+
   val minimalDownstreamResponseJson: JsValue = Json.parse(s"""
         |  {
         |    "balanceDetails": $minimalBalanceDetailsDownstreamResponseJson
         |  }
         |""".stripMargin)
+
+  val minimalDownstreamResponseHipJson: JsValue = Json.parse(s"""
+       |{
+       |  "success": {
+       |    "balanceDetails": $minimalBalanceDetailsDownstreamResponseHipJson
+       |  }
+       |}
+       |""".stripMargin)
 
   private def responseWith(financialDetails: FinancialDetails) =
     RetrieveBalanceAndTransactionsResponse(

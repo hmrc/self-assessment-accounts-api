@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v4.endpoints.retrieveBalanceAndTransactions.def1
+package v3.endpoints.retrieveBalanceAndTransactions.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors._
@@ -26,10 +26,13 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture._
-import v4.retrieveBalanceAndTransactions.def1.model.ResponseFixture._
+import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
+import v3.retrieveBalanceAndTransactions.def1.model.ResponseFixture._
 
-class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
+class Def1_RetrieveBalanceAndTransactionsIfsISpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1553.enabled" -> false) ++ super.servicesConfig
 
   "Calling the 'retrieve a charge history' endpoint" when {
     "any valid request is made with doc number, fromDate, toDate and all flag params as false" should {
@@ -229,7 +232,7 @@ class Def1_RetrieveBalanceAndTransactionsISpec extends IntegrationBaseSpec {
       buildRequest(uri)
         .addQueryStringParameters(queryParams: _*)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.4.0+json"),
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }

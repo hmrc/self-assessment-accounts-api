@@ -28,7 +28,8 @@ case class ChargeDetail(documentId: String,
 object ChargeDetail {
   implicit val writes: Writes[ChargeDetail] = Json.writes[ChargeDetail]
 
-  implicit val reads: Reads[ChargeDetail] = ((JsPath \ "documentId").read[String] and
+  implicit val reads: Reads[ChargeDetail] =
+    ((JsPath \ "documentId").read[String].orElse((JsPath \ "documentID").read[String]) and
     (JsPath \ "mainTransaction").readNullable[String] and
     (JsPath \ "mainType").readNullable[String] and
     (JsPath \ "subTransaction").readNullable[String] and

@@ -116,7 +116,7 @@ object DocumentDetails {
   implicit val reads: Reads[DocumentDetails] =
     (
       (JsPath \ "taxYear").readNullable[String].map(taxYear) and
-        (JsPath \ "documentId").read[String] and
+        (JsPath \ "documentId").read[String].orElse((JsPath \ "documentID").read[String]) and
         (JsPath \ "formBundleNumber").readNullable[String] and
         (JsPath \ "creditReason").readNullable[String] and
         (JsPath \ "documentDate").read[String] and
@@ -126,7 +126,12 @@ object DocumentDetails {
         (JsPath \ "totalAmount").read[BigDecimal] and
         (JsPath \ "documentOutstandingAmount").read[BigDecimal] and
         JsPath.readNullable[LastClearing].map(replaceWithNoneIfEmpty[LastClearing]) and
-        (JsPath \ "statisticalFlag").read[Boolean] and
+        (JsPath \ "statisticalFlag").read[Boolean]
+          .orElse((JsPath \ "statisticalFlag").read[String].flatMap {
+            case "Y" => Reads.pure(true)
+            case "N" => Reads.pure(false)
+            case x   => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
+          }) and
         (JsPath \ "informationCode").readNullable[String].map(informationCode) and
         (JsPath \ "paymentLot").readNullable[String] and
         (JsPath \ "paymentLotItem").readNullable[String] and

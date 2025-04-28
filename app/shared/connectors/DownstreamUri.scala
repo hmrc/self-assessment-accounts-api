@@ -40,6 +40,9 @@ object DownstreamUri {
   def HipUri[Resp](path: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] =
     DownstreamUri(path, DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig))
 
+  def HipEtmpUri[Resp](path: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] =
+    DownstreamUri(path, DownstreamStrategy.hipEtmpAuthStrategy(appConfig.hipDownstreamConfig))
+
   def DesToHipMigrationUri[Resp](path: String, switchName: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] = {
     lazy val desStrategy = DownstreamStrategy.standardStrategy(appConfig.desDownstreamConfig)
     lazy val hipStategy  = DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig)

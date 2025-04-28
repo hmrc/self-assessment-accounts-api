@@ -23,7 +23,7 @@ import common.errors._
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
 import shared.models.domain.DateRange
-import shared.models.errors.{FromDateFormatError, MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
+import shared.models.errors._
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.Singleton
@@ -41,11 +41,12 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
                                                    includeEstimatedCharges: Option[String])
     extends Validator[RetrieveBalanceAndTransactionsRequestData] {
 
-  private val minYear = 1900
-  private val maxYear = 2099
+  private val minYear      = 1900
+  private val maxYear      = 2099
+  private val maxDaysRange = 732
 
   private val resolveDateRange = ResolveDateRange(FromDateFormatError, ToDateFormatError, RangeToDateBeforeFromDateError)
-    .withYearsLimitedTo(minYear, maxYear)
+    .withYearsAndRangeLimitedTo(minYear, maxYear, maxDaysRange)
 
   private def optionWithDefaultString(value: Option[String]): String = value.getOrElse("false")
 
@@ -102,10 +103,11 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
                                     fromAndToDates: Option[DateRange]): Validated[Seq[MtdError], Unit] = {
     val otherQueryParamsDefined = docNumber.isDefined || fromAndToDates.isDefined
 
-    if (onlyOpenItems && otherQueryParamsDefined)
-      invalid(RuleInconsistentQueryParamsError)
-    else
-      Valid(())
+    (onlyOpenItems, otherQueryParamsDefined) match {
+      case (true, true)   => invalid(RuleInconsistentQueryParamsError)
+      case (false, false) => invalid(RuleInconsistentQueryParamsError)
+      case _              => Valid(())
+    }
   }
 
 }

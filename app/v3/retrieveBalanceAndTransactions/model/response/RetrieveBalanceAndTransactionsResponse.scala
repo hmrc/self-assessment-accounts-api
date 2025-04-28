@@ -16,7 +16,8 @@
 
 package v3.retrieveBalanceAndTransactions.model.response
 
-import play.api.libs.json.{Json, OWrites, Reads}
+import play.api.libs.functional.syntax._
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v3.retrieveBalanceAndTransactions.def1.model.response._
 
 case class RetrieveBalanceAndTransactionsResponse(
@@ -28,8 +29,19 @@ case class RetrieveBalanceAndTransactionsResponse(
 
 object RetrieveBalanceAndTransactionsResponse {
 
+  private def innerReads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
+    (
+      (JsPath \ "balanceDetails").read[BalanceDetails] and
+        (JsPath \ "codingDetails").readNullable[Seq[CodingDetails]] and
+        (JsPath \ "documentDetails").readNullable[Seq[DocumentDetails]] and
+        (JsPath \ "financialDetails").read[Seq[FinancialDetails]].map(fd => Option(fd))
+          .orElse((JsPath \ "financialDetailsItem").readNullable[Seq[FinancialDetails]])
+    )(RetrieveBalanceAndTransactionsResponse.apply _)
+
+  // accommodating HIP response being wrapped in a 'success' object
   implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
-    Json.reads[RetrieveBalanceAndTransactionsResponse]
+    (JsPath \ "success").read[RetrieveBalanceAndTransactionsResponse](innerReads).orElse(innerReads)
 
   implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
+
 }
