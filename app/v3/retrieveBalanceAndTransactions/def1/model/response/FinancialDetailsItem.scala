@@ -54,10 +54,10 @@ object FinancialDetailsItem {
       (if (readLocks.value) __.read[FinancialDetailsItemLocks].map(Some(_)) else Reads.pure(None)) and
       (__ \ "returnFlag").readNullable[Boolean]
         .orElse((__ \ "returnFlag").readNullable[String].flatMap[Option[Boolean]] {
-          case Some(x) if x == "Y" => Reads.pure(Some(true))
-          case Some(x) if x == "N" => Reads.pure(Some(false))
-          case Some(x)             => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
-          case None                => Reads.pure(None)
+          case Some("Y") => Reads.pure(Some(true))
+          case Some("N") => Reads.pure(Some(false))
+          case Some(x)   => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
+          case None      => Reads.pure(None)
         }) and
       (__ \ "paymentReference").readNullable[String] and
       (__ \ "paymentAmount").readNullable[BigDecimal] and
