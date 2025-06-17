@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package v3.deleteCodingOut
+package v4.deleteCodingOut
 
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
-import v3.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
-import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
+import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
+import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.Future
 

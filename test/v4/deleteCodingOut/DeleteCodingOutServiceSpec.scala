@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package v3.deleteCodingOut
+package v4.deleteCodingOut
 
-import common.errors.CodingOutNotFoundError
+import common.errors.{CodingOutNotFoundError, RuleOutsideAmendmentWindowError}
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
-import v3.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
-import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
+import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
+import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.Future
 
@@ -60,6 +60,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
       val errors = Map(
         "INVALID_TAXABLE_ENTITY_ID" -> NinoFormatError,
         "INVALID_TAX_YEAR"          -> TaxYearFormatError,
+        "OUTSIDE_AMENDMENT_WINDOW"  -> RuleOutsideAmendmentWindowError,
         "INVALID_CORRELATIONID"     -> InternalError,
         "NO_DATA_FOUND"             -> CodingOutNotFoundError,
         "SERVER_ERROR"              -> InternalError,

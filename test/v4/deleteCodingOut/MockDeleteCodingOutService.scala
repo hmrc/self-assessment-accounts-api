@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package v3.deleteCodingOut
+package v4.deleteCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import shared.controllers.RequestContext
 import shared.models.errors.ErrorWrapper
 import shared.models.outcomes.ResponseWrapper
-import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
+import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 

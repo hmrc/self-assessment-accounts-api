@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package v3.deleteCodingOut.def1.models
+package v4.deleteCodingOut.def1.models
 
 import config.SaAccountsConfig
 import org.scalamock.handlers.CallHandler
 import shared.controllers.validators.{MockValidatorFactory, Validator}
-import v3.deleteCodingOut.DeleteCodingOutValidatorFactory
-import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
+import v4.deleteCodingOut.DeleteCodingOutValidatorFactory
+import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 trait MockDeleteCodingOutValidatorFactory extends MockValidatorFactory[DeleteCodingOutRequestData] {
 

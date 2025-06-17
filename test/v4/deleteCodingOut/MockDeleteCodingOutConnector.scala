@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-package v3.deleteCodingOut
+package v4.deleteCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
-import shared.controllers.RequestContext
-import shared.models.errors.ErrorWrapper
-import shared.models.outcomes.ResponseWrapper
-import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
+import shared.connectors.DownstreamOutcome
+import uk.gov.hmrc.http.HeaderCarrier
+import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteCodingOutService extends MockFactory {
+trait MockDeleteCodingOutConnector extends MockFactory {
 
-  val mockDeleteCodingOutService: DeleteCodingOutService = mock[DeleteCodingOutService]
+  val mockDeleteCodingOutConnector: DeleteCodingOutConnector =
+    mock[DeleteCodingOutConnector]
 
-  object MockDeleteCodingOutService {
+  object MockDeleteCodingOutConnector {
 
-    def deleteCodingOut(requestData: DeleteCodingOutRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[Unit]]]] =
-      (mockDeleteCodingOutService
-        .deleteCodingOut(_: DeleteCodingOutRequestData)(_: RequestContext, _: ExecutionContext))
-        .expects(requestData, *, *)
+    def deleteCodingOut(requestData: DeleteCodingOutRequestData): CallHandler[Future[DownstreamOutcome[Unit]]] =
+      (
+        mockDeleteCodingOutConnector
+          .deleteCodingOut(_: DeleteCodingOutRequestData)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
+        .expects(requestData, *, *, *)
   }
 }

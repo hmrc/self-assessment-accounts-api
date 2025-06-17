@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v3.deleteCodingOut
+package v4.deleteCodingOut
 
 import config.MockSaAccountsConfig
 import play.api.Configuration
@@ -25,10 +25,10 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError, RuleTaxYearNotEndedError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version3}
-import v3.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
-import v3.deleteCodingOut.def1.models.MockDeleteCodingOutValidatorFactory
-import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
+import shared.routing.{Version,  Version4}
+import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
+import v4.deleteCodingOut.def1.models.MockDeleteCodingOutValidatorFactory
+import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -40,7 +40,7 @@ class DeleteCodingOutControllerSpec
     with MockDeleteCodingOutValidatorFactory
     with MockSaAccountsConfig {
 
-  override val apiVersion: Version = Version3
+  override val apiVersion: Version =  Version4
 
   private val taxYear = "2019-20"
 

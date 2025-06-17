@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v3.deleteCodingOut
+package v4.deleteCodingOut
 
 import config.MockSaAccountsConfig
 import shared.utils.UnitSpec
-import v3.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
+import v4.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 
 class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {
 
