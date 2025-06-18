@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package v4.optOutOfCodingOut
+package v3.retrieveCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
-import v4.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
-import v4.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
+import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
+import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateOrAmendCodingOutOptOutConnector extends MockFactory {
+trait MockRetrieveCodingOutConnector extends MockFactory {
 
-  val mockCreateOrAmendCodingOutOptOutConnector: OptOutOfCodingOutConnector = mock[OptOutOfCodingOutConnector]
+  val mockRetrieveCodingOutConnector: RetrieveCodingOutConnector = mock[RetrieveCodingOutConnector]
 
-  object MockCreateOrAmendCodingOutOptOutConnector {
+  object MockRetrieveCodingOutConnector {
 
-    def amendCodingOutOptOut(requestData: OptOutOfCodingOutRequestData): CallHandler[Future[DownstreamOutcome[OptOutOfCodingOutResponse]]] =
-      (mockCreateOrAmendCodingOutOptOutConnector
-        .amendCodingOutOptOut(_: OptOutOfCodingOutRequestData)(
+    def retrieveCodingOut(requestData: RetrieveCodingOutRequestData): CallHandler[Future[DownstreamOutcome[RetrieveCodingOutResponse]]] =
+      (mockRetrieveCodingOutConnector
+        .retrieveCodingOut(_: RetrieveCodingOutRequestData)(
           _: HeaderCarrier,
           _: ExecutionContext,
           _: String

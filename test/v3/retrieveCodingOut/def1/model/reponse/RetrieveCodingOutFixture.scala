@@ -17,6 +17,7 @@
 package v3.retrieveCodingOut.def1.model.reponse
 
 import play.api.libs.json.{JsObject, Json}
+import v3.retrieveCodingOut.def1.model.response.{Def1_RetrieveCodingOutResponse, TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
 
 object RetrieveCodingOutFixture {
 
@@ -191,5 +192,43 @@ object RetrieveCodingOutFixture {
      """.stripMargin
     )
     .as[JsObject]
+
+  val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
+    UnmatchedCustomerSubmissions(
+      0,
+      "2021-08-24T14:15:22Z",
+      Some(BigInt(12345678910L))
+    )
+
+  val taxCodeComponents: TaxCodeComponents =
+    TaxCodeComponents(
+      0,
+      Some("2021-22"),
+      "2021-08-24T14:15:22Z",
+      "hmrcHeld",
+      Some(BigInt(12345678910L))
+    )
+
+  val taxCodeComponentObject: TaxCodeComponentsObject =
+    TaxCodeComponentsObject(
+      Some(List(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
+      Some(List(taxCodeComponents)),
+      Some(taxCodeComponents)
+    )
+
+  val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
+    UnmatchedCustomerSubmissionsObject(
+      Some(List(unmatchedCustomerSubmissions)),
+      Some(List(unmatchedCustomerSubmissions)),
+      Some(List(unmatchedCustomerSubmissions)),
+      Some(unmatchedCustomerSubmissions)
+    )
+
+  val retrieveCodingOutResponse: Def1_RetrieveCodingOutResponse =
+    Def1_RetrieveCodingOutResponse(
+      Some(taxCodeComponentObject),
+      Some(unmatchedCustomerSubmissionsObject)
+    )
 
 }

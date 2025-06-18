@@ -25,14 +25,14 @@ import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateOrAmendCodingOutOptOutConnector extends MockFactory {
+trait MockOptOutOfCodingOutConnector extends MockFactory {
 
-  val mockCreateOrAmendCodingOutOptOutConnector: OptOutOfCodingOutConnector = mock[OptOutOfCodingOutConnector]
+  val mockOptOutOfCodingOutConnector: OptOutOfCodingOutConnector = mock[OptOutOfCodingOutConnector]
 
-  object MockCreateOrAmendCodingOutOptOutConnector {
+  object MockOptOutOfCodingOutConnector {
 
     def amendCodingOutOptOut(requestData: OptOutOfCodingOutRequestData): CallHandler[Future[DownstreamOutcome[OptOutOfCodingOutResponse]]] =
-      (mockCreateOrAmendCodingOutOptOutConnector
+      (mockOptOutOfCodingOutConnector
         .amendCodingOutOptOut(_: OptOutOfCodingOutRequestData)(
           _: HeaderCarrier,
           _: ExecutionContext,
