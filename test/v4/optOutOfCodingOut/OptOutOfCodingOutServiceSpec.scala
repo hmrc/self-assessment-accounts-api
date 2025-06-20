@@ -75,10 +75,10 @@ class OptOutOfCodingOutServiceSpec extends ServiceSpec {
     }
   }
 
-  trait Test extends MockCreateOrAmendCodingOutOptOutConnector {
+  trait Test extends MockOptOutOfCodingOutConnector {
 
     val service = new OptOutOfCodingOutService(
-      connector = mockCreateOrAmendCodingOutOptOutConnector
+      connector = mockOptOutOfCodingOutConnector
     )
 
   }

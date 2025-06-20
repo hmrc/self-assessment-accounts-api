@@ -36,7 +36,7 @@ class OptOutOfCodingOutServiceSpec extends ServiceSpec {
   "OptOutOfCodingOutService" when {
     "service call successful" must {
       "return success" in new Test {
-        MockCreateOrAmendCodingOutOptOutConnector.amendCodingOutOptOut(requestData) returns
+        MockOptOutOfCodingOutConnector.amendCodingOutOptOut(requestData) returns
           Future.successful(Right(ResponseWrapper(correlationId, downstreamResponse)))
 
         await(service.optOutOfCodingOut(requestData)) shouldBe Right(ResponseWrapper(correlationId, downstreamResponse))
@@ -48,7 +48,7 @@ class OptOutOfCodingOutServiceSpec extends ServiceSpec {
         def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
           s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-            MockCreateOrAmendCodingOutOptOutConnector.amendCodingOutOptOut(requestData) returns
+            MockOptOutOfCodingOutConnector.amendCodingOutOptOut(requestData) returns
               Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode)))))
 
             await(service.optOutOfCodingOut(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
@@ -75,10 +75,10 @@ class OptOutOfCodingOutServiceSpec extends ServiceSpec {
     }
   }
 
-  trait Test extends MockCreateOrAmendCodingOutOptOutConnector {
+  trait Test extends MockOptOutOfCodingOutConnector {
 
     val service = new OptOutOfCodingOutService(
-      connector = mockCreateOrAmendCodingOutOptOutConnector
+      connector = mockOptOutOfCodingOutConnector
     )
 
   }

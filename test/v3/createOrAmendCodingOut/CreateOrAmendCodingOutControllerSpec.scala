@@ -30,6 +30,7 @@ import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
 import v3.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
 import v3.createOrAmendCodingOut.def1.model.request._
+import v3.createOrAmendCodingOut.def1.models.request.CodingOutFixtures.validRequestBody
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -86,14 +87,7 @@ class CreateOrAmendCodingOutControllerSpec
         |""".stripMargin
   )
 
-  private val requestBody = Def1_CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
-    payeUnderpayment = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
-    selfAssessmentUnderpayment = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
-    debt = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
-    inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
-  ))
-
-  private val requestData = Def1_CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear), requestBody)
+  private val requestData = Def1_CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear), validRequestBody)
 
   val mtdResponseJson: JsValue =
     Json.parse(s"""{

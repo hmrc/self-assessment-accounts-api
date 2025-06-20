@@ -27,9 +27,8 @@ import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
 import v4.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
-import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.retrieveCodingOutMtdResponse
+import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
-import v4.retrieveCodingOut.def1.model.response._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -50,44 +49,6 @@ class RetrieveCodingOutControllerSpec
     taxYear = TaxYear.fromMtd(taxYear),
     source = Some(MtdSource.parser(source))
   )
-
-  val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
-    UnmatchedCustomerSubmissions(
-      0,
-      "2021-08-24T14:15:22Z",
-      Some(BigInt(12345678910L))
-    )
-
-  val taxCodeComponents: TaxCodeComponents =
-    TaxCodeComponents(
-      0,
-      Some("2021-22"),
-      "2021-08-24T14:15:22Z",
-      "hmrcHeld",
-      Some(BigInt(12345678910L))
-    )
-
-  val taxCodeComponentObject: TaxCodeComponentsObject =
-    TaxCodeComponentsObject(
-      Some(List(taxCodeComponents)),
-      Some(List(taxCodeComponents)),
-      Some(List(taxCodeComponents)),
-      Some(taxCodeComponents)
-    )
-
-  val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
-    UnmatchedCustomerSubmissionsObject(
-      Some(List(unmatchedCustomerSubmissions)),
-      Some(List(unmatchedCustomerSubmissions)),
-      Some(List(unmatchedCustomerSubmissions)),
-      Some(unmatchedCustomerSubmissions)
-    )
-
-  val retrieveCodingOutResponse: Def1_RetrieveCodingOutResponse =
-    Def1_RetrieveCodingOutResponse(
-      Some(taxCodeComponentObject),
-      Some(unmatchedCustomerSubmissionsObject)
-    )
 
   "RetrieveCodingOutController" should {
     "return OK" when {

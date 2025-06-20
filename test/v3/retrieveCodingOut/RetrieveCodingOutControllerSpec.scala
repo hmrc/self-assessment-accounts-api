@@ -17,6 +17,7 @@
 package v3.retrieveCodingOut
 
 import common.errors.CodingOutNotFoundError
+import common.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import common.models.MtdSource
 import config.MockSaAccountsConfig
 import play.api.Configuration
@@ -28,11 +29,9 @@ import shared.models.domain.TaxYear
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
-import common.hateoas.RelType.{CREATE_OR_AMEND_CODING_OUT_UNDERPAYMENTS, DELETE_CODING_OUT_UNDERPAYMENTS, SELF}
 import v3.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
-import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.mtdResponseWithHateoas
+import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
-import v3.retrieveCodingOut.def1.model.response._
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutHateoasData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -73,44 +72,6 @@ class RetrieveCodingOutControllerSpec
     method = DELETE,
     rel = DELETE_CODING_OUT_UNDERPAYMENTS
   )
-
-  val unmatchedCustomerSubmissions: UnmatchedCustomerSubmissions =
-    UnmatchedCustomerSubmissions(
-      0,
-      "2021-08-24T14:15:22Z",
-      Some(BigInt(12345678910L))
-    )
-
-  val taxCodeComponents: TaxCodeComponents =
-    TaxCodeComponents(
-      0,
-      Some("2021-22"),
-      "2021-08-24T14:15:22Z",
-      "hmrcHeld",
-      Some(BigInt(12345678910L))
-    )
-
-  val taxCodeComponentObject: TaxCodeComponentsObject =
-    TaxCodeComponentsObject(
-      Some(List(taxCodeComponents)),
-      Some(List(taxCodeComponents)),
-      Some(List(taxCodeComponents)),
-      Some(taxCodeComponents)
-    )
-
-  val unmatchedCustomerSubmissionsObject: UnmatchedCustomerSubmissionsObject =
-    UnmatchedCustomerSubmissionsObject(
-      Some(List(unmatchedCustomerSubmissions)),
-      Some(List(unmatchedCustomerSubmissions)),
-      Some(List(unmatchedCustomerSubmissions)),
-      Some(unmatchedCustomerSubmissions)
-    )
-
-  val retrieveCodingOutResponse: Def1_RetrieveCodingOutResponse =
-    Def1_RetrieveCodingOutResponse(
-      Some(taxCodeComponentObject),
-      Some(unmatchedCustomerSubmissionsObject)
-    )
 
   private val mtdResponseJson = mtdResponseWithHateoas(validNino, taxYear, source)
 

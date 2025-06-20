@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-package v3.optOutOfCodingOut
+package v4.deleteCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
-import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
-import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
+import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateOrAmendCodingOutOptOutConnector extends MockFactory {
+trait MockDeleteCodingOutConnector extends MockFactory {
 
-  val mockCreateOrAmendCodingOutOptOutConnector: OptOutOfCodingOutConnector = mock[OptOutOfCodingOutConnector]
+  val mockDeleteCodingOutConnector: DeleteCodingOutConnector =
+    mock[DeleteCodingOutConnector]
 
-  object MockCreateOrAmendCodingOutOptOutConnector {
+  object MockDeleteCodingOutConnector {
 
-    def amendCodingOutOptOut(requestData: OptOutOfCodingOutRequestData): CallHandler[Future[DownstreamOutcome[OptOutOfCodingOutResponse]]] =
-      (mockCreateOrAmendCodingOutOptOutConnector
-        .amendCodingOutOptOut(_: OptOutOfCodingOutRequestData)(
-          _: HeaderCarrier,
-          _: ExecutionContext,
-          _: String
-        ))
+    def deleteCodingOut(requestData: DeleteCodingOutRequestData): CallHandler[Future[DownstreamOutcome[Unit]]] =
+      (
+        mockDeleteCodingOutConnector
+          .deleteCodingOut(_: DeleteCodingOutRequestData)(
+            _: HeaderCarrier,
+            _: ExecutionContext,
+            _: String
+          )
+        )
         .expects(requestData, *, *, *)
-
   }
-
 }

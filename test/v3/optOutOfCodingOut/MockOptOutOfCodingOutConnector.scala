@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package v4.optOutOfCodingOut
+package v3.optOutOfCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
-import v4.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
-import v4.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
+import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
+import v3.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockCreateOrAmendCodingOutOptOutConnector extends MockFactory {
+trait MockOptOutOfCodingOutConnector extends MockFactory {
 
-  val mockCreateOrAmendCodingOutOptOutConnector: OptOutOfCodingOutConnector = mock[OptOutOfCodingOutConnector]
+  val mockOptOutOfCodingOutConnector: OptOutOfCodingOutConnector = mock[OptOutOfCodingOutConnector]
 
-  object MockCreateOrAmendCodingOutOptOutConnector {
+  object MockOptOutOfCodingOutConnector {
 
     def amendCodingOutOptOut(requestData: OptOutOfCodingOutRequestData): CallHandler[Future[DownstreamOutcome[OptOutOfCodingOutResponse]]] =
-      (mockCreateOrAmendCodingOutOptOutConnector
+      (mockOptOutOfCodingOutConnector
         .amendCodingOutOptOut(_: OptOutOfCodingOutRequestData)(
           _: HeaderCarrier,
           _: ExecutionContext,
