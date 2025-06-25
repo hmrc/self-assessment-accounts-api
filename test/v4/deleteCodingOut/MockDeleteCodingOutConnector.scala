@@ -18,13 +18,14 @@ package v4.deleteCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteCodingOutConnector extends MockFactory {
+trait MockDeleteCodingOutConnector extends TestSuite with MockFactory {
 
   val mockDeleteCodingOutConnector: DeleteCodingOutConnector =
     mock[DeleteCodingOutConnector]

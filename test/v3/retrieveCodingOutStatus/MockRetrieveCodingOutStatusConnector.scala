@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package v3.retrieveCodingOutStatus
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
@@ -25,7 +26,7 @@ import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockRetrieveCodingOutStatusConnector extends MockFactory {
+trait MockRetrieveCodingOutStatusConnector extends TestSuite with MockFactory {
 
   val mockRetrieveCodingOutStatusConnector: RetrieveCodingOutStatusConnector =
     mock[RetrieveCodingOutStatusConnector]

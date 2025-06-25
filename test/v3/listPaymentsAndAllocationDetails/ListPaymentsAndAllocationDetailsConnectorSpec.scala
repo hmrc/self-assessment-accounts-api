@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package v3.listPaymentsAndAllocationDetails
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{DateRange, Nino}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
@@ -54,7 +55,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, response))
 
       willGet(
-        url = s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+        url = url"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
         parameters = queryParams
       ).returns(Future.successful(outcome))
 

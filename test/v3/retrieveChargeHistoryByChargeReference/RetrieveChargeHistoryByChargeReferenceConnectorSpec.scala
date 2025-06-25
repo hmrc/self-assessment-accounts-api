@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import common.models.ChargeReference
 import shared.connectors.ConnectorSpec
 import shared.models.domain.Nino
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
@@ -64,7 +65,7 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
         private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
         willGet(
-          url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+          url = url"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
           parameters = List("chargeReference" -> chargeReference)
         ).returns(Future.successful(outcome))
         await(connector.retrieveChargeHistoryByChargeReference(request)) shouldBe outcome

@@ -19,6 +19,7 @@ package v3.optOutOfCodingOut
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{EmptyJsonBody, Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
 import v3.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 
@@ -42,7 +43,7 @@ class OptOutOfCodingOutConnectorSpec extends ConnectorSpec {
       "return a successful result" in new IfsTest with Test {
 
         private val outcome = Right(ResponseWrapper(correlationId, Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")))
-        willPut(s"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}", EmptyJsonBody)
+        willPut(url"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}", EmptyJsonBody)
           .returns(Future.successful(outcome))
 
         await(connector.amendCodingOutOptOut(request)) shouldBe outcome

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package v3.retrieveChargeHistoryByTransactionId
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TransactionId}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -63,7 +64,7 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
         private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
 
         willGet(
-          url = s"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
+          url = url"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
           parameters = List("docNumber" -> transactionId)
         ).returns(Future.successful(outcome))
 
