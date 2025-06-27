@@ -18,6 +18,7 @@ package v3.deleteCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.models.errors.ErrorWrapper
 import shared.models.outcomes.ResponseWrapper
@@ -25,7 +26,7 @@ import v3.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockDeleteCodingOutService extends MockFactory {
+trait MockDeleteCodingOutService extends TestSuite with MockFactory {
 
   val mockDeleteCodingOutService: DeleteCodingOutService = mock[DeleteCodingOutService]
 

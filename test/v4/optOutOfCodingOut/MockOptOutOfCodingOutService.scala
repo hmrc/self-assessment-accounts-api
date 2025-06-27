@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package v4.optOutOfCodingOut
 
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import shared.controllers.RequestContext
 import shared.models.errors.ErrorWrapper
 import shared.models.outcomes.ResponseWrapper
@@ -26,7 +27,7 @@ import v4.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait MockOptOutOfCodingOutService extends MockFactory {
+trait MockOptOutOfCodingOutService extends TestSuite with MockFactory {
   val mockOptOutOfCodingOutService: OptOutOfCodingOutService = mock[OptOutOfCodingOutService]
 
   object MockedOptOutOfCodingOutService {

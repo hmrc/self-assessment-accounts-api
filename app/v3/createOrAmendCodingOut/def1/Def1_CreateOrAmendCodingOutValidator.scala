@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,11 @@ import v3.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOut
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
 import javax.inject.Singleton
-import scala.annotation.nowarn
 
 @Singleton
 class Def1_CreateOrAmendCodingOutValidator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean, appConfig: SaAccountsConfig)
     extends Validator[CreateOrAmendCodingOutRequestData] {
 
-  @nowarn("cat=lint-byname-implicit")
   private val resolveJson = new ResolveNonEmptyJsonObject[Def1_CreateOrAmendCodingOutRequestBody]()
 
   private val validatePayeUnderpayments = ResolveParsedNumber()

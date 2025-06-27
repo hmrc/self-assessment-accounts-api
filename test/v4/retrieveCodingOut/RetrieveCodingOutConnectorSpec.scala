@@ -20,6 +20,7 @@ import common.models.MtdSource.hmrcHeld
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
@@ -45,9 +46,9 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
 
       val uri = if (taxYear.useTaxYearSpecificApi) {
-        s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/$nino"
+        url"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/$nino"
       } else {
-        s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
+        url"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
       }
 
       willGet(uri, Seq(queryParams)).returns(Future.successful(outcome))

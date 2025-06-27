@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,11 +18,13 @@ package shared.connectors
 
 import org.scalatest.Assertion
 import play.api.http.{HeaderNames, MimeTypes, Status}
+import play.api.libs.json.Json
 import shared.config.{MockSharedAppConfig, SharedAppConfig}
 import shared.mocks.MockHttpClient
 import shared.models.outcomes.ResponseWrapper
 import shared.utils.UnitSpec
-import uk.gov.hmrc.http.{HeaderCarrier, HttpClient, HttpReads}
+import uk.gov.hmrc.http.client.HttpClientV2
+import uk.gov.hmrc.http.{HeaderCarrier, HttpReads, StringContextOps}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,8 +36,8 @@ class BaseDownstreamConnectorSpec extends UnitSpec with MockHttpClient with Mock
 
   private val baseUrl     = "http://test-BaseUrl"
   private val path        = "some/url"
-  private val absoluteUrl = s"$baseUrl/$path"
-  private val body        = "body"
+  private val absoluteUrl = url"$baseUrl/some/url"
+  private val body        = Json.toJson("body")
   private val userAgent   = "this-api"
 
   private implicit val correlationId: String = "someCorrelationId"
@@ -60,7 +62,7 @@ class BaseDownstreamConnectorSpec extends UnitSpec with MockHttpClient with Mock
     HeaderCarrier(otherHeaders = inputHeaders)
 
   val connector: BaseDownstreamConnector = new BaseDownstreamConnector {
-    val http: HttpClient           = mockHttpClient
+    val http: HttpClientV2           = mockHttpClient
     val appConfig: SharedAppConfig = mockSharedAppConfig
   }
 
@@ -231,7 +233,7 @@ class BaseDownstreamConnectorSpec extends UnitSpec with MockHttpClient with Mock
           implicit val hc: HeaderCarrier = headerCarrierForInput()
 
           MockedHttpClient.delete(
-            absoluteUrl + "?param1=value1&param2=value2",
+            url"$absoluteUrl?param1=value1&param2=value2",
             headerCarrierConfig,
             requiredHeaders = standardContractHeadersWith(additionalRequiredHeaders),
             excludedHeaders = Seq(contentTypeHeader) ++ additionalExcludedHeaders
@@ -247,7 +249,7 @@ class BaseDownstreamConnectorSpec extends UnitSpec with MockHttpClient with Mock
 
     "a request is received with headers" must {
       def makeCall(downstreamUri: DownstreamUri[Result], requiredHeaders: Seq[(String, String)] = Nil, excludedHeaders: Seq[(String, String)] = Nil)(
-          implicit hc: HeaderCarrier): Assertion = {
+        implicit hc: HeaderCarrier): Assertion = {
         MockedHttpClient.put(
           absoluteUrl,
           headerCarrierConfig,

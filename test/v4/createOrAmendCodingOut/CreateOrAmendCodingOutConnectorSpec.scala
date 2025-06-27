@@ -19,6 +19,7 @@ package v4.createOrAmendCodingOut
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v4.createOrAmendCodingOut.def1.model.request.Def1_CreateOrAmendCodingOutRequestData
 import v4.createOrAmendCodingOut.def1.models.request.CodingOutFixtures.validRequestBody
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
@@ -43,9 +44,9 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
        val uri = if (taxYear.useTaxYearSpecificApi) {
-        s"$baseUrl/income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"
+        url"$baseUrl/income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"
       } else {
-        s"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
+        url"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
       }
 
       willPut(

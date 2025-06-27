@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package v4.retrieveCodingOutStatus
 import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
@@ -50,7 +51,7 @@ class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
     "retrieveCodingOutStatus" must {
       "return a 200 status with a valid response" in new IfsTest with Test {
         private val outcome = Right(ResponseWrapper(correlationId, response))
-        willGet(s"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/$nino/2024")
+        willGet(url"$baseUrl/income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/$nino/2024")
           .returns(Future.successful(outcome))
 
         await(connector.retrieveCodingOutStatus(request(Nino(nino), TaxYear.fromMtd("2023-24")))) shouldEqual outcome

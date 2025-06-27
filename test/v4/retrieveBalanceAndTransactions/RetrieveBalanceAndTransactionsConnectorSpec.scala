@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{DateRange, Nino}
 import shared.models.outcomes.ResponseWrapper
+import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
 import v4.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
 import v4.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.{documentDetails, documentDetailsWithoutDocDueDate}
@@ -184,9 +185,9 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
       val outcome = Right(ResponseWrapper(correlationId, response))
 
       val url = if(hipTest) {
-        s"$baseUrl/etmp/RESTAdapter/itsa/taxpayer/financial-details"
+        url"$baseUrl/etmp/RESTAdapter/itsa/taxpayer/financial-details"
       } else {
-        s"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
+        url"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
       }
       willGet(
         url = url,
