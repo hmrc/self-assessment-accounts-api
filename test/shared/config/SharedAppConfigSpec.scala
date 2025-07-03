@@ -348,14 +348,6 @@ class SharedAppConfigSpec extends UnitSpec {
            |        token = IFS-ABCD1234
            |        environmentHeaders = ["IFS-Accept", "IFS-Gov-Test-Scenario", "IFS-Content-Type"]
            |      }
-           |
-           |      tys-ifs {
-           |        host = 127.0.0.1
-           |        port = 8888
-           |        env = Prod
-           |        token = TYS-IFS-ABCD1234
-           |        environmentHeaders = ["TYS-IFS-Accept", "TYS-IFS-Gov-Test-Scenario", "TYS-IFS-Content-Type"]
-           |      }
            |    }
            |  }
            |""".stripMargin
