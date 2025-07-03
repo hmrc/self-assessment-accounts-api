@@ -18,7 +18,7 @@ package shared.config.rewriters
 
 import com.github.jknack.handlebars.Options
 import shared.config.rewriters.DocumentationRewriters.CheckAndRewrite
-import shared.config.{SharedAppConfig, ConfigFeatureSwitches}
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 
 import javax.inject.{Inject, Singleton}
 

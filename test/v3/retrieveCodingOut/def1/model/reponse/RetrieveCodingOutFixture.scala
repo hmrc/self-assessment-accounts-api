@@ -17,7 +17,7 @@
 package v3.retrieveCodingOut.def1.model.reponse
 
 import play.api.libs.json.{JsObject, Json}
-import v3.retrieveCodingOut.def1.model.response.{Def1_RetrieveCodingOutResponse, TaxCodeComponents, TaxCodeComponentsObject, UnmatchedCustomerSubmissions, UnmatchedCustomerSubmissionsObject}
+import v3.retrieveCodingOut.def1.model.response._
 
 object RetrieveCodingOutFixture {
 

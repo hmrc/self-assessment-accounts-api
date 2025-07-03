@@ -59,7 +59,7 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
       "a valid request is supplied" in new IfsTest with Test {
         connectorRequest(taxYear)
       }
-      "a valid TYS request is supplied" in new TysIfsTest with Test {
+      "a valid TYS request is supplied" in new IfsTest with Test {
         connectorRequest(tysTaxYear)
       }
     }

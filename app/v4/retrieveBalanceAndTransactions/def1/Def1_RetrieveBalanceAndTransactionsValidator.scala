@@ -23,7 +23,7 @@ import common.errors._
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
 import shared.models.domain.DateRange
-import shared.models.errors.{FromDateFormatError, MissingFromDateError, MtdError, RangeToDateBeforeFromDateError, RuleMissingToDateError, ToDateFormatError}
+import shared.models.errors._
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.Singleton

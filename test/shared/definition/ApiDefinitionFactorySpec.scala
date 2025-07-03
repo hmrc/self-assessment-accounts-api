@@ -18,7 +18,7 @@ package shared.definition
 
 import cats.implicits.catsSyntaxValidatedId
 import shared.config.Deprecation.NotDeprecated
-import shared.config.{SharedAppConfig, MockSharedAppConfig}
+import shared.config.{MockSharedAppConfig, SharedAppConfig}
 import shared.definition.APIStatus.{ALPHA, BETA}
 import shared.mocks.MockHttpClient
 import shared.routing._
