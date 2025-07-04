@@ -16,6 +16,7 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
+import common.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import common.models.ChargeReference
 import play.api.Configuration
 import play.api.libs.json.{JsObject, JsValue}
@@ -27,7 +28,6 @@ import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
-import common.hateoas.RelType.{RETRIEVE_TRANSACTION_DETAILS, SELF}
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
