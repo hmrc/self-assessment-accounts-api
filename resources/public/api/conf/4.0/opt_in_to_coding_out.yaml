@@ -68,6 +68,8 @@ post:
               $ref: "./common/errors.yaml#/components/examples/ruleItsaContractObjectNotExist"
             RULE_ALREADY_OPTED_IN:
               $ref: "./common/errors.yaml#/components/examples/ruleAlreadyOptedIn"
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
 
     "403":
       description: Forbidden

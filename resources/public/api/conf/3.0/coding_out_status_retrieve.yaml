@@ -77,4 +77,6 @@ get:
               $ref: "./common/errors.yaml#/components/examples/ruleBusinessPartnerNotExist"
             RULE_ITSA_CONTRACT_OBJECT_NOT_EXIST:
               $ref: "./common/errors.yaml#/components/examples/ruleItsaContractObjectNotExist"
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
 
