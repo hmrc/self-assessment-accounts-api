@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,11 +34,9 @@ object DownstreamUri {
   def IfsUri[Resp](value: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] =
     withStandardStrategy(value, appConfig.ifsDownstreamConfig)
 
-  def HipUri[Resp](path: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] =
-    DownstreamUri(path, DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig))
-
-  def HipEtmpUri[Resp](path: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] =
-    DownstreamUri(path, DownstreamStrategy.hipEtmpAuthStrategy(appConfig.hipDownstreamConfig))
+  def HipUri[Resp](path: String,
+                   additionalContractHeaders: => Seq[(String, String)] = Nil)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] =
+    DownstreamUri(path, DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig, additionalContractHeaders))
 
   def DesToHipMigrationUri[Resp](path: String, switchName: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] = {
     lazy val desStrategy = DownstreamStrategy.standardStrategy(appConfig.desDownstreamConfig)

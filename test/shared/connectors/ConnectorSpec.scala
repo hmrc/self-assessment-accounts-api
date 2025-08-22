@@ -141,13 +141,15 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     private val environment = "hip-environment"
 
+    protected val additionalContractHeaders: Seq[(String, String)] = List.empty
+
     protected final lazy val requiredHeaders: Seq[(String, String)] = List(
       "Authorization"        -> s"Basic $token",
       "Environment"          -> environment,
       "User-Agent"           -> "this-api",
       "CorrelationId"        -> correlationId,
       "Gov-Test-Scenario"    -> "DEFAULT"
-    ) ++ intent.map("intent" -> _)
+    ) ++ intent.map("intent" -> _) ++ additionalContractHeaders
 
     MockedSharedAppConfig.hipDownstreamConfig
       .anyNumberOfTimes() returns BasicAuthDownstreamConfig(this.baseUrl, environment, clientId, clientSecret, Some(allowedHeaders))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package shared.connectors
 
 import com.google.common.base.Charsets
 import shared.config.{BasicAuthDownstreamConfig, ConfigFeatureSwitches, DownstreamConfig, SharedAppConfig}
-import shared.utils.DateUtils
 
 import java.util.Base64
 import scala.concurrent.{ExecutionContext, Future}
@@ -66,44 +65,27 @@ object DownstreamStrategy {
   /** Creates a strategy instance that uses the OAuth client id and secret but as a base64-encoded Basic auth token.
     * @param downstreamConfig
     *   configuration for the downstream host & endpoint
+    * @param additionalContractHeaders
+    *   optional additional headers to be included in the contract headers
     */
-  def basicAuthStrategy(downstreamConfig: BasicAuthDownstreamConfig): DownstreamStrategy = new DownstreamStrategy {
-    override def baseUrl: String = downstreamConfig.baseUrl
+  def basicAuthStrategy(downstreamConfig: BasicAuthDownstreamConfig, additionalContractHeaders: => Seq[(String, String)] = Nil): DownstreamStrategy =
+    new DownstreamStrategy {
+      override def baseUrl: String = downstreamConfig.baseUrl
 
-    override def contractHeaders(correlationId: String)(implicit ec: ExecutionContext): Future[Seq[(String, String)]] = {
-      val encodedToken = Base64.getEncoder.encodeToString(s"${downstreamConfig.clientId}:${downstreamConfig.clientSecret}".getBytes(Charsets.UTF_8))
+      override def contractHeaders(correlationId: String)(implicit ec: ExecutionContext): Future[Seq[(String, String)]] = {
+        val encodedToken = Base64.getEncoder.encodeToString(s"${downstreamConfig.clientId}:${downstreamConfig.clientSecret}".getBytes(Charsets.UTF_8))
 
-      Future.successful(
-        List(
-          "Authorization" -> s"Basic $encodedToken",
-          "Environment"   -> downstreamConfig.env,
-          "CorrelationId" -> correlationId
-        ))
+        Future.successful(
+          List(
+            "Authorization" -> s"Basic $encodedToken",
+            "Environment"   -> downstreamConfig.env,
+            "CorrelationId" -> correlationId
+          ) ++ additionalContractHeaders
+        )
+      }
+
+      override def environmentHeaders: Seq[String] = downstreamConfig.environmentHeaders.getOrElse(Nil)
     }
-
-    override def environmentHeaders: Seq[String] = downstreamConfig.environmentHeaders.getOrElse(Nil)
-  }
-
-  def hipEtmpAuthStrategy(downstreamConfig: BasicAuthDownstreamConfig): DownstreamStrategy = new DownstreamStrategy {
-    override def baseUrl: String = downstreamConfig.baseUrl
-
-    override def contractHeaders(correlationId: String)(implicit ec: ExecutionContext): Future[Seq[(String, String)]] = {
-      val encodedToken = Base64.getEncoder.encodeToString(s"${downstreamConfig.clientId}:${downstreamConfig.clientSecret}".getBytes(Charsets.UTF_8))
-
-      Future.successful(
-        List(
-          "Authorization"         -> s"Basic $encodedToken",
-          "Environment"           -> downstreamConfig.env,
-          "correlationId"         -> correlationId,
-          "X-Message-Type"        -> "ETMPGetFinancialDetails",
-          "X-Originating-System"  -> "MDTP",
-          "X-Receipt-Date"        -> DateUtils.isoDateTimeStamp,
-          "X-Transmitting-System" -> "HIP"
-        ))
-    }
-
-    override def environmentHeaders: Seq[String] = downstreamConfig.environmentHeaders.getOrElse(Nil)
-  }
 
   /** Creates a strategy based on a choice of two strategies and the value of a feature switch.
     * @param onStrategy
