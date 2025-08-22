@@ -25,7 +25,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors._
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponse}
+import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponse}
 
 class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec {
 
