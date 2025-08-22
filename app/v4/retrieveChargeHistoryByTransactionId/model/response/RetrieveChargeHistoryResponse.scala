@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package v4.retrieveChargeHistoryByTransactionId.model.response
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import shared.config.SharedAppConfig
 import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
@@ -28,5 +29,5 @@ object RetrieveChargeHistoryResponse  {
       .read[Seq[ChargeHistoryDetail]]
       .map(items => RetrieveChargeHistoryResponse(items))
 
-  implicit val writes: OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
+  implicit def writes(implicit appConfig: SharedAppConfig): OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
 }
