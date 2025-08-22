@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class DownstreamStrategySpec extends UnitSpec with ScalaFutures with MockSharedAppConfig {
 
   "StandardStrategy" must {
-    "use the supplied DownstreamConfig" in {
+    "use the supplied DownstreamConfig with environment headers present" in {
       val downstreamConfig =
         DownstreamConfig(baseUrl = "someBaseUrl", env = "someEnv", token = "someToken", environmentHeaders = Some(Seq("header1", "header2")))
 
@@ -41,10 +41,26 @@ class DownstreamStrategySpec extends UnitSpec with ScalaFutures with MockSharedA
         )
       strategy.environmentHeaders should contain theSameElementsAs Seq("header1", "header2")
     }
+
+    "use the supplied DownstreamConfig with environment headers absent" in {
+      val downstreamConfig =
+        DownstreamConfig(baseUrl = "someBaseUrl", env = "someEnv", token = "someToken", environmentHeaders = None)
+
+      val strategy = DownstreamStrategy.standardStrategy(downstreamConfig)
+
+      strategy.baseUrl shouldBe "someBaseUrl"
+      strategy.contractHeaders("someCorrelationId").futureValue should contain theSameElementsAs
+        Seq(
+          "Authorization" -> "Bearer someToken",
+          "Environment"   -> "someEnv",
+          "CorrelationId" -> "someCorrelationId"
+        )
+      strategy.environmentHeaders shouldBe empty
+    }
   }
 
   "BasicAuthStrategy" must {
-    "use the supplied BasicAuthDownstreamConfig and ClientAuthConfig" in {
+    "use the supplied BasicAuthDownstreamConfig with environment headers present and no additional contract headers" in {
       val downstreamConfig =
         BasicAuthDownstreamConfig(
           baseUrl = "someBaseUrl",
@@ -64,6 +80,52 @@ class DownstreamStrategySpec extends UnitSpec with ScalaFutures with MockSharedA
         )
       strategy.environmentHeaders should contain theSameElementsAs Seq("header1", "header2")
 
+    }
+
+    "use the supplied BasicAuthDownstreamConfig with environment headers absent and no additional contract headers" in {
+      val downstreamConfig =
+        BasicAuthDownstreamConfig(
+          baseUrl = "someBaseUrl",
+          env = "someEnv",
+          clientId = "someClient",
+          clientSecret = "someSecret",
+          environmentHeaders = None)
+
+      val strategy = DownstreamStrategy.basicAuthStrategy(downstreamConfig)
+
+      strategy.baseUrl shouldBe "someBaseUrl"
+      strategy.contractHeaders("someCorrelationId").futureValue should contain theSameElementsAs
+        Seq(
+          "Authorization" -> "Basic c29tZUNsaWVudDpzb21lU2VjcmV0",
+          "Environment"   -> "someEnv",
+          "CorrelationId" -> "someCorrelationId"
+        )
+      strategy.environmentHeaders shouldBe empty
+    }
+
+    "include additional contract headers when provided" in {
+      val downstreamConfig =
+        BasicAuthDownstreamConfig(
+          baseUrl = "someBaseUrl",
+          env = "someEnv",
+          clientId = "someClient",
+          clientSecret = "someSecret",
+          environmentHeaders = Some(Seq("header1"))
+        )
+
+      val additionalContractHeaders = Seq(
+        "X-Custom-Header-1" -> "customValue1",
+        "X-Custom-Header-2" -> "customValue2"
+      )
+
+      val strategy = DownstreamStrategy.basicAuthStrategy(downstreamConfig, additionalContractHeaders)
+
+      strategy.contractHeaders("someCorrelationId").futureValue should contain theSameElementsAs
+        Seq(
+          "Authorization" -> "Basic c29tZUNsaWVudDpzb21lU2VjcmV0",
+          "Environment"   -> "someEnv",
+          "CorrelationId" -> "someCorrelationId"
+        ) ++ additionalContractHeaders
     }
   }
 

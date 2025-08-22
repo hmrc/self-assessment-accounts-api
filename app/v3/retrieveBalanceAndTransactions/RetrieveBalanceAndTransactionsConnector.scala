@@ -17,9 +17,10 @@
 package v3.retrieveBalanceAndTransactions
 
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
-import shared.connectors.DownstreamUri.{HipEtmpUri, IfsUri}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import shared.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 import v3.retrieveBalanceAndTransactions.def1.model.response.FinancialDetailsItem
@@ -76,10 +77,21 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClientV2,
         "dateTo"            -> fromAndToDates.map(_.endDate.toString)
       ).collect { case (k, Some(v)) => k -> v }
 
+    val additionalContractHeaders: Seq[(String, String)] = List(
+      "X-Message-Type"        -> "ETMPGetFinancialDetails",
+      "X-Originating-System"  -> "MDTP",
+      "X-Receipt-Date"        -> isoDateTimeStamp,
+      "X-Transmitting-System" -> "HIP"
+    )
+
     val (queryParams, downStreamUri) = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1553")) {
       (
         hipRequiredQueryParams ++ hipOptionalQueryParams,
-        HipEtmpUri[RetrieveBalanceAndTransactionsResponse]("etmp/RESTAdapter/itsa/taxpayer/financial-details"))
+        HipUri[RetrieveBalanceAndTransactionsResponse](
+          path = "etmp/RESTAdapter/itsa/taxpayer/financial-details",
+          additionalContractHeaders = additionalContractHeaders
+        )
+      )
     } else {
       (
         ifsBooleanQueryParams ++ ifsOptionalQueryParams,

@@ -20,6 +20,7 @@ import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{DateRange, Nino}
 import shared.models.outcomes.ResponseWrapper
+import shared.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.StringContextOps
 import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
 import v3.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
@@ -133,7 +134,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
       "return a valid response" when {
 
-        "a valid request containing both docNumber and fromDate and dateTo is supplied" in new HipEtmpTest with Test {
+        "a valid request containing both docNumber and fromDate and dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
 
           val queryParams: Seq[(String, String)] =
             commonQueryHipParams ++ List(
@@ -146,7 +147,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
           connectorRequest(validRequest, validResponse, queryParams, true)
         }
 
-        "a valid request containing docNumber and not fromDate or dateTo is supplied" in new HipEtmpTest with Test {
+        "a valid request containing docNumber and not fromDate or dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
           val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
 
           val queryParams: Seq[(String, String)] =
@@ -156,7 +157,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
           connectorRequest(request, validResponse, queryParams, true)
         }
 
-        "a valid request containing fromDate and dateTo and no docNumber is supplied" in new HipEtmpTest with Test {
+        "a valid request containing fromDate and dateTo and no docNumber is supplied" in new HipTestWithAdditionalContactHeaders {
           val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
 
           val queryParams: Seq[(String, String)] =
@@ -170,6 +171,15 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
         }
       }
     }
+  }
+
+  private trait HipTestWithAdditionalContactHeaders extends HipTest with Test {
+    override val additionalContractHeaders: Seq[(String, String)] = List(
+      "X-Message-Type"        -> "ETMPGetFinancialDetails",
+      "X-Originating-System"  -> "MDTP",
+      "X-Receipt-Date"        -> isoDateTimeStamp,
+      "X-Transmitting-System" -> "HIP"
+    )
   }
 
   private trait Test { _: ConnectorTest =>
