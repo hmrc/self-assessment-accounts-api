@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 package v4.retrieveChargeHistoryByTransactionId.def1
 
 import play.api.libs.json.{JsValue, Json}
+import shared.models.domain.Timestamp
 import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
-
 
 object RetrieveChargeHistoryFixture {
 
@@ -30,6 +30,7 @@ object RetrieveChargeHistoryFixture {
     description = "Balancing Charge",
     totalAmount = 54321.12,
     changeDate = "2020-02-24",
+    changeTimestamp = Timestamp("2020-02-24T14:15:22.802Z"),
     changeReason = "amended return",
     poaAdjustmentReason = Some("001")
   )
@@ -45,7 +46,7 @@ object RetrieveChargeHistoryFixture {
       |  "documentDate":"${validChargeHistoryDetailObject.transactionDate}",
       |  "documentDescription": "${validChargeHistoryDetailObject.description}",
       |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
-      |  "reversalDate": "${validChargeHistoryDetailObject.changeDate}",
+      |  "reversalDate": "${validChargeHistoryDetailObject.changeTimestamp.value}",
       |  "reversalReason": "${validChargeHistoryDetailObject.changeReason}",
       |  "poaAdjustmentReason": "001"
       |}
@@ -83,6 +84,7 @@ object RetrieveChargeHistoryFixture {
       |  "description": "${validChargeHistoryDetailObject.description}",
       |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
       |  "changeDate": "${validChargeHistoryDetailObject.changeDate}",
+      |  "changeTimestamp": "${validChargeHistoryDetailObject.changeTimestamp.value}",
       |  "changeReason": "${validChargeHistoryDetailObject.changeReason}",
       |  "poaAdjustmentReason": "001"
       |}
