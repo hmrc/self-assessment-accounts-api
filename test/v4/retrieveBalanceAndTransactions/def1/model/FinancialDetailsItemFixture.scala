@@ -17,7 +17,7 @@
 package v4.retrieveBalanceAndTransactions.def1.model
 
 import play.api.libs.json.{JsObject, JsValue, Json}
-import v4.retrieveBalanceAndTransactions.def1.model.response.FinancialDetailsItem
+import v4.retrieveBalanceAndTransactions.def1.model.response.{CodedOutStatus, FinancialDetailsItem}
 
 trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
 
@@ -36,10 +36,15 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
     paymentLot = Some("paymentLot"),
     paymentLotItem = Some("paymentLotItem"),
     clearingSAPDocument = Some("clearingSAPDocument"),
-    isChargeEstimate = Some(true)
+    isChargeEstimate = Some(true),
+    codedOutStatus = None
   )
 
+  val financialDetailsItemHip: FinancialDetailsItem = financialDetailsItem.copy(codedOutStatus = Some(CodedOutStatus.NotCollected))
+
   val financialDetailsItemWithoutLocks: FinancialDetailsItem = financialDetailsItem.copy(locks = None)
+
+  val financialDetailsItemWithoutLocksHip: FinancialDetailsItem = financialDetailsItemHip.copy(locks = None)
 
   val financialDetailsItemEmpty: FinancialDetailsItem =
     FinancialDetailsItem(
@@ -57,7 +62,8 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
       paymentLot = None,
       paymentLotItem = None,
       clearingSAPDocument = None,
-      isChargeEstimate = None
+      isChargeEstimate = None,
+      codedOutStatus = None
     )
 
   val financialDetailsItemWithoutLocksMtdJson: JsValue =
@@ -80,8 +86,32 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
          |}
          |""".stripMargin)
 
+  val financialDetailsItemWithoutLocksMtdJsonHip: JsValue =
+    Json.parse(s"""
+                  |{
+                  |  "itemId": "001",
+                  |  "dueDate": "2022-02-02",
+                  |  "amount": 1.23,
+                  |  "clearingDate": "2021-01-01",
+                  |  "clearingReason": "Incoming Payment",
+                  |  "outgoingPaymentMethod": "Repayment to Card",
+                  |  "isReturn": true,
+                  |  "paymentReference": "paymentReference",
+                  |  "paymentAmount": 2.23,
+                  |  "paymentMethod": "paymentMethod",
+                  |  "paymentLot": "paymentLot",
+                  |  "paymentLotItem": "paymentLotItem",
+                  |  "clearingSAPDocument": "clearingSAPDocument",
+                  |  "isChargeEstimate": true,
+                  |  "codedOutStatus": "not-collected"
+                  |}
+                  |""".stripMargin)
+
   val financialDetailsItemMtdJson: JsValue =
     financialDetailsItemWithoutLocksMtdJson.as[JsObject] ++ Json.obj("locks" -> financialDetailsItemLocksMtdJson)
+
+  val financialDetailsItemMtdJsonHip: JsValue =
+    financialDetailsItemWithoutLocksMtdJsonHip.as[JsObject] ++ Json.obj("locks" -> financialDetailsItemLocksMtdJson)
 
   val financialDetailsItemDownstreamJson: JsValue =
     Json.parse("""
@@ -133,6 +163,7 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
         |  "clearingSAPDocument": "clearingSAPDocument",
         |  "codingInitiationDate": "2021-01-11",
         |  "statisticalDocument": "Y",
+        |  "codedOutStatus": "N",
         |  "returnReason": "returnReason"
         |}
         |""".stripMargin)

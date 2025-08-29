@@ -33,7 +33,8 @@ case class FinancialDetailsItem(itemId: Option[String],
                                 paymentLot: Option[String],
                                 paymentLotItem: Option[String],
                                 clearingSAPDocument: Option[String],
-                                isChargeEstimate: Option[Boolean])
+                                isChargeEstimate: Option[Boolean],
+                                codedOutStatus: Option[CodedOutStatus])
 
 object FinancialDetailsItem {
   implicit val writes: Writes[FinancialDetailsItem] = Json.writes
@@ -71,7 +72,9 @@ object FinancialDetailsItem {
         case Some(x) if x == "N"             => Reads.pure(Some(false))
         case Some(x)                         => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
         case None                            => Reads.pure(None)
-      })(FinancialDetailsItem.apply _)
+      } and
+      (__ \ "codedOutStatus").readNullable[CodedOutStatus]
+      )(FinancialDetailsItem.apply _)
   }
 
   private def convertToMtd(mapping: Map[String, String])(maybeDownstream: Option[String]): Option[String] =

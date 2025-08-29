@@ -48,7 +48,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdResponseWithoutLocksJson
+        response.json shouldBe mtdResponseWithoutLocksJsonHip
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
@@ -64,7 +64,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdResponseJson
+        response.json shouldBe mtdResponseJsonHip
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
@@ -78,7 +78,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdResponseJson
+        response.json shouldBe mtdResponseJsonHip
         response.header("Content-Type") shouldBe Some("application/json")
       }
     }
