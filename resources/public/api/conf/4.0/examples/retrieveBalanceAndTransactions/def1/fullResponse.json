@@ -120,7 +120,8 @@
           "paymentLot": "81203010024",
           "paymentLotItem": "000001",
           "clearingSAPDocument": "3350000253",
-          "isChargeEstimate": true
+          "isChargeEstimate": true,
+          "codedOutStatus": "initiated"
         }
       ]
     }

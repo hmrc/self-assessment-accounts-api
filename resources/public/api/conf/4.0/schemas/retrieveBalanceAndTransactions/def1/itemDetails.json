@@ -126,6 +126,21 @@
         "description": "Indicates whether the item represents an estimated charge.",
         "type": "boolean",
         "example": "true"
+      },
+      "codedOutStatus": {
+        "description": "Indicates whether an amount has been coded out through the PAYE system.",
+        "example": "initiated",
+        "type": "string",
+        "enum": [
+          "initiated",
+          "not-collected",
+          "partly-collected",
+          "fully-collected",
+          "awaiting-collection",
+          "waiting-cancellation",
+          "cancelled",
+          "rejected"
+        ]
       }
     }
   }
