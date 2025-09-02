@@ -16,63 +16,52 @@
 
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
-import play.api.libs.json._
-import shared.utils.Logging
+import play.api.libs.json.{Reads, Writes}
+import shared.utils.enums.Enums
 
-trait CodedOutStatus
+sealed trait CodedOutStatus {
+  def fromDownstream: String
+}
 
-object CodedOutStatus extends Logging {
+object CodedOutStatus {
 
-  case object Initiated extends CodedOutStatus {
-    override def toString: String = "initiated"
+  implicit val reads: Reads[CodedOutStatus] = Enums
+    .readsFrom[CodedOutStatus](_.fromDownstream)
+    .orElse(
+      Enums.reads[CodedOutStatus]
+    )
+
+  implicit val writes: Writes[CodedOutStatus] = Enums.writes[CodedOutStatus]
+
+  case object `initiated` extends CodedOutStatus {
+    override val fromDownstream: String = "I"
   }
 
-  case object NotCollected extends CodedOutStatus {
-    override def toString: String = "not-collected"
+  case object `not-collected` extends CodedOutStatus {
+    override val fromDownstream: String = "N"
   }
 
-  case object PartlyCollected extends CodedOutStatus {
-    override def toString: String = "partly-collected"
+  case object `partly-collected` extends CodedOutStatus {
+    override val fromDownstream: String = "P"
   }
 
-  case object FullyCollected extends CodedOutStatus {
-    override def toString: String = "fully-collected"
+  case object `fully-collected` extends CodedOutStatus {
+    override val fromDownstream: String = "F"
   }
 
-  case object AwaitingCollection extends CodedOutStatus {
-    override def toString: String = "awaiting-collection"
+  case object `awaiting-collection` extends CodedOutStatus {
+    override val fromDownstream: String = "A"
   }
 
-  case object WaitingCancellation extends CodedOutStatus {
-    override def toString: String = "waiting-cancellation"
+  case object `waiting-cancellation` extends CodedOutStatus {
+    override val fromDownstream: String = "W"
   }
 
-  case object Cancelled extends CodedOutStatus {
-    override def toString: String = "cancelled"
+  case object `cancelled` extends CodedOutStatus {
+    override val fromDownstream: String = "C"
   }
 
-  case object Rejected extends CodedOutStatus {
-    override def toString: String = "rejected"
+  case object `rejected` extends CodedOutStatus {
+    override val fromDownstream: String = "R"
   }
-
-  implicit val writes: Writes[CodedOutStatus] = Writes { (codedOutStatus: CodedOutStatus) =>
-    JsString(codedOutStatus.toString)
-  }
-
-  implicit val reads: Reads[CodedOutStatus] = Reads { json =>
-    json.as[String] match {
-      case "I" | "i" => JsSuccess(Initiated)
-      case "N" | "n" => JsSuccess(NotCollected)
-      case "P" | "p" => JsSuccess(PartlyCollected)
-      case "F" | "f" => JsSuccess(FullyCollected)
-      case "A" | "a" => JsSuccess(AwaitingCollection)
-      case "W" | "w" => JsSuccess(WaitingCancellation)
-      case "C" | "c" => JsSuccess(Cancelled)
-      case "R" | "r" => JsSuccess(Rejected)
-      case other     =>
-        logger.error(s"Unknown coded out status: $other")
-        JsError(s"Unknown coded out status: $other")
-    }
-  }
-
 }

@@ -40,7 +40,7 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
     codedOutStatus = None
   )
 
-  val financialDetailsItemHip: FinancialDetailsItem = financialDetailsItem.copy(codedOutStatus = Some(CodedOutStatus.NotCollected))
+  val financialDetailsItemHip: FinancialDetailsItem = financialDetailsItem.copy(codedOutStatus = Some(CodedOutStatus.`not-collected`))
 
   val financialDetailsItemWithoutLocks: FinancialDetailsItem = financialDetailsItem.copy(locks = None)
 
