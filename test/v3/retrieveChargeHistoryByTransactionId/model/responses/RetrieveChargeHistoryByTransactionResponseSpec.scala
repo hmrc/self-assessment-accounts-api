@@ -16,12 +16,15 @@
 
 package v3.retrieveChargeHistoryByTransactionId.model.responses
 
-import play.api.libs.json.Json
+import play.api.Configuration
+import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import shared.utils.UnitSpec
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
+import shared.config.MockSharedAppConfig
 
-class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec {
+class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec with MockSharedAppConfig {
 
   val validObjectSingle: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(List(validChargeHistoryDetailObject))
   val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
@@ -42,8 +45,18 @@ class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec {
     }
   }
 
-  "Written to JSON" should {
-    "produce the expected JSON" in {
+  "written to JSON" should {
+    "produce the expected JSON when feature switch is disabled" in {
+      MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> false)
+      Json.toJson(validObjectSingle) shouldBe Json.obj(
+        "chargeHistoryDetails" -> Json.arr(
+          mtdSingleJson.as[JsObject] - "changeTimestamp"
+        )
+      )
+    }
+
+    "produce the expected JSON when feature switch is enabled" in {
+      MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> true)
       Json.toJson(validObjectSingle) shouldBe mtdSingleResponse
     }
   }
