@@ -22,9 +22,8 @@ import shared.models.domain.Nino
 import shared.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
-import v3.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
+import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
-import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.Future
 
@@ -33,36 +32,19 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
   val nino: String            = "AA123456A"
   val chargeReference: String = "anId"
 
-  val chargeHistoryDetails: ChargeHistoryDetail =
-    ChargeHistoryDetail(
-      taxYear = Some("2019-20"),
-      transactionId = "X123456790A",
-      transactionDate = "2019-06-01",
-      description = "Balancing Charge Debit",
-      totalAmount = 600.01,
-      changeDate = "2019-06-05",
-      changeReason = "Example reason",
-      poaAdjustmentReason = Some("002")
-    )
-
-  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
-    RetrieveChargeHistoryResponse(
-      chargeHistoryDetails = List(chargeHistoryDetails)
-    )
-
   trait Test  { _: ConnectorTest =>
 
     val connector: RetrieveChargeHistoryByChargeReferenceConnector =
       new RetrieveChargeHistoryByChargeReferenceConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
   }
 
-  "RetrieveChargeHistoryConnector" when {
-    "retrieveChargeHistory" must {
+  "RetrieveChargeHistoryByChargeReferenceConnector" when {
+    "retrieveChargeHistoryByChargeReference" must {
       "return a valid response" in new IfsTest with Test {
 
         val request: RetrieveChargeHistoryByChargeReferenceRequestData =
           Def1_RetrieveChargeHistoryByChargeReferenceRequestData(Nino(nino), ChargeReference(chargeReference))
-        private val outcome = Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
+        private val outcome = Right(ResponseWrapper(correlationId, validChargeHistoryResponseObject))
 
         willGet(
           url = url"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",

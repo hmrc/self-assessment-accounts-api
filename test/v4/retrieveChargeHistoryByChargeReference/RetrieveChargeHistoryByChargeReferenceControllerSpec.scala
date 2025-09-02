@@ -90,7 +90,7 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration.empty
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveChargeHistoryByChargeReference(validNino, chargeReference)(fakeGetRequest)

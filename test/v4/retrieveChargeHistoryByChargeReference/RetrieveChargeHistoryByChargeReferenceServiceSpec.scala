@@ -22,30 +22,12 @@ import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
+import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
-import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.Future
 
 class RetrieveChargeHistoryByChargeReferenceServiceSpec extends ServiceSpec {
-
-  val chargeHistoryDetails: ChargeHistoryDetail =
-    ChargeHistoryDetail(
-      taxYear = Some("2019-20"),
-      transactionId = "X123456790A",
-      transactionDate = "2019-06-01",
-      description = "Balancing Charge Debit",
-      totalAmount = 600.01,
-      changeDate = "2019-06-05",
-      changeReason = "Example reason",
-      poaAdjustmentReason = Some("001")
-    )
-
-  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
-    RetrieveChargeHistoryResponse(
-      chargeHistoryDetails = List(chargeHistoryDetails)
-    )
 
   private val nino            = Nino("AA123456A")
   private val chargeReference = ChargeReference("anId")
@@ -61,10 +43,10 @@ class RetrieveChargeHistoryByChargeReferenceServiceSpec extends ServiceSpec {
       "return mapped result" in new Test {
         MockRetrieveChargeHistoryByChargeReferenceConnector
           .retrieveChargeHistoryByChargeReference(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, validChargeHistoryResponseObject))))
 
         private val result = await(service.retrieveChargeHistoryByChargeReference(requestData))
-        result shouldBe Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
+        result shouldBe Right(ResponseWrapper(correlationId, validChargeHistoryResponseObject))
       }
     }
   }

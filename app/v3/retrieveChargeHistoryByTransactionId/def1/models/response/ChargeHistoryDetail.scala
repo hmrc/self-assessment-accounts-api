@@ -18,7 +18,11 @@ package v3.retrieveChargeHistoryByTransactionId.def1.models.response
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import shared.models.domain.TaxYear
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.models.domain.{TaxYear, Timestamp}
+
+import scala.util.Try
+
 
 case class ChargeHistoryDetail(taxYear: Option[String],
                                transactionId: String,
@@ -26,10 +30,15 @@ case class ChargeHistoryDetail(taxYear: Option[String],
                                description: String,
                                totalAmount: BigDecimal,
                                changeDate: String,
+                               changeTimestamp: Timestamp,
                                changeReason: String,
                                poaAdjustmentReason: Option[String])
 
 object ChargeHistoryDetail {
+
+  private def timestampConverter(str: String): Timestamp = Try(Timestamp(str)).getOrElse(
+    Timestamp(s"${str}T00:00:00.000Z")
+  )
 
   implicit val reads: Reads[ChargeHistoryDetail] =
     ((JsPath \ "taxYear").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
@@ -37,9 +46,13 @@ object ChargeHistoryDetail {
       (JsPath \ "documentDate").read[String] and
       (JsPath \ "documentDescription").read[String] and
       (JsPath \ "totalAmount").read[BigDecimal] and
-      (JsPath \ "reversalDate").read[String] and
+      (JsPath \ "reversalDate").read[String].map(timestampConverter(_).toDate) and
+      (JsPath \ "reversalDate").read[String].map(timestampConverter) and
       (JsPath \ "reversalReason").read[String] and
       (JsPath \ "poaAdjustmentReason").readNullable[String])(ChargeHistoryDetail.apply _)
 
-  implicit val writes: OWrites[ChargeHistoryDetail] = Json.writes[ChargeHistoryDetail]
+  implicit def writes(implicit appConfig: SharedAppConfig): OWrites[ChargeHistoryDetail] =
+    Json.writes[ChargeHistoryDetail].transform { jsonObject =>
+      if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) jsonObject else jsonObject - "changeTimestamp"
+    }
 }

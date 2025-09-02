@@ -17,6 +17,7 @@
 package v4.retrieveChargeHistoryByChargeReference.model.response
 
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
+import shared.config.SharedAppConfig
 import v4.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
@@ -27,5 +28,5 @@ object RetrieveChargeHistoryResponse {
       .read[Seq[ChargeHistoryDetail]]
       .map(items => RetrieveChargeHistoryResponse(items))
 
-  implicit val writes: OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
+  implicit def writes(implicit appConfig: SharedAppConfig): OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
 }

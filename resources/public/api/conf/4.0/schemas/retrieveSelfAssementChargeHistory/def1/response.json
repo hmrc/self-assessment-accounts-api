@@ -40,14 +40,14 @@
             "example": "600.00"
           },
           "changeDate": {
-            "description": "The date the charge was changed in the format: YYYY-MM-DD. This field is deprecated and will be removed in a future release. Use changeTimestamp instead.",
+            "description": "The date the charge was changed, in the format: YYYY-MM-DD. This field is deprecated and will be removed in a future release. Use changeTimestamp instead.",
             "type": "string",
             "format": "date",
             "example": "2018-04-05",
             "deprecated": true
           },
           "changeTimestamp": {
-            "description": "{{#unless (releasedInProduction 'ifs_hip_migration_1554_docs')}}[Test only] {{/unless}}The timestamp the charge was changed in the format: YYYY-MM-DDThh:mm:ss.SSSZ",
+            "description": "{{#unless (releasedInProduction 'ifs_hip_migration_1554_docs')}}[Test only] {{/unless}}The timestamp the charge was changed, in the format: YYYY-MM-DDThh:mm:ss.SSSZ",
             "type": "string",
             "format": "date-time",
             "example": "2018-04-05T14:15:22.802Z"

@@ -17,6 +17,7 @@
 package v3.retrieveChargeHistoryByChargeReference.def1.model.response
 
 import play.api.libs.json.{JsObject, JsValue, Json}
+import shared.models.domain.Timestamp
 import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 object RetrieveChargeHistoryFixture {
@@ -28,6 +29,7 @@ object RetrieveChargeHistoryFixture {
     description = "Balancing Charge",
     totalAmount = 54321.12,
     changeDate = "2020-02-24",
+    changeTimestamp = Timestamp("2020-02-24T14:15:22.802Z"),
     changeReason = "amended return",
     poaAdjustmentReason = Some("001")
   )
@@ -43,7 +45,7 @@ object RetrieveChargeHistoryFixture {
       |  "documentDate":"${validChargeHistoryDetailObject.transactionDate}",
       |  "documentDescription": "${validChargeHistoryDetailObject.description}",
       |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
-      |  "reversalDate": "${validChargeHistoryDetailObject.changeDate}",
+      |  "reversalDate": "${validChargeHistoryDetailObject.changeTimestamp.value}",
       |  "reversalReason": "${validChargeHistoryDetailObject.changeReason}",
       |  "poaAdjustmentReason": "001"
       |}
@@ -81,6 +83,7 @@ object RetrieveChargeHistoryFixture {
       |  "description": "${validChargeHistoryDetailObject.description}",
       |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
       |  "changeDate": "${validChargeHistoryDetailObject.changeDate}",
+      |  "changeTimestamp": "${validChargeHistoryDetailObject.changeTimestamp.value}",
       |  "changeReason": "${validChargeHistoryDetailObject.changeReason}",
       |  "poaAdjustmentReason": "001"
       |}

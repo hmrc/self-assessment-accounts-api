@@ -31,7 +31,7 @@ object RetrieveChargeHistoryResponse extends HateoasLinks {
       .read[Seq[ChargeHistoryDetail]]
       .map(items => RetrieveChargeHistoryResponse(items))
 
-  implicit val writes: OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
+  implicit def writes(implicit appConfig: SharedAppConfig): OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
 
   implicit object RetrieveChargeHistoryLinksFactory extends HateoasLinksFactory[RetrieveChargeHistoryResponse, RetrieveChargeHistoryHateoasData] {
 
