@@ -55,7 +55,7 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
         "passed a valid JSON document" should {
           "return a fully populated object" in {
-            downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe response
+            downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseHip
           }
 
           "return a minimally populated object" in {
@@ -69,7 +69,7 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
         "exclude locks" should {
           "return the object without locks" in {
-            downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseWithoutLocks
+            downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseWithoutLocksHip
           }
         }
       }

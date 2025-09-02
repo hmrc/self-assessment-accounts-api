@@ -41,7 +41,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
 
         "all properties are present and the feature switch is enabled (HIP enabled)" must {
           "include locks in the object" in {
-            financialDetailsItemDownstreamHipJson.as[FinancialDetailsItem] shouldBe financialDetailsItem
+            financialDetailsItemDownstreamHipJson.as[FinancialDetailsItem] shouldBe financialDetailsItemHip
           }
         }
 
@@ -63,7 +63,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
 
         "all properties are present and the feature switch is enabled (HIP enabled)" must {
           "not include locks field" in {
-            financialDetailsItemDownstreamHipJson.as[FinancialDetailsItem] shouldBe financialDetailsItem.copy(locks = None)
+            financialDetailsItemDownstreamHipJson.as[FinancialDetailsItem] shouldBe financialDetailsItemHip.copy(locks = None)
           }
         }
 

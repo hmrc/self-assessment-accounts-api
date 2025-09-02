@@ -26,15 +26,19 @@ import v4.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransa
 
 object ResponseFixture {
 
-  val response: RetrieveBalanceAndTransactionsResponse             = responseWith(financialDetailsFull)
-  val responseWithoutLocks: RetrieveBalanceAndTransactionsResponse = responseWith(financialDetailsWithoutLocks)
+  val response: RetrieveBalanceAndTransactionsResponse                = responseWith(financialDetailsFull)
+  val responseHip: RetrieveBalanceAndTransactionsResponse             = responseWith(financialDetailsFullHip)
+  val responseWithoutLocks: RetrieveBalanceAndTransactionsResponse    = responseWith(financialDetailsWithoutLocks)
+  val responseWithoutLocksHip: RetrieveBalanceAndTransactionsResponse = responseWith(financialDetailsWithoutLocksHip)
 
   val minimalResponse: RetrieveBalanceAndTransactionsResponse =
     RetrieveBalanceAndTransactionsResponse(minimalBalanceDetails, None, None, None)
 
   val mtdResponseJson: JsValue                         = mtdResponseJsonWith(mtdFinancialDetailsFullJson)
+  val mtdResponseJsonHip: JsValue                      = mtdResponseJsonWith(mtdFinancialDetailsFullJsonHip)
   val mtdResponseWithoutPOARelevantAmountJson: JsValue = mtdResponseJsonWithoutPOAAmount(mtdFinancialDetailsFullJson)
   val mtdResponseWithoutLocksJson: JsValue             = mtdResponseJsonWith(mtdFinancialDetailsWithoutLocksJson)
+  val mtdResponseWithoutLocksJsonHip: JsValue          = mtdResponseJsonWith(mtdFinancialDetailsWithoutLocksJsonHip)
 
   val downstreamResponseJson: JsValue = Json.parse(s"""
         |  {

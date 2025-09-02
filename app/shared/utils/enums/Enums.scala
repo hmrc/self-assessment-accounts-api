@@ -34,6 +34,8 @@ object Enums {
   def reads[E: MkValues: ClassTag](implicit ev: Show[E] = Shows.toStringShow[E]): Reads[E] =
     implicitly[Reads[String]].collect(JsonValidationError(s"error.expected.$typeName"))(parser)
 
+  def readsFrom[E: MkValues: ClassTag](extractValue: E => String)(implicit ev: Show[E] = Show.show(extractValue)): Reads[E] = reads
+
   def typeName[E: ClassTag]: String =
     implicitly[ClassTag[E]].runtimeClass.getSimpleName
 

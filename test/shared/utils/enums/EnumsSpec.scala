@@ -101,17 +101,30 @@ class EnumsSpec extends UnitSpec with Inspectors {
           override def altName: String = "three"
         }
 
-        implicit val show: Show[Enum2]     = Show.show[Enum2](_.altName)
-        implicit val format: Format[Enum2] = Enums.format[Enum2]
+        val reads: Reads[Enum2] = Enums.readsFrom[Enum2](_.altName)
+
+        val writes: Writes[Enum2] = {
+          implicit val show: Show[Enum2] = Show.show(_.altName)
+          Enums.writes[Enum2]
+        }
+
+        implicit val format: Format[Enum2] = Format(reads, writes)
       }
 
-      val json = Json.parse("""
-          |{
-          | "someField": "one"
-          |}""".stripMargin)
+      val enums: List[Enum2] = List(Enum2.`enum-one`, Enum2.`enum-two`, Enum2.`enum-three`)
 
-      json.as[Foo[Enum2]] shouldBe Foo(Enum2.`enum-one`)
-      Json.toJson(Foo[Enum2](Enum2.`enum-one`)) shouldBe json
+      def json(value: String): JsValue = Json.parse(
+        s"""
+           |{
+           |   "someField": "$value"
+           |}
+        """.stripMargin
+      )
+
+      enums.foreach { enum =>
+        json(enum.altName).as[Foo[Enum2]] shouldBe Foo(enum)
+        Json.toJson(Foo(enum)) shouldBe json(enum.altName)
+      }
     }
 
     "detects badly formatted values" in {

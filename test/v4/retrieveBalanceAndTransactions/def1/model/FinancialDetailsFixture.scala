@@ -34,7 +34,11 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
   val financialDetailsFull: FinancialDetails = financialDetailsWith(List(financialDetailsItem))
 
+  val financialDetailsFullHip: FinancialDetails = financialDetailsWith(List(financialDetailsItemHip))
+
   val financialDetailsWithoutLocks: FinancialDetails = financialDetailsWith(List(financialDetailsItemWithoutLocks))
+
+  val financialDetailsWithoutLocksHip: FinancialDetails = financialDetailsWith(List(financialDetailsItemWithoutLocksHip))
 
   private def financialDetailsWith(items: Seq[FinancialDetailsItem]): FinancialDetails = FinancialDetails(
     taxYear = taxYear.asMtd,
@@ -122,8 +126,10 @@ object FinancialDetailsFixture extends FinancialDetailsItemFixture {
       |}
       |""".stripMargin)
 
-  val mtdFinancialDetailsFullJson: JsValue         = mtdFinancialDetailsWith(financialDetailsItemMtdJson)
-  val mtdFinancialDetailsWithoutLocksJson: JsValue = mtdFinancialDetailsWith(financialDetailsItemWithoutLocksMtdJson)
+  val mtdFinancialDetailsFullJson: JsValue            = mtdFinancialDetailsWith(financialDetailsItemMtdJson)
+  val mtdFinancialDetailsFullJsonHip: JsValue         = mtdFinancialDetailsWith(financialDetailsItemMtdJsonHip)
+  val mtdFinancialDetailsWithoutLocksJson: JsValue    = mtdFinancialDetailsWith(financialDetailsItemWithoutLocksMtdJson)
+  val mtdFinancialDetailsWithoutLocksJsonHip: JsValue = mtdFinancialDetailsWith(financialDetailsItemWithoutLocksMtdJsonHip)
 
   private def mtdFinancialDetailsWith(items: JsValue): JsValue = Json.parse(s"""
        |  {

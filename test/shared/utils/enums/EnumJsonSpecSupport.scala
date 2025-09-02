@@ -47,7 +47,7 @@ trait EnumJsonSpecSupport {
     */
   def testDeserialization[A: Reads](namesAndValues: (String, A)*): Unit =
     "JSON reads" must {
-      "serialize correctly" in {
+      "deserialize correctly" in {
         namesAndValues.foreach { case (name, obj) =>
           JsString(name).as[A] shouldBe obj
         }
