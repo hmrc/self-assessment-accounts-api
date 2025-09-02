@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,35 +16,45 @@
 
 package v4.retrieveChargeHistoryByTransactionId.model.responses
 
-import play.api.libs.json.Json
+import play.api.Configuration
+import play.api.libs.json.{JsObject, Json}
+import shared.config.MockSharedAppConfig
 import shared.utils.UnitSpec
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
-class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec {
+class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec with MockSharedAppConfig {
 
   val validObjectSingle: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(List(validChargeHistoryDetailObject))
   val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
-  "Def1_RetrieveChargeHistoryResponse" when {
-    "reading valid JSON" should {
+  "RetrieveChargeHistoryResponse" when {
+    "read from valid JSON" should {
       "return the expected object" in {
         downstreamResponse.as[RetrieveChargeHistoryResponse] shouldBe validObjectSingle
       }
     }
-  }
 
-  "Def1_RetrieveChargeHistoryResponse" when {
-    "reading valid JSON with multiple charge history details" should {
+    "read from valid JSON with multiple charge history details" should {
       "return the expected object" in {
         downstreamResponseMultiple.as[RetrieveChargeHistoryResponse] shouldBe validObjectMultiple
       }
     }
-  }
 
-  "Written to JSON" should {
-    "produce the expected JSON" in {
-      Json.toJson(validObjectSingle) shouldBe mtdSingleResponse
+    "written to JSON" should {
+      "produce the expected JSON when feature switch is disabled" in {
+        MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> false)
+        Json.toJson(validObjectSingle) shouldBe Json.obj(
+          "chargeHistoryDetails" -> Json.arr(
+            mtdSingleJson.as[JsObject] - "changeTimestamp"
+          )
+        )
+      }
+
+      "produce the expected JSON when feature switch is enabled" in {
+        MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> true)
+        Json.toJson(validObjectSingle) shouldBe mtdSingleResponse
+      }
     }
   }
 
