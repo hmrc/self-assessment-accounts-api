@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,31 +20,13 @@ import shared.models.domain.{Nino, TransactionId}
 import shared.models.errors._
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
+import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
-import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
-import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.Future
 
 class RetrieveChargeHistoryByTransactionIdServiceSpec extends ServiceSpec {
-
-  val chargeHistoryDetails: ChargeHistoryDetail =
-    ChargeHistoryDetail(
-      taxYear = Some("2019-20"),
-      transactionId = "X123456790A",
-      transactionDate = "2019-06-01",
-      description = "Balancing Charge Debit",
-      totalAmount = 600.01,
-      changeDate = "2019-06-05",
-      changeReason = "Example reason",
-      poaAdjustmentReason = Some("001")
-    )
-
-  val retrieveChargeHistoryResponse: RetrieveChargeHistoryResponse =
-    RetrieveChargeHistoryResponse(
-      chargeHistoryDetails = List(chargeHistoryDetails)
-    )
 
   private val nino          = Nino("AA123456A")
   private val transactionId = TransactionId("anId")
@@ -55,50 +37,50 @@ class RetrieveChargeHistoryByTransactionIdServiceSpec extends ServiceSpec {
       transactionId = transactionId
     )
 
-  "RetrieveChargeHistoryService" should {
-    "service call successful" when {
+  "RetrieveChargeHistoryByTransactionIdService" when {
+    "service call successful" should {
       "return mapped result" in new Test {
         MockRetrieveChargeHistoryByTransactionIdConnector
           .retrieveChargeHistoryByTransactionId(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))))
+          .returns(Future.successful(Right(ResponseWrapper(correlationId, validChargeHistoryResponseObject))))
 
         private val result = await(service.retrieveChargeHistoryByTransactionId(requestData))
-        result shouldBe Right(ResponseWrapper(correlationId, retrieveChargeHistoryResponse))
+        result shouldBe Right(ResponseWrapper(correlationId, validChargeHistoryResponseObject))
       }
     }
-  }
 
-  "unsuccessful" must {
-    "map errors according to spec" when {
+    "unsuccessful" should {
+      "map errors according to spec" when {
 
-      def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
-        s"a $downstreamErrorCode error is returned from the service" in new Test {
+        def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
+          s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-          MockRetrieveChargeHistoryByTransactionIdConnector
-            .retrieveChargeHistoryByTransactionId(requestData)
-            .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
+            MockRetrieveChargeHistoryByTransactionIdConnector
+              .retrieveChargeHistoryByTransactionId(requestData)
+              .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
-          await(service.retrieveChargeHistoryByTransactionId(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
-        }
+            await(service.retrieveChargeHistoryByTransactionId(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
+          }
 
-      val errors: Seq[(String, MtdError)] =
-        List(
-          "INVALID_CORRELATIONID" -> InternalError,
-          "INVALID_ID_TYPE"       -> InternalError,
-          "INVALID_IDVALUE"       -> NinoFormatError,
-          "INVALID_REGIME_TYPE"   -> InternalError,
-          "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
-          "INVALID_DATE_FROM"     -> InternalError,
-          "INVALID_DATE_TO"       -> InternalError,
-          "INVALID_DATE_RANGE"    -> InternalError,
-          "INVALID_REQUEST"       -> InternalError,
-          "REQUEST_NOT_PROCESSED" -> InternalError,
-          "NO_DATA_FOUND"         -> NotFoundError,
-          "SERVER_ERROR"          -> InternalError,
-          "SERVICE_UNAVAILABLE"   -> InternalError
-        )
+        val errors: Seq[(String, MtdError)] =
+          List(
+            "INVALID_CORRELATIONID" -> InternalError,
+            "INVALID_ID_TYPE"       -> InternalError,
+            "INVALID_IDVALUE"       -> NinoFormatError,
+            "INVALID_REGIME_TYPE"   -> InternalError,
+            "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
+            "INVALID_DATE_FROM"     -> InternalError,
+            "INVALID_DATE_TO"       -> InternalError,
+            "INVALID_DATE_RANGE"    -> InternalError,
+            "INVALID_REQUEST"       -> InternalError,
+            "REQUEST_NOT_PROCESSED" -> InternalError,
+            "NO_DATA_FOUND"         -> NotFoundError,
+            "SERVER_ERROR"          -> InternalError,
+            "SERVICE_UNAVAILABLE"   -> InternalError
+          )
 
-      errors.foreach(args => (serviceError _).tupled(args))
+        errors.foreach(args => (serviceError _).tupled(args))
+      }
     }
   }
 

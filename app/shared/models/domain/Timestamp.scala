@@ -24,6 +24,8 @@ import java.time.{ZoneId, ZonedDateTime}
 
 case class Timestamp private (value: String) extends AnyVal {
   override def toString: String = value
+
+  def toDate: String =  ZonedDateTime.parse(value).toLocalDate.toString
 }
 
 object Timestamp {
