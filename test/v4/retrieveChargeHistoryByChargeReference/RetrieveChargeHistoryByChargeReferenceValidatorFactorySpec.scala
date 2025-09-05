@@ -20,11 +20,10 @@ import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v4.retrieveChargeHistoryByChargeReference.def1.Def1_RetrieveChargeHistoryByChargeReferenceValidator
 
-class RetrieveChargeHistoryByChargeReferenceValidatorFactorySpec extends UnitSpec with JsonErrorValidators{
+class RetrieveChargeHistoryByChargeReferenceValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2019-20"
-
 
   private val validatorFactory = new RetrieveChargeHistoryByChargeReferenceValidatorFactory
 

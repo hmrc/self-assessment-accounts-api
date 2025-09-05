@@ -43,7 +43,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       Some(paymentLot),
       Some(paymentLotItem))
 
-  trait Test { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
 
     val connector: ListPaymentsAndAllocationDetailsConnector =
       new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)

@@ -139,8 +139,8 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
           val queryParams: Seq[(String, String)] =
             commonQueryHipParams ++ List(
               "sapDocumentNumber" -> docNumber,
-              "dateFrom"  -> fromDate,
-              "dateTo"    -> toDate
+              "dateFrom"          -> fromDate,
+              "dateTo"            -> toDate
             )
 
           MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1553.enabled" -> true)
@@ -174,15 +174,17 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   }
 
   private trait HipTestWithAdditionalContactHeaders extends HipTest with Test {
+
     override val additionalContractHeaders: Seq[(String, String)] = List(
       "X-Message-Type"        -> "ETMPGetFinancialDetails",
       "X-Originating-System"  -> "MDTP",
       "X-Receipt-Date"        -> isoDateTimeStamp,
       "X-Transmitting-System" -> "HIP"
     )
+
   }
 
-  private trait Test { _: ConnectorTest =>
+  private trait Test { self: ConnectorTest =>
 
     private val connector: RetrieveBalanceAndTransactionsConnector =
       new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockSharedAppConfig)
@@ -194,7 +196,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
       val outcome = Right(ResponseWrapper(correlationId, response))
 
-      val url = if(hipTest) {
+      val url = if (hipTest) {
         url"$baseUrl/etmp/RESTAdapter/itsa/taxpayer/financial-details"
       } else {
         url"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"

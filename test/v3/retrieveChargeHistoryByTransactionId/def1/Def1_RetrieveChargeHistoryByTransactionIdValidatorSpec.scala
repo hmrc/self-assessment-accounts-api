@@ -17,7 +17,7 @@
 package v3.retrieveChargeHistoryByTransactionId.def1
 
 import shared.models.domain.{Nino, TransactionId}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData

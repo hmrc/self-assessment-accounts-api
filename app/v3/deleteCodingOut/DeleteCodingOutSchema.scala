@@ -34,7 +34,7 @@ object DeleteCodingOutSchema {
   }
 
   def schemaFor(taxYear: TaxYear): DeleteCodingOutSchema = {
-      Def1
+    Def1
   }
 
 }

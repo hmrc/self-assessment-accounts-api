@@ -27,18 +27,18 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthService,
-                                             val lookupService: MtdIdLookupService,
-                                             validatorFactory: RetrieveCodingOutValidatorFactory,
-                                             service: RetrieveCodingOutService,
-                                             cc: ControllerComponents,
-                                             idGenerator: IdGenerator
-                                            )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAppConfig: SaAccountsConfig)
+class RetrieveCodingOutController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: RetrieveCodingOutValidatorFactory,
+    service: RetrieveCodingOutService,
+    cc: ControllerComponents,
+    idGenerator: IdGenerator)(using ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAppConfig: SaAccountsConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "retrieve-coding-out"
 
-  implicit val endpointLogContext: EndpointLogContext =
+  given endpointLogContext: EndpointLogContext =
     EndpointLogContext(
       controllerName = "RetrieveCodingOutController",
       endpointName = "retrieveCodingOut"
@@ -46,7 +46,7 @@ class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthServ
 
   def retrieveCodingOut(nino: String, taxYear: String, source: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+      given RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, taxYear, source, saAppConfig)
 

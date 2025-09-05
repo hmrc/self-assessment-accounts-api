@@ -26,8 +26,11 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class ListPaymentsAndAllocationDetailsValidatorFactory @Inject() {
 
-  def validator(nino: String, fromDate: Option[String], toDate: Option[String], paymentLot: Option[String], paymentLotItem: Option[String]):
-  Validator[ListPaymentsAndAllocationDetailsRequestData] = {
+  def validator(nino: String,
+                fromDate: Option[String],
+                toDate: Option[String],
+                paymentLot: Option[String],
+                paymentLotItem: Option[String]): Validator[ListPaymentsAndAllocationDetailsRequestData] = {
 
     val schema = ListPaymentsAndAllocationDetailsSchema.schemaFor(fromDate, toDate)
 

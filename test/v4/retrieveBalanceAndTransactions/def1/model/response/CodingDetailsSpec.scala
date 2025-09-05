@@ -18,7 +18,11 @@ package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v4.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.{codingDetails, codingDetailsDownstreamResponseJson, codingDetailsMtdResponseJson}
+import v4.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.{
+  codingDetails,
+  codingDetailsDownstreamResponseJson,
+  codingDetailsMtdResponseJson
+}
 
 class CodingDetailsSpec extends UnitSpec {
 

@@ -16,7 +16,7 @@
 
 package v3.createOrAmendCodingOut.def1.model.request
 
-import play.api.libs.json._
+import play.api.libs.json.*
 
 case class TaxCodeComponent(id: BigDecimal, amount: BigDecimal)
 

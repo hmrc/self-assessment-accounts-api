@@ -16,9 +16,9 @@
 
 package v3.retrieveBalanceAndTransactions.model.response
 
-import play.api.libs.functional.syntax._
+import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v3.retrieveBalanceAndTransactions.def1.model.response._
+import v3.retrieveBalanceAndTransactions.def1.model.response.*
 
 case class RetrieveBalanceAndTransactionsResponse(
     balanceDetails: BalanceDetails,
@@ -34,7 +34,9 @@ object RetrieveBalanceAndTransactionsResponse {
       (JsPath \ "balanceDetails").read[BalanceDetails] and
         (JsPath \ "codingDetails").readNullable[Seq[CodingDetails]] and
         (JsPath \ "documentDetails").readNullable[Seq[DocumentDetails]] and
-        (JsPath \ "financialDetails").read[Seq[FinancialDetails]].map(fd => Option(fd))
+        (JsPath \ "financialDetails")
+          .read[Seq[FinancialDetails]]
+          .map(fd => Option(fd))
           .orElse((JsPath \ "financialDetailsItem").readNullable[Seq[FinancialDetails]])
     )(RetrieveBalanceAndTransactionsResponse.apply _)
 

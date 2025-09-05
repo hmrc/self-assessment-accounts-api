@@ -17,7 +17,7 @@
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.TaxYear
 
 case class CodingDetails(returnTaxYear: Option[String], totalLiabilityAmount: Option[BigDecimal], codingTaxYear: Option[String], coded: Option[Coded])

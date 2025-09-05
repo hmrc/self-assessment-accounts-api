@@ -22,7 +22,7 @@ import v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeRe
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
 case class Def1_RetrieveChargeHistoryByChargeReferenceRequestData(nino: Nino, chargeReference: ChargeReference)
-  extends RetrieveChargeHistoryByChargeReferenceRequestData {
+    extends RetrieveChargeHistoryByChargeReferenceRequestData {
 
   override val schema: RetrieveChargeHistoryByChargeReferenceSchema = RetrieveChargeHistoryByChargeReferenceSchema.Def1
 }

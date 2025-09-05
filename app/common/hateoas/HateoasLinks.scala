@@ -16,7 +16,7 @@
 
 package common.hateoas
 
-import common.hateoas.RelType._
+import common.hateoas.RelType.*
 import shared.config.SharedAppConfig
 import shared.hateoas.Link
 import shared.hateoas.Method.{DELETE, GET, PUT}

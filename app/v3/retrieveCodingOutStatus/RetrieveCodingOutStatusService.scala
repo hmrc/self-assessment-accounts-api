@@ -16,10 +16,10 @@
 
 package v3.retrieveCodingOutStatus
 
-import cats.implicits._
-import common.errors._
+import cats.implicits.*
+import common.errors.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
 import v3.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 import v3.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse

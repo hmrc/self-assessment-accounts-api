@@ -20,7 +20,7 @@ import config.{SaAccountsConfig, SaAccountsFeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers._
+import shared.controllers.*
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
@@ -29,14 +29,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAuthService,
-                                                  val lookupService: MtdIdLookupService,
-                                                  validatorFactory: CreateOrAmendCodingOutValidatorFactory,
-                                                  service: CreateOrAmendCodingOutService,
-                                                  auditService: AuditService,
-                                                  cc: ControllerComponents,
-                                                  idGenerator: IdGenerator
-                                                 )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
+class CreateOrAmendCodingOutController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: CreateOrAmendCodingOutValidatorFactory,
+    service: CreateOrAmendCodingOutService,
+    auditService: AuditService,
+    cc: ControllerComponents,
+    idGenerator: IdGenerator)(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
     extends AuthorisedController(cc)
     with Logging {
 
@@ -51,12 +51,12 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator =
-        validatorFactory.validator(nino,
+        validatorFactory.validator(
+          nino,
           taxYear,
           request.body,
           temporalValidationEnabled = SaAccountsFeatureSwitches().isTemporalValidationEnabled,
-          saAccountsConfig
-        )
+          saAccountsConfig)
 
       val requestHandler =
         RequestHandler
@@ -74,4 +74,5 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
 
       requestHandler.handleRequest()
     }
+
 }

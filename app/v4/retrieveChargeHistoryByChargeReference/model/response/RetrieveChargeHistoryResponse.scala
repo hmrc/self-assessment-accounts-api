@@ -23,6 +23,7 @@ import v4.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHisto
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
 
 object RetrieveChargeHistoryResponse {
+
   implicit val reads: Reads[RetrieveChargeHistoryResponse] =
     (JsPath \ "chargeHistoryDetails")
       .read[Seq[ChargeHistoryDetail]]

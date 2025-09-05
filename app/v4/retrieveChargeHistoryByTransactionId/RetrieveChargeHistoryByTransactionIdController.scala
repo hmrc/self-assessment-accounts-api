@@ -31,17 +31,17 @@ class RetrieveChargeHistoryByTransactionIdController @Inject() (val authService:
                                                                 validatorFactory: RetrieveChargeHistoryByTransactionIdValidatorFactory,
                                                                 service: RetrieveChargeHistoryByTransactionIdService,
                                                                 cc: ControllerComponents,
-                                                                idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+                                                                idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName = "retrieve-charge-history-by-transaction-id"
 
-  implicit val endpointLogContext: EndpointLogContext =
+  given endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveChargeHistoryByTransactionIdController", endpointName = "retrieveChargeHistoryByTransactionId")
 
   def retrieveChargeHistoryByTransactionId(nino: String, transactionId: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+      given RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, transactionId)
 

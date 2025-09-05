@@ -20,13 +20,13 @@ import play.api.Configuration
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.json.OFormat.oFormatFromReadsAndOWrites
 import shared.utils.UnitSpec
-import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
+import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.*
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 import shared.config.MockSharedAppConfig
 
 class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec with MockSharedAppConfig {
 
-  val validObjectSingle: RetrieveChargeHistoryResponse = RetrieveChargeHistoryResponse(List(validChargeHistoryDetailObject))
+  val validObjectSingle: RetrieveChargeHistoryResponse   = RetrieveChargeHistoryResponse(List(validChargeHistoryDetailObject))
   val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
   "Def1_RetrieveChargeHistoryResponse" when {

@@ -30,7 +30,7 @@ import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
 import v3.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
-import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
+import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
 import v3.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutHateoasData
 
@@ -120,7 +120,7 @@ class RetrieveCodingOutControllerSpec
 
   private trait Test extends ControllerTest {
 
-    override protected val controller = new RetrieveCodingOutController(
+    override protected val controller: RetrieveCodingOutController = new RetrieveCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveCodingOutValidatorFactory,

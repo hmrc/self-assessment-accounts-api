@@ -77,12 +77,11 @@ class OptOutOfCodingOutControllerSpec
     protected val requestData: OptOutOfCodingOutRequestData = Def1_OptOutOfCodingOutRequestData(
       nino = parsedNino,
       taxYear = TaxYear.fromMtd(taxYear)
-
     )
 
     protected val response: Def1_OptOutOfCodingOutResponse = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
-    override protected val controller = new OptOutOfCodingOutController(
+    override protected val controller: OptOutOfCodingOutController = new OptOutOfCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockOptOutOfCodingOutValidatorFactory,

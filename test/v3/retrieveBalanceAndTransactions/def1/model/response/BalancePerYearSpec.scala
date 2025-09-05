@@ -18,7 +18,7 @@ package v3.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture._
+import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.*
 
 class BalancePerYearSpec extends UnitSpec {
 

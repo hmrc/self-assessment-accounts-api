@@ -22,7 +22,7 @@ import v4.retrieveBalanceAndTransactions.def1.model.response.{Coded, CodingDetai
 
 object CodingDetailsFixture {
 
-  private val taxYear: TaxYear = TaxYear("2022")
+  private val taxYear: TaxYear = TaxYear.ending(2022)
 
   val coded: Coded = Coded(charge = Some(123.45), initiationDate = Some("2022-10-13"))
 

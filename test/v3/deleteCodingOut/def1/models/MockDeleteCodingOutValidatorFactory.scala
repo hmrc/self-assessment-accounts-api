@@ -28,4 +28,5 @@ trait MockDeleteCodingOutValidatorFactory extends MockValidatorFactory[DeleteCod
 
   def validator(): CallHandler[Validator[DeleteCodingOutRequestData]] =
     (mockDeleteCodingOutValidatorFactory.validator(_: String, _: String, _: SaAccountsConfig)).expects(*, *, *)
+
 }

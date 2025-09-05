@@ -20,7 +20,7 @@ import common.models.ChargeReference
 import shared.models.domain.Nino
 import v3.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema
 
-trait RetrieveChargeHistoryByChargeReferenceRequestData{
+trait RetrieveChargeHistoryByChargeReferenceRequestData {
   val nino: Nino
   val chargeReference: ChargeReference
 

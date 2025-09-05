@@ -20,7 +20,7 @@ import common.errors.SourceFormatError
 import common.models.MtdSource
 import config.MockSaAccountsConfig
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData

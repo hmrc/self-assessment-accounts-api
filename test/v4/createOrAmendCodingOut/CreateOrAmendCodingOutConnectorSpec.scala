@@ -33,7 +33,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
   private val tysTaxYear = TaxYear.fromMtd("2023-24")
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     val connector: CreateOrAmendCodingOutConnector =
       new CreateOrAmendCodingOutConnector(mockHttpClient, mockSharedAppConfig)
@@ -41,9 +41,9 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
     def connectorRequest(taxYear: TaxYear): Unit = {
 
       val validRequest: CreateOrAmendCodingOutRequestData = Def1_CreateOrAmendCodingOutRequestData(nino, taxYear, validRequestBody)
-      val outcome = Right(ResponseWrapper(correlationId, ()))
+      val outcome                                         = Right(ResponseWrapper(correlationId, ()))
 
-       val uri = if (taxYear.useTaxYearSpecificApi) {
+      val uri = if (taxYear.useTaxYearSpecificApi) {
         url"$baseUrl/income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"
       } else {
         url"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"

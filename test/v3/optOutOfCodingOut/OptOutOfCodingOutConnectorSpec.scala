@@ -32,7 +32,7 @@ class OptOutOfCodingOutConnectorSpec extends ConnectorSpec {
 
   private val request = new Def1_OptOutOfCodingOutRequestData(nino, taxYear)
 
-  trait Test { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
 
     protected val connector = new OptOutOfCodingOutConnector(mockHttpClient, mockSharedAppConfig)
 

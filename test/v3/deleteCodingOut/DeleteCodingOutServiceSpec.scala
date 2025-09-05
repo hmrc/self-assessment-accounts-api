@@ -18,7 +18,7 @@ package v3.deleteCodingOut
 
 import common.errors.CodingOutNotFoundError
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v3.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
@@ -50,7 +50,8 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
         s"a $downstreamErrorCode error is returned from the service" in new Test {
 
-          MockDeleteCodingOutConnector.deleteCodingOut(requestData)
+          MockDeleteCodingOutConnector
+            .deleteCodingOut(requestData)
             .returns(Future.successful(Left(ResponseWrapper(correlationId, DownstreamErrors.single(DownstreamErrorCode(downstreamErrorCode))))))
 
           private val result = await(service.deleteCodingOut(requestData))

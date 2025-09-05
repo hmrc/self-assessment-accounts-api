@@ -21,6 +21,6 @@ import v3.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactio
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 
 case class Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino: Nino, transactionId: TransactionId)
-  extends RetrieveChargeHistoryByTransactionIdRequestData {
+    extends RetrieveChargeHistoryByTransactionIdRequestData {
   override val schema: RetrieveChargeHistoryByTransactionIdSchema = RetrieveChargeHistoryByTransactionIdSchema.Def1
 }

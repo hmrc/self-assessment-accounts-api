@@ -16,22 +16,14 @@
 
 package common.models
 
-import play.api.libs.json
+import play.api.libs.json.*
 import shared.utils.enums.Enums
 
-sealed trait DownstreamSource {
-  def toMtdSource: String
+enum DownstreamSource(val toMtdSource: String) {
+  case `HMRC HELD` extends DownstreamSource("hmrcHeld")
+  case `CUSTOMER`  extends DownstreamSource("user")
 }
 
 object DownstreamSource {
-
-  case object `HMRC HELD` extends DownstreamSource {
-    override def toMtdSource: String = "hmrcHeld"
-  }
-
-  case object `CUSTOMER` extends DownstreamSource {
-    override def toMtdSource: String = "user"
-  }
-
-  implicit val format: json.Format[DownstreamSource] = Enums.format[DownstreamSource]
+  given Format[DownstreamSource] = Enums.format(values)
 }

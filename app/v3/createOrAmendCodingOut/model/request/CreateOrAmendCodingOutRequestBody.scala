@@ -24,8 +24,8 @@ trait CreateOrAmendCodingOutRequestBody
 
 object CreateOrAmendCodingOutRequestBody extends JsonWritesUtil {
 
-  implicit val writes: OWrites[CreateOrAmendCodingOutRequestBody] = writesFrom {
-    case def1: Def1_CreateOrAmendCodingOutRequestBody => Json.toJson(def1).as[JsObject]
+  implicit val writes: OWrites[CreateOrAmendCodingOutRequestBody] = writesFrom { case def1: Def1_CreateOrAmendCodingOutRequestBody =>
+    Json.toJson(def1).as[JsObject]
   }
 
 }

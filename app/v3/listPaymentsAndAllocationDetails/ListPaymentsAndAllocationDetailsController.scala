@@ -31,12 +31,12 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                                                             validatorFactory: ListPaymentsAndAllocationDetailsValidatorFactory,
                                                             service: ListPaymentsAndAllocationDetailsService,
                                                             cc: ControllerComponents,
-                                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+                                                            idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "list-payments-and-allocation-details"
 
-  implicit val endpointLogContext: EndpointLogContext =
+  given endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "ListPaymentsAndAllocationDetailsController", endpointName = "listPaymentsAndAllocationDetails")
 
   def listPayments(nino: String,
@@ -45,7 +45,7 @@ class ListPaymentsAndAllocationDetailsController @Inject() (val authService: Enr
                    paymentLot: Option[String],
                    paymentLotItem: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+      given RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(nino, fromDate, toDate, paymentLot, paymentLotItem)
 

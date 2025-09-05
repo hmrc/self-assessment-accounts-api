@@ -18,7 +18,13 @@ package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{downstreamFinancialDetailsFullHipJson, downstreamFinancialDetailsFullJson, financialDetailsFull, financialDetailsFullHip, mtdFinancialDetailsFullJson}
+import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{
+  downstreamFinancialDetailsFullHipJson,
+  downstreamFinancialDetailsFullJson,
+  financialDetailsFull,
+  financialDetailsFullHip,
+  mtdFinancialDetailsFullJson
+}
 
 class FinancialDetailsSpec extends UnitSpec {
 

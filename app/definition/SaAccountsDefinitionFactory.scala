@@ -17,15 +17,15 @@
 package definition
 
 import shared.config.SharedAppConfig
-import shared.definition._
+import shared.definition.*
 import shared.routing.{Version3, Version4}
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class SaAccountsDefinitionFactory @Inject()(protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
+class SaAccountsDefinitionFactory @Inject() (protected val appConfig: SharedAppConfig) extends ApiDefinitionFactory {
 
-  lazy val definition: Definition =
+  val definition: Definition =
     Definition(
       api = APIDefinition(
         name = "Self Assessment Accounts (MTD)",
@@ -47,4 +47,5 @@ class SaAccountsDefinitionFactory @Inject()(protected val appConfig: SharedAppCo
         requiresTrust = None
       )
     )
+
 }

@@ -27,11 +27,11 @@ import scala.concurrent.Future
 
 class DeleteCodingOutConnectorSpec extends ConnectorSpec {
 
-  private val nino    = Nino("AA123456A")
-  private val taxYear = TaxYear.fromMtd("2019-20")
+  private val nino       = Nino("AA123456A")
+  private val taxYear    = TaxYear.fromMtd("2019-20")
   private val tysTaxYear = TaxYear.fromMtd("2023-24")
 
-  trait Test { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
 
     val connector = new DeleteCodingOutConnector(mockHttpClient, mockSharedAppConfig)
 
@@ -41,7 +41,7 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
 
       val outcome = Right(ResponseWrapper(correlationId, ()))
 
-      val uri = if(taxYear.useTaxYearSpecificApi) {
+      val uri = if (taxYear.useTaxYearSpecificApi) {
         url"$baseUrl/income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"
       } else {
         url"$baseUrl/income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
@@ -52,6 +52,7 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
       val result = await(connector.deleteCodingOut(validRequest))
       result shouldBe outcome
     }
+
   }
 
   "DeleteCodingOutConnector" should {

@@ -23,7 +23,9 @@ import v3.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 trait OptOutOfCodingOutResponse
 
 object OptOutOfCodingOutResponse {
-  implicit val writes: OWrites[OptOutOfCodingOutResponse] = writesFrom {
-    case def1: Def1_OptOutOfCodingOutResponse => Json.toJson(def1).as[JsObject]
+
+  implicit val writes: OWrites[OptOutOfCodingOutResponse] = writesFrom { case def1: Def1_OptOutOfCodingOutResponse =>
+    Json.toJson(def1).as[JsObject]
   }
+
 }

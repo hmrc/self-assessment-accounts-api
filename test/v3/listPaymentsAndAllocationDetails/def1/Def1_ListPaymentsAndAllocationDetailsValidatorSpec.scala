@@ -16,9 +16,9 @@
 
 package v3.listPaymentsAndAllocationDetails.def1
 
-import common.errors._
+import common.errors.*
 import shared.models.domain.{DateRange, Nino}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v3.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
@@ -36,9 +36,9 @@ class Def1_ListPaymentsAndAllocationDetailsValidatorSpec extends UnitSpec {
 
   private val parsedNino = Nino(validNino)
 
-  private val parsedFromDate       = LocalDate.parse(validFromDate)
-  private val parsedParsedToDate   = LocalDate.parse(validToDate)
-  private val parsedFromAndToDates = DateRange(parsedFromDate, parsedParsedToDate)
+  private val parsedFromDate           = LocalDate.parse(validFromDate)
+  private val parsedParsedToDate       = LocalDate.parse(validToDate)
+  private val parsedFromAndToDates     = DateRange(parsedFromDate, parsedParsedToDate)
   private val parsedSameFromAndToDates = DateRange(parsedFromDate, parsedFromDate)
 
   private val parsedPaymentLot     = validPaymentLot

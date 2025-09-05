@@ -22,8 +22,8 @@ import v3.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 
 class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {
 
-  private val validNino = "AA123456A"
-  private val validTaxYear = "2019-20"
+  private val validNino        = "AA123456A"
+  private val validTaxYear     = "2019-20"
   private val validatorFactory = new DeleteCodingOutValidatorFactory
 
   "running a validation" should {
@@ -37,4 +37,5 @@ class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsCo
     }
 
   }
+
 }

@@ -18,7 +18,7 @@ package v3.retrieveCodingOut.def1.model.reponse
 
 import play.api.libs.json.{JsValue, Json}
 import shared.utils.UnitSpec
-import v3.retrieveCodingOut.def1.model.response._
+import v3.retrieveCodingOut.def1.model.response.*
 import v3.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
 class Def1_RetrieveCodingOutResponseSpec extends UnitSpec {

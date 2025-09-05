@@ -28,7 +28,7 @@ class OptInToCodingOutConnectorSpec extends ConnectorSpec {
   private val nino: String = "AA123456A"
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     protected val connector: OptInToCodingOutConnector = new OptInToCodingOutConnector(
       http = mockHttpClient,

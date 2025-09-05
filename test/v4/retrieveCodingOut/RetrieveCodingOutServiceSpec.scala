@@ -16,10 +16,10 @@
 
 package v4.retrieveCodingOut
 
-import common.errors._
+import common.errors.*
 import common.models.MtdSource.hmrcHeld
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{ServiceOutcome, ServiceSpec}
 import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.retrieveCodingOutResponse

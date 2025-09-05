@@ -17,11 +17,11 @@
 package v4.optOutOfCodingOut.def1
 
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v4.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
 
-class Def1_OptOutOfCodingOutValidatorSpec extends UnitSpec  {
+class Def1_OptOutOfCodingOutValidatorSpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"

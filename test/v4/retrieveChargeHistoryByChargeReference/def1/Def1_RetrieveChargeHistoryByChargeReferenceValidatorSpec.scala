@@ -33,7 +33,6 @@ class Def1_RetrieveChargeHistoryByChargeReferenceValidatorSpec extends UnitSpec 
   private val parsedNino            = Nino(validNino)
   private val parsedChargeReference = ChargeReference(validChargeReference)
 
-
   private def validator(nino: String, chargeReference: String) =
     new Def1_RetrieveChargeHistoryByChargeReferenceValidator(nino, chargeReference)
 

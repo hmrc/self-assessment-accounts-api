@@ -18,9 +18,9 @@ package shared.controllers.validators.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import cats.implicits._
+import cats.implicits.*
 import shared.models.domain.DateRange
-import shared.models.errors._
+import shared.models.errors.*
 
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -76,9 +76,12 @@ object ResolveDateRange extends ResolverSupport {
     datesLimitedTo(yearStartDate(minYear), minError, yearEndDate(maxYear), maxError)
   }
 
-  def yearsAndRangeLimitedTo(minYear: Int, minError: => MtdError,
-                             maxYear: Int, maxError: => MtdError,
-                             maxDaysRange: Int, invalidRangeError: => MtdError): Validator[DateRange] = {
+  def yearsAndRangeLimitedTo(minYear: Int,
+                             minError: => MtdError,
+                             maxYear: Int,
+                             maxError: => MtdError,
+                             maxDaysRange: Int,
+                             invalidRangeError: => MtdError): Validator[DateRange] = {
     combinedValidator[DateRange](
       yearsLimitedTo(minYear, minError, maxYear, maxError),
       rangeLimitedTo(maxDaysRange, invalidRangeError)

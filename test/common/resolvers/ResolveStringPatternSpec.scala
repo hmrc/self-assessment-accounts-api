@@ -44,4 +44,5 @@ class ResolveStringPatternSpec extends UnitSpec {
       }
     }
   }
+
 }

@@ -29,14 +29,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class RetrieveCodingOutController @Inject() (val authService: EnrolmentsAuthService,
-                                             val lookupService: MtdIdLookupService,
-                                             validatorFactory: RetrieveCodingOutValidatorFactory,
-                                             service: RetrieveCodingOutService,
-                                             hateoasFactory: HateoasFactory,
-                                             cc: ControllerComponents,
-                                             idGenerator: IdGenerator
-                                            )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAppConfig: SaAccountsConfig)
+class RetrieveCodingOutController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: RetrieveCodingOutValidatorFactory,
+    service: RetrieveCodingOutService,
+    hateoasFactory: HateoasFactory,
+    cc: ControllerComponents,
+    idGenerator: IdGenerator)(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAppConfig: SaAccountsConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "retrieve-coding-out"

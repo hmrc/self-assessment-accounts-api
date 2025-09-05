@@ -16,7 +16,7 @@
 
 package shared.controllers
 
-import play.api.mvc._
+import play.api.mvc.*
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.models.auth.UserDetails
 import shared.models.errors.MtdError

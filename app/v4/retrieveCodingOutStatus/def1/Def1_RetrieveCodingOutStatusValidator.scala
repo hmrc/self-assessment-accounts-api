@@ -27,13 +27,12 @@ import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestDa
 import javax.inject.Singleton
 
 @Singleton
-class Def1_RetrieveCodingOutStatusValidator (nino: String,
-                                             taxYear: String) extends Validator[RetrieveCodingOutStatusRequestData] {
+class Def1_RetrieveCodingOutStatusValidator(nino: String, taxYear: String) extends Validator[RetrieveCodingOutStatusRequestData] {
 
-      def validate: Validated[Seq[MtdError], RetrieveCodingOutStatusRequestData] =
-        (
-          ResolveNino(nino),
-          ResolveTaxYear(taxYear)
-        ).mapN(Def1_RetrieveCodingOutStatusRequestData)
+  def validate: Validated[Seq[MtdError], RetrieveCodingOutStatusRequestData] =
+    (
+      ResolveNino(nino),
+      ResolveTaxYear(taxYear)
+    ).mapN(Def1_RetrieveCodingOutStatusRequestData)
 
 }

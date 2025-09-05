@@ -21,7 +21,7 @@ import play.api.Configuration
 import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.domain.DateRange
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
 import v4.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
@@ -81,7 +81,7 @@ class ListPaymentsAndAllocationDetailsControllerSpec
 
   private trait Test extends ControllerTest {
 
-    override protected val controller = new ListPaymentsAndAllocationDetailsController(
+    override protected val controller: ListPaymentsAndAllocationDetailsController = new ListPaymentsAndAllocationDetailsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockListPaymentsAndAllocationDetailsValidatorFactory,
