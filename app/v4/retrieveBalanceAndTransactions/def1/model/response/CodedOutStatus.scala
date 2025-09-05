@@ -25,15 +25,11 @@ sealed trait CodedOutStatus {
 
 object CodedOutStatus {
 
-  implicit val reads: Reads[CodedOutStatus] = Enums
-    .readsFrom[CodedOutStatus](_.fromDownstream)
-    .orElse(
-      Enums.reads[CodedOutStatus]
-    )
+  implicit val reads: Reads[CodedOutStatus] = Enums.readsFrom[CodedOutStatus](_.fromDownstream)
 
   implicit val writes: Writes[CodedOutStatus] = Enums.writes[CodedOutStatus]
 
-  case object `initiated` extends CodedOutStatus {
+  case object initiated extends CodedOutStatus {
     override val fromDownstream: String = "I"
   }
 
@@ -57,11 +53,11 @@ object CodedOutStatus {
     override val fromDownstream: String = "W"
   }
 
-  case object `cancelled` extends CodedOutStatus {
+  case object cancelled extends CodedOutStatus {
     override val fromDownstream: String = "C"
   }
 
-  case object `rejected` extends CodedOutStatus {
+  case object rejected extends CodedOutStatus {
     override val fromDownstream: String = "R"
   }
 }
