@@ -23,24 +23,24 @@ import v4.retrieveBalanceAndTransactions.def1.model.response.CodedOutStatus._
 class CodedOutStatusSpec extends UnitSpec with EnumJsonSpecSupport {
 
   testDeserialization[CodedOutStatus](
-    ("I", `initiated`),
+    ("I", initiated),
     ("N", `not-collected`),
     ("P", `partly-collected`),
     ("F", `fully-collected`),
     ("A", `awaiting-collection`),
     ("W", `waiting-cancellation`),
-    ("C", `cancelled`),
-    ("R", `rejected`)
+    ("C", cancelled),
+    ("R", rejected)
   )
 
-  testRoundTrip[CodedOutStatus](
-    ("initiated", `initiated`),
-    ("not-collected", `not-collected`),
-    ("partly-collected", `partly-collected`),
-    ("fully-collected", `fully-collected`),
-    ("awaiting-collection", `awaiting-collection`),
-    ("waiting-cancellation", `waiting-cancellation`),
-    ("cancelled", `cancelled`),
-    ("rejected", `rejected`)
+  testSerialization[CodedOutStatus](
+    (initiated, "initiated"),
+    (`not-collected`, "not-collected"),
+    (`partly-collected`, "partly-collected"),
+    (`fully-collected`, "fully-collected"),
+    (`awaiting-collection`, "awaiting-collection"),
+    (`waiting-cancellation`, "waiting-cancellation"),
+    (cancelled, "cancelled"),
+    (rejected, "rejected")
   )
 }
