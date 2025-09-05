@@ -18,7 +18,7 @@ package v4.deleteCodingOut.def1.models
 
 import config.MockSaAccountsConfig
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
 import v4.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData

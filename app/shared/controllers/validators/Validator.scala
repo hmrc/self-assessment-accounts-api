@@ -18,7 +18,7 @@ package shared.controllers.validators
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import cats.implicits._
+import cats.implicits.*
 import shared.models.errors.{BadRequestError, ErrorWrapper, MtdError}
 import shared.utils.Logging
 

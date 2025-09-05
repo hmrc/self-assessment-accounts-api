@@ -22,9 +22,8 @@ import v4.optOutOfCodingOut.def1.Def1_OptOutOfCodingOutValidator
 
 class OptOutOfCodingOutValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2019-20"
-
 
   private val validatorFactory = new OptOutOfCodingOutValidatorFactory
 

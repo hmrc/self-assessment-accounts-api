@@ -20,7 +20,7 @@ import com.google.common.base.Charsets
 import org.scalamock.handlers.CallHandler
 import play.api.http.{HeaderNames, MimeTypes, Status}
 import play.api.libs.json.{Json, Writes}
-import shared.config._
+import shared.config.*
 import shared.mocks.MockHttpClient
 import shared.utils.{DateUtils, UnitSpec}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -49,10 +49,10 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
       Some("this-api")
     )
 
-  protected trait ConnectorTest extends MockHttpClient with MockSharedAppConfig {
+  protected trait ConnectorTest extends UnitSpec with MockHttpClient with MockSharedAppConfig {
     protected val baseUrl: String = "http://test-BaseUrl"
 
-    protected val requiredHeaders: Seq[(String, String)]
+    protected lazy val requiredHeaders: Seq[(String, String)]
 
     protected val allowedHeaders: Seq[String] = List("Gov-Test-Scenario")
 
@@ -109,7 +109,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     private val token       = s"$name-token"
     private val environment = s"$name-environment"
 
-    protected final lazy val requiredHeaders: Seq[(String, String)] = List(
+    protected lazy val requiredHeaders: Seq[(String, String)] = List(
       "Authorization"        -> s"Bearer $token",
       "Environment"          -> environment,
       "User-Agent"           -> "this-api",
@@ -143,7 +143,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     protected val additionalContractHeaders: Seq[(String, String)] = List.empty
 
-    protected final lazy val requiredHeaders: Seq[(String, String)] = List(
+    protected lazy val requiredHeaders: Seq[(String, String)] = List(
       "Authorization"        -> s"Basic $token",
       "Environment"          -> environment,
       "User-Agent"           -> "this-api",
@@ -165,17 +165,17 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
 
     private val environment = "hip-environment"
 
-    protected final lazy val requiredHeaders: Seq[(String, String)] = List(
-      "Authorization"        -> s"Basic $token",
-      "Environment"          -> environment,
-      "User-Agent"           -> "this-api",
-      "correlationId"        -> correlationId,
-      "Gov-Test-Scenario"    -> "DEFAULT",
+    protected lazy val requiredHeaders: Seq[(String, String)] = List(
+      "Authorization"         -> s"Basic $token",
+      "Environment"           -> environment,
+      "User-Agent"            -> "this-api",
+      "correlationId"         -> correlationId,
+      "Gov-Test-Scenario"     -> "DEFAULT",
       "X-Message-Type"        -> "ETMPGetFinancialDetails",
       "X-Originating-System"  -> "MDTP",
       "X-Receipt-Date"        -> DateUtils.isoDateTimeStamp,
       "X-Transmitting-System" -> "HIP"
-    ) ++ intent.map("intent" -> _)
+    ) ++ intent.map("intent"  -> _)
 
     MockedSharedAppConfig.hipDownstreamConfig
       .anyNumberOfTimes() returns BasicAuthDownstreamConfig(this.baseUrl, environment, clientId, clientSecret, Some(allowedHeaders))

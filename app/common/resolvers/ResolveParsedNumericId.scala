@@ -27,4 +27,5 @@ object ResolveParsedNumericId extends ResolverSupport {
 
   def resolver(path: => String): Resolver[BigDecimal, BigDecimal] = value =>
     cond(value > 0 && value < 1000000000000000.00 && value.scale <= 0, value, List(IdFormatError.withPath(path)))
+
 }

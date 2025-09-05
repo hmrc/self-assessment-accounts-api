@@ -21,8 +21,8 @@ import v4.deleteCodingOut.DeleteCodingOutSchema
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 case class Def1_DeleteCodingOutRequestData(
-                                            nino: Nino,
-                                            taxYear: TaxYear
-                                          ) extends DeleteCodingOutRequestData {
+    nino: Nino,
+    taxYear: TaxYear
+) extends DeleteCodingOutRequestData {
   override val schema: DeleteCodingOutSchema = DeleteCodingOutSchema.Def1
 }

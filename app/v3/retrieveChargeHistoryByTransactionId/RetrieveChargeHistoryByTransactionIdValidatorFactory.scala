@@ -35,4 +35,5 @@ class RetrieveChargeHistoryByTransactionIdValidatorFactory @Inject() {
     }
 
   }
+
 }

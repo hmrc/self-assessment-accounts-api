@@ -19,45 +19,24 @@ package v4.retrieveBalanceAndTransactions.def1.model.response
 import play.api.libs.json.{Reads, Writes}
 import shared.utils.enums.Enums
 
-sealed trait CodedOutStatus {
-  def fromDownstream: String
+enum CodedOutStatus(val fromDownstream: String) {
+  case `initiated`            extends CodedOutStatus("I")
+  case `not-collected`        extends CodedOutStatus("N")
+  case `partly-collected`     extends CodedOutStatus("P")
+  case `fully-collected`      extends CodedOutStatus("F")
+  case `awaiting-collection`  extends CodedOutStatus("A")
+  case `waiting-cancellation` extends CodedOutStatus("W")
+  case `cancelled`            extends CodedOutStatus("C")
+  case `rejected`             extends CodedOutStatus("R")
 }
 
 object CodedOutStatus {
 
-  implicit val reads: Reads[CodedOutStatus] = Enums.readsFrom[CodedOutStatus](_.fromDownstream)
+  given Reads[CodedOutStatus] = Enums
+    .readsFrom[CodedOutStatus](_.fromDownstream)
+    .orElse(
+      Enums.reads(values)
+    )
 
-  implicit val writes: Writes[CodedOutStatus] = Enums.writes[CodedOutStatus]
-
-  case object initiated extends CodedOutStatus {
-    override val fromDownstream: String = "I"
-  }
-
-  case object `not-collected` extends CodedOutStatus {
-    override val fromDownstream: String = "N"
-  }
-
-  case object `partly-collected` extends CodedOutStatus {
-    override val fromDownstream: String = "P"
-  }
-
-  case object `fully-collected` extends CodedOutStatus {
-    override val fromDownstream: String = "F"
-  }
-
-  case object `awaiting-collection` extends CodedOutStatus {
-    override val fromDownstream: String = "A"
-  }
-
-  case object `waiting-cancellation` extends CodedOutStatus {
-    override val fromDownstream: String = "W"
-  }
-
-  case object cancelled extends CodedOutStatus {
-    override val fromDownstream: String = "C"
-  }
-
-  case object rejected extends CodedOutStatus {
-    override val fromDownstream: String = "R"
-  }
+  given Writes[CodedOutStatus] = Enums.writes
 }

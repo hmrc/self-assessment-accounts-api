@@ -23,7 +23,7 @@ import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
-import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture._
+import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
 import v4.retrieveBalanceAndTransactions.def1.model.ResponseFixture.{mtdResponseJson, response}
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
@@ -75,7 +75,7 @@ class RetrieveBalanceAndTransactionsControllerSpec
 
   trait Test extends ControllerTest {
 
-    override protected val controller = new RetrieveBalanceAndTransactionsController(
+    override protected val controller: RetrieveBalanceAndTransactionsController = new RetrieveBalanceAndTransactionsController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveBalanceAndTransactionsValidatorFactory,

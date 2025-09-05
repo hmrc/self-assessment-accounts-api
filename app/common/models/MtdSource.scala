@@ -19,25 +19,14 @@ package common.models
 import play.api.libs.json.Format
 import shared.utils.enums.Enums
 
-sealed trait MtdSource {
-  def toDownstreamSource: String
+enum MtdSource(val toDownstreamSource: String) {
+  case hmrcHeld extends MtdSource("HMRC-HELD")
+  case user     extends MtdSource("CUSTOMER")
+  case latest   extends MtdSource("LATEST")
 }
 
 object MtdSource {
-  val parser: PartialFunction[String, MtdSource] = Enums.parser[MtdSource]
+  val parser: PartialFunction[String, MtdSource] = Enums.parser(values)
 
-  case object hmrcHeld extends MtdSource {
-    override def toDownstreamSource: String = "HMRC-HELD"
-  }
-
-  case object user extends MtdSource {
-    override def toDownstreamSource: String = "CUSTOMER"
-  }
-
-  implicit val format: Format[MtdSource] = Enums.format[MtdSource]
-
-  case object latest extends MtdSource {
-    override def toDownstreamSource: String = "LATEST"
-  }
-
+  implicit val format: Format[MtdSource] = Enums.format(values)
 }

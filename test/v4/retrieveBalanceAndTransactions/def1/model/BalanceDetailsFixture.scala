@@ -22,7 +22,7 @@ import v4.retrieveBalanceAndTransactions.def1.model.response.{BalanceDetails, Ba
 
 object BalanceDetailsFixture {
 
-  private val taxYear: TaxYear = TaxYear("2022")
+  private val taxYear: TaxYear = TaxYear.ending(2022)
 
   val balancePerYear: BalancePerYear = BalancePerYear(123.45, taxYear.asMtd)
 

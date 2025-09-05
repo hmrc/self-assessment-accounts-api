@@ -17,7 +17,7 @@
 package v3.retrieveChargeHistoryByTransactionId
 
 import shared.models.domain.{Nino, TransactionId}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject

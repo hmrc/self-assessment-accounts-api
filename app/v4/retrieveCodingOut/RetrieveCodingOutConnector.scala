@@ -44,8 +44,7 @@ class RetrieveCodingOutConnector @Inject() (val http: HttpClientV2, val appConfi
     }
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
-      IfsUri[DownstreamResp](
-        s"income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/${nino.value}")
+      IfsUri[DownstreamResp](s"income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/${nino.value}")
     } else {
       IfsUri[DownstreamResp](s"income-tax/accounts/self-assessment/collection/tax-code/${nino.value}/${taxYear.asMtd}")
     }

@@ -20,10 +20,12 @@ import play.api.libs.json.Json
 import shared.utils.UnitSpec
 import v4.retrieveCodingOut.def1.model.response.UnmatchedCustomerSubmissions
 
-
 class UnmatchedCustomerSubmissionsSpec extends UnitSpec {
+
   private val unmatchedCustomerSubmissions = UnmatchedCustomerSubmissions(
-    amount = 1, submittedOn = "date", id = Some(3)
+    amount = 1,
+    submittedOn = "date",
+    id = Some(3)
   )
 
   private val mtdJson = Json.parse(s"""
@@ -41,8 +43,6 @@ class UnmatchedCustomerSubmissionsSpec extends UnitSpec {
                                              |   "id": 3
                                              | }
                                              |""".stripMargin)
-
-
 
   "UnmatchedCustomerSubmissionsSpec" should {
 

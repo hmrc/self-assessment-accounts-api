@@ -16,9 +16,9 @@
 
 package v3.retrieveBalanceAndTransactions
 
-import common.errors._
+import common.errors.*
 import shared.models.domain.{DateRange, Nino}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.{ServiceOutcome, ServiceSpec}
 import v3.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails

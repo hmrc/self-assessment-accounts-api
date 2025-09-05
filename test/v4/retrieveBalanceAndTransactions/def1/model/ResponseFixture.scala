@@ -17,10 +17,10 @@
 package v4.retrieveBalanceAndTransactions.def1.model
 
 import play.api.libs.json.{JsValue, Json}
-import v4.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture._
-import v4.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture._
-import v4.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture._
-import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture._
+import v4.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.*
+import v4.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.*
+import v4.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.*
+import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.*
 import v4.retrieveBalanceAndTransactions.def1.model.response.FinancialDetails
 import v4.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 

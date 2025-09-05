@@ -72,7 +72,7 @@ class OptInToCodingOutControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    val controller = new OptInToCodingOutController(
+    val controller: OptInToCodingOutController = new OptInToCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockOptInToCodingOutValidatorFactory,

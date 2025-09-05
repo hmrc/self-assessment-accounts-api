@@ -30,11 +30,11 @@ import scala.concurrent.Future
 class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
 
   private val nino: String           = "AA123456A"
-  private val taxYear: TaxYear       = TaxYear("2024")
+  private val taxYear: TaxYear       = TaxYear.ending(2024)
   private val processingDate: String = "2020-12-17T09:30:47Z"
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     val response: RetrieveCodingOutStatusResponse =
       Def1_RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = taxYear, optOutIndicator = true)

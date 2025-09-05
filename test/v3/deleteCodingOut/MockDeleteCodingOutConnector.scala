@@ -42,5 +42,7 @@ trait MockDeleteCodingOutConnector extends TestSuite with MockFactory {
           )
         )
         .expects(requestData, *, *, *)
+
   }
+
 }

@@ -16,10 +16,10 @@
 
 package v4.createOrAmendCodingOut
 
-import cats.implicits._
+import cats.implicits.*
 import common.errors.RuleOutsideAmendmentWindowError
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.BaseService
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
@@ -28,11 +28,11 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CreateOrAmendCodingOutService @Inject()(connector: CreateOrAmendCodingOutConnector) extends BaseService {
+class CreateOrAmendCodingOutService @Inject() (connector: CreateOrAmendCodingOutConnector) extends BaseService {
 
   def amend(request: CreateOrAmendCodingOutRequestData)(implicit
-                                                        ctx: RequestContext,
-                                                        ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
+      ctx: RequestContext,
+      ec: ExecutionContext): Future[Either[ErrorWrapper, ResponseWrapper[Unit]]] = {
     connector
       .amendCodingOut(request)
       .map(_.leftMap(mapDownstreamErrors(errorMap)))

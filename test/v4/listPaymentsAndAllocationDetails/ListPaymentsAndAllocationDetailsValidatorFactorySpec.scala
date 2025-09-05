@@ -22,12 +22,11 @@ import v4.listPaymentsAndAllocationDetails.def1.Def1_ListPaymentsAndAllocationDe
 
 class ListPaymentsAndAllocationDetailsValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
-  private val validNino = "AA123456A"
-  private val validFromDate = Some("2022-08-15")
-  private val validToDate = Some("2022-09-15")
-  private val paymentLot = Some("paymentLot")
+  private val validNino      = "AA123456A"
+  private val validFromDate  = Some("2022-08-15")
+  private val validToDate    = Some("2022-09-15")
+  private val paymentLot     = Some("paymentLot")
   private val paymentLotItem = Some("paymentLotItem")
-
 
   private val validatorFactory = new ListPaymentsAndAllocationDetailsValidatorFactory
 

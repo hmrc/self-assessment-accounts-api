@@ -31,10 +31,11 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
   val nino: String          = "AA123456A"
   val transactionId: String = "anId"
 
-  trait Test {  _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
 
     val connector: RetrieveChargeHistoryByTransactionIdConnector =
       new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+
   }
 
   "RetrieveChargeHistoryByTransactionIdConnector" when {

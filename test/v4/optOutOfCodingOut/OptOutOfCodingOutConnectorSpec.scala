@@ -27,13 +27,13 @@ import scala.concurrent.Future
 
 class OptOutOfCodingOutConnectorSpec extends ConnectorSpec {
 
-  private val nino = Nino("AA123456A")
+  private val nino    = Nino("AA123456A")
   private val taxYear = TaxYear.fromMtd("2019-20")
 
   private val request = new Def1_OptOutOfCodingOutRequestData(nino, taxYear)
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     protected val connector = new OptOutOfCodingOutConnector(mockHttpClient, mockSharedAppConfig)
 

@@ -28,7 +28,10 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class CreateOrAmendCodingOutValidatorFactory @Inject() {
 
-  def validator(nino: String, taxYear: String, body: JsValue, temporalValidationEnabled: Boolean,
+  def validator(nino: String,
+                taxYear: String,
+                body: JsValue,
+                temporalValidationEnabled: Boolean,
                 appConfig: SaAccountsConfig): Validator[CreateOrAmendCodingOutRequestData] = {
 
     val schema = CreateOrAmendCodingOutSchema.schemaFor(taxYear)

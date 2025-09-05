@@ -21,9 +21,10 @@ import shared.config.FeatureSwitchesBehaviour
 import shared.utils.UnitSpec
 
 class SaAccountsFeatureSwitchesSpec extends UnitSpec with FeatureSwitchesBehaviour[SaAccountsFeatureSwitches] {
-  override def featureSwitches(configuration: Configuration): SaAccountsFeatureSwitches = SaAccountsFeatureSwitches(configuration)
+  override def featureSwitches(configuration: Configuration): SaAccountsFeatureSwitches = ???
 
   "supportingAgentsAccessControlEnabled" should {
     behave like aFeatureSwitchWithKey("supporting-agents-access-control.enabled", _.supportingAgentsAccessControlEnabled)
   }
+
 }

@@ -22,9 +22,8 @@ import v3.retrieveCodingOutStatus.def1.Def1_RetrieveCodingOutStatusValidator
 
 class RetrieveCodingOutStatusValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
-  private val validNino        = "AA123456A"
-  private val validTaxYear     = "2019-20"
-
+  private val validNino    = "AA123456A"
+  private val validTaxYear = "2019-20"
 
   private val validatorFactory = new RetrieveCodingOutStatusValidatorFactory
 

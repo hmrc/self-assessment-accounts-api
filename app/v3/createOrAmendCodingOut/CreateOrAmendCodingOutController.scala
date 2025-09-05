@@ -20,47 +20,47 @@ import config.{SaAccountsConfig, SaAccountsFeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers._
+import shared.controllers.*
 import shared.hateoas.HateoasFactory
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.{IdGenerator, Logging}
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
-import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse._
+import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutResponse.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAuthService,
-                                                  val lookupService: MtdIdLookupService,
-                                                  validatorFactory: CreateOrAmendCodingOutValidatorFactory,
-                                                  service: CreateOrAmendCodingOutService,
-                                                  hateoasFactory: HateoasFactory,
-                                                  auditService: AuditService,
-                                                  cc: ControllerComponents,
-                                                  idGenerator: IdGenerator
-                                                 )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
+class CreateOrAmendCodingOutController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: CreateOrAmendCodingOutValidatorFactory,
+    service: CreateOrAmendCodingOutService,
+    hateoasFactory: HateoasFactory,
+    auditService: AuditService,
+    cc: ControllerComponents,
+    idGenerator: IdGenerator)(using ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
     extends AuthorisedController(cc)
     with Logging {
 
   override val endpointName: String = "create-or-amend-coding-out"
 
-  implicit val endpointLogContext: EndpointLogContext =
+  given endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "CreateOrAmendCodingOutController", endpointName = "CreateOrAmendCodingOut")
 
   def createOrAmendCodingOut(nino: String, taxYear: String): Action[JsValue] =
     authorisedAction(nino).async(parse.json) { implicit request =>
-      implicit val apiVersion: Version = Version(request)
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+      given apiVersion: Version = Version(request)
+      given RequestContext      = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator =
-        validatorFactory.validator(nino,
+        validatorFactory.validator(
+          nino,
           taxYear,
           request.body,
           temporalValidationEnabled = SaAccountsFeatureSwitches().isTemporalValidationEnabled,
-          saAccountsConfig
-        )
+          saAccountsConfig)
 
       val requestHandler =
         RequestHandler
@@ -79,4 +79,5 @@ class CreateOrAmendCodingOutController @Inject() (val authService: EnrolmentsAut
 
       requestHandler.handleRequest()
     }
+
 }

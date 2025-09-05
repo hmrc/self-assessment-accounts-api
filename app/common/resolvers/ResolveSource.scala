@@ -32,4 +32,5 @@ object ResolveSource extends ResolverSupport {
       .lift(value)
       .map(parsed => Valid(parsed))
       .getOrElse(Invalid(List(SourceFormatError)))
+
 }

@@ -20,13 +20,13 @@ import cats.implicits.catsSyntaxValidatedId
 import shared.config.Deprecation.NotDeprecated
 import shared.config.MockSharedAppConfig
 import shared.definition.APIStatus.BETA
-import shared.definition._
+import shared.definition.*
 import shared.mocks.MockHttpClient
 import shared.routing.{Version3, Version4}
 import shared.utils.UnitSpec
 
 class SaAccountsDefinitionFactorySpec extends UnitSpec {
-  
+
   class Test extends MockHttpClient with MockSharedAppConfig {
     MockedSharedAppConfig.apiGatewayContext returns "accounts/self-assessment"
     val apiDefinitionFactory = new SaAccountsDefinitionFactory(mockSharedAppConfig)
@@ -67,4 +67,5 @@ class SaAccountsDefinitionFactorySpec extends UnitSpec {
       }
     }
   }
+
 }

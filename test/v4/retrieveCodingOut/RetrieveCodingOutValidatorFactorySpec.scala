@@ -22,9 +22,9 @@ import v4.retrieveCodingOut.def1.Def1_RetrieveCodingOutValidator
 
 class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {
 
-  private val validNino = "AA123456A"
+  private val validNino    = "AA123456A"
   private val validTaxYear = "2019-20"
-  private val source = Some("hmrcHeld")
+  private val source       = Some("hmrcHeld")
 
   private val validatorFactory = new RetrieveCodingOutValidatorFactory
 
@@ -39,4 +39,5 @@ class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccounts
       }
     }
   }
+
 }

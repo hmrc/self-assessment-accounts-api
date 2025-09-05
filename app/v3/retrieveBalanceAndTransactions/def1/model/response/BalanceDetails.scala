@@ -64,18 +64,25 @@ object BalanceDetails {
 
   implicit val reads: Reads[BalanceDetails] = (
     (JsPath \ "balanceDueWithin30Days").read[BigDecimal].orElse((JsPath \ "balanceDueWithin30days").read[BigDecimal]) and
-      (JsPath \ "nextPaymentDateForChargesDueIn30Days").read[String].map(s => Option(s))
+      (JsPath \ "nextPaymentDateForChargesDueIn30Days")
+        .read[String]
+        .map(s => Option(s))
         .orElse((JsPath \ "nxtPymntDateChrgsDueIn30Days").readNullable[String]) and
-      (JsPath \ "balanceNotDueIn30Days").read[BigDecimal]
+      (JsPath \ "balanceNotDueIn30Days")
+        .read[BigDecimal]
         .orElse((JsPath \ "balanceNotDuein30Days").read[BigDecimal]) and
-      (JsPath \ "nextPaymentDateBalanceNotDue").read[String].map(s => Option(s))
+      (JsPath \ "nextPaymentDateBalanceNotDue")
+        .read[String]
+        .map(s => Option(s))
         .orElse((JsPath \ "nextPaymntDateBalnceNotDue").readNullable[String]) and
       (JsPath \ "overDueAmount").read[BigDecimal] and
       (JsPath \ "bcdBalancePerYear").readNullable[Seq[DownstreamBalancePerYear]].map {
         case Some(bs) => bs.collect(DownstreamBalancePerYear.asMtd)
         case None     => Nil
       } and
-      (JsPath \ "earliestPaymentDateOverDue").read[String].map(s => Option(s))
+      (JsPath \ "earliestPaymentDateOverDue")
+        .read[String]
+        .map(s => Option(s))
         .orElse((JsPath \ "earlistPymntDateOverDue").readNullable[String]) and
       (JsPath \ "totalBalance").read[BigDecimal] and
       (JsPath \ "amountCodedOut").readNullable[BigDecimal] and

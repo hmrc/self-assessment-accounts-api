@@ -32,10 +32,11 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
   val nino: String            = "AA123456A"
   val chargeReference: String = "anId"
 
-  trait Test  { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
 
     val connector: RetrieveChargeHistoryByChargeReferenceConnector =
       new RetrieveChargeHistoryByChargeReferenceConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+
   }
 
   "RetrieveChargeHistoryByChargeReferenceConnector" when {

@@ -21,13 +21,12 @@ import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
 case class Def1_RetrieveCodingOutResponse(taxCodeComponents: Option[TaxCodeComponentsObject],
                                           unmatchedCustomerSubmissions: Option[UnmatchedCustomerSubmissionsObject])
-extends RetrieveCodingOutResponse
+    extends RetrieveCodingOutResponse
 
-object Def1_RetrieveCodingOutResponse{
+object Def1_RetrieveCodingOutResponse {
 
   implicit val writes: Writes[Def1_RetrieveCodingOutResponse] = Json.writes[Def1_RetrieveCodingOutResponse]
 
   implicit val reads: Reads[Def1_RetrieveCodingOutResponse] = Json.reads[Def1_RetrieveCodingOutResponse]
 
 }
-

@@ -21,7 +21,6 @@ import shared.models.domain.Timestamp
 import v3.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
-
 object RetrieveChargeHistoryFixture {
 
   val validChargeHistoryDetailObject: ChargeHistoryDetail = ChargeHistoryDetail(

@@ -16,8 +16,8 @@
 
 package v3.retrieveBalanceAndTransactions.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class FinancialDetailsItem(itemId: Option[String],
                                 dueDate: Option[String],
@@ -52,7 +52,8 @@ object FinancialDetailsItem {
       (__ \ "clearingReason").readNullable[String] and
       (__ \ "outgoingPaymentMethod").readNullable[String].map(paymentMethodConverter) and
       (if (readLocks.value) __.read[FinancialDetailsItemLocks].map(Some(_)) else Reads.pure(None)) and
-      (__ \ "returnFlag").readNullable[Boolean]
+      (__ \ "returnFlag")
+        .readNullable[Boolean]
         .orElse((__ \ "returnFlag").readNullable[String].flatMap[Option[Boolean]] {
           case Some("Y") => Reads.pure(Some(true))
           case Some("N") => Reads.pure(Some(false))

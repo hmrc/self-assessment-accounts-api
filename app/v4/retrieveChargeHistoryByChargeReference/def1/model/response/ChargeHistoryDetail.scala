@@ -16,8 +16,8 @@
 
 package v4.retrieveChargeHistoryByChargeReference.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.models.domain.{TaxYear, Timestamp}
 
@@ -54,4 +54,5 @@ object ChargeHistoryDetail {
     Json.writes[ChargeHistoryDetail].transform { jsonObject =>
       if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) jsonObject else jsonObject - "changeTimestamp"
     }
+
 }

@@ -19,7 +19,7 @@ package v3.deleteCodingOut
 import config.SaAccountsConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers._
+import shared.controllers.*
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
@@ -28,14 +28,14 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class DeleteCodingOutController @Inject() (val authService: EnrolmentsAuthService,
-                                           val lookupService: MtdIdLookupService,
-                                           validatorFactory: DeleteCodingOutValidatorFactory,
-                                           service: DeleteCodingOutService,
-                                           auditService: AuditService,
-                                           cc: ControllerComponents,
-                                           idGenerator: IdGenerator
-                                          )(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
+class DeleteCodingOutController @Inject() (
+    val authService: EnrolmentsAuthService,
+    val lookupService: MtdIdLookupService,
+    validatorFactory: DeleteCodingOutValidatorFactory,
+    service: DeleteCodingOutService,
+    auditService: AuditService,
+    cc: ControllerComponents,
+    idGenerator: IdGenerator)(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "delete-coding-out"

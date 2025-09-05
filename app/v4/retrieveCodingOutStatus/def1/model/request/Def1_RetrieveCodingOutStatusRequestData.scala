@@ -20,8 +20,7 @@ import shared.models.domain.{Nino, TaxYear}
 import v4.retrieveCodingOutStatus.RetrieveCodingOutStatusSchema
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 
-case class Def1_RetrieveCodingOutStatusRequestData(nino: Nino,
-                                                   taxYear: TaxYear) extends RetrieveCodingOutStatusRequestData{
+case class Def1_RetrieveCodingOutStatusRequestData(nino: Nino, taxYear: TaxYear) extends RetrieveCodingOutStatusRequestData {
 
   override val schema: RetrieveCodingOutStatusSchema = RetrieveCodingOutStatusSchema.Def1
 }

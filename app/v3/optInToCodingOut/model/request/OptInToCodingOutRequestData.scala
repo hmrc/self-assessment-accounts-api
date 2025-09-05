@@ -19,7 +19,7 @@ package v3.optInToCodingOut.model.request
 import shared.models.domain.{Nino, TaxYear}
 import v3.optInToCodingOut.OptInToCodingOutSchema
 
-trait OptInToCodingOutRequestData{
+trait OptInToCodingOutRequestData {
   val nino: Nino
   val taxYear: TaxYear
 

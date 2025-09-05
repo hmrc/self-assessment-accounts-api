@@ -16,7 +16,7 @@
 
 package v3.listPaymentsAndAllocationDetails.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.utils.JsonWritesUtil
 import v3.listPaymentsAndAllocationDetails.def1.model.response.Def1_ListPaymentsAndAllocationDetailsResponse
 
@@ -24,8 +24,8 @@ trait ListPaymentsAndAllocationDetailsResponse
 
 object ListPaymentsAndAllocationDetailsResponse extends JsonWritesUtil {
 
-  implicit val writes: OWrites[ListPaymentsAndAllocationDetailsResponse] = writesFrom {
-    case def1: Def1_ListPaymentsAndAllocationDetailsResponse => Json.toJson(def1).as[JsObject]
+  implicit val writes: OWrites[ListPaymentsAndAllocationDetailsResponse] = writesFrom { case def1: Def1_ListPaymentsAndAllocationDetailsResponse =>
+    Json.toJson(def1).as[JsObject]
   }
 
 }

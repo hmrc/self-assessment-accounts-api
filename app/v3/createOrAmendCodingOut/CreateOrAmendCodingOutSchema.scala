@@ -34,7 +34,7 @@ object CreateOrAmendCodingOutSchema {
   }
 
   def schemaFor(taxYear: TaxYear): CreateOrAmendCodingOutSchema = {
-      Def1
+    Def1
   }
 
 }

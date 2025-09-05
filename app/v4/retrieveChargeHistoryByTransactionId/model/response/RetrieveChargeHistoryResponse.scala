@@ -22,7 +22,7 @@ import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistor
 
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
 
-object RetrieveChargeHistoryResponse  {
+object RetrieveChargeHistoryResponse {
 
   implicit val reads: Reads[RetrieveChargeHistoryResponse] =
     (JsPath \ "chargeHistoryDetails")

@@ -34,7 +34,7 @@ object OptInToCodingOutSchema {
   }
 
   def schemaFor(taxYear: TaxYear): OptInToCodingOutSchema = {
-      Def1
+    Def1
   }
 
 }

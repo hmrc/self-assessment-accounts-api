@@ -53,7 +53,10 @@ class RetrieveCodingOutStatusControllerSpec
 
   private val downstreamResponse: RetrieveCodingOutStatusResponse =
     Def1_RetrieveCodingOutStatusResponse(
-      processingDate = processingDate, nino = validNino, taxYear = TaxYear.fromMtd(taxYear), optOutIndicator = true
+      processingDate = processingDate,
+      nino = validNino,
+      taxYear = TaxYear.fromMtd(taxYear),
+      optOutIndicator = true
     )
 
   "RetrieveCodingOutStatusController" should {
@@ -90,7 +93,7 @@ class RetrieveCodingOutStatusControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    override protected val controller = new RetrieveCodingOutStatusController(
+    override protected val controller: RetrieveCodingOutStatusController = new RetrieveCodingOutStatusController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveCodingOutStatusValidatorFactory,
