@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import play.api.Configuration
 import play.api.mvc.Request
 import shared.config.{FeatureSwitches, SharedAppConfig}
 
-case class SaAccountsFeatureSwitches private (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
+case class SaAccountsFeatureSwitches private[config] (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
   def isTemporalValidationEnabled(using request: Request[_]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension")) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import shared.utils.{EmptinessChecker, EmptyPathsResult}
 case class LastClearing(lastClearingDate: Option[String], lastClearingReason: Option[String], lastClearedAmount: Option[BigDecimal])
 
 object LastClearing {
-  given EmptinessChecker[LastClearing] = ???
+  given EmptinessChecker[LastClearing] = EmptinessChecker.derived
   given OFormat[LastClearing]          = Json.format[LastClearing]
 }
 
@@ -38,7 +38,7 @@ case class LatePaymentInterest(latePaymentInterestId: Option[String],
                                interestOutstandingAmount: Option[BigDecimal])
 
 object LatePaymentInterest {
-  given EmptinessChecker[LatePaymentInterest] = ???
+  given EmptinessChecker[LatePaymentInterest] = EmptinessChecker.derived
 
   given Reads[LatePaymentInterest] =
     (
@@ -58,7 +58,7 @@ object LatePaymentInterest {
 case class ReducedCharge(chargeType: Option[String], documentNumber: Option[String], amendmentDate: Option[String], taxYear: Option[String])
 
 object ReducedCharge {
-  given EmptinessChecker[ReducedCharge] = ???
+  given EmptinessChecker[ReducedCharge] = EmptinessChecker.derived
 
   given Reads[ReducedCharge] =
     (
