@@ -20,23 +20,19 @@ import play.api.libs.json.{Reads, Writes}
 import shared.utils.enums.Enums
 
 enum CodedOutStatus(val fromDownstream: String) {
-  case `initiated`            extends CodedOutStatus("I")
+  case initiated              extends CodedOutStatus("I")
   case `not-collected`        extends CodedOutStatus("N")
   case `partly-collected`     extends CodedOutStatus("P")
   case `fully-collected`      extends CodedOutStatus("F")
   case `awaiting-collection`  extends CodedOutStatus("A")
   case `waiting-cancellation` extends CodedOutStatus("W")
-  case `cancelled`            extends CodedOutStatus("C")
-  case `rejected`             extends CodedOutStatus("R")
+  case cancelled              extends CodedOutStatus("C")
+  case rejected               extends CodedOutStatus("R")
 }
 
 object CodedOutStatus {
 
-  given Reads[CodedOutStatus] = Enums
-    .readsFrom[CodedOutStatus](_.fromDownstream)
-    .orElse(
-      Enums.reads(values)
-    )
+  given Reads[CodedOutStatus] = Enums.readsFrom[CodedOutStatus](values, _.fromDownstream)
 
   given Writes[CodedOutStatus] = Enums.writes
 }

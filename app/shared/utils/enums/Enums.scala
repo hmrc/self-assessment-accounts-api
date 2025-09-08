@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ object Enums {
   def reads[E: ClassTag](values: Array[E])(using ev: Show[E] = Shows.toStringShow[E]): Reads[E] =
     summon[Reads[String]].collect(JsonValidationError(s"error.expected.$typeName"))(parser(values))
 
-  def readsFrom[E: ClassTag](extractValue: E => String)(using ev: Show[E] = Show.show(extractValue)): Reads[E] = ???
+  def readsFrom[E: ClassTag](values: Array[E], extractValue: E => String)(using ev: Show[E] = Show.show(extractValue)): Reads[E] = reads(values)
 
   private def typeName[E: ClassTag]: String = summon[ClassTag[E]].runtimeClass.getSimpleName
 
