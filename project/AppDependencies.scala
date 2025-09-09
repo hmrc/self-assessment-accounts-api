@@ -29,12 +29,12 @@ object AppDependencies {
   val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"         %% "bootstrap-test-play-30" % bootstrapPlayVersion,
     "org.scalatestplus"   %% "scalacheck-1-18"        % "3.2.19.0",
-    "org.scalamock"       %% "scalamock"              % "7.4.0"
+    "org.scalamock"       %% "scalamock"              % "7.4.2"
   ).map(_ % Test)
 
   val itDependencies: Seq[ModuleID] = Seq(
-    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.19.1",
-    "io.swagger.parser.v3"         % "swagger-parser-v3"     % "2.1.30"
+    "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.20.0",
+    "io.swagger.parser.v3"         % "swagger-parser-v3"     % "2.1.33"
   ).map(_ % Test)
 
 }
