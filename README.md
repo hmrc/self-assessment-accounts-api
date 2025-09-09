@@ -15,9 +15,9 @@ The Self Assessment Accounts API allows a developer to:
 
 ## Requirements
 
-- Scala 2.13.x
+- Scala 3.5.x
 - Java 11
-- sbt 1.7.x
+- sbt 1.10.x
 - [Service Manager](https://github.com/hmrc/service-manager)
 
 ## Development Setup

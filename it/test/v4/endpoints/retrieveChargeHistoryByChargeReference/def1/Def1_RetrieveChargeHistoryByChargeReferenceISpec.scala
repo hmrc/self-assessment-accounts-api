@@ -133,7 +133,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSp
         ("AA1123A", "XD000024425799", BAD_REQUEST, NinoFormatError),
         ("AA123456A", "veryBadChargeRef", BAD_REQUEST, ChargeReferenceFormatError)
       )
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(args => validationErrorTest.tupled(args))
     }
 
     "des service error" when {
@@ -170,7 +170,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSp
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
-      input.foreach(args => (serviceErrorTest _).tupled(args))
+      input.foreach(args => serviceErrorTest.tupled(args))
     }
   }
 

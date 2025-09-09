@@ -33,6 +33,6 @@ class Def1_RetrieveCodingOutStatusValidator(nino: String, taxYear: String) exten
     (
       ResolveNino(nino),
       ResolveTaxYear(taxYear)
-    ).mapN(Def1_RetrieveCodingOutStatusRequestData)
+    ).mapN(Def1_RetrieveCodingOutStatusRequestData.apply)
 
 }

@@ -30,7 +30,7 @@ object CodingDetails {
         (JsPath \ "totalLiabilityAmount").readNullable[BigDecimal] and
         (JsPath \ "taxYearCoding").readNullable[String].map(_.map(TaxYear.fromDownstream(_).asMtd)) and
         (JsPath \ "coded").readNullable[Coded]
-    )(CodingDetails.apply _)
+    )(CodingDetails.apply)
 
   implicit val writes: OWrites[CodingDetails] = Json.writes[CodingDetails]
 }
@@ -42,7 +42,7 @@ object Coded {
   implicit val reads: Reads[Coded] = (
     (JsPath \ "amount").readNullable[BigDecimal] and
       (JsPath \ "initiationDate").readNullable[String]
-  )(Coded.apply _)
+  )(Coded.apply)
 
   implicit val writes: OWrites[Coded] = Json.writes[Coded]
 }

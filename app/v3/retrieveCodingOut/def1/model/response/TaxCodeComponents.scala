@@ -30,7 +30,7 @@ object TaxCodeComponents {
       (JsPath \ "submittedOn").read[String] and
       (JsPath \ "source").read[DownstreamSource].map(_.toMtdSource) and
       (JsPath \ "componentIdentifier").readNullable[String].map(_.map(BigInt(_)))
-  )(TaxCodeComponents.apply _)
+  )(TaxCodeComponents.apply)
 
   implicit val writes: OWrites[TaxCodeComponents] = Json.writes[TaxCodeComponents]
 }

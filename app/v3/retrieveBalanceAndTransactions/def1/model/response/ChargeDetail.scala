@@ -33,6 +33,6 @@ object ChargeDetail {
       (JsPath \ "mainTransaction").readNullable[String] and
       (JsPath \ "mainType").readNullable[String] and
       (JsPath \ "subTransaction").readNullable[String] and
-      (JsPath \ "chargeType").readNullable[String])(ChargeDetail.apply _)
+      (JsPath \ "chargeType").readNullable[String])(ChargeDetail.apply)
 
 }

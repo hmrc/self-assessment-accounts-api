@@ -36,6 +36,6 @@ class Def1_RetrieveChargeHistoryByTransactionIdValidator(
     (
       ResolveNino(nino),
       ResolveTransactionId(transactionId)
-    ).mapN(Def1_RetrieveChargeHistoryByTransactionIdRequestData)
+    ).mapN(Def1_RetrieveChargeHistoryByTransactionIdRequestData.apply)
 
 }

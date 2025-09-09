@@ -18,10 +18,11 @@ package shared.controllers.validators.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
 import play.api.libs.json.*
+import shared.controllers.validators.resolvers.UnexpectedJsonFieldsValidator.SchemaStructureSource
 import shared.models.errors.RuleIncorrectOrEmptyBodyError
 import shared.models.utils.JsonErrorValidators
-import shared.utils.{EmptinessChecker, UnitSpec}
 import shared.utils.EmptinessChecker.field
+import shared.utils.{EmptinessChecker, UnitSpec}
 
 class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with JsonErrorValidators {
 
@@ -111,6 +112,17 @@ class ResolveNonEmptyJsonObjectSpec extends UnitSpec with ResolverSupport with J
         val json = Json.parse("""{ "bar": {"field1" : "field one", "field2" : "field two", "extra": "x" }}""")
 
         resolver(json) shouldBe Valid(Foo(bar = Bar("field one", "field two")))
+      }
+    }
+
+    "an instance is created" must {
+      "delegate to the companion object resolver and apply" in {
+        val json = Json.parse("""{ "bar": {"field1" : "field one", "field2" : "field two" }}""")
+
+        val instance = ResolveNonEmptyJsonObject[Foo]
+
+        instance.resolver(json) shouldBe Valid(Foo(bar = Bar("field one", "field two")))
+        instance(json) shouldBe Valid(Foo(bar = Bar("field one", "field two")))
       }
     }
 

@@ -41,7 +41,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
           .deleteCodingOut(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, ()))))
 
-        val result = await(service.deleteCodingOut(requestData))
+        val result: Either[ErrorWrapper, ResponseWrapper[Unit]] = await(service.deleteCodingOut(requestData))
         result shouldBe Right(ResponseWrapper(correlationId, ()))
       }
     }
@@ -72,7 +72,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
         "TAX_YEAR_NOT_SUPPORTED" -> RuleTaxYearNotSupportedError
       )
 
-      (errors ++ extraTysErrors).foreach(args => (serviceError _).tupled(args))
+      (errors ++ extraTysErrors).foreach(args => serviceError.tupled(args))
     }
   }
 

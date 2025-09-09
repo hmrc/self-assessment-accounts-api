@@ -50,7 +50,7 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String,
       ResolveNino(nino),
       resolveTaxYear(taxYear),
       resolveJson(body)
-    ).mapN(Def1_CreateOrAmendCodingOutRequestData) andThen validatedParsedBody
+    ).mapN(Def1_CreateOrAmendCodingOutRequestData.apply) andThen validatedParsedBody
 
   private def validatedParsedBody(
       parsed: Def1_CreateOrAmendCodingOutRequestData): Validated[Seq[MtdError], Def1_CreateOrAmendCodingOutRequestData] = {

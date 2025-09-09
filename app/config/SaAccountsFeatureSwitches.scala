@@ -23,7 +23,7 @@ import shared.config.{FeatureSwitches, SharedAppConfig}
 
 case class SaAccountsFeatureSwitches private[config] (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
-  def isTemporalValidationEnabled(using request: Request[_]): Boolean = {
+  def isTemporalValidationEnabled(using request: Request[?]): Boolean = {
     if (isEnabled("allowTemporalValidationSuspension")) {
       request.headers.get("suspend-temporal-validations").forall(!BooleanUtils.toBoolean(_))
     } else {

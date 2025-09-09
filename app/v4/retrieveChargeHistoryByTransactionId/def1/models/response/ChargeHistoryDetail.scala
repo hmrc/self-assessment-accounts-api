@@ -48,7 +48,7 @@ object ChargeHistoryDetail {
       (JsPath \ "reversalDate").read[String].map(timestampConverter(_).toDate) and
       (JsPath \ "reversalDate").read[String].map(timestampConverter) and
       (JsPath \ "reversalReason").read[String] and
-      (JsPath \ "poaAdjustmentReason").readNullable[String])(ChargeHistoryDetail.apply _)
+      (JsPath \ "poaAdjustmentReason").readNullable[String])(ChargeHistoryDetail.apply)
 
   implicit def writes(implicit appConfig: SharedAppConfig): OWrites[ChargeHistoryDetail] =
     Json.writes[ChargeHistoryDetail].transform { jsonObject =>

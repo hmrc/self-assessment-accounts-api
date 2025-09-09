@@ -26,6 +26,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.{InternalError, MtdError, NinoFormatError, TaxYearFormatError}
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
+import play.api.libs.ws.WSBodyWritables.writeableOf_WsBody
 
 class Def1_OptInToCodingOutISpec extends IntegrationBaseSpec {
 
@@ -71,7 +72,7 @@ class Def1_OptInToCodingOutISpec extends IntegrationBaseSpec {
       ("AA1123A", "2021-22", BAD_REQUEST, NinoFormatError),
       ("AA123456A", "20199", BAD_REQUEST, TaxYearFormatError)
     )
-    input foreach (validationErrorTest _).tupled
+    input foreach validationErrorTest.tupled
 
     "downstream service error" should {
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
@@ -105,7 +106,7 @@ class Def1_OptInToCodingOutISpec extends IntegrationBaseSpec {
         (BAD_GATEWAY, "BAD_GATEWAY", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
-      input.foreach(args => (serviceErrorTest _).tupled(args))
+      input.foreach(args => serviceErrorTest.tupled(args))
     }
   }
 

@@ -116,7 +116,7 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
         ifsErrors ++ hipErrors
       }
 
-      errors.foreach((serviceError _).tupled)
+      errors.foreach(serviceError.tupled)
     }
   }
 

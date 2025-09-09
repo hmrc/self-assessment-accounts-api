@@ -36,7 +36,7 @@ object FinancialDetailsItemLocks {
     (bool("paymentLock") and
       bool("clearingLock") and
       bool("interestLock") and
-      bool("dunningLock"))(FinancialDetailsItemLocks.apply _)
+      bool("dunningLock"))(FinancialDetailsItemLocks.apply)
   }
 
 }

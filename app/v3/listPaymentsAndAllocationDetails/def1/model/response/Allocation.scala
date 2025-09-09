@@ -47,6 +47,6 @@ object Allocation {
       (JsPath \ "amount").readNullable[BigDecimal] and
       (JsPath \ "clearedAmount").readNullable[BigDecimal] and
       (JsPath \ "contractAccount").readNullable[String]
-  )(Allocation.apply _)
+  )(Allocation.apply)
 
 }

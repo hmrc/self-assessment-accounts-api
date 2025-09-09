@@ -71,7 +71,7 @@ object FinancialDetailsItem {
         case Some(x) if x == "N"             => Reads.pure(Some(false))
         case Some(x)                         => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
         case None                            => Reads.pure(None)
-      })(FinancialDetailsItem.apply _)
+      })(FinancialDetailsItem.apply)
   }
 
   private def convertToMtd(mapping: Map[String, String])(maybeDownstream: Option[String]): Option[String] =

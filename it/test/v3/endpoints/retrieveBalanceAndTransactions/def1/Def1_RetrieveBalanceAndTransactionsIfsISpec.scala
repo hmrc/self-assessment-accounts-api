@@ -148,7 +148,7 @@ class Def1_RetrieveBalanceAndTransactionsIfsISpec extends IntegrationBaseSpec {
       )
       // format: on
 
-    input.foreach((validationErrorTest _).tupled)
+    input.foreach(validationErrorTest.tupled)
   }
 
   "downstream service error" should {
@@ -192,7 +192,7 @@ class Def1_RetrieveBalanceAndTransactionsIfsISpec extends IntegrationBaseSpec {
       (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
       (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
     )
-    input.foreach(args => (serviceErrorTest _).tupled(args))
+    input.foreach(args => serviceErrorTest.tupled(args))
   }
 
   private trait Test {
@@ -230,7 +230,7 @@ class Def1_RetrieveBalanceAndTransactionsIfsISpec extends IntegrationBaseSpec {
 
       setupStubs()
       buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
+        .addQueryStringParameters(queryParams*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123")

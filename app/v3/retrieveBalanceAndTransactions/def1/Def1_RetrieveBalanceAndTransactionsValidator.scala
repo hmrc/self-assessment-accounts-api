@@ -68,7 +68,7 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
       ResolveBoolean(optionWithDefaultString(removePOA), RemovePaymentOnAccountFormatError),
       ResolveBoolean(optionWithDefaultString(customerPaymentInformation), CustomerPaymentInformationFormatError),
       ResolveBoolean(optionWithDefaultString(includeEstimatedCharges), IncludeEstimatedChargesFormatError)
-    ).mapN(RetrieveBalanceAndTransactionsRequestData) andThen validateParameterRules
+    ).mapN(RetrieveBalanceAndTransactionsRequestData.apply) andThen validateParameterRules
 
   private def resolveDocNumber(docNumber: Option[String]): Validated[Seq[MtdError], Option[String]] = {
     val MAX_LENGTH = 12

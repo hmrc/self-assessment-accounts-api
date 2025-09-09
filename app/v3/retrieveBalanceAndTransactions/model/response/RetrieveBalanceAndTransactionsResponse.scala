@@ -38,7 +38,7 @@ object RetrieveBalanceAndTransactionsResponse {
           .read[Seq[FinancialDetails]]
           .map(fd => Option(fd))
           .orElse((JsPath \ "financialDetailsItem").readNullable[Seq[FinancialDetails]])
-    )(RetrieveBalanceAndTransactionsResponse.apply _)
+    )(RetrieveBalanceAndTransactionsResponse.apply)
 
   // accommodating HIP response being wrapped in a 'success' object
   implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =

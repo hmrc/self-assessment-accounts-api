@@ -133,7 +133,7 @@ class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec 
         ("AA1123A", "transactionId", BAD_REQUEST, NinoFormatError),
         ("AA123456A", "invalidTransactionId", BAD_REQUEST, TransactionIdFormatError)
       )
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(args => validationErrorTest.tupled(args))
     }
 
     "des service error" when {
@@ -170,7 +170,7 @@ class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec 
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
-      input.foreach(args => (serviceErrorTest _).tupled(args))
+      input.foreach(args => serviceErrorTest.tupled(args))
     }
   }
 

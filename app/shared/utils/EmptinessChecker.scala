@@ -16,7 +16,7 @@
 
 package shared.utils
 
-import scala.compiletime.{constValue, erasedValue, summonInline}
+import scala.compiletime.*
 import scala.deriving.Mirror
 
 sealed trait EmptyPathsResult
@@ -99,8 +99,6 @@ object EmptinessChecker {
 
   def instance[A](func: A => Structure): EmptinessChecker[A] = (value: A) => func(value)
 
-  def instanceObj[A](func: A => Structure.Obj): ObjEmptinessChecker[A] = (value: A) => func(value)
-
   def use[A](func: A => List[(String, Structure)]): EmptinessChecker[A] = EmptinessChecker.instance { a =>
     Structure.Obj(func(a))
   }
@@ -109,11 +107,16 @@ object EmptinessChecker {
 
   def primitive[A]: EmptinessChecker[A] = EmptinessChecker.instance(_ => Structure.Primitive)
 
-  given EmptinessChecker[String]     = instance(_ => Structure.Primitive)
-  given EmptinessChecker[Int]        = instance(_ => Structure.Primitive)
-  given EmptinessChecker[Double]     = instance(_ => Structure.Primitive)
-  given EmptinessChecker[Boolean]    = instance(_ => Structure.Primitive)
-  given EmptinessChecker[BigInt]     = instance(_ => Structure.Primitive)
+  given EmptinessChecker[String] = instance(_ => Structure.Primitive)
+
+  given EmptinessChecker[Int] = instance(_ => Structure.Primitive)
+
+  given EmptinessChecker[Double] = instance(_ => Structure.Primitive)
+
+  given EmptinessChecker[Boolean] = instance(_ => Structure.Primitive)
+
+  given EmptinessChecker[BigInt] = instance(_ => Structure.Primitive)
+
   given EmptinessChecker[BigDecimal] = instance(_ => Structure.Primitive)
 
   given [A](using aInstance: EmptinessChecker[A]): EmptinessChecker[Option[A]] =

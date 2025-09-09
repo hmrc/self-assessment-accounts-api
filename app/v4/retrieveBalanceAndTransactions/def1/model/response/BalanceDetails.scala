@@ -93,7 +93,7 @@ object BalanceDetails {
       (JsPath \ "firstPendingAmountRequested").readNullable[BigDecimal] and
       (JsPath \ "secondPendingAmountRequested").readNullable[BigDecimal] and
       (JsPath \ "availableCredit").readNullable[BigDecimal]
-  )(BalanceDetails.apply _)
+  )(BalanceDetails.apply)
 
   implicit val writes: OWrites[BalanceDetails] = Json.writes[BalanceDetails]
 

@@ -50,7 +50,7 @@ object LatePaymentInterest {
         (JsPath \ "latePaymentInterestAmount").readNullable[BigDecimal] and
         (JsPath \ "lpiWithDunningLock").readNullable[BigDecimal] and
         (JsPath \ "interestOutstandingAmount").readNullable[BigDecimal]
-    )(LatePaymentInterest.apply _)
+    )(LatePaymentInterest.apply)
 
   given OWrites[LatePaymentInterest] = Json.writes[LatePaymentInterest]
 }
@@ -72,7 +72,7 @@ object ReducedCharge {
               val ty = TaxYear.fromDownstream(year)
               ty.asMtd
             })
-    )(ReducedCharge.apply _)
+    )(ReducedCharge.apply)
 
   given OWrites[ReducedCharge] = Json.writes[ReducedCharge]
 }
@@ -141,7 +141,7 @@ object DocumentDetails {
         (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
         JsPath.readNullable[ReducedCharge].map(replaceWithNoneIfEmpty[ReducedCharge]) and
         (JsPath \ "poaRelevantAmount").readNullable[BigDecimal]
-    )(DocumentDetails.apply _)
+    )(DocumentDetails.apply)
 
   given OWrites[DocumentDetails] = Json.writes[DocumentDetails]
 }

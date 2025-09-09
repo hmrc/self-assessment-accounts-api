@@ -73,7 +73,7 @@ class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
         ("AA123456A", "2018-20", BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
 
-      input.map(c => (c._1, c._2, c._3, c._4)).foreach((validationErrorTest _).tupled)
+      input.map(c => (c._1, c._2, c._3, c._4)).foreach(validationErrorTest.tupled)
     }
 
     "downstream service error" when {
@@ -101,7 +101,7 @@ class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
 
-      (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4)).foreach((serviceErrorTest _).tupled)
+      (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4)).foreach(serviceErrorTest.tupled)
     }
   }
 

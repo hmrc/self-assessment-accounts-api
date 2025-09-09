@@ -81,7 +81,7 @@ class RetrieveChargeHistoryByChargeReferenceServiceSpec extends ServiceSpec {
           "SERVICE_UNAVAILABLE"   -> InternalError
         )
 
-      errors.foreach(args => (serviceError _).tupled(args))
+      errors.foreach(args => serviceError.tupled(args))
     }
   }
 

@@ -61,7 +61,7 @@ class Def1_ListPaymentsAndAllocationDetailsValidator(nino: String,
           .getOrElse(Valid(None)),
         resolvePaymentLot(paymentLot),
         resolvePaymentLotItem(paymentLotItem)
-      ).mapN(Def1_ListPaymentsAndAllocationDetailsRequestData)
+      ).mapN(Def1_ListPaymentsAndAllocationDetailsRequestData.apply)
     }
   }
 

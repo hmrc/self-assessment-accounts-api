@@ -27,7 +27,7 @@ object UnmatchedCustomerSubmissions {
     (JsPath \ "amount").read[BigDecimal] and
       (JsPath \ "submittedOn").read[String] and
       (JsPath \ "componentIdentifier").readNullable[String].map(_.map(BigInt(_)))
-  )(UnmatchedCustomerSubmissions.apply _)
+  )(UnmatchedCustomerSubmissions.apply)
 
   implicit val writes: OWrites[UnmatchedCustomerSubmissions] = Json.writes[UnmatchedCustomerSubmissions]
 }

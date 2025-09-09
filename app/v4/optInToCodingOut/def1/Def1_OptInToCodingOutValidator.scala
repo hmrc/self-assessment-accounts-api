@@ -33,6 +33,6 @@ class Def1_OptInToCodingOutValidator(nino: String, taxYear: String) extends Vali
     (
       ResolveNino(nino),
       ResolveTaxYear(taxYear)
-    ).mapN(Def1_OptInToCodingOutRequestData)
+    ).mapN(Def1_OptInToCodingOutRequestData.apply)
 
 }

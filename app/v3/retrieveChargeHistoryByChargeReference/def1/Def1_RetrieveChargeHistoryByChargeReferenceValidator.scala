@@ -37,6 +37,6 @@ class Def1_RetrieveChargeHistoryByChargeReferenceValidator(
     (
       ResolveNino(nino),
       ResolveChargeReference(chargeReference)
-    ).mapN(Def1_RetrieveChargeHistoryByChargeReferenceRequestData)
+    ).mapN(Def1_RetrieveChargeHistoryByChargeReferenceRequestData.apply)
 
 }
