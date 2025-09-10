@@ -37,6 +37,6 @@ class Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: Sa
     (
       ResolveNino(nino),
       resolveTaxYear(taxYear)
-    ).mapN(Def1_DeleteCodingOutRequestData)
+    ).mapN(Def1_DeleteCodingOutRequestData.apply)
 
 }

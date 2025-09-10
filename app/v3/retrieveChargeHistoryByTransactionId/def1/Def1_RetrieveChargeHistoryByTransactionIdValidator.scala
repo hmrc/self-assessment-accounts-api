@@ -28,15 +28,14 @@ import javax.inject.Singleton
 
 @Singleton
 class Def1_RetrieveChargeHistoryByTransactionIdValidator(
-                                                          nino: String,
-                                                          transactionId: String
-                                                        ) extends Validator[RetrieveChargeHistoryByTransactionIdRequestData] {
+    nino: String,
+    transactionId: String
+) extends Validator[RetrieveChargeHistoryByTransactionIdRequestData] {
 
-      def validate: Validated[Seq[MtdError], RetrieveChargeHistoryByTransactionIdRequestData] =
-        (
-          ResolveNino(nino),
-          ResolveTransactionId(transactionId)
-        ).mapN(Def1_RetrieveChargeHistoryByTransactionIdRequestData)
-
+  def validate: Validated[Seq[MtdError], RetrieveChargeHistoryByTransactionIdRequestData] =
+    (
+      ResolveNino(nino),
+      ResolveTransactionId(transactionId)
+    ).mapN(Def1_RetrieveChargeHistoryByTransactionIdRequestData.apply)
 
 }

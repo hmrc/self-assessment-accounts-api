@@ -17,8 +17,8 @@
 package v4.retrieveCodingOut.def1.model.response
 
 import common.models.DownstreamSource
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class TaxCodeComponents(amount: BigDecimal, relatedTaxYear: Option[String], submittedOn: String, source: String, id: Option[BigInt])
 
@@ -30,7 +30,7 @@ object TaxCodeComponents {
       (JsPath \ "submittedOn").read[String] and
       (JsPath \ "source").read[DownstreamSource].map(_.toMtdSource) and
       (JsPath \ "componentIdentifier").readNullable[String].map(_.map(BigInt(_)))
-  )(TaxCodeComponents.apply _)
+  )(TaxCodeComponents.apply)
 
   implicit val writes: OWrites[TaxCodeComponents] = Json.writes[TaxCodeComponents]
 }

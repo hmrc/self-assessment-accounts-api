@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,16 @@
 
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 import shared.models.domain.TaxYear
 import shared.utils.{EmptinessChecker, EmptyPathsResult}
 
 case class LastClearing(lastClearingDate: Option[String], lastClearingReason: Option[String], lastClearedAmount: Option[BigDecimal])
 
 object LastClearing {
-  implicit val emptinessChecker: EmptinessChecker[LastClearing] = EmptinessChecker.genericInstance
-  implicit val format: OFormat[LastClearing]                    = Json.format[LastClearing]
+  given EmptinessChecker[LastClearing] = EmptinessChecker.derived
+  given format: OFormat[LastClearing]  = Json.format[LastClearing]
 }
 
 case class LatePaymentInterest(latePaymentInterestId: Option[String],
@@ -38,9 +38,9 @@ case class LatePaymentInterest(latePaymentInterestId: Option[String],
                                interestOutstandingAmount: Option[BigDecimal])
 
 object LatePaymentInterest {
-  implicit val emptinessChecker: EmptinessChecker[LatePaymentInterest] = EmptinessChecker.genericInstance
+  given EmptinessChecker[LatePaymentInterest] = EmptinessChecker.derived
 
-  implicit val reads: Reads[LatePaymentInterest] =
+  given Reads[LatePaymentInterest] =
     (
       (JsPath \ "latePaymentInterestID").readNullable[String] and
         (JsPath \ "accruingInterestAmount").readNullable[BigDecimal] and
@@ -50,17 +50,17 @@ object LatePaymentInterest {
         (JsPath \ "latePaymentInterestAmount").readNullable[BigDecimal] and
         (JsPath \ "lpiWithDunningLock").readNullable[BigDecimal] and
         (JsPath \ "interestOutstandingAmount").readNullable[BigDecimal]
-    )(LatePaymentInterest.apply _)
+    )(LatePaymentInterest.apply)
 
-  implicit val writes: OWrites[LatePaymentInterest] = Json.writes[LatePaymentInterest]
+  given OWrites[LatePaymentInterest] = Json.writes[LatePaymentInterest]
 }
 
 case class ReducedCharge(chargeType: Option[String], documentNumber: Option[String], amendmentDate: Option[String], taxYear: Option[String])
 
 object ReducedCharge {
-  implicit val emptinessChecker: EmptinessChecker[ReducedCharge] = EmptinessChecker.genericInstance
+  given EmptinessChecker[ReducedCharge] = EmptinessChecker.derived
 
-  implicit val reads: Reads[ReducedCharge] =
+  given Reads[ReducedCharge] =
     (
       (JsPath \ "chargeTypeReducedCharge").readNullable[String] and
         (JsPath \ "documentNumberReducedCharge").readNullable[String] and
@@ -72,9 +72,9 @@ object ReducedCharge {
               val ty = TaxYear.fromDownstream(year)
               ty.asMtd
             })
-    )(ReducedCharge.apply _)
+    )(ReducedCharge.apply)
 
-  implicit val writes: OWrites[ReducedCharge] = Json.writes[ReducedCharge]
+  given OWrites[ReducedCharge] = Json.writes[ReducedCharge]
 }
 
 case class DocumentDetails(taxYear: Option[String],
@@ -108,12 +108,12 @@ object DocumentDetails {
       Some(ty.asMtd)
   }
 
-  private def replaceWithNoneIfEmpty[A](maybeA: Option[A])(implicit emptinessChecker: EmptinessChecker[A]): Option[A] =
+  private def replaceWithNoneIfEmpty[A](maybeA: Option[A])(using emptinessChecker: EmptinessChecker[A]): Option[A] =
     maybeA.flatMap { a =>
       if (emptinessChecker.findEmptyPaths(a) == EmptyPathsResult.CompletelyEmpty) None else Some(a)
     }
 
-  implicit val reads: Reads[DocumentDetails] =
+  given Reads[DocumentDetails] =
     (
       (JsPath \ "taxYear").readNullable[String].map(taxYear) and
         (JsPath \ "documentId").read[String].orElse((JsPath \ "documentID").read[String]) and
@@ -126,7 +126,8 @@ object DocumentDetails {
         (JsPath \ "totalAmount").read[BigDecimal] and
         (JsPath \ "documentOutstandingAmount").read[BigDecimal] and
         JsPath.readNullable[LastClearing].map(replaceWithNoneIfEmpty[LastClearing]) and
-        (JsPath \ "statisticalFlag").read[Boolean]
+        (JsPath \ "statisticalFlag")
+          .read[Boolean]
           .orElse((JsPath \ "statisticalFlag").read[String].flatMap {
             case "Y" => Reads.pure(true)
             case "N" => Reads.pure(false)
@@ -140,7 +141,7 @@ object DocumentDetails {
         (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
         JsPath.readNullable[ReducedCharge].map(replaceWithNoneIfEmpty[ReducedCharge]) and
         (JsPath \ "poaRelevantAmount").readNullable[BigDecimal]
-    )(DocumentDetails.apply _)
+    )(DocumentDetails.apply)
 
-  implicit val writes: OWrites[DocumentDetails] = Json.writes[DocumentDetails]
+  given OWrites[DocumentDetails] = Json.writes[DocumentDetails]
 }

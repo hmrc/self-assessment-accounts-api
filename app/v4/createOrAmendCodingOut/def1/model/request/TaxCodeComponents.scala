@@ -17,6 +17,7 @@
 package v4.createOrAmendCodingOut.def1.model.request
 
 import play.api.libs.json.{Json, OFormat}
+import shared.utils.EmptinessChecker
 
 case class TaxCodeComponents(payeUnderpayment: Option[Seq[TaxCodeComponent]],
                              selfAssessmentUnderpayment: Option[Seq[TaxCodeComponent]],
@@ -27,4 +28,5 @@ case class TaxCodeComponents(payeUnderpayment: Option[Seq[TaxCodeComponent]],
 
 object TaxCodeComponents {
   implicit val format: OFormat[TaxCodeComponents] = Json.format[TaxCodeComponents]
+  given EmptinessChecker[TaxCodeComponents]       = EmptinessChecker.derived
 }

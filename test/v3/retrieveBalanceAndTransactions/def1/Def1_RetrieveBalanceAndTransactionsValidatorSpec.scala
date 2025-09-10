@@ -16,10 +16,10 @@
 
 package v3.retrieveBalanceAndTransactions.def1
 
-import common.errors._
-import shared.models.errors._
+import common.errors.*
+import shared.models.errors.*
 import shared.utils.UnitSpec
-import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture._
+import v3.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
@@ -135,7 +135,8 @@ class Def1_RetrieveBalanceAndTransactionsValidatorSpec extends UnitSpec {
 
       "an invalid from date is supplied" in {
         val result: Either[ErrorWrapper, RetrieveBalanceAndTransactionsRequestData] =
-          validator(validNino, None, fromDate = Some("invalid"), toDate = Some(validToDate), None, None, None, None, None, None).validateAndWrapResult()
+          validator(validNino, None, fromDate = Some("invalid"), toDate = Some(validToDate), None, None, None, None, None, None)
+            .validateAndWrapResult()
 
         result shouldBe Left(
           ErrorWrapper(correlationId, FromDateFormatError)

@@ -18,11 +18,11 @@ package v3.endpoints.retrieveChargeHistoryByTransactionId.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
@@ -133,7 +133,7 @@ class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec 
         ("AA1123A", "transactionId", BAD_REQUEST, NinoFormatError),
         ("AA123456A", "invalidTransactionId", BAD_REQUEST, TransactionIdFormatError)
       )
-      input.foreach(args => (validationErrorTest _).tupled(args))
+      input.foreach(args => validationErrorTest.tupled(args))
     }
 
     "des service error" when {
@@ -170,7 +170,7 @@ class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec 
         (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
         (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
-      input.foreach(args => (serviceErrorTest _).tupled(args))
+      input.foreach(args => serviceErrorTest.tupled(args))
     }
   }
 

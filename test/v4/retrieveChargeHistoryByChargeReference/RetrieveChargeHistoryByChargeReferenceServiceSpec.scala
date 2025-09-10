@@ -18,7 +18,7 @@ package v4.retrieveChargeHistoryByChargeReference
 
 import common.models.ChargeReference
 import shared.models.domain.Nino
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
@@ -81,7 +81,7 @@ class RetrieveChargeHistoryByChargeReferenceServiceSpec extends ServiceSpec {
           "SERVICE_UNAVAILABLE"   -> InternalError
         )
 
-      errors.foreach(args => (serviceError _).tupled(args))
+      errors.foreach(args => serviceError.tupled(args))
     }
   }
 

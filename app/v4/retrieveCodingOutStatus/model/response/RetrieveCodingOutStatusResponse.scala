@@ -16,7 +16,7 @@
 
 package v4.retrieveCodingOutStatus.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.utils.JsonWritesUtil
 import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 
@@ -24,8 +24,8 @@ trait RetrieveCodingOutStatusResponse
 
 object RetrieveCodingOutStatusResponse extends JsonWritesUtil {
 
-  implicit val writes: OWrites[RetrieveCodingOutStatusResponse] = writesFrom {
-    case def1: Def1_RetrieveCodingOutStatusResponse => Json.toJson(def1).as[JsObject]
+  implicit val writes: OWrites[RetrieveCodingOutStatusResponse] = writesFrom { case def1: Def1_RetrieveCodingOutStatusResponse =>
+    Json.toJson(def1).as[JsObject]
   }
 
 }

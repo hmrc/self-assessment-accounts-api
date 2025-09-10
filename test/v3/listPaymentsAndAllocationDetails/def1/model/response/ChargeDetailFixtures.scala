@@ -18,7 +18,6 @@ package v3.listPaymentsAndAllocationDetails.def1.model.response
 
 import play.api.libs.json.{JsValue, Json}
 
-
 object ChargeDetailFixtures {
 
   val chargeDetailObject: ChargeDetail =

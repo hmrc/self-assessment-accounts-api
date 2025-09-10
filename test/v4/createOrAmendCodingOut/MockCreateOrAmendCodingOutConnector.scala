@@ -43,5 +43,7 @@ trait MockCreateOrAmendCodingOutConnector extends TestSuite with MockFactory {
         )
         .expects(requestData, *, *, *)
     }
+
   }
+
 }

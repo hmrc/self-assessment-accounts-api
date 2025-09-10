@@ -20,7 +20,7 @@ import play.api.Configuration
 import play.api.libs.json.{JsObject, Json}
 import shared.config.MockSharedAppConfig
 import shared.utils.UnitSpec
-import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
+import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.*
 
 class RetrieveChargeHistoryByChargeReferenceResponseSpec extends UnitSpec with MockSharedAppConfig {
 

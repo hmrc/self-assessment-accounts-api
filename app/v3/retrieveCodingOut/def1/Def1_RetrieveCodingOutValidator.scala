@@ -17,7 +17,7 @@
 package v3.retrieveCodingOut.def1
 
 import cats.data.Validated
-import cats.implicits._
+import cats.implicits.*
 import common.resolvers.ResolveSource
 import config.SaAccountsConfig
 import shared.controllers.validators.Validator
@@ -31,7 +31,7 @@ import javax.inject.Singleton
 
 @Singleton
 class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String], appConfig: SaAccountsConfig)
-  extends Validator[RetrieveCodingOutRequestData] {
+    extends Validator[RetrieveCodingOutRequestData] {
 
   private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.ending(appConfig.minimumPermittedTaxYear))
 
@@ -40,5 +40,6 @@ class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Opt
       ResolveNino(nino),
       resolveTaxYear(taxYear),
       ResolveSource(source)
-    ).mapN(Def1_RetrieveCodingOutRequestData)
+    ).mapN(Def1_RetrieveCodingOutRequestData.apply)
+
 }

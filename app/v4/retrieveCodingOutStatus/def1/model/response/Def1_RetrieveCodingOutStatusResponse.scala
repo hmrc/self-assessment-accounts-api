@@ -16,14 +16,12 @@
 
 package v4.retrieveCodingOutStatus.def1.model.response
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import shared.models.domain.TaxYear
 import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
-case class Def1_RetrieveCodingOutStatusResponse(processingDate: String,
-                                                nino: String,
-                                                taxYear: TaxYear,
-                                                optOutIndicator: Boolean) extends RetrieveCodingOutStatusResponse
+case class Def1_RetrieveCodingOutStatusResponse(processingDate: String, nino: String, taxYear: TaxYear, optOutIndicator: Boolean)
+    extends RetrieveCodingOutStatusResponse
 
 object Def1_RetrieveCodingOutStatusResponse {
 

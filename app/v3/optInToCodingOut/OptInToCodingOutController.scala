@@ -18,7 +18,7 @@ package v3.optInToCodingOut
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
-import shared.controllers._
+import shared.controllers.*
 import shared.routing.Version
 import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
@@ -33,18 +33,18 @@ class OptInToCodingOutController @Inject() (val authService: EnrolmentsAuthServi
                                             service: OptInToCodingOutService,
                                             auditService: AuditService,
                                             cc: ControllerComponents,
-                                            idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+                                            idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName = "opt-in-to-coding-out"
 
-  implicit val endpointLogContext: EndpointLogContext =
+  given endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "OptInToCodingOutController", endpointName = "optInToCodingOut")
 
   def optInToCodingOut(nino: String, taxYear: String): Action[AnyContent] = {
     authorisedAction(nino).async { implicit request =>
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
-      val validator                    = validatorFactory.validator(nino, taxYear)
+      given RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+      val validator        = validatorFactory.validator(nino, taxYear)
 
       val requestHandler =
         RequestHandler

@@ -19,7 +19,7 @@ package v3.createOrAmendCodingOut.model.request
 import shared.models.domain.{Nino, TaxYear}
 import v3.createOrAmendCodingOut.CreateOrAmendCodingOutSchema
 
-trait CreateOrAmendCodingOutRequestData{
+trait CreateOrAmendCodingOutRequestData {
   def nino: Nino
   def taxYear: TaxYear
   def body: CreateOrAmendCodingOutRequestBody

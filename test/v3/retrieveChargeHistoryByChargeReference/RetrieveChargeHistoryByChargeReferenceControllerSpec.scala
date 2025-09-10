@@ -29,7 +29,7 @@ import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
 import v3.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
-import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture._
+import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.*
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse.RetrieveChargeHistoryHateoasData
@@ -85,7 +85,10 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
               )))
 
         val responseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(validNino, chargeReference)
-        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(responseWithHateoas),maybeAuditResponseBody = Some(responseWithHateoas))
+        runOkTestWithAudit(
+          expectedStatus = OK,
+          maybeExpectedResponseBody = Some(responseWithHateoas),
+          maybeAuditResponseBody = Some(responseWithHateoas))
       }
     }
 
@@ -105,7 +108,7 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    override protected val controller = new RetrieveChargeHistoryByChargeReferenceController(
+    override protected val controller: RetrieveChargeHistoryByChargeReferenceController = new RetrieveChargeHistoryByChargeReferenceController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveChargeHistoryByChargeReferenceValidatorFactory,

@@ -35,4 +35,5 @@ object ResolveChargeReference extends ResolverSupport {
       ChargeReference(value),
       List(ChargeReferenceFormatError)
     )
+
 }

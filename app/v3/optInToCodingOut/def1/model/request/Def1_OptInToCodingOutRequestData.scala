@@ -21,9 +21,9 @@ import v3.optInToCodingOut.OptInToCodingOutSchema
 import v3.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 case class Def1_OptInToCodingOutRequestData(
-                                             nino: Nino,
-                                            taxYear: TaxYear
-                                           ) extends OptInToCodingOutRequestData {
+    nino: Nino,
+    taxYear: TaxYear
+) extends OptInToCodingOutRequestData {
 
-  override val schema: OptInToCodingOutSchema =  OptInToCodingOutSchema.Def1
+  override val schema: OptInToCodingOutSchema = OptInToCodingOutSchema.Def1
 }

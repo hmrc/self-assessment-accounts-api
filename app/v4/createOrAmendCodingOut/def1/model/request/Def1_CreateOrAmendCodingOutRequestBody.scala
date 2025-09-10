@@ -17,6 +17,7 @@
 package v4.createOrAmendCodingOut.def1.model.request
 
 import play.api.libs.json.{Json, OFormat}
+import shared.utils.EmptinessChecker
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestBody
 
 case class Def1_CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComponents) extends CreateOrAmendCodingOutRequestBody {
@@ -37,4 +38,6 @@ case class Def1_CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComp
 
 object Def1_CreateOrAmendCodingOutRequestBody {
   implicit val format: OFormat[Def1_CreateOrAmendCodingOutRequestBody] = Json.format[Def1_CreateOrAmendCodingOutRequestBody]
+  given EmptinessChecker[Def1_CreateOrAmendCodingOutRequestBody]       = EmptinessChecker.derived
+
 }

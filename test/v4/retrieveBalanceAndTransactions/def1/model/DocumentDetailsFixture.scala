@@ -16,7 +16,7 @@
 
 package v4.retrieveBalanceAndTransactions.def1.model
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import v4.retrieveBalanceAndTransactions.def1.model.response.{DocumentDetails, LastClearing, LatePaymentInterest, ReducedCharge}
 
 object DocumentDetailsFixture {
@@ -184,9 +184,9 @@ object DocumentDetailsFixture {
   val documentDetailWithoutPoaRelevantAmountAndDocDueDateMtdResponseJson: JsObject =
     documentDetailsMtdResponseWithoutPOARelevantAmountJson - "documentDueDate"
 
-  val documentDetailsDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
+  val documentDetailsDownstreamResponseJson: JsValue    = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
   val documentDetailsDownstreamResponseHipJson: JsValue = newDownstreamDocumentDetailsHipJson("2021", maybeDocumentDueDate = Some("2021-04-05"))
-  val documentDetailsWithoutDocDueDateDownstreamResponseJson: JsValue = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = None)
+  val documentDetailsWithoutDocDueDateDownstreamResponseJson: JsValue    = newDownstreamDocumentDetailsJson("2021", maybeDocumentDueDate = None)
   val documentDetailsWithoutDocDueDateDownstreamResponseHipJson: JsValue = newDownstreamDocumentDetailsHipJson("2021", maybeDocumentDueDate = None)
 
   val documentDetailsWithoutPOAAmountDownstreamResponseJson: JsValue =

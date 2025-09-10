@@ -31,7 +31,7 @@ object RetrieveChargeHistoryByTransactionIdSchema {
 
   private val defaultSchema = Def1
 
-  def schemaFor(nino: String, taxYear :String): RetrieveChargeHistoryByTransactionIdSchema = {
+  def schemaFor(nino: String, taxYear: String): RetrieveChargeHistoryByTransactionIdSchema = {
     defaultSchema
   }
 

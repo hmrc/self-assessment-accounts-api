@@ -18,7 +18,7 @@ package v3.optInToCodingOut
 
 import common.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v3.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
@@ -28,7 +28,7 @@ import scala.concurrent.Future
 class OptInToCodingOutServiceSpec extends ServiceSpec {
 
   private val nino    = Nino("AA123456A")
-  private val taxYear = TaxYear("2014")
+  private val taxYear = TaxYear.ending(2014)
 
   private val requestData = Def1_OptInToCodingOutRequestData(nino, taxYear)
 
@@ -69,7 +69,7 @@ class OptInToCodingOutServiceSpec extends ServiceSpec {
             "SERVICE_UNAVAILABLE"            -> InternalError
           )
 
-        errors.foreach(args => (serviceError _).tupled(args))
+        errors.foreach(args => serviceError.tupled(args))
       }
     }
   }

@@ -23,9 +23,10 @@ import v4.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
 
 class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {
 
-  private val validNino = "AA123456A"
-  private val validTaxYear = "2019-20"
+  private val validNino                 = "AA123456A"
+  private val validTaxYear              = "2019-20"
   private val temporalValidationEnabled = false
+
   private val validBody = Json.parse(
     s"""|{
         |  "taxCodeComponents": {
@@ -55,7 +56,6 @@ class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with MockSaAcc
         |}
         |""".stripMargin
   )
-
 
   private val validatorFactory = new CreateOrAmendCodingOutValidatorFactory
 

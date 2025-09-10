@@ -23,11 +23,11 @@ import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
 import v4.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
-import v4.createOrAmendCodingOut.def1.model.request._
+import v4.createOrAmendCodingOut.def1.model.request.*
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -121,7 +121,7 @@ class CreateOrAmendCodingOutControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    override protected val controller = new CreateOrAmendCodingOutController(
+    override protected val controller: CreateOrAmendCodingOutController = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockCreateOrAmendCodingOutValidatorFactory,

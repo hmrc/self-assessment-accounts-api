@@ -31,7 +31,7 @@ class OptOutOfCodingOutValidatorFactory @Inject() {
     val schema = OptOutOfCodingOutSchema.schemaFor(taxYear)
 
     schema match {
-      case Def1 =>  new Def1_OptOutOfCodingOutValidator(nino, taxYear)
+      case Def1 => new Def1_OptOutOfCodingOutValidator(nino, taxYear)
     }
 
   }

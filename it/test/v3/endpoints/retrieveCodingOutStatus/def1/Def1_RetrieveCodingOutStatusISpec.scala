@@ -19,11 +19,11 @@ package v3.endpoints.retrieveCodingOutStatus.def1
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v3.retrieveCodingOutStatus.model.responses.ResponseFixture.{downstreamResponseJson, mtdResponseJson}
@@ -72,7 +72,7 @@ class Def1_RetrieveCodingOutStatusISpec extends IntegrationBaseSpec {
       ("AA1123A", "2021-22", BAD_REQUEST, NinoFormatError),
       ("AA123456A", "20199", BAD_REQUEST, TaxYearFormatError)
     )
-    input foreach (validationErrorTest _).tupled
+    input foreach validationErrorTest.tupled
   }
 
   "downstream service error" should {
@@ -106,7 +106,7 @@ class Def1_RetrieveCodingOutStatusISpec extends IntegrationBaseSpec {
       (BAD_GATEWAY, "BAD_GATEWAY", INTERNAL_SERVER_ERROR, InternalError),
       (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
     )
-    input.foreach(args => (serviceErrorTest _).tupled(args))
+    input.foreach(args => serviceErrorTest.tupled(args))
   }
 
   private trait Test {

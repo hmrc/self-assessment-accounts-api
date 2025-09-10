@@ -140,32 +140,32 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
         |}
         |""".stripMargin)
 
-    val financialDetailsItemDownstreamHipJson: JsValue =
+  val financialDetailsItemDownstreamHipJson: JsValue =
     Json.parse("""
-        |{
-        |  "subItem": "001",
-        |  "dueDate": "2022-02-02",
-        |  "amount": 1.23,
-        |  "clearingDate": "2021-01-01",
-        |  "clearingReason": "Incoming Payment",
-        |  "outgoingPaymentMethod": "A",
-        |  "paymentLock": "K",
-        |  "clearingLock": "0",
-        |  "interestLock": "interestLock",
-        |  "dunningLock": "dunningLock",
-        |  "returnFlag": "Y",
-        |  "paymentReference": "paymentReference",
-        |  "promisetoPay": "X",
-        |  "paymentAmount": 2.23,
-        |  "paymentMethod": "paymentMethod",
-        |  "paymentLot": "paymentLot",
-        |  "paymentLotItem": "paymentLotItem",
-        |  "clearingSAPDocument": "clearingSAPDocument",
-        |  "codingInitiationDate": "2021-01-11",
-        |  "statisticalDocument": "Y",
-        |  "codedOutStatus": "N",
-        |  "returnReason": "returnReason"
-        |}
-        |""".stripMargin)
+      |{
+      |  "subItem": "001",
+      |  "dueDate": "2022-02-02",
+      |  "amount": 1.23,
+      |  "clearingDate": "2021-01-01",
+      |  "clearingReason": "Incoming Payment",
+      |  "outgoingPaymentMethod": "A",
+      |  "paymentLock": "K",
+      |  "clearingLock": "0",
+      |  "interestLock": "interestLock",
+      |  "dunningLock": "dunningLock",
+      |  "returnFlag": "Y",
+      |  "paymentReference": "paymentReference",
+      |  "promisetoPay": "X",
+      |  "paymentAmount": 2.23,
+      |  "paymentMethod": "paymentMethod",
+      |  "paymentLot": "paymentLot",
+      |  "paymentLotItem": "paymentLotItem",
+      |  "clearingSAPDocument": "clearingSAPDocument",
+      |  "codingInitiationDate": "2021-01-11",
+      |  "statisticalDocument": "Y",
+      |  "codedOutStatus": "N",
+      |  "returnReason": "returnReason"
+      |}
+      |""".stripMargin)
 
 }

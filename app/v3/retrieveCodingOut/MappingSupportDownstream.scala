@@ -40,7 +40,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
 
     desResponseWrapper.responseData match {
       case retrieveCodingOutDetailsResponse: Def1_RetrieveCodingOutResponse
-        if taxYear.year < currentTaxYear.year && idsMissing(retrieveCodingOutDetailsResponse) =>
+          if taxYear.year < currentTaxYear.year && idsMissing(retrieveCodingOutDetailsResponse) =>
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
             s"Error response received with CorrelationId")
@@ -53,7 +53,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
   }
 
   def idsMissing(response: Def1_RetrieveCodingOutResponse): Boolean = {
-    import response._
+    import response.*
 
     lazy val taxCodeComponentsIdsMissing = taxCodeComponents.fold(false)(taxCodeComponents => {
       import taxCodeComponents._

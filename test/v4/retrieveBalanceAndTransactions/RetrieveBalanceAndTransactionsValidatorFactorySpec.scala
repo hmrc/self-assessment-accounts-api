@@ -19,7 +19,7 @@ package v4.retrieveBalanceAndTransactions
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v4.retrieveBalanceAndTransactions.def1.Def1_RetrieveBalanceAndTransactionsValidator
-import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture._
+import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
 
 class RetrieveBalanceAndTransactionsValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 

@@ -21,7 +21,7 @@ import shared.connectors.ConnectorSpec
 import shared.models.domain.{Nino, TaxYear}
 import shared.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
-import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
+import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
@@ -35,7 +35,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
   private val source      = hmrcHeld
   private val queryParams = "view" -> "HMRC-HELD"
 
-  trait Test { _: ConnectorTest =>
+  trait Test { self: ConnectorTest =>
 
     val connector = new RetrieveCodingOutConnector(mockHttpClient, mockSharedAppConfig)
 

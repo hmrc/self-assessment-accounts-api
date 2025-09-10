@@ -19,7 +19,7 @@ package v3.retrieveCodingOut
 import cats.data.EitherT
 import common.errors.{CodingOutNotFoundError, SourceFormatError}
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.BaseService
 import v3.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
@@ -29,9 +29,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector)
-    extends BaseService
-    with MappingSupportDownstream {
+class RetrieveCodingOutService @Inject() (connector: RetrieveCodingOutConnector) extends BaseService with MappingSupportDownstream {
 
   def retrieveCodingOut(request: RetrieveCodingOutRequestData)(implicit
       ctx: RequestContext,

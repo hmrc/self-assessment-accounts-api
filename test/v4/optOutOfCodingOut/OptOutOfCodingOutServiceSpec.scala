@@ -18,7 +18,7 @@ package v4.optOutOfCodingOut
 
 import common.errors.{RuleAlreadyOptedOutError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v4.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
@@ -29,7 +29,7 @@ import scala.concurrent.Future
 class OptOutOfCodingOutServiceSpec extends ServiceSpec {
 
   private val nino               = Nino("AA123456A")
-  private val taxYear            = TaxYear("2014")
+  private val taxYear            = TaxYear.ending(2014)
   private val requestData        = Def1_OptOutOfCodingOutRequestData(nino, taxYear)
   private val downstreamResponse = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
@@ -70,7 +70,7 @@ class OptOutOfCodingOutServiceSpec extends ServiceSpec {
             "SERVICE_UNAVAILABLE"            -> InternalError
           )
 
-        errors.foreach(args => (serviceError _).tupled(args))
+        errors.foreach(args => serviceError.tupled(args))
       }
     }
   }

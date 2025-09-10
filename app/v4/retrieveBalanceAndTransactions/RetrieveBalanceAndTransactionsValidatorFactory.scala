@@ -36,6 +36,15 @@ class RetrieveBalanceAndTransactionsValidatorFactory @Inject() {
                 customerPaymentInformation: Option[String],
                 includeEstimatedCharges: Option[String]): Validator[RetrieveBalanceAndTransactionsRequestData] =
     new Def1_RetrieveBalanceAndTransactionsValidator(
-      nino, docNumber, fromDate, toDate, onlyOpenItems, includeLocks, calculateAccruedInterest, removePOA, customerPaymentInformation, includeEstimatedCharges)
+      nino,
+      docNumber,
+      fromDate,
+      toDate,
+      onlyOpenItems,
+      includeLocks,
+      calculateAccruedInterest,
+      removePOA,
+      customerPaymentInformation,
+      includeEstimatedCharges)
 
 }

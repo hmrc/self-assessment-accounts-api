@@ -18,11 +18,11 @@ package v3.endpoints.deleteCodingOut.def1
 
 import common.errors.CodingOutNotFoundError
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 
@@ -73,7 +73,7 @@ class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
         ("AA123456A", "2018-20", BAD_REQUEST, RuleTaxYearRangeInvalidError)
       )
 
-      input.map(c => (c._1, c._2, c._3, c._4)).foreach((validationErrorTest _).tupled)
+      input.map(c => (c._1, c._2, c._3, c._4)).foreach(validationErrorTest.tupled)
     }
 
     "downstream service error" when {
@@ -101,7 +101,7 @@ class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
         (UNPROCESSABLE_ENTITY, "TAX_YEAR_NOT_SUPPORTED", BAD_REQUEST, RuleTaxYearNotSupportedError)
       )
 
-      (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4)).foreach((serviceErrorTest _).tupled)
+      (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4)).foreach(serviceErrorTest.tupled)
     }
   }
 

@@ -27,7 +27,7 @@ sealed trait RetrieveCodingOutStatusSchema extends DownstreamReadable[RetrieveCo
 
 object RetrieveCodingOutStatusSchema {
 
-  case object Def1 extends RetrieveCodingOutStatusSchema{
+  case object Def1 extends RetrieveCodingOutStatusSchema {
     type DownstreamResp = Def1_RetrieveCodingOutStatusResponse
     val connectorReads: Reads[DownstreamResp] = Def1_RetrieveCodingOutStatusResponse.reads
   }
@@ -41,7 +41,7 @@ object RetrieveCodingOutStatusSchema {
   }
 
   def schemaFor(taxYear: TaxYear): RetrieveCodingOutStatusSchema = {
-      Def1
+    Def1
   }
 
 }

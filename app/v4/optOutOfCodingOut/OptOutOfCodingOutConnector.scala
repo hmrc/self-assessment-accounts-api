@@ -30,12 +30,12 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class  OptOutOfCodingOutConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class OptOutOfCodingOutConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
 
   def amendCodingOutOptOut(request: OptOutOfCodingOutRequestData)(implicit
-                                                                  hc: HeaderCarrier,
-                                                                  ec: ExecutionContext,
-                                                                  correlationId: String): Future[DownstreamOutcome[OptOutOfCodingOutResponse]] = {
+      hc: HeaderCarrier,
+      ec: ExecutionContext,
+      correlationId: String): Future[DownstreamOutcome[OptOutOfCodingOutResponse]] = {
 
     import request._
     import schema._

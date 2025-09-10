@@ -30,9 +30,9 @@ object ChargeDetail {
 
   implicit val reads: Reads[ChargeDetail] =
     ((JsPath \ "documentId").read[String].orElse((JsPath \ "documentID").read[String]) and
-    (JsPath \ "mainTransaction").readNullable[String] and
-    (JsPath \ "mainType").readNullable[String] and
-    (JsPath \ "subTransaction").readNullable[String] and
-    (JsPath \ "chargeType").readNullable[String])(ChargeDetail.apply _)
+      (JsPath \ "mainTransaction").readNullable[String] and
+      (JsPath \ "mainType").readNullable[String] and
+      (JsPath \ "subTransaction").readNullable[String] and
+      (JsPath \ "chargeType").readNullable[String])(ChargeDetail.apply)
 
 }

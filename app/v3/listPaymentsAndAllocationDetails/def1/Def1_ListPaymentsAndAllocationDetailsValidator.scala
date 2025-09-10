@@ -17,13 +17,13 @@
 package v3.listPaymentsAndAllocationDetails.def1
 
 import cats.data.Validated
-import cats.data.Validated._
-import cats.implicits._
-import common.errors._
+import cats.data.Validated.*
+import cats.implicits.*
+import common.errors.*
 import common.resolvers.ResolveStringPattern
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
-import shared.models.errors._
+import shared.models.errors.*
 import v3.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v3.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 
@@ -61,7 +61,7 @@ class Def1_ListPaymentsAndAllocationDetailsValidator(nino: String,
           .getOrElse(Valid(None)),
         resolvePaymentLot(paymentLot),
         resolvePaymentLotItem(paymentLotItem)
-      ).mapN(Def1_ListPaymentsAndAllocationDetailsRequestData)
+      ).mapN(Def1_ListPaymentsAndAllocationDetailsRequestData.apply)
     }
   }
 

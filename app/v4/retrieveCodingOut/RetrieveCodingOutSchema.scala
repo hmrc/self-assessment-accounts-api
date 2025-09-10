@@ -41,7 +41,7 @@ object RetrieveCodingOutSchema {
   }
 
   def schemaFor(taxYear: TaxYear): RetrieveCodingOutSchema = {
-      Def1
+    Def1
   }
 
 }

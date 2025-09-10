@@ -23,7 +23,11 @@ import v3.retrieveCodingOut.def1.model.response.TaxCodeComponents
 class TaxCodeComponentsSpec extends UnitSpec {
 
   private val taxCodeComponents = TaxCodeComponents(
-    amount = 1, relatedTaxYear = Some("year"), submittedOn = "date", source = "hmrcHeld", id = Some(3)
+    amount = 1,
+    relatedTaxYear = Some("year"),
+    submittedOn = "date",
+    source = "hmrcHeld",
+    id = Some(3)
   )
 
   private val mtdJson = Json.parse(s"""
@@ -46,8 +50,6 @@ class TaxCodeComponentsSpec extends UnitSpec {
                                      | }
                                      |""".stripMargin)
 
-
-
   "TaxCodeComponents" should {
 
     "read MTD json to the expected object" in {
@@ -63,4 +65,3 @@ class TaxCodeComponentsSpec extends UnitSpec {
   }
 
 }
-

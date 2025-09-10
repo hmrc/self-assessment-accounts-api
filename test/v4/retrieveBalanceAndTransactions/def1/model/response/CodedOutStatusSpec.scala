@@ -18,7 +18,7 @@ package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import shared.utils.UnitSpec
 import shared.utils.enums.EnumJsonSpecSupport
-import v4.retrieveBalanceAndTransactions.def1.model.response.CodedOutStatus._
+import v4.retrieveBalanceAndTransactions.def1.model.response.CodedOutStatus.*
 
 class CodedOutStatusSpec extends UnitSpec with EnumJsonSpecSupport {
 
@@ -43,4 +43,5 @@ class CodedOutStatusSpec extends UnitSpec with EnumJsonSpecSupport {
     (cancelled, "cancelled"),
     (rejected, "rejected")
   )
+
 }

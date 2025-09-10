@@ -72,7 +72,8 @@ class DeleteCodingOutControllerSpec
     "the service returns an error" in new Test {
       willUseValidator(returningSuccess(requestData))
 
-      MockDeleteCodingOutService.deleteCodingOut(requestData)
+      MockDeleteCodingOutService
+        .deleteCodingOut(requestData)
         .returns(Future.successful(Left(ErrorWrapper(correlationId, RuleTaxYearNotEndedError))))
 
       runErrorTestWithAudit(RuleTaxYearNotEndedError)
@@ -81,7 +82,7 @@ class DeleteCodingOutControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    override protected val controller =
+    override protected val controller: DeleteCodingOutController =
       new DeleteCodingOutController(
         mockEnrolmentsAuthService,
         mockMtdIdLookupService,
@@ -94,7 +95,6 @@ class DeleteCodingOutControllerSpec
 
     MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
-
 
     protected def callController(): Future[Result] = controller.handleRequest(validNino, taxYear)(fakeRequest)
 
@@ -112,6 +112,7 @@ class DeleteCodingOutControllerSpec
           auditResponse = auditResponse
         )
       )
+
   }
 
 }

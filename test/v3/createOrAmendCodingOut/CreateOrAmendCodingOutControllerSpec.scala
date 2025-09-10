@@ -25,11 +25,11 @@ import shared.hateoas.Method.{DELETE, GET, PUT}
 import shared.hateoas.{HateoasWrapper, Link, MockHateoasFactory}
 import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import shared.models.domain.TaxYear
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
 import v3.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
-import v3.createOrAmendCodingOut.def1.model.request._
+import v3.createOrAmendCodingOut.def1.model.request.*
 import v3.createOrAmendCodingOut.def1.models.request.CodingOutFixtures.validRequestBody
 import v3.createOrAmendCodingOut.model.response.CreateOrAmendCodingOutHateoasData
 
@@ -49,10 +49,7 @@ class CreateOrAmendCodingOutControllerSpec
   private val taxYear = "2019-20"
 
   private val testHateoasLinks = List(
-    Link(
-      href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code",
-      method = PUT,
-      rel = "create-or-amend-coding-out-underpayments"),
+    Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = PUT, rel = "create-or-amend-coding-out-underpayments"),
     Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = GET, rel = "self"),
     Link(href = s"/accounts/self-assessment/$validNino/$taxYear/collection/tax-code", method = DELETE, rel = "delete-coding-out-underpayments")
   )
@@ -154,7 +151,7 @@ class CreateOrAmendCodingOutControllerSpec
 
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
 
-    override protected val controller = new CreateOrAmendCodingOutController(
+    override protected val controller: CreateOrAmendCodingOutController = new CreateOrAmendCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockCreateOrAmendCodingOutValidatorFactory,

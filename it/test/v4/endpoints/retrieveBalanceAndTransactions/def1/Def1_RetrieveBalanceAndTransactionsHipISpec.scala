@@ -17,17 +17,17 @@
 package v4.endpoints.retrieveBalanceAndTransactions.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import common.errors._
+import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture._
-import v4.retrieveBalanceAndTransactions.def1.model.ResponseFixture._
+import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
+import v4.retrieveBalanceAndTransactions.def1.model.ResponseFixture.*
 
 class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
 
@@ -146,7 +146,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
       )
       // format: on
 
-    input.foreach((validationErrorTest _).tupled)
+    input.foreach(validationErrorTest.tupled)
   }
 
   "downstream service error" should {
@@ -171,9 +171,9 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
       (UNPROCESSABLE_ENTITY, "002", INTERNAL_SERVER_ERROR, InternalError),
       (UNPROCESSABLE_ENTITY, "003", INTERNAL_SERVER_ERROR, InternalError),
       (UNPROCESSABLE_ENTITY, "005", NOT_FOUND, NotFoundError),
-      (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError),
+      (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError)
     )
-    input.foreach(args => (serviceErrorTest _).tupled(args))
+    input.foreach(args => serviceErrorTest.tupled(args))
   }
 
   private trait Test {
@@ -211,7 +211,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
 
       setupStubs()
       buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
+        .addQueryStringParameters(queryParams*)
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.4.0+json"),
           (AUTHORIZATION, "Bearer 123")

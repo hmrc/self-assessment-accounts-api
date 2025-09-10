@@ -21,11 +21,16 @@ import shared.config.{ConfidenceLevelConfig, MockSharedAppConfig}
 import shared.models.auth.UserDetails
 import shared.models.errors.{ClientOrAgentNotAuthorisedError, InternalError}
 import shared.models.outcomes.AuthOutcome
-import shared.services.EnrolmentsAuthService.{authorisationDisabledPredicate, authorisationEnabledPredicate, mtdEnrolmentPredicate, supportingAgentAuthPredicate}
+import shared.services.EnrolmentsAuthService.{
+  authorisationDisabledPredicate,
+  authorisationEnabledPredicate,
+  mtdEnrolmentPredicate,
+  supportingAgentAuthPredicate
+}
 import uk.gov.hmrc.auth.core.AffinityGroup.{Agent, Individual, Organisation}
-import uk.gov.hmrc.auth.core._
+import uk.gov.hmrc.auth.core.*
 import uk.gov.hmrc.auth.core.authorise.Predicate
-import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals._
+import uk.gov.hmrc.auth.core.retrieve.v2.Retrievals.*
 import uk.gov.hmrc.auth.core.retrieve.{EmptyRetrieval, Retrieval, ~}
 import uk.gov.hmrc.http.HeaderCarrier
 

@@ -16,8 +16,8 @@
 
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class FinancialDetailsItemLocks(
     isChargeOnHold: Boolean,
@@ -36,7 +36,7 @@ object FinancialDetailsItemLocks {
     (bool("paymentLock") and
       bool("clearingLock") and
       bool("interestLock") and
-      bool("dunningLock"))(FinancialDetailsItemLocks.apply _)
+      bool("dunningLock"))(FinancialDetailsItemLocks.apply)
   }
 
 }

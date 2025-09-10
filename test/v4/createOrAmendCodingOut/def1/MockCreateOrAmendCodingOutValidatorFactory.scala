@@ -23,7 +23,6 @@ import shared.controllers.validators.{MockValidatorFactory, Validator}
 import v4.createOrAmendCodingOut.CreateOrAmendCodingOutValidatorFactory
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
-
 trait MockCreateOrAmendCodingOutValidatorFactory extends MockValidatorFactory[CreateOrAmendCodingOutRequestData] {
 
   val mockCreateOrAmendCodingOutValidatorFactory: CreateOrAmendCodingOutValidatorFactory = mock[CreateOrAmendCodingOutValidatorFactory]

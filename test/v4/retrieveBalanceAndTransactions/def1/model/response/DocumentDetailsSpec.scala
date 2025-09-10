@@ -19,7 +19,7 @@ package v4.retrieveBalanceAndTransactions.def1.model.response
 import play.api.libs.json.{JsString, Json}
 import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v4.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture._
+import v4.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.*
 
 class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
 
@@ -41,9 +41,9 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
 
       "given a valid downstreamJSON document with 9999 (meaning no tax year)" must {
         "omit the tax year in the DocumentDetails object" in {
-          val json = newDownstreamDocumentDetailsJson(taxYear = "9999", maybeDocumentDueDate = Some("2021-04-05"))
+          val json     = newDownstreamDocumentDetailsJson(taxYear = "9999", maybeDocumentDueDate = Some("2021-04-05"))
           val expected = documentDetails.copy(taxYear = None)
-          val result = json.as[DocumentDetails]
+          val result   = json.as[DocumentDetails]
           result shouldBe expected
         }
       }
@@ -90,9 +90,9 @@ class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {
 
       "given a valid downstreamJSON document with 9999 (meaning no tax year)" must {
         "omit the tax year in the DocumentDetails object" in {
-          val json = newDownstreamDocumentDetailsHipJson(taxYear = "9999", maybeDocumentDueDate = Some("2021-04-05"))
+          val json     = newDownstreamDocumentDetailsHipJson(taxYear = "9999", maybeDocumentDueDate = Some("2021-04-05"))
           val expected = documentDetails.copy(taxYear = None)
-          val result = json.as[DocumentDetails]
+          val result   = json.as[DocumentDetails]
           result shouldBe expected
         }
       }

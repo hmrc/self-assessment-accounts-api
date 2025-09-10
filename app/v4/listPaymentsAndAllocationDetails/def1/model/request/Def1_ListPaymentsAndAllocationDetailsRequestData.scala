@@ -24,8 +24,7 @@ case class Def1_ListPaymentsAndAllocationDetailsRequestData(
     nino: Nino,
     fromAndToDates: Option[DateRange],
     paymentLot: Option[String],
-    paymentLotItem: Option[String],
-
+    paymentLotItem: Option[String]
 ) extends ListPaymentsAndAllocationDetailsRequestData {
   override val schema: ListPaymentsAndAllocationDetailsSchema = ListPaymentsAndAllocationDetailsSchema.Def1
 }

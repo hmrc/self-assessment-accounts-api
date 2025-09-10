@@ -34,8 +34,8 @@ object DownstreamUri {
   def IfsUri[Resp](value: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] =
     withStandardStrategy(value, appConfig.ifsDownstreamConfig)
 
-  def HipUri[Resp](path: String,
-                   additionalContractHeaders: => Seq[(String, String)] = Nil)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] =
+  def HipUri[Resp](path: String, additionalContractHeaders: => Seq[(String, String)] = Nil)(implicit
+      appConfig: SharedAppConfig): DownstreamUri[Resp] =
     DownstreamUri(path, DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig, additionalContractHeaders))
 
   def DesToHipMigrationUri[Resp](path: String, switchName: String)(implicit appConfig: SharedAppConfig): DownstreamUri[Resp] = {

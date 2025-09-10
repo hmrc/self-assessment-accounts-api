@@ -27,7 +27,7 @@ import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version4}
 import v4.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
-import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
+import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -84,7 +84,7 @@ class RetrieveCodingOutControllerSpec
 
   private trait Test extends ControllerTest {
 
-    override protected val controller = new RetrieveCodingOutController(
+    override protected val controller: RetrieveCodingOutController = new RetrieveCodingOutController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveCodingOutValidatorFactory,

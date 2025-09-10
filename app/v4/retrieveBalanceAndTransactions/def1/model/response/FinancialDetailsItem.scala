@@ -16,8 +16,8 @@
 
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
-import play.api.libs.functional.syntax._
-import play.api.libs.json._
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
 case class FinancialDetailsItem(itemId: Option[String],
                                 dueDate: Option[String],
@@ -73,8 +73,7 @@ object FinancialDetailsItem {
         case Some(x)                         => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
         case None                            => Reads.pure(None)
       } and
-      (__ \ "codedOutStatus").readNullable[CodedOutStatus]
-      )(FinancialDetailsItem.apply _)
+      (__ \ "codedOutStatus").readNullable[CodedOutStatus])(FinancialDetailsItem.apply)
   }
 
   private def convertToMtd(mapping: Map[String, String])(maybeDownstream: Option[String]): Option[String] =

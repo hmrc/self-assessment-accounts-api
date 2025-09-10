@@ -18,7 +18,12 @@ package v3.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v3.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{chargeDetail, downstreamFinancialDetailsFullHipJson, downstreamFinancialDetailsFullJson, mtdChargeDetailJson}
+import v3.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{
+  chargeDetail,
+  downstreamFinancialDetailsFullHipJson,
+  downstreamFinancialDetailsFullJson,
+  mtdChargeDetailJson
+}
 
 class ChargeDetailSpec extends UnitSpec {
 

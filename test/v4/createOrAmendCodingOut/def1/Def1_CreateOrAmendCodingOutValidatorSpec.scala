@@ -19,9 +19,13 @@ package v4.createOrAmendCodingOut.def1
 import config.MockSaAccountsConfig
 import play.api.libs.json.{JsObject, JsPath, JsValue, Json}
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.utils.UnitSpec
-import v4.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponents}
+import v4.createOrAmendCodingOut.def1.model.request.{
+  Def1_CreateOrAmendCodingOutRequestBody,
+  Def1_CreateOrAmendCodingOutRequestData,
+  TaxCodeComponents
+}
 
 class Def1_CreateOrAmendCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
 

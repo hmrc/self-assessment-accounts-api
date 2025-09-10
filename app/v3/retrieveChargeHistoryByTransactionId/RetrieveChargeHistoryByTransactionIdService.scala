@@ -16,9 +16,9 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import cats.implicits._
+import cats.implicits.*
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse

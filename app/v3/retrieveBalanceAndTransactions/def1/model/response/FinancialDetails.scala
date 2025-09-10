@@ -51,6 +51,6 @@ object FinancialDetails {
       (JsPath \ "clearedAmount").readNullable[BigDecimal] and
       (JsPath \ "accruedInterest").readNullable[BigDecimal] and
       (JsPath \ "items").read[Seq[FinancialDetailsItem]]
-  )(FinancialDetails.apply _)
+  )(FinancialDetails.apply)
 
 }

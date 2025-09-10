@@ -36,5 +36,7 @@ trait MockDeleteCodingOutService extends TestSuite with MockFactory {
       (mockDeleteCodingOutService
         .deleteCodingOut(_: DeleteCodingOutRequestData)(_: RequestContext, _: ExecutionContext))
         .expects(requestData, *, *)
+
   }
+
 }

@@ -27,13 +27,14 @@ trait RetrieveCodingOutResponse
 
 object RetrieveCodingOutResponse extends JsonWritesUtil with HateoasLinks {
 
-  implicit val writes: OWrites[RetrieveCodingOutResponse] = writesFrom {
-    case def1: Def1_RetrieveCodingOutResponse => Json.toJson(def1).as[JsObject]
+  implicit val writes: OWrites[RetrieveCodingOutResponse] = writesFrom { case def1: Def1_RetrieveCodingOutResponse =>
+    Json.toJson(def1).as[JsObject]
   }
+
   implicit object RetrieveCodingOutLinksFactory extends HateoasLinksFactory[RetrieveCodingOutResponse, RetrieveCodingOutHateoasData] {
 
     override def links(appConfig: SharedAppConfig, data: RetrieveCodingOutHateoasData): Seq[Link] = {
-      import data._
+      import data.*
       Seq(
         createOrAmendCodingOut(appConfig, nino, taxYear),
         retrieveCodingOut(appConfig, nino, taxYear),

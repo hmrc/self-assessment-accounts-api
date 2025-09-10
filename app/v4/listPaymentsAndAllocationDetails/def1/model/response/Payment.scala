@@ -41,6 +41,6 @@ object Payment {
       (JsPath \ "paymentMethod").readNullable[String] and
       (JsPath \ "valueDate").readNullable[String] and
       (JsPath \ "sapClearingDocsDetails").readNullable[List[Allocation]].map(_.getOrElse(List()))
-  )(Payment.apply _)
+  )(Payment.apply)
 
 }

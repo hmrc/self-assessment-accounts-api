@@ -29,10 +29,10 @@ import javax.inject.Singleton
 @Singleton
 class Def1_OptInToCodingOutValidator(nino: String, taxYear: String) extends Validator[OptInToCodingOutRequestData] {
 
-      def validate: Validated[Seq[MtdError], OptInToCodingOutRequestData] =
-        (
-          ResolveNino(nino),
-          ResolveTaxYear(taxYear)
-        ).mapN(Def1_OptInToCodingOutRequestData)
+  def validate: Validated[Seq[MtdError], OptInToCodingOutRequestData] =
+    (
+      ResolveNino(nino),
+      ResolveTaxYear(taxYear)
+    ).mapN(Def1_OptInToCodingOutRequestData.apply)
 
 }

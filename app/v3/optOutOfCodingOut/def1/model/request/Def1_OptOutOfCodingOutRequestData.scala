@@ -21,8 +21,8 @@ import v3.optOutOfCodingOut.OptOutOfCodingOutSchema
 import v3.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 
 case class Def1_OptOutOfCodingOutRequestData(
-                                              nino: Nino,
-                                              taxYear: TaxYear
-                                            ) extends OptOutOfCodingOutRequestData {
+    nino: Nino,
+    taxYear: TaxYear
+) extends OptOutOfCodingOutRequestData {
   override val schema: OptOutOfCodingOutSchema = OptOutOfCodingOutSchema.Def1
 }

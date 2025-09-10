@@ -29,7 +29,8 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveChargeHistoryByChargeReferenceConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class RetrieveChargeHistoryByChargeReferenceConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig)
+    extends BaseDownstreamConnector {
 
   def retrieveChargeHistoryByChargeReference(request: RetrieveChargeHistoryByChargeReferenceRequestData)(implicit
       hc: HeaderCarrier,

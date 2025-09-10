@@ -16,18 +16,17 @@
 
 package v3.endpoints.retrieveCodingOut.def1
 
-import common.errors._
+import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status._
+import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.domain.TaxYear
-import shared.models.errors._
+import shared.models.errors.*
 import shared.services.{AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture._
-
+import v3.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, ZoneOffset}
 
@@ -196,7 +195,7 @@ class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
 
       setupStubs()
       buildRequest(uri)
-        .addQueryStringParameters(queryParams: _*)
+        .addQueryStringParameters(queryParams*)
         .withHttpHeaders(
           (ACCEPT, s"application/vnd.hmrc.$version+json"),
           (AUTHORIZATION, "Bearer 123") // some bearer token
@@ -455,7 +454,7 @@ class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
         versions.foreach(version => {
           s"for version $version " when {
             val parameters = input.map(c => (c._1, c._2, c._3, c._4, c._5, version))
-            parameters.foreach(args => (validationErrorTest _).tupled(args))
+            parameters.foreach(args => validationErrorTest.tupled(args))
           }
         })
 
@@ -501,7 +500,7 @@ class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
         versions.foreach(version => {
           s"for version $version " when {
             val parameters = (errors ++ extraTysErrors).map(c => (c._1, c._2, c._3, c._4, version))
-            parameters.foreach(args => (serviceErrorTest _).tupled(args))
+            parameters.foreach(args => serviceErrorTest.tupled(args))
           }
         })
       }

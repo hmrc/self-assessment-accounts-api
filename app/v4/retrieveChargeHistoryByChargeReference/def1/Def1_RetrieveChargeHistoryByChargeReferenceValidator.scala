@@ -29,14 +29,14 @@ import javax.inject.Singleton
 
 @Singleton
 class Def1_RetrieveChargeHistoryByChargeReferenceValidator(
-                                                            nino: String,
-                                                            chargeReference: String
-                                                          ) extends Validator[RetrieveChargeHistoryByChargeReferenceRequestData]  {
+    nino: String,
+    chargeReference: String
+) extends Validator[RetrieveChargeHistoryByChargeReferenceRequestData] {
 
-      def validate: Validated[Seq[MtdError], RetrieveChargeHistoryByChargeReferenceRequestData] =
-        (
-          ResolveNino(nino),
-          ResolveChargeReference(chargeReference)
-        ).mapN(Def1_RetrieveChargeHistoryByChargeReferenceRequestData)
+  def validate: Validated[Seq[MtdError], RetrieveChargeHistoryByChargeReferenceRequestData] =
+    (
+      ResolveNino(nino),
+      ResolveChargeReference(chargeReference)
+    ).mapN(Def1_RetrieveChargeHistoryByChargeReferenceRequestData.apply)
 
 }

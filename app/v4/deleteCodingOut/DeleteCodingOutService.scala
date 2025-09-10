@@ -16,10 +16,10 @@
 
 package v4.deleteCodingOut
 
-import cats.implicits._
+import cats.implicits.*
 import common.errors.{CodingOutNotFoundError, RuleOutsideAmendmentWindowError}
 import shared.controllers.RequestContext
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.BaseService
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData

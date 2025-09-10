@@ -16,9 +16,13 @@
 
 import uk.gov.hmrc.DefaultBuildSettings
 
-ThisBuild / scalaVersion := "2.13.16"
+ThisBuild / scalaVersion := "3.5.2"
 ThisBuild / majorVersion := 0
-ThisBuild / scalacOptions += "-Xfatal-warnings"
+ThisBuild / scalacOptions ++= Seq(
+  "-Werror",
+  "-Wconf:msg=Flag.*repeatedly:s"
+)
+ThisBuild / scalafmtOnCompile := true
 
 val appName = "self-assessment-accounts-api"
 
@@ -33,13 +37,13 @@ lazy val microservice = Project(appName, file("."))
     Compile / unmanagedResourceDirectories += baseDirectory.value / "resources",
     Compile / unmanagedClasspath += baseDirectory.value / "resources"
   )
-  .settings(CodeCoverageSettings.settings: _*)
+  .settings(CodeCoverageSettings.settings)
   .settings(PlayKeys.playDefaultPort := 9792)
 
 lazy val it = project
   .enablePlugins(PlayScala)
   .dependsOn(microservice % "test->test")
-  .settings(DefaultBuildSettings.itSettings() ++ ScalafmtPlugin.scalafmtConfigSettings)
+  .settings(DefaultBuildSettings.itSettings())
   .settings(
     Test / fork := true,
     Test / javaOptions += "-Dlogger.resource=logback-test.xml")

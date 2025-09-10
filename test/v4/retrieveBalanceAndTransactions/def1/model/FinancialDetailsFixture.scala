@@ -22,7 +22,7 @@ import v4.retrieveBalanceAndTransactions.def1.model.response.{ChargeDetail, Fina
 
 object FinancialDetailsFixture extends FinancialDetailsItemFixture {
 
-  private val taxYear: TaxYear = TaxYear("2022")
+  private val taxYear: TaxYear = TaxYear.ending(2022)
 
   val chargeDetail: ChargeDetail = ChargeDetail(
     documentId = "123456",

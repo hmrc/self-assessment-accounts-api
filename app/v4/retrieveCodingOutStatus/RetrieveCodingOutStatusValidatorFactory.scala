@@ -34,7 +34,6 @@ class RetrieveCodingOutStatusValidatorFactory @Inject() {
       case Def1 => new Def1_RetrieveCodingOutStatusValidator(nino, taxYear)
     }
 
-
   }
 
 }

@@ -27,7 +27,7 @@ sealed trait OptOutOfCodingOutSchema extends DownstreamReadable[OptOutOfCodingOu
 
 object OptOutOfCodingOutSchema {
 
-  case object Def1 extends OptOutOfCodingOutSchema{
+  case object Def1 extends OptOutOfCodingOutSchema {
     override type DownstreamResp = Def1_OptOutOfCodingOutResponse
     override implicit def connectorReads: Reads[DownstreamResp] = Def1_OptOutOfCodingOutResponse.reads
   }
@@ -41,7 +41,7 @@ object OptOutOfCodingOutSchema {
   }
 
   def schemaFor(taxYear: TaxYear): OptOutOfCodingOutSchema = {
-      Def1
+    Def1
   }
 
 }

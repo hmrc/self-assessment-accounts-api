@@ -18,12 +18,12 @@ package v3.retrieveBalanceAndTransactions.def1
 
 import cats.data.Validated
 import cats.data.Validated.Valid
-import cats.implicits._
-import common.errors._
+import cats.implicits.*
+import common.errors.*
 import shared.controllers.validators.Validator
 import shared.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
 import shared.models.domain.DateRange
-import shared.models.errors._
+import shared.models.errors.*
 import v3.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.Singleton
@@ -68,7 +68,7 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
       ResolveBoolean(optionWithDefaultString(removePOA), RemovePaymentOnAccountFormatError),
       ResolveBoolean(optionWithDefaultString(customerPaymentInformation), CustomerPaymentInformationFormatError),
       ResolveBoolean(optionWithDefaultString(includeEstimatedCharges), IncludeEstimatedChargesFormatError)
-    ).mapN(RetrieveBalanceAndTransactionsRequestData) andThen validateParameterRules
+    ).mapN(RetrieveBalanceAndTransactionsRequestData.apply) andThen validateParameterRules
 
   private def resolveDocNumber(docNumber: Option[String]): Validated[Seq[MtdError], Option[String]] = {
     val MAX_LENGTH = 12

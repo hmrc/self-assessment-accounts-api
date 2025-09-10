@@ -59,6 +59,6 @@ object ResponseFixture {
     .as[JsObject]
 
   val def1ResponseModel: Def1_RetrieveCodingOutStatusResponse =
-    Def1_RetrieveCodingOutStatusResponse("2023-12-17T09:30:47Z", "AB123456A", TaxYear("2024"), true)
+    Def1_RetrieveCodingOutStatusResponse("2023-12-17T09:30:47Z", "AB123456A", TaxYear.ending(2024), true)
 
 }

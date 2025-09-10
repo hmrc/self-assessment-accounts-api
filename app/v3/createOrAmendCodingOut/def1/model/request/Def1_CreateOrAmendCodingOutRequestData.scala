@@ -21,10 +21,8 @@ import v3.createOrAmendCodingOut.CreateOrAmendCodingOutSchema
 import v3.createOrAmendCodingOut.CreateOrAmendCodingOutSchema.Def1
 import v3.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
-case class Def1_CreateOrAmendCodingOutRequestData(nino: Nino,
-                                                  taxYear: TaxYear,
-                                                  body: Def1_CreateOrAmendCodingOutRequestBody
-                                                 ) extends CreateOrAmendCodingOutRequestData{
+case class Def1_CreateOrAmendCodingOutRequestData(nino: Nino, taxYear: TaxYear, body: Def1_CreateOrAmendCodingOutRequestBody)
+    extends CreateOrAmendCodingOutRequestData {
 
   override val schema: CreateOrAmendCodingOutSchema = Def1
 }

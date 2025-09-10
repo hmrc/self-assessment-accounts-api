@@ -33,7 +33,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
   private val tysTaxYear = TaxYear.fromMtd("2023-24")
 
   trait Test {
-    _: ConnectorTest =>
+    self: ConnectorTest =>
 
     val connector: CreateOrAmendCodingOutConnector =
       new CreateOrAmendCodingOutConnector(mockHttpClient, mockSharedAppConfig)

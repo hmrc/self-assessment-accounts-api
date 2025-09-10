@@ -18,7 +18,7 @@ package v3.retrieveCodingOutStatus
 
 import common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v3.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
@@ -30,15 +30,19 @@ import scala.concurrent.Future
 
 class RetrieveCodingOutStatusServiceSpec extends ServiceSpec {
   private val nino    = "AA123456A"
-  private val taxYear = "2014"
+  private val taxYear = 2014
 
   val retrieveCodingOutStatusResponse: RetrieveCodingOutStatusResponse =
-    Def1_RetrieveCodingOutStatusResponse(processingDate = "2023-12-17T09:30:47Z", nino = nino, taxYear = TaxYear(taxYear), optOutIndicator = true)
+    Def1_RetrieveCodingOutStatusResponse(
+      processingDate = "2023-12-17T09:30:47Z",
+      nino = nino,
+      taxYear = TaxYear.ending(taxYear),
+      optOutIndicator = true)
 
   private val requestData: RetrieveCodingOutStatusRequestData =
     Def1_RetrieveCodingOutStatusRequestData(
       Nino(nino),
-      TaxYear(taxYear)
+      TaxYear.ending(taxYear)
     )
 
   "RetrieveCodingOutStatusService" should {
@@ -79,7 +83,7 @@ class RetrieveCodingOutStatusServiceSpec extends ServiceSpec {
           "SERVICE_UNAVAILABLE"            -> InternalError
         )
 
-      errors.foreach(args => (serviceError _).tupled(args))
+      errors.foreach(args => serviceError.tupled(args))
     }
 
   }

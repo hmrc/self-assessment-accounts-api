@@ -27,4 +27,5 @@ trait MockSaAccountsConfig extends TestSuite with MockFactory {
   object MockedSaAccountsConfig {
     def minimumPermittedTaxYear: CallHandler[Int] = (() => mockSaAccountsConfig.minimumPermittedTaxYear).expects()
   }
+
 }

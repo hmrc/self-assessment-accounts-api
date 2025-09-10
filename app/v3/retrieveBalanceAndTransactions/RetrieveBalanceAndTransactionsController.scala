@@ -31,12 +31,12 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
                                                           validatorFactory: RetrieveBalanceAndTransactionsValidatorFactory,
                                                           service: RetrieveBalanceAndTransactionsService,
                                                           cc: ControllerComponents,
-                                                          idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
+                                                          idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName: String = "retrieve-balance-and-transactions"
 
-  implicit val endpointLogContext: EndpointLogContext =
+  given endpointLogContext: EndpointLogContext =
     EndpointLogContext(controllerName = "RetrieveBalanceAndTransactionsController", endpointName = "retrieveBalanceAndTransactions")
 
   def retrieveBalanceAndTransactions(nino: String,
@@ -50,7 +50,7 @@ class RetrieveBalanceAndTransactionsController @Inject() (val authService: Enrol
                                      customerPaymentInformation: Option[String],
                                      includeEstimatedCharges: Option[String]): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
-      implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
+      given RequestContext = RequestContext.from(idGenerator, endpointLogContext)
 
       val validator = validatorFactory.validator(
         nino,

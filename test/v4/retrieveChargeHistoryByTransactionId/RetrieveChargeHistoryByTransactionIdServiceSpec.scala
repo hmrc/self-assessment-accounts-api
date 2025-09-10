@@ -17,7 +17,7 @@
 package v4.retrieveChargeHistoryByTransactionId
 
 import shared.models.domain.{Nino, TransactionId}
-import shared.models.errors._
+import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
@@ -79,7 +79,7 @@ class RetrieveChargeHistoryByTransactionIdServiceSpec extends ServiceSpec {
             "SERVICE_UNAVAILABLE"   -> InternalError
           )
 
-        errors.foreach(args => (serviceError _).tupled(args))
+        errors.foreach(args => serviceError.tupled(args))
       }
     }
   }

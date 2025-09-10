@@ -26,7 +26,7 @@ import shared.models.domain.TransactionId
 import shared.models.errors.{ErrorWrapper, NinoFormatError}
 import shared.models.outcomes.ResponseWrapper
 import shared.routing.{Version, Version3}
-import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture._
+import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.*
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
@@ -101,7 +101,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
 
   private trait Test extends ControllerTest {
 
-    override protected val controller = new RetrieveChargeHistoryByTransactionIdController(
+    override protected val controller: RetrieveChargeHistoryByTransactionIdController = new RetrieveChargeHistoryByTransactionIdController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveChargeHistoryByTransactionIdValidatorFactory,

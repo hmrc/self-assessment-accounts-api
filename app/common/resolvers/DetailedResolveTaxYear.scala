@@ -21,7 +21,7 @@ import cats.data.Validated.cond
 import shared.controllers.validators.resolvers.{ResolveTaxYear, ResolveTaxYearMinimum}
 import shared.models.domain.TaxYear
 import shared.models.domain.TaxYear.currentTaxYear
-import shared.models.errors._
+import shared.models.errors.*
 
 case class DetailedResolveTaxYear(
     allowIncompleteTaxYear: Boolean = true,
@@ -37,4 +37,5 @@ case class DetailedResolveTaxYear(
       cond(allowIncompleteTaxYear || parsed.year < currentTaxYear.year, parsed, List(RuleTaxYearNotEndedError))
     }
   }
+
 }
