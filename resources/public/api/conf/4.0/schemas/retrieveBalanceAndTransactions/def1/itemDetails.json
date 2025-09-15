@@ -128,7 +128,7 @@
         "example": "true"
       },
       "codedOutStatus": {
-        "description": "Indicates whether an amount has been coded out through the PAYE system.",
+        "description": "{{#unless (releasedInProduction 'api_1553_r18_docs')}}[Test only] {{/unless}}Indicates whether an amount has been coded out through the PAYE system.",
         "example": "initiated",
         "type": "string",
         "enum": [
