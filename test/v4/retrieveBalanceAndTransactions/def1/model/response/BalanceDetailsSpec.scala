@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,12 @@
 
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
-import play.api.libs.json.Json
+import play.api.libs.json.{JsNumber, JsValue, Json}
+import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v4.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.*
 
-class BalanceDetailsSpec extends UnitSpec {
+class BalanceDetailsSpec extends UnitSpec with JsonErrorValidators {
 
   "reads" when {
     "the feature switch is disabled (IFS enabled)" should {
@@ -80,11 +81,21 @@ class BalanceDetailsSpec extends UnitSpec {
         balanceDetails.bcdBalancePerYear shouldBe Nil
       }
     }
+
     "the feature switch is enabled (HIP enabled)" should {
       "return a BalanceDetails object" when {
-        "passed a valid JSON document" in {
-          balanceDetailsDownstreamResponseHipJson
-            .as[BalanceDetails] shouldBe balanceDetails
+        "passed a valid JSON document with fields allocatedCreditForChargesThatAreOverdue and totalCreditAvailableForRepayment" in {
+          balanceDetailsDownstreamResponseHipJson.as[BalanceDetails] shouldBe balanceDetails
+        }
+
+        "passed a valid JSON document with fields allocatedCredit and availableCredit" in {
+          val downstreamJson: JsValue = balanceDetailsDownstreamResponseHipJson
+            .removeProperty("allocatedCreditForChargesThatAreOverdue")
+            .removeProperty("totalCreditAvailableForRepayment")
+            .update("allocatedCredit", JsNumber(12.34))
+            .update("availableCredit", JsNumber(235.99))
+
+          downstreamJson.as[BalanceDetails] shouldBe balanceDetails
         }
       }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,11 +88,13 @@ object BalanceDetails {
       (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
       (JsPath \ "totalBCDBalance").readNullable[BigDecimal] and
       (JsPath \ "unallocatedCredit").readNullable[BigDecimal] and
-      (JsPath \ "allocatedCredit").readNullable[BigDecimal] and
+      ((JsPath \ "allocatedCreditForChargesThatAreOverdue").readNullable[BigDecimal] and
+        (JsPath \ "allocatedCredit").readNullable[BigDecimal])(_ orElse _) and
       (JsPath \ "totalCredit").readNullable[BigDecimal] and
       (JsPath \ "firstPendingAmountRequested").readNullable[BigDecimal] and
       (JsPath \ "secondPendingAmountRequested").readNullable[BigDecimal] and
-      (JsPath \ "availableCredit").readNullable[BigDecimal]
+      ((JsPath \ "totalCreditAvailableForRepayment").readNullable[BigDecimal] and
+        (JsPath \ "availableCredit").readNullable[BigDecimal])(_ orElse _)
   )(BalanceDetails.apply)
 
   implicit val writes: OWrites[BalanceDetails] = Json.writes[BalanceDetails]

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2025 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -123,11 +123,11 @@ object BalanceDetailsFixture {
        |    "amountCodedOut": 12.12,
        |    "totalBCDBalance": 99.10,
        |    "unallocatedCredit": 8.56,
-       |    "allocatedCredit": 12.34,
+       |    "allocatedCreditForChargesThatAreOverdue": 12.34,
        |    "totalCredit": 8.34,
        |    "firstPendingAmountRequested": 3.45,
        |    "secondPendingAmountRequested": 13.45,
-       |    "availableCredit": 235.99
+       |    "totalCreditAvailableForRepayment": 235.99
        |  }
        |""".stripMargin
   )
