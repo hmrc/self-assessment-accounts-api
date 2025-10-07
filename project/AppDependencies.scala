@@ -18,7 +18,7 @@ import sbt.*
 
 object AppDependencies {
 
-  val bootstrapPlayVersion = "9.14.0"
+  val bootstrapPlayVersion = "10.2.0"
 
   val compile: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"       %% "bootstrap-backend-play-30" % bootstrapPlayVersion,
@@ -29,12 +29,12 @@ object AppDependencies {
   val test: Seq[ModuleID] = Seq(
     "uk.gov.hmrc"         %% "bootstrap-test-play-30" % bootstrapPlayVersion,
     "org.scalatestplus"   %% "scalacheck-1-18"        % "3.2.19.0",
-    "org.scalamock"       %% "scalamock"              % "7.4.2"
+    "org.scalamock"       %% "scalamock"              % "7.5.0"
   ).map(_ % Test)
 
   val itDependencies: Seq[ModuleID] = Seq(
     "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.20.0",
-    "io.swagger.parser.v3"         % "swagger-parser-v3"     % "2.1.33"
+    "io.swagger.parser.v3"         % "swagger-parser-v3"     % "2.1.34"
   ).map(_ % Test)
 
 }
