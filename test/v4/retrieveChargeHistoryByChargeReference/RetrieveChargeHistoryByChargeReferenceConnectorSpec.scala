@@ -64,10 +64,8 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
 
   }
 
-  private val commonQueryHipParams: Seq[(String, String)] = List(
-    "idType"   -> "NINO",
-    "idNumber" -> nino
-  )
+  def hipQueryParams: Seq[(String, String)] =
+    Seq("idType" -> "NINO", "idValue" -> nino, "chargeReference" -> chargeReference)
 
   private val validRequest: RetrieveChargeHistoryByChargeReferenceRequestData = Def1_RetrieveChargeHistoryByChargeReferenceRequestData(
     Nino(nino),
@@ -98,13 +96,8 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
     "the feature switch is enabled (HIP enabled)" must {
       "return a valid response" in new HipTestWithAdditionalContactHeaders {
 
-        val queryParams: Seq[(String, String)] =
-          commonQueryHipParams ++ List(
-            "chargeReference" -> chargeReference
-          )
-
         MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> true)
-        connectorRequest(validRequest, validChargeHistoryResponseObject, queryParams, true)
+        connectorRequest(validRequest, validChargeHistoryResponseObject, hipQueryParams, true)
       }
     }
   }

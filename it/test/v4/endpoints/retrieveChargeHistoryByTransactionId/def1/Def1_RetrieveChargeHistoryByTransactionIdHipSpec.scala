@@ -36,6 +36,13 @@ class Def1_RetrieveChargeHistoryByTransactionIdHipSpec extends IntegrationBaseSp
 
     def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
 
+    def hipQueryParams: Map[String, String] =
+      Map(
+        "idType"            -> "NINO",
+        "idValue"           -> nino,
+        "sapDocumentNumber" -> transactionId
+      )
+
     def setupStubs(): StubMapping
 
     def request: WSRequest = {
@@ -66,12 +73,12 @@ class Def1_RetrieveChargeHistoryByTransactionIdHipSpec extends IntegrationBaseSp
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseMultiple)
         }
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdMultipleResponse(mtdSingleJson)
+        response.json shouldBe mtdMultipleResponse()
         response.header("Content-Type") shouldBe Some("application/json")
       }
 

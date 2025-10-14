@@ -50,7 +50,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
     val hipQueryParams: Seq[(String, String)] =
       List(
         "idType"            -> "NINO",
-        "idNumber"          -> nino.value,
+        "idValue"           -> nino.value,
         "sapDocumentNumber" -> transactionId.toString
       )
 

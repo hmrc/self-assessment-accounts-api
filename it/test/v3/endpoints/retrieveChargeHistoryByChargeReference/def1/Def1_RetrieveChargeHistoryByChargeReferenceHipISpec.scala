@@ -53,6 +53,13 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
         )
     }
 
+    def hipQueryParams: Map[String, String] =
+      Map(
+        "idType"          -> "NINO",
+        "idValue"         -> nino,
+        "chargeReference" -> chargeReference
+      )
+
     def uri: String = s"/$nino/charges/chargeReference/$chargeReference"
 
     def errorBody(code: String): String =
@@ -72,7 +79,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseMultiple)
         }
 
         val response: WSResponse = await(request.get())

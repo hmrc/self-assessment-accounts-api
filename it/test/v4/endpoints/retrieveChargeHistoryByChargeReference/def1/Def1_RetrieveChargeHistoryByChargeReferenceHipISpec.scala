@@ -35,6 +35,13 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
     protected val chargeReference = "XD000024425799"
     protected val nino            = "AA123456A"
 
+    def hipQueryParams: Map[String, String] =
+      Map(
+        "idType"          -> "NINO",
+        "idValue"         -> nino,
+        "chargeReference" -> chargeReference
+      )
+
     def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
 
     def setupStubs(): StubMapping
@@ -67,12 +74,12 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseMultiple)
         }
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdMultipleResponse(mtdSingleJson)
+        response.json shouldBe mtdMultipleResponse()
         response.header("Content-Type") shouldBe Some("application/json")
       }
 

@@ -59,8 +59,8 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
 
         runOkTestWithAudit(
           expectedStatus = OK,
-          maybeExpectedResponseBody = Some(mtdMultipleResponse(mtdSingleJson)),
-          maybeAuditResponseBody = Some(mtdMultipleResponse(mtdSingleJson)))
+          maybeExpectedResponseBody = Some(mtdMultipleResponse()),
+          maybeAuditResponseBody = Some(mtdMultipleResponse()))
       }
     }
 

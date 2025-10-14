@@ -52,9 +52,9 @@ class RetrieveChargeHistoryByChargeReferenceConnector @Inject() (val http: HttpC
     val hipQueryParams: Seq[(String, String)] =
       List(
         "idType"          -> "NINO",
-        "idNumber"        -> nino.value,
+        "idValue"         -> nino.value,
         "chargeReference" -> chargeReference.value
-      ).map { case (k, v) => k -> v.toString }
+      )
 
     val (downStreamUri, queryParams) = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) {
       (

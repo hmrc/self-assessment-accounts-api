@@ -99,7 +99,7 @@ object RetrieveChargeHistoryFixture {
       |  ]
       | }
       |""".stripMargin)
-  
+
   def mtdMultipleResponse(chargeDetails: JsValue = mtdSingleJson): JsObject = Json
     .obj("chargeHistoryDetails" -> Json.arr(chargeDetails, chargeDetails))
 
