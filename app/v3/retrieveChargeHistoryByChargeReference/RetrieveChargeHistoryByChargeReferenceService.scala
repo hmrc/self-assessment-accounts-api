@@ -38,8 +38,8 @@ class RetrieveChargeHistoryByChargeReferenceService @Inject() (connector: Retrie
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private val errorMap: Map[String, MtdError] =
-    Map(
+  private val errorMap: Map[String, MtdError] = {
+    val ifsErrors = Map(
       "INVALID_CORRELATIONID" -> InternalError,
       "INVALID_ID_TYPE"       -> InternalError,
       "INVALID_IDVALUE"       -> NinoFormatError,
@@ -54,5 +54,16 @@ class RetrieveChargeHistoryByChargeReferenceService @Inject() (connector: Retrie
       "SERVER_ERROR"          -> InternalError,
       "SERVICE_UNAVAILABLE"   -> InternalError
     )
+
+    val hipErrors = Map(
+      "014" -> NotFoundError,
+      "002" -> InternalError,
+      "003" -> InternalError,
+      "005" -> NotFoundError,
+      "015" -> InternalError
+    )
+    ifsErrors ++ hipErrors
+
+  }
 
 }

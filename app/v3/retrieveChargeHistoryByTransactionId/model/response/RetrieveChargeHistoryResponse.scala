@@ -26,10 +26,18 @@ case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistory
 
 object RetrieveChargeHistoryResponse extends HateoasLinks {
 
-  implicit val reads: Reads[RetrieveChargeHistoryResponse] =
-    (JsPath \ "chargeHistoryDetails")
+  implicit val reads: Reads[RetrieveChargeHistoryResponse] = {
+
+    val ifsReads: Reads[RetrieveChargeHistoryResponse] = (JsPath \ "chargeHistoryDetails")
       .read[Seq[ChargeHistoryDetail]]
       .map(items => RetrieveChargeHistoryResponse(items))
+
+    val hipReads: Reads[RetrieveChargeHistoryResponse] = (JsPath \ "success" \ "chargeHistoryDetails" \ "chargeHistory")
+      .read[Seq[ChargeHistoryDetail]]
+      .map(items => RetrieveChargeHistoryResponse(items))
+
+    hipReads orElse ifsReads
+  }
 
   implicit def writes(implicit appConfig: SharedAppConfig): OWrites[RetrieveChargeHistoryResponse] = Json.writes[RetrieveChargeHistoryResponse]
 

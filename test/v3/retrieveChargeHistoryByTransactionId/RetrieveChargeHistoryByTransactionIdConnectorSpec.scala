@@ -16,13 +16,16 @@
 
 package v3.retrieveChargeHistoryByTransactionId
 
-import shared.connectors.ConnectorSpec
+import play.api.Configuration
+import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{Nino, TransactionId}
 import shared.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
+import shared.utils.DateUtils.isoDateTimeStamp
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v3.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v3.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
+import v3.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.Future
 
@@ -31,27 +34,76 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
   val nino: String          = "AA123456A"
   val transactionId: String = "anId"
 
-  trait Test { self: ConnectorTest =>
+  private trait Test {
+    self: ConnectorTest =>
 
-    val connector: RetrieveChargeHistoryByTransactionIdConnector =
-      new RetrieveChargeHistoryByTransactionIdConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+    private val connector: RetrieveChargeHistoryByTransactionIdConnector =
+      new RetrieveChargeHistoryByTransactionIdConnector(mockHttpClient, mockSharedAppConfig)
+
+    def connectorRequest(request: RetrieveChargeHistoryByTransactionIdRequestData,
+                         response: RetrieveChargeHistoryResponse,
+                         queryParams: Seq[(String, String)],
+                         hipTest: Boolean): Unit = {
+
+      val outcome = Right(ResponseWrapper(correlationId, response))
+
+      val url = if (hipTest) {
+        url"$baseUrl/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
+      } else {
+        url"$baseUrl/cross-regime/charges/NINO/$nino/ITSA"
+      }
+      willGet(
+        url = url,
+        parameters = queryParams
+      ).returns(Future.successful(outcome))
+
+      val result: DownstreamOutcome[RetrieveChargeHistoryResponse] = await(connector.retrieveChargeHistoryByTransactionId(request))
+      result shouldBe outcome
+    }
+
+  }
+
+  private val commonQueryHipParams: Seq[(String, String)] = List(
+    "idType"   -> "NINO",
+    "idNumber" -> nino
+  )
+
+  private val validRequest: RetrieveChargeHistoryByTransactionIdRequestData = Def1_RetrieveChargeHistoryByTransactionIdRequestData(
+    Nino(nino),
+    TransactionId(transactionId)
+  )
+
+  private trait HipTestWithAdditionalContactHeaders extends HipTest with Test {
+
+    override val additionalContractHeaders: Seq[(String, String)] = List(
+      "X-Message-Type"        -> "ETMPGetChargeHistory",
+      "X-Originating-System"  -> "MDTP",
+      "X-Receipt-Type"        -> "ITSA",
+      "X-Receipt-Date"        -> isoDateTimeStamp,
+      "X-Transmitting-System" -> "HIP"
+    )
 
   }
 
   "RetrieveChargeHistoryByTransactionIdConnector" when {
-    "retrieveChargeHistoryByTransactionId" must {
+    "the feature switch is enabled (HIP disabled)" must {
       "return a valid response" in new IfsTest with Test {
+        MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> false)
+        val queryParams: List[(String, String)] = List("docNumber" -> transactionId)
+        connectorRequest(validRequest, validChargeHistoryResponseObject, queryParams, false)
+      }
+    }
 
-        val request: RetrieveChargeHistoryByTransactionIdRequestData =
-          Def1_RetrieveChargeHistoryByTransactionIdRequestData(Nino(nino), TransactionId(transactionId))
-        private val outcome = Right(ResponseWrapper(correlationId, validChargeHistoryResponseObject))
+    "the feature switch is enabled (HIP enabled)" must {
+      "return a valid response" in new HipTestWithAdditionalContactHeaders {
 
-        willGet(
-          url = url"$baseUrl/cross-regime/charges/NINO/$nino/ITSA",
-          parameters = List("docNumber" -> transactionId)
-        ).returns(Future.successful(outcome))
+        val queryParams: Seq[(String, String)] =
+          commonQueryHipParams ++ List(
+            "sapDocumentNumber" -> transactionId
+          )
 
-        await(connector.retrieveChargeHistoryByTransactionId(request)) shouldBe outcome
+        MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> true)
+        connectorRequest(validRequest, validChargeHistoryResponseObject, queryParams, true)
       }
     }
   }

@@ -27,7 +27,10 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
 
-class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec {
+class Def1_RetrieveChargeHistoryByTransactionIdIfsSpec extends IntegrationBaseSpec {
+
+  override def servicesConfig: Map[String, Any] =
+    Map("feature-switch.ifs_hip_migration_1554.enabled" -> false) ++ super.servicesConfig
 
   private trait Test {
 

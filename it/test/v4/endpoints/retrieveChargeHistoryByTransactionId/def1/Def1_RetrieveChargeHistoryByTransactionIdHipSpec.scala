@@ -27,14 +27,14 @@ import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponse}
 
-class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec {
+class Def1_RetrieveChargeHistoryByTransactionIdHipSpec extends IntegrationBaseSpec {
 
   private trait Test {
 
     protected val transactionId = "23456789"
     protected val nino          = "AA123456A"
 
-    def downstreamUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
+    def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
 
     def setupStubs(): StubMapping
 
@@ -51,11 +51,11 @@ class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec 
 
     def errorBody(code: String): String =
       s"""
-         |{
-         |   "code": "$code",
-         |   "reason": "downstream message"
-         |}
-          """.stripMargin
+           |{
+           |   "code": "$code",
+           |   "text": "downstream message"
+           |}
+            """.stripMargin
 
   }
 
@@ -75,37 +75,6 @@ class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec 
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-    }
-    "return a 500 status code" when {
-      "downstream returns errors that map to DownstreamError" in new Test {
-
-        val multipleErrors: String =
-          """
-                |{
-                |   "failures": [
-                |        {
-                |            "code": "INVALID_IDTYPE",
-                |            "reason": "The provided id type is invalid
-                |        },
-                |        {
-                |            "code": "INVALID_REGIME_TYPE",
-                |            "reason": "The provided regime type is invalid"
-                |        }
-                |    ]
-                |}
-          """.stripMargin
-
-        override def setupStubs(): StubMapping = {
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, BAD_REQUEST, multipleErrors)
-        }
-
-        val response: WSResponse = await(request.get())
-        response.status shouldBe INTERNAL_SERVER_ERROR
-        response.json shouldBe Json.toJson(InternalError)
-        response.header("Content-Type") shouldBe Some("application/json")
-      }
     }
 
     "return error according to spec" when {
@@ -134,7 +103,7 @@ class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec 
       input.foreach(args => validationErrorTest.tupled(args))
     }
 
-    "des service error" when {
+    "downstream service error" when {
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
@@ -153,20 +122,11 @@ class Def1_RetrieveChargeHistoryByTransactionIdSpec extends IntegrationBaseSpec 
       }
 
       val input = Seq(
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
-        (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, TransactionIdFormatError),
-        (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_DATE_RANGE", INTERNAL_SERVER_ERROR, InternalError),
-        (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, InternalError),
-        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-        (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (UNPROCESSABLE_ENTITY, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
+        (UNPROCESSABLE_ENTITY, "014", NOT_FOUND, NotFoundError),
+        (UNPROCESSABLE_ENTITY, "002", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "003", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "005", NOT_FOUND, NotFoundError),
+        (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError)
       )
       input.foreach(args => serviceErrorTest.tupled(args))
     }
