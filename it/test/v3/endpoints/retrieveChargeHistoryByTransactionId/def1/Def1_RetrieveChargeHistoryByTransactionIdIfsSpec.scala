@@ -25,7 +25,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponseWithHateoas}
+import v3.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.*
 
 class Def1_RetrieveChargeHistoryByTransactionIdIfsSpec extends IntegrationBaseSpec {
 
@@ -37,7 +37,8 @@ class Def1_RetrieveChargeHistoryByTransactionIdIfsSpec extends IntegrationBaseSp
     protected val transactionId = "23456789"
     protected val nino          = "AA123456A"
 
-    protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, transactionId)
+    protected val mtdResponseWithHateoas: JsObject =
+      mtdMultipleResponseWithHateoas(nino, transactionId, mtdSingleJson.as[JsObject] - "changeTimestamp")
 
     def downstreamUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
 

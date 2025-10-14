@@ -26,7 +26,7 @@ import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponse}
+import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.*
 
 class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBaseSpec {
 
@@ -72,7 +72,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdMultipleResponse
+        response.json shouldBe mtdMultipleResponse(mtdSingleJson)
         response.header("Content-Type") shouldBe Some("application/json")
       }
 

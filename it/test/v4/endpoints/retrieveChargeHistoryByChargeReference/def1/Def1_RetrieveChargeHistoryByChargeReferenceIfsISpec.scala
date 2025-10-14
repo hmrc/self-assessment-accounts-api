@@ -20,13 +20,17 @@ import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.ChargeReferenceFormatError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponse}
+import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.{
+  downstreamResponseMultiple,
+  mtdMultipleResponse,
+  mtdSingleJson
+}
 
 class Def1_RetrieveChargeHistoryByChargeReferenceIfsISpec extends IntegrationBaseSpec {
 
@@ -75,7 +79,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceIfsISpec extends IntegrationBas
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdMultipleResponse
+        response.json shouldBe mtdMultipleResponse(mtdSingleJson.as[JsObject] - "changeTimestamp")
         response.header("Content-Type") shouldBe Some("application/json")
       }
 

@@ -55,7 +55,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
           .retrieveChargeHistoryByTransactionId(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, response))))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdMultipleResponse))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdMultipleResponse(mtdSingleJson)))
       }
     }
     "return the error as per spec" when {

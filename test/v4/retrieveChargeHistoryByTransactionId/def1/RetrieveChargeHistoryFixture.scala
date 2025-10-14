@@ -16,7 +16,7 @@
 
 package v4.retrieveChargeHistoryByTransactionId.def1
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import shared.models.domain.Timestamp
 import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
@@ -99,14 +99,8 @@ object RetrieveChargeHistoryFixture {
       |  ]
       | }
       |""".stripMargin)
-
-  val mtdMultipleResponse: JsValue = Json.parse(s"""
-      |{
-      |   "chargeHistoryDetails": [
-      |      $mtdSingleJson,
-      |      $mtdSingleJson
-      |  ]
-      | }
-      |""".stripMargin)
+  
+  def mtdMultipleResponse(chargeDetails: JsValue = mtdSingleJson): JsObject = Json
+    .obj("chargeHistoryDetails" -> Json.arr(chargeDetails, chargeDetails))
 
 }

@@ -109,12 +109,12 @@ object RetrieveChargeHistoryFixture {
       | }
       |""".stripMargin)
 
-  def mtdMultipleResponseWithHateoas(nino: String, transactionId: String): JsObject = Json
+  def mtdMultipleResponseWithHateoas(nino: String, transactionId: String, chargeDetails: JsValue = mtdSingleJson): JsObject = Json
     .parse(s"""
        |{
        |   "chargeHistoryDetails": [
-       |      $mtdSingleJson,
-       |      $mtdSingleJson
+       |      $chargeDetails,
+       |      $chargeDetails
        |  ],
        |   "links":[
        |      {
