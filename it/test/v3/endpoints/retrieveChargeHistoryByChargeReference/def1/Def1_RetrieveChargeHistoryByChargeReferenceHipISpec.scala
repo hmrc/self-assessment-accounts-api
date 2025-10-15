@@ -14,28 +14,33 @@
  * limitations under the License.
  */
 
-package v4.endpoints.retrieveChargeHistoryByChargeReference.def1
+package v3.endpoints.retrieveChargeHistoryByChargeReference.def1
 
 import com.github.tomakehurst.wiremock.stubbing.StubMapping
 import common.errors.ChargeReferenceFormatError
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 import shared.models.errors.*
 import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.{downstreamResponseMultiple, mtdMultipleResponse}
+import v3.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.{
+  downstreamResponseMultiple,
+  mtdMultipleResponseWithHateoas
+}
 
-class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSpec {
+class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
     protected val chargeReference = "XD000024425799"
     protected val nino            = "AA123456A"
 
-    def downstreamUrl: String = s"/cross-regime/charges/NINO/$nino/ITSA"
+    protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, chargeReference)
+
+    def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
 
     def setupStubs(): StubMapping
 
@@ -43,20 +48,30 @@ class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSp
       setupStubs()
       buildRequest(uri)
         .withHttpHeaders(
-          (ACCEPT, "application/vnd.hmrc.4.0+json"),
+          (ACCEPT, "application/vnd.hmrc.3.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
+
+    def hipQueryParams: Map[String, String] =
+      Map(
+        "idType"          -> "NINO",
+        "idValue"         -> nino,
+        "chargeReference" -> chargeReference
+      )
 
     def uri: String = s"/$nino/charges/chargeReference/$chargeReference"
 
     def errorBody(code: String): String =
       s"""
-         |{
-         |   "code": "$code",
-         |   "reason": "downstream message"
-         |}
-          """.stripMargin
+           |{
+           |  "errors": {
+           |    "processingDate": "2022-01-31T09:26:17Z",
+           |    "code": "$code",
+           |    "text": "downstream message"
+           |  }
+           |}
+           """.stripMargin
 
   }
 
@@ -67,46 +82,15 @@ class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSp
         override def setupStubs(): StubMapping = {
           AuthStub.authorised()
           MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, OK, downstreamResponseMultiple)
+          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponseMultiple)
         }
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
-        response.json shouldBe mtdMultipleResponse
+        response.json shouldBe mtdResponseWithHateoas
         response.header("Content-Type") shouldBe Some("application/json")
       }
 
-    }
-    "return a 500 status code" when {
-      "downstream returns errors that map to DownstreamError" in new Test {
-
-        val multipleErrors: String =
-          """
-            |{
-            |   "failures": [
-            |        {
-            |            "code": "INVALID_IDTYPE",
-            |            "reason": "The provided id type is invalid
-            |        },
-            |        {
-            |            "code": "INVALID_REGIME_TYPE",
-            |            "reason": "The provided regime type is invalid"
-            |        }
-            |    ]
-            |}
-          """.stripMargin
-
-        override def setupStubs(): StubMapping = {
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, BAD_REQUEST, multipleErrors)
-        }
-
-        val response: WSResponse = await(request.get())
-        response.status shouldBe INTERNAL_SERVER_ERROR
-        response.json shouldBe Json.toJson(InternalError)
-        response.header("Content-Type") shouldBe Some("application/json")
-      }
     }
 
     "return error according to spec" when {
@@ -136,7 +120,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSp
       input.foreach(args => validationErrorTest.tupled(args))
     }
 
-    "des service error" when {
+    "downstream service error" when {
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 
@@ -155,20 +139,11 @@ class Def1_RetrieveChargeHistoryByChargeReferenceISpec extends IntegrationBaseSp
       }
 
       val input = Seq(
-        (BAD_REQUEST, "INVALID_CORRELATIONID", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_IDVALUE", BAD_REQUEST, NinoFormatError),
-        (BAD_REQUEST, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_DOC_NUMBER", BAD_REQUEST, TransactionIdFormatError),
-        (BAD_REQUEST, "INVALID_DATE_FROM", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_DATE_TO", INTERNAL_SERVER_ERROR, InternalError),
-        (BAD_REQUEST, "INVALID_DATE_RANGE", INTERNAL_SERVER_ERROR, InternalError),
-        (FORBIDDEN, "REQUEST_NOT_PROCESSED", INTERNAL_SERVER_ERROR, InternalError),
-        (NOT_FOUND, "NO_DATA_FOUND", NOT_FOUND, NotFoundError),
-        (UNPROCESSABLE_ENTITY, "INVALID_IDTYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (UNPROCESSABLE_ENTITY, "INVALID_REGIME_TYPE", INTERNAL_SERVER_ERROR, InternalError),
-        (INTERNAL_SERVER_ERROR, "SERVER_ERROR", INTERNAL_SERVER_ERROR, InternalError),
-        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
+        (UNPROCESSABLE_ENTITY, "014", NOT_FOUND, NotFoundError),
+        (UNPROCESSABLE_ENTITY, "002", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "003", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "005", NOT_FOUND, NotFoundError),
+        (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError)
       )
       input.foreach(args => serviceErrorTest.tupled(args))
     }

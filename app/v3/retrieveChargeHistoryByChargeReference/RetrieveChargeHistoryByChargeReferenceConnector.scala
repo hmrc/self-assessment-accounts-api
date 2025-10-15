@@ -16,15 +16,15 @@
 
 package v3.retrieveChargeHistoryByChargeReference
 
-import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri.IfsUri
+import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
+import shared.connectors.DownstreamUri.{HipUri, IfsUri}
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 import v3.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v3.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
-
+import shared.utils.DateUtils.isoDateTimeStamp
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -38,12 +38,41 @@ class RetrieveChargeHistoryByChargeReferenceConnector @Inject() (val http: HttpC
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
     import request._
-    import schema._
 
-    val queryParams = List("chargeReference" -> chargeReference.value)
+    val additionalContractHeaders: Seq[(String, String)] = List(
+      "X-Message-Type"        -> "ETMPGetChargeHistory",
+      "X-Originating-System"  -> "MDTP",
+      "X-Regime-Type"         -> "ITSA",
+      "X-Receipt-Date"        -> isoDateTimeStamp,
+      "X-Transmitting-System" -> "HIP"
+    )
 
-    get(IfsUri[DownstreamResp](s"cross-regime/charges/NINO/$nino/ITSA"), queryParams)
+    val hipQueryParams: Seq[(String, String)] =
+      List(
+        "idType"          -> "NINO",
+        "idValue"         -> nino.value,
+        "chargeReference" -> chargeReference.value
+      )
 
+    val ifsQueryParams = List("chargeReference" -> chargeReference.value)
+
+    val (downStreamUri, queryParams) =
+      if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) {
+        (
+          HipUri[RetrieveChargeHistoryResponse](
+            path = "etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory",
+            additionalContractHeaders = additionalContractHeaders
+          ),
+          hipQueryParams
+        )
+      } else {
+        (
+          IfsUri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"),
+          ifsQueryParams
+        )
+      }
+
+    get(downStreamUri, queryParams)
   }
 
 }
