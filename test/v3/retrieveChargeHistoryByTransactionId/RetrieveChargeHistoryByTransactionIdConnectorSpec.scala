@@ -76,7 +76,7 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
     override val additionalContractHeaders: Seq[(String, String)] = List(
       "X-Message-Type"        -> "ETMPGetChargeHistory",
       "X-Originating-System"  -> "MDTP",
-      "X-Receipt-Type"        -> "ITSA",
+      "X-Regime-Type"         -> "ITSA",
       "X-Receipt-Date"        -> isoDateTimeStamp,
       "X-Transmitting-System" -> "HIP"
     )

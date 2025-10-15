@@ -64,10 +64,13 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
 
     def errorBody(code: String): String =
       s"""
-         |{
-         |   "code": "$code",
-         |   "text": "downstream message"
-         |}
+           |{
+           |  "errors": {
+           |    "processingDate": "2022-01-31T09:26:17Z",
+           |    "code": "$code",
+           |    "text": "downstream message"
+           |  }
+           |}
            """.stripMargin
 
   }
@@ -117,7 +120,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
       input.foreach(args => validationErrorTest.tupled(args))
     }
 
-    "des service error" when {
+    "downstream service error" when {
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
 

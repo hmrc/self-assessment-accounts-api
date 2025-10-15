@@ -42,7 +42,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
     val additionalContractHeaders: Seq[(String, String)] = List(
       "X-Message-Type"        -> "ETMPGetChargeHistory",
       "X-Originating-System"  -> "MDTP",
-      "X-Receipt-Type"        -> "ITSA",
+      "X-Regime-Type"         -> "ITSA",
       "X-Receipt-Date"        -> isoDateTimeStamp,
       "X-Transmitting-System" -> "HIP"
     )
@@ -54,7 +54,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
         "sapDocumentNumber" -> transactionId.toString
       )
 
-    val IfsQueryParams = Seq("docNumber" -> transactionId.toString)
+    val ifsQueryParams = Seq("docNumber" -> transactionId.toString)
 
     val (downStreamUri, queryParams) = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) {
       (
@@ -67,7 +67,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
     } else {
       (
         IfsUri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"),
-        IfsQueryParams
+        ifsQueryParams
       )
 
     }

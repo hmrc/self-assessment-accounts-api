@@ -60,8 +60,11 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
     def errorBody(code: String): String =
       s"""
          |{
-         |   "code": "$code",
-         |   "text": "downstream message"
+         |  "errors": {
+         |    "processingDate": "2022-01-31T09:26:17Z",
+         |    "code": "$code",
+         |    "text": "downstream message"
+         |  }
          |}
            """.stripMargin
 
