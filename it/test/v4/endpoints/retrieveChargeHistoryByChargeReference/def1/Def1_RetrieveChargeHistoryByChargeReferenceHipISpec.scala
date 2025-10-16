@@ -42,7 +42,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
         "chargeReference" -> chargeReference
       )
 
-    def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
+    def downstreamUrl: String = s"/etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory"
 
     def setupStubs(): StubMapping
 

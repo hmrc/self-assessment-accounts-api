@@ -59,7 +59,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
     val (downStreamUri, queryParams) = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) {
       (
         HipUri[RetrieveChargeHistoryResponse](
-          path = "etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory",
+          path = "etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory",
           additionalContractHeaders
         ),
         hipQueryParams

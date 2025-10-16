@@ -40,7 +40,7 @@ class Def1_RetrieveChargeHistoryByChargeReferenceHipISpec extends IntegrationBas
 
     protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, chargeReference)
 
-    def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
+    def downstreamUrl: String = s"/etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory"
 
     def setupStubs(): StubMapping
 

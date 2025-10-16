@@ -34,7 +34,7 @@ class Def1_RetrieveChargeHistoryByTransactionIdHipSpec extends IntegrationBaseSp
     protected val transactionId = "23456789"
     protected val nino          = "AA123456A"
 
-    def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
+    def downstreamUrl: String = s"/etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory"
 
     def hipQueryParams: Map[String, String] =
       Map(

@@ -60,7 +60,7 @@ class RetrieveChargeHistoryByChargeReferenceConnector @Inject() (val http: HttpC
       if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) {
         (
           HipUri[RetrieveChargeHistoryResponse](
-            path = "etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory",
+            path = "etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory",
             additionalContractHeaders = additionalContractHeaders
           ),
           hipQueryParams

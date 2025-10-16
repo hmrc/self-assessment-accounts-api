@@ -49,7 +49,7 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
       val outcome = Right(ResponseWrapper(correlationId, response))
 
       val url = if (hipTest) {
-        url"$baseUrl/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
+        url"$baseUrl/etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory"
       } else {
         url"$baseUrl/cross-regime/charges/NINO/$nino/ITSA"
       }
