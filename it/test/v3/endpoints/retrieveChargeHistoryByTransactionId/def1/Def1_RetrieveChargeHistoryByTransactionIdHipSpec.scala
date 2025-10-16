@@ -36,7 +36,7 @@ class Def1_RetrieveChargeHistoryByTransactionIdHipSpec extends IntegrationBaseSp
 
     protected val mtdResponseWithHateoas: JsObject = mtdMultipleResponseWithHateoas(nino, transactionId)
 
-    def downstreamUrl: String = s"/etmp/RESTAdapter/itsa/taxpayer/GetChargeHistory"
+    def downstreamUrl: String = s"/etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory"
 
     def hipQueryParams: Map[String, String] =
       Map(
