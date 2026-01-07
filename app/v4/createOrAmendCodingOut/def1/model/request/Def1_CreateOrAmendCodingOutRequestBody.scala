@@ -20,21 +20,7 @@ import play.api.libs.json.{Json, OFormat}
 import shared.utils.EmptinessChecker
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestBody
 
-case class Def1_CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComponents) extends CreateOrAmendCodingOutRequestBody {
-
-  def getEmptyFieldName(seqO: Option[Seq[TaxCodeComponent]], fieldName: String): Seq[String] =
-    seqO.map(seq => if (seq.isEmpty) Seq(s"/taxCodeComponents/$fieldName") else Seq.empty).getOrElse(Seq.empty)
-
-  def emptyFields: Seq[String] =
-    if (taxCodeComponents.isEmpty) {
-      List("/taxCodeComponents")
-    } else {
-      getEmptyFieldName(seqO = taxCodeComponents.payeUnderpayment, fieldName = "payeUnderpayment") ++
-        getEmptyFieldName(seqO = taxCodeComponents.selfAssessmentUnderpayment, fieldName = "selfAssessmentUnderpayment") ++
-        getEmptyFieldName(seqO = taxCodeComponents.debt, fieldName = "debt")
-    }
-
-}
+case class Def1_CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComponents) extends CreateOrAmendCodingOutRequestBody
 
 object Def1_CreateOrAmendCodingOutRequestBody {
   implicit val format: OFormat[Def1_CreateOrAmendCodingOutRequestBody] = Json.format[Def1_CreateOrAmendCodingOutRequestBody]
