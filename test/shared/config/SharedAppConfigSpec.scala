@@ -74,6 +74,22 @@ class SharedAppConfigSpec extends UnitSpec {
       )
     }
 
+    "return the IFS-1891 config" in {
+      val expected1891EnvHeaders = Some(
+        List(
+          "1891-Accept",
+          "1891-Gov-Test-Scenario",
+          "1891-Content-Type"
+        ))
+
+      simpleAppConfig.ifs1891DownstreamConfig shouldBe DownstreamConfig(
+        "http://127.0.0.1:8888",
+        "Prod",
+        "1891-ABCD1234",
+        expected1891EnvHeaders
+      )
+    }
+
     "return the apiDocumentationUrl" when {
       "it is not specified" in {
         val changedAppConfig = appConfig("", None)
@@ -434,6 +450,16 @@ class SharedAppConfigSpec extends UnitSpec {
            |        token = IFS-ABCD1234
            |        environmentHeaders = ["IFS-Accept", "IFS-Gov-Test-Scenario", "IFS-Content-Type"]
            |      }
+           |
+           |      ifs-1891 {
+           |        enabled = true
+           |        host = 127.0.0.1
+           |        port = 8888
+           |        env = Prod
+           |        token = 1891-ABCD1234
+           |        environmentHeaders = ["1891-Accept", "1891-Gov-Test-Scenario", "1891-Content-Type"]
+           |      }
+           |
            |    }
            |  }
            |""".stripMargin

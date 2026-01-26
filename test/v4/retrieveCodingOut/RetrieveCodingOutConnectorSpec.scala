@@ -60,11 +60,11 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
   "RetrieveCodingOutConnector" should {
     "return a valid response" when {
-      "a valid request is supplied" in new IfsTest with Test {
+      "a valid request is supplied" in new Ifs1891Test with Test {
         connectorRequest(taxYear)
       }
 
-      "a valid TYS request is supplied" in new IfsTest with Test {
+      "a valid TYS request is supplied" in new Ifs1891Test with Test {
         connectorRequest(tysTaxYear)
       }
     }
