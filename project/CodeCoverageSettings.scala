@@ -23,7 +23,6 @@ object CodeCoverageSettings {
     "<empty>",
     "Reverse.*",
     "uk.gov.hmrc.BuildInfo",
-    "v1.hateoas.HateoasLinks",
     "app.*",
     "prod.*",
     ".*Routes.*",

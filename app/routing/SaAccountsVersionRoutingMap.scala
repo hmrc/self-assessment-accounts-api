@@ -21,11 +21,10 @@ import shared.routing.*
 
 import javax.inject.{Inject, Singleton}
 
-@Singleton case class SaAccountsVersionRoutingMap @Inject() (defaultRouter: Router, v3Router: v3.Routes, v4Router: v4.Routes)
-    extends VersionRoutingMap {
+@Singleton case class SaAccountsVersionRoutingMap @Inject() (defaultRouter: Router, v4Router: v4.Routes) extends VersionRoutingMap {
 
   /** Routes corresponding to available versions.
     */
-  val map: Map[Version, Router] = Map(Version3 -> v3Router, Version4 -> v4Router)
+  val map: Map[Version, Router] = Map(Version4 -> v4Router)
 
 }
