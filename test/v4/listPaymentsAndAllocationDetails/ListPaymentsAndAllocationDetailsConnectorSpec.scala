@@ -78,6 +78,23 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
         connectorRequest(validRequest, responseObject, queryParams)
       }
+
+      "a valid request is supplied without the paymentLot query params" in new DesTest with Test {
+        private val invalidRequest: ListPaymentsAndAllocationDetailsRequestData =
+          Def1_ListPaymentsAndAllocationDetailsRequestData(
+            Nino(nino),
+            Some(DateRange(LocalDate.parse(dateFrom), LocalDate.parse(dateTo))),
+            None,
+            None)
+
+        val queryParams: Seq[(String, String)] =
+          List(
+            "dateFrom" -> s"$dateFrom",
+            "dateTo"   -> s"$dateTo"
+          )
+
+        connectorRequest(invalidRequest, responseObject, queryParams)
+      }
     }
   }
 

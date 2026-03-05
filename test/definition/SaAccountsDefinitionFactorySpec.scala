@@ -19,9 +19,9 @@ package definition
 import cats.implicits.catsSyntaxValidatedId
 import shared.config.Deprecation.NotDeprecated
 import shared.config.MockSharedAppConfig
-import shared.definition.APIStatus.BETA
 import shared.definition.*
-import shared.routing.{Version3, Version4}
+import shared.definition.APIStatus.BETA
+import shared.routing.Version4
 import shared.utils.UnitSpec
 
 class SaAccountsDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig {
@@ -30,9 +30,6 @@ class SaAccountsDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig 
     "called" should {
       "return a valid Definition case class" in {
         MockedSharedAppConfig.apiGatewayContext returns "accounts/self-assessment"
-        MockedSharedAppConfig.apiStatus(Version3) returns "BETA"
-        MockedSharedAppConfig.endpointsEnabled(Version3).returns(true).anyNumberOfTimes()
-        MockedSharedAppConfig.deprecationFor(Version3).returns(NotDeprecated.valid).anyNumberOfTimes()
         MockedSharedAppConfig.apiStatus(Version4) returns "BETA"
         MockedSharedAppConfig.endpointsEnabled(Version4).returns(true).anyNumberOfTimes()
         MockedSharedAppConfig.deprecationFor(Version4).returns(NotDeprecated.valid).anyNumberOfTimes()
@@ -47,11 +44,6 @@ class SaAccountsDefinitionFactorySpec extends UnitSpec with MockSharedAppConfig 
               context = "accounts/self-assessment",
               categories = Seq("INCOME_TAX_MTD"),
               versions = Seq(
-                APIVersion(
-                  version = Version3,
-                  status = BETA,
-                  endpointsEnabled = true
-                ),
                 APIVersion(
                   version = Version4,
                   status = BETA,

@@ -57,4 +57,21 @@ class TaxCodeComponentsSpec extends UnitSpec {
 
   }
 
+  "isEmpty" should {
+    "return true when all fields are None" in {
+      val emptyComponents = TaxCodeComponents(None, None, None, None)
+      emptyComponents.isEmpty shouldBe true
+    }
+
+    "return false when at least one field is non-empty" in {
+      val nonEmptyComponents = TaxCodeComponents(
+        payeUnderpayment = Some(List(TaxCodeComponent(id = 1, amount = 1.1))),
+        selfAssessmentUnderpayment = None,
+        debt = None,
+        inYearAdjustment = None
+      )
+      nonEmptyComponents.isEmpty shouldBe false
+    }
+  }
+
 }
