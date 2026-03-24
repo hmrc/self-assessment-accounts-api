@@ -16,15 +16,16 @@
 
 package v4.retrieveChargeHistoryByTransactionId
 
-import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
-import shared.connectors.DownstreamUri.{HipUri, IfsUri}
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.HipUri
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import shared.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
-import shared.utils.DateUtils.isoDateTimeStamp
+
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -37,7 +38,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveChargeHistoryResponse]] = {
 
-    import request._
+    import request.*
 
     val additionalContractHeaders: Seq[(String, String)] = List(
       "X-Message-Type"        -> "ETMPGetChargeHistory",
@@ -54,9 +55,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
         "sapDocumentNumber" -> transactionId.toString
       )
 
-    val ifsQueryParams = Seq("docNumber" -> transactionId.toString)
-
-    val (downStreamUri, queryParams) = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) {
+    val (downStreamUri, queryParams) =
       (
         HipUri[RetrieveChargeHistoryResponse](
           path = "etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory",
@@ -64,13 +63,7 @@ class RetrieveChargeHistoryByTransactionIdConnector @Inject() (val http: HttpCli
         ),
         hipQueryParams
       )
-    } else {
-      (
-        IfsUri[RetrieveChargeHistoryResponse](s"cross-regime/charges/NINO/$nino/ITSA"),
-        ifsQueryParams
-      )
 
-    }
     get(downStreamUri, queryParams)
   }
 

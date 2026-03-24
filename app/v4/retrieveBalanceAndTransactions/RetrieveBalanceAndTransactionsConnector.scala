@@ -16,8 +16,8 @@
 
 package v4.retrieveBalanceAndTransactions
 
-import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
-import shared.connectors.DownstreamUri.{HipUri, IfsUri}
+import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri.HipUri
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import shared.utils.DateUtils.isoDateTimeStamp
@@ -38,24 +38,7 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClientV2,
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveBalanceAndTransactionsResponse]] = {
 
-    import request._
-
-    val ifsBooleanQueryParams: Seq[(String, String)] =
-      List(
-        "onlyOpenItems"              -> onlyOpenItems,
-        "includeLocks"               -> includeLocks,
-        "calculateAccruedInterest"   -> calculateAccruedInterest,
-        "removePOA"                  -> removePOA,
-        "customerPaymentInformation" -> customerPaymentInformation,
-        "includeStatistical"         -> includeEstimatedCharges
-      ).map { case (k, v) => k -> v.toString }
-
-    val ifsOptionalQueryParams: Seq[(String, String)] =
-      List(
-        "docNumber" -> docNumber,
-        "dateFrom"  -> fromAndToDates.map(_.startDate.toString),
-        "dateTo"    -> fromAndToDates.map(_.endDate.toString)
-      ).collect { case (k, Some(v)) => k -> v }
+    import request.*
 
     val hipRequiredQueryParams: Seq[(String, String)] =
       List(
@@ -84,20 +67,11 @@ class RetrieveBalanceAndTransactionsConnector @Inject() (val http: HttpClientV2,
       "X-Transmitting-System" -> "HIP"
     )
 
-    val (queryParams, downStreamUri) = if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1553")) {
-      (
-        hipRequiredQueryParams ++ hipOptionalQueryParams,
-        HipUri[RetrieveBalanceAndTransactionsResponse](
-          path = "etmp/RESTAdapter/itsa/taxpayer/financial-details",
-          additionalContractHeaders = additionalContractHeaders
-        )
-      )
-    } else {
-      (
-        ifsBooleanQueryParams ++ ifsOptionalQueryParams,
-        IfsUri[RetrieveBalanceAndTransactionsResponse](s"enterprise/02.00.00/financial-data/NINO/${nino.nino}/ITSA")
-      )
-    }
+    val (queryParams, downStreamUri) = (
+      hipRequiredQueryParams ++ hipOptionalQueryParams,
+      HipUri[RetrieveBalanceAndTransactionsResponse](
+        path = "etmp/RESTAdapter/itsa/taxpayer/financial-details",
+        additionalContractHeaders = additionalContractHeaders))
 
     // So that we don't read locks into result unless we've asked for them
     implicit val jsonReadLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(request.includeLocks)
