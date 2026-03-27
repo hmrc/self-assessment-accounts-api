@@ -18,7 +18,6 @@ package v4.retrieveChargeHistoryByChargeReference.def1.model.response
 
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
-import shared.config.SharedAppConfig
 import shared.models.domain.{TaxYear, Timestamp}
 
 import scala.util.Try
@@ -50,7 +49,7 @@ object ChargeHistoryDetail {
       (JsPath \ "reversalReason").read[String] and
       (JsPath \ "poaAdjustmentReason").readNullable[String])(ChargeHistoryDetail.apply)
 
-  implicit def writes(implicit appConfig: SharedAppConfig): OWrites[ChargeHistoryDetail] =
+  implicit def writes: OWrites[ChargeHistoryDetail] =
     Json.writes[ChargeHistoryDetail]
 
 }

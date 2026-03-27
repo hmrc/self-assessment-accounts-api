@@ -77,43 +77,39 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   )
 
   "RetrieveBalanceAndTransactionsConnector" when {
+    "return a valid response" when {
 
-    "the feature switch is enabled (HIP enabled)" should {
+      "a valid request containing both docNumber and fromDate and dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
 
-      "return a valid response" when {
+        val queryParams: Seq[(String, String)] =
+          commonQueryHipParams ++ List(
+            "sapDocumentNumber" -> docNumber,
+            "dateFrom"          -> fromDate,
+            "dateTo"            -> toDate
+          )
 
-        "a valid request containing both docNumber and fromDate and dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
+        connectorRequest(validRequest, validResponse, queryParams)
+      }
 
-          val queryParams: Seq[(String, String)] =
-            commonQueryHipParams ++ List(
-              "sapDocumentNumber" -> docNumber,
-              "dateFrom"          -> fromDate,
-              "dateTo"            -> toDate
-            )
+      "a valid request containing docNumber and not fromDate or dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
+        val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
 
-          connectorRequest(validRequest, validResponse, queryParams)
-        }
+        val queryParams: Seq[(String, String)] =
+          commonQueryHipParams ++ List("sapDocumentNumber" -> docNumber)
 
-        "a valid request containing docNumber and not fromDate or dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
-          val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
+        connectorRequest(request, validResponse, queryParams)
+      }
 
-          val queryParams: Seq[(String, String)] =
-            commonQueryHipParams ++ List("sapDocumentNumber" -> docNumber)
+      "a valid request containing fromDate and dateTo and no docNumber is supplied" in new HipTestWithAdditionalContactHeaders {
+        val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
 
-          connectorRequest(request, validResponse, queryParams)
-        }
+        val queryParams: Seq[(String, String)] =
+          commonQueryHipParams ++ List(
+            "dateFrom" -> fromDate,
+            "dateTo"   -> toDate
+          )
 
-        "a valid request containing fromDate and dateTo and no docNumber is supplied" in new HipTestWithAdditionalContactHeaders {
-          val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
-
-          val queryParams: Seq[(String, String)] =
-            commonQueryHipParams ++ List(
-              "dateFrom" -> fromDate,
-              "dateTo"   -> toDate
-            )
-
-          connectorRequest(request, validResponse, queryParams)
-        }
+        connectorRequest(request, validResponse, queryParams)
       }
     }
   }
