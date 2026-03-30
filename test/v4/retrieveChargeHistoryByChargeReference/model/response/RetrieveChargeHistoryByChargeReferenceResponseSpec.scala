@@ -16,8 +16,7 @@
 
 package v4.retrieveChargeHistoryByChargeReference.model.response
 
-import play.api.Configuration
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import shared.config.MockSharedAppConfig
 import shared.utils.UnitSpec
 import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.*
@@ -44,17 +43,7 @@ class RetrieveChargeHistoryByChargeReferenceResponseSpec extends UnitSpec with M
   }
 
   "written to JSON" should {
-    "produce the expected JSON when feature switch is disabled" in {
-      MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> false)
-      Json.toJson(validObjectSingle) shouldBe Json.obj(
-        "chargeHistoryDetails" -> Json.arr(
-          mtdSingleJson.as[JsObject] - "changeTimestamp"
-        )
-      )
-    }
-
-    "produce the expected JSON when feature switch is enabled" in {
-      MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> true)
+    "produce the expected JSON" in {
       Json.toJson(validObjectSingle) shouldBe mtdSingleResponse
     }
   }

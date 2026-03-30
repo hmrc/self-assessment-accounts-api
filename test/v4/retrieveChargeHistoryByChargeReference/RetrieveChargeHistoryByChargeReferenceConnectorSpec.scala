@@ -16,13 +16,12 @@
 
 package v4.retrieveChargeHistoryByChargeReference
 
-import play.api.Configuration
 import common.models.ChargeReference
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.Nino
 import shared.models.outcomes.ResponseWrapper
-import uk.gov.hmrc.http.StringContextOps
 import shared.utils.DateUtils.isoDateTimeStamp
+import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
@@ -43,16 +42,13 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
 
     def connectorRequest(request: RetrieveChargeHistoryByChargeReferenceRequestData,
                          response: RetrieveChargeHistoryResponse,
-                         queryParams: Seq[(String, String)],
-                         hipTest: Boolean): Unit = {
+                         queryParams: Seq[(String, String)]): Unit = {
 
       val outcome = Right(ResponseWrapper(correlationId, response))
 
-      val url = if (hipTest) {
+      val url =
         url"$baseUrl/etmp/RESTAdapter/ITSA/TaxPayer/GetChargeHistory"
-      } else {
-        url"$baseUrl/cross-regime/charges/NINO/$nino/ITSA"
-      }
+
       willGet(
         url = url,
         parameters = queryParams
@@ -85,20 +81,9 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
   }
 
   "RetrieveChargeHistoryByChargeReferenceConnector" when {
-    "the feature switch is enabled (HIP disabled)" must {
-      "return a valid response" in new IfsTest with Test {
-        MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> false)
-        val queryParams: List[(String, String)] = List("chargeReference" -> chargeReference)
-        connectorRequest(validRequest, validChargeHistoryResponseObject, queryParams, false)
-      }
-    }
+    "return a valid response" in new HipTestWithAdditionalContactHeaders {
 
-    "the feature switch is enabled (HIP enabled)" must {
-      "return a valid response" in new HipTestWithAdditionalContactHeaders {
-
-        MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1554.enabled" -> true)
-        connectorRequest(validRequest, validChargeHistoryResponseObject, hipQueryParams, true)
-      }
+      connectorRequest(validRequest, validChargeHistoryResponseObject, hipQueryParams)
     }
   }
 

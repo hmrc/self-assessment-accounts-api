@@ -18,7 +18,6 @@ package v4.retrieveChargeHistoryByTransactionId.def1.models.response
 
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
-import shared.config.{ConfigFeatureSwitches, SharedAppConfig}
 import shared.models.domain.{TaxYear, Timestamp}
 
 import scala.util.Try
@@ -50,9 +49,7 @@ object ChargeHistoryDetail {
       (JsPath \ "reversalReason").read[String] and
       (JsPath \ "poaAdjustmentReason").readNullable[String])(ChargeHistoryDetail.apply)
 
-  implicit def writes(implicit appConfig: SharedAppConfig): OWrites[ChargeHistoryDetail] =
-    Json.writes[ChargeHistoryDetail].transform { jsonObject =>
-      if (ConfigFeatureSwitches().isEnabled("ifs_hip_migration_1554")) jsonObject else jsonObject - "changeTimestamp"
-    }
+  implicit def writes: OWrites[ChargeHistoryDetail] =
+    Json.writes[ChargeHistoryDetail]
 
 }

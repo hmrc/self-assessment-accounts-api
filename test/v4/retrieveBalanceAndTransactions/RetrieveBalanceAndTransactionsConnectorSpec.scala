@@ -16,7 +16,6 @@
 
 package v4.retrieveBalanceAndTransactions
 
-import play.api.Configuration
 import shared.connectors.{ConnectorSpec, DownstreamOutcome}
 import shared.models.domain.{DateRange, Nino}
 import shared.models.outcomes.ResponseWrapper
@@ -65,15 +64,6 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
     includeEstimatedCharges = includeEstimatedCharges
   )
 
-  private val commonQueryIfsParams: Seq[(String, String)] = List(
-    "onlyOpenItems"              -> onlyOpenItems.toString,
-    "includeLocks"               -> includeLocks.toString,
-    "calculateAccruedInterest"   -> calculateAccruedInterest.toString,
-    "removePOA"                  -> removePOA.toString,
-    "customerPaymentInformation" -> customerPaymentInformation.toString,
-    "includeStatistical"         -> includeEstimatedCharges.toString
-  )
-
   private val commonQueryHipParams: Seq[(String, String)] = List(
     "onlyOpenItems"              -> onlyOpenItems.toString,
     "includeLocks"               -> includeLocks.toString,
@@ -87,88 +77,39 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   )
 
   "RetrieveBalanceAndTransactionsConnector" when {
+    "return a valid response" when {
 
-    "the feature switch is disabled (IFS enabled)" should {
+      "a valid request containing both docNumber and fromDate and dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
 
-      "return a valid response" when {
+        val queryParams: Seq[(String, String)] =
+          commonQueryHipParams ++ List(
+            "sapDocumentNumber" -> docNumber,
+            "dateFrom"          -> fromDate,
+            "dateTo"            -> toDate
+          )
 
-        "a valid request containing both docNumber and fromDate and dateTo is supplied" in new IfsTest with Test {
-
-          val queryParams: Seq[(String, String)] =
-            commonQueryIfsParams ++ List(
-              "docNumber" -> docNumber,
-              "dateFrom"  -> fromDate,
-              "dateTo"    -> toDate
-            )
-
-          MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1553.enabled" -> false)
-          connectorRequest(validRequest, validResponse, queryParams, false)
-        }
-
-        "a valid request containing docNumber and not fromDate or dateTo is supplied" in new IfsTest with Test {
-          val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
-
-          val queryParams: Seq[(String, String)] =
-            commonQueryIfsParams ++ List("docNumber" -> docNumber)
-
-          MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1553.enabled" -> false)
-          connectorRequest(request, validResponse, queryParams, false)
-        }
-
-        "a valid request containing fromDate and dateTo and no docNumber is supplied" in new IfsTest with Test {
-          val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
-
-          val queryParams: Seq[(String, String)] =
-            commonQueryIfsParams ++ List(
-              "dateFrom" -> fromDate,
-              "dateTo"   -> toDate
-            )
-
-          MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1553.enabled" -> false)
-          connectorRequest(request, validResponse, queryParams, false)
-        }
+        connectorRequest(validRequest, validResponse, queryParams)
       }
-    }
 
-    "the feature switch is enabled (HIP enabled)" should {
+      "a valid request containing docNumber and not fromDate or dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
+        val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
 
-      "return a valid response" when {
+        val queryParams: Seq[(String, String)] =
+          commonQueryHipParams ++ List("sapDocumentNumber" -> docNumber)
 
-        "a valid request containing both docNumber and fromDate and dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
+        connectorRequest(request, validResponse, queryParams)
+      }
 
-          val queryParams: Seq[(String, String)] =
-            commonQueryHipParams ++ List(
-              "sapDocumentNumber" -> docNumber,
-              "dateFrom"          -> fromDate,
-              "dateTo"            -> toDate
-            )
+      "a valid request containing fromDate and dateTo and no docNumber is supplied" in new HipTestWithAdditionalContactHeaders {
+        val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
 
-          MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1553.enabled" -> true)
-          connectorRequest(validRequest, validResponse, queryParams, true)
-        }
+        val queryParams: Seq[(String, String)] =
+          commonQueryHipParams ++ List(
+            "dateFrom" -> fromDate,
+            "dateTo"   -> toDate
+          )
 
-        "a valid request containing docNumber and not fromDate or dateTo is supplied" in new HipTestWithAdditionalContactHeaders {
-          val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(fromAndToDates = None)
-
-          val queryParams: Seq[(String, String)] =
-            commonQueryHipParams ++ List("sapDocumentNumber" -> docNumber)
-
-          MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1553.enabled" -> true)
-          connectorRequest(request, validResponse, queryParams, true)
-        }
-
-        "a valid request containing fromDate and dateTo and no docNumber is supplied" in new HipTestWithAdditionalContactHeaders {
-          val request: RetrieveBalanceAndTransactionsRequestData = validRequest.copy(docNumber = None)
-
-          val queryParams: Seq[(String, String)] =
-            commonQueryHipParams ++ List(
-              "dateFrom" -> fromDate,
-              "dateTo"   -> toDate
-            )
-
-          MockedSharedAppConfig.featureSwitchConfig returns Configuration("ifs_hip_migration_1553.enabled" -> true)
-          connectorRequest(request, validResponse, queryParams, true)
-        }
+        connectorRequest(request, validResponse, queryParams)
       }
     }
   }
@@ -191,16 +132,13 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
 
     def connectorRequest(request: RetrieveBalanceAndTransactionsRequestData,
                          response: RetrieveBalanceAndTransactionsResponse,
-                         queryParams: Seq[(String, String)],
-                         hipTest: Boolean): Unit = {
+                         queryParams: Seq[(String, String)]): Unit = {
 
       val outcome = Right(ResponseWrapper(correlationId, response))
 
-      val url = if (hipTest) {
+      val url =
         url"$baseUrl/etmp/RESTAdapter/itsa/taxpayer/financial-details"
-      } else {
-        url"$baseUrl/enterprise/02.00.00/financial-data/NINO/$nino/ITSA"
-      }
+
       willGet(
         url = url,
         parameters = queryParams
