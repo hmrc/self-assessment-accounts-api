@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "itemId": "001",
+      "dueDate": "2018-08-13",
+      "amount": 10000,
+      "clearingDate": "2018-08-13",
+      "clearingReason": "Incoming Payment",
+      "outgoingPaymentMethod": "Payable Order Repayment",
+      "locks": {
+        "isChargeOnHold": false,
+        "isEstimatedChargeOnHold": false,
+        "isInterestAccrualOnHold": false,
+        "isInterestChargeOnHold": false
+      },
+      "isReturn": true,
+      "paymentReference": "Ab12453535",
+      "paymentAmount": 10000,
+      "paymentMethod": "Payment",
+      "paymentLot": "81203010024",
+      "paymentLotItem": "000001",
+      "clearingSAPDocument": "3350000253",
+      "isChargeEstimate": true
+    }
+  ]
+}

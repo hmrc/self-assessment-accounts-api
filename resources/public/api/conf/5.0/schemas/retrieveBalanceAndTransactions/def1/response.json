@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve Self Assessment Balance and Transactions",
+  "description": "This endpoint enables you to retrieve the overall liability broken down into overdue, currently due (payable), and pending (not yet due) amounts. A National Insurance number must be provided.",
+  "type": "object",
+  "properties": {
+    "balanceDetails": {
+      "$ref": "balanceDetails.json"
+    },
+    "codingDetails": {
+      "$ref": "codingDetails.json"
+    },
+    "documentDetails": {
+      "$ref": "documentDetails.json"
+    },
+    "financialDetails": {
+      "$ref": "financialDetails.json"
+    }
+  },
+  "required": [
+    "balanceDetails"
+  ],
+  "additionalProperties": false
+}

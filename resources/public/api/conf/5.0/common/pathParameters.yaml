@@ -1,0 +1,60 @@
+components:
+  parameters:
+    nino:
+      name: nino
+      in: path
+      description: |
+        National Insurance number, in the format `AA999999A`.
+      schema:
+        type: string
+        example: TC663795B
+      required: true
+    taxYear:
+      name: taxYear
+      in: path
+      description: |
+        The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. The minimum tax year is 2021-22. No gaps are allowed, for example, 2020-22 is not valid. (The minimum tax year in Sandbox is 2019-20.)
+      schema:
+        type: string
+        example: 2021-22
+      required: true
+    identifierType:
+      name: identifierType
+      in: path
+      description: |
+        Define what type of identifier is being used in the request, either transactionId or chargeReference.
+        One of:
+          - `transactionId`
+          - `chargeReference`
+      schema:
+        type: string
+        enum: [transactionId, chargeReference]
+      required: true
+    identifier:
+      name: identifier
+      in: path
+      description: |
+        The unique identifier, either transactionId or chargeReference.
+      schema:
+        oneOf:
+          - $ref: "#/components/schemas/transactionId"
+          - $ref: "#/components/schemas/chargeReference"
+      required: true
+    codingOutTaxYear:
+      name: taxYear
+      in: path
+      description: |
+        The tax year the data applies to, for example, 2021-22. The start year and end year must not span two tax years. No gaps are allowed, for example, 2020-22 is not valid.
+      schema:
+        type: string
+        example: 2021-22
+      required: true
+  schemas:
+    transactionId:
+      type: string
+      pattern: "^[0-9A-Za-z]{1,12}$"
+      example: X92AM39DLE3D
+    chargeReference:
+      type: string
+      pattern: "^[A-Za-z]{2}[0-9]{12}$"
+      example: AB123456789012

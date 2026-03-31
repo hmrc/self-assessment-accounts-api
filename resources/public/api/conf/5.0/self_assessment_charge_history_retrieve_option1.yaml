@@ -1,0 +1,115 @@
+get:
+  summary: Retrieve History of a Self Assessment Charge OPTION 1
+
+  description: |
+    This endpoint enables you to retrieve the history of changes to an individual charge. A National Insurance number, and either a transaction ID or charge reference must be provided. 
+    You can get the transaction ID using the Retrieve Self Assessment Balance and Transactions endpoint - it is returned as documentId in the documentDetails array.
+        
+    ### Test data
+    Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
+    
+    | Header Value (Gov-Test-Scenario) | Scenario                                       |
+    |----------------------------------|------------------------------------------------|
+    | N/A - DEFAULT                    | Simulates success response.                    |
+    | NOT_FOUND                        | Simulates the scenario where no data is found. |   
+
+  tags:
+    - Payments and Liabilities
+
+  security:
+    - User-Restricted:
+        - read:self-assessment
+
+  parameters:
+    - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/transactionId"
+    - $ref: "./common/queryParameters.yaml#/components/parameters/chargeReference"
+    - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
+
+  responses:
+    "200":
+      description: Success
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/retrieveSelfAssementChargeHistory/def1/response.json"
+          examples:
+            Request:
+              value:
+                $ref: "./examples/retrieveSelfAssementChargeHistory/def1/response.json"
+
+    "400":
+      description: Bad request
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error-response.yaml"
+          examples:
+            FORMAT_NINO:
+              $ref: "./common/errors.yaml#/components/examples/formatNino"
+            FORMAT_TRANSACTION_ID:
+              $ref: "./common/errors.yaml#/components/examples/formatTransactionId"
+            FORMAT_CHARGE_REFERENCE:
+              $ref: "./common/errors.yaml#/components/examples/formatChargeReference"
+            RULE_INVALID_IDENTIFIER:
+              $ref: "./common/errors.yaml#/components/examples/ruleInvalidIdentifier"
+            RULE_INCORRECT_GOV_TEST_SCENARIO:
+              $ref: "./common/errors.yaml#/components/examples/ruleIncorrectGovTestScenario"
+
+    "403":
+      description: Forbidden
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error-response.yaml"
+          examples:
+            CLIENT_OR_AGENT_NOT_AUTHORISED:
+              $ref: "./common/errors.yaml#/components/examples/clientOrAgentNotAuthorised"
+
+    "404":
+      description: Not found
+      headers:
+        X-CorrelationId:
+          $ref: "./common/headers.yaml#/components/parameters/correlationId"
+        Deprecation:
+          $ref: "./common/headers.yaml#/components/parameters/deprecationHeader"
+        Sunset:
+          $ref: "./common/headers.yaml#/components/parameters/sunsetHeader"
+        Link:
+          $ref: "./common/headers.yaml#/components/parameters/linkHeader"
+      content:
+        application/json:
+          schema:
+            $ref: "./schemas/error-response.yaml"
+          examples:
+            NOT_FOUND:
+              $ref: "./common/errors.yaml#/components/examples/notFound"
