@@ -9,6 +9,7 @@
       "returnTaxYear": {
         "description": "The ending year of the tax year to which the return relates is in the format YYYY-YY.",
         "type": "string",
+        "pattern": "^\\d{4}-\\d{2}$",
         "example": "2021-22"
       },
       "totalLiabilityAmount": {
@@ -17,11 +18,12 @@
         "multipleOf": 0.01,
         "minimum": -99999999999.99,
         "maximum": 99999999999.99,
-        "example": "5009.99"
+        "example": 5009.99
       },
       "codingTaxYear": {
         "description": "The tax year that the coded out charge will be attached to.",
         "type": "string",
+        "pattern": "^\\d{4}-\\d{2}$",
         "example": "2021-22"
       },
       "coded": {
@@ -34,11 +36,12 @@
             "multipleOf": 0.01,
             "minimum": -99999999999.99,
             "maximum": 99999999999.99,
-            "example": "5009.99"
+            "example": 5009.99
           },
           "initiationDate": {
             "description": "Initiation date of the coded out charge, in the format YYYY-MM-DD.",
             "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
             "example": "2021-04-05"
           }
         }

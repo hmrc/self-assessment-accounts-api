@@ -21,7 +21,7 @@
                 "multipleOf": 1,
                 "minimum": 1,
                 "maximum": 999999999999999,
-                "example": "1234567890"
+                "example": 1234567890
               },
               "amount": {
                 "description": "The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -29,16 +29,18 @@
                 "multipleOf": 0.01,
                 "minimum": 0.00,
                 "maximum": 99999999999.99,
-                "example": "5000.99"
+                "example": 5000.99
               },
               "relatedTaxYear": {
                 "description": "The tax year related to the underpayment.",
                 "type": "string",
+                "pattern": "^2[0-9]{3}-[0-9]{2}$",
                 "example": "2021-22"
               },
               "submittedOn": {
                 "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
                 "type": "string",
+                "format": "date-time",
                 "example": "2021-07-06T09:37:17.000Z"
               },
               "source": {
@@ -71,7 +73,7 @@
                 "multipleOf": 1,
                 "minimum": 1,
                 "maximum": 999999999999999,
-                "example": "1234567890"
+                "example": 1234567890
               },
               "amount": {
                 "description": "The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -79,16 +81,18 @@
                 "multipleOf": 0.01,
                 "minimum": 0.00,
                 "maximum": 99999999999.99,
-                "example": "5000.99"
+                "example": 5000.99
               },
               "relatedTaxYear": {
                 "description": "The tax year related to the underpayment.",
                 "type": "string",
+                "pattern": "^2[0-9]{3}-[0-9]{2}$",
                 "example": "2021-22"
               },
               "submittedOn": {
                 "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
                 "type": "string",
+                "format": "date-time",
                 "example": "2021-07-06T09:37:17.000Z"
               },
               "source": {
@@ -121,7 +125,7 @@
                 "multipleOf": 1,
                 "minimum": 1,
                 "maximum": 999999999999999,
-                "example": "1234567890"
+                "example": 1234567890
               },
               "amount": {
                 "description": "The total amount of debt coded out. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -129,16 +133,18 @@
                 "multipleOf": 0.01,
                 "minimum": 0.00,
                 "maximum": 99999999999.99,
-                "example": "5000.99"
+                "example": 5000.99
               },
               "relatedTaxYear": {
                 "description": "The tax year related to the debt.",
                 "type": "string",
+                "pattern": "^2[0-9]{3}-[0-9]{2}$",
                 "example": "2021-22"
               },
               "submittedOn": {
                 "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
                 "type": "string",
+                "format": "date-time",
                 "example": "2021-07-06T09:37:17.000Z"
               },
               "source": {
@@ -168,7 +174,7 @@
               "multipleOf": 1,
               "minimum": 1,
               "maximum": 999999999999999,
-              "example": "1234567890"
+              "example": 1234567890
             },
             "amount": {
               "description": "The total amount of PAYE coded out in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -176,16 +182,18 @@
               "multipleOf": 0.01,
               "minimum": 0.00,
               "maximum": 99999999999.99,
-              "example": "5000.99"
+              "example": 5000.99
             },
             "relatedTaxYear": {
               "description": "The tax year related to the in-year adjustment.",
               "type": "string",
+              "pattern": "^2[0-9]{3}-[0-9]{2}$",
               "example": "2021-22"
             },
             "submittedOn": {
               "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
               "type": "string",
+              "format": "date-time",
               "example": "2021-07-06T09:37:17.000Z"
             },
             "source": {
@@ -224,7 +232,7 @@
                 "multipleOf": 1,
                 "minimum": 1,
                 "maximum": 999999999999999,
-                "example": "1234567890"
+                "example": 1234567890
               },
               "amount": {
                 "description": "The total coded out amount attributed to Self Assessment underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -232,11 +240,12 @@
                 "multipleOf": 0.01,
                 "minimum": 0.00,
                 "maximum": 99999999999.99,
-                "example": "5000.99"
+                "example": 5000.99
               },
               "submittedOn": {
                 "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
                 "type": "string",
+                "format": "date-time",
                 "example": "2021-07-06T09:37:17.000Z"
               }
             },
@@ -260,7 +269,7 @@
                 "multipleOf": 1,
                 "minimum": 1,
                 "maximum": 999999999999999,
-                "example": "1234567890"
+                "example": 1234567890
               },
               "amount": {
                 "description": "The total coded out amount attributed to PAYE underpayments. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -268,7 +277,7 @@
                 "multipleOf": 0.01,
                 "minimum": 0.00,
                 "maximum": 99999999999.99,
-                "example": "5000.99"
+                "example": 5000.99
               },
               "submittedOn": {
                 "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
@@ -296,7 +305,7 @@
                 "multipleOf": 1,
                 "minimum": 1,
                 "maximum": 999999999999999,
-                "example": "1234567890"
+                "example": 1234567890
               },
               "amount": {
                 "description": "The total amount of debt coded out. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -304,11 +313,12 @@
                 "multipleOf": 0.01,
                 "minimum": 0.00,
                 "maximum": 99999999999.99,
-                "example": "5000.99"
+                "example": 5000.99
               },
               "submittedOn": {
                 "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
                 "type": "string",
+                "format": "date-time",
                 "example": "2021-07-06T09:37:17.000Z"
               }
             },
@@ -329,7 +339,7 @@
               "multipleOf": 1,
               "minimum": 1,
               "maximum": 999999999999999,
-              "example": "1234567890"
+              "example": 1234567890
             },
             "amount": {
               "description": "The total amount of PAYE coded out in-year adjustment. The value must be between 0 and 99999999999.99 up to 2 decimal places.",
@@ -337,11 +347,12 @@
               "multipleOf": 0.01,
               "minimum": 0.00,
               "maximum": 99999999999.99,
-              "example": "5000.99"
+              "example": 5000.99
             },
             "submittedOn": {
               "description": "The date the coded out information was added. It is either the latest change date held within HMRC or the latest user submitted date. It is in the format YYYY-MM-DDThh:mm:ss.sssZ.",
               "type": "string",
+              "format": "date-time",
               "example": "2021-07-06T09:37:17.000Z"
             }
           },
