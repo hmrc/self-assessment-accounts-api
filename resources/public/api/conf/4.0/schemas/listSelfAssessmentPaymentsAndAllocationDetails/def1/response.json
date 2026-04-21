@@ -25,19 +25,24 @@
           "paymentAmount": {
             "type": "number",
             "description": "The amount of the payment received into the account. \n\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-            "example": "10000.00"
+            "minimum": -99999999999.99,
+            "maximum": 99999999999.99,
+            "multipleOf": 0.01,
+            "example": 10000.00
           },
           "paymentMethod": {
             "type": "string",
             "description": "The method used to make the payment. \n\nMust conform to the regular expression:\n^[0-9A-Za-z]{1,30}$",
-            "example": "BACS, Payment by card"
+            "example": "BACS, Payment by card",
+            "pattern": "^[0-9A-Za-z]{1,30}$",
+            "minLength": 1,
+            "maxLength": 30
           },
           "transactionDate": {
             "type": "string",
             "description": "The date the payment was received into the account in the format: YYYY-MM-DD",
             "example": "2018-04-05"
           },
-
           "allocations": {
             "type": "array",
             "description": "A list of charges which are allocated amounts from the payment",
@@ -47,31 +52,40 @@
                 "chargeReference": {
                   "type": "string",
                   "description": "A unique reference for the original charge that the payment was made against.",
-                  "example": "XM002610011595"
+                  "example": "XM002610011595",
+                  "minLength": 1,
+                  "maxLength": 16
                 },
                 "periodKey": {
                   "type": "string",
                   "description": "The period key attributed to the charge.\n\nA four digit reference containing characters and numbers to identify the specific tax period.",
-                  "example": "16RL"
+                  "example": "20G1",
+                  "minLength": 1,
+                  "maxLength": 4
                 },
                 "periodKeyDescription": {
                   "type": "string",
                   "description": "A description of the period key as a tax period.",
-                  "example": "6th April 2020 to 5th April 2021"
+                  "example": "6th April 2020 to 5th April 2021",
+                  "minLength": 1,
+                  "maxLength": 50
                 },
                 "startDate": {
                   "type": "string",
                   "description": "The start date of the tax year for the charge in the format YYYY-MM-DD",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
                   "example": "2018-04-06"
                 },
                 "endDate": {
                   "type": "string",
                   "description": "The end date of the tax year for the charge in the format YYYY-MM-DD",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
                   "example": "2019-04-05"
                 },
                 "dueDate": {
                   "type": "string",
                   "description": "The date the charge must be paid by. Interest or penalties will be accrued after this date.",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
                   "example": "2019-07-27"
                 },
                 "chargeDetail": {
@@ -80,12 +94,16 @@
                     "documentId": {
                       "type": "string",
                       "description": "Same as Document Number unless on output there are no postings then the Form Bundle number is returned. Must conform to the regular expression: ^[0-9A-Za-z]{1,12}$",
-                      "example": "1040000872"
+                      "example": "1040000872",
+                      "minLength": 1,
+                      "maxLength": 12
                     },
                     "documentType": {
                       "type": "string",
                       "description": "A code to specify the document type of which this is a subitem.",
-                      "example": "3880"
+                      "example": "3880",
+                      "minLength": 1,
+                      "maxLength": 4
                     },
                     "documentTypeDescription": {
                       "type": "string",
@@ -95,30 +113,42 @@
                     "chargeType": {
                       "type": "string",
                       "description": "A code to specify the type of charge.",
-                      "example": "1005"
+                      "example": "1005",
+                      "minLength": 1,
+                      "maxLength": 4
                     },
                     "chargeTypeDescription": {
                       "type": "string",
                       "description": "Description of the charge type.",
-                      "example": "Income Tax Estimate -  ITSA"
+                      "example": "Income Tax Estimate -  ITSA",
+                      "pattern": "^[0-9A-Za-z]{1,30}$",
+                      "minLength": 1,
+                      "maxLength": 30
                     }
-
                   }
                 },
                 "amount": {
                   "type": "number",
                   "description": "The original value of this transaction.\n\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-                  "example": "600.00"
+                  "example": "600.00",
+                  "minimum": -99999999999.99,
+                  "maximum": 99999999999.99,
+                  "multipleOf": 0.01
                 },
                 "clearedAmount": {
                   "type": "number",
                   "description": "The cleared value of this transaction.\n\nThe value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
-                  "example": "600.00"
+                  "example": "600.00",
+                  "minimum": -99999999999.99,
+                  "maximum": 99999999999.99,
+                  "multipleOf": 0.01
                 },
                 "contractAccount": {
                   "type": "string",
                   "description": "The accounting record for a particular charge type.",
-                  "example": "000404772537"
+                  "example": "000404772537",
+                  "minLength": 1,
+                  "maxLength": 12
                 }
 
               },
