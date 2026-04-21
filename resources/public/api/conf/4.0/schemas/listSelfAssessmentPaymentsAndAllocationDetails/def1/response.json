@@ -34,6 +34,7 @@
             "type": "string",
             "description": "The method used to make the payment. \n\nMust conform to the regular expression:\n^[0-9A-Za-z]{1,30}$",
             "example": "BACS, Payment by card",
+            "pattern": "^[0-9A-Za-z]{1,30}$",
             "minLength": 1,
             "maxLength": 30
           },

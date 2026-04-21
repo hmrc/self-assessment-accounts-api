@@ -15,12 +15,15 @@
             "description": "The tax year that this charge relates to in the format: YYYY-YY.",
             "type": "string",
             "format": "date",
+            "pattern": "^\\d{4}-\\d{2}$",
             "example": "2022-23"
           },
           "transactionId": {
             "description": "A unique identifier used to return a single charge. Must conform to the regular expression ^[A-Za-z0-9]{1,12}$",
             "type": "string",
-            "pattern": "^[A-Za-z0-9]{1,30}$",
+            "minLength": 1,
+            "maxLength": 12,
+            "pattern": "^[A-Za-z0-9]{1,12}$",
             "example": "X123456790A"
           },
           "transactionDate": {
