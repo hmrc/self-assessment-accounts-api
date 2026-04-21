@@ -111,7 +111,6 @@
               "multipleOf": 1,
               "minimum": 1,
               "maximum": 999999999999999,
-              "multipleOf": 1,
               "example": 1234567890
             },
             "amount": {
