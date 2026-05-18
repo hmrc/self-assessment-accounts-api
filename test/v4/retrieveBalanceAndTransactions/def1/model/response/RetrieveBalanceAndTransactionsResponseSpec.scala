@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,31 +24,30 @@ import v4.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransa
 class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
 
   "RetrieveBalanceAndTransactionsResponse.reads" when {
-    "the feature switch is enabled (HIP enabled)" when {
-      "locks are included" when {
-        implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
+    "locks are included" when {
+      implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
 
-        "passed a valid JSON document" should {
-          "return a fully populated object" in {
-            downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseHip
-          }
-
-          "return a minimally populated object" in {
-            minimalDownstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe minimalResponse
-          }
+      "passed a valid JSON document" should {
+        "return a fully populated object" in {
+          downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseHip
         }
-      }
 
-      "locks are included" should {
-        implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
-
-        "exclude locks" should {
-          "return the object without locks" in {
-            downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseWithoutLocksHip
-          }
+        "return a minimally populated object" in {
+          minimalDownstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe minimalResponse
         }
       }
     }
+
+    "locks are included" should {
+      implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
+
+      "exclude locks" should {
+        "return the object without locks" in {
+          downstreamResponseHipJson.as[RetrieveBalanceAndTransactionsResponse] shouldBe responseWithoutLocksHip
+        }
+      }
+    }
+
   }
 
   "RetrieveBalanceAndTransactionsResponse.writes" should {

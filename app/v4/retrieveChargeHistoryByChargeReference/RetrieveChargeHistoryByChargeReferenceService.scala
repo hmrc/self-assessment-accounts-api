@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,18 +38,13 @@ class RetrieveChargeHistoryByChargeReferenceService @Inject() (connector: Retrie
       .map(_.leftMap(mapDownstreamErrors(errorMap)))
   }
 
-  private val errorMap: Map[String, MtdError] = {
-
-    val hipErrors = Map(
+  private val errorMap: Map[String, MtdError] =
+    Map(
       "014" -> NotFoundError,
       "002" -> InternalError,
       "003" -> InternalError,
       "005" -> NotFoundError,
       "015" -> InternalError
     )
-
-    hipErrors
-
-  }
 
 }
