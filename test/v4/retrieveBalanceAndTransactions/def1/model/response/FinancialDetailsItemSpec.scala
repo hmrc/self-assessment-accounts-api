@@ -33,13 +33,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
       "reading locks" when {
         implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
 
-        "all properties are present and the feature switch is disabled (IFS enabled)" must {
-          "include locks in the object" in {
-            financialDetailsItemDownstreamJson.as[FinancialDetailsItem] shouldBe financialDetailsItem
-          }
-        }
-
-        "all properties are present and the feature switch is enabled (HIP enabled)" must {
+        "all properties are present" must {
           "include locks in the object" in {
             financialDetailsItemDownstreamHipJson.as[FinancialDetailsItem] shouldBe financialDetailsItemHip
           }
@@ -55,13 +49,7 @@ class FinancialDetailsItemSpec extends UnitSpec with FinancialDetailsItemFixture
       "not reading locks" when {
         implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
 
-        "all properties are present and the feature switch is disabled (IFS enabled)" must {
-          "not include locks field" in {
-            financialDetailsItemDownstreamJson.as[FinancialDetailsItem] shouldBe financialDetailsItem.copy(locks = None)
-          }
-        }
-
-        "all properties are present and the feature switch is enabled (HIP enabled)" must {
+        "all properties are present" must {
           "not include locks field" in {
             financialDetailsItemDownstreamHipJson.as[FinancialDetailsItem] shouldBe financialDetailsItemHip.copy(locks = None)
           }

@@ -20,7 +20,6 @@ import play.api.libs.json.Json
 import shared.utils.UnitSpec
 import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{
   downstreamFinancialDetailsFullHipJson,
-  downstreamFinancialDetailsFullJson,
   financialDetailsFull,
   financialDetailsFullHip,
   mtdFinancialDetailsFullJson
@@ -31,11 +30,7 @@ class FinancialDetailsSpec extends UnitSpec {
   implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(true)
 
   "reads" should {
-    "return a valid model with all properties" when {
-      "valid JSON with all properties is supplied and the feature switch is disabled (IFS enabled)" in {
-        downstreamFinancialDetailsFullJson.as[FinancialDetails] shouldBe financialDetailsFull
-      }
-    }
+
     "return a valid model with all properties" when {
       "valid JSON with all properties is supplied and the feature switch is enabled (HIP enabled)" in {
         downstreamFinancialDetailsFullHipJson.as[FinancialDetails] shouldBe financialDetailsFullHip

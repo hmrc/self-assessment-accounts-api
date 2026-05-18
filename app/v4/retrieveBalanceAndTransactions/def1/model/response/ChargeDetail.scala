@@ -29,7 +29,7 @@ object ChargeDetail {
   given Writes[ChargeDetail] = Json.writes[ChargeDetail]
 
   given Reads[ChargeDetail] =
-    ((JsPath \ "documentId").read[String].orElse((JsPath \ "documentID").read[String]) and
+    ((JsPath \ "documentID").read[String] and
       (JsPath \ "mainTransaction").readNullable[String] and
       (JsPath \ "mainType").readNullable[String] and
       (JsPath \ "subTransaction").readNullable[String] and

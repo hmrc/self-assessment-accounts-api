@@ -39,21 +39,6 @@ class RetrieveChargeHistoryByTransactionIdService @Inject() (connector: Retrieve
   }
 
   private val errorMap: Map[String, MtdError] = {
-    val ifsErrors = Map(
-      "INVALID_CORRELATIONID" -> InternalError,
-      "INVALID_ID_TYPE"       -> InternalError,
-      "INVALID_IDVALUE"       -> NinoFormatError,
-      "INVALID_REGIME_TYPE"   -> InternalError,
-      "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
-      "INVALID_DATE_FROM"     -> InternalError,
-      "INVALID_DATE_TO"       -> InternalError,
-      "INVALID_DATE_RANGE"    -> InternalError,
-      "INVALID_REQUEST"       -> InternalError,
-      "REQUEST_NOT_PROCESSED" -> InternalError,
-      "NO_DATA_FOUND"         -> NotFoundError,
-      "SERVER_ERROR"          -> InternalError,
-      "SERVICE_UNAVAILABLE"   -> InternalError
-    )
 
     val hipErrors = Map(
       "014" -> NotFoundError,
@@ -62,7 +47,7 @@ class RetrieveChargeHistoryByTransactionIdService @Inject() (connector: Retrieve
       "005" -> NotFoundError,
       "015" -> InternalError
     )
-    ifsErrors ++ hipErrors
+    hipErrors
 
   }
 

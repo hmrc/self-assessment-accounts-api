@@ -17,7 +17,6 @@
 package v4.retrieveBalanceAndTransactions
 
 import cats.implicits.*
-import common.errors.*
 import shared.controllers.RequestContext
 import shared.models.errors.*
 import shared.services.{BaseService, ServiceOutcome}
@@ -39,28 +38,6 @@ class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanc
   }
 
   private val downStreamErrorMap: Map[String, MtdError] = {
-    val ifsErrors =
-      Map(
-        "INVALID_CORRELATIONID"                -> InternalError,
-        "INVALID_IDTYPE"                       -> InternalError,
-        "INVALID_IDNUMBER"                     -> NinoFormatError,
-        "INVALID_REGIME_TYPE"                  -> InternalError,
-        "INVALID_DOC_NUMBER"                   -> DocNumberFormatError,
-        "INVALID_ONLY_OPEN_ITEMS"              -> OnlyOpenItemsFormatError,
-        "INVALID_INCLUDE_LOCKS"                -> IncludeLocksFormatError,
-        "INVALID_CALCULATE_ACCRUED_INTEREST"   -> CalculateAccruedInterestFormatError,
-        "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> CustomerPaymentInformationFormatError,
-        "INVALID_DATE_FROM"                    -> FromDateFormatError,
-        "INVALID_DATE_TO"                      -> ToDateFormatError,
-        "INVALID_DATE_RANGE"                   -> RuleInvalidDateRangeError,
-        "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
-        "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> RemovePaymentOnAccountFormatError,
-        "INVALID_INCLUDE_STATISTICAL"          -> IncludeEstimatedChargesFormatError,
-        "REQUEST_NOT_PROCESSED"                -> InternalError,
-        "NO_DATA_FOUND"                        -> NotFoundError,
-        "SERVER_ERROR"                         -> InternalError,
-        "SERVICE_UNAVAILABLE"                  -> InternalError
-      )
 
     val hipErrors =
       Map(
@@ -70,7 +47,7 @@ class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanc
         "015" -> InternalError
       )
 
-    ifsErrors ++ hipErrors
+    hipErrors
   }
 
 }

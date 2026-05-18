@@ -62,21 +62,30 @@ class RetrieveChargeHistoryByTransactionIdServiceSpec extends ServiceSpec {
             await(service.retrieveChargeHistoryByTransactionId(requestData)) shouldBe Left(ErrorWrapper(correlationId, error))
           }
 
+//        val errors: Seq[(String, MtdError)] =
+//          List(
+//            "INVALID_CORRELATIONID" -> InternalError,
+//            "INVALID_ID_TYPE"       -> InternalError,
+//            "INVALID_IDVALUE"       -> NinoFormatError,
+//            "INVALID_REGIME_TYPE"   -> InternalError,
+//            "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
+//            "INVALID_DATE_FROM"     -> InternalError,
+//            "INVALID_DATE_TO"       -> InternalError,
+//            "INVALID_DATE_RANGE"    -> InternalError,
+//            "INVALID_REQUEST"       -> InternalError,
+//            "REQUEST_NOT_PROCESSED" -> InternalError,
+//            "NO_DATA_FOUND"         -> NotFoundError,
+//            "SERVER_ERROR"          -> InternalError,
+//            "SERVICE_UNAVAILABLE"   -> InternalError
+//          )
+
         val errors: Seq[(String, MtdError)] =
           List(
-            "INVALID_CORRELATIONID" -> InternalError,
-            "INVALID_ID_TYPE"       -> InternalError,
-            "INVALID_IDVALUE"       -> NinoFormatError,
-            "INVALID_REGIME_TYPE"   -> InternalError,
-            "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
-            "INVALID_DATE_FROM"     -> InternalError,
-            "INVALID_DATE_TO"       -> InternalError,
-            "INVALID_DATE_RANGE"    -> InternalError,
-            "INVALID_REQUEST"       -> InternalError,
-            "REQUEST_NOT_PROCESSED" -> InternalError,
-            "NO_DATA_FOUND"         -> NotFoundError,
-            "SERVER_ERROR"          -> InternalError,
-            "SERVICE_UNAVAILABLE"   -> InternalError
+            "014" -> NotFoundError,
+            "002" -> InternalError,
+            "003" -> InternalError,
+            "005" -> NotFoundError,
+            "015" -> InternalError
           )
 
         errors.foreach(args => serviceError.tupled(args))

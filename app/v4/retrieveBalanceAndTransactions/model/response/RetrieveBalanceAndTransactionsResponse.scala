@@ -29,20 +29,24 @@ case class RetrieveBalanceAndTransactionsResponse(
 
 object RetrieveBalanceAndTransactionsResponse {
 
-  private def innerReads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
-    (
-      (JsPath \ "balanceDetails").read[BalanceDetails] and
-        (JsPath \ "codingDetails").readNullable[Seq[CodingDetails]] and
-        (JsPath \ "documentDetails").readNullable[Seq[DocumentDetails]] and
-        (JsPath \ "financialDetails")
-          .read[Seq[FinancialDetails]]
-          .map(fd => Option(fd))
-          .orElse((JsPath \ "financialDetailsItem").readNullable[Seq[FinancialDetails]])
-    )(RetrieveBalanceAndTransactionsResponse.apply)
+//  private def innerReads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
+//    (
+//      (JsPath \ "balanceDetails").read[BalanceDetails] and
+//        (JsPath \ "codingDetails").readNullable[Seq[CodingDetails]] and
+//        (JsPath \ "documentDetails").readNullable[Seq[DocumentDetails]] and
+//        (JsPath \ "financialDetailsItem").readNullable[Seq[FinancialDetails]]
+//        )(RetrieveBalanceAndTransactionsResponse.apply)
 
   // accommodating HIP response being wrapped in a 'success' object
   implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
-    (JsPath \ "success").read[RetrieveBalanceAndTransactionsResponse](innerReads).orElse(innerReads)
+    (JsPath \ "success").read[RetrieveBalanceAndTransactionsResponse](
+      (
+        (JsPath \ "balanceDetails").read[BalanceDetails] and
+          (JsPath \ "codingDetails").readNullable[Seq[CodingDetails]] and
+          (JsPath \ "documentDetails").readNullable[Seq[DocumentDetails]] and
+          (JsPath \ "financialDetailsItem").readNullable[Seq[FinancialDetails]]
+      )(RetrieveBalanceAndTransactionsResponse.apply)
+    )
 
   implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
 

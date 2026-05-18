@@ -16,7 +16,6 @@
 
 package v4.retrieveBalanceAndTransactions
 
-import common.errors.*
 import shared.models.domain.{DateRange, Nino}
 import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
@@ -83,37 +82,15 @@ class RetrieveBalanceAndTransactionsServiceSpec extends ServiceSpec {
         }
 
       val errors: Seq[(String, MtdError)] = {
-        val ifsErrors =
-          List(
-            "INVALID_CORRELATIONID"                -> InternalError,
-            "INVALID_IDTYPE"                       -> InternalError,
-            "INVALID_IDNUMBER"                     -> NinoFormatError,
-            "INVALID_REGIME_TYPE"                  -> InternalError,
-            "INVALID_DOC_NUMBER"                   -> DocNumberFormatError,
-            "INVALID_ONLY_OPEN_ITEMS"              -> OnlyOpenItemsFormatError,
-            "INVALID_INCLUDE_LOCKS"                -> IncludeLocksFormatError,
-            "INVALID_CALCULATE_ACCRUED_INTEREST"   -> CalculateAccruedInterestFormatError,
-            "INVALID_CUSTOMER_PAYMENT_INFORMATION" -> CustomerPaymentInformationFormatError,
-            "INVALID_DATE_FROM"                    -> FromDateFormatError,
-            "INVALID_DATE_TO"                      -> ToDateFormatError,
-            "INVALID_DATE_RANGE"                   -> RuleInvalidDateRangeError,
-            "INVALID_REQUEST"                      -> RuleInconsistentQueryParamsError,
-            "INVALID_REMOVE_PAYMENT_ON_ACCOUNT"    -> RemovePaymentOnAccountFormatError,
-            "INVALID_INCLUDE_STATISTICAL"          -> IncludeEstimatedChargesFormatError,
-            "REQUEST_NOT_PROCESSED"                -> InternalError,
-            "NO_DATA_FOUND"                        -> NotFoundError,
-            "SERVER_ERROR"                         -> InternalError,
-            "SERVICE_UNAVAILABLE"                  -> InternalError
-          )
 
-        val hipErrors = Map(
+        val hipErrors = Seq(
           "002" -> InternalError,
           "003" -> InternalError,
           "005" -> NotFoundError,
           "015" -> InternalError
         )
 
-        ifsErrors ++ hipErrors
+        hipErrors
       }
 
       errors.foreach(serviceError.tupled)
