@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ object ChargeDetail {
   given Writes[ChargeDetail] = Json.writes[ChargeDetail]
 
   given Reads[ChargeDetail] =
-    ((JsPath \ "documentId").read[String].orElse((JsPath \ "documentID").read[String]) and
+    ((JsPath \ "documentID").read[String] and
       (JsPath \ "mainTransaction").readNullable[String] and
       (JsPath \ "mainType").readNullable[String] and
       (JsPath \ "subTransaction").readNullable[String] and

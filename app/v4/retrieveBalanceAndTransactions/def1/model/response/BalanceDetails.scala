@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -63,38 +63,25 @@ object BalanceDetails {
   }
 
   implicit val reads: Reads[BalanceDetails] = (
-    (JsPath \ "balanceDueWithin30Days").read[BigDecimal].orElse((JsPath \ "balanceDueWithin30days").read[BigDecimal]) and
-      (JsPath \ "nextPaymentDateForChargesDueIn30Days")
-        .read[String]
-        .map(s => Option(s))
-        .orElse((JsPath \ "nxtPymntDateChrgsDueIn30Days").readNullable[String]) and
-      (JsPath \ "balanceNotDueIn30Days")
-        .read[BigDecimal]
-        .orElse((JsPath \ "balanceNotDuein30Days").read[BigDecimal]) and
-      (JsPath \ "nextPaymentDateBalanceNotDue")
-        .read[String]
-        .map(s => Option(s))
-        .orElse((JsPath \ "nextPaymntDateBalnceNotDue").readNullable[String]) and
+    (JsPath \ "balanceDueWithin30days").read[BigDecimal] and
+      (JsPath \ "nxtPymntDateChrgsDueIn30Days").readNullable[String] and
+      (JsPath \ "balanceNotDuein30Days").read[BigDecimal] and
+      (JsPath \ "nextPaymntDateBalnceNotDue").readNullable[String] and
       (JsPath \ "overDueAmount").read[BigDecimal] and
       (JsPath \ "bcdBalancePerYear").readNullable[Seq[DownstreamBalancePerYear]].map {
         case Some(bs) => bs.collect(DownstreamBalancePerYear.asMtd)
         case None     => Nil
       } and
-      (JsPath \ "earliestPaymentDateOverDue")
-        .read[String]
-        .map(s => Option(s))
-        .orElse((JsPath \ "earlistPymntDateOverDue").readNullable[String]) and
+      (JsPath \ "earlistPymntDateOverDue").readNullable[String] and
       (JsPath \ "totalBalance").read[BigDecimal] and
       (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
       (JsPath \ "totalBCDBalance").readNullable[BigDecimal] and
       (JsPath \ "unallocatedCredit").readNullable[BigDecimal] and
-      ((JsPath \ "allocatedCreditForChargesThatAreOverdue").readNullable[BigDecimal] and
-        (JsPath \ "allocatedCredit").readNullable[BigDecimal])(_ orElse _) and
+      (JsPath \ "allocatedCreditForChargesThatAreOverdue").readNullable[BigDecimal] and
       (JsPath \ "totalCredit").readNullable[BigDecimal] and
       (JsPath \ "firstPendingAmountRequested").readNullable[BigDecimal] and
       (JsPath \ "secondPendingAmountRequested").readNullable[BigDecimal] and
-      ((JsPath \ "totalCreditAvailableForRepayment").readNullable[BigDecimal] and
-        (JsPath \ "availableCredit").readNullable[BigDecimal])(_ orElse _)
+      (JsPath \ "totalCreditAvailableForRepayment").readNullable[BigDecimal]
   )(BalanceDetails.apply)
 
   implicit val writes: OWrites[BalanceDetails] = Json.writes[BalanceDetails]

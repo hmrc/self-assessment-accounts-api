@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,14 +53,12 @@ object FinancialDetailsItem {
       (__ \ "clearingReason").readNullable[String] and
       (__ \ "outgoingPaymentMethod").readNullable[String].map(paymentMethodConverter) and
       (if (readLocks.value) __.read[FinancialDetailsItemLocks].map(Some(_)) else Reads.pure(None)) and
-      (__ \ "returnFlag")
-        .readNullable[Boolean]
-        .orElse((__ \ "returnFlag").readNullable[String].flatMap[Option[Boolean]] {
-          case Some("Y") => Reads.pure(Some(true))
-          case Some("N") => Reads.pure(Some(false))
-          case Some(x)   => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
-          case None      => Reads.pure(None)
-        }) and
+      (__ \ "returnFlag").readNullable[String].flatMap[Option[Boolean]] {
+        case Some("Y") => Reads.pure(Some(true))
+        case Some("N") => Reads.pure(Some(false))
+        case Some(x)   => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
+        case None      => Reads.pure(None)
+      } and
       (__ \ "paymentReference").readNullable[String] and
       (__ \ "paymentAmount").readNullable[BigDecimal] and
       (__ \ "paymentMethod").readNullable[String] and

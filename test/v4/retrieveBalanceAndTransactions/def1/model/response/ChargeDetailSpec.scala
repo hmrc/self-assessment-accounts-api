@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,33 +18,19 @@ package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{
-  chargeDetail,
-  downstreamFinancialDetailsFullHipJson,
-  downstreamFinancialDetailsFullJson,
-  mtdChargeDetailJson
-}
+import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.{chargeDetail, downstreamFinancialDetailsFullHipJson, mtdChargeDetailJson}
 
 class ChargeDetailSpec extends UnitSpec {
 
   "reads" when {
-    "the feature switch is disabled (IFS enabled)" should {
-      "return a valid model with properties" when {
-        "valid JSON with all properties is supplied" in {
-          downstreamFinancialDetailsFullJson.as[ChargeDetail] shouldBe chargeDetail
-        }
-      }
-    }
-    "the feature switch is enabled (HIP enabled)" should {
-      "return a valid model with properties" when {
-        "valid JSON with all properties is supplied" in {
-          downstreamFinancialDetailsFullHipJson.as[ChargeDetail] shouldBe chargeDetail
-        }
+    "passed a valid model with properties" should {
+      "return a valid JSON with all properties is supplied" in {
+        downstreamFinancialDetailsFullHipJson.as[ChargeDetail] shouldBe chargeDetail
       }
     }
   }
 
-  "writes" should {
+  "writes" when {
     "passed a valid model with all properties" should {
       "return valid JSON with all properties" in {
         Json.toJson(chargeDetail) shouldBe mtdChargeDetailJson

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,19 +66,11 @@ class RetrieveChargeHistoryByChargeReferenceServiceSpec extends ServiceSpec {
 
       val errors: Seq[(String, MtdError)] =
         List(
-          "INVALID_CORRELATIONID" -> InternalError,
-          "INVALID_ID_TYPE"       -> InternalError,
-          "INVALID_IDVALUE"       -> NinoFormatError,
-          "INVALID_REGIME_TYPE"   -> InternalError,
-          "INVALID_DOC_NUMBER"    -> TransactionIdFormatError,
-          "INVALID_DATE_FROM"     -> InternalError,
-          "INVALID_DATE_TO"       -> InternalError,
-          "INVALID_DATE_RANGE"    -> InternalError,
-          "INVALID_REQUEST"       -> InternalError,
-          "REQUEST_NOT_PROCESSED" -> InternalError,
-          "NO_DATA_FOUND"         -> NotFoundError,
-          "SERVER_ERROR"          -> InternalError,
-          "SERVICE_UNAVAILABLE"   -> InternalError
+          "014" -> NotFoundError,
+          "002" -> InternalError,
+          "003" -> InternalError,
+          "005" -> NotFoundError,
+          "015" -> InternalError
         )
 
       errors.foreach(args => serviceError.tupled(args))
