@@ -29,16 +29,12 @@ case class RetrieveBalanceAndTransactionsResponse(
 
 object RetrieveBalanceAndTransactionsResponse {
 
-  // accommodating HIP response being wrapped in a 'success' object
-  implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] =
-    (JsPath \ "success").read[RetrieveBalanceAndTransactionsResponse](
-      (
-        (JsPath \ "balanceDetails").read[BalanceDetails] and
-          (JsPath \ "codingDetails").readNullable[Seq[CodingDetails]] and
-          (JsPath \ "documentDetails").readNullable[Seq[DocumentDetails]] and
-          (JsPath \ "financialDetailsItem").readNullable[Seq[FinancialDetails]]
-      )(RetrieveBalanceAndTransactionsResponse.apply)
-    )
+  implicit def reads(implicit readLocks: FinancialDetailsItem.ReadLocks): Reads[RetrieveBalanceAndTransactionsResponse] = (
+    (JsPath \ "success" \ "balanceDetails").read[BalanceDetails] and
+      (JsPath \ "success" \ "codingDetails").readNullable[Seq[CodingDetails]] and
+      (JsPath \ "success" \ "documentDetails").readNullable[Seq[DocumentDetails]] and
+      (JsPath \ "success" \ "financialDetailsItem").readNullable[Seq[FinancialDetails]]
+  )(RetrieveBalanceAndTransactionsResponse.apply)
 
   implicit val writes: OWrites[RetrieveBalanceAndTransactionsResponse] = Json.writes[RetrieveBalanceAndTransactionsResponse]
 

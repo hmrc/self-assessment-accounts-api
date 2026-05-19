@@ -17,11 +17,10 @@
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
-import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
 import v4.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.*
 
-class BalanceDetailsSpec extends UnitSpec with JsonErrorValidators {
+class BalanceDetailsSpec extends UnitSpec {
 
   "reads" when {
 
