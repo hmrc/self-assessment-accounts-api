@@ -32,7 +32,7 @@ class FinancialDetailsSpec extends UnitSpec {
   "reads" should {
 
     "return a valid model with all properties" when {
-      "valid JSON with all properties is supplied and the feature switch is enabled (HIP enabled)" in {
+      "valid JSON with all properties is supplied" in {
         downstreamFinancialDetailsFullHipJson.as[FinancialDetails] shouldBe financialDetailsFullHip
       }
     }

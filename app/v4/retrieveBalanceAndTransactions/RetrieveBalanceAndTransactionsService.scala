@@ -34,20 +34,15 @@ class RetrieveBalanceAndTransactionsService @Inject() (connector: RetrieveBalanc
       ec: ExecutionContext): Future[ServiceOutcome[RetrieveBalanceAndTransactionsResponse]] = {
     connector
       .retrieveBalanceAndTransactions(request)
-      .map(_.leftMap(mapDownstreamErrors(downStreamErrorMap)))
+      .map(_.leftMap(mapDownstreamErrors(downstreamErrorMap)))
   }
 
-  private val downStreamErrorMap: Map[String, MtdError] = {
-
-    val hipErrors =
-      Map(
-        "002" -> InternalError,
-        "003" -> InternalError,
-        "005" -> NotFoundError,
-        "015" -> InternalError
-      )
-
-    hipErrors
-  }
+  private val downstreamErrorMap: Map[String, MtdError] =
+    Map(
+      "002" -> InternalError,
+      "003" -> InternalError,
+      "005" -> NotFoundError,
+      "015" -> InternalError
+    )
 
 }

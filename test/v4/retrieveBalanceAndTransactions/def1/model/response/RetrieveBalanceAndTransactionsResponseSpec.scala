@@ -38,7 +38,7 @@ class RetrieveBalanceAndTransactionsResponseSpec extends UnitSpec {
       }
     }
 
-    "locks are included" should {
+    "locks are excluded" should {
       implicit val readLocks: FinancialDetailsItem.ReadLocks = FinancialDetailsItem.ReadLocks(false)
 
       "exclude locks" should {
