@@ -1,0 +1,94 @@
+{
+  "totalisations": {
+    "lateSubmissionPenaltyTotalValue": 200,
+    "penalisedPrincipalTotal": 2000,
+    "latePaymentPenaltyPostedTotal": 165.25,
+    "latePaymentPenaltyEstimateTotal": 15.26
+  },
+  "lateSubmissionPenalty": {
+    "summary": {
+      "activePenaltyPoints": 10,
+      "inactivePenaltyPoints": 12,
+      "periodOfComplianceAchievement": "2025-11-30",
+      "regimeThreshold": 10,
+      "penaltyChargeAmount": 684.25
+    },
+    "details": [
+      {
+        "penaltyNumber": "12345678901234",
+        "penaltyOrder": "01",
+        "penaltyCategory": "point",
+        "penaltyStatus": "active",
+        "frequencyAdjustmentPointIndicator": true,
+        "penaltyCreationDate": "2024-11-14",
+        "penaltyExpiryDate": "2026-11-14",
+        "expiryReason": "submission-frequency-change",
+        "communicationsDate": "2024-11-15",
+        "lateSubmissions": [
+          {
+            "lateSubmissionId": "105",
+            "incomeSource": "Income Tax Liability",
+            "taxPeriod": "24C3",
+            "taxReturnStatus": "fulfilled",
+            "taxPeriodStartDate": "2024-07-01",
+            "taxPeriodEndDate": "2024-09-30",
+            "taxPeriodDueDate": "2024-11-07",
+            "returnReceiptDate": "2024-11-13"
+          }
+        ],
+        "appealInformation": [
+          {
+            "status": "appeal-upheld",
+            "level": "appeal-first-tier-tribunal",
+            "description": "Reason to appeal"
+          }
+        ],
+        "chargeReference": "XP001286394838",
+        "chargeAmount": 543.29,
+        "chargeOutstandingAmount": 123.26,
+        "chargeDueDate": "2024-12-04"
+      }
+    ]
+  },
+  "latePaymentPenalty": {
+    "details": [
+      {
+        "principalChargeReference": "XV123451234512",
+        "penaltyCategory": "lpp1",
+        "penaltyStatus": "posted",
+        "penaltyAmountAccruing": 99.99,
+        "penaltyAmountPosted": 1001.45,
+        "penaltyAmountPaid": 1001.45,
+        "penaltyAmountOutstanding": 99.99,
+        "latePaymentPenalty1LowerRateCalculationAmount": 99.99,
+        "latePaymentPenalty1LowerRatePercentage": 2,
+        "latePaymentPenalty1HigherRateCalculationAmount": 99.99,
+        "latePaymentPenalty1HigherRatePercentage": 2,
+        "latePaymentPenalty2Days": 31,
+        "latePaymentPenalty2Percentage": 4,
+        "penaltyChargeCreationDate": "2024-12-08",
+        "communicationsDate": "2024-12-09",
+        "penaltyChargeReference": "XP298765432109",
+        "penaltyChargeDueDate": "2025-01-08",
+        "appealInformation": [
+          {
+            "status": "cannot-be-appealed",
+            "level": "statutory-review",
+            "description": "Reason to appeal"
+          }
+        ],
+        "principalChargeDocNumber": "123456789012",
+        "principalChargeBillingFrom": "2024-07-01",
+        "principalChargeBillingTo": "2024-09-30",
+        "principalChargeDueDate": "2024-11-07",
+        "principalChargeLatestClearing": "2025-02-15",
+        "timeToPay": [
+          {
+            "startDate": "2024-12-15",
+            "endDate": "2025-06-15"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -59,6 +59,8 @@ tags:
   - name: Coding Out Underpayments and Debts
     description: Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts.<br><br>
   - name: Coding Out Status
+  - name: ITSA Penalties
+    description: This endpoint allows software packages to retrieve a list of penalties against a specified customer (identified by a National Insurance number) for a period of up to 24 months.
 
 
 paths:
@@ -80,3 +82,5 @@ paths:
     $ref: "./coding_out_status_retrieve.yaml"
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/opt-in:
     $ref: "./opt_in_to_coding_out.yaml"
+  /accounts/self-assessment/{nino}/penalties:
+    $ref: "./itsa_penalties_retrieve.yaml"
