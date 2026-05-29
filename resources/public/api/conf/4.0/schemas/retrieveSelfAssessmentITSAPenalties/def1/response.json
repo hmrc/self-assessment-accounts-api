@@ -60,6 +60,7 @@
             "activePenaltyPoints": {
               "description": "Number of active penalty points held for failure to submit on time.",
               "type": "integer",
+              "multipleOf": 1,
               "minimum": 0,
               "maximum": 99,
               "example": 10
@@ -67,6 +68,7 @@
             "inactivePenaltyPoints": {
               "description": "Number of inactive penalty points.",
               "type": "integer",
+              "multipleOf": 1,
               "minimum": 0,
               "maximum": 99,
               "example": 12
@@ -80,6 +82,7 @@
             "regimeThreshold": {
               "description": "Total number of penalty points that are required before a financial penalty will be generated.",
               "type": "integer",
+              "multipleOf": 1,
               "minimum": 0,
               "maximum": 99,
               "example": 10
@@ -443,6 +446,7 @@
               "latePaymentPenalty2Days": {
                 "description": "The number of days over which the second late payment penalty has accrued since day 31 after the tax payment due date.",
                 "type": "integer",
+                "multipleOf": 1,
                 "minimum": 1,
                 "maximum": 999,
                 "example": 31
