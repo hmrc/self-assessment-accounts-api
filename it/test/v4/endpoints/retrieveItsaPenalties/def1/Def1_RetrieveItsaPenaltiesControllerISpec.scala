@@ -20,7 +20,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.*
 import shared.models.errors.*
-import shared.services.{AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v4.retrieveItsaPenalties.def1.model.response.RetrieveItsaPenaltiesFixture.*
 
@@ -42,6 +42,7 @@ class Def1_RetrieveItsaPenaltiesControllerISpec extends IntegrationBaseSpec {
     def setupStubs(): Unit = ()
 
     def request: WSRequest = {
+      AuditStub.audit()
       AuthStub.authorised()
       MtdIdLookupStub.ninoFound(nino)
       setupStubs()
@@ -54,15 +55,14 @@ class Def1_RetrieveItsaPenaltiesControllerISpec extends IntegrationBaseSpec {
 
     def errorBody(code: String): String =
       s"""
-         |  "origin": "HIP",
-         |  "response": [
-         |    {
-         |      "type": "$code",
-         |      "reason": "downstream message"
-         |    }
-         |  ]
+         |{
+         |  "errors": {
+         |    "processingDate": "2025-07-15T09:45:17Z",
+         |    "code": "$code",
+         |    "text": "downstream message"
+         |  }
          |}
-           """.stripMargin
+      """.stripMargin
 
   }
 
@@ -120,7 +120,7 @@ class Def1_RetrieveItsaPenaltiesControllerISpec extends IntegrationBaseSpec {
         }
       }
 
-      val input = Seq(
+      val input = List(
         (UNPROCESSABLE_ENTITY, "002", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "003", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError),

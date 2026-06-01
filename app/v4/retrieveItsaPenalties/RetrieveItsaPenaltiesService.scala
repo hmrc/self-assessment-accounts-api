@@ -31,10 +31,8 @@ class RetrieveItsaPenaltiesService @Inject() (connector: RetrieveItsaPenaltiesCo
 
   def retrieveItsaPenalties(request: RetrieveItsaPenaltiesRequestData)(implicit
       ctx: RequestContext,
-      ec: ExecutionContext): Future[ServiceOutcome[RetrieveItsaPenaltiesResponse]] = {
-
+      ec: ExecutionContext): Future[ServiceOutcome[RetrieveItsaPenaltiesResponse]] =
     connector.retrieveItsaPenalties(request).map(_.leftMap(mapDownstreamErrors(errorMap)))
-  }
 
   private val errorMap: Map[String, MtdError] =
     Map(

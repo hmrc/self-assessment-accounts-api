@@ -40,12 +40,15 @@ trait HttpParser extends Logging {
     (__ \ "bvrfailureResponseElement" \ "validationRuleFailures").read[Seq[DownstreamErrorCode]]
   }
 
+  private val singleHipErrorReads: Reads[DownstreamErrorCode] = (__ \ "errors").read[DownstreamErrorCode]
+
   private val hipErrorReads: Reads[DownstreamErrorCode] = (__ \ "errors" \ "code").read[String].map(DownstreamErrorCode(_))
 
   def parseErrors(response: HttpResponse): DownstreamError = {
     val wrappedResponse: JsonResponseHelper = new JsonResponseHelper(response)
 
     val singleError         = wrappedResponse.validateJson[DownstreamErrorCode].map(err => DownstreamErrors(List(err)))
+    lazy val singleHipError = wrappedResponse.validateJson(singleHipErrorReads).map(err => DownstreamErrors.single(err))
     lazy val hipError       = wrappedResponse.validateJson(hipErrorReads).map(err => DownstreamErrors(List(err)))
     lazy val multipleErrors = wrappedResponse.validateJson(multipleErrorReads).map(errs => DownstreamErrors(errs))
     lazy val bvrErrors =
@@ -56,7 +59,7 @@ trait HttpParser extends Logging {
       OutboundError(InternalError)
     }
 
-    singleError orElse hipError orElse multipleErrors orElse bvrErrors getOrElse unableToParseJsonError
+    singleError orElse singleHipError orElse hipError orElse multipleErrors orElse bvrErrors getOrElse unableToParseJsonError
   }
 
 }
