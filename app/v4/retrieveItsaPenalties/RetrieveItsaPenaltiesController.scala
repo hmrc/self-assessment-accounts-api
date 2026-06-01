@@ -19,10 +19,8 @@ package v4.retrieveItsaPenalties
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import shared.config.SharedAppConfig
 import shared.controllers.*
-import shared.routing.Version
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
 import shared.utils.IdGenerator
-
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
 
@@ -31,7 +29,6 @@ class RetrieveItsaPenaltiesController @Inject() (val authService: EnrolmentsAuth
                                                  val lookupService: MtdIdLookupService,
                                                  validatorFactory: RetrieveItsaPenaltiesValidatorFactory,
                                                  service: RetrieveItsaPenaltiesService,
-                                                 auditService: AuditService,
                                                  cc: ControllerComponents,
                                                  idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: SharedAppConfig)
     extends AuthorisedController(cc) {
@@ -39,9 +36,9 @@ class RetrieveItsaPenaltiesController @Inject() (val authService: EnrolmentsAuth
   val endpointName: String = "retrieve-itsa-penalties"
 
   implicit val endpointLogContext: EndpointLogContext =
-    EndpointLogContext(controllerName = "RetrieveItsaPenaltiesController", endpointName = "retrieveItsaPenalties")
+    EndpointLogContext(controllerName = "RetrieveItsaPenaltiesController", endpointName = endpointName)
 
-  def retrieveItsaPenalties(nino: String): Action[AnyContent] = {
+  def retrieveItsaPenalties(nino: String): Action[AnyContent] =
     authorisedAction(nino).async { implicit request =>
       implicit val ctx: RequestContext = RequestContext.from(idGenerator, endpointLogContext)
       val validator                    = validatorFactory.validator(nino)
@@ -51,16 +48,7 @@ class RetrieveItsaPenaltiesController @Inject() (val authService: EnrolmentsAuth
           .withValidator(validator)
           .withService(service.retrieveItsaPenalties)
           .withPlainJsonResult()
-          .withAuditing(AuditHandler(
-            auditService,
-            auditType = "RetrieveItsaPenalties",
-            transactionName = "retrieve-itsa-penalties",
-            apiVersion = Version(request),
-            params = Map("nino" -> nino),
-            includeResponse = true
-          ))
       requestHandler.handleRequest()
     }
-  }
 
 }

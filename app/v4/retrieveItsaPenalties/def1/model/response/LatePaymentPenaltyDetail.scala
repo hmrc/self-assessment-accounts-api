@@ -17,7 +17,6 @@
 package v4.retrieveItsaPenalties.def1.model.response
 
 import play.api.libs.json.*
-//import play.api.libs.functional.syntax.*
 
 case class LatePaymentPenaltyDetail(
     principalChargeReference: String,

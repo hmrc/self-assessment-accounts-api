@@ -17,15 +17,13 @@
 package v4.retrieveItsaPenalties
 
 import play.api.Configuration
-import play.api.libs.json.JsValue
 import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.errors.{ErrorWrapper, NinoFormatError}
+import shared.models.errors.{ErrorWrapper, NinoFormatError, InternalError}
 import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version4}
 import v4.retrieveItsaPenalties.def1.model.response.RetrieveItsaPenaltiesFixture.*
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -35,13 +33,11 @@ class RetrieveItsaPenaltiesControllerSpec
     with MockRetrieveItsaPenaltiesService
     with MockRetrieveItsaPenaltiesValidatorFactory {
 
-  override val apiVersion: Version = Version4
-
   private val requestData: RetrieveItsaPenaltiesRequestData =
     RetrieveItsaPenaltiesRequestData(nino = parsedNino)
 
   "retrieveItsaPenalties" should {
-    "return OK" when {
+    "return 200 (OK) " when {
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
@@ -49,32 +45,37 @@ class RetrieveItsaPenaltiesControllerSpec
           .retrieveItsaPenalties(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
-        runOkTestWithAudit(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdJsonResponse), maybeAuditResponseBody = Some(mtdJsonResponse))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdJsonResponse))
       }
     }
 
-    "return the error as per spec" when {
+    "return validation error as per spec" when {
+      "the parser validation fails" in new Test {
+        willUseValidator(returning(NinoFormatError))
+
+        runErrorTest(NinoFormatError)
+      }
+
       "the service returns an error" in new Test {
         willUseValidator(returningSuccess(requestData))
 
         MockRetrieveItsaPenaltiesService
           .retrieveItsaPenalties(requestData)
-          .returns(Future.successful(Left(ErrorWrapper(correlationId, NinoFormatError))))
+          .returns(Future.successful(Left(ErrorWrapper(correlationId, InternalError))))
 
-        runErrorTestWithAudit(NinoFormatError)
+        runErrorTest(InternalError)
       }
     }
 
   }
 
-  private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
+  private trait Test extends ControllerTest {
 
     override protected val controller: RetrieveItsaPenaltiesController = new RetrieveItsaPenaltiesController(
       authService = mockEnrolmentsAuthService,
       lookupService = mockMtdIdLookupService,
       validatorFactory = mockRetrieveItsaPenaltiesValidatorFactory,
       service = mockRetrieveItsaPenaltiesService,
-      auditService = mockAuditService,
       cc = cc,
       idGenerator = mockIdGenerator
     )
@@ -83,21 +84,6 @@ class RetrieveItsaPenaltiesControllerSpec
     MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveItsaPenalties(validNino)(fakeGetRequest)
-
-    override protected def event(auditResponse: AuditResponse, maybeRequestBody: Option[JsValue]): AuditEvent[GenericAuditDetail] =
-      AuditEvent(
-        auditType = "RetrieveItsaPenalties",
-        transactionName = "retrieve-itsa-penalties",
-        detail = GenericAuditDetail(
-          userType = "Individual",
-          agentReferenceNumber = None,
-          versionNumber = apiVersion.name,
-          params = Map("nino" -> validNino),
-          requestBody = maybeRequestBody,
-          `X-CorrelationId` = correlationId,
-          auditResponse = auditResponse
-        )
-      )
 
   }
 

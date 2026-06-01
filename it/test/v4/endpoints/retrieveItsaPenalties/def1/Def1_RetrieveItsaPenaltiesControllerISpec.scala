@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,18 +16,15 @@
 
 package v4.endpoints.retrieveItsaPenalties.def1
 
-import com.github.tomakehurst.wiremock.stubbing.StubMapping
-import play.api.http.HeaderNames.ACCEPT
-import play.api.http.Status.*
 import play.api.libs.json.Json
 import play.api.libs.ws.{WSRequest, WSResponse}
-import play.api.test.Helpers.AUTHORIZATION
+import play.api.test.Helpers.*
 import shared.models.errors.*
-import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import shared.services.{AuthStub, DownstreamStub, MtdIdLookupStub}
 import shared.support.IntegrationBaseSpec
 import v4.retrieveItsaPenalties.def1.model.response.RetrieveItsaPenaltiesFixture.*
 
-class Def1_RetrieveItsaPenaltiesHipISpec extends IntegrationBaseSpec {
+class Def1_RetrieveItsaPenaltiesControllerISpec extends IntegrationBaseSpec {
 
   private trait Test {
 
@@ -42,18 +39,18 @@ class Def1_RetrieveItsaPenaltiesHipISpec extends IntegrationBaseSpec {
 
     def downstreamUrl: String = s"/etmp/RESTAdapter/cross-regime/taxpayer/penalties"
 
-    def setupStubs(): StubMapping
+    def setupStubs(): Unit = ()
 
     def request: WSRequest = {
+      AuthStub.authorised()
+      MtdIdLookupStub.ninoFound(nino)
       setupStubs()
-      buildRequest(uri)
+      buildRequest(s"/$nino/penalties")
         .withHttpHeaders(
           (ACCEPT, "application/vnd.hmrc.4.0+json"),
           (AUTHORIZATION, "Bearer 123")
         )
     }
-
-    def uri: String = s"/$nino/penalties"
 
     def errorBody(code: String): String =
       s"""
@@ -69,15 +66,16 @@ class Def1_RetrieveItsaPenaltiesHipISpec extends IntegrationBaseSpec {
 
   }
 
-  "Calling the 'retrieve ITSA penalties' endpoint" should {
+  "Calling the 'retrieve itsa penalties' endpoint" should {
     "return a 200 status code" when {
       "any valid request is made" in new Test {
-
-        override def setupStubs(): StubMapping = {
-          AuthStub.authorised()
-          MtdIdLookupStub.ninoFound(nino)
-          DownstreamStub.onSuccess(DownstreamStub.GET, downstreamUrl, hipQueryParams, OK, downstreamResponse)
-        }
+        override def setupStubs(): Unit = DownstreamStub.onSuccess(
+          method = DownstreamStub.GET,
+          uri = downstreamUrl,
+          hipQueryParams,
+          status = OK,
+          body = downstreamResponse
+        )
 
         val response: WSResponse = await(request.get())
         response.status shouldBe OK
@@ -94,11 +92,6 @@ class Def1_RetrieveItsaPenaltiesHipISpec extends IntegrationBaseSpec {
 
           override val nino: String = requestNino
 
-          override def setupStubs(): StubMapping = {
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-          }
-
           val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
           response.json shouldBe Json.toJson(expectedBody)
@@ -113,13 +106,12 @@ class Def1_RetrieveItsaPenaltiesHipISpec extends IntegrationBaseSpec {
     "downstream service error" when {
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"downstream returns an $downstreamCode error and status $downstreamStatus" in new Test {
-
-          override def setupStubs(): StubMapping = {
-            AuditStub.audit()
-            AuthStub.authorised()
-            MtdIdLookupStub.ninoFound(nino)
-            DownstreamStub.onError(DownstreamStub.GET, downstreamUrl, downstreamStatus, errorBody(downstreamCode))
-          }
+          override def setupStubs(): Unit = DownstreamStub.onError(
+            method = DownstreamStub.GET,
+            uri = downstreamUrl,
+            errorStatus = downstreamStatus,
+            errorBody = errorBody(downstreamCode)
+          )
 
           val response: WSResponse = await(request.get())
           response.status shouldBe expectedStatus
@@ -132,7 +124,9 @@ class Def1_RetrieveItsaPenaltiesHipISpec extends IntegrationBaseSpec {
         (UNPROCESSABLE_ENTITY, "002", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "003", INTERNAL_SERVER_ERROR, InternalError),
         (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError),
-        (UNPROCESSABLE_ENTITY, "135", INTERNAL_SERVER_ERROR, InternalError)
+        (UNPROCESSABLE_ENTITY, "135", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "UNMATCHED_STUB_ERROR", BAD_REQUEST, RuleIncorrectGovTestScenarioError),
+        (SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE", INTERNAL_SERVER_ERROR, InternalError)
       )
       input.foreach(args => serviceErrorTest.tupled(args))
     }
