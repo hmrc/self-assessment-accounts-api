@@ -17,6 +17,7 @@
 package v4.retrieveItsaPenalties.def1.model.response
 
 import play.api.libs.json.*
+//import play.api.libs.functional.syntax.*
 
 case class LatePaymentPenaltyDetail(
     principalChargeReference: String,
@@ -45,74 +46,80 @@ case class LatePaymentPenaltyDetail(
     timeToPay: Option[Seq[TimeToPay]]
 )
 
+private case class DownstreamLatePaymentPenaltyDetail(
+    principalChargeReference: String,
+    penaltyCategory: Option[String],
+    penaltyStatus: String,
+    penaltyAmountAccruing: BigDecimal,
+    penaltyAmountPosted: BigDecimal,
+    penaltyAmountPaid: Option[BigDecimal],
+    penaltyAmountOutstanding: Option[BigDecimal],
+    lpp1LRCalculationAmt: Option[BigDecimal],
+    lpp1LRPercentage: Option[BigDecimal],
+    lpp1HRCalculationAmt: Option[BigDecimal],
+    lpp1HRPercentage: Option[BigDecimal],
+    lpp2Days: Option[String],
+    lpp2Percentage: Option[BigDecimal],
+    penaltyChargeCreationDate: Option[String],
+    communicationsDate: Option[String],
+    penaltyChargeReference: Option[String],
+    penaltyChargeDueDate: Option[String],
+    appealInformation: Option[Seq[AppealInformation]],
+    principalChargeDocNumber: Option[String],
+    principalChargeBillingFrom: String,
+    principalChargeBillingTo: String,
+    principalChargeDueDate: String,
+    principalChargeLatestClearing: Option[String],
+    timeToPay: Option[Seq[TimeToPay]]
+)
+
+private object DownstreamLatePaymentPenaltyDetail {
+
+  implicit val reads: Reads[DownstreamLatePaymentPenaltyDetail] =
+    Json.reads[DownstreamLatePaymentPenaltyDetail]
+
+}
+
+private def toDomain(downstream: DownstreamLatePaymentPenaltyDetail): LatePaymentPenaltyDetail =
+  LatePaymentPenaltyDetail(
+    principalChargeReference = downstream.principalChargeReference,
+    penaltyCategory = downstream.penaltyCategory.map {
+      case "LPP1" => "lpp1"
+      case "LPP2" => "lpp2"
+      case other  => other.toLowerCase
+    },
+    penaltyStatus = downstream.penaltyStatus match {
+      case "A"   => "accruing"
+      case "P"   => "posted"
+      case other => other.toLowerCase
+    },
+    penaltyAmountAccruing = downstream.penaltyAmountAccruing,
+    penaltyAmountPosted = downstream.penaltyAmountPosted,
+    penaltyAmountPaid = downstream.penaltyAmountPaid,
+    penaltyAmountOutstanding = downstream.penaltyAmountOutstanding,
+    latePaymentPenalty1LowerRateCalculationAmount = downstream.lpp1LRCalculationAmt,
+    latePaymentPenalty1LowerRatePercentage = downstream.lpp1LRPercentage,
+    latePaymentPenalty1HigherRateCalculationAmount = downstream.lpp1HRCalculationAmt,
+    latePaymentPenalty1HigherRatePercentage = downstream.lpp1HRPercentage,
+    latePaymentPenalty2Days = downstream.lpp2Days.map(_.toInt),
+    latePaymentPenalty2Percentage = downstream.lpp2Percentage,
+    penaltyChargeCreationDate = downstream.penaltyChargeCreationDate,
+    communicationsDate = downstream.communicationsDate,
+    penaltyChargeReference = downstream.penaltyChargeReference,
+    penaltyChargeDueDate = downstream.penaltyChargeDueDate,
+    appealInformation = downstream.appealInformation,
+    principalChargeDocNumber = downstream.principalChargeDocNumber,
+    principalChargeBillingFrom = downstream.principalChargeBillingFrom,
+    principalChargeBillingTo = downstream.principalChargeBillingTo,
+    principalChargeDueDate = downstream.principalChargeDueDate,
+    principalChargeLatestClearing = downstream.principalChargeLatestClearing,
+    timeToPay = downstream.timeToPay
+  )
+
 object LatePaymentPenaltyDetail {
 
-  private val penaltyCategoryMap: Map[String, String] = Map(
-    "LPP1" -> "lpp1",
-    "LPP2" -> "lpp2"
-  )
-
-  private val penaltyStatusMap: Map[String, String] = Map(
-    "A" -> "accruing",
-    "P" -> "posted"
-  )
-
-  private val transformReads: Reads[JsObject] =
-    __.json
-      .update(
-        (__ \ "penaltyCategory").json.copyFrom(
-          (__ \ "penaltyCategory")
-            .readNullable[String]
-            .map {
-              case Some(v) => JsString(penaltyCategoryMap.getOrElse(v, v))
-              case None    => JsNull
-            }
-        )
-      )
-      .andThen(
-        __.json.update(
-          (__ \ "penaltyStatus").json.copyFrom(
-            (__ \ "penaltyStatus")
-              .read[String]
-              .map(v => JsString(penaltyStatusMap.getOrElse(v, v)))
-          )
-        )
-      )
-      .andThen(
-        __.json.update(
-          (__ \ "latePaymentPenalty1LowerRateCalculationAmount").json.copyFrom((__ \ "lpp1LRCalculationAmt").json.pick)
-        )
-      )
-      .andThen(
-        __.json.update(
-          (__ \ "latePaymentPenalty1LowerRatePercentage").json.copyFrom((__ \ "lpp1LRPercentage").json.pick)
-        )
-      )
-      .andThen(
-        __.json.update(
-          (__ \ "latePaymentPenalty1HigherRateCalculationAmount").json.copyFrom((__ \ "lpp1HRCalculationAmt").json.pick)
-        )
-      )
-      .andThen(
-        __.json.update(
-          (__ \ "latePaymentPenalty1HigherRatePercentage").json.copyFrom((__ \ "lpp1HRPercentage").json.pick)
-        )
-      )
-      .andThen(
-        __.json.update(
-          (__ \ "latePaymentPenalty2Days").json.copyFrom(
-            (__ \ "lpp2Days").read[String].map(v => JsNumber(v.toInt))
-          )
-        )
-      )
-      .andThen(
-        __.json.update(
-          (__ \ "latePaymentPenalty2Percentage").json.copyFrom((__ \ "lpp2Percentage").json.pick)
-        )
-      )
-
   implicit val reads: Reads[LatePaymentPenaltyDetail] =
-    transformReads.andThen(Json.reads[LatePaymentPenaltyDetail])
+    DownstreamLatePaymentPenaltyDetail.reads.map(toDomain)
 
   implicit val writes: OWrites[LatePaymentPenaltyDetail] =
     Json.writes[LatePaymentPenaltyDetail]

@@ -26,15 +26,14 @@ class RetrieveItsaPenaltiesValidatorFactorySpec extends UnitSpec with JsonErrorV
 
   private val validatorFactory = new RetrieveItsaPenaltiesValidatorFactory
 
-  "running a validation" should {
-    "return the parsed domain object" when {
-      "given a valid request" in {
-        val result = validatorFactory.validator(validNino)
-        result shouldBe a[Def1_RetrieveItsaPenaltiesValidator]
+  "RetrieveItsaPenaltiesValidatorFactory" should {
 
-      }
+    "return a valid validator for a valid request" in {
+
+      val result = validatorFactory.validator(validNino)
+
+      result shouldBe a[Def1_RetrieveItsaPenaltiesValidator]
     }
-
   }
 
 }

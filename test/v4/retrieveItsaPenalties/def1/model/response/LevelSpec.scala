@@ -16,22 +16,22 @@
 
 package v4.retrieveItsaPenalties.def1.model.response
 
-import play.api.libs.functional.syntax.*
-import play.api.libs.json.*
+import shared.utils.UnitSpec
+import shared.utils.enums.EnumJsonSpecSupport
+import v4.retrieveItsaPenalties.def1.model.response.Level.*
 
-case class RetrieveItsaPenalties(
-    totalisations: Option[Totalisations],
-    lateSubmissionPenalty: Option[LateSubmissionPenalty],
-    latePaymentPenalty: Option[LatePaymentPenalty]
-)
+class LevelSpec extends UnitSpec with EnumJsonSpecSupport {
 
-object RetrieveItsaPenalties {
+  testDeserialization[Level](
+    ("01", `statutory-review`),
+    ("02", `appeal-first-tier-tribunal`),
+    ("03", tribunal)
+  )
 
-  implicit val reads: Reads[RetrieveItsaPenalties] = (
-    (JsPath \ "totalisations").readNullable[Totalisations] and
-      (JsPath \ "lsp").readNullable[LateSubmissionPenalty] and
-      (JsPath \ "lpp").readNullable[LatePaymentPenalty]
-  )(RetrieveItsaPenalties.apply)
+  testSerialization[Level](
+    (`statutory-review`, "statutory-review"),
+    (`appeal-first-tier-tribunal`, "appeal-first-tier-tribunal"),
+    (tribunal, "tribunal")
+  )
 
-  implicit val format: OFormat[RetrieveItsaPenalties] = Json.format[RetrieveItsaPenalties]
 }

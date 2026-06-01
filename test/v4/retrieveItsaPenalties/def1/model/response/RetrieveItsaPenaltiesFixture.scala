@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,7 +96,7 @@ object RetrieveItsaPenaltiesFixture {
                 penaltyAmountOutstanding = Some(99.99),
                 latePaymentPenalty1LowerRateCalculationAmount = Some(99.99),
                 latePaymentPenalty1LowerRatePercentage = Some(2),
-                latePaymentPenalty1HigherRateCalculationAmount = Some(99.99),
+                latePaymentPenalty1HigherRateCalculationAmount = None,
                 latePaymentPenalty1HigherRatePercentage = Some(2),
                 latePaymentPenalty2Days = Some(31),
                 latePaymentPenalty2Percentage = Some(4),
@@ -205,7 +205,6 @@ object RetrieveItsaPenaltiesFixture {
       |            "lpp1LRCalculationAmt": 99.99,
       |            "lpp1LRDays": "15",
       |            "lpp1LRPercentage": 2,
-      |            "lpp1HRCalculationAmt": 99.99,
       |            "lpp1HRDays": "31",
       |            "lpp1HRPercentage": 2,
       |            "lpp2Days": "31",
@@ -310,7 +309,6 @@ object RetrieveItsaPenaltiesFixture {
       |        "penaltyAmountOutstanding": 99.99,
       |        "latePaymentPenalty1LowerRateCalculationAmount": 99.99,
       |        "latePaymentPenalty1LowerRatePercentage": 2,
-      |        "latePaymentPenalty1HigherRateCalculationAmount": 99.99,
       |        "latePaymentPenalty1HigherRatePercentage": 2,
       |        "latePaymentPenalty2Days": 31,
       |        "latePaymentPenalty2Percentage": 4,

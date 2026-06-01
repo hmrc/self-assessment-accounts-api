@@ -16,31 +16,22 @@
 
 package v4.retrieveItsaPenalties.def1.model.response
 
-import play.api.libs.json.*
-import shared.utils.enums.Enums
+import shared.utils.enums.EnumJsonSpecSupport
+import shared.utils.UnitSpec
+import v4.retrieveItsaPenalties.def1.model.response.PenaltyCategory.*
 
-enum Status {
-  case `under-appeal`
-  case `appeal-upheld`
-  case `appeal-rejected`
-  case `cannot-be-appealed`
-}
+class PenaltyCategorySpec extends UnitSpec with EnumJsonSpecSupport {
 
-object Status {
-
-  private val downstreamMap: Map[String, Status] = Map(
-    "A"  -> Status.`under-appeal`,
-    "B"  -> Status.`appeal-upheld`,
-    "92" -> Status.`appeal-upheld`,
-    "93" -> Status.`appeal-upheld`,
-    "C"  -> Status.`appeal-rejected`,
-    "91" -> Status.`appeal-rejected`,
-    "94" -> Status.`appeal-rejected`,
-    "99" -> Status.`cannot-be-appealed`
+  testDeserialization[PenaltyCategory](
+    ("P", point),
+    ("C", charge),
+    ("T", threshold)
   )
 
-  given Reads[Status] =
-    Reads.StringReads.map(downstreamMap)
+  testSerialization[PenaltyCategory](
+    (point, "point"),
+    (charge, "charge"),
+    (threshold, "threshold")
+  )
 
-  given Writes[Status] = Enums.writes
 }

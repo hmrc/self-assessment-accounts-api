@@ -33,19 +33,15 @@ class RetrieveItsaPenaltiesServiceSpec extends ServiceSpec {
     RetrieveItsaPenaltiesRequestData(nino = nino)
 
   "RetrieveItsaPenaltiesService" should {
-    "service call successful" when {
-      "return mapped result" in new Test {
-        MockRetrieveItsaPenaltiesConnector
-          .retrieveItsaPenalties(requestData)
-          .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
+    "return a mapped response when the connector call is successful" in new Test {
+      MockRetrieveItsaPenaltiesConnector
+        .retrieveItsaPenalties(requestData)
+        .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
-        private val result = await(service.retrieveItsaPenalties(requestData))
-        result shouldBe Right(ResponseWrapper(correlationId, responseModel))
-      }
+      private val result = await(service.retrieveItsaPenalties(requestData))
+      result shouldBe Right(ResponseWrapper(correlationId, responseModel))
     }
-  }
 
-  "unsuccessful" must {
     "map errors according to spec" when {
 
       def serviceError(downstreamErrorCode: String, error: MtdError): Unit =
@@ -69,6 +65,7 @@ class RetrieveItsaPenaltiesServiceSpec extends ServiceSpec {
 
       errors.foreach(args => serviceError.tupled(args))
     }
+
   }
 
   trait Test extends MockRetrieveItsaPenaltiesConnector {
