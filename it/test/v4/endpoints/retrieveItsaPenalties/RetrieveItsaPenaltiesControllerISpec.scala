@@ -99,37 +99,36 @@ class RetrieveItsaPenaltiesControllerISpec extends IntegrationBaseSpec {
       }
 
       validationErrorTest("AA1123A", BAD_REQUEST, NinoFormatError)
-    }
 
-    def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-      s"downstream returns a code $downstreamCode error and status $downstreamStatus" in new Test {
-        override def setupStubs(): Unit = DownstreamStub.onError(
-          method = DownstreamStub.GET,
-          uri = downstreamUrl,
-          queryParams = downstreamQueryParams,
-          errorStatus = downstreamStatus,
-          errorBody = errorBody(downstreamCode)
-        )
+      def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
+        s"downstream returns a code $downstreamCode error and status $downstreamStatus" in new Test {
+          override def setupStubs(): Unit = DownstreamStub.onError(
+            method = DownstreamStub.GET,
+            uri = downstreamUrl,
+            queryParams = downstreamQueryParams,
+            errorStatus = downstreamStatus,
+            errorBody = errorBody(downstreamCode)
+          )
 
-        val response: WSResponse = await(request.get())
-        response.status shouldBe expectedStatus
-        response.json shouldBe Json.toJson(expectedBody)
-        response.header("Content-Type") shouldBe Some("application/json")
-        response.header("X-CorrelationId").nonEmpty shouldBe true
+          val response: WSResponse = await(request.get())
+          response.status shouldBe expectedStatus
+          response.json shouldBe Json.toJson(expectedBody)
+          response.header("Content-Type") shouldBe Some("application/json")
+          response.header("X-CorrelationId").nonEmpty shouldBe true
+        }
       }
+
+      val input: Seq[(Int, String, Int, MtdError)] = List(
+        (UNPROCESSABLE_ENTITY, "016", BAD_REQUEST, NinoFormatError),
+        (UNPROCESSABLE_ENTITY, "002", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "003", INTERNAL_SERVER_ERROR, InternalError),
+        (UNPROCESSABLE_ENTITY, "135", INTERNAL_SERVER_ERROR, InternalError),
+        (BAD_REQUEST, "UNMATCHED_STUB_ERROR", BAD_REQUEST, RuleIncorrectGovTestScenarioError)
+      )
+
+      input.foreach(serviceErrorTest.tupled)
     }
-
-    val input: Seq[(Int, String, Int, MtdError)] = List(
-      (UNPROCESSABLE_ENTITY, "016", BAD_REQUEST, NinoFormatError),
-      (UNPROCESSABLE_ENTITY, "002", INTERNAL_SERVER_ERROR, InternalError),
-      (UNPROCESSABLE_ENTITY, "015", INTERNAL_SERVER_ERROR, InternalError),
-      (UNPROCESSABLE_ENTITY, "003", INTERNAL_SERVER_ERROR, InternalError),
-      (UNPROCESSABLE_ENTITY, "135", INTERNAL_SERVER_ERROR, InternalError),
-      (BAD_REQUEST, "UNMATCHED_STUB_ERROR", BAD_REQUEST, RuleIncorrectGovTestScenarioError)
-    )
-
-    input.foreach(serviceErrorTest.tupled)
-
   }
 
 }

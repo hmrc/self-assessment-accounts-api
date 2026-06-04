@@ -22,7 +22,7 @@ import RetrieveItsaPenaltiesFixture.*
 
 class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
+  "RetrieveItsaPenaltiesResponse" should {
     "read from json" in {
       downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
     }

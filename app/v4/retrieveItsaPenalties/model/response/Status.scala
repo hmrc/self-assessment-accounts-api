@@ -36,10 +36,9 @@ object Status {
     "99" -> `cannot-be-appealed`
   )
 
-  given reads: Reads[Status] =
+  given Reads[Status] =
     Reads.StringReads.collect(JsonValidationError("error.expected.Status"))(downstreamMap)
 
-  given writes: Writes[Status] =
-    Enums.writes[Status]
+  given Writes[Status] = Enums.writes[Status]
 
 }

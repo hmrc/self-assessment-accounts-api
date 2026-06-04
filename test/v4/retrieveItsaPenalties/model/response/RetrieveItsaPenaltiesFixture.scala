@@ -345,34 +345,4 @@ object RetrieveItsaPenaltiesFixture {
       |""".stripMargin
   )
 
-  val lateSubmissionsDownstreamJson: JsValue = Json.parse(
-    """
-      |{
-      |  "lateSubmissionID": "1054",
-      |  "incomeSource": "Income Tax Liability",
-      |  "taxPeriod": "24C3",
-      |  "taxReturnStatus": "Fulfilled",
-      |  "taxPeriodStartDate": "2024-07-01",
-      |  "taxPeriodEndDate": "2024-09-30",
-      |  "taxPeriodDueDate": "2024-11-07",
-      |  "returnReceiptDate": "2024-11-13"
-      |}
-      |""".stripMargin
-  )
-
-  val lateSubmissionsMtdJson: JsValue = Json.parse(
-    """
-      |{
-      |  "lateSubmissionId": "1054",
-      |  "incomeSource": "Income Tax Liability",
-      |  "taxPeriod": "24C3",
-      |  "taxReturnStatus": "fulfilled",
-      |  "taxPeriodStartDate": "2024-07-01",
-      |  "taxPeriodEndDate": "2024-09-30",
-      |  "taxPeriodDueDate": "2024-11-07",
-      |  "returnReceiptDate": "2024-11-13"
-      |}
-      |""".stripMargin
-  )
-
 }

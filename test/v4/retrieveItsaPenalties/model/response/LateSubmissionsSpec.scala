@@ -18,14 +18,44 @@ package v4.retrieveItsaPenalties.model.response
 
 import play.api.libs.json.*
 import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import RetrieveItsaPenaltiesFixture.lateSubmissionsModel
 
 class LateSubmissionsSpec extends UnitSpec {
+
+  val downstreamJson: JsValue = Json.parse(
+    """
+      |{
+      |  "lateSubmissionID": "1054",
+      |  "incomeSource": "Income Tax Liability",
+      |  "taxPeriod": "24C3",
+      |  "taxReturnStatus": "Fulfilled",
+      |  "taxPeriodStartDate": "2024-07-01",
+      |  "taxPeriodEndDate": "2024-09-30",
+      |  "taxPeriodDueDate": "2024-11-07",
+      |  "returnReceiptDate": "2024-11-13"
+      |}
+      |""".stripMargin
+  )
+
+  val mtdJson: JsValue = Json.parse(
+    """
+      |{
+      |  "lateSubmissionId": "1054",
+      |  "incomeSource": "Income Tax Liability",
+      |  "taxPeriod": "24C3",
+      |  "taxReturnStatus": "fulfilled",
+      |  "taxPeriodStartDate": "2024-07-01",
+      |  "taxPeriodEndDate": "2024-09-30",
+      |  "taxPeriodDueDate": "2024-11-07",
+      |  "returnReceiptDate": "2024-11-13"
+      |}
+      |""".stripMargin
+  )
 
   "LateSubmissions" should {
 
     "successfully read from valid json" in {
-      lateSubmissionsDownstreamJson.as[LateSubmissions] shouldBe lateSubmissionsModel
+      downstreamJson.as[LateSubmissions] shouldBe lateSubmissionsModel
     }
 
     "fail to read from invalid json" in {
@@ -33,7 +63,7 @@ class LateSubmissionsSpec extends UnitSpec {
     }
 
     "write to json" in {
-      Json.toJson(lateSubmissionsModel) shouldBe lateSubmissionsMtdJson
+      Json.toJson(lateSubmissionsModel) shouldBe mtdJson
     }
   }
 
