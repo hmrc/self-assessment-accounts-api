@@ -16,20 +16,17 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
-import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import shared.utils.enums.Enums
+import play.api.libs.json.{Reads, Writes}
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+enum TaxReturnStatus(val fromDownstream: String) {
+  case open      extends TaxReturnStatus("Open")
+  case fulfilled extends TaxReturnStatus("Fulfilled")
+  case reversed  extends TaxReturnStatus("Reversed")
+}
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
-    }
+object TaxReturnStatus {
+  given Reads[TaxReturnStatus] = Enums.readsFrom[TaxReturnStatus](values, _.fromDownstream)
 
-    "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
-    }
-  }
-
+  given Writes[TaxReturnStatus] = Enums.writes[TaxReturnStatus]
 }

@@ -17,15 +17,20 @@
 package v4.retrieveItsaPenalties
 
 import shared.controllers.validators.Validator
-import v4.retrieveItsaPenalties.def1.Def1_RetrieveItsaPenaltiesValidator
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
-
-import javax.inject.{Inject, Singleton}
+import cats.data.Validated
+import shared.models.errors.*
+import shared.controllers.validators.resolvers.ResolveNino
+import javax.inject.Singleton
 
 @Singleton
-class RetrieveItsaPenaltiesValidatorFactory @Inject() {
+class RetrieveItsaPenaltiesValidatorFactory {
 
-  def validator(nino: String): Validator[RetrieveItsaPenaltiesRequestData] =
-    new Def1_RetrieveItsaPenaltiesValidator(nino)
+  def validator(nino: String): Validator[RetrieveItsaPenaltiesRequestData] = new Validator[RetrieveItsaPenaltiesRequestData] {
+
+    def validate: Validated[Seq[MtdError], RetrieveItsaPenaltiesRequestData] =
+      ResolveNino(nino).map(RetrieveItsaPenaltiesRequestData.apply)
+
+  }
 
 }

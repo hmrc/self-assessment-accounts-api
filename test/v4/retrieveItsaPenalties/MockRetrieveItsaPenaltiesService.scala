@@ -20,12 +20,10 @@ import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
 import shared.controllers.RequestContext
-import shared.models.errors.ErrorWrapper
-import shared.models.outcomes.ResponseWrapper
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
-
 import scala.concurrent.{ExecutionContext, Future}
+import shared.services.ServiceOutcome
 
 trait MockRetrieveItsaPenaltiesService extends TestSuite with MockFactory {
 
@@ -34,8 +32,7 @@ trait MockRetrieveItsaPenaltiesService extends TestSuite with MockFactory {
 
   object MockRetrieveItsaPenaltiesService {
 
-    def retrieveItsaPenalties(
-        request: RetrieveItsaPenaltiesRequestData): CallHandler[Future[Either[ErrorWrapper, ResponseWrapper[RetrieveItsaPenaltiesResponse]]]] = {
+    def retrieveItsaPenalties(request: RetrieveItsaPenaltiesRequestData): CallHandler[Future[ServiceOutcome[RetrieveItsaPenaltiesResponse]]] = {
       (
         mockRetrieveItsaPenaltiesService
           .retrieveItsaPenalties(_: RetrieveItsaPenaltiesRequestData)(

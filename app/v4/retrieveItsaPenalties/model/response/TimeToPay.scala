@@ -16,20 +16,20 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
-import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+case class TimeToPay(
+    startDate: String,
+    endDate: String
+)
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
-    }
+object TimeToPay {
 
-    "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
-    }
-  }
+  implicit val reads: Reads[TimeToPay] = (
+    (JsPath \ "ttpStartDate").read[String] and
+      (JsPath \ "ttpEndDate").read[String]
+  )(TimeToPay.apply)
 
+  implicit val writes: OWrites[TimeToPay] = Json.writes[TimeToPay]
 }

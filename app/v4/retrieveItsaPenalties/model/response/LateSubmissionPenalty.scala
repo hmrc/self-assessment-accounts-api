@@ -16,20 +16,19 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
-import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+case class LateSubmissionPenalty(summary: LateSubmissionPenaltySummary, details: Seq[LateSubmissionPenaltyDetail])
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
-    }
+object LateSubmissionPenalty {
 
-    "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
-    }
-  }
+  implicit val reads: Reads[LateSubmissionPenalty] = (
+    (JsPath \ "lspSummary").read[LateSubmissionPenaltySummary] and
+      (JsPath \ "lspDetails").read[Seq[LateSubmissionPenaltyDetail]]
+  )(LateSubmissionPenalty.apply)
+
+  implicit val writes: OWrites[LateSubmissionPenalty] =
+    Json.writes[LateSubmissionPenalty]
 
 }

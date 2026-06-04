@@ -19,23 +19,23 @@ package v4.retrieveItsaPenalties.model.response
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
 
-case class RetrieveItsaPenaltiesResponse(
-    totalisations: Option[Totalisations],
-    lateSubmissionPenalty: Option[LateSubmissionPenalty],
-    latePaymentPenalty: Option[LatePaymentPenalty]
+case class Totalisations(
+    lateSubmissionPenaltyTotalValue: BigDecimal,
+    penalisedPrincipalTotal: BigDecimal,
+    latePaymentPenaltyPostedTotal: BigDecimal,
+    latePaymentPenaltyEstimateTotal: BigDecimal
 )
 
-object RetrieveItsaPenaltiesResponse {
+object Totalisations {
 
-  private val basePath = JsPath \ "success" \ "penaltyData"
+  implicit val reads: Reads[Totalisations] = (
+    (JsPath \ "lspTotalValue").read[BigDecimal] and
+      (JsPath \ "penalisedPrincipalTotal").read[BigDecimal] and
+      (JsPath \ "lppPostedTotal").read[BigDecimal] and
+      (JsPath \ "lppEstimatedTotal").read[BigDecimal]
+  )(Totalisations.apply)
 
-  implicit val reads: Reads[RetrieveItsaPenaltiesResponse] = (
-    (basePath \ "totalisations").readNullable[Totalisations] and
-      (basePath \ "lsp").readNullable[LateSubmissionPenalty] and
-      (basePath \ "lpp").readNullable[LatePaymentPenalty]
-  )(RetrieveItsaPenaltiesResponse.apply)
-
-  implicit val writes: OWrites[RetrieveItsaPenaltiesResponse] =
-    Json.writes[RetrieveItsaPenaltiesResponse]
+  implicit val writes: OWrites[Totalisations] =
+    Json.writes[Totalisations]
 
 }

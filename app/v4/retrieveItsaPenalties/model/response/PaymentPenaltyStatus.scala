@@ -16,20 +16,16 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
-import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import shared.utils.enums.Enums
+import play.api.libs.json.{Reads, Writes}
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+enum PaymentPenaltyStatus(val fromDownstream: String) {
+  case accruing extends PaymentPenaltyStatus("A")
+  case posted   extends PaymentPenaltyStatus("P")
+}
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
-    }
+object PaymentPenaltyStatus {
+  given Reads[PaymentPenaltyStatus] = Enums.readsFrom[PaymentPenaltyStatus](values, _.fromDownstream)
 
-    "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
-    }
-  }
-
+  given Writes[PaymentPenaltyStatus] = Enums.writes[PaymentPenaltyStatus]
 }

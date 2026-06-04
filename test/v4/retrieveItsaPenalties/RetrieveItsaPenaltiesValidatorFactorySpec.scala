@@ -16,23 +16,41 @@
 
 package v4.retrieveItsaPenalties
 
-import shared.models.utils.JsonErrorValidators
 import shared.utils.UnitSpec
-import v4.retrieveItsaPenalties.def1.Def1_RetrieveItsaPenaltiesValidator
+import shared.models.domain.Nino
+import shared.controllers.validators.Validator
+import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
+import shared.models.errors.*
 
-class RetrieveItsaPenaltiesValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
+class RetrieveItsaPenaltiesValidatorFactorySpec extends UnitSpec {
 
-  private val validNino = "AA123456A"
+  private implicit val correlationId: String = "1234"
 
-  private val validatorFactory = new RetrieveItsaPenaltiesValidatorFactory
+  private val validNino: String = "AA123456A"
 
-  "RetrieveItsaPenaltiesValidatorFactory" should {
+  private val parsedNino: Nino = Nino(validNino)
 
-    "return a valid validator for a valid request" in {
+  private val validatorFactory: RetrieveItsaPenaltiesValidatorFactory = new RetrieveItsaPenaltiesValidatorFactory
 
-      val result = validatorFactory.validator(validNino)
+  private def validator(nino: String): Validator[RetrieveItsaPenaltiesRequestData] = validatorFactory.validator(nino)
 
-      result shouldBe a[Def1_RetrieveItsaPenaltiesValidator]
+  "RetrieveItsaPenaltiesValidatorFactory" when {
+    "validator" should {
+      "return the parsed domain object" when {
+        "a valid request is supplied" in {
+          val result: Either[ErrorWrapper, RetrieveItsaPenaltiesRequestData] = validator(validNino).validateAndWrapResult()
+
+          result shouldBe Right(RetrieveItsaPenaltiesRequestData(parsedNino))
+        }
+      }
+
+      "return NinoFormatError" when {
+        "an invalid nino is supplied" in {
+          val result: Either[ErrorWrapper, RetrieveItsaPenaltiesRequestData] = validator("invalidNino").validateAndWrapResult()
+
+          result shouldBe Left(ErrorWrapper(correlationId, NinoFormatError))
+        }
+      }
     }
   }
 

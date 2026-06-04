@@ -23,7 +23,7 @@ import shared.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
-import v4.retrieveItsaPenalties.def1.model.response.RetrieveItsaPenaltiesFixture.responseModel
+import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.responseModel
 import scala.concurrent.Future
 
 class RetrieveItsaPenaltiesConnectorSpec extends ConnectorSpec {
@@ -33,41 +33,12 @@ class RetrieveItsaPenaltiesConnectorSpec extends ConnectorSpec {
   private trait Test {
     self: ConnectorTest =>
 
-    private val connector: RetrieveItsaPenaltiesConnector =
-      new RetrieveItsaPenaltiesConnector(mockHttpClient, mockSharedAppConfig)
+    val connector: RetrieveItsaPenaltiesConnector = new RetrieveItsaPenaltiesConnector(mockHttpClient, mockSharedAppConfig)
 
-    def connectorRequest(request: RetrieveItsaPenaltiesRequestData,
-                         response: RetrieveItsaPenaltiesResponse,
-                         queryParams: Seq[(String, String)]): Unit = {
-
-      val outcome = Right(ResponseWrapper(correlationId, response))
-
-      val url =
-        url"$baseUrl/etmp/RESTAdapter/cross-regime/taxpayer/penalties"
-
-      willGet(
-        url = url,
-        parameters = queryParams
-      ).returns(Future.successful(outcome))
-
-      val result: DownstreamOutcome[RetrieveItsaPenaltiesResponse] = await(connector.retrieveItsaPenalties(request))
-      result shouldBe outcome
-    }
-
+    val request: RetrieveItsaPenaltiesRequestData = RetrieveItsaPenaltiesRequestData(Nino(nino))
   }
 
-  def hipQueryParams: Seq[(String, String)] =
-    Seq(
-      "taxRegime" -> "ITSA",
-      "idType"    -> "NINO",
-      "idNumber"  -> nino
-    )
-
-  private val validRequest: RetrieveItsaPenaltiesRequestData = RetrieveItsaPenaltiesRequestData(
-    Nino(nino)
-  )
-
-  private trait HipTestWithAdditionalContactHeaders extends HipTest with Test {
+  private trait HipTestWithAdditionalContractHeaders extends HipTest with Test {
 
     override val additionalContractHeaders: Seq[(String, String)] = List(
       "X-Originating-System"  -> "MDTP",
@@ -77,10 +48,22 @@ class RetrieveItsaPenaltiesConnectorSpec extends ConnectorSpec {
 
   }
 
-  "RetrieveItsaPenaltiesConnector" when {
-    "return a valid response" in new HipTestWithAdditionalContactHeaders {
+  "RetrieveItsaPenaltiesConnector" should {
+    "return a valid response" in new HipTestWithAdditionalContractHeaders {
+      val outcome: DownstreamOutcome[RetrieveItsaPenaltiesResponse] = Right(ResponseWrapper(correlationId, responseModel))
 
-      connectorRequest(validRequest, responseModel, hipQueryParams)
+      willGet(
+        url = url"$baseUrl/etmp/RESTAdapter/cross-regime/taxpayer/penalties",
+        parameters = Seq(
+          "taxRegime" -> "ITSA",
+          "idType"    -> "NINO",
+          "idNumber"  -> nino
+        )
+      ).returns(Future.successful(outcome))
+
+      val result: DownstreamOutcome[RetrieveItsaPenaltiesResponse] = await(connector.retrieveItsaPenalties(request))
+
+      result shouldBe outcome
     }
   }
 

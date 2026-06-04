@@ -16,20 +16,19 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
-import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import play.api.libs.json.{Reads, Writes}
+import shared.utils.enums.Enums
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+enum Level(val fromDownstream: String) {
+  case `statutory-review`           extends Level("01")
+  case `appeal-first-tier-tribunal` extends Level("02")
+  case tribunal                     extends Level("03")
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
-    }
+}
 
-    "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
-    }
-  }
+object Level {
 
+  given Reads[Level] = Enums.readsFrom[Level](values, _.fromDownstream)
+
+  given Writes[Level] = Enums.writes[Level]
 }

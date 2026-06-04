@@ -16,19 +16,24 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
+import play.api.libs.json.*
 import shared.utils.UnitSpec
 import RetrieveItsaPenaltiesFixture.*
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+class LateSubmissionsSpec extends UnitSpec {
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
+  "LateSubmissions" should {
+
+    "successfully read from valid json" in {
+      lateSubmissionsDownstreamJson.as[LateSubmissions] shouldBe lateSubmissionsModel
+    }
+
+    "fail to read from invalid json" in {
+      JsObject.empty.validate[LateSubmissions] shouldBe a[JsError]
     }
 
     "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
+      Json.toJson(lateSubmissionsModel) shouldBe lateSubmissionsMtdJson
     }
   }
 

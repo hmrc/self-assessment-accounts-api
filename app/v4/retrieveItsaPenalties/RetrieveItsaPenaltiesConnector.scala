@@ -17,6 +17,7 @@
 package v4.retrieveItsaPenalties
 
 import shared.config.SharedAppConfig
+import shared.connectors.DownstreamUri
 import shared.connectors.DownstreamUri.HipUri
 import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
@@ -39,7 +40,7 @@ class RetrieveItsaPenaltiesConnector @Inject() (val http: HttpClientV2, val appC
 
     import request.*
 
-    val hipRequiredQueryParams: Seq[(String, String)] =
+    val queryParams: Seq[(String, String)] =
       List(
         "taxRegime" -> "ITSA",
         "idType"    -> "NINO",
@@ -52,11 +53,10 @@ class RetrieveItsaPenaltiesConnector @Inject() (val http: HttpClientV2, val appC
       "X-Transmitting-System" -> "HIP"
     )
 
-    val (queryParams, downstreamUri) = (
-      hipRequiredQueryParams,
-      HipUri[RetrieveItsaPenaltiesResponse](
-        path = "etmp/RESTAdapter/cross-regime/taxpayer/penalties",
-        additionalContractHeaders = additionalContractHeaders))
+    val downstreamUri: DownstreamUri[RetrieveItsaPenaltiesResponse] = HipUri[RetrieveItsaPenaltiesResponse](
+      path = "etmp/RESTAdapter/cross-regime/taxpayer/penalties",
+      additionalContractHeaders = additionalContractHeaders
+    )
 
     get(downstreamUri, queryParams)
   }

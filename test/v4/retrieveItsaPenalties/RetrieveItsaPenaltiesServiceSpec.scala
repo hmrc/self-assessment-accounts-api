@@ -21,13 +21,13 @@ import shared.models.errors.*
 import shared.models.outcomes.ResponseWrapper
 import shared.services.ServiceSpec
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
-import v4.retrieveItsaPenalties.def1.model.response.RetrieveItsaPenaltiesFixture.responseModel
+import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.responseModel
 
 import scala.concurrent.Future
 
 class RetrieveItsaPenaltiesServiceSpec extends ServiceSpec {
 
-  private val nino = Nino("AA123456A")
+  private val nino: Nino = Nino("AA123456A")
 
   private val requestData: RetrieveItsaPenaltiesRequestData =
     RetrieveItsaPenaltiesRequestData(nino = nino)
@@ -38,8 +38,7 @@ class RetrieveItsaPenaltiesServiceSpec extends ServiceSpec {
         .retrieveItsaPenalties(requestData)
         .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
-      private val result = await(service.retrieveItsaPenalties(requestData))
-      result shouldBe Right(ResponseWrapper(correlationId, responseModel))
+      await(service.retrieveItsaPenalties(requestData)) shouldBe Right(ResponseWrapper(correlationId, responseModel))
     }
 
     "map errors according to spec" when {
@@ -55,13 +54,7 @@ class RetrieveItsaPenaltiesServiceSpec extends ServiceSpec {
         }
 
       val errors: Seq[(String, MtdError)] =
-        List(
-          "016"                 -> NinoFormatError,
-          "002"                 -> InternalError,
-          "015"                 -> InternalError,
-          "003"                 -> InternalError,
-          "135"                 -> InternalError,
-          "SERVICE_UNAVAILABLE" -> InternalError)
+        List("016" -> NinoFormatError, "002" -> InternalError, "015" -> InternalError, "003" -> InternalError, "135" -> InternalError)
 
       errors.foreach(args => serviceError.tupled(args))
     }

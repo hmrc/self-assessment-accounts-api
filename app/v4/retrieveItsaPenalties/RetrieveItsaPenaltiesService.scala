@@ -36,12 +36,11 @@ class RetrieveItsaPenaltiesService @Inject() (connector: RetrieveItsaPenaltiesCo
 
   private val errorMap: Map[String, MtdError] =
     Map(
-      "016"                 -> NinoFormatError,
-      "002"                 -> InternalError,
-      "015"                 -> InternalError,
-      "003"                 -> InternalError,
-      "135"                 -> InternalError,
-      "SERVICE_UNAVAILABLE" -> InternalError
+      "016" -> NinoFormatError,
+      "002" -> InternalError,
+      "015" -> InternalError,
+      "003" -> InternalError,
+      "135" -> InternalError
     )
 
 }

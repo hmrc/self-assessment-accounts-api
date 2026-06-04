@@ -16,20 +16,28 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import shared.utils.enums.EnumJsonSpecSupport
+import v4.retrieveItsaPenalties.model.response.Status.*
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+class StatusSpec extends UnitSpec with EnumJsonSpecSupport {
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
-    }
+  testDeserialization[Status](
+    ("A", `under-appeal`),
+    ("B", `appeal-upheld`),
+    ("92", `appeal-upheld`),
+    ("93", `appeal-upheld`),
+    ("C", `appeal-rejected`),
+    ("91", `appeal-rejected`),
+    ("94", `appeal-rejected`),
+    ("99", `cannot-be-appealed`)
+  )
 
-    "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
-    }
-  }
+  testSerialization[Status](
+    (`under-appeal`, "under-appeal"),
+    (`appeal-upheld`, "appeal-upheld"),
+    (`appeal-rejected`, "appeal-rejected"),
+    (`cannot-be-appealed`, "cannot-be-appealed")
+  )
 
 }

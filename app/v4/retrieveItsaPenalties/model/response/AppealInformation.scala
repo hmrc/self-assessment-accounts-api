@@ -16,20 +16,22 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
-import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import play.api.libs.functional.syntax.*
+import play.api.libs.json.*
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+case class AppealInformation(
+    status: Status,
+    level: Option[Level],
+    description: String
+)
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
-    }
+object AppealInformation {
 
-    "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
-    }
-  }
+  implicit val reads: Reads[AppealInformation] = (
+    (JsPath \ "appealStatus").read[Status] and
+      (JsPath \ "appealLevel").readNullable[Level] and
+      (JsPath \ "appealDescription").read[String]
+  )(AppealInformation.apply)
 
+  implicit val writes: OWrites[AppealInformation] = Json.writes[AppealInformation]
 }

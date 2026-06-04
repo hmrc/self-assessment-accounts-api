@@ -21,15 +21,14 @@ import play.api.mvc.Result
 import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import shared.models.errors.{ErrorWrapper, NinoFormatError, InternalError}
 import shared.models.outcomes.ResponseWrapper
-import v4.retrieveItsaPenalties.def1.model.response.RetrieveItsaPenaltiesFixture.*
+import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.*
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
 class RetrieveItsaPenaltiesControllerSpec
-    extends ControllerBaseSpec
-    with ControllerTestRunner
+    extends ControllerTestRunner
     with MockRetrieveItsaPenaltiesService
     with MockRetrieveItsaPenaltiesValidatorFactory {
 
@@ -37,7 +36,7 @@ class RetrieveItsaPenaltiesControllerSpec
     RetrieveItsaPenaltiesRequestData(nino = parsedNino)
 
   "retrieveItsaPenalties" should {
-    "return 200 (OK) " when {
+    "return 200 (OK)" when {
       "the request is valid" in new Test {
         willUseValidator(returningSuccess(requestData))
 
@@ -45,7 +44,7 @@ class RetrieveItsaPenaltiesControllerSpec
           .retrieveItsaPenalties(requestData)
           .returns(Future.successful(Right(ResponseWrapper(correlationId, responseModel))))
 
-        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdJsonResponse))
+        runOkTest(expectedStatus = OK, maybeExpectedResponseBody = Some(mtdJson))
       }
     }
 

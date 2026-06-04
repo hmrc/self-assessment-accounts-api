@@ -16,20 +16,20 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
 import shared.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import shared.utils.enums.EnumJsonSpecSupport
+import v4.retrieveItsaPenalties.model.response.PaymentPenaltyCategory.*
 
-class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
+class PaymentPenaltyCategorySpec extends UnitSpec with EnumJsonSpecSupport {
 
-  "Def1_RetrieveItsaPenaltiesResponse" should {
-    "read from json" in {
-      downstreamJson.as[RetrieveItsaPenaltiesResponse] shouldBe responseModel
-    }
+  testDeserialization[PaymentPenaltyCategory](
+    ("LPP1", lpp1),
+    ("LPP2", lpp2)
+  )
 
-    "write to json" in {
-      Json.toJson(responseModel) shouldBe mtdJson
-    }
-  }
+  testSerialization[PaymentPenaltyCategory](
+    (lpp1, "lpp1"),
+    (lpp2, "lpp2")
+  )
 
 }
