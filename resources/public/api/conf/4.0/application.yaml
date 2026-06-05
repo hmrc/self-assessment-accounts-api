@@ -32,7 +32,6 @@ info:
     * Send queries or feedback related to the design of the APIs (including recommended changes) using the [income-tax-mtd-changelog](https://github.com/hmrc/income-tax-mtd-changelog/issues) GitHub page.
     * <a href="/contact/report-technical-problem?newTab=true&service=api-documentation-frontend" target="_blank">Is this page not working properly? (opens in new tab)</a>
 
-
 servers:
   - url: https://test-api.service.hmrc.gov.uk
     description: Sandbox
@@ -55,11 +54,15 @@ components:
 
 tags:
   - name: Payments and Liabilities
-    description: These endpoints allow a developer to retrieve accounting information to be shown back to the customer. This includes listing payments the customer has made, how these payments have been allocated and details of any upcoming or outstanding liabilities. The data returned only relates to payments and liabilities arising for tax years since the customer joined the new service. There may also be outstanding liabilities and payment information a customer needs to view for the years prior to signing up to Making Tax Digital for Income Tax Self Assessment that can be viewed using their existing Personal Tax Account.<br><br>
+    description: These endpoints allow a developer to retrieve accounting information to be shown back to the customer. This includes listing payments the customer has made, how these payments have been allocated and details of any upcoming or outstanding liabilities. The data returned only relates to payments and liabilities arising for tax years since the customer joined the new service. There may also be outstanding liabilities and payment information a customer needs to view for the years prior to signing up to Making Tax Digital for Income Tax Self Assessment that can be viewed using their existing Personal Tax Account.
   - name: Coding Out Underpayments and Debts
-    description: Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts.<br><br>
+    description: Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts.
   - name: Coding Out Status
-
+    description: Endpoints relating to coding out status.
+  {{#if (enabled "api_5329_r21_itsa_penalties_docs")}}
+  - name: ITSA Penalties
+    description: This endpoint allows software packages to retrieve a list of penalties against a specified customer (identified by a National Insurance number) for a period of up to 24 months.
+  {{/if}}
 
 paths:
   /accounts/self-assessment/{nino}/charges/{transactionId}:
@@ -80,3 +83,7 @@ paths:
     $ref: "./coding_out_status_retrieve.yaml"
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/opt-in:
     $ref: "./opt_in_to_coding_out.yaml"
+  {{#if (enabled "api_5329_r21_itsa_penalties_docs")}}
+  /accounts/self-assessment/{nino}/penalties:
+    $ref: "./itsa_penalties_retrieve.yaml"
+  {{/if}}

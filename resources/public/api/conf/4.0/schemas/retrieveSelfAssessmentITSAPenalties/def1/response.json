@@ -1,0 +1,608 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Retrieve ITSA Penalties",
+  "description": "This endpoint retrieves details of all the penalties that have been applied to an ITSA account. Twenty-four months worth of penalty information will be returned. A National Insurance number must be provided.",
+  "type": "object",
+  "properties": {
+    "totalisations": {
+      "description": "Totals that relate to the penalties that HMRC has levied.",
+      "type": "object",
+      "properties": {
+        "lateSubmissionPenaltyTotalValue": {
+          "description": "Total value of all unpaid late submission penalties. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -99999999999.99,
+          "maximum": 99999999999.99,
+          "example": 5000.99
+        },
+        "penalisedPrincipalTotal": {
+          "description": "Total amount of late tax due (before penalties and interest). The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -99999999999.99,
+          "maximum": 99999999999.99,
+          "example": 5000.99
+        },
+        "latePaymentPenaltyPostedTotal": {
+          "description": "Total amount of late payment penalty charges. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -99999999999.99,
+          "maximum": 99999999999.99,
+          "example": 5000.99
+        },
+        "latePaymentPenaltyEstimateTotal": {
+          "description": "Estimated total amount of uncharged late payment penalties, based upon the amount that is accruing. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+          "type": "number",
+          "multipleOf": 0.01,
+          "minimum": -99999999999.99,
+          "maximum": 99999999999.99,
+          "example": 5000.99
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "lateSubmissionPenaltyTotalValue",
+        "penalisedPrincipalTotal",
+        "latePaymentPenaltyPostedTotal",
+        "latePaymentPenaltyEstimateTotal"
+      ]
+    },
+    "lateSubmissionPenalty": {
+      "description": "Information about the late submission penalties that HMRC has levied for the individual.",
+      "type": "object",
+      "properties": {
+        "summary": {
+          "description": "A summary of the individual's late submission penalty status.",
+          "type": "object",
+          "properties": {
+            "activePenaltyPoints": {
+              "description": "Number of active penalty points held for failure to submit on time.",
+              "type": "integer",
+              "multipleOf": 1,
+              "minimum": 0,
+              "maximum": 99,
+              "example": 10
+            },
+            "inactivePenaltyPoints": {
+              "description": "Number of inactive penalty points.",
+              "type": "integer",
+              "multipleOf": 1,
+              "minimum": 0,
+              "maximum": 99,
+              "example": 12
+            },
+            "periodOfComplianceAchievement": {
+              "description": "The date upon which all accrued penalty points will expire, if the individual meets the requirements for compliance. In the format `YYYY-MM-DD`.",
+              "type": "string",
+              "format": "date",
+              "example": "2025-11-30"
+            },
+            "regimeThreshold": {
+              "description": "Total number of penalty points that are required before a financial penalty will be generated.",
+              "type": "integer",
+              "multipleOf": 1,
+              "minimum": 0,
+              "maximum": 99,
+              "example": 10
+            },
+            "penaltyChargeAmount": {
+              "description": "The total late submission penalty charge amount. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+              "type": "number",
+              "multipleOf": 0.01,
+              "minimum": -99999999999.99,
+              "maximum": 99999999999.99,
+              "example": 684.25
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "activePenaltyPoints",
+            "inactivePenaltyPoints",
+            "regimeThreshold",
+            "penaltyChargeAmount"
+          ]
+        },
+        "details": {
+          "description": "Details of each late submission penalty that the individual has accrued.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "title": "lateSubmissionPenaltyDetail",
+            "type": "object",
+            "properties": {
+              "penaltyNumber": {
+                "description": "The unique identification number for the penalty.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 14,
+                "example": "00005678901234"
+              },
+              "penaltyOrder": {
+                "description": "The position that the penalty currently occupies within the individual's point balance. If a default non-business value such as NA is received, this field should not be returned.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2,
+                "example": "01"
+              },
+              "penaltyCategory": {
+                "description": "The category of the penalty.\n\nPossible values are:\n\n* **point** - The penalty represents a point that has not met the threshold for a charge.\n\n* **charge** - The penalty represents a charge that has been levied because the point threshold has been exceeded.\n\n* **threshold** - The penalty represents a point that has met the threshold for a charge.",
+                "type": "string",
+                "enum": [
+                  "point",
+                  "charge",
+                  "threshold"
+                ],
+                "example": "point"
+              },
+              "penaltyStatus": {
+                "description": "The status of the penalty.\n\nPossible values are:\n\n* **active** - The penalty counts towards the point balance.\n* **inactive** - The penalty no longer counts towards the point balance.",
+                "type": "string",
+                "enum": [
+                  "active",
+                  "inactive"
+                ],
+                "example": "active"
+              },
+              "frequencyAdjustmentPointIndicator": {
+                "description": "Indicates whether there has been an adjustment to the penalty point because of a change to the submission frequency.",
+                "type": "boolean",
+                "example": true
+              },
+              "penaltyCreationDate": {
+                "description": "The date that the penalty point was created, in the format `YYYY-MM-DD`.",
+                "type": "string",
+                "format": "date",
+                "example": "2024-11-14"
+              },
+              "penaltyExpiryDate": {
+                "description": "The date that the penalty point will expire. If the penalty falls within the points threshold, it will expire once compliance is met.",
+                "type": "string",
+                "format": "date",
+                "example": "2026-11-14"
+              },
+              "expiryReason": {
+                "description": "The reason why a penalty point has expired.\n\nPossible values are:\n\n* **appeal** - The penalty point has expired due to a successful appeal.\n\n* **submission-frequency-change** - The penalty point has expired due to a change in the user's submission frequency.\n\n* **obligations-reversed** - A change has resulted in the user's obligations being reversed. For example, a user might have deregistered for self-assessment before a submission was due.\n\n* **hmrc-removed** - An HMRC officer has removed the penalty. This might happen, for example, following a decision made by a tribunal.\n\n* **natural-expiry** - The penalty point has expired naturally. For example, it has reached the end of its 24-month lifetime.\n\n* **penalty-removed** - The penalty has been removed because the submission was deemed to be on time.\n\n* **expiry-conditions-met** - The penalty point has expired because the user has met the conditions for the expiry of all active penalty points.\n\n* **hmrc-reset** - An HMRC officer has reset the user's penalty points to zero.",
+                "type": "string",
+                "enum": [
+                  "appeal",
+                  "submission-frequency-change",
+                  "obligations-reversed",
+                  "hmrc-removed",
+                  "natural-expiry",
+                  "penalty-removed",
+                  "expiry-conditions-met",
+                  "hmrc-reset"
+                ],
+                "example": "submission-frequency-change"
+              },
+              "communicationsDate": {
+                "description": "The date when a letter about the penalty was sent to the customer, in the format `YYYY-MM-DD`.",
+                "type": "string",
+                "format": "date",
+                "example": "2024-11-15"
+              },
+              "lateSubmissions": {
+                "description": "The late submissions that relate to the period for which the penalty was levied.",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "title": "lateSubmission",
+                  "type": "object",
+                  "properties": {
+                    "lateSubmissionId": {
+                      "description": "The unique identification number for the late submission penalty.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 3,
+                      "example": "012"
+                    },
+                    "incomeSource": {
+                      "description": "Identifies the income source associated with the late submission.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160,
+                      "example": "Income Tax Property"
+                    },
+                    "taxPeriod": {
+                      "description": "Identifies the tax period associated with the submission.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4,
+                      "example": "23A1"
+                    },
+                    "taxReturnStatus": {
+                      "description": "The status of the tax return.\n\nPossible values are:\n\n* **open** - The return has not yet been submitted.\n* **fulfilled** - The obligation has been met.\n* **reversed** - The obligation no longer exists.",
+                      "type": "string",
+                      "enum": [
+                        "open",
+                        "fulfilled",
+                        "reversed"
+                      ],
+                      "example": "fulfilled"
+                    },
+                    "taxPeriodStartDate": {
+                      "description": "Start date of the tax period to which the penalty relates.",
+                      "type": "string",
+                      "format": "date",
+                      "example": "2024-07-01"
+                    },
+                    "taxPeriodEndDate": {
+                      "description": "End date of the tax period to which the penalty relates.",
+                      "type": "string",
+                      "format": "date",
+                      "example": "2024-09-30"
+                    },
+                    "taxPeriodDueDate": {
+                      "description": "The due date for the tax return, which was missed and gave rise to the late submission penalty.",
+                      "type": "string",
+                      "format": "date",
+                      "example": "2024-11-07"
+                    },
+                    "returnReceiptDate": {
+                      "description": "The date upon which the tax return was submitted.",
+                      "type": "string",
+                      "format": "date",
+                      "example": "2024-11-13"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "lateSubmissionId"
+                  ]
+                }
+              },
+              "appealInformation": {
+                "description": "Details of any appeals that the individual has made against the penalty point.",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "title": "lateSubmissionAppealInformation",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "description": "The appeal status of a penalty.\n\nPossible values are:\n\n* **under-appeal** - The penalty has been formally appealed by the taxpayer.\n\n* **appeal-upheld** - The appeal has been reviewed and accepted (in full or substantially).\n\n* **appeal-rejected** - The appeal has been reviewed and denied.\n\n* **cannot-be-appealed** - The penalty is not eligible for appeal.",
+                      "type": "string",
+                      "enum": [
+                        "under-appeal",
+                        "appeal-upheld",
+                        "appeal-rejected",
+                        "cannot-be-appealed"
+                      ],
+                      "example": "appeal-upheld"
+                    },
+                    "level": {
+                      "description": "The level of appeal.\n\nPossible values are:\n\n* **statutory-review** - The first formal appeal stage within HMRC.\n\n* **appeal-first-tier-tribunal** - The next level of appeal beyond HMRC.\n\n* **tribunal** - An independent review by a judicial body.",
+                      "type": "string",
+                      "enum": [
+                        "statutory-review",
+                        "appeal-first-tier-tribunal",
+                        "tribunal"
+                      ],
+                      "example": "appeal-first-tier-tribunal"
+                    },
+                    "description": {
+                      "description": "Appeal description.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 50,
+                      "example": "Details about Appeal"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "status",
+                    "description"
+                  ]
+                }
+              },
+              "chargeReference": {
+                "description": "The late submission penalty charge reference.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16,
+                "example": "XS212345678901"
+              },
+              "chargeAmount": {
+                "description": "The late submission penalty charge amount. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": 543.29
+              },
+              "chargeOutstandingAmount": {
+                "description": "The penalty charge amount that remains to be paid. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": 123.26
+              },
+              "chargeDueDate": {
+                "description": "The due date for the late submission penalty charge (this will be a maximum of 30 days after the submission was originally due).",
+                "type": "string",
+                "format": "date",
+                "example": "2024-12-04"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "penaltyNumber",
+              "penaltyCreationDate",
+              "penaltyExpiryDate"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "details"
+      ]
+    },
+    "latePaymentPenalty": {
+      "description": "Information about the late payment penalties that HMRC has levied.",
+      "type": "object",
+      "properties": {
+        "details": {
+          "description": "Details of all the late payment penalties that the individual has accrued.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "title": "latePaymentPenaltyDetail",
+            "type": "object",
+            "properties": {
+              "principalChargeReference": {
+                "description": "The reference for the principal charge upon which the late payment penalty is based.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16,
+                "example": "XV123451234512"
+              },
+              "penaltyCategory": {
+                "description": "The category of the penalty.\n\nPossible values are:\n\n* **lpp1** - The first late payment penalty.\n* **lpp2** - The second late payment penalty.",
+                "type": "string",
+                "enum": [
+                  "lpp1",
+                  "lpp2"
+                ],
+                "example": "lpp1"
+              },
+              "penaltyStatus": {
+                "description": "The status of the penalty.\n\nPossible values are:\n\n* **accruing** - The penalty is accruing and has not yet been posted.\n* **posted** - The penalty has been posted to the account.",
+                "type": "string",
+                "enum": [
+                  "accruing",
+                  "posted"
+                ],
+                "example": "posted"
+              },
+              "penaltyAmountAccruing": {
+                "description": "The unposted penalty amount that is accruing. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": 99.99
+              },
+              "penaltyAmountPosted": {
+                "description": "The penalty amount that has been posted to the account. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": 1001.45
+              },
+              "penaltyAmountPaid": {
+                "description": "The penalty amount that has already been paid. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": 1001.45
+              },
+              "penaltyAmountOutstanding": {
+                "description": "The remaining penalty amount to be paid. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": 99.99
+              },
+              "latePaymentPenalty1LowerRateCalculationAmount": {
+                "description": "The amount of tax that remained unpaid 16 days after the due date. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": 99.99
+              },
+              "latePaymentPenalty1LowerRatePercentage": {
+                "description": "The percentage used to calculate the lower-rate part of the first late payment penalty. The value must be between -99.99 and 99.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99.99,
+                "maximum": 99.99,
+                "example": 2.00
+              },
+              "latePaymentPenalty1HigherRateCalculationAmount": {
+                "description": "The amount of tax that remained unpaid 31 days after the due date. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99999999999.99,
+                "maximum": 99999999999.99,
+                "example": 99.99
+              },
+              "latePaymentPenalty1HigherRatePercentage": {
+                "description": "The percentage used to calculate the higher-rate part of the first late payment penalty. The value must be between -99.99 and 99.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99.99,
+                "maximum": 99.99,
+                "example": 2.00
+              },
+              "latePaymentPenalty2Days": {
+                "description": "The number of days over which the second late payment penalty has accrued since day 31 after the tax payment due date.",
+                "type": "integer",
+                "multipleOf": 1,
+                "minimum": 1,
+                "maximum": 999,
+                "example": 31
+              },
+              "latePaymentPenalty2Percentage": {
+                "description": "The percentage rate applied to unpaid tax to calculate the second late payment penalty. The value must be between -99.99 and 99.99 up to 2 decimal places.",
+                "type": "number",
+                "multipleOf": 0.01,
+                "minimum": -99.99,
+                "maximum": 99.99,
+                "example": 4.00
+              },
+              "penaltyChargeCreationDate": {
+                "description": "The date when the penalty charge was created.",
+                "type": "string",
+                "format": "date",
+                "example": "2024-12-08"
+              },
+              "communicationsDate": {
+                "description": "The date when a letter about the penalty was sent to the customer.",
+                "type": "string",
+                "format": "date",
+                "example": "2024-12-09"
+              },
+              "penaltyChargeReference": {
+                "description": "The late payment penalty charge reference. This field is not returned when the penaltyStatus is 'accruing'.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 16,
+                "example": "XP298765432109"
+              },
+              "penaltyChargeDueDate": {
+                "description": "The date that the penalty must be paid by.",
+                "type": "string",
+                "format": "date",
+                "example": "2025-01-08"
+              },
+              "appealInformation": {
+                "description": "Details of any appeals made against the penalty.",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "title": "latePaymentAppealInformation",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "description": "The appeal status of a penalty.\n\nPossible values are:\n\n* **under-appeal** - The penalty has been formally appealed by the taxpayer.\n\n* **appeal-upheld** - The appeal has been reviewed and accepted (in full or substantially).\n\n* **appeal-rejected** - The appeal has been reviewed and denied.\n\n* **cannot-be-appealed** - The penalty is not eligible for appeal.",
+                      "type": "string",
+                      "enum": [
+                        "under-appeal",
+                        "appeal-upheld",
+                        "appeal-rejected",
+                        "cannot-be-appealed"
+                      ],
+                      "example": "appeal-upheld"
+                    },
+                    "level": {
+                      "description": "The level of appeal.\n\nPossible values are:\n\n* **statutory-review** - The first formal appeal stage within HMRC.\n\n* **appeal-first-tier-tribunal** - The next level of appeal beyond HMRC.\n\n* **tribunal** - An independent review by a judicial body.",
+                      "type": "string",
+                      "enum": [
+                        "statutory-review",
+                        "appeal-first-tier-tribunal",
+                        "tribunal"
+                      ],
+                      "example": "appeal-first-tier-tribunal"
+                    },
+                    "description": {
+                      "description": "Appeal description.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 50,
+                      "example": "Reason to appeal"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "status",
+                    "description"
+                  ]
+                }
+              },
+              "principalChargeDocNumber": {
+                "description": "Document number relating to the principal charge.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 12,
+                "example": "123456789012"
+              },
+              "principalChargeBillingFrom": {
+                "description": "The start date of the obligation period.",
+                "type": "string",
+                "format": "date",
+                "example": "2024-07-01"
+              },
+              "principalChargeBillingTo": {
+                "description": "The end date of the obligation period.",
+                "type": "string",
+                "format": "date",
+                "example": "2024-09-30"
+              },
+              "principalChargeDueDate": {
+                "description": "The date that the principal charge should have been paid by.",
+                "type": "string",
+                "format": "date",
+                "example": "2024-11-07"
+              },
+              "principalChargeLatestClearing": {
+                "description": "The date that the principal charge was paid.",
+                "type": "string",
+                "format": "date",
+                "example": "2025-02-15"
+              },
+              "timeToPay": {
+                "description": "Details of the Time to Pay arrangement that has been made.",
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "title": "timeToPayDetail",
+                  "type": "object",
+                  "properties": {
+                    "startDate": {
+                      "description": "The start date of the agreed time to pay the charge.",
+                      "type": "string",
+                      "format": "date",
+                      "example": "2024-12-15"
+                    },
+                    "endDate": {
+                      "description": "The last date of the agreed time to pay the charge.",
+                      "type": "string",
+                      "format": "date",
+                      "example": "2025-06-15"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "startDate",
+                    "endDate"
+                  ]
+                }
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "principalChargeReference",
+              "penaltyStatus",
+              "penaltyAmountAccruing",
+              "penaltyAmountPosted",
+              "principalChargeBillingFrom",
+              "principalChargeBillingTo",
+              "principalChargeDueDate"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "additionalProperties": false
+  }
+}
