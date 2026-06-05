@@ -13,3 +13,5 @@ DELETE        /:nino/:taxYear/collection/tax-code                          v4.de
 GET           /:nino/:taxYear/collection/tax-code/coding-out/status        v4.retrieveCodingOutStatus.RetrieveCodingOutStatusController.retrieveCodingOutStatus(nino: String, taxYear: String)
 POST          /:nino/:taxYear/collection/tax-code/coding-out/opt-in        v4.optInToCodingOut.OptInToCodingOutController.optInToCodingOut(nino: String, taxYear: String)
 POST          /:nino/:taxYear/collection/tax-code/coding-out/opt-out       v4.optOutOfCodingOut.OptOutOfCodingOutController.optOutOfCodingOut(nino: String, taxYear: String)
+
+GET           /:nino/penalties                                             v4.retrieveItsaPenalties.RetrieveItsaPenaltiesController.retrieveItsaPenalties(nino: String)

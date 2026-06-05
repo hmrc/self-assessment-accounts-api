@@ -57,8 +57,12 @@ abstract class ControllerBaseSpec
   def fakePostRequest[T](body: T): FakeRequest[T] = fakeRequest.withBody(body)
 }
 
-trait ControllerTestRunner extends MockEnrolmentsAuthService with MockMtdIdLookupService with MockIdGenerator with RealAppConfig {
-  self: ControllerBaseSpec =>
+trait ControllerTestRunner
+    extends ControllerBaseSpec
+    with MockEnrolmentsAuthService
+    with MockMtdIdLookupService
+    with MockIdGenerator
+    with RealAppConfig {
 
   protected val correlationId    = "X-123"
   protected val validNino        = "AA123456A"
