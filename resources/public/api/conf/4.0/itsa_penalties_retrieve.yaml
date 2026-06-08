@@ -1,14 +1,14 @@
 get:
   summary: Retrieve ITSA Penalties
   description: |
-    This endpoint enables a specified customer (identified by a National Insurance number) to retrieve a list of penalties against their ITSA account for a period of up to 24 months.
+    This endpoint enables a specified customer (identified by a National Insurance number) to retrieve details of all the penalties that have been applied to an ITSA account. 24 months worth of penalty information will be returned.
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
     
     | Header Value (Gov-Test-Scenario)            | Scenario                                                                                                                            |
     |---------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
-    | N/A - DEFAULT                               | Simulates a successful response with latest values.                                                                                 |
+    | N/A - DEFAULT                               | Simulates the scenario where there are multiple penalties in the last 2 years.                                                                               |
     | NO_PENALTIES                                | Simulates the scenario where there are no penalties in the last 2 years.                                                            |
     | LATE_SUBMISSION                             | Simulates the scenario where there is a single late submission penalty in the last 2 years.                                         |
     | LATE_PAYMENT                                | Simulates the scenario where there is a single late payment penalty in the last 2 years.                                            |
@@ -46,14 +46,14 @@ get:
       content:
         application/json:
           schema:
-            $ref: "./schemas/retrieveSelfAssessmentITSAPenalties/def1/response.json"
+            $ref: "./schemas/retrieveSelfAssessmentItsaPenalties/response.json"
           examples:
             With Penalties:
               value:
-                $ref: "./examples/retrieveSelfAssessmentITSAPenalties/def1/response.json"
+                $ref: "./examples/retrieveSelfAssessmentItsaPenalties/penalties_response.json"
             No Penalties:
-              description: Example of an account with no penalties
-              value: {}
+              value:
+                $ref: "./examples/retrieveSelfAssessmentItsaPenalties/no_penalties_response.json"
 
     "400":
       description: Bad request

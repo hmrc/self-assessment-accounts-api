@@ -1,32 +1,55 @@
 {
   "totalisations": {
-    "lateSubmissionPenaltyTotalValue": 123.26,
-    "penalisedPrincipalTotal": 2000.00,
-    "latePaymentPenaltyPostedTotal": 1101.44,
-    "latePaymentPenaltyEstimateTotal": 99.99
+    "lateSubmissionPenaltyTotalValue": 0,
+    "penalisedPrincipalTotal": 7014.02,
+    "latePaymentPenaltyPostedTotal": 805.21,
+    "latePaymentPenaltyEstimateTotal": 4762.36
   },
   "lateSubmissionPenalty": {
     "summary": {
-      "activePenaltyPoints": 2,
-      "inactivePenaltyPoints": 12,
+      "activePenaltyPoints": 1,
+      "inactivePenaltyPoints": 1,
       "periodOfComplianceAchievement": "2025-11-30",
-      "regimeThreshold": 2,
-      "penaltyChargeAmount": 543.29
+      "regimeThreshold": 4,
+      "penaltyChargeAmount": 0
     },
     "details": [
       {
-        "penaltyNumber": "12345678901233",
-        "penaltyOrder": "01",
-        "penaltyCategory": "point",
-        "penaltyStatus": "active",
-        "penaltyCreationDate": "2024-10-14",
-        "penaltyExpiryDate": "2026-10-14",
-        "communicationsDate": "2024-10-15"
+        "penaltyNumber": "12345678901234",
+        "penaltyStatus": "inactive",
+        "frequencyAdjustmentPointIndicator": true,
+        "penaltyCreationDate": "2022-11-14",
+        "penaltyExpiryDate": "2024-11-14",
+        "expiryReason": "submission-frequency-change",
+        "communicationsDate": "2022-11-15",
+        "lateSubmissions": [
+          {
+            "lateSubmissionId": "104",
+            "incomeSource": "Income Tax Liability",
+            "taxPeriod": "22C3",
+            "taxReturnStatus": "fulfilled",
+            "taxPeriodStartDate": "2022-07-01",
+            "taxPeriodEndDate": "2022-09-30",
+            "taxPeriodDueDate": "2022-11-07",
+            "returnReceiptDate": "2022-11-13"
+          }
+        ],
+        "appealInformation": [
+          {
+            "status": "appeal-upheld",
+            "level": "tribunal",
+            "description": "Reason to appeal"
+          }
+        ],
+        "chargeReference": "XP001286394838",
+        "chargeAmount": 543.29,
+        "chargeOutstandingAmount": 123.26,
+        "chargeDueDate": "2024-12-04"
       },
       {
-        "penaltyNumber": "12345678901234",
-        "penaltyOrder": "02",
-        "penaltyCategory": "threshold",
+        "penaltyNumber": "34345678901256",
+        "penaltyOrder": "01",
+        "penaltyCategory": "point",
         "penaltyStatus": "active",
         "frequencyAdjustmentPointIndicator": true,
         "penaltyCreationDate": "2024-11-14",
@@ -47,15 +70,11 @@
         ],
         "appealInformation": [
           {
-            "status": "cannot-be-appealed",
-            "level": "statutory-review",
+            "status": "appeal-upheld",
+            "level": "tribunal",
             "description": "Reason to appeal"
           }
-        ],
-        "chargeReference": "XP001286394838",
-        "chargeAmount": 543.29,
-        "chargeOutstandingAmount": 123.26,
-        "chargeDueDate": "2024-12-04"
+        ]
       }
     ]
   },
@@ -64,15 +83,15 @@
       {
         "principalChargeReference": "XV123451234512",
         "penaltyCategory": "lpp1",
-        "penaltyStatus": "posted",
-        "penaltyAmountAccruing": 99.99,
-        "penaltyAmountPosted": 1101.44,
-        "penaltyAmountPaid": 1001.45,
-        "penaltyAmountOutstanding": 99.99,
-        "latePaymentPenalty1LowerRateCalculationAmount": 99.99,
+        "penaltyStatus": "accruing",
+        "penaltyAmountAccruing": 4018,
+        "penaltyAmountPosted": 1045.1,
+        "penaltyAmountPaid": 4507.2,
+        "penaltyAmountOutstanding": 7014.84,
+        "latePaymentPenalty1LowerRateCalculationAmount": 463.15,
         "latePaymentPenalty1LowerRatePercentage": 2,
-        "latePaymentPenalty1HigherRateCalculationAmount": 99.99,
-        "latePaymentPenalty1HigherRatePercentage": 4,
+        "latePaymentPenalty1HigherRateCalculationAmount": 0,
+        "latePaymentPenalty1HigherRatePercentage": 2,
         "latePaymentPenalty2Days": 31,
         "latePaymentPenalty2Percentage": 4,
         "penaltyChargeCreationDate": "2024-12-08",
