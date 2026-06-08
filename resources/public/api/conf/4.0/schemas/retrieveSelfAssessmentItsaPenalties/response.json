@@ -50,7 +50,7 @@
       ]
     },
     "lateSubmissionPenalty": {
-      "description": "Information about the late submission penalties that HMRC has levied for the individual.",
+      "description": "Information about the late submission penalties that HMRC has levied.",
       "type": "object",
       "properties": {
         "summary": {
@@ -74,7 +74,7 @@
               "example": 12
             },
             "periodOfComplianceAchievement": {
-              "description": "The date upon which all accrued penalty points will expire, if the individual meets the requirements for compliance. In the format `YYYY-MM-DD`.",
+              "description": "The date upon which all accrued penalty points will expire, if the individual meets the requirements for compliance. Must conform to the format `YYYY-MM-DD`.",
               "type": "string",
               "format": "date",
               "example": "2025-11-30"
@@ -120,7 +120,7 @@
                 "example": "00005678901234"
               },
               "penaltyOrder": {
-                "description": "The position that the penalty currently occupies within the individual's point balance. If a default non-business value such as NA is received, this field should not be returned.",
+                "description": "The position that the penalty currently occupies within the individual's point balance.",
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 2,
@@ -151,13 +151,13 @@
                 "example": true
               },
               "penaltyCreationDate": {
-                "description": "The date that the penalty point was created, in the format `YYYY-MM-DD`.",
+                "description": "The date that the penalty point was created. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2024-11-14"
               },
               "penaltyExpiryDate": {
-                "description": "The date that the penalty point will expire. If the penalty falls within the points threshold, it will expire once compliance is met.",
+                "description": "The date that the penalty point will expire. If the penalty falls within the points threshold, it will expire once compliance is met. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2026-11-14"
@@ -178,7 +178,7 @@
                 "example": "submission-frequency-change"
               },
               "communicationsDate": {
-                "description": "The date when a letter about the penalty was sent to the customer, in the format `YYYY-MM-DD`.",
+                "description": "The date when a letter about the penalty was sent to the customer. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2024-11-15"
@@ -213,7 +213,7 @@
                       "example": "23A1"
                     },
                     "taxReturnStatus": {
-                      "description": "The status of the tax return.\n\nPossible values are:\n\n* **open** - The return has not yet been submitted.\n* **fulfilled** - The obligation has been met.\n* **reversed** - The obligation no longer exists.",
+                      "description": "The status of the tax return.\n\nPossible values are:\n\n* **open** - The return is yet to be submitted.\n* **fulfilled** - The obligation has been met.\n* **reversed** - The obligation no longer exists.",
                       "type": "string",
                       "enum": [
                         "open",
@@ -223,25 +223,25 @@
                       "example": "fulfilled"
                     },
                     "taxPeriodStartDate": {
-                      "description": "Start date of the tax period to which the penalty relates.",
+                      "description": "Start date of the tax period to which the penalty relates. Must conform to the format `YYYY-MM-DD`.",
                       "type": "string",
                       "format": "date",
                       "example": "2024-07-01"
                     },
                     "taxPeriodEndDate": {
-                      "description": "End date of the tax period to which the penalty relates.",
+                      "description": "End date of the tax period to which the penalty relates. Must conform to the format `YYYY-MM-DD`.",
                       "type": "string",
                       "format": "date",
                       "example": "2024-09-30"
                     },
                     "taxPeriodDueDate": {
-                      "description": "The due date for the tax return, which was missed and gave rise to the late submission penalty.",
+                      "description": "The due date for the tax return, which was missed and gave rise to the late submission penalty. Must conform to the format `YYYY-MM-DD`.",
                       "type": "string",
                       "format": "date",
                       "example": "2024-11-07"
                     },
                     "returnReceiptDate": {
-                      "description": "The date upon which the tax return was submitted.",
+                      "description": "The date upon which the tax return was submitted. Must conform to the format `YYYY-MM-DD`.",
                       "type": "string",
                       "format": "date",
                       "example": "2024-11-13"
@@ -273,7 +273,7 @@
                       "example": "appeal-upheld"
                     },
                     "level": {
-                      "description": "The level of appeal.\n\nPossible values are:\n\n* **statutory-review** - The first formal appeal stage within HMRC.\n\n* **appeal-first-tier-tribunal** - The next level of appeal beyond HMRC.\n\n* **tribunal** - An independent review by a judicial body.",
+                      "description": "The level of appeal.\n\nPossible values are:\n\n* **statutory-review** - This is the first formal appeal stage within HMRC.\n\n* **appeal-first-tier-tribunal** - This is the next escalation beyond HMRC.\n\n* **tribunal** - This is an independent review from a judicial body.",
                       "type": "string",
                       "enum": [
                         "statutory-review",
@@ -321,7 +321,7 @@
                 "example": 123.26
               },
               "chargeDueDate": {
-                "description": "The due date for the late submission penalty charge (this will be a maximum of 30 days after the submission was originally due).",
+                "description": "The due date for the late submission penalty charge (this will be a maximum of 30 days after the submission was originally due). Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2024-12-04"
@@ -371,7 +371,7 @@
                 "example": "lpp1"
               },
               "penaltyStatus": {
-                "description": "The status of the penalty.\n\nPossible values are:\n\n* **accruing** - The penalty is accruing and has not yet been posted.\n* **posted** - The penalty has been posted to the account.",
+                "description": "The status of the penalty.\n\nPossible values are:\n\n* **accruing** - The penalty is accruing and is yet to be posted.\n* **posted** - The penalty has been posted to the account.",
                 "type": "string",
                 "enum": [
                   "accruing",
@@ -444,7 +444,7 @@
                 "example": 2.00
               },
               "latePaymentPenalty2Days": {
-                "description": "The number of days over which the second late payment penalty has accrued since day 31 after the tax payment due date.",
+                "description": "The number of days over which the second late payment penalty has accrued since day 31 after the tax payment due date. The value must be between 1 and 999.",
                 "type": "integer",
                 "multipleOf": 1,
                 "minimum": 1,
@@ -460,26 +460,26 @@
                 "example": 4.00
               },
               "penaltyChargeCreationDate": {
-                "description": "The date when the penalty charge was created.",
+                "description": "The date when the penalty charge was created. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2024-12-08"
               },
               "communicationsDate": {
-                "description": "The date when a letter about the penalty was sent to the customer.",
+                "description": "The date when a letter about the penalty was sent to the customer. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2024-12-09"
               },
               "penaltyChargeReference": {
-                "description": "The late payment penalty charge reference. This field is not returned when the penaltyStatus is 'accruing'.",
+                "description": "The late payment penalty charge reference. Not returned if the penaltyStatus is 'accruing'.",
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 16,
                 "example": "XP298765432109"
               },
               "penaltyChargeDueDate": {
-                "description": "The date that the penalty must be paid by.",
+                "description": "The date that the penalty must be paid by. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2025-01-08"
@@ -504,7 +504,7 @@
                       "example": "appeal-upheld"
                     },
                     "level": {
-                      "description": "The level of appeal.\n\nPossible values are:\n\n* **statutory-review** - The first formal appeal stage within HMRC.\n\n* **appeal-first-tier-tribunal** - The next level of appeal beyond HMRC.\n\n* **tribunal** - An independent review by a judicial body.",
+                      "description": "The level of appeal.\n\nPossible values are:\n\n* **statutory-review** - This is the first formal appeal stage within HMRC.\n\n* **appeal-first-tier-tribunal** - This is the next escalation beyond HMRC.\n\n* **tribunal** - This is an independent review from a judicial body.",
                       "type": "string",
                       "enum": [
                         "statutory-review",
@@ -536,25 +536,25 @@
                 "example": "123456789012"
               },
               "principalChargeBillingFrom": {
-                "description": "The start date of the obligation period.",
+                "description": "The start date of the obligation period. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2024-07-01"
               },
               "principalChargeBillingTo": {
-                "description": "The end date of the obligation period.",
+                "description": "The end date of the obligation period. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2024-09-30"
               },
               "principalChargeDueDate": {
-                "description": "The date that the principal charge should have been paid by.",
+                "description": "The date that the principal charge should have been paid by. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2024-11-07"
               },
               "principalChargeLatestClearing": {
-                "description": "The date that the principal charge was paid.",
+                "description": "The date that the principal charge was paid. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
                 "format": "date",
                 "example": "2025-02-15"
@@ -568,13 +568,13 @@
                   "type": "object",
                   "properties": {
                     "startDate": {
-                      "description": "The start date of the agreed time to pay the charge.",
+                      "description": "The start date of the agreed time to pay the charge. Must conform to the format `YYYY-MM-DD`.",
                       "type": "string",
                       "format": "date",
                       "example": "2024-12-15"
                     },
                     "endDate": {
-                      "description": "The last date of the agreed time to pay the charge.",
+                      "description": "The last date of the agreed time to pay the charge. Must conform to the format `YYYY-MM-DD`.",
                       "type": "string",
                       "format": "date",
                       "example": "2025-06-15"
@@ -602,7 +602,7 @@
         }
       },
       "additionalProperties": false
-    },
-    "additionalProperties": false
-  }
+    }
+  },
+  "additionalProperties": false
 }

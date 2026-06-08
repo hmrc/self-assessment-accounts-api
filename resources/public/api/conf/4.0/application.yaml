@@ -61,7 +61,7 @@ tags:
     description: Endpoints relating to coding out status.
   {{#if (enabled "api_5329_r21_itsa_penalties_docs")}}
   - name: ITSA Penalties
-    description: This endpoint allows software packages to retrieve a list of penalties against a specified customer (identified by a National Insurance number) for a period of up to 24 months.
+    description: "Income Tax Self Assessment (ITSA) penalties are issued by HMRC when a customer fails to meet their tax obligations. These penalties are split into 2 main categories: late submission penalties, which apply when a tax return is not submitted by the required deadline, and late payment penalties, which apply when tax due is not paid by the required deadline."
   {{/if}}
 
 paths:
