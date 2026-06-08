@@ -52,7 +52,6 @@ get:
               value:
                 $ref: "./examples/retrieveSelfAssessmentItsaPenalties/penalties_response.json"
             No Penalties:
-              description: Example of an account with no penalties
               value:
                 $ref: "./examples/retrieveSelfAssessmentItsaPenalties/no_penalties_response.json"
 
