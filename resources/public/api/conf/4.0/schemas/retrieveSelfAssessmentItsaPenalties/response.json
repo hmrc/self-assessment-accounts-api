@@ -146,9 +146,9 @@
                 "example": "active"
               },
               "frequencyAdjustmentPointIndicator": {
-                "description": "Indicates whether there has been an adjustment to the penalty point because of a change to the submission frequency.",
+                "description": "Indicates whether there has been an adjustment to the penalty point because of a change to the submission frequency. The value can only be returned as `true`.",
                 "type": "boolean",
-                "example": true
+                "enum": [true]
               },
               "penaltyCreationDate": {
                 "description": "The date that the penalty point was created. Must conform to the format `YYYY-MM-DD`.",
