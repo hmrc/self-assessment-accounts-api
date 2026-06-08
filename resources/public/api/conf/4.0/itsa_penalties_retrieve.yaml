@@ -1,7 +1,7 @@
 get:
   summary: Retrieve ITSA Penalties
   description: |
-    Retrieves details of all the penalties that have been applied to an ITSA account. Twenty-four months worth of penalty information will be returned. A National Insurance number must be provided.
+    This endpoint enables a specified customer (identified by a National Insurance number) to retrieve details of all the penalties that have been applied to an ITSA account. 24 months worth of penalty information will be returned.
     
     ### Test data
     Scenario simulation using Gov-Test-Scenario headers is only available in the sandbox environment.
