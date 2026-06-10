@@ -76,7 +76,7 @@ class JsonResponseHelperSpec extends UnitSpec with HttpParser with LogCapturing 
         val response = httpResponseWithBody("not-json")
         withCaptureOfLoggingFrom(logger) { logs =>
           response.validateJsonWithLogging[TestModel] shouldBe None
-          
+
           logs.head.getMessage shouldBe "[JsonResponseHelper][validateJsonWithLogging] Response body is not valid JSON"
         }
       }
