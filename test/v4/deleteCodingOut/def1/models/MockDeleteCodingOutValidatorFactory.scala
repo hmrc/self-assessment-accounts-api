@@ -18,7 +18,7 @@ package v4.deleteCodingOut.def1.models
 
 import config.SaAccountsConfig
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v4.deleteCodingOut.DeleteCodingOutValidatorFactory
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 

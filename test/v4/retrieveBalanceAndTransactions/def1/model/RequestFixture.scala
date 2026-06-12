@@ -16,7 +16,7 @@
 
 package v4.retrieveBalanceAndTransactions.def1.model
 
-import shared.models.domain.{DateRange, Nino}
+import api.models.domain.{DateRange, Nino}
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import java.time.LocalDate

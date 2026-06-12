@@ -17,8 +17,8 @@
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.{JsString, Json}
-import shared.models.utils.JsonErrorValidators
-import shared.utils.UnitSpec
+import api.models.utils.JsonErrorValidators
+import api.utils.UnitSpec
 import v4.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.*
 
 class DocumentDetailsSpec extends UnitSpec with JsonErrorValidators {

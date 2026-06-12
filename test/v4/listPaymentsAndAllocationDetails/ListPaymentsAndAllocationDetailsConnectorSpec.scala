@@ -16,9 +16,9 @@
 
 package v4.listPaymentsAndAllocationDetails
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{DateRange, Nino}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{DateRange, Nino}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
@@ -46,7 +46,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
   trait Test { self: ConnectorTest =>
 
     val connector: ListPaymentsAndAllocationDetailsConnector =
-      new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockSharedAppConfig)
+      new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
     def connectorRequest(request: ListPaymentsAndAllocationDetailsRequestData,
                          response: ListPaymentsAndAllocationDetailsResponse,

@@ -16,7 +16,7 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import shared.utils.enums.Enums
+import api.utils.enums.Enums
 import play.api.libs.json.{Reads, Writes}
 
 enum SubmissionPenaltyStatus(val fromDownstream: String) {

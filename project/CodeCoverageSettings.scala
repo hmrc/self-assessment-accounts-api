@@ -29,7 +29,7 @@ object CodeCoverageSettings {
     "config.*",
     "testOnly.*",
     "testOnlyDoNotUseInAppConf.*",
-    "shared.config.*",
+    "api.config.*",
     ".*\\$anon.*"
   )
 

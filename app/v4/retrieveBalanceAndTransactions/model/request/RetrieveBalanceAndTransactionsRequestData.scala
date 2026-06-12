@@ -16,7 +16,7 @@
 
 package v4.retrieveBalanceAndTransactions.model.request
 
-import shared.models.domain.{DateRange, Nino}
+import api.models.domain.{DateRange, Nino}
 
 case class RetrieveBalanceAndTransactionsRequestData(
     nino: Nino,

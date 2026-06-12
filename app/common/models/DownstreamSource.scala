@@ -17,7 +17,7 @@
 package common.models
 
 import play.api.libs.json.*
-import shared.utils.enums.Enums
+import api.utils.enums.Enums
 
 enum DownstreamSource(val toMtdSource: String) {
   case `HMRC HELD` extends DownstreamSource("hmrcHeld")

@@ -17,7 +17,7 @@
 package v4.retrieveCodingOut
 
 import config.MockSaAccountsConfig
-import shared.utils.UnitSpec
+import api.utils.UnitSpec
 import v4.retrieveCodingOut.def1.Def1_RetrieveCodingOutValidator
 
 class RetrieveCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {

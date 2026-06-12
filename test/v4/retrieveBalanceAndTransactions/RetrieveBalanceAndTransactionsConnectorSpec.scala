@@ -16,10 +16,10 @@
 
 package v4.retrieveBalanceAndTransactions
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{DateRange, Nino}
-import shared.models.outcomes.ResponseWrapper
-import shared.utils.DateUtils.isoDateTimeStamp
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{DateRange, Nino}
+import api.models.outcomes.ResponseWrapper
+import api.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
 import v4.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
@@ -128,7 +128,7 @@ class RetrieveBalanceAndTransactionsConnectorSpec extends ConnectorSpec {
   private trait Test { self: ConnectorTest =>
 
     private val connector: RetrieveBalanceAndTransactionsConnector =
-      new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockSharedAppConfig)
+      new RetrieveBalanceAndTransactionsConnector(mockHttpClient, mockAppConfig)
 
     def connectorRequest(request: RetrieveBalanceAndTransactionsRequestData,
                          response: RetrieveBalanceAndTransactionsResponse,

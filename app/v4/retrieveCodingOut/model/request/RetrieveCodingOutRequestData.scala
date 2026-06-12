@@ -17,7 +17,7 @@
 package v4.retrieveCodingOut.model.request
 
 import common.models.MtdSource
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 import v4.retrieveCodingOut.RetrieveCodingOutSchema
 
 trait RetrieveCodingOutRequestData {

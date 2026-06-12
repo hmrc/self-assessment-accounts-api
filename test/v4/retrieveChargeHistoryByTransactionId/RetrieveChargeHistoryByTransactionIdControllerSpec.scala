@@ -18,11 +18,11 @@ package v4.retrieveChargeHistoryByTransactionId
 
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.TransactionId
-import shared.models.errors.{ErrorWrapper, NinoFormatError}
-import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version4}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.domain.TransactionId
+import api.models.errors.{ErrorWrapper, NinoFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.routing.{Version, Version4}
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
@@ -83,8 +83,8 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration.empty
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration.empty
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveChargeHistoryByTransactionId(validNino, transactionId)(fakeGetRequest)
   }

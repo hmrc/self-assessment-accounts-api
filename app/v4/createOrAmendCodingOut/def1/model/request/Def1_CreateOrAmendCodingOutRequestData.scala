@@ -16,7 +16,7 @@
 
 package v4.createOrAmendCodingOut.def1.model.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 import v4.createOrAmendCodingOut.CreateOrAmendCodingOutSchema
 import v4.createOrAmendCodingOut.CreateOrAmendCodingOutSchema.Def1
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData

@@ -16,7 +16,7 @@
 
 package v4.createOrAmendCodingOut.model.request
 
-import shared.models.domain.{Nino, TaxYear}
+import api.models.domain.{Nino, TaxYear}
 import v4.createOrAmendCodingOut.CreateOrAmendCodingOutSchema
 
 trait CreateOrAmendCodingOutRequestData {

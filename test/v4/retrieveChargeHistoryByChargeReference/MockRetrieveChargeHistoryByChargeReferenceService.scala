@@ -19,9 +19,9 @@ package v4.retrieveChargeHistoryByChargeReference
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import shared.controllers.RequestContext
-import shared.models.errors.ErrorWrapper
-import shared.models.outcomes.ResponseWrapper
+import api.controllers.RequestContext
+import api.models.errors.ErrorWrapper
+import api.models.outcomes.ResponseWrapper
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 

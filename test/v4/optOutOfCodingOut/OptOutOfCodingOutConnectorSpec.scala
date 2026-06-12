@@ -16,9 +16,9 @@
 
 package v4.optOutOfCodingOut
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{EmptyJsonBody, Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{EmptyJsonBody, Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v4.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
 import v4.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
@@ -35,7 +35,7 @@ class OptOutOfCodingOutConnectorSpec extends ConnectorSpec {
   trait Test {
     self: ConnectorTest =>
 
-    protected val connector = new OptOutOfCodingOutConnector(mockHttpClient, mockSharedAppConfig)
+    protected val connector = new OptOutOfCodingOutConnector(mockHttpClient, mockAppConfig)
 
   }
 

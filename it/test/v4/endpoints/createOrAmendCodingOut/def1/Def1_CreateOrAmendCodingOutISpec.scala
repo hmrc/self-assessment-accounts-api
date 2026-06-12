@@ -22,9 +22,9 @@ import play.api.http.Status.*
 import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import shared.models.errors.*
-import shared.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import shared.support.IntegrationBaseSpec
+import api.models.errors.*
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.support.IntegrationBaseSpec
 import play.api.libs.ws.JsonBodyWritables.writeableOf_JsValue
 
 class Def1_CreateOrAmendCodingOutISpec extends IntegrationBaseSpec {

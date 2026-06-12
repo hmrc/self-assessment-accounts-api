@@ -16,13 +16,13 @@
 
 package v4.retrieveCodingOut
 
-import shared.controllers.EndpointLogContext
-import shared.models.domain.TaxYear
-import shared.models.domain.TaxYear.currentTaxYear
-import shared.models.errors.{ErrorWrapper, InternalError}
-import shared.models.outcomes.ResponseWrapper
-import shared.services.DownstreamResponseMappingSupport
-import shared.utils.Logging
+import api.controllers.EndpointLogContext
+import api.models.domain.TaxYear
+import api.models.domain.TaxYear.currentTaxYear
+import api.models.errors.{ErrorWrapper, InternalError}
+import api.models.outcomes.ResponseWrapper
+import api.services.DownstreamResponseMappingSupport
+import api.utils.Logging
 import v4.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 

@@ -16,9 +16,9 @@
 
 package v4.optInToCodingOut
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 
 import scala.concurrent.Future
@@ -32,7 +32,7 @@ class OptInToCodingOutConnectorSpec extends ConnectorSpec {
 
     protected val connector: OptInToCodingOutConnector = new OptInToCodingOutConnector(
       http = mockHttpClient,
-      appConfig = mockSharedAppConfig
+      appConfig = mockAppConfig
     )
 
   }

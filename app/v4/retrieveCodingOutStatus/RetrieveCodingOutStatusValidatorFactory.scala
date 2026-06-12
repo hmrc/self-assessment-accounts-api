@@ -16,7 +16,7 @@
 
 package v4.retrieveCodingOutStatus
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.retrieveCodingOutStatus.RetrieveCodingOutStatusSchema.Def1
 import v4.retrieveCodingOutStatus.def1.Def1_RetrieveCodingOutStatusValidator
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData

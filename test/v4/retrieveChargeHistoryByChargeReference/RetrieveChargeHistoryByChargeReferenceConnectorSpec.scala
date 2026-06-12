@@ -17,10 +17,10 @@
 package v4.retrieveChargeHistoryByChargeReference
 
 import common.models.ChargeReference
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.Nino
-import shared.models.outcomes.ResponseWrapper
-import shared.utils.DateUtils.isoDateTimeStamp
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import api.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
@@ -38,7 +38,7 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
     self: ConnectorTest =>
 
     private val connector: RetrieveChargeHistoryByChargeReferenceConnector =
-      new RetrieveChargeHistoryByChargeReferenceConnector(mockHttpClient, mockSharedAppConfig)
+      new RetrieveChargeHistoryByChargeReferenceConnector(mockHttpClient, mockAppConfig)
 
     def connectorRequest(request: RetrieveChargeHistoryByChargeReferenceRequestData,
                          response: RetrieveChargeHistoryResponse,

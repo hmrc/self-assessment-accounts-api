@@ -19,7 +19,7 @@ package config
 import org.apache.commons.lang3.BooleanUtils
 import play.api.Configuration
 import play.api.mvc.Request
-import shared.config.{FeatureSwitches, SharedAppConfig}
+import api.config.{FeatureSwitches, AppConfig}
 
 case class SaAccountsFeatureSwitches private[config] (protected val featureSwitchConfig: Configuration) extends FeatureSwitches {
 
@@ -34,5 +34,5 @@ case class SaAccountsFeatureSwitches private[config] (protected val featureSwitc
 }
 
 object SaAccountsFeatureSwitches {
-  def apply()(using appConfig: SharedAppConfig): SaAccountsFeatureSwitches = SaAccountsFeatureSwitches(appConfig.featureSwitchConfig)
+  def apply()(using appConfig: AppConfig): SaAccountsFeatureSwitches = SaAccountsFeatureSwitches(appConfig.featureSwitchConfig)
 }

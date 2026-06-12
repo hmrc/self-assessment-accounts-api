@@ -20,12 +20,12 @@ import common.errors.RuleBusinessPartnerNotExistError
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.TaxYear
-import shared.models.errors.{ErrorWrapper, NinoFormatError}
-import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version4}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.TaxYear
+import api.models.errors.{ErrorWrapper, NinoFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.routing.{Version, Version4}
 import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
@@ -102,8 +102,8 @@ class RetrieveCodingOutStatusControllerSpec
       cc = cc,
       idGenerator = mockIdGenerator)
 
-    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveCodingOutStatus(validNino, taxYear)(fakeGetRequest)
 

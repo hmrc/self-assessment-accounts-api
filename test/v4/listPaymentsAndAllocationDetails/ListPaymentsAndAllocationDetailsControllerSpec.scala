@@ -19,11 +19,11 @@ package v4.listPaymentsAndAllocationDetails
 import common.errors.PaymentLotFormatError
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.DateRange
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version4}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.domain.DateRange
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.routing.{Version, Version4}
 import v4.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.{mtdResponseJson, responseObject}
@@ -90,8 +90,8 @@ class ListPaymentsAndAllocationDetailsControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] =
       controller.listPayments(validNino, Some("2022-08-15"), Some("2022-09-15"), Some("paymentLot"), Some("paymentLotItem"))(fakeGetRequest)
