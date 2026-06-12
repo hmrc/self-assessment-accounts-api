@@ -19,8 +19,8 @@ package config
 import com.google.inject.AbstractModule
 import definition.SaAccountsDefinitionFactory
 import routing.SaAccountsVersionRoutingMap
-import shared.definition.ApiDefinitionFactory
-import shared.routing.VersionRoutingMap
+import api.definition.ApiDefinitionFactory
+import api.routing.VersionRoutingMap
 
 class SaAccountsPlayModule extends AbstractModule {
 

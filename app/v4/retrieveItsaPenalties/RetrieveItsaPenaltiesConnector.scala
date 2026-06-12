@@ -16,22 +16,22 @@
 
 package v4.retrieveItsaPenalties
 
-import shared.config.SharedAppConfig
-import shared.connectors.DownstreamUri
-import shared.connectors.DownstreamUri.HipUri
-import shared.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import shared.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.config.AppConfig
+import api.connectors.DownstreamUri
+import api.connectors.DownstreamUri.HipUri
+import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
-import shared.utils.DateUtils.isoDateTimeStamp
+import api.utils.DateUtils.isoDateTimeStamp
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class RetrieveItsaPenaltiesConnector @Inject() (val http: HttpClientV2, val appConfig: SharedAppConfig) extends BaseDownstreamConnector {
+class RetrieveItsaPenaltiesConnector @Inject() (val http: HttpClientV2, val appConfig: AppConfig) extends BaseDownstreamConnector {
 
   def retrieveItsaPenalties(request: RetrieveItsaPenaltiesRequestData)(implicit
       hc: HeaderCarrier,

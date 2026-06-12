@@ -17,7 +17,7 @@
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.{Reads, Writes}
-import shared.utils.enums.Enums
+import api.utils.enums.Enums
 
 enum CodedOutStatus(val fromDownstream: String) {
   case initiated              extends CodedOutStatus("I")

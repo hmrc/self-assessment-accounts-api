@@ -17,10 +17,10 @@
 package v4.createOrAmendCodingOut
 
 import common.errors.RuleOutsideAmendmentWindowError
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.{ServiceOutcome, ServiceSpec}
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.{ServiceOutcome, ServiceSpec}
 import v4.createOrAmendCodingOut.def1.model.request.Def1_CreateOrAmendCodingOutRequestData
 import v4.createOrAmendCodingOut.def1.models.request.CodingOutFixtures.validRequestBody
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData

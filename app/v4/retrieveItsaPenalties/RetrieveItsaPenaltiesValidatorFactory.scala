@@ -16,11 +16,11 @@
 
 package v4.retrieveItsaPenalties
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 import cats.data.Validated
-import shared.models.errors.*
-import shared.controllers.validators.resolvers.ResolveNino
+import api.models.errors.*
+import api.controllers.validators.resolvers.ResolveNino
 import javax.inject.Singleton
 
 @Singleton

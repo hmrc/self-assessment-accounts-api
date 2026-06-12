@@ -18,7 +18,7 @@ package v4.retrieveChargeHistoryByChargeReference.def1.model.response
 
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
-import shared.models.domain.{TaxYear, Timestamp}
+import api.models.domain.{TaxYear, Timestamp}
 
 import scala.util.Try
 

@@ -19,11 +19,11 @@ package v4.createOrAmendCodingOut
 import config.{SaAccountsConfig, SaAccountsFeatureSwitches}
 import play.api.libs.json.JsValue
 import play.api.mvc.{Action, ControllerComponents}
-import shared.config.SharedAppConfig
-import shared.controllers.*
-import shared.routing.Version
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.{IdGenerator, Logging}
+import api.config.AppConfig
+import api.controllers.*
+import api.routing.Version
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.{IdGenerator, Logging}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -36,7 +36,7 @@ class CreateOrAmendCodingOutController @Inject() (
     service: CreateOrAmendCodingOutService,
     auditService: AuditService,
     cc: ControllerComponents,
-    idGenerator: IdGenerator)(implicit ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAccountsConfig: SaAccountsConfig)
+    idGenerator: IdGenerator)(implicit ec: ExecutionContext, appConfig: AppConfig, saAccountsConfig: SaAccountsConfig)
     extends AuthorisedController(cc)
     with Logging {
 

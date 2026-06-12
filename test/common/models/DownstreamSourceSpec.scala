@@ -17,8 +17,8 @@
 package common.models
 
 import common.models.DownstreamSource.{`CUSTOMER`, `HMRC HELD`}
-import shared.utils.UnitSpec
-import shared.utils.enums.EnumJsonSpecSupport
+import api.utils.UnitSpec
+import api.utils.enums.EnumJsonSpecSupport
 
 class DownstreamSourceSpec extends UnitSpec with EnumJsonSpecSupport {
 

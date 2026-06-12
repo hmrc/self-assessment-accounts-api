@@ -16,7 +16,7 @@
 
 package v4.listPaymentsAndAllocationDetails.model.request
 
-import shared.models.domain.{DateRange, Nino}
+import api.models.domain.{DateRange, Nino}
 import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsSchema
 
 trait ListPaymentsAndAllocationDetailsRequestData {

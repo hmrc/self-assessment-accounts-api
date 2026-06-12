@@ -16,6 +16,6 @@
 
 package v4.retrieveItsaPenalties.model.request
 
-import shared.models.domain.Nino
+import api.models.domain.Nino
 
 case class RetrieveItsaPenaltiesRequestData(nino: Nino)

@@ -21,11 +21,11 @@ import common.models.MtdSource
 import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.domain.TaxYear
-import shared.models.errors.{ErrorWrapper, NinoFormatError}
-import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version4}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.domain.TaxYear
+import api.models.errors.{ErrorWrapper, NinoFormatError}
+import api.models.outcomes.ResponseWrapper
+import api.routing.{Version, Version4}
 import v4.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
 import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
@@ -93,8 +93,8 @@ class RetrieveCodingOutControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig returns Configuration.empty
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.featureSwitchConfig returns Configuration.empty
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
     protected def callController(): Future[Result] = controller.retrieveCodingOut(validNino, taxYear, Some(source))(fakeGetRequest)
   }
 

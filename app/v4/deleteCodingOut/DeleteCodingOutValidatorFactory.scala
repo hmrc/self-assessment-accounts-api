@@ -17,7 +17,7 @@
 package v4.deleteCodingOut
 
 import config.SaAccountsConfig
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.deleteCodingOut.DeleteCodingOutSchema.Def1
 import v4.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData

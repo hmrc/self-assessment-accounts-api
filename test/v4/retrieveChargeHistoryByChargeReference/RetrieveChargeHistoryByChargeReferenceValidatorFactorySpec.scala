@@ -16,8 +16,8 @@
 
 package v4.retrieveChargeHistoryByChargeReference
 
-import shared.models.utils.JsonErrorValidators
-import shared.utils.UnitSpec
+import api.models.utils.JsonErrorValidators
+import api.utils.UnitSpec
 import v4.retrieveChargeHistoryByChargeReference.def1.Def1_RetrieveChargeHistoryByChargeReferenceValidator
 
 class RetrieveChargeHistoryByChargeReferenceValidatorFactorySpec extends UnitSpec with JsonErrorValidators {

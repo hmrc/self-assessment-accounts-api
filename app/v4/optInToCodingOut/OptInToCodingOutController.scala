@@ -17,11 +17,11 @@
 package v4.optInToCodingOut
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.config.SharedAppConfig
-import shared.controllers.*
-import shared.routing.Version
-import shared.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.IdGenerator
+import api.config.AppConfig
+import api.controllers.*
+import api.routing.Version
+import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.IdGenerator
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -33,7 +33,7 @@ class OptInToCodingOutController @Inject() (val authService: EnrolmentsAuthServi
                                             service: OptInToCodingOutService,
                                             auditService: AuditService,
                                             cc: ControllerComponents,
-                                            idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: SharedAppConfig)
+                                            idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName = "opt-in-to-coding-out"

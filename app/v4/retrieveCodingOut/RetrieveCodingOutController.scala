@@ -18,10 +18,10 @@ package v4.retrieveCodingOut
 
 import config.SaAccountsConfig
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.config.SharedAppConfig
-import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.IdGenerator
+import api.config.AppConfig
+import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.IdGenerator
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -33,7 +33,7 @@ class RetrieveCodingOutController @Inject() (
     validatorFactory: RetrieveCodingOutValidatorFactory,
     service: RetrieveCodingOutService,
     cc: ControllerComponents,
-    idGenerator: IdGenerator)(using ec: ExecutionContext, sharedAppConfig: SharedAppConfig, saAppConfig: SaAccountsConfig)
+    idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: AppConfig, saAppConfig: SaAccountsConfig)
     extends AuthorisedController(cc) {
 
   override val endpointName: String = "retrieve-coding-out"

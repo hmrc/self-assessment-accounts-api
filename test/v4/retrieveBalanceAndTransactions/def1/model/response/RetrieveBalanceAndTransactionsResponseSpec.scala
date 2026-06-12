@@ -17,7 +17,7 @@
 package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.json.Json
-import shared.utils.UnitSpec
+import api.utils.UnitSpec
 import v4.retrieveBalanceAndTransactions.def1.model.ResponseFixture.*
 import v4.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 

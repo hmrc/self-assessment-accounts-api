@@ -22,9 +22,9 @@ import cats.implicits.*
 import common.resolvers.{DetailedResolveTaxYear, ResolveParsedNumericId}
 import config.SaAccountsConfig
 import play.api.libs.json.JsValue
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.*
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.*
+import api.models.errors.MtdError
 import v4.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent}
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 

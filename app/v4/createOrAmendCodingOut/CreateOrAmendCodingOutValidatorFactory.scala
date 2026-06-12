@@ -18,7 +18,7 @@ package v4.createOrAmendCodingOut
 
 import config.SaAccountsConfig
 import play.api.libs.json.JsValue
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.createOrAmendCodingOut.CreateOrAmendCodingOutSchema.Def1
 import v4.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData

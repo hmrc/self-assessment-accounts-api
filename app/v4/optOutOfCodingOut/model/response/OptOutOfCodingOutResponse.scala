@@ -17,7 +17,7 @@
 package v4.optOutOfCodingOut.model.response
 
 import play.api.libs.json.{JsObject, Json, OWrites}
-import shared.utils.JsonWritesUtil.writesFrom
+import api.utils.JsonWritesUtil.writesFrom
 import v4.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 
 trait OptOutOfCodingOutResponse
