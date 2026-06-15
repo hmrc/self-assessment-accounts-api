@@ -17,8 +17,8 @@
 package common.models
 
 import common.models.MtdSource.{hmrcHeld, latest, user}
-import shared.utils.UnitSpec
-import shared.utils.enums.EnumJsonSpecSupport
+import api.utils.UnitSpec
+import api.utils.enums.EnumJsonSpecSupport
 
 class MtdSourceSpec extends UnitSpec with EnumJsonSpecSupport {
 

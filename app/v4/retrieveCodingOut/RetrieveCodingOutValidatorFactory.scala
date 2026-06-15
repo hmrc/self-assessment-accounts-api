@@ -17,7 +17,7 @@
 package v4.retrieveCodingOut
 
 import config.SaAccountsConfig
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.retrieveCodingOut.RetrieveCodingOutSchema.Def1
 import v4.retrieveCodingOut.def1.Def1_RetrieveCodingOutValidator
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData

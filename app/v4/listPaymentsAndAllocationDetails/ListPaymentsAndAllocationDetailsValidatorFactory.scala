@@ -16,7 +16,7 @@
 
 package v4.listPaymentsAndAllocationDetails
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsSchema.Def1
 import v4.listPaymentsAndAllocationDetails.def1.Def1_ListPaymentsAndAllocationDetailsValidator
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData

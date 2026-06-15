@@ -16,7 +16,7 @@
 
 package v4.optOutOfCodingOut
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.optOutOfCodingOut.OptOutOfCodingOutSchema.Def1
 import v4.optOutOfCodingOut.def1.Def1_OptOutOfCodingOutValidator
 import v4.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData

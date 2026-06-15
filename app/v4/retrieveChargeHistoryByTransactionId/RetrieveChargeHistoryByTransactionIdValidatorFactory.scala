@@ -16,7 +16,7 @@
 
 package v4.retrieveChargeHistoryByTransactionId
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.retrieveChargeHistoryByTransactionId.RetrieveChargeHistoryByTransactionIdSchema.Def1
 import v4.retrieveChargeHistoryByTransactionId.def1.Def1_RetrieveChargeHistoryByTransactionIdValidator
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData

@@ -17,7 +17,7 @@
 package v4.createOrAmendCodingOut.model.request
 
 import play.api.libs.json.{JsObject, Json, OWrites}
-import shared.utils.JsonWritesUtil
+import api.utils.JsonWritesUtil
 import v4.createOrAmendCodingOut.def1.model.request.Def1_CreateOrAmendCodingOutRequestBody
 
 trait CreateOrAmendCodingOutRequestBody

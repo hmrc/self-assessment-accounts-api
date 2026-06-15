@@ -17,9 +17,9 @@
 package v4.retrieveCodingOutStatus
 
 import play.api.libs.json.Reads
-import shared.controllers.validators.resolvers.ResolveTaxYear
-import shared.models.domain.TaxYear
-import shared.schema.DownstreamReadable
+import api.controllers.validators.resolvers.ResolveTaxYear
+import api.models.domain.TaxYear
+import api.schema.DownstreamReadable
 import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 

@@ -18,9 +18,9 @@ package v4.retrieveChargeHistoryByChargeReference.def1
 
 import common.errors.ChargeReferenceFormatError
 import common.models.ChargeReference
-import shared.models.domain.Nino
-import shared.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError}
-import shared.utils.UnitSpec
+import api.models.domain.Nino
+import api.models.errors.{BadRequestError, ErrorWrapper, NinoFormatError}
+import api.utils.UnitSpec
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 

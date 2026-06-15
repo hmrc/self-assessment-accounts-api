@@ -17,10 +17,10 @@
 package v4.optInToCodingOut
 
 import common.errors.{RuleAlreadyOptedInError, RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.ServiceSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.ServiceSpec
 import v4.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 
 import scala.concurrent.Future

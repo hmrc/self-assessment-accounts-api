@@ -20,12 +20,12 @@ import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
-import shared.models.domain.TaxYear
-import shared.models.errors.{ErrorWrapper, NinoFormatError, RuleTaxYearNotEndedError}
-import shared.models.outcomes.ResponseWrapper
-import shared.routing.{Version, Version4}
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
+import api.models.domain.TaxYear
+import api.models.errors.{ErrorWrapper, NinoFormatError, RuleTaxYearNotEndedError}
+import api.models.outcomes.ResponseWrapper
+import api.routing.{Version, Version4}
 import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v4.deleteCodingOut.def1.models.MockDeleteCodingOutValidatorFactory
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
@@ -93,8 +93,8 @@ class DeleteCodingOutControllerSpec
         mockIdGenerator
       )
 
-    MockedSharedAppConfig.featureSwitchConfig.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.featureSwitchConfig.returns(Configuration("allowTemporalValidationSuspension.enabled" -> true)).anyNumberOfTimes()
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.handleRequest(validNino, taxYear)(fakeRequest)
 

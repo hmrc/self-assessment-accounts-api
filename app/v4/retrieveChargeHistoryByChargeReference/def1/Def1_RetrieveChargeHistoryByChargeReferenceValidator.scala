@@ -19,9 +19,9 @@ package v4.retrieveChargeHistoryByChargeReference.def1
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple2Semigroupal
 import common.resolvers.ResolveChargeReference
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.ResolveNino
-import shared.models.errors.MtdError
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.ResolveNino
+import api.models.errors.MtdError
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 

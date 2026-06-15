@@ -16,7 +16,7 @@
 
 package v4.retrieveBalanceAndTransactions
 
-import shared.controllers.validators.Validator
+import api.controllers.validators.Validator
 import v4.retrieveBalanceAndTransactions.def1.Def1_RetrieveBalanceAndTransactionsValidator
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 

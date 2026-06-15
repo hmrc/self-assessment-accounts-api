@@ -18,10 +18,10 @@ package v4.retrieveCodingOut
 
 import cats.data.EitherT
 import common.errors.{CodingOutNotFoundError, SourceFormatError}
-import shared.controllers.RequestContext
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.BaseService
+import api.controllers.RequestContext
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 

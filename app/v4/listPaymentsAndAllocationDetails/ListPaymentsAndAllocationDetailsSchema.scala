@@ -17,7 +17,7 @@
 package v4.listPaymentsAndAllocationDetails
 
 import play.api.libs.json.Reads
-import shared.schema.DownstreamReadable
+import api.schema.DownstreamReadable
 import v4.listPaymentsAndAllocationDetails.def1.model.response.Def1_ListPaymentsAndAllocationDetailsResponse
 import v4.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
 

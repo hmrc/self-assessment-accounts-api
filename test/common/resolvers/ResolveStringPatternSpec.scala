@@ -17,8 +17,8 @@
 package common.resolvers
 
 import cats.data.Validated.{Invalid, Valid}
-import shared.models.errors.TaxYearFormatError
-import shared.utils.UnitSpec
+import api.models.errors.TaxYearFormatError
+import api.utils.UnitSpec
 
 class ResolveStringPatternSpec extends UnitSpec {
 

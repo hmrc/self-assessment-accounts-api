@@ -16,10 +16,10 @@
 
 package v4.retrieveItsaPenalties
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.Nino
-import shared.models.outcomes.ResponseWrapper
-import shared.utils.DateUtils.isoDateTimeStamp
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.Nino
+import api.models.outcomes.ResponseWrapper
+import api.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
@@ -33,7 +33,7 @@ class RetrieveItsaPenaltiesConnectorSpec extends ConnectorSpec {
   private trait Test {
     self: ConnectorTest =>
 
-    val connector: RetrieveItsaPenaltiesConnector = new RetrieveItsaPenaltiesConnector(mockHttpClient, mockSharedAppConfig)
+    val connector: RetrieveItsaPenaltiesConnector = new RetrieveItsaPenaltiesConnector(mockHttpClient, mockAppConfig)
 
     val request: RetrieveItsaPenaltiesRequestData = RetrieveItsaPenaltiesRequestData(Nino(nino))
   }

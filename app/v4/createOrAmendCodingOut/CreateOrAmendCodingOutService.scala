@@ -18,10 +18,10 @@ package v4.createOrAmendCodingOut
 
 import cats.implicits.*
 import common.errors.RuleOutsideAmendmentWindowError
-import shared.controllers.RequestContext
-import shared.models.errors.*
-import shared.models.outcomes.ResponseWrapper
-import shared.services.BaseService
+import api.controllers.RequestContext
+import api.models.errors.*
+import api.models.outcomes.ResponseWrapper
+import api.services.BaseService
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}

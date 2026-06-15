@@ -17,7 +17,7 @@
 package v4.retrieveItsaPenalties.model.response
 
 import play.api.libs.json.{Reads, Writes}
-import shared.utils.enums.Enums
+import api.utils.enums.Enums
 
 enum SubmissionPenaltyCategory(val fromDownstream: String) {
   case point     extends SubmissionPenaltyCategory("P")

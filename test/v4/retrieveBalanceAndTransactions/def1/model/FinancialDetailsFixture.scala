@@ -17,7 +17,7 @@
 package v4.retrieveBalanceAndTransactions.def1.model
 
 import play.api.libs.json.{JsValue, Json}
-import shared.models.domain.TaxYear
+import api.models.domain.TaxYear
 import v4.retrieveBalanceAndTransactions.def1.model.response.{ChargeDetail, FinancialDetails, FinancialDetailsItem}
 
 object FinancialDetailsFixture extends FinancialDetailsItemFixture {

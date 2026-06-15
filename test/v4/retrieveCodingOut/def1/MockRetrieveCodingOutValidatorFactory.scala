@@ -18,7 +18,7 @@ package v4.retrieveCodingOut.def1
 
 import config.SaAccountsConfig
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v4.retrieveCodingOut.RetrieveCodingOutValidatorFactory
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 

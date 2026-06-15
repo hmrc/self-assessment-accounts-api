@@ -20,8 +20,8 @@ import cats.data.Validated
 import cats.data.Validated.cond
 import common.errors.ChargeReferenceFormatError
 import common.models.ChargeReference
-import shared.controllers.validators.resolvers.ResolverSupport
-import shared.models.errors.MtdError
+import api.controllers.validators.resolvers.ResolverSupport
+import api.models.errors.MtdError
 
 object ResolveChargeReference extends ResolverSupport {
 

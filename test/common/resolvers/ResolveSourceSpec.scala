@@ -19,7 +19,7 @@ package common.resolvers
 import cats.data.Validated.{Invalid, Valid}
 import common.errors.SourceFormatError
 import common.models.MtdSource
-import shared.utils.UnitSpec
+import api.utils.UnitSpec
 
 class ResolveSourceSpec extends UnitSpec {
 

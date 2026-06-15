@@ -16,7 +16,7 @@
 
 package common.models
 
-import shared.utils.UnitSpec
+import api.utils.UnitSpec
 
 class ChargeReferenceSpec extends UnitSpec {
 

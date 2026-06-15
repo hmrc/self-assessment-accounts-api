@@ -17,7 +17,7 @@
 package v4.retrieveCodingOutStatus
 
 import org.scalamock.handlers.CallHandler
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 
 trait MockRetrieveCodingOutStatusValidatorFactory extends MockValidatorFactory[RetrieveCodingOutStatusRequestData] {

@@ -19,7 +19,7 @@ package v4.createOrAmendCodingOut.def1
 import config.SaAccountsConfig
 import org.scalamock.handlers.CallHandler
 import play.api.libs.json.JsValue
-import shared.controllers.validators.{MockValidatorFactory, Validator}
+import api.controllers.validators.{MockValidatorFactory, Validator}
 import v4.createOrAmendCodingOut.CreateOrAmendCodingOutValidatorFactory
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 

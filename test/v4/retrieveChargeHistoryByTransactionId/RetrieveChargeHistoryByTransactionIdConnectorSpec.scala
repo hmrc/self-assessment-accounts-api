@@ -16,10 +16,10 @@
 
 package v4.retrieveChargeHistoryByTransactionId
 
-import shared.connectors.{ConnectorSpec, DownstreamOutcome}
-import shared.models.domain.{Nino, TransactionId}
-import shared.models.outcomes.ResponseWrapper
-import shared.utils.DateUtils.isoDateTimeStamp
+import api.connectors.{ConnectorSpec, DownstreamOutcome}
+import api.models.domain.{Nino, TransactionId}
+import api.models.outcomes.ResponseWrapper
+import api.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
@@ -37,7 +37,7 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
     self: ConnectorTest =>
 
     private val connector: RetrieveChargeHistoryByTransactionIdConnector =
-      new RetrieveChargeHistoryByTransactionIdConnector(mockHttpClient, mockSharedAppConfig)
+      new RetrieveChargeHistoryByTransactionIdConnector(mockHttpClient, mockAppConfig)
 
     def connectorRequest(request: RetrieveChargeHistoryByTransactionIdRequestData,
                          response: RetrieveChargeHistoryResponse,

@@ -16,9 +16,9 @@
 
 package v4.retrieveCodingOutStatus
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
@@ -41,7 +41,7 @@ class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
 
     protected val connector: RetrieveCodingOutStatusConnector = new RetrieveCodingOutStatusConnector(
       http = mockHttpClient,
-      appConfig = mockSharedAppConfig
+      appConfig = mockAppConfig
     )
 
     protected def request(nino: Nino, taxYear: TaxYear): RetrieveCodingOutStatusRequestData = Def1_RetrieveCodingOutStatusRequestData(nino, taxYear)

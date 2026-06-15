@@ -17,10 +17,10 @@
 package v4.retrieveChargeHistoryByTransactionId
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
-import shared.config.SharedAppConfig
-import shared.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
-import shared.services.{EnrolmentsAuthService, MtdIdLookupService}
-import shared.utils.IdGenerator
+import api.config.AppConfig
+import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
+import api.services.{EnrolmentsAuthService, MtdIdLookupService}
+import api.utils.IdGenerator
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext
@@ -31,7 +31,7 @@ class RetrieveChargeHistoryByTransactionIdController @Inject() (val authService:
                                                                 validatorFactory: RetrieveChargeHistoryByTransactionIdValidatorFactory,
                                                                 service: RetrieveChargeHistoryByTransactionIdService,
                                                                 cc: ControllerComponents,
-                                                                idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: SharedAppConfig)
+                                                                idGenerator: IdGenerator)(using ec: ExecutionContext, appConfig: AppConfig)
     extends AuthorisedController(cc) {
 
   val endpointName = "retrieve-charge-history-by-transaction-id"

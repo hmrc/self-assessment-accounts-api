@@ -17,9 +17,9 @@
 package v4.listPaymentsAndAllocationDetails.def1
 
 import common.errors.*
-import shared.models.domain.{DateRange, Nino}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{DateRange, Nino}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 

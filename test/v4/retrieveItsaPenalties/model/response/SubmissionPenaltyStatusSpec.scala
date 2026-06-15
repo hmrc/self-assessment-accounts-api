@@ -16,8 +16,8 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import shared.utils.UnitSpec
-import shared.utils.enums.EnumJsonSpecSupport
+import api.utils.UnitSpec
+import api.utils.enums.EnumJsonSpecSupport
 import v4.retrieveItsaPenalties.model.response.SubmissionPenaltyStatus.*
 
 class SubmissionPenaltyStatusSpec extends UnitSpec with EnumJsonSpecSupport {

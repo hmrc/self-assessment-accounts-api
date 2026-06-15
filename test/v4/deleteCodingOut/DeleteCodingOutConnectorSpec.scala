@@ -16,9 +16,9 @@
 
 package v4.deleteCodingOut
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
@@ -33,7 +33,7 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
 
   trait Test { self: ConnectorTest =>
 
-    val connector = new DeleteCodingOutConnector(mockHttpClient, mockSharedAppConfig)
+    val connector = new DeleteCodingOutConnector(mockHttpClient, mockAppConfig)
 
     def connectorRequest(taxYear: TaxYear): Unit = {
 

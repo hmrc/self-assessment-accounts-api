@@ -17,12 +17,12 @@
 package v4.retrieveChargeHistoryByTransactionId.model.responses
 
 import play.api.libs.json.Json
-import shared.config.MockSharedAppConfig
-import shared.utils.UnitSpec
+import api.config.MockAppConfig
+import api.utils.UnitSpec
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
-class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec with MockSharedAppConfig {
+class RetrieveChargeHistoryByTransactionResponseSpec extends UnitSpec with MockAppConfig {
 
   val validObjectSingle: RetrieveChargeHistoryResponse   = RetrieveChargeHistoryResponse(List(validChargeHistoryDetailObject))
   val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject

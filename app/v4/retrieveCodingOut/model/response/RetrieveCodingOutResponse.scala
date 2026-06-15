@@ -17,7 +17,7 @@
 package v4.retrieveCodingOut.model.response
 
 import play.api.libs.json.{JsObject, Json, OWrites}
-import shared.utils.JsonWritesUtil
+import api.utils.JsonWritesUtil
 import v4.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 
 trait RetrieveCodingOutResponse

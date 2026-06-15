@@ -18,8 +18,8 @@ package common.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.cond
-import shared.controllers.validators.resolvers.ResolverSupport
-import shared.models.errors.MtdError
+import api.controllers.validators.resolvers.ResolverSupport
+import api.models.errors.MtdError
 
 import scala.util.matching.Regex
 

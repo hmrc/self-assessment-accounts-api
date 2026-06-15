@@ -21,9 +21,9 @@ import cats.data.Validated.*
 import cats.implicits.*
 import common.errors.*
 import common.resolvers.ResolveStringPattern
-import shared.controllers.validators.Validator
-import shared.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
-import shared.models.errors.*
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveDateRange, ResolveNino}
+import api.models.errors.*
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 

@@ -18,9 +18,9 @@ package common.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
-import shared.models.domain.TaxYear
-import shared.models.errors.{MtdError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError}
-import shared.utils.UnitSpec
+import api.models.domain.TaxYear
+import api.models.errors.{MtdError, RuleTaxYearNotEndedError, RuleTaxYearNotSupportedError}
+import api.utils.UnitSpec
 
 class DetailedResolveTaxYearSpec extends UnitSpec {
 

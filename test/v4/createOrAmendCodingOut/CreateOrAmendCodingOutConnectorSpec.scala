@@ -16,9 +16,9 @@
 
 package v4.createOrAmendCodingOut
 
-import shared.connectors.ConnectorSpec
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.outcomes.ResponseWrapper
+import api.connectors.ConnectorSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
 import v4.createOrAmendCodingOut.def1.model.request.Def1_CreateOrAmendCodingOutRequestData
 import v4.createOrAmendCodingOut.def1.models.request.CodingOutFixtures.validRequestBody
@@ -36,7 +36,7 @@ class CreateOrAmendCodingOutConnectorSpec extends ConnectorSpec {
     self: ConnectorTest =>
 
     val connector: CreateOrAmendCodingOutConnector =
-      new CreateOrAmendCodingOutConnector(mockHttpClient, mockSharedAppConfig)
+      new CreateOrAmendCodingOutConnector(mockHttpClient, mockAppConfig)
 
     def connectorRequest(taxYear: TaxYear): Unit = {
 

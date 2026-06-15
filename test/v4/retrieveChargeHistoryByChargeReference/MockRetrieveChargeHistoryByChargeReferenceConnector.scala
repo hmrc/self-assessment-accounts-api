@@ -19,7 +19,7 @@ package v4.retrieveChargeHistoryByChargeReference
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import shared.connectors.DownstreamOutcome
+import api.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse

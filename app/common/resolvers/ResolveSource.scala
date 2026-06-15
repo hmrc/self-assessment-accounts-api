@@ -20,8 +20,8 @@ import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import common.errors.SourceFormatError
 import common.models.MtdSource
-import shared.controllers.validators.resolvers.ResolverSupport
-import shared.models.errors.MtdError
+import api.controllers.validators.resolvers.ResolverSupport
+import api.models.errors.MtdError
 
 object ResolveSource extends ResolverSupport {
 

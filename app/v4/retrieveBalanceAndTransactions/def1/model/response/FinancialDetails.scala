@@ -18,7 +18,7 @@ package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import play.api.libs.functional.syntax.toFunctionalBuilderOps
 import play.api.libs.json.{JsPath, Json, Reads, Writes}
-import shared.models.domain.TaxYear
+import api.models.domain.TaxYear
 
 case class FinancialDetails(taxYear: String,
                             chargeDetail: ChargeDetail,

@@ -16,8 +16,8 @@
 
 package v4.listPaymentsAndAllocationDetails
 
-import shared.models.utils.JsonErrorValidators
-import shared.utils.UnitSpec
+import api.models.utils.JsonErrorValidators
+import api.utils.UnitSpec
 import v4.listPaymentsAndAllocationDetails.def1.Def1_ListPaymentsAndAllocationDetailsValidator
 
 class ListPaymentsAndAllocationDetailsValidatorFactorySpec extends UnitSpec with JsonErrorValidators {

@@ -17,7 +17,7 @@
 package v4.createOrAmendCodingOut.def1.model.request
 
 import play.api.libs.json.{Json, OFormat}
-import shared.utils.EmptinessChecker
+import api.utils.EmptinessChecker
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestBody
 
 case class Def1_CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComponents) extends CreateOrAmendCodingOutRequestBody

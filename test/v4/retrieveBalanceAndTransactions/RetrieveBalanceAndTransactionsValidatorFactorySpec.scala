@@ -16,8 +16,8 @@
 
 package v4.retrieveBalanceAndTransactions
 
-import shared.models.utils.JsonErrorValidators
-import shared.utils.UnitSpec
+import api.models.utils.JsonErrorValidators
+import api.utils.UnitSpec
 import v4.retrieveBalanceAndTransactions.def1.Def1_RetrieveBalanceAndTransactionsValidator
 import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
 

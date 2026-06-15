@@ -17,7 +17,7 @@
 package v4.createOrAmendCodingOut.def1.model.request
 
 import play.api.libs.json.*
-import shared.utils.EmptinessChecker
+import api.utils.EmptinessChecker
 
 case class TaxCodeComponent(id: BigDecimal, amount: BigDecimal)
 

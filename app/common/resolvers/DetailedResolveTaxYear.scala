@@ -18,10 +18,10 @@ package common.resolvers
 
 import cats.data.Validated
 import cats.data.Validated.cond
-import shared.controllers.validators.resolvers.{ResolveTaxYear, ResolveTaxYearMinimum}
-import shared.models.domain.TaxYear
-import shared.models.domain.TaxYear.currentTaxYear
-import shared.models.errors.*
+import api.controllers.validators.resolvers.{ResolveTaxYear, ResolveTaxYearMinimum}
+import api.models.domain.TaxYear
+import api.models.domain.TaxYear.currentTaxYear
+import api.models.errors.*
 
 case class DetailedResolveTaxYear(
     allowIncompleteTaxYear: Boolean = true,

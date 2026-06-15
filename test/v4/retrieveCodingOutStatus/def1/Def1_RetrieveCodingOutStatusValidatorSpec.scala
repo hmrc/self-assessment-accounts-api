@@ -16,9 +16,9 @@
 
 package v4.retrieveCodingOutStatus.def1
 
-import shared.models.domain.{Nino, TaxYear}
-import shared.models.errors.*
-import shared.utils.UnitSpec
+import api.models.domain.{Nino, TaxYear}
+import api.models.errors.*
+import api.utils.UnitSpec
 import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 

@@ -19,11 +19,11 @@ package v4.retrieveItsaPenalties
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import shared.controllers.RequestContext
+import api.controllers.RequestContext
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
 import scala.concurrent.{ExecutionContext, Future}
-import shared.services.ServiceOutcome
+import api.services.ServiceOutcome
 
 trait MockRetrieveItsaPenaltiesService extends TestSuite with MockFactory {
 

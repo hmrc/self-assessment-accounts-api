@@ -18,9 +18,9 @@ package v4.retrieveItsaPenalties
 
 import play.api.Configuration
 import play.api.mvc.Result
-import shared.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import shared.models.errors.{ErrorWrapper, NinoFormatError, InternalError}
-import shared.models.outcomes.ResponseWrapper
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.errors.{ErrorWrapper, NinoFormatError, InternalError}
+import api.models.outcomes.ResponseWrapper
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.*
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 
@@ -79,8 +79,8 @@ class RetrieveItsaPenaltiesControllerSpec
       idGenerator = mockIdGenerator
     )
 
-    MockedSharedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration.empty
-    MockedSharedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
+    MockedAppConfig.featureSwitchConfig.anyNumberOfTimes() returns Configuration.empty
+    MockedAppConfig.endpointAllowsSupportingAgents(controller.endpointName).anyNumberOfTimes() returns false
 
     protected def callController(): Future[Result] = controller.retrieveItsaPenalties(validNino)(fakeGetRequest)
 
