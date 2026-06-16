@@ -16,10 +16,10 @@
 
 package v4.retrieveCodingOut
 
-import play.api.libs.json.Reads
 import api.controllers.validators.resolvers.ResolveTaxYear
 import api.models.domain.TaxYear
 import api.schema.DownstreamReadable
+import play.api.libs.json.Reads
 import v4.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 

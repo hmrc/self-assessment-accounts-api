@@ -16,16 +16,16 @@
 
 package v4.retrieveCodingOut
 
-import common.errors.CodingOutNotFoundError
-import common.models.MtdSource
-import config.MockSaAccountsConfig
-import play.api.Configuration
-import play.api.mvc.Result
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.TaxYear
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
+import common.errors.CodingOutNotFoundError
+import common.models.MtdSource
+import config.MockSaAccountsConfig
+import play.api.Configuration
+import play.api.mvc.Result
 import v4.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
 import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData

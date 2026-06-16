@@ -16,8 +16,8 @@
 
 package v4.retrieveChargeHistoryByTransactionId.model.response
 
-import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import api.config.AppConfig
+import play.api.libs.json.{JsPath, Json, OWrites, Reads}
 import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])

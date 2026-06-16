@@ -16,8 +16,8 @@
 
 package v4.retrieveChargeHistoryByTransactionId.def1
 
-import play.api.libs.json.{JsObject, JsValue, Json}
 import api.models.domain.Timestamp
+import play.api.libs.json.{JsObject, JsValue, Json}
 import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 

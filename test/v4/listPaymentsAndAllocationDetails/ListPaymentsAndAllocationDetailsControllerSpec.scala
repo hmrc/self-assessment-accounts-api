@@ -16,14 +16,14 @@
 
 package v4.listPaymentsAndAllocationDetails
 
-import common.errors.PaymentLotFormatError
-import play.api.Configuration
-import play.api.mvc.Result
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.DateRange
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
+import common.errors.PaymentLotFormatError
+import play.api.Configuration
+import play.api.mvc.Result
 import v4.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.{mtdResponseJson, responseObject}

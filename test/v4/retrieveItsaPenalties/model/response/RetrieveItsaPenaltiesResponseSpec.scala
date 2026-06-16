@@ -16,9 +16,9 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.Json
 import api.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.*
+import play.api.libs.json.Json
+import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.*
 
 class RetrieveItsaPenaltiesResponseSpec extends UnitSpec {
 

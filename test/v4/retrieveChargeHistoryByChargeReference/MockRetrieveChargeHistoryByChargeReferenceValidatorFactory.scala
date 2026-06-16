@@ -16,8 +16,8 @@
 
 package v4.retrieveChargeHistoryByChargeReference
 
-import org.scalamock.handlers.CallHandler
 import api.controllers.validators.{MockValidatorFactory, Validator}
+import org.scalamock.handlers.CallHandler
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
 trait MockRetrieveChargeHistoryByChargeReferenceValidatorFactory extends MockValidatorFactory[RetrieveChargeHistoryByChargeReferenceRequestData] {

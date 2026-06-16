@@ -16,11 +16,11 @@
 
 package v4.optInToCodingOut
 
+import api.connectors.DownstreamOutcome
+import api.models.domain.{Nino, TaxYear}
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import api.connectors.DownstreamOutcome
-import api.models.domain.{Nino, TaxYear}
 import uk.gov.hmrc.http.HeaderCarrier
 
 import scala.concurrent.{ExecutionContext, Future}

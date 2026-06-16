@@ -16,11 +16,11 @@
 
 package v4.retrieveCodingOutStatus
 
-import common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
+import common.errors.{RuleBusinessPartnerNotExistError, RuleItsaContractObjectNotExistError}
 import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData

@@ -16,12 +16,12 @@
 
 package v4.retrieveCodingOut
 
-import config.SaAccountsConfig
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import api.config.AppConfig
 import api.controllers.{AuthorisedController, EndpointLogContext, RequestContext, RequestHandler}
 import api.services.{EnrolmentsAuthService, MtdIdLookupService}
 import api.utils.IdGenerator
+import config.SaAccountsConfig
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext

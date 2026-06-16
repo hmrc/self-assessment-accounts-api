@@ -16,10 +16,10 @@
 
 package v4.retrieveCodingOut
 
-import common.models.MtdSource.hmrcHeld
 import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
+import common.models.MtdSource.hmrcHeld
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData

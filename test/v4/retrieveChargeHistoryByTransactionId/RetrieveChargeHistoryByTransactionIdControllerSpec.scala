@@ -16,13 +16,13 @@
 
 package v4.retrieveChargeHistoryByTransactionId
 
-import play.api.Configuration
-import play.api.mvc.Result
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.TransactionId
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
+import play.api.Configuration
+import play.api.mvc.Result
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData

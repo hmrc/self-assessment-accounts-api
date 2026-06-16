@@ -16,12 +16,12 @@
 
 package v4.retrieveChargeHistoryByChargeReference.def1
 
-import cats.data.Validated
-import cats.implicits.catsSyntaxTuple2Semigroupal
-import common.resolvers.ResolveChargeReference
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.ResolveNino
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.catsSyntaxTuple2Semigroupal
+import common.resolvers.ResolveChargeReference
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 

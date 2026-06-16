@@ -16,9 +16,9 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.*
 import api.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.totalisationsmodel
+import play.api.libs.json.*
+import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.totalisationsmodel
 
 class TotalisationsSpec extends UnitSpec {
 

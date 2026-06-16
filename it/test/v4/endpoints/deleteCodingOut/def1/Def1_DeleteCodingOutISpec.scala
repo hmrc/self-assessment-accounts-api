@@ -16,15 +16,15 @@
 
 package v4.endpoints.deleteCodingOut.def1
 
+import api.models.errors.*
+import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.support.IntegrationBaseSpec
 import common.errors.{CodingOutNotFoundError, RuleOutsideAmendmentWindowError}
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
 import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import api.models.errors.*
-import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.support.IntegrationBaseSpec
 
 class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
 

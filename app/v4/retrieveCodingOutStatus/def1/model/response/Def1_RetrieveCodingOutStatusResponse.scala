@@ -16,8 +16,8 @@
 
 package v4.retrieveCodingOutStatus.def1.model.response
 
-import play.api.libs.json.*
 import api.models.domain.TaxYear
+import play.api.libs.json.*
 import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
 case class Def1_RetrieveCodingOutStatusResponse(processingDate: String, nino: String, taxYear: TaxYear, optOutIndicator: Boolean)

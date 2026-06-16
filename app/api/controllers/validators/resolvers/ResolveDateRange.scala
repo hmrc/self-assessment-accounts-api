@@ -16,11 +16,11 @@
 
 package api.controllers.validators.resolvers
 
+import api.models.domain.DateRange
+import api.models.errors.*
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits.*
-import api.models.domain.DateRange
-import api.models.errors.*
 
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
@@ -31,7 +31,7 @@ case class ResolveDateRange(startDateFormatError: MtdError = StartDateFormatErro
                             endBeforeStartDateError: MtdError = RuleEndBeforeStartDateError,
                             invalidDateRangeError: MtdError = RuleInvalidDateRangeError)
     extends ResolverSupport {
-  import ResolveDateRange._
+  import ResolveDateRange.*
 
   val resolver: Resolver[(String, String), DateRange] = { case (startDate, endDate) =>
     (

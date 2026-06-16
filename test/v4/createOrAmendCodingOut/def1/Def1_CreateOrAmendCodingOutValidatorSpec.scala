@@ -16,11 +16,11 @@
 
 package v4.createOrAmendCodingOut.def1
 
-import config.MockSaAccountsConfig
-import play.api.libs.json.{JsObject, JsPath, JsValue, Json}
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
+import config.MockSaAccountsConfig
+import play.api.libs.json.{JsObject, JsPath, JsValue, Json}
 import v4.createOrAmendCodingOut.def1.model.request.{
   Def1_CreateOrAmendCodingOutRequestBody,
   Def1_CreateOrAmendCodingOutRequestData,
@@ -104,7 +104,7 @@ class Def1_CreateOrAmendCodingOutValidatorSpec extends UnitSpec with MockSaAccou
   )
 
   private val parsedBody = validJson.as[Def1_CreateOrAmendCodingOutRequestBody]
-  import parsedBody.{taxCodeComponents => parsedTaxCodeComponents}
+  import parsedBody.taxCodeComponents as parsedTaxCodeComponents
 
   private def validJsonWithout(field: String): JsObject =
     (JsPath \ "taxCodeComponents" \ field)

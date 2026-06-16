@@ -16,11 +16,11 @@
 
 package v4.retrieveChargeHistoryByChargeReference
 
-import common.models.ChargeReference
 import api.connectors.{ConnectorSpec, DownstreamOutcome}
 import api.models.domain.Nino
 import api.models.outcomes.ResponseWrapper
 import api.utils.DateUtils.isoDateTimeStamp
+import common.models.ChargeReference
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject

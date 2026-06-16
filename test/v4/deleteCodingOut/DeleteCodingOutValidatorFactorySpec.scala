@@ -16,8 +16,8 @@
 
 package v4.deleteCodingOut
 
-import config.MockSaAccountsConfig
 import api.utils.UnitSpec
+import config.MockSaAccountsConfig
 import v4.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 
 class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {

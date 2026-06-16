@@ -16,8 +16,8 @@
 
 package v4.retrieveBalanceAndTransactions
 
-import org.scalamock.handlers.CallHandler
 import api.controllers.validators.{MockValidatorFactory, Validator}
+import org.scalamock.handlers.CallHandler
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 trait MockRetrieveBalanceAndTransactionsValidatorFactory extends MockValidatorFactory[RetrieveBalanceAndTransactionsRequestData] {

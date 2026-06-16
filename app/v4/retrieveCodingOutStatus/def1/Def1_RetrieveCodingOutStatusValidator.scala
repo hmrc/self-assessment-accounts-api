@@ -16,11 +16,11 @@
 
 package v4.retrieveCodingOutStatus.def1
 
-import cats.data.Validated
-import cats.implicits.catsSyntaxTuple2Semigroupal
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.catsSyntaxTuple2Semigroupal
 import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 

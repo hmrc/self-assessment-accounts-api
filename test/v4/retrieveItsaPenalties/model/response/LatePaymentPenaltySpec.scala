@@ -16,9 +16,9 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.*
 import api.utils.UnitSpec
-import RetrieveItsaPenaltiesFixture.latePaymentPenaltyModel
+import play.api.libs.json.*
+import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.latePaymentPenaltyModel
 
 class LatePaymentPenaltySpec extends UnitSpec {
 

@@ -16,13 +16,13 @@
 
 package definition
 
-import cats.implicits.catsSyntaxValidatedId
 import api.config.Deprecation.NotDeprecated
 import api.config.MockAppConfig
 import api.definition.*
 import api.definition.APIStatus.BETA
 import api.routing.Version4
 import api.utils.UnitSpec
+import cats.implicits.catsSyntaxValidatedId
 
 class SaAccountsDefinitionFactorySpec extends UnitSpec with MockAppConfig {
 

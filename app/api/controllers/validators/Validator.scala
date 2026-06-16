@@ -16,11 +16,11 @@
 
 package api.controllers.validators
 
+import api.models.errors.{BadRequestError, ErrorWrapper, MtdError}
+import api.utils.Logging
 import cats.data.Validated
 import cats.data.Validated.{Invalid, Valid}
 import cats.implicits.*
-import api.models.errors.{BadRequestError, ErrorWrapper, MtdError}
-import api.utils.Logging
 
 trait Validator[+PARSED] extends Logging {
 

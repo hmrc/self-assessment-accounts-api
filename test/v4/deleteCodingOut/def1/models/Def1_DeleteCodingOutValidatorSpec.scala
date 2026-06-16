@@ -16,10 +16,10 @@
 
 package v4.deleteCodingOut.def1.models
 
-import config.MockSaAccountsConfig
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
+import config.MockSaAccountsConfig
 import v4.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 

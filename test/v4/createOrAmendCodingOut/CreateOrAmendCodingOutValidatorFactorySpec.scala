@@ -16,9 +16,9 @@
 
 package v4.createOrAmendCodingOut
 
+import api.utils.UnitSpec
 import config.MockSaAccountsConfig
 import play.api.libs.json.Json
-import api.utils.UnitSpec
 import v4.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
 
 class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {

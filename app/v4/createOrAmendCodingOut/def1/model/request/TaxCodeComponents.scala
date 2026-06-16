@@ -16,8 +16,8 @@
 
 package v4.createOrAmendCodingOut.def1.model.request
 
-import play.api.libs.json.{Json, OFormat}
 import api.utils.EmptinessChecker
+import play.api.libs.json.{Json, OFormat}
 
 case class TaxCodeComponents(payeUnderpayment: Option[Seq[TaxCodeComponent]],
                              selfAssessmentUnderpayment: Option[Seq[TaxCodeComponent]],

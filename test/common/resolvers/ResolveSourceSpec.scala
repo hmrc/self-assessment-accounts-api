@@ -16,10 +16,10 @@
 
 package common.resolvers
 
+import api.utils.UnitSpec
 import cats.data.Validated.{Invalid, Valid}
 import common.errors.SourceFormatError
 import common.models.MtdSource
-import api.utils.UnitSpec
 
 class ResolveSourceSpec extends UnitSpec {
 

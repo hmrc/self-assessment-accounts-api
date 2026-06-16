@@ -53,10 +53,10 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
   }
 
   def idsMissing(response: Def1_RetrieveCodingOutResponse): Boolean = {
-    import response._
+    import response.*
 
     lazy val taxCodeComponentsIdsMissing = taxCodeComponents.fold(false)(taxCodeComponents => {
-      import taxCodeComponents._
+      import taxCodeComponents.*
 
       debt.fold(false)(debt => debt.exists(_.id.isEmpty)) ||
       inYearAdjustment.fold(false)(inYearAdjustment => inYearAdjustment.id.isEmpty) ||
@@ -65,7 +65,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
     })
 
     lazy val unmatchedCustomerSubmissionsIdsMissing = unmatchedCustomerSubmissions.fold(false)(unmatchedCustomerSubmissions => {
-      import unmatchedCustomerSubmissions._
+      import unmatchedCustomerSubmissions.*
 
       debt.fold(false)(debt => debt.exists(_.id.isEmpty)) ||
       inYearAdjustment.fold(false)(inYearAdjustment => inYearAdjustment.id.isEmpty) ||
