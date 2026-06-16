@@ -16,10 +16,10 @@
 
 package v4.retrieveChargeHistoryByChargeReference
 
-import cats.implicits.*
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
+import cats.implicits.*
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 

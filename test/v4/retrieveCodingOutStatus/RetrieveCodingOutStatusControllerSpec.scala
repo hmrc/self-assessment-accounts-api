@@ -16,16 +16,16 @@
 
 package v4.retrieveCodingOutStatus
 
-import common.errors.RuleBusinessPartnerNotExistError
-import play.api.Configuration
-import play.api.libs.json.JsValue
-import play.api.mvc.Result
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.domain.TaxYear
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
+import common.errors.RuleBusinessPartnerNotExistError
+import play.api.Configuration
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
 import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse

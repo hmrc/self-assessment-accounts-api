@@ -16,17 +16,18 @@
 
 package v4.endpoints.retrieveCodingOut.def1
 
+import api.models.domain.TaxYear
+import api.models.errors.*
+import api.services.{AuthStub, DownstreamStub, MtdIdLookupStub}
+import api.support.IntegrationBaseSpec
 import common.errors.*
 import play.api.http.HeaderNames.ACCEPT
 import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import api.models.domain.TaxYear
-import api.models.errors.*
-import api.services.{AuthStub, DownstreamStub, MtdIdLookupStub}
-import api.support.IntegrationBaseSpec
 import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
+
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, ZoneOffset}
 

@@ -37,8 +37,8 @@ class OptOutOfCodingOutConnector @Inject() (val http: HttpClientV2, val appConfi
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[OptOutOfCodingOutResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     put(
       EmptyJsonBody,

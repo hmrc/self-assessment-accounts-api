@@ -16,11 +16,11 @@
 
 package v4.listPaymentsAndAllocationDetails
 
-import cats.implicits.*
-import common.errors.*
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
+import cats.implicits.*
+import common.errors.*
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
 

@@ -16,8 +16,8 @@
 
 package v4.listPaymentsAndAllocationDetails.def1
 
-import org.scalamock.handlers.CallHandler
 import api.controllers.validators.{MockValidatorFactory, Validator}
+import org.scalamock.handlers.CallHandler
 import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 

@@ -36,8 +36,8 @@ class RetrieveCodingOutStatusConnector @Inject() (val http: HttpClientV2, val ap
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutStatusResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     val downstreamUri =
       IfsUri[DownstreamResp](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")

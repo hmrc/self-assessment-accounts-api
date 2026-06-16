@@ -16,14 +16,14 @@
 
 package v4.createOrAmendCodingOut
 
-import config.{SaAccountsConfig, SaAccountsFeatureSwitches}
-import play.api.libs.json.JsValue
-import play.api.mvc.{Action, ControllerComponents}
 import api.config.AppConfig
 import api.controllers.*
 import api.routing.Version
 import api.services.{AuditService, EnrolmentsAuthService, MtdIdLookupService}
 import api.utils.{IdGenerator, Logging}
+import config.{SaAccountsConfig, SaAccountsFeatureSwitches}
+import play.api.libs.json.JsValue
+import play.api.mvc.{Action, ControllerComponents}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.ExecutionContext

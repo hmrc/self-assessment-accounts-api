@@ -16,11 +16,11 @@
 
 package v4.retrieveChargeHistoryByTransactionId.def1
 
-import cats.data.Validated
-import cats.implicits.catsSyntaxTuple2Semigroupal
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveTransactionId}
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.catsSyntaxTuple2Semigroupal
 import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 

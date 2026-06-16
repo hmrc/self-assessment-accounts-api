@@ -16,10 +16,10 @@
 
 package v4.listPaymentsAndAllocationDetails
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import api.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse

@@ -16,15 +16,15 @@
 
 package v4.retrieveChargeHistoryByChargeReference
 
-import common.models.ChargeReference
-import play.api.Configuration
-import play.api.libs.json.JsValue
-import play.api.mvc.Result
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.audit.{AuditEvent, AuditResponse, GenericAuditDetail}
 import api.models.errors.{ErrorWrapper, NinoFormatError}
 import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
+import common.models.ChargeReference
+import play.api.Configuration
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
 import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
 import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData

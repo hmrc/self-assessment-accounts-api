@@ -22,8 +22,9 @@ import api.models.outcomes.ResponseWrapper
 import api.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.StringContextOps
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
-import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.responseModel
+import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
+
 import scala.concurrent.Future
 
 class RetrieveItsaPenaltiesConnectorSpec extends ConnectorSpec {

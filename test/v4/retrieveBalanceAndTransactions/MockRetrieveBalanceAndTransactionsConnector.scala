@@ -16,10 +16,10 @@
 
 package v4.retrieveBalanceAndTransactions
 
+import api.connectors.DownstreamOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import api.connectors.DownstreamOutcome
 import uk.gov.hmrc.http.HeaderCarrier
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 import v4.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse

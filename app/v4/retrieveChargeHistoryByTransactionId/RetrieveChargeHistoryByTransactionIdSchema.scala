@@ -16,8 +16,8 @@
 
 package v4.retrieveChargeHistoryByTransactionId
 
-import play.api.libs.json.Reads
 import api.schema.DownstreamReadable
+import play.api.libs.json.Reads
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 
 sealed trait RetrieveChargeHistoryByTransactionIdSchema extends DownstreamReadable[RetrieveChargeHistoryResponse]

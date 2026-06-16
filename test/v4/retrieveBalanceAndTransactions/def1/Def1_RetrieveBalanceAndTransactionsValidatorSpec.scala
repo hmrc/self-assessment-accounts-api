@@ -16,9 +16,9 @@
 
 package v4.retrieveBalanceAndTransactions.def1
 
-import common.errors.*
 import api.models.errors.*
 import api.utils.UnitSpec
+import common.errors.*
 import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 

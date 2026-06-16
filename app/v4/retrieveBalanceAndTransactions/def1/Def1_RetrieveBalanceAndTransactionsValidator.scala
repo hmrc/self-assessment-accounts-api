@@ -16,14 +16,14 @@
 
 package v4.retrieveBalanceAndTransactions.def1
 
-import cats.data.Validated
-import cats.data.Validated.Valid
-import cats.implicits.*
-import common.errors.*
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
 import api.models.domain.DateRange
 import api.models.errors.*
+import cats.data.Validated
+import cats.data.Validated.Valid
+import cats.implicits.*
+import common.errors.*
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.Singleton

@@ -17,15 +17,14 @@
 package v4.retrieveItsaPenalties
 
 import api.config.AppConfig
-import api.connectors.DownstreamUri
 import api.connectors.DownstreamUri.HipUri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
-import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.connectors.{BaseDownstreamConnector, DownstreamOutcome, DownstreamUri}
+import api.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
-import api.utils.DateUtils.isoDateTimeStamp
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}

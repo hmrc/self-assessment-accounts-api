@@ -16,10 +16,10 @@
 
 package v4.optOutOfCodingOut
 
-import play.api.libs.json.Reads
 import api.controllers.validators.resolvers.ResolveTaxYear
 import api.models.domain.TaxYear
 import api.schema.DownstreamReadable
+import play.api.libs.json.Reads
 import v4.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 import v4.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 

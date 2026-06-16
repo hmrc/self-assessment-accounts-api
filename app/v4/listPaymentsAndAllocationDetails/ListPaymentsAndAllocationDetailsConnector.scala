@@ -36,8 +36,8 @@ class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClientV
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
-    import request._
-    import schema._
+    import request.*
+    import schema.*
 
     val dateFrom = fromAndToDates.map(_.startDate.toString)
     val dateTo   = fromAndToDates.map(_.endDate.toString)

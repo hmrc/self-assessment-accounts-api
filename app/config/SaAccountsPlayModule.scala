@@ -16,11 +16,11 @@
 
 package config
 
+import api.definition.ApiDefinitionFactory
+import api.routing.VersionRoutingMap
 import com.google.inject.AbstractModule
 import definition.SaAccountsDefinitionFactory
 import routing.SaAccountsVersionRoutingMap
-import api.definition.ApiDefinitionFactory
-import api.routing.VersionRoutingMap
 
 class SaAccountsPlayModule extends AbstractModule {
 

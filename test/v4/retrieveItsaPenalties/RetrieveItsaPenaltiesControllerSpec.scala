@@ -16,13 +16,13 @@
 
 package v4.retrieveItsaPenalties
 
+import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
+import api.models.errors.{ErrorWrapper, InternalError, NinoFormatError}
+import api.models.outcomes.ResponseWrapper
 import play.api.Configuration
 import play.api.mvc.Result
-import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.errors.{ErrorWrapper, NinoFormatError, InternalError}
-import api.models.outcomes.ResponseWrapper
-import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.*
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
+import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesFixture.*
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

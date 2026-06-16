@@ -16,9 +16,9 @@
 
 package v4.retrieveChargeHistoryByTransactionId.model.responses
 
-import play.api.libs.json.Json
 import api.config.MockAppConfig
 import api.utils.UnitSpec
+import play.api.libs.json.Json
 import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 

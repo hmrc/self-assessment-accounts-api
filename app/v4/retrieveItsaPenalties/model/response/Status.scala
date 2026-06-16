@@ -16,8 +16,8 @@
 
 package v4.retrieveItsaPenalties.model.response
 
-import play.api.libs.json.*
 import api.utils.enums.Enums
+import play.api.libs.json.*
 
 enum Status {
   case `under-appeal`, `appeal-upheld`, `appeal-rejected`, `cannot-be-appealed`

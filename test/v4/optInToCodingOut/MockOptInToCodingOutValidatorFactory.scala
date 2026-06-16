@@ -16,8 +16,8 @@
 
 package v4.optInToCodingOut
 
-import org.scalamock.handlers.CallHandler
 import api.controllers.validators.{MockValidatorFactory, Validator}
+import org.scalamock.handlers.CallHandler
 import v4.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 trait MockOptInToCodingOutValidatorFactory extends MockValidatorFactory[OptInToCodingOutRequestData] {

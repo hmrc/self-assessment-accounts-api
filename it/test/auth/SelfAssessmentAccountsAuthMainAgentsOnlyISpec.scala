@@ -16,11 +16,11 @@
 
 package auth
 
+import api.auth.AuthMainAgentsOnlyISpec
+import api.services.DownstreamStub
 import play.api.http.Status.NO_CONTENT
 import play.api.libs.json.JsValue
 import play.api.libs.ws.{WSRequest, WSResponse}
-import api.auth.AuthMainAgentsOnlyISpec
-import api.services.DownstreamStub
 
 class SelfAssessmentAccountsAuthMainAgentsOnlyISpec extends AuthMainAgentsOnlyISpec {
 

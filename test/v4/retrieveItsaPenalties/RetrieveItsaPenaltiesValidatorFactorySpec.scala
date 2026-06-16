@@ -16,11 +16,11 @@
 
 package v4.retrieveItsaPenalties
 
-import api.utils.UnitSpec
-import api.models.domain.Nino
 import api.controllers.validators.Validator
-import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
+import api.models.domain.Nino
 import api.models.errors.*
+import api.utils.UnitSpec
+import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 
 class RetrieveItsaPenaltiesValidatorFactorySpec extends UnitSpec {
 

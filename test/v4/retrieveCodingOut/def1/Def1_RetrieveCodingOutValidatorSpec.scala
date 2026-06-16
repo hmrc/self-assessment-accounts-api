@@ -16,12 +16,12 @@
 
 package v4.retrieveCodingOut.def1
 
-import common.errors.SourceFormatError
-import common.models.MtdSource
-import config.MockSaAccountsConfig
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
+import common.errors.SourceFormatError
+import common.models.MtdSource
+import config.MockSaAccountsConfig
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 

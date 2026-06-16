@@ -16,8 +16,8 @@
 
 package common.models
 
-import play.api.libs.json.Format
 import api.utils.enums.Enums
+import play.api.libs.json.Format
 
 enum MtdSource(val toDownstreamSource: String) {
   case hmrcHeld extends MtdSource("HMRC-HELD")

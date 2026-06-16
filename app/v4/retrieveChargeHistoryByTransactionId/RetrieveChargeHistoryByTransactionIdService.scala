@@ -16,10 +16,10 @@
 
 package v4.retrieveChargeHistoryByTransactionId
 
-import cats.implicits.*
 import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
+import cats.implicits.*
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
 

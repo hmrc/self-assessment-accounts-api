@@ -16,14 +16,14 @@
 
 package v4.retrieveCodingOut.def1
 
-import cats.data.Validated
-import cats.implicits.*
-import common.resolvers.ResolveSource
-import config.SaAccountsConfig
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.*
+import common.resolvers.ResolveSource
+import config.SaAccountsConfig
 import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 

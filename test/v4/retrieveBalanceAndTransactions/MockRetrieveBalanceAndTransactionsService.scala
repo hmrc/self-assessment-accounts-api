@@ -16,12 +16,12 @@
 
 package v4.retrieveBalanceAndTransactions
 
-import org.scalamock.handlers.CallHandler
-import org.scalamock.scalatest.MockFactory
-import org.scalatest.TestSuite
 import api.controllers.RequestContext
 import api.models.errors.ErrorWrapper
 import api.models.outcomes.ResponseWrapper
+import org.scalamock.handlers.CallHandler
+import org.scalamock.scalatest.MockFactory
+import org.scalatest.TestSuite
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 import v4.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 

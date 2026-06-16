@@ -16,8 +16,8 @@
 
 package v4.retrieveCodingOut.def1.model.reponse
 
-import play.api.libs.json.{JsValue, Json}
 import api.utils.UnitSpec
+import play.api.libs.json.{JsValue, Json}
 import v4.retrieveCodingOut.def1.model.response.*
 import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 

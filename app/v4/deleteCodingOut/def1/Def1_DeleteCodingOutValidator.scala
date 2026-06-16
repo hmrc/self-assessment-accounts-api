@@ -16,13 +16,13 @@
 
 package v4.deleteCodingOut.def1
 
-import cats.data.Validated
-import cats.implicits.catsSyntaxTuple2Semigroupal
-import config.SaAccountsConfig
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.catsSyntaxTuple2Semigroupal
+import config.SaAccountsConfig
 import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 

@@ -35,7 +35,7 @@ class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClientV2, val app
       ec: ExecutionContext,
       correlationId: String): Future[DownstreamOutcome[Unit]] = {
 
-    import request._
+    import request.*
 
     val uri = if (taxYear.useTaxYearSpecificApi) {
       IfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino")

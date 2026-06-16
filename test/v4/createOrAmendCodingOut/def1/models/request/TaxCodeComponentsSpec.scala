@@ -16,8 +16,8 @@
 
 package v4.createOrAmendCodingOut.def1.models.request
 
-import play.api.libs.json.Json
 import api.utils.UnitSpec
+import play.api.libs.json.Json
 import v4.createOrAmendCodingOut.def1.model.request.{TaxCodeComponent, TaxCodeComponents}
 
 class TaxCodeComponentsSpec extends UnitSpec {

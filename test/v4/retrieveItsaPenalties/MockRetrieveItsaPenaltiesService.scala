@@ -16,14 +16,15 @@
 
 package v4.retrieveItsaPenalties
 
+import api.controllers.RequestContext
+import api.services.ServiceOutcome
 import org.scalamock.handlers.CallHandler
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.TestSuite
-import api.controllers.RequestContext
 import v4.retrieveItsaPenalties.model.request.RetrieveItsaPenaltiesRequestData
 import v4.retrieveItsaPenalties.model.response.RetrieveItsaPenaltiesResponse
+
 import scala.concurrent.{ExecutionContext, Future}
-import api.services.ServiceOutcome
 
 trait MockRetrieveItsaPenaltiesService extends TestSuite with MockFactory {
 
