@@ -16,13 +16,13 @@
 
 package api.utils
 
+import api.models.errors.*
 import org.scalatestplus.play.guice.GuiceOneAppPerSuite
 import play.api.Configuration
 import play.api.libs.json.Json
 import play.api.mvc.{AnyContent, RequestHeader, Result}
 import play.api.test.FakeRequest
 import play.api.test.Helpers.*
-import api.models.errors.*
 import uk.gov.hmrc.auth.core.InsufficientEnrolments
 import uk.gov.hmrc.http.*
 import uk.gov.hmrc.play.audit.http.connector.AuditConnector
