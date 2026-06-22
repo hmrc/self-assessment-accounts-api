@@ -59,14 +59,11 @@ tags:
     description: Coding out is a concept used to retrieve underpaid tax and debts through a taxpayers PAYE tax code.<br><br> The coding out underpayments and debts endpoints allow software packages to overwrite coding out underpayment and debt amounts that are held by HMRC for a previous tax year and given NINO. Software packages can then amend previously submitted overwrite amounts, retrieve the HMRC held or user submitted coding out amounts or delete the user submitted amounts.
   - name: Coding Out Status
     description: Endpoints relating to coding out status.
-  {{#if (enabled "api_5329_r21_itsa_penalties_docs")}}
   - name: ITSA Penalties
     description: |
       Income Tax Self Assessment (ITSA) penalties are issued by HMRC when a customer fails to meet their tax obligations.
       These penalties are split into 2 main categories: late submission penalties, which apply when a tax return is not
       submitted by the required deadline, and late payment penalties, which apply when tax due is not paid by the required deadline.
-  {{/if}}
-
 paths:
   /accounts/self-assessment/{nino}/charges/{transactionId}:
     $ref: "./self_assessment_charge_history_retrieve.yaml"
@@ -86,7 +83,5 @@ paths:
     $ref: "./coding_out_status_retrieve.yaml"
   /accounts/self-assessment/{nino}/{taxYear}/collection/tax-code/coding-out/opt-in:
     $ref: "./opt_in_to_coding_out.yaml"
-  {{#if (enabled "api_5329_r21_itsa_penalties_docs")}}
   /accounts/self-assessment/{nino}/penalties:
     $ref: "./itsa_penalties_retrieve.yaml"
-  {{/if}}
