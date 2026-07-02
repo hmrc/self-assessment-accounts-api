@@ -1,4 +1,4 @@
-self-assessment-accounts-api
+Self Assessment Accounts API
 ========================
 
 [![Apache-2.0 license](http://img.shields.io/badge/license-Apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
@@ -71,4 +71,4 @@ Available on the [HMRC Developer Hub](https://developer.service.hmrc.gov.uk/api-
 
 ## License
 
-This code is open source software licensed under the [Apache 2.0 License]("http://www.apache.org/licenses/LICENSE-2.0.html")
+This code is open source software licensed under the [Apache 2.0 License](http://www.apache.org/licenses/LICENSE-2.0.html)
