@@ -17,14 +17,14 @@ post:
 
   security:
     - User-Restricted:
-        - read:self-assessment
+        - write:self-assessment
 
   tags:
     - Coding Out Status
 
   parameters:
     - $ref: "./common/headers.yaml#/components/parameters/acceptJson"
-    - $ref: "./common/headers.yaml#/components/parameters/authorizationReadScopeHeader"
+    - $ref: "./common/headers.yaml#/components/parameters/authorizationWriteScopeHeader"
     - $ref: "./common/headers.yaml#/components/parameters/testScenarioHeader"
     - $ref: "./common/pathParameters.yaml#/components/parameters/nino"
     - $ref: "./common/pathParameters.yaml#/components/parameters/codingOutTaxYear"
