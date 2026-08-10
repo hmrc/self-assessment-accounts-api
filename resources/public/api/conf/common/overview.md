@@ -1,3 +1,5 @@
+> HMRC is no longer accepting production credential access requests for new 2026–27 quarterly update products, as the market window for these products has now closed.
+
 Use the Self Assessment Accounts API to retrieve information about a customer’s income tax payments and liabilities after signing up for Making Tax Digital.
 It is also used to allow HMRC to automatically collect tax due using tax codes.
 
