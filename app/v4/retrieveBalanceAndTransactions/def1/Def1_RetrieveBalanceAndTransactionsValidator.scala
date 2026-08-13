@@ -17,7 +17,7 @@
 package v4.retrieveBalanceAndTransactions.def1
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino}
+import api.controllers.validators.resolvers.{ResolveBoolean, ResolveDateRange, ResolveNino, ResolveStringPattern}
 import api.models.domain.DateRange
 import api.models.errors.*
 import cats.data.Validated
@@ -71,13 +71,8 @@ class Def1_RetrieveBalanceAndTransactionsValidator(nino: String,
     ).mapN(RetrieveBalanceAndTransactionsRequestData.apply) andThen validateParameterRules
 
   private def resolveDocNumber(docNumber: Option[String]): Validated[Seq[MtdError], Option[String]] = {
-    val MAX_LENGTH = 12
-    docNumber
-      .map {
-        case docNumber if docNumber.nonEmpty && docNumber.length < MAX_LENGTH => Valid(Some(docNumber))
-        case _                                                                => invalid(DocNumberFormatError)
-      }
-      .getOrElse(Valid(None))
+    val docNumberRegex = "^[a-zA-Z0-9]{12}$".r
+    ResolveStringPattern(docNumberRegex, DocNumberFormatError)(docNumber)
   }
 
   private def validateParameterRules(

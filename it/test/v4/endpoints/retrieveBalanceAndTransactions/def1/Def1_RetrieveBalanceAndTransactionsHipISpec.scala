@@ -180,7 +180,7 @@ class Def1_RetrieveBalanceAndTransactionsHipISpec extends IntegrationBaseSpec {
 
     protected val nino = "AA123456A"
 
-    protected val docNumber: Option[String]                  = Some("1234")
+    protected val docNumber: Option[String]                  = Some("123456789012")
     protected val fromDate: Option[String]                   = Some("2022-08-15")
     protected val toDate: Option[String]                     = Some("2022-09-15")
     protected val onlyOpenItems: Option[String]              = Some("false")

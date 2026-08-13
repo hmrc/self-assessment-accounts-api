@@ -25,7 +25,8 @@ components:
         (When onlyOpenItems has been set to false, either the date range (fromDate and toDate) or doc number should be supplied.)
       schema:
         type: string
-        example: "3060013199"
+        example: "306001319972"
+        pattern: "^[a-zA-Z0-9]{12}$"
       required: false
     onlyOpenItems:
       name: onlyOpenItems
