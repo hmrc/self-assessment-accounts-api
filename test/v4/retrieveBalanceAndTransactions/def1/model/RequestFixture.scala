@@ -22,7 +22,7 @@ import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransac
 import java.time.LocalDate
 
 object RequestFixture {
-  val validDocNumber    = "1234"
+  val validDocNumber    = "123456789012"
   val validFromDate     = "2022-08-15"
   val validToDate       = "2022-09-15"
   val outOfRangeEndDate = "2024-09-15"
