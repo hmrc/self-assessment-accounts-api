@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package v4.retrieveBalanceAndTransactions.def1.model
 
+import common.models.ChargeClassification.`enquiry-amendment`
 import play.api.libs.json.*
 import v4.retrieveBalanceAndTransactions.def1.model.response.{DocumentDetails, LastClearing, LatePaymentInterest, ReducedCharge}
 
@@ -54,6 +55,7 @@ object DocumentDetailsFixture {
     documentText = Some("ITSA- Bal Charge"),
     documentDueDate = Some("2021-04-05"),
     documentDescription = Some("ITSA- POA 1"),
+    chargeClassification = Some(`enquiry-amendment`),
     originalAmount = 1.99,
     outstandingAmount = 2.99,
     lastClearing = Some(lastClearing),
@@ -79,6 +81,7 @@ object DocumentDetailsFixture {
     documentDate = "2018-04-05",
     None,
     documentDueDate = None,
+    None,
     None,
     originalAmount = 1.99,
     outstandingAmount = 2.99,
@@ -136,6 +139,7 @@ object DocumentDetailsFixture {
        |  "documentText": "ITSA- Bal Charge",
        |  "documentDueDate": "2021-04-05",
        |  "documentDescription": "ITSA- POA 1",
+       |  "chargeClassification": "RA",
        |  "originalAmount": 1.99,
        |  "outstandingAmount": 2.99,
        |  "lastClearing": $lastClearingJson,
@@ -163,6 +167,7 @@ object DocumentDetailsFixture {
            |  "documentText": "ITSA- Bal Charge",
            |  "documentDueDate": "2021-04-05",
            |  "documentDescription": "ITSA- POA 1",
+           |  "chargeClassification": "enquiry-amendment",
            |  "originalAmount": 1.99,
            |  "outstandingAmount": 2.99,
            |  "lastClearing": $lastClearingJson,
@@ -236,6 +241,7 @@ object DocumentDetailsFixture {
        |  "effectiveDateOfPayment": "2021-04-05",
        |  $docDueDateLine
        |  "documentDescription": "ITSA- POA 1",
+       |  "chargeClassification": "RA",
        |  "totalAmount": 1.99,
        |  "documentOutstandingAmount": 2.99,
        |  "lastClearingDate": "2018-04-05",
@@ -277,6 +283,7 @@ object DocumentDetailsFixture {
                   |  "effectiveDateOfPayment": "2021-04-05",
                   |  $docDueDateLine
                   |  "documentDescription": "ITSA- POA 1",
+                  |  "chargeClassification": "RA",
                   |  "totalAmount": 1.99,
                   |  "documentOutstandingAmount": 2.99,
                   |  "lastClearingDate": "2018-04-05",
