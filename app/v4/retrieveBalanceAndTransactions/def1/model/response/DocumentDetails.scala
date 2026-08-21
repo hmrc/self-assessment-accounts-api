@@ -18,6 +18,7 @@ package v4.retrieveBalanceAndTransactions.def1.model.response
 
 import api.models.domain.TaxYear
 import api.utils.{EmptinessChecker, EmptyPathsResult}
+import common.models.ChargeClassification
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
 
@@ -85,6 +86,7 @@ case class DocumentDetails(taxYear: Option[String],
                            documentText: Option[String],
                            documentDueDate: Option[String],
                            documentDescription: Option[String],
+                           chargeClassification: Option[ChargeClassification],
                            originalAmount: BigDecimal,
                            outstandingAmount: BigDecimal,
                            lastClearing: Option[LastClearing],
@@ -123,6 +125,7 @@ object DocumentDetails {
         (JsPath \ "documentText").readNullable[String] and
         (JsPath \ "documentDueDate").readNullable[String] and
         (JsPath \ "documentDescription").readNullable[String] and
+        (JsPath \ "chargeClassification").readNullable[ChargeClassification] and
         (JsPath \ "totalAmount").read[BigDecimal] and
         (JsPath \ "documentOutstandingAmount").read[BigDecimal] and
         JsPath.readNullable[LastClearing].map(replaceWithNoneIfEmpty[LastClearing]) and
