@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package v4.retrieveChargeHistoryByTransactionId.def1
 
 import api.models.domain.Timestamp
+import common.models.ChargeClassification
 import play.api.libs.json.{JsObject, JsValue, Json}
 import v4.retrieveChargeHistoryByTransactionId.def1.models.response.ChargeHistoryDetail
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
@@ -28,6 +29,7 @@ object RetrieveChargeHistoryFixture {
     transactionId = "123456789",
     transactionDate = "2020-01-29",
     description = "Balancing Charge",
+    chargeClassification = Some(ChargeClassification.`enquiry-amendment`),
     totalAmount = 54321.12,
     changeDate = "2020-02-24",
     changeTimestamp = Timestamp("2020-02-24T14:15:22.802Z"),
@@ -45,6 +47,7 @@ object RetrieveChargeHistoryFixture {
       |  "documentId": "${validChargeHistoryDetailObject.transactionId}",
       |  "documentDate":"${validChargeHistoryDetailObject.transactionDate}",
       |  "documentDescription": "${validChargeHistoryDetailObject.description}",
+      |  "chargeClassification": "RA",
       |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
       |  "reversalDate": "${validChargeHistoryDetailObject.changeTimestamp.value}",
       |  "reversalReason": "${validChargeHistoryDetailObject.changeReason}",
@@ -82,6 +85,7 @@ object RetrieveChargeHistoryFixture {
       |  "transactionId": "${validChargeHistoryDetailObject.transactionId}",
       |  "transactionDate": "${validChargeHistoryDetailObject.transactionDate}",
       |  "description": "${validChargeHistoryDetailObject.description}",
+      |  "chargeClassification": "enquiry-amendment",
       |  "totalAmount": ${validChargeHistoryDetailObject.totalAmount},
       |  "changeDate": "${validChargeHistoryDetailObject.changeDate}",
       |  "changeTimestamp": "${validChargeHistoryDetailObject.changeTimestamp.value}",

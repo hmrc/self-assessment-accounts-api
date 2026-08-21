@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package v4.retrieveChargeHistoryByTransactionId.def1.models.response
 
 import api.models.domain.{TaxYear, Timestamp}
+import common.models.ChargeClassification
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.*
 
@@ -26,6 +27,7 @@ case class ChargeHistoryDetail(taxYear: Option[String],
                                transactionId: String,
                                transactionDate: String,
                                description: String,
+                               chargeClassification: Option[ChargeClassification],
                                totalAmount: BigDecimal,
                                changeDate: String,
                                changeTimestamp: Timestamp,
@@ -43,6 +45,7 @@ object ChargeHistoryDetail {
       (JsPath \ "documentId").read[String] and
       (JsPath \ "documentDate").read[String] and
       (JsPath \ "documentDescription").read[String] and
+      (JsPath \ "chargeClassification").readNullable[ChargeClassification] and
       (JsPath \ "totalAmount").read[BigDecimal] and
       (JsPath \ "reversalDate").read[String].map(timestampConverter(_).toDate) and
       (JsPath \ "reversalDate").read[String].map(timestampConverter) and
