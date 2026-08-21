@@ -17,7 +17,7 @@
 package common.models
 
 import api.utils.enums.Enums
-import play.api.libs.json.*
+import play.api.libs.json.{Reads, Writes}
 
 enum ChargeClassification(val fromDownstream: String) {
   case `enquiry-amendment`                  extends ChargeClassification("RA")
@@ -31,4 +31,5 @@ object ChargeClassification {
   given Reads[ChargeClassification] = Enums.readsFrom[ChargeClassification](values, _.fromDownstream)
 
   given Writes[ChargeClassification] = Enums.writes[ChargeClassification]
+
 }

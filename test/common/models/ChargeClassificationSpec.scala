@@ -26,7 +26,8 @@ class ChargeClassificationSpec extends UnitSpec with EnumJsonSpecSupport {
     ("RA", `enquiry-amendment`),
     ("AC", `auto-correction`),
     ("MC", `manual-correction`),
-    ("RC", `customer-rejection-of-a-correction`))
+    ("RC", `customer-rejection-of-a-correction`)
+  )
 
   testSerialization[ChargeClassification](
     (`enquiry-amendment`, "enquiry-amendment"),
