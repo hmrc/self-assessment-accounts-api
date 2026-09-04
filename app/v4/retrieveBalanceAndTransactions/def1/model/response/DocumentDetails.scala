@@ -96,6 +96,8 @@ case class DocumentDetails(taxYear: Option[String],
                            paymentLotItem: Option[String],
                            effectiveDateOfPayment: Option[String],
                            latePaymentInterest: Option[LatePaymentInterest],
+                           totalStandoverAmount: Option[BigDecimal],
+                           collectableAmount: Option[BigDecimal],
                            amountCodedOut: Option[BigDecimal],
                            reducedCharge: Option[ReducedCharge],
                            poaRelevantAmount: Option[BigDecimal])
@@ -115,34 +117,61 @@ object DocumentDetails {
       if (emptinessChecker.findEmptyPaths(a) == EmptyPathsResult.CompletelyEmpty) None else Some(a)
     }
 
-  given Reads[DocumentDetails] =
-    (
-      (JsPath \ "taxYear").readNullable[String].map(taxYear) and
-        (JsPath \ "documentID").read[String] and
-        (JsPath \ "formBundleNumber").readNullable[String] and
-        (JsPath \ "creditReason").readNullable[String] and
-        (JsPath \ "documentDate").read[String] and
-        (JsPath \ "documentText").readNullable[String] and
-        (JsPath \ "documentDueDate").readNullable[String] and
-        (JsPath \ "documentDescription").readNullable[String] and
-        (JsPath \ "chargeClassification").readNullable[ChargeClassification] and
-        (JsPath \ "totalAmount").read[BigDecimal] and
-        (JsPath \ "documentOutstandingAmount").read[BigDecimal] and
-        JsPath.readNullable[LastClearing].map(replaceWithNoneIfEmpty[LastClearing]) and
-        (JsPath \ "statisticalFlag").read[String].flatMap {
-          case "Y" => Reads.pure(true)
-          case "N" => Reads.pure(false)
-          case x   => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
-        } and
-        (JsPath \ "informationCode").readNullable[String].map(informationCode) and
-        (JsPath \ "paymentLot").readNullable[String] and
-        (JsPath \ "paymentLotItem").readNullable[String] and
-        (JsPath \ "effectiveDateOfPayment").readNullable[String] and
-        JsPath.readNullable[LatePaymentInterest].map(replaceWithNoneIfEmpty[LatePaymentInterest]) and
-        (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
-        JsPath.readNullable[ReducedCharge].map(replaceWithNoneIfEmpty[ReducedCharge]) and
-        (JsPath \ "poaRelevantAmount").readNullable[BigDecimal]
-    )(DocumentDetails.apply)
+  given Reads[DocumentDetails] = for {
+    taxYear              <- (JsPath \ "taxYear").readNullable[String].map(taxYear)
+    documentId           <- (JsPath \ "documentID").read[String]
+    formBundleNumber     <- (JsPath \ "formBundleNumber").readNullable[String]
+    creditReason         <- (JsPath \ "creditReason").readNullable[String]
+    documentDate         <- (JsPath \ "documentDate").read[String]
+    documentText         <- (JsPath \ "documentText").readNullable[String]
+    documentDueDate      <- (JsPath \ "documentDueDate").readNullable[String]
+    documentDescription  <- (JsPath \ "documentDescription").readNullable[String]
+    chargeClassification <- (JsPath \ "chargeClassification").readNullable[ChargeClassification]
+    originalAmount       <- (JsPath \ "totalAmount").read[BigDecimal]
+    outstandingAmount    <- (JsPath \ "documentOutstandingAmount").read[BigDecimal]
+    lastClearing         <- JsPath.readNullable[LastClearing].map(replaceWithNoneIfEmpty[LastClearing])
+    isChargeEstimate <- (JsPath \ "statisticalFlag").read[String].flatMap {
+      case "Y" => Reads.pure(true)
+      case "N" => Reads.pure(false)
+      case x   => Reads.failed(s"expected 'Y' or 'N' but was `$x`")
+    }
+    isCodedOut             <- (JsPath \ "informationCode").readNullable[String].map(informationCode)
+    paymentLot             <- (JsPath \ "paymentLot").readNullable[String]
+    paymentLotItem         <- (JsPath \ "paymentLotItem").readNullable[String]
+    effectiveDateOfPayment <- (JsPath \ "effectiveDateOfPayment").readNullable[String]
+    latePaymentInterest    <- JsPath.readNullable[LatePaymentInterest].map(replaceWithNoneIfEmpty[LatePaymentInterest])
+    totalStandoverAmount   <- (JsPath \ "totalSoAmt").readNullable[BigDecimal]
+    collectableAmount      <- (JsPath \ "collectableAmt").readNullable[BigDecimal]
+    amountCodedOut         <- (JsPath \ "amountCodedOut").readNullable[BigDecimal]
+    reducedCharge          <- JsPath.readNullable[ReducedCharge].map(replaceWithNoneIfEmpty[ReducedCharge])
+    poaRelevantAmount      <- (JsPath \ "poaRelevantAmount").readNullable[BigDecimal]
+  } yield {
+    DocumentDetails(
+      taxYear = taxYear,
+      documentId = documentId,
+      formBundleNumber = formBundleNumber,
+      creditReason = creditReason,
+      documentDate = documentDate,
+      documentText = documentText,
+      documentDueDate = documentDueDate,
+      documentDescription = documentDescription,
+      chargeClassification = chargeClassification,
+      originalAmount = originalAmount,
+      outstandingAmount = outstandingAmount,
+      lastClearing = lastClearing,
+      isChargeEstimate = isChargeEstimate,
+      isCodedOut = isCodedOut,
+      paymentLot = paymentLot,
+      paymentLotItem = paymentLotItem,
+      effectiveDateOfPayment = effectiveDateOfPayment,
+      latePaymentInterest = latePaymentInterest,
+      totalStandoverAmount = totalStandoverAmount,
+      collectableAmount = collectableAmount,
+      amountCodedOut = amountCodedOut,
+      reducedCharge = reducedCharge,
+      poaRelevantAmount = poaRelevantAmount
+    )
+  }
 
   given OWrites[DocumentDetails] = Json.writes[DocumentDetails]
 }

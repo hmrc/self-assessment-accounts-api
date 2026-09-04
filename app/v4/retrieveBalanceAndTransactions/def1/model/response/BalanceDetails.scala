@@ -77,7 +77,7 @@ object BalanceDetails {
       (JsPath \ "totalBalance").read[BigDecimal] and
       (JsPath \ "amountCodedOut").readNullable[BigDecimal] and
       (JsPath \ "totalBCDBalance").readNullable[BigDecimal] and
-      (JsPath \ "totalFormalAndInformalStandovers").readNullable[BigDecimal] and
+      (JsPath \ "totalFormalAndInformal").readNullable[BigDecimal] and
       (JsPath \ "unallocatedCredit").readNullable[BigDecimal] and
       (JsPath \ "allocatedCreditForChargesThatAreOverdue").readNullable[BigDecimal] and
       (JsPath \ "totalCredit").readNullable[BigDecimal] and
