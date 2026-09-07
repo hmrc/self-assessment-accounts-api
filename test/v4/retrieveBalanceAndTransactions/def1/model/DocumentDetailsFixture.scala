@@ -65,6 +65,8 @@ object DocumentDetailsFixture {
     paymentLotItem = Some("000001"),
     effectiveDateOfPayment = Some("2021-04-05"),
     latePaymentInterest = Some(latePaymentInterest),
+    totalStandoverAmount = Some(10.99),
+    collectableAmount = Some(11.99),
     amountCodedOut = Some(5.99),
     reducedCharge = Some(reducedCharge),
     poaRelevantAmount = Some(5.99)
@@ -88,6 +90,8 @@ object DocumentDetailsFixture {
     None,
     isChargeEstimate = false,
     isCodedOut = false,
+    None,
+    None,
     None,
     None,
     None,
@@ -177,6 +181,8 @@ object DocumentDetailsFixture {
            |  "paymentLotItem": "000001",
            |  "effectiveDateOfPayment": "2021-04-05",
            |  "latePaymentInterest": $latePaymentInterestJson,
+           |  "totalStandoverAmount": 10.99,
+           |  "collectableAmount": 11.99,
            |  "amountCodedOut": 5.99,
            |  "reducedCharge": $reducedChargeJson,
            |  "poaRelevantAmount":5.99
@@ -305,6 +311,8 @@ object DocumentDetailsFixture {
                   |  "lpiWithDunningLock": 7.99,
                   |  "latePaymentInterestAmount": 8.99,
                   |  "interestOutstandingAmount": 9.99,
+                  |  "totalSoAmt": 10.99,
+                  |  "collectableAmt": 11.99,
                   |  "poaRelevantAmount":5.99
                   |}
                   |""".stripMargin)

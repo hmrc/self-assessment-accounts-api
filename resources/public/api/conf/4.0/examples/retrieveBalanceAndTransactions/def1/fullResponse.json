@@ -19,6 +19,9 @@
     "totalBalance": -99999999999.99,
     "amountCodedOut": 3456.67,
     "totalBcdBalance": 2600.24,
+    {{#if (enabled 'r22_charge_classification_docs')}}
+    "totalFormalInformalStandovers": 5009.99,
+    {{/if}}
     "unallocatedCredit": 3456.67,
     "allocatedCredit": 2345.67,
     "totalCredit": 4567.67,
@@ -72,6 +75,10 @@
         "interestDunningLockAmount": 5009.99,
         "interestOutstandingAmount": 5009.99
       },
+      {{#if (enabled 'r22_charge_classification_docs')}}
+      "totalStandoverAmount": 5009.99,
+      "collectableAmount": 5009.99,
+      {{/if}}
       "amountCodedOut": 5009.99,
       "reducedCharge": {
         "chargeType": "AA",
