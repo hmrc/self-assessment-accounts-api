@@ -24,6 +24,7 @@ enum ChargeClassification(val fromDownstream: String) {
   case `auto-correction`                    extends ChargeClassification("AC")
   case `manual-correction`                  extends ChargeClassification("MC")
   case `customer-rejection-of-a-correction` extends ChargeClassification("RC")
+  case `automatic-financial-adjustment`     extends ChargeClassification("AF")
 }
 
 object ChargeClassification {

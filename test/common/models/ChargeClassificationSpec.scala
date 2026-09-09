@@ -18,7 +18,7 @@ package common.models
 
 import api.utils.UnitSpec
 import api.utils.enums.EnumJsonSpecSupport
-import common.models.ChargeClassification.{`auto-correction`, `customer-rejection-of-a-correction`, `enquiry-amendment`, `manual-correction`}
+import common.models.ChargeClassification.*
 
 class ChargeClassificationSpec extends UnitSpec with EnumJsonSpecSupport {
 
@@ -26,14 +26,16 @@ class ChargeClassificationSpec extends UnitSpec with EnumJsonSpecSupport {
     ("RA", `enquiry-amendment`),
     ("AC", `auto-correction`),
     ("MC", `manual-correction`),
-    ("RC", `customer-rejection-of-a-correction`)
+    ("RC", `customer-rejection-of-a-correction`),
+    ("AF", `automatic-financial-adjustment`)
   )
 
   testSerialization[ChargeClassification](
     (`enquiry-amendment`, "enquiry-amendment"),
     (`auto-correction`, "auto-correction"),
     (`manual-correction`, "manual-correction"),
-    (`customer-rejection-of-a-correction`, "customer-rejection-of-a-correction")
+    (`customer-rejection-of-a-correction`, "customer-rejection-of-a-correction"),
+    (`automatic-financial-adjustment`, "automatic-financial-adjustment")
   )
 
 }
