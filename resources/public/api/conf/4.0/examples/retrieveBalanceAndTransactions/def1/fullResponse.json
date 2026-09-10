@@ -118,10 +118,11 @@
           "clearingReason": "Outgoing Payment",
           "outgoingPaymentMethod": "Payable Order Repayment",
           "locks": {
-            "isChargeOnHold": false,
-            "isEstimatedChargeOnHold": false,
-            "isInterestAccrualOnHold": false,
-            "isInterestChargeOnHold": false
+            "isChargeOnHold": true,
+            "isEstimatedChargeOnHold": true,
+            "isInterestAccrualOnHold": true,
+            "isInterestChargeOnHold": true,
+            "dunningLock": "currently suspended on appeal"
           },
           "isReturn": true,
           "paymentReference": "Ab12453535",
