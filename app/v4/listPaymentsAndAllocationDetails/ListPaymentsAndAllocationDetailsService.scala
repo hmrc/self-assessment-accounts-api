@@ -56,7 +56,11 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
       "NO_DATA_FOUND"            -> NotFoundError,
       "PARTIALLY_MIGRATED"       -> BadRequestError,
       "SERVER_ERROR"             -> InternalError,
-      "SERVICE_UNAVAILABLE"      -> InternalError
+      "SERVICE_UNAVAILABLE"      -> InternalError,
+      "003"                      -> BadRequestError,
+      "005"                      -> NotFoundError,
+      "015"                      -> InternalError,
+      "600"                      -> BadRequestError
     )
 
 }

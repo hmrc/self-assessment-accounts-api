@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package v4.listPaymentsAndAllocationDetails
 import api.connectors.ConnectorSpec
 import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
+import api.utils.DateUtils.isoDateTimeStamp
+import play.api.Configuration
 import uk.gov.hmrc.http.StringContextOps
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
@@ -65,9 +67,20 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
   }
 
+  private trait HipTestWithAdditionalContractHeaders extends HipTest with Test {
+
+    override val additionalContractHeaders: Seq[(String, String)] = List(
+      "X-Originating-System"  -> "MDTP",
+      "X-Receipt-Date"        -> isoDateTimeStamp,
+      "X-Transmitting-System" -> "HIP"
+    )
+
+  }
+
   "ListPaymentsAndAllocationDetailsConnector" should {
     "return a valid response" when {
-      "a valid request is supplied" in new DesTest with Test {
+      "a valid request is supplied (DES enabled)" in new DesTest with Test {
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> false))
         val queryParams: Seq[(String, String)] =
           List(
             "dateFrom"       -> s"$dateFrom",
@@ -79,7 +92,25 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
         connectorRequest(validRequest, responseObject, queryParams)
       }
 
+      "valid request is supplied (HIP enabled)" in new HipTestWithAdditionalContractHeaders {
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> true))
+        val outcome = Right(ResponseWrapper(correlationId, responseObject))
+
+        willGet(
+          url = url"$baseUrl/etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA",
+          parameters = Seq(
+            "dateFrom"       -> s"$dateFrom",
+            "dateTo"         -> s"$dateTo",
+            "paymentLot"     -> s"$paymentLot",
+            "paymentLotItem" -> s"$paymentLotItem"
+          )
+        ).returns(Future.successful(outcome))
+
+        await(connector.listPaymentsAndAllocationDetails(validRequest)) shouldBe outcome
+      }
+
       "a valid request is supplied without the paymentLot query params" in new DesTest with Test {
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> false))
         private val invalidRequest: ListPaymentsAndAllocationDetailsRequestData =
           Def1_ListPaymentsAndAllocationDetailsRequestData(
             Nino(nino),

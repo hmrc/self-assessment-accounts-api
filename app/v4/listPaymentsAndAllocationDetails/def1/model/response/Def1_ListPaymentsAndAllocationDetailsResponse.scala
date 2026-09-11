@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,9 +24,18 @@ case class Def1_ListPaymentsAndAllocationDetailsResponse(
 ) extends ListPaymentsAndAllocationDetailsResponse
 
 object Def1_ListPaymentsAndAllocationDetailsResponse {
-  implicit val writes: Writes[Def1_ListPaymentsAndAllocationDetailsResponse] = Json.writes[Def1_ListPaymentsAndAllocationDetailsResponse]
 
-  implicit val reads: Reads[Def1_ListPaymentsAndAllocationDetailsResponse] =
-    (JsPath \ "paymentDetails").read[List[Payment]].map(Def1_ListPaymentsAndAllocationDetailsResponse.apply)
+  implicit val writes: Writes[Def1_ListPaymentsAndAllocationDetailsResponse] =
+    Json.writes[Def1_ListPaymentsAndAllocationDetailsResponse]
+
+  implicit val reads: Reads[Def1_ListPaymentsAndAllocationDetailsResponse] = {
+    val paymentDetailsReads =
+      (JsPath \ "paymentDetails").read[List[Payment]]
+
+    (JsPath \ "success" \ "paymentDetails")
+      .read[List[Payment]]
+      .orElse(paymentDetailsReads)
+      .map(Def1_ListPaymentsAndAllocationDetailsResponse.apply)
+  }
 
 }
