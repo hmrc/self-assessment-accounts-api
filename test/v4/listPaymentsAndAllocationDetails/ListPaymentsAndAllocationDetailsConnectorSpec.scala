@@ -45,6 +45,14 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       Some(paymentLot),
       Some(paymentLotItem))
 
+  private val queryParams: Seq[(String, String)] =
+    List(
+      "dateFrom"       -> s"$dateFrom",
+      "dateTo"         -> s"$dateTo",
+      "paymentLot"     -> s"$paymentLot",
+      "paymentLotItem" -> s"$paymentLotItem"
+    )
+
   trait Test { self: ConnectorTest =>
 
     val connector: ListPaymentsAndAllocationDetailsConnector =
@@ -67,44 +75,20 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
   }
 
-  private trait HipTestWithAdditionalContractHeaders extends HipTest with Test {
-
-    override val additionalContractHeaders: Seq[(String, String)] = List(
-      "X-Originating-System"  -> "MDTP",
-      "X-Receipt-Date"        -> isoDateTimeStamp,
-      "X-Transmitting-System" -> "HIP"
-    )
-
-  }
-
   "ListPaymentsAndAllocationDetailsConnector" should {
     "return a valid response" when {
       "a valid request is supplied (DES enabled)" in new DesTest with Test {
         MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> false))
-        val queryParams: Seq[(String, String)] =
-          List(
-            "dateFrom"       -> s"$dateFrom",
-            "dateTo"         -> s"$dateTo",
-            "paymentLot"     -> s"$paymentLot",
-            "paymentLotItem" -> s"$paymentLotItem"
-          )
 
         connectorRequest(validRequest, responseObject, queryParams)
       }
 
-      "valid request is supplied (HIP enabled)" in new HipTestWithAdditionalContractHeaders {
+      "valid request is supplied (HIP enabled)" in new HipTest with Test {
         MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> true))
         val outcome = Right(ResponseWrapper(correlationId, responseObject))
 
-        willGet(
-          url = url"$baseUrl/etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA",
-          parameters = Seq(
-            "dateFrom"       -> s"$dateFrom",
-            "dateTo"         -> s"$dateTo",
-            "paymentLot"     -> s"$paymentLot",
-            "paymentLotItem" -> s"$paymentLotItem"
-          )
-        ).returns(Future.successful(outcome))
+        willGet(url = url"$baseUrl/etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA", queryParams)
+          .returns(Future.successful(outcome))
 
         await(connector.listPaymentsAndAllocationDetails(validRequest)) shouldBe outcome
       }
