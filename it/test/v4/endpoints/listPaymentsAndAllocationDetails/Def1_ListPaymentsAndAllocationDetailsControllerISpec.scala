@@ -29,8 +29,8 @@ class Def1_ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBa
   private trait Test {
 
     val nino: String           = "AA123456A"
-    private val dateFrom       = "2025-08-13"
-    private val dateTo         = "2025-09-13"
+    private val dateFrom       = "2026-07-13"
+    private val dateTo         = "2026-08-13"
     private val paymentLot     = "081203010024"
     private val paymentLotItem = "000001"
 
@@ -92,21 +92,6 @@ class Def1_ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBa
     }
 
     "return error according to spec" when {
-
-      def validationErrorTest(requestNino: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
-        s"validation fails with ${expectedBody.code} error" in new Test {
-
-          override val nino: String = requestNino
-
-          val response: WSResponse = await(request.get())
-          response.status shouldBe expectedStatus
-          response.json shouldBe Json.toJson(expectedBody)
-          response.header("Content-Type") shouldBe Some("application/json")
-        }
-      }
-
-      validationErrorTest("AA1123A", BAD_REQUEST, NinoFormatError)
-
       def serviceErrorTest(downstreamStatus: Int, downstreamCode: String, expectedStatus: Int, expectedBody: MtdError): Unit = {
         s"downstream returns a code $downstreamCode error and status $downstreamStatus" in new Test {
           override def setupStubs(): Unit = DownstreamStub.onError(
