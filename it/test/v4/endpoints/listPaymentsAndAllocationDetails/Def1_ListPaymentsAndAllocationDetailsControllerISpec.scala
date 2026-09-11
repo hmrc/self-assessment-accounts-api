@@ -28,7 +28,7 @@ class Def1_ListPaymentsAndAllocationDetailsControllerISpec extends IntegrationBa
 
   private trait Test {
 
-    val nino: String           = "AA123456A"
+    private val nino           = "AA123456A"
     private val dateFrom       = "2026-07-13"
     private val dateTo         = "2026-08-13"
     private val paymentLot     = "081203010024"

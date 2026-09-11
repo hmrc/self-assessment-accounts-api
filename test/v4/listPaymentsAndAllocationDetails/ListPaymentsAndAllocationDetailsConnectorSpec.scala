@@ -19,13 +19,11 @@ package v4.listPaymentsAndAllocationDetails
 import api.connectors.ConnectorSpec
 import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
-import api.utils.DateUtils.isoDateTimeStamp
 import play.api.Configuration
 import uk.gov.hmrc.http.StringContextOps
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
-import v4.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -58,14 +56,12 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
     val connector: ListPaymentsAndAllocationDetailsConnector =
       new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    def connectorRequest(request: ListPaymentsAndAllocationDetailsRequestData,
-                         response: ListPaymentsAndAllocationDetailsResponse,
-                         queryParams: Seq[(String, String)]): Unit = {
+    def connectorRequest(request: ListPaymentsAndAllocationDetailsRequestData, downstreamUrl: String, queryParams: Seq[(String, String)]): Unit = {
 
-      val outcome = Right(ResponseWrapper(correlationId, response))
+      val outcome = Right(ResponseWrapper(correlationId, responseObject))
 
       willGet(
-        url = url"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+        url = url"$downstreamUrl",
         parameters = queryParams
       ).returns(Future.successful(outcome))
 
@@ -79,18 +75,20 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
     "return a valid response" when {
       "a valid request is supplied (DES enabled)" in new DesTest with Test {
         MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> false))
-
-        connectorRequest(validRequest, responseObject, queryParams)
+        connectorRequest(
+          validRequest,
+          s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+          queryParams
+        )
       }
 
       "valid request is supplied (HIP enabled)" in new HipTest with Test {
         MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> true))
-        val outcome = Right(ResponseWrapper(correlationId, responseObject))
-
-        willGet(url = url"$baseUrl/etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA", queryParams)
-          .returns(Future.successful(outcome))
-
-        await(connector.listPaymentsAndAllocationDetails(validRequest)) shouldBe outcome
+        connectorRequest(
+          validRequest,
+          s"$baseUrl/etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA",
+          queryParams
+        )
       }
 
       "a valid request is supplied without the paymentLot query params" in new DesTest with Test {
@@ -108,7 +106,11 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
             "dateTo"   -> s"$dateTo"
           )
 
-        connectorRequest(invalidRequest, responseObject, queryParams)
+        connectorRequest(
+          invalidRequest,
+          s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+          queryParams
+        )
       }
     }
   }
