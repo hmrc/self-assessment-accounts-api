@@ -87,8 +87,8 @@
           "dunningLock": {
             "description": "The reason the interest charge is on hold.",
             "type": "string",
-            minLength: 1,
-            maxLength: 30,
+            "minLength": 1,
+            "maxLength": 30,
             "example": "currently suspended on appeal"
           }
         },
