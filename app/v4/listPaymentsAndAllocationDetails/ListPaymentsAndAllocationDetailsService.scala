@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,7 +56,11 @@ class ListPaymentsAndAllocationDetailsService @Inject() (connector: ListPayments
       "NO_DATA_FOUND"            -> NotFoundError,
       "PARTIALLY_MIGRATED"       -> BadRequestError,
       "SERVER_ERROR"             -> InternalError,
-      "SERVICE_UNAVAILABLE"      -> InternalError
+      "SERVICE_UNAVAILABLE"      -> InternalError,
+      "003"                      -> BadRequestError,
+      "005"                      -> NotFoundError,
+      "015"                      -> InternalError,
+      "600"                      -> BadRequestError
     )
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 
 package v4.listPaymentsAndAllocationDetails
 
-import api.config.AppConfig
-import api.connectors.DownstreamUri.DesUri
+import api.config.{AppConfig, ConfigFeatureSwitches}
+import api.connectors.DownstreamUri.{DesUri, HipUri}
 import api.connectors.httpparsers.StandardDownstreamHttpParser.reads
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
+import api.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.http.client.HttpClientV2
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
@@ -53,7 +54,17 @@ class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClientV
         getIfExists(paymentLot, "paymentLot") ++
         getIfExists(paymentLotItem, "paymentLotItem")
 
-    get(DesUri[DownstreamResp](s"cross-regime/payment-allocation/NINO/$nino/ITSA"), queryParams)
+    val additionalContractHeaders: Seq[(String, String)] = List(
+      "X-Originating-System"  -> "MDTP",
+      "X-Receipt-Date"        -> isoDateTimeStamp,
+      "X-Transmitting-System" -> "HIP"
+    )
+
+    if (ConfigFeatureSwitches().isEnabled("des_hip_migration_1413")) {
+      get(HipUri[DownstreamResp](s"etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA", additionalContractHeaders), queryParams)
+    } else {
+      get(DesUri[DownstreamResp](s"cross-regime/payment-allocation/NINO/$nino/ITSA"), queryParams)
+    }
 
   }
 

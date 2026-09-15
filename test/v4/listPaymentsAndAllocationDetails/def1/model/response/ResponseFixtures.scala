@@ -50,4 +50,20 @@ object ResponseFixtures {
        |""".stripMargin
   )
 
+  val responseHipDownstreamJson: JsValue = Json.parse(
+    s"""
+       |{
+       |"success": {
+       |    "idType": "NINO",
+       |    "idValue": "NS345678A",
+       |    "regimeType": "VATC",
+       |    "businessPartner": "1122334455",
+       |    "paymentDetails": [
+       |        $paymentDownstreamJson
+       |    ]
+       |}
+       |}
+       |""".stripMargin
+  )
+
 }

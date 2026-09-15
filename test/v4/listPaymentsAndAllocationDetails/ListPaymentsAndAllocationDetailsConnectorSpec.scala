@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ package v4.listPaymentsAndAllocationDetails
 import api.connectors.ConnectorSpec
 import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
+import play.api.Configuration
 import uk.gov.hmrc.http.StringContextOps
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
-import v4.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -43,19 +43,25 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       Some(paymentLot),
       Some(paymentLotItem))
 
+  private val queryParams: Seq[(String, String)] =
+    List(
+      "dateFrom"       -> s"$dateFrom",
+      "dateTo"         -> s"$dateTo",
+      "paymentLot"     -> s"$paymentLot",
+      "paymentLotItem" -> s"$paymentLotItem"
+    )
+
   trait Test { self: ConnectorTest =>
 
     val connector: ListPaymentsAndAllocationDetailsConnector =
       new ListPaymentsAndAllocationDetailsConnector(http = mockHttpClient, appConfig = mockAppConfig)
 
-    def connectorRequest(request: ListPaymentsAndAllocationDetailsRequestData,
-                         response: ListPaymentsAndAllocationDetailsResponse,
-                         queryParams: Seq[(String, String)]): Unit = {
+    def connectorRequest(request: ListPaymentsAndAllocationDetailsRequestData, downstreamUrl: String, queryParams: Seq[(String, String)]): Unit = {
 
-      val outcome = Right(ResponseWrapper(correlationId, response))
+      val outcome = Right(ResponseWrapper(correlationId, responseObject))
 
       willGet(
-        url = url"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+        url = url"$downstreamUrl",
         parameters = queryParams
       ).returns(Future.successful(outcome))
 
@@ -67,19 +73,26 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
 
   "ListPaymentsAndAllocationDetailsConnector" should {
     "return a valid response" when {
-      "a valid request is supplied" in new DesTest with Test {
-        val queryParams: Seq[(String, String)] =
-          List(
-            "dateFrom"       -> s"$dateFrom",
-            "dateTo"         -> s"$dateTo",
-            "paymentLot"     -> s"$paymentLot",
-            "paymentLotItem" -> s"$paymentLotItem"
-          )
+      "a valid request is supplied (DES enabled)" in new DesTest with Test {
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> false))
+        connectorRequest(
+          validRequest,
+          s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+          queryParams
+        )
+      }
 
-        connectorRequest(validRequest, responseObject, queryParams)
+      "valid request is supplied (HIP enabled)" in new HipTest with Test {
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> true))
+        connectorRequest(
+          validRequest,
+          s"$baseUrl/etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA",
+          queryParams
+        )
       }
 
       "a valid request is supplied without the paymentLot query params" in new DesTest with Test {
+        MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> false))
         private val invalidRequest: ListPaymentsAndAllocationDetailsRequestData =
           Def1_ListPaymentsAndAllocationDetailsRequestData(
             Nino(nino),
@@ -93,7 +106,11 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
             "dateTo"   -> s"$dateTo"
           )
 
-        connectorRequest(invalidRequest, responseObject, queryParams)
+        connectorRequest(
+          invalidRequest,
+          s"$baseUrl/cross-regime/payment-allocation/NINO/$nino/ITSA",
+          queryParams
+        )
       }
     }
   }
