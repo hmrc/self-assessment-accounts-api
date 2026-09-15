@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,23 +21,32 @@ import v4.retrieveBalanceAndTransactions.def1.model.response.FinancialDetailsIte
 
 trait FinancialDetailsItemLocksFixture {
 
-  val financialDetailsItemLocks: FinancialDetailsItemLocks =
-    FinancialDetailsItemLocks(isChargeOnHold = true, isEstimatedChargeOnHold = true, isInterestAccrualOnHold = true, isInterestChargeOnHold = true)
+  val financialDetailsItemLocks: FinancialDetailsItemLocks = FinancialDetailsItemLocks(
+    isChargeOnHold = true,
+    isEstimatedChargeOnHold = true,
+    isInterestAccrualOnHold = true,
+    isInterestChargeOnHold = true,
+    dunningLock = Some("some dunning lock")
+  )
 
-  val financialDetailsItemLocksFalse: FinancialDetailsItemLocks =
-    FinancialDetailsItemLocks(
-      isChargeOnHold = false,
-      isEstimatedChargeOnHold = false,
-      isInterestAccrualOnHold = false,
-      isInterestChargeOnHold = false)
+  val financialDetailsItemLocksFalse: FinancialDetailsItemLocks = FinancialDetailsItemLocks(
+    isChargeOnHold = false,
+    isEstimatedChargeOnHold = false,
+    isInterestAccrualOnHold = false,
+    isInterestChargeOnHold = false,
+    dunningLock = None
+  )
 
   val financialDetailsItemLocksMtdJson: JsValue = Json.parse(
-    """{
-      |     "isChargeOnHold": true,
-      |     "isEstimatedChargeOnHold": true,
-      |     "isInterestAccrualOnHold": true,
-      |     "isInterestChargeOnHold": true
-      }""".stripMargin
+    """
+      |{
+      |  "isChargeOnHold": true,
+      |  "isEstimatedChargeOnHold": true,
+      |  "isInterestAccrualOnHold": true,
+      |  "isInterestChargeOnHold": true,
+      |  "dunningLock": "some dunning lock"
+      |}
+    """.stripMargin
   )
 
 }

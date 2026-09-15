@@ -83,6 +83,13 @@
             "description": "A lock has been put in so the interest will not be charged to the customer.",
             "type": "boolean",
             "example": true
+          },
+          "dunningLock": {
+            "description": "The reason the interest charge is on hold.",
+            "type": "string",
+            minLength: 1,
+            maxLength: 30,
+            "example": "currently suspended on appeal"
           }
         },
         "required": [

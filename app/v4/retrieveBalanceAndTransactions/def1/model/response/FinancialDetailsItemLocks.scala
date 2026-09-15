@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,20 +23,38 @@ case class FinancialDetailsItemLocks(
     isChargeOnHold: Boolean,
     isEstimatedChargeOnHold: Boolean,
     isInterestAccrualOnHold: Boolean,
-    isInterestChargeOnHold: Boolean
+    isInterestChargeOnHold: Boolean,
+    dunningLock: Option[String]
 )
 
 object FinancialDetailsItemLocks {
-  implicit val writes: Writes[FinancialDetailsItemLocks] = Json.writes
+  implicit val writes: Writes[FinancialDetailsItemLocks] = Json.writes[FinancialDetailsItemLocks]
 
   implicit val reads: Reads[FinancialDetailsItemLocks] = {
-    def bool(fieldName: String): Reads[Boolean] =
-      (__ \ fieldName).readNullable[String].map(_.exists(_.nonEmpty))
+    def readLock(fieldName: String): Reads[Boolean] = (__ \ fieldName).readNullable[String].map(_.exists(!_.isBlank))
 
-    (bool("paymentLock") and
-      bool("clearingLock") and
-      bool("interestLock") and
-      bool("dunningLock"))(FinancialDetailsItemLocks.apply)
+    (
+      readLock("paymentLock") and
+        readLock("clearingLock") and
+        readLock("interestLock") and
+        (__ \ "dunningLock").readNullable[String]
+    )((isChargeOnHold, isEstimatedChargeOnHold, isInterestAccrualOnHold, dunningLock) =>
+      val validDunningLock: Option[String] = dunningLock.filterNot(_.isBlank)
+
+      FinancialDetailsItemLocks(
+        isChargeOnHold = isChargeOnHold,
+        isEstimatedChargeOnHold = isEstimatedChargeOnHold,
+        isInterestAccrualOnHold = isInterestAccrualOnHold,
+        isInterestChargeOnHold = validDunningLock.isDefined,
+        dunningLock = validDunningLock.map(toMtdDunningLock)
+      )
+    )
+  }
+
+  private def toMtdDunningLock(value: String): String = value.trim.toLowerCase match {
+    case "formal stand over" => "currently suspended on appeal"
+    case "stand over order"  => "collection suspended"
+    case other               => other
   }
 
 }

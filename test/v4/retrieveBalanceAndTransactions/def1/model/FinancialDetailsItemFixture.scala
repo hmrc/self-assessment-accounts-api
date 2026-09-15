@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,46 +66,48 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
       codedOutStatus = None
     )
 
-  val financialDetailsItemWithoutLocksMtdJson: JsValue =
-    Json.parse(s"""
-         |{
-         |  "itemId": "001",
-         |  "dueDate": "2022-02-02",
-         |  "amount": 1.23,
-         |  "clearingDate": "2021-01-01",
-         |  "clearingReason": "Incoming Payment",
-         |  "outgoingPaymentMethod": "Repayment to Card",
-         |  "isReturn": true,
-         |  "paymentReference": "paymentReference",
-         |  "paymentAmount": 2.23,
-         |  "paymentMethod": "paymentMethod",
-         |  "paymentLot": "paymentLot",
-         |  "paymentLotItem": "paymentLotItem",
-         |  "clearingSAPDocument": "clearingSAPDocument",
-         |  "isChargeEstimate": true
-         |}
-         |""".stripMargin)
+  val financialDetailsItemWithoutLocksMtdJson: JsValue = Json.parse(
+    """
+      |{
+      |  "itemId": "001",
+      |  "dueDate": "2022-02-02",
+      |  "amount": 1.23,
+      |  "clearingDate": "2021-01-01",
+      |  "clearingReason": "Incoming Payment",
+      |  "outgoingPaymentMethod": "Repayment to Card",
+      |  "isReturn": true,
+      |  "paymentReference": "paymentReference",
+      |  "paymentAmount": 2.23,
+      |  "paymentMethod": "paymentMethod",
+      |  "paymentLot": "paymentLot",
+      |  "paymentLotItem": "paymentLotItem",
+      |  "clearingSAPDocument": "clearingSAPDocument",
+      |  "isChargeEstimate": true
+      |}
+    """.stripMargin
+  )
 
-  val financialDetailsItemWithoutLocksMtdJsonHip: JsValue =
-    Json.parse(s"""
-                  |{
-                  |  "itemId": "001",
-                  |  "dueDate": "2022-02-02",
-                  |  "amount": 1.23,
-                  |  "clearingDate": "2021-01-01",
-                  |  "clearingReason": "Incoming Payment",
-                  |  "outgoingPaymentMethod": "Repayment to Card",
-                  |  "isReturn": true,
-                  |  "paymentReference": "paymentReference",
-                  |  "paymentAmount": 2.23,
-                  |  "paymentMethod": "paymentMethod",
-                  |  "paymentLot": "paymentLot",
-                  |  "paymentLotItem": "paymentLotItem",
-                  |  "clearingSAPDocument": "clearingSAPDocument",
-                  |  "isChargeEstimate": true,
-                  |  "codedOutStatus": "not-collected"
-                  |}
-                  |""".stripMargin)
+  val financialDetailsItemWithoutLocksMtdJsonHip: JsValue = Json.parse(
+    """
+      |{
+      |  "itemId": "001",
+      |  "dueDate": "2022-02-02",
+      |  "amount": 1.23,
+      |  "clearingDate": "2021-01-01",
+      |  "clearingReason": "Incoming Payment",
+      |  "outgoingPaymentMethod": "Repayment to Card",
+      |  "isReturn": true,
+      |  "paymentReference": "paymentReference",
+      |  "paymentAmount": 2.23,
+      |  "paymentMethod": "paymentMethod",
+      |  "paymentLot": "paymentLot",
+      |  "paymentLotItem": "paymentLotItem",
+      |  "clearingSAPDocument": "clearingSAPDocument",
+      |  "isChargeEstimate": true,
+      |  "codedOutStatus": "not-collected"
+      |}
+    """.stripMargin
+  )
 
   val financialDetailsItemMtdJson: JsValue =
     financialDetailsItemWithoutLocksMtdJson.as[JsObject] ++ Json.obj("locks" -> financialDetailsItemLocksMtdJson)
@@ -113,35 +115,8 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
   val financialDetailsItemMtdJsonHip: JsValue =
     financialDetailsItemWithoutLocksMtdJsonHip.as[JsObject] ++ Json.obj("locks" -> financialDetailsItemLocksMtdJson)
 
-  val financialDetailsItemDownstreamJson: JsValue =
-    Json.parse("""
-        |{
-        |  "subItem": "001",
-        |  "dueDate": "2022-02-02",
-        |  "amount": 1.23,
-        |  "clearingDate": "2021-01-01",
-        |  "clearingReason": "Incoming Payment",
-        |  "outgoingPaymentMethod": "A",
-        |  "paymentLock": "K",
-        |  "clearingLock": "0",
-        |  "interestLock": "interestLock",
-        |  "dunningLock": "dunningLock",
-        |  "returnFlag": true,
-        |  "paymentReference": "paymentReference",
-        |  "promisetoPay": "X",
-        |  "paymentAmount": 2.23,
-        |  "paymentMethod": "paymentMethod",
-        |  "paymentLot": "paymentLot",
-        |  "paymentLotItem": "paymentLotItem",
-        |  "clearingSAPDocument": "clearingSAPDocument",
-        |  "codingInitiationDate": "2021-01-11",
-        |  "statisticalDocument": "Y",
-        |  "returnReason": "returnReason"
-        |}
-        |""".stripMargin)
-
-  val financialDetailsItemDownstreamHipJson: JsValue =
-    Json.parse("""
+  val financialDetailsItemDownstreamJson: JsValue = Json.parse(
+    """
       |{
       |  "subItem": "001",
       |  "dueDate": "2022-02-02",
@@ -152,7 +127,35 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
       |  "paymentLock": "K",
       |  "clearingLock": "0",
       |  "interestLock": "interestLock",
-      |  "dunningLock": "dunningLock",
+      |  "dunningLock": "Some Dunning Lock",
+      |  "returnFlag": true,
+      |  "paymentReference": "paymentReference",
+      |  "promisetoPay": "X",
+      |  "paymentAmount": 2.23,
+      |  "paymentMethod": "paymentMethod",
+      |  "paymentLot": "paymentLot",
+      |  "paymentLotItem": "paymentLotItem",
+      |  "clearingSAPDocument": "clearingSAPDocument",
+      |  "codingInitiationDate": "2021-01-11",
+      |  "statisticalDocument": "Y",
+      |  "returnReason": "returnReason"
+      |}
+    """.stripMargin
+  )
+
+  val financialDetailsItemDownstreamHipJson: JsValue = Json.parse(
+    """
+      |{
+      |  "subItem": "001",
+      |  "dueDate": "2022-02-02",
+      |  "amount": 1.23,
+      |  "clearingDate": "2021-01-01",
+      |  "clearingReason": "Incoming Payment",
+      |  "outgoingPaymentMethod": "A",
+      |  "paymentLock": "K",
+      |  "clearingLock": "0",
+      |  "interestLock": "interestLock",
+      |  "dunningLock": "Some Dunning Lock",
       |  "returnFlag": "Y",
       |  "paymentReference": "paymentReference",
       |  "promisetoPay": "X",
@@ -166,6 +169,7 @@ trait FinancialDetailsItemFixture extends FinancialDetailsItemLocksFixture {
       |  "codedOutStatus": "N",
       |  "returnReason": "returnReason"
       |}
-      |""".stripMargin)
+    """.stripMargin
+  )
 
 }

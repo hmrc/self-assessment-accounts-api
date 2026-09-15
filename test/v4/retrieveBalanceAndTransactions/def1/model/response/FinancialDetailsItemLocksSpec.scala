@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsItemFixture
 class FinancialDetailsItemLocksSpec extends UnitSpec with FinancialDetailsItemFixture {
 
   "FinancialDetailsItemLocks" when {
-
     "written to MTD JSON" must {
       "work" in {
         Json.toJson(financialDetailsItemLocks) shouldBe financialDetailsItemLocksMtdJson
@@ -54,6 +53,10 @@ class FinancialDetailsItemLocksSpec extends UnitSpec with FinancialDetailsItemFi
             json("").as[FinancialDetailsItemLocks] shouldBe model(false)
           }
 
+          "convert whitespace-only string to false" in {
+            json("    ").as[FinancialDetailsItemLocks] shouldBe model(false)
+          }
+
           "convert absent field to false" in {
             JsObject.empty.as[FinancialDetailsItemLocks] shouldBe model(false)
           }
@@ -70,6 +73,10 @@ class FinancialDetailsItemLocksSpec extends UnitSpec with FinancialDetailsItemFi
 
           "convert empty string to false" in {
             json("").as[FinancialDetailsItemLocks] shouldBe model(false)
+          }
+
+          "convert whitespace-only string to false" in {
+            json("    ").as[FinancialDetailsItemLocks] shouldBe model(false)
           }
 
           "convert absent field to false" in {
@@ -90,6 +97,10 @@ class FinancialDetailsItemLocksSpec extends UnitSpec with FinancialDetailsItemFi
             json("").as[FinancialDetailsItemLocks] shouldBe model(false)
           }
 
+          "convert whitespace-only string to false" in {
+            json("    ").as[FinancialDetailsItemLocks] shouldBe model(false)
+          }
+
           "convert absent field to false" in {
             JsObject.empty.as[FinancialDetailsItemLocks] shouldBe model(false)
           }
@@ -98,18 +109,33 @@ class FinancialDetailsItemLocksSpec extends UnitSpec with FinancialDetailsItemFi
         "converting dunningLock to isInterestChargeOnHold" must {
           def json(value: String): JsValue = Json.parse(s"""{ "dunningLock": "$value" }""")
 
-          def model(value: Boolean): FinancialDetailsItemLocks = financialDetailsItemLocksFalse.copy(isInterestChargeOnHold = value)
+          def model(value: Boolean, dunningLock: Option[String]): FinancialDetailsItemLocks = financialDetailsItemLocksFalse.copy(
+            isInterestChargeOnHold = value,
+            dunningLock = dunningLock
+          )
 
-          "convert non-empty string to true" in {
-            json("ANYTHING").as[FinancialDetailsItemLocks] shouldBe model(true)
+          "convert empty string to false and no dunning lock" in {
+            json("").as[FinancialDetailsItemLocks] shouldBe model(false, None)
           }
 
-          "convert empty string to false" in {
-            json("").as[FinancialDetailsItemLocks] shouldBe model(false)
+          "convert whitespace-only string to false and no dunning lock" in {
+            json("    ").as[FinancialDetailsItemLocks] shouldBe model(false, None)
           }
 
-          "convert absent field to false" in {
-            JsObject.empty.as[FinancialDetailsItemLocks] shouldBe model(false)
+          "convert absent field to false and no dunning lock" in {
+            JsObject.empty.as[FinancialDetailsItemLocks] shouldBe model(false, None)
+          }
+
+          "convert Formal Stand over to true and currently suspended on appeal" in {
+            json("Formal Stand over").as[FinancialDetailsItemLocks] shouldBe model(true, Some("currently suspended on appeal"))
+          }
+
+          "convert Stand over order to true and collection suspended" in {
+            json("Stand over order").as[FinancialDetailsItemLocks] shouldBe model(true, Some("collection suspended"))
+          }
+
+          "convert an unmapped dunning lock to true, trim and lowercase" in {
+            json("  Coding Out Dunning lock  ").as[FinancialDetailsItemLocks] shouldBe model(true, Some("coding out dunning lock"))
           }
         }
       }
