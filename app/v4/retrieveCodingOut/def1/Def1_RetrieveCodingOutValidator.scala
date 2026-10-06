@@ -17,7 +17,8 @@
 package v4.retrieveCodingOut.def1
 
 import api.controllers.validators.Validator
-import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYearMinimum}
+import api.controllers.validators.resolvers.ResolveNino
+import api.controllers.validators.resolvers.ResolveTaxYear.ResolveDetailedTaxYear
 import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
@@ -33,7 +34,7 @@ import javax.inject.Singleton
 class Def1_RetrieveCodingOutValidator(nino: String, taxYear: String, source: Option[String], appConfig: SaAccountsConfig)
     extends Validator[RetrieveCodingOutRequestData] {
 
-  private val resolveTaxYear = ResolveTaxYearMinimum(TaxYear.ending(appConfig.minimumPermittedTaxYear))
+  private val resolveTaxYear = ResolveDetailedTaxYear(TaxYear.ending(appConfig.minimumPermittedTaxYear))
 
   def validate: Validated[Seq[MtdError], RetrieveCodingOutRequestData] =
     (
