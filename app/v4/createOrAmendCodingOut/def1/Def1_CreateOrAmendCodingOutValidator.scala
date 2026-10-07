@@ -18,11 +18,13 @@ package v4.createOrAmendCodingOut.def1
 
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.*
+import api.controllers.validators.resolvers.ResolveTaxYear.ResolveDetailedTaxYear
+import api.models.domain.TaxYear
 import api.models.errors.MtdError
 import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits.*
-import common.resolvers.{DetailedResolveTaxYear, ResolveParsedNumericId}
+import common.resolvers.ResolveParsedNumericId
 import config.SaAccountsConfig
 import play.api.libs.json.JsValue
 import v4.createOrAmendCodingOut.def1.model.request.{Def1_CreateOrAmendCodingOutRequestBody, Def1_CreateOrAmendCodingOutRequestData, TaxCodeComponent}
@@ -43,7 +45,10 @@ class Def1_CreateOrAmendCodingOutValidator(nino: String,
   private val validatePayeUnderpayments = ResolveParsedNumber()
 
   private val resolveTaxYear =
-    DetailedResolveTaxYear(allowIncompleteTaxYear = !temporalValidationEnabled, maybeMinimumTaxYear = Some(appConfig.minimumPermittedTaxYear))
+    ResolveDetailedTaxYear(
+      minimumTaxYear = TaxYear.ending(appConfig.minimumPermittedTaxYear),
+      allowIncompleteTaxYear = !temporalValidationEnabled
+    )
 
   def validate: Validated[Seq[MtdError], Def1_CreateOrAmendCodingOutRequestData] =
     (
