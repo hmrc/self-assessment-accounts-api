@@ -20,7 +20,6 @@ import api.controllers.RequestContext
 import api.models.errors.*
 import api.services.{BaseService, ServiceOutcome}
 import cats.implicits.*
-import common.errors.*
 import v4.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 import v4.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 

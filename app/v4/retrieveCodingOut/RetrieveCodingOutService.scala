@@ -21,7 +21,6 @@ import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.BaseService
 import cats.data.EitherT
-import common.errors.{CodingOutNotFoundError, SourceFormatError}
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 

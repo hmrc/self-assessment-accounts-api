@@ -18,7 +18,7 @@ package common.resolvers
 
 import api.utils.UnitSpec
 import cats.data.Validated.{Invalid, Valid}
-import common.errors.ChargeReferenceFormatError
+import api.models.errors.*
 import common.models.ChargeReference
 
 class ResolveChargeReferenceSpec extends UnitSpec {

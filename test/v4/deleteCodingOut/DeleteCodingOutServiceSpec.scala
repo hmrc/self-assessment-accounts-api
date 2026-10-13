@@ -20,7 +20,6 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import common.errors.{CodingOutNotFoundError, RuleOutsideAmendmentWindowError}
 import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 

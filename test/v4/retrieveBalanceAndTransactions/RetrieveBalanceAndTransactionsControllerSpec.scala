@@ -17,10 +17,9 @@
 package v4.retrieveBalanceAndTransactions
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
-import api.models.errors.{ErrorWrapper, NinoFormatError}
+import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
-import common.errors.DocNumberFormatError
 import play.api.Configuration
 import play.api.mvc.Result
 import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
