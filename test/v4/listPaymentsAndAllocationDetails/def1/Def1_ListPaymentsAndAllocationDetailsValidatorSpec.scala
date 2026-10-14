@@ -19,7 +19,6 @@ package v4.listPaymentsAndAllocationDetails.def1
 import api.models.domain.{DateRange, Nino}
 import api.models.errors.*
 import api.utils.UnitSpec
-import common.errors.*
 import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsValidatorFactory
 import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
 

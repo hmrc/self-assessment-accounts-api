@@ -18,10 +18,9 @@ package v4.retrieveCodingOut
 
 import api.controllers.{ControllerBaseSpec, ControllerTestRunner}
 import api.models.domain.TaxYear
-import api.models.errors.{ErrorWrapper, NinoFormatError}
+import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
-import common.errors.CodingOutNotFoundError
 import common.models.MtdSource
 import config.MockSaAccountsConfig
 import play.api.Configuration

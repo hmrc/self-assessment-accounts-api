@@ -17,10 +17,9 @@
 package common.resolvers
 
 import api.controllers.validators.resolvers.ResolverSupport
-import api.models.errors.MtdError
+import api.models.errors.*
 import cats.data.Validated
 import cats.data.Validated.cond
-import common.errors.ChargeReferenceFormatError
 import common.models.ChargeReference
 
 object ResolveChargeReference extends ResolverSupport {

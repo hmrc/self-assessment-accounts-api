@@ -23,7 +23,6 @@ import api.models.errors.*
 import cats.data.Validated
 import cats.data.Validated.Valid
 import cats.implicits.*
-import common.errors.*
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.Singleton
