@@ -155,6 +155,20 @@ class Def1_CreateOrAmendCodingOutValidatorSpec extends UnitSpec with MockSaAccou
       "a valid request is supplied missing inYearAdjustment" in {
         testValidWithMissingField("inYearAdjustment", parsedTaxCodeComponents.copy(inYearAdjustment = None))
       }
+
+      "given a tax year that hasn't ended and temporal validation is disabled" in {
+        setupMocks()
+
+        val result = new Def1_CreateOrAmendCodingOutValidator(
+          validNino,
+          TaxYear.currentTaxYear.asMtd,
+          validJson,
+          temporalValidationEnabled = false,
+          mockSaAccountsConfig).validateAndWrapResult()
+        result shouldBe Right(
+          Def1_CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.currentTaxYear, parsedBody)
+        )
+      }
     }
 
     "return NinoFormatError" when {
@@ -249,7 +263,7 @@ class Def1_CreateOrAmendCodingOutValidatorSpec extends UnitSpec with MockSaAccou
     }
 
     "return RuleTaxYearNotEndedError" when {
-      "given a tax year that hasn't ended" in {
+      "given a tax year that hasn't ended and temporal validation is enabled" in {
         setupMocks()
 
         val result = validator(validNino, TaxYear.currentTaxYear.asMtd, validJson).validateAndWrapResult()
