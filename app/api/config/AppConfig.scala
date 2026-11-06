@@ -42,7 +42,7 @@ class AppConfig @Inject() (val config: ServicesConfig, protected[config] val con
   def desDownstreamConfig: DownstreamConfig            = downstreamConfig("des")
   def ifsDownstreamConfig: DownstreamConfig            = downstreamConfig("ifs")
   def ifs1891DownstreamConfig: DownstreamConfig        = downstreamConfig("ifs-1891")
-  def ifs1892and1893DownstreamConfig: DownstreamConfig = downstreamConfig("ifs-1892/1893")
+  def ifs1892And1893DownstreamConfig: DownstreamConfig = downstreamConfig("ifs-1892-1893")
   def hipDownstreamConfig: BasicAuthDownstreamConfig   = basicAuthDownstreamConfig("hip")
 
   // API Config

@@ -39,8 +39,8 @@ object DownstreamUri {
 
   }
 
-  def Ifs1892and1893Uri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] = {
-    withStandardStrategy(value, appConfig.ifs1892and1893DownstreamConfig)
+  def Ifs1892And1893Uri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] = {
+    withStandardStrategy(value, appConfig.ifs1892And1893DownstreamConfig)
   }
 
   def HipUri[Resp](path: String, additionalContractHeaders: => Seq[(String, String)] = Nil)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
