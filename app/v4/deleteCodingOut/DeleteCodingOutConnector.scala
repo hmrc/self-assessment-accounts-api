@@ -17,7 +17,7 @@
 package v4.deleteCodingOut
 
 import api.config.AppConfig
-import api.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.Ifs1892And1893Uri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.*
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -38,13 +38,9 @@ class DeleteCodingOutConnector @Inject() (val http: HttpClientV2, val appConfig:
     import request.*
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
-      IfsUri[Unit](
-        s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino"
-      )
+      Ifs1892And1893Uri[Unit](s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino")
     } else {
-      IfsUri[Unit](
-        s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}"
-      )
+      Ifs1892And1893Uri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}")
     }
 
     delete(downstreamUri)
