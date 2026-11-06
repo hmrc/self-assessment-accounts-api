@@ -138,7 +138,7 @@ trait ConnectorSpec extends UnitSpec with Status with MimeTypes with HeaderNames
     MockedAppConfig.ifs1891DownstreamConfig.anyNumberOfTimes() returns config
   }
 
-  protected trait Ifs1892and1893Test extends StandardConnectorTest {
+  protected trait ifs1892And1893Test extends StandardConnectorTest {
     override val name = "ifs-1892-1893"
 
     MockedAppConfig.ifs1892And1893DownstreamConfig.anyNumberOfTimes() returns config
