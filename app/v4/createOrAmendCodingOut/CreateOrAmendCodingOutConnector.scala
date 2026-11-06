@@ -17,7 +17,7 @@
 package v4.createOrAmendCodingOut
 
 import api.config.AppConfig
-import api.connectors.DownstreamUri.IfsUri
+import api.connectors.DownstreamUri.Ifs1892and1893Uri
 import api.connectors.httpparsers.StandardDownstreamHttpParser.*
 import api.connectors.{BaseDownstreamConnector, DownstreamOutcome}
 import uk.gov.hmrc.http.HeaderCarrier
@@ -37,13 +37,13 @@ class CreateOrAmendCodingOutConnector @Inject() (val http: HttpClientV2, val app
 
     import request.*
 
-    val uri = if (taxYear.useTaxYearSpecificApi) {
-      IfsUri[Unit](s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino")
+    val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
+      Ifs1892and1893Uri[Unit](s"income-tax/${taxYear.asTysDownstream}/accounts/self-assessment/collection/tax-code/$nino")
     } else {
-      IfsUri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}")
+      Ifs1892and1893Uri[Unit](s"income-tax/accounts/self-assessment/collection/tax-code/$nino/${taxYear.asMtd}")
     }
 
-    put(request.body, uri)
+    put(request.body, downstreamUri)
   }
 
 }

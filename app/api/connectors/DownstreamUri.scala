@@ -34,8 +34,14 @@ object DownstreamUri {
   def IfsUri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
     withStandardStrategy(value, appConfig.ifsDownstreamConfig)
 
-  def Ifs1891Uri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
+  def Ifs1891Uri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] = {
     withStandardStrategy(value, appConfig.ifs1891DownstreamConfig)
+
+  }
+
+  def Ifs1892and1893Uri[Resp](value: String)(implicit appConfig: AppConfig): DownstreamUri[Resp] = {
+    withStandardStrategy(value, appConfig.ifs1892and1893DownstreamConfig)
+  }
 
   def HipUri[Resp](path: String, additionalContractHeaders: => Seq[(String, String)] = Nil)(implicit appConfig: AppConfig): DownstreamUri[Resp] =
     DownstreamUri(path, DownstreamStrategy.basicAuthStrategy(appConfig.hipDownstreamConfig, additionalContractHeaders))
