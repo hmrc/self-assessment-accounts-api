@@ -90,6 +90,22 @@ class AppConfigSpec extends UnitSpec {
       )
     }
 
+    "return the IFS-1892-1893 config" in {
+      val expected1892And1893EnvHeaders = Some(
+        List(
+          "1892-1893-Accept",
+          "1892-1893-Gov-Test-Scenario",
+          "1892-1893-Content-Type"
+        ))
+
+      simpleAppConfig.ifs1892And1893DownstreamConfig shouldBe DownstreamConfig(
+        "http://127.0.0.1:8888",
+        "Prod",
+        "1892-1893-ABCD1234",
+        expected1892And1893EnvHeaders
+      )
+    }
+
     "return the apiDocumentationUrl" when {
       "it is not specified" in {
         val changedAppConfig = appConfig("", None)
@@ -447,6 +463,15 @@ class AppConfigSpec extends UnitSpec {
            |        env = Prod
            |        token = 1891-ABCD1234
            |        environmentHeaders = ["1891-Accept", "1891-Gov-Test-Scenario", "1891-Content-Type"]
+           |      }
+           |
+           |      ifs-1892-1893 {
+           |        enabled = true
+           |        host = 127.0.0.1
+           |        port = 8888
+           |        env = Prod
+           |        token = 1892-1893-ABCD1234
+           |        environmentHeaders = ["1892-1893-Accept", "1892-1893-Gov-Test-Scenario", "1892-1893-Content-Type"]
            |      }
            |
            |    }
