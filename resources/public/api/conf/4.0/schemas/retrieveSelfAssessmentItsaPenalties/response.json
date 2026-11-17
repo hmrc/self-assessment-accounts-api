@@ -387,6 +387,13 @@
                 "maximum": 99999999999.99,
                 "example": 99.99
               },
+              {{#if (enabled 'r23_penalties_docs')}}
+              "accrualsPaused": {
+                "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Indicates whether further accruals are temporarily stopped because a standover lock is active. If false, accruals continue to be calculated as normal.",
+                "type": "boolean",
+                "enum": [true]
+              },
+              {{/if}}
               "penaltyAmountPosted": {
                 "description": "The penalty amount that has been posted to the account. The value must be between -99999999999.99 and 99999999999.99 up to 2 decimal places.",
                 "type": "number",
@@ -535,6 +542,16 @@
                 "maxLength": 12,
                 "example": "123456789012"
               },
+              {{#if (enabled 'r23_penalties_docs')}}
+              "chargeClassification": {
+                "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Helps distinguish charges across different amendment types when similar main transactions are used.\n\nPossible values are:\n\n* **enquiry-amendment** - Charge resulting from a Revenue Amendment made as part of an enquiry.",
+                "type": "string",
+                "enum": [
+                  "enquiry-amendment"
+                ],
+                "example": "enquiry-amendment"
+              },
+              {{/if}}
               "principalChargeBillingFrom": {
                 "description": "The start date of the obligation period. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
@@ -553,6 +570,23 @@
                 "format": "date",
                 "example": "2024-11-07"
               },
+              {{#if (enabled 'r23_penalties_docs')}}
+              "parentChargeFormalStandover": {
+                "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Indicates whether the parent charge is currently under a formal standover.",
+                "type": "boolean",
+                "enum": [true]
+              },
+              "parentChargeInformalStandover": {
+                "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Indicates whether an informal standover is active on the parent charge.",
+                "type": "boolean",
+                "enum": [true]
+              },
+              "penaltyChargeInformalStandover": {
+                "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Indicates whether an informal standover is active on the associated penalty charge.",
+                "type": "boolean",
+                "enum": [true]
+              },
+              {{/if}}
               "principalChargeLatestClearing": {
                 "description": "The date that the principal charge was paid. Must conform to the format `YYYY-MM-DD`.",
                 "type": "string",
@@ -587,6 +621,54 @@
                   ]
                 }
               }
+              {{#if (enabled 'r23_penalties_docs')}}
+              ,"timeToPayForPenaltyCharges": {
+                "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Details of the penalty charges Time to Pay arrangements that have been made.",
+                "type": "object",
+                "properties": {
+                  "penaltyChargeIndicator": {
+                    "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Indicates whether the penalty charge is included in an active Time to Pay arrangement.",
+                    "type": "boolean",
+                    "enum": [true]
+                  },
+                  "startDate": {
+                    "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}The start date of the Time to Pay arrangement covering the penalty charge. Must conform to the format `YYYY-MM-DD`.",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-06-24"
+                  },
+                  "endDate": {
+                    "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}The end date of the Time to Pay arrangement covering the penalty charge. Must conform to the format `YYYY-MM-DD`.",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-06-24"
+                  }
+                }
+              },
+              "timeToPayForParentCharges": {
+                "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Details of the parent charges Time to Pay arrangements that have been made.",
+                "type": "object",
+                "properties": {
+                  "parentChargeIndicator": {
+                    "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}Indicates whether the parent charge is included in an active Time to Pay arrangement.",
+                    "type": "boolean",
+                    "enum": [true]
+                  },
+                  "startDate": {
+                    "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}The start date of the Time to Pay arrangement covering the parent charge. Must conform to the format `YYYY-MM-DD`.",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-06-24"
+                  },
+                  "endDate": {
+                    "description": "{{#unless (releasedInProduction 'r23_penalties_docs')}}[Test only] {{/unless}}The end date of the Time to Pay arrangement covering the parent charge. Must conform to the format `YYYY-MM-DD`.",
+                    "type": "string",
+                    "format": "date",
+                    "example": "2026-06-24"
+                  }
+                }
+              }
+              {{/if}}
             },
             "additionalProperties": false,
             "required": [

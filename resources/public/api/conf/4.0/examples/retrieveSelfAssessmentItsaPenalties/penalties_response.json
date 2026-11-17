@@ -85,6 +85,9 @@
         "penaltyCategory": "lpp1",
         "penaltyStatus": "accruing",
         "penaltyAmountAccruing": 4018,
+        {{#if (enabled 'r23_penalties_docs')}}
+          "accrualsPaused": true,
+        {{/if}}
         "penaltyAmountPosted": 1045.1,
         "penaltyAmountPaid": 4507.2,
         "penaltyAmountOutstanding": 7014.84,
@@ -106,9 +109,17 @@
           }
         ],
         "principalChargeDocNumber": "123456789012",
+        {{#if (enabled 'r23_penalties_docs')}}
+        "chargeClassification": "enquiry-amendment",
+        {{/if}}
         "principalChargeBillingFrom": "2024-07-01",
         "principalChargeBillingTo": "2024-09-30",
         "principalChargeDueDate": "2024-11-07",
+        {{#if (enabled 'r23_penalties_docs')}}
+        "parentChargeFormalStandover": true,
+        "parentChargeInformalStandover": false,
+        "penaltyChargeInformalStandover": false,
+        {{/if}}
         "principalChargeLatestClearing": "2025-02-15",
         "timeToPay": [
           {
@@ -116,6 +127,18 @@
             "endDate": "2025-06-15"
           }
         ]
+        {{#if (enabled 'r23_penalties_docs')}}
+        ,"timeToPayForPenaltyCharges": {
+          "penaltyChargeIndicator": true,
+          "startDate": "2024-12-15",
+          "endDate": "2025-06-15"
+        },
+        "timeToPayForParentCharges": {
+          "parentChargeIndicator": true,
+          "startDate": "2024-12-15",
+          "endDate": "2025-06-15"
+        }
+        {{/if}}
       }
     ]
   }
