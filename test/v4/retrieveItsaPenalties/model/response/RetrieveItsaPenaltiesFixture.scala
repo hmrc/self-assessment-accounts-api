@@ -55,6 +55,20 @@ object RetrieveItsaPenaltiesFixture {
       endDate = "2025-06-15"
     )
 
+  val timeToPayForPenaltyChargesModel: TimeToPayForPenaltyCharges =
+    TimeToPayForPenaltyCharges(
+      penaltyChargeIndicator = Some(true),
+      startDate = Some("2024-12-15"),
+      endDate = Some("2025-06-15")
+    )
+
+  val timeToPayForParentChargesModel: TimeToPayForParentCharges =
+    TimeToPayForParentCharges(
+      parentChargeIndicator = Some(true),
+      startDate = Some("2024-12-15"),
+      endDate = Some("2025-06-15")
+    )
+
   val appealInformationModel: AppealInformation =
     AppealInformation(
       status = Status.`under-appeal`,
@@ -95,6 +109,7 @@ object RetrieveItsaPenaltiesFixture {
       penaltyCategory = Some(PaymentPenaltyCategory.lpp1),
       penaltyStatus = PaymentPenaltyStatus.posted,
       penaltyAmountAccruing = 99.99,
+      accrualsPaused = Some(false),
       penaltyAmountPosted = 1001.45,
       penaltyAmountPaid = Some(1001.45),
       penaltyAmountOutstanding = Some(99.99),
@@ -110,13 +125,19 @@ object RetrieveItsaPenaltiesFixture {
       penaltyChargeDueDate = Some("2025-01-08"),
       appealInformation = Some(Seq(appealInformationModel)),
       principalChargeDocNumber = Some("123456789012"),
+      chargeClassification = Some(ChargeClassification.`enquiry-amendment`),
       principalChargeBillingFrom = "2024-07-01",
       principalChargeBillingTo = "2024-09-30",
       principalChargeDueDate = "2024-11-07",
+      parentChargeFormalStandover = Some(true),
+      parentChargeInformalStandover = Some(false),
+      penaltyChargeInformalStandover = Some(false),
       principalChargeLatestClearing = Some("2025-02-15"),
       timeToPay = Some(
         Seq(timeToPaymodel)
-      )
+      ),
+      timeToPayForPenaltyCharges = Some(timeToPayForPenaltyChargesModel),
+      timeToPayForParentCharges = Some(timeToPayForParentChargesModel)
     )
 
   val latePaymentPenaltyModel: LatePaymentPenalty =
@@ -201,6 +222,7 @@ object RetrieveItsaPenaltiesFixture {
       |            "penaltyCategory": "LPP1",
       |            "penaltyStatus": "P",
       |            "penaltyAmountAccruing": 99.99,
+      |            "accrualsPaused": false,
       |            "penaltyAmountPosted": 1001.45,
       |            "penaltyAmountPaid": 1001.45,
       |            "penaltyAmountOutstanding": 99.99,
@@ -225,17 +247,27 @@ object RetrieveItsaPenaltiesFixture {
       |            ],
       |            "principalChargeDocNumber": "123456789012",
       |            "principalChargeMainTr": "4700",
+      |            "chargeClassificationValue": "RA",
       |            "principalChargeSubTr": "1174",
       |            "principalChargeBillingFrom": "2024-07-01",
       |            "principalChargeBillingTo": "2024-09-30",
       |            "principalChargeDueDate": "2024-11-07",
+      |            "parentFormalStandover": true,
+      |            "parentInformalStandover": false,
+      |            "penaltyInformalStandover": false,
       |            "principalChargeLatestClearing": "2025-02-15",
       |            "timeToPay": [
       |              {
       |                "ttpStartDate": "2024-12-15",
       |                "ttpEndDate": "2025-06-15"
       |              }
-      |            ]
+      |            ],
+      |            "ttpForPenalty": true,
+      |            "ttpStartDateForPenalty": "2024-12-15",
+      |            "ttpEndDateForPenalty": "2025-06-15",
+      |            "ttpForParent": true,
+      |            "ttpStartDateForParent": "2024-12-15",
+      |            "ttpEndDateForParent": "2025-06-15"
       |          }
       |        ],
       |        "manualLPPIndicator": true
@@ -307,6 +339,7 @@ object RetrieveItsaPenaltiesFixture {
       |        "penaltyCategory": "lpp1",
       |        "penaltyStatus": "posted",
       |        "penaltyAmountAccruing": 99.99,
+      |        "accrualsPaused": false,
       |        "penaltyAmountPosted": 1001.45,
       |        "penaltyAmountPaid": 1001.45,
       |        "penaltyAmountOutstanding": 99.99,
@@ -328,16 +361,30 @@ object RetrieveItsaPenaltiesFixture {
       |          }
       |        ],
       |        "principalChargeDocNumber": "123456789012",
+      |        "chargeClassification": "enquiry-amendment",
       |        "principalChargeBillingFrom": "2024-07-01",
       |        "principalChargeBillingTo": "2024-09-30",
       |        "principalChargeDueDate": "2024-11-07",
+      |        "parentChargeFormalStandover": true,
+      |        "parentChargeInformalStandover": false,
+      |        "penaltyChargeInformalStandover": false,
       |        "principalChargeLatestClearing": "2025-02-15",
       |        "timeToPay": [
       |          {
       |            "startDate": "2024-12-15",
       |            "endDate": "2025-06-15"
       |          }
-      |        ]
+      |        ],
+      |        "timeToPayForPenaltyCharges": {
+      |		       "penaltyChargeIndicator": true,
+      |          "startDate": "2024-12-15",
+      |          "endDate": "2025-06-15"
+      |		     },
+      |		     "timeToPayForParentCharges": {
+      |          "parentChargeIndicator": true,
+      |          "startDate": "2024-12-15",
+      |          "endDate": "2025-06-15"
+      |		     }
       |      }
       |    ]
       |  }

@@ -23,6 +23,7 @@ case class LatePaymentPenaltyDetail(
     penaltyCategory: Option[PaymentPenaltyCategory],
     penaltyStatus: PaymentPenaltyStatus,
     penaltyAmountAccruing: BigDecimal,
+    accrualsPaused: Option[Boolean],
     penaltyAmountPosted: BigDecimal,
     penaltyAmountPaid: Option[BigDecimal],
     penaltyAmountOutstanding: Option[BigDecimal],
@@ -38,11 +39,17 @@ case class LatePaymentPenaltyDetail(
     penaltyChargeDueDate: Option[String],
     appealInformation: Option[Seq[AppealInformation]],
     principalChargeDocNumber: Option[String],
+    chargeClassification: Option[ChargeClassification],
     principalChargeBillingFrom: String,
     principalChargeBillingTo: String,
     principalChargeDueDate: String,
+    parentChargeFormalStandover: Option[Boolean],
+    parentChargeInformalStandover: Option[Boolean],
+    penaltyChargeInformalStandover: Option[Boolean],
     principalChargeLatestClearing: Option[String],
-    timeToPay: Option[Seq[TimeToPay]]
+    timeToPay: Option[Seq[TimeToPay]],
+    timeToPayForPenaltyCharges: Option[TimeToPayForPenaltyCharges],
+    timeToPayForParentCharges: Option[TimeToPayForParentCharges]
 )
 
 object LatePaymentPenaltyDetail {
@@ -52,6 +59,7 @@ object LatePaymentPenaltyDetail {
     penaltyCategory                                <- (JsPath \ "penaltyCategory").readNullable[PaymentPenaltyCategory]
     penaltyStatus                                  <- (JsPath \ "penaltyStatus").read[PaymentPenaltyStatus]
     penaltyAmountAccruing                          <- (JsPath \ "penaltyAmountAccruing").read[BigDecimal]
+    accrualsPaused                                 <- (JsPath \ "accrualsPaused").readNullable[Boolean]
     penaltyAmountPosted                            <- (JsPath \ "penaltyAmountPosted").read[BigDecimal]
     penaltyAmountPaid                              <- (JsPath \ "penaltyAmountPaid").readNullable[BigDecimal]
     penaltyAmountOutstanding                       <- (JsPath \ "penaltyAmountOutstanding").readNullable[BigDecimal]
@@ -67,17 +75,28 @@ object LatePaymentPenaltyDetail {
     penaltyChargeDueDate                           <- (JsPath \ "penaltyChargeDueDate").readNullable[String]
     appealInformation                              <- (JsPath \ "appealInformation").readNullable[Seq[AppealInformation]]
     principalChargeDocNumber                       <- (JsPath \ "principalChargeDocNumber").readNullable[String]
+    chargeClassification                           <- (JsPath \ "chargeClassificationValue").readNullable[ChargeClassification]
     principalChargeBillingFrom                     <- (JsPath \ "principalChargeBillingFrom").read[String]
     principalChargeBillingTo                       <- (JsPath \ "principalChargeBillingTo").read[String]
     principalChargeDueDate                         <- (JsPath \ "principalChargeDueDate").read[String]
+    parentChargeFormalStandover                    <- (JsPath \ "parentFormalStandover").readNullable[Boolean]
+    parentChargeInformalStandover                  <- (JsPath \ "parentInformalStandover").readNullable[Boolean]
+    penaltyChargeInformalStandover                 <- (JsPath \ "penaltyInformalStandover").readNullable[Boolean]
     principalChargeLatestClearing                  <- (JsPath \ "principalChargeLatestClearing").readNullable[String]
     timeToPay                                      <- (JsPath \ "timeToPay").readNullable[Seq[TimeToPay]]
+    timeToPayForPenaltyChargesIndicator            <- (JsPath \ "ttpForPenalty").readNullable[Boolean]
+    timeToPayForPenaltyStartDate                   <- (JsPath \ "ttpStartDateForPenalty").readNullable[String]
+    timeToPayForPenaltyEndDate                     <- (JsPath \ "ttpEndDateForPenalty").readNullable[String]
+    timeToPayForParentChargesIndicator             <- (JsPath \ "ttpForParent").readNullable[Boolean]
+    timeToPayForParentStartDate                    <- (JsPath \ "ttpStartDateForParent").readNullable[String]
+    timeToPayForParentEndDate                      <- (JsPath \ "ttpEndDateForParent").readNullable[String]
   } yield {
     LatePaymentPenaltyDetail(
       principalChargeReference = principalChargeReference,
       penaltyCategory = penaltyCategory,
       penaltyStatus = penaltyStatus,
       penaltyAmountAccruing = penaltyAmountAccruing,
+      accrualsPaused = accrualsPaused,
       penaltyAmountPosted = penaltyAmountPosted,
       penaltyAmountPaid = penaltyAmountPaid,
       penaltyAmountOutstanding = penaltyAmountOutstanding,
@@ -93,11 +112,23 @@ object LatePaymentPenaltyDetail {
       penaltyChargeDueDate = penaltyChargeDueDate,
       appealInformation = appealInformation,
       principalChargeDocNumber = principalChargeDocNumber,
+      chargeClassification = chargeClassification,
       principalChargeBillingFrom = principalChargeBillingFrom,
       principalChargeBillingTo = principalChargeBillingTo,
       principalChargeDueDate = principalChargeDueDate,
+      parentChargeFormalStandover = parentChargeFormalStandover,
+      parentChargeInformalStandover = parentChargeInformalStandover,
+      penaltyChargeInformalStandover = penaltyChargeInformalStandover,
       principalChargeLatestClearing = principalChargeLatestClearing,
-      timeToPay = timeToPay
+      timeToPay = timeToPay,
+      timeToPayForPenaltyCharges = (timeToPayForPenaltyChargesIndicator, timeToPayForPenaltyStartDate, timeToPayForPenaltyEndDate) match {
+        case (None, None, None) => None
+        case _ => Some(TimeToPayForPenaltyCharges(timeToPayForPenaltyChargesIndicator, timeToPayForPenaltyStartDate, timeToPayForPenaltyEndDate))
+      },
+      timeToPayForParentCharges = (timeToPayForParentChargesIndicator, timeToPayForParentStartDate, timeToPayForParentEndDate) match {
+        case (None, None, None) => None
+        case _ => Some(TimeToPayForParentCharges(timeToPayForParentChargesIndicator, timeToPayForParentStartDate, timeToPayForParentEndDate))
+      }
     )
   }
 

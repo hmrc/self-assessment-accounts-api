@@ -29,6 +29,7 @@ class LatePaymentPenaltyDetailSpec extends UnitSpec {
         |  "penaltyCategory": "LPP1",
         |  "penaltyStatus": "P",
         |  "penaltyAmountAccruing": 99.99,
+        |  "accrualsPaused": false,
         |  "penaltyAmountPosted": 1001.45,
         |  "penaltyAmountPaid": 1001.45,
         |  "penaltyAmountOutstanding": 99.99,
@@ -50,16 +51,26 @@ class LatePaymentPenaltyDetailSpec extends UnitSpec {
         |              }
         |            ],
         |  "principalChargeDocNumber": "123456789012",
+        |  "chargeClassificationValue": "RA",
         |  "principalChargeBillingFrom": "2024-07-01",
         |  "principalChargeBillingTo": "2024-09-30",
         |  "principalChargeDueDate": "2024-11-07",
+        |   "parentFormalStandover": true,
+        |   "parentInformalStandover": false,
+        |   "penaltyInformalStandover": false, 
         |  "principalChargeLatestClearing": "2025-02-15",
         |   "timeToPay": [
         |              {
         |                "ttpStartDate": "2024-12-15",
         |                "ttpEndDate": "2025-06-15"
         |              }
-        |            ]
+        |            ],
+        |  "ttpForPenalty": true,
+        |  "ttpStartDateForPenalty": "2024-12-15",
+        |  "ttpEndDateForPenalty": "2025-06-15",
+        |  "ttpForParent": true,
+        |  "ttpStartDateForParent": "2024-12-15",
+        |  "ttpEndDateForParent": "2025-06-15"
         |}
         |""".stripMargin
   )
@@ -71,6 +82,7 @@ class LatePaymentPenaltyDetailSpec extends UnitSpec {
         |  "penaltyCategory": "lpp1",
         |  "penaltyStatus": "posted",
         |  "penaltyAmountAccruing": 99.99,
+        |  "accrualsPaused": false,
         |  "penaltyAmountPosted": 1001.45,
         |  "penaltyAmountPaid": 1001.45,
         |  "penaltyAmountOutstanding": 99.99,
@@ -92,16 +104,30 @@ class LatePaymentPenaltyDetailSpec extends UnitSpec {
         |          }
         |        ],
         |  "principalChargeDocNumber": "123456789012",
+        |  "chargeClassification": "enquiry-amendment",
         |  "principalChargeBillingFrom": "2024-07-01",
         |  "principalChargeBillingTo": "2024-09-30",
         |  "principalChargeDueDate": "2024-11-07",
+        |  "parentChargeFormalStandover": true,
+        |  "parentChargeInformalStandover": false,
+        |  "penaltyChargeInformalStandover": false,
         |  "principalChargeLatestClearing": "2025-02-15",
         |  "timeToPay": [
         |          {
         |            "startDate": "2024-12-15",
         |            "endDate": "2025-06-15"
         |          }
-        |        ]
+        |        ],
+        |  "timeToPayForPenaltyCharges": {
+        |	   "penaltyChargeIndicator": true,
+        |    "startDate": "2024-12-15",
+        |    "endDate": "2025-06-15"
+        |	 },
+        |	 "timeToPayForParentCharges": {
+        |    "parentChargeIndicator": true,
+        |    "startDate": "2024-12-15",
+        |    "endDate": "2025-06-15"
+        |	 }
         |}
         |""".stripMargin
   )
