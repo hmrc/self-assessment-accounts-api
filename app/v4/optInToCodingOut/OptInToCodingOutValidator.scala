@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package v4.optInToCodingOut.def1.model.request
+package v4.optInToCodingOut
 
-import api.models.domain.{Nino, TaxYear}
-import v4.optInToCodingOut.OptInToCodingOutSchema
+import api.controllers.validators.Validator
+import api.controllers.validators.resolvers.{ResolveNino, ResolveTaxYear}
+import api.models.errors.MtdError
+import cats.data.Validated
+import cats.implicits.catsSyntaxTuple2Semigroupal
 import v4.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
-case class Def1_OptInToCodingOutRequestData(
-    nino: Nino,
-    taxYear: TaxYear
-) extends OptInToCodingOutRequestData {
+import javax.inject.Singleton
 
-  override val schema: OptInToCodingOutSchema = OptInToCodingOutSchema.Def1
+@Singleton
+class OptInToCodingOutValidator(nino: String, taxYear: String) extends Validator[OptInToCodingOutRequestData] {
+
+  def validate: Validated[Seq[MtdError], OptInToCodingOutRequestData] =
+    (
+      ResolveNino(nino),
+      ResolveTaxYear(taxYear)
+    ).mapN(OptInToCodingOutRequestData.apply)
+
 }

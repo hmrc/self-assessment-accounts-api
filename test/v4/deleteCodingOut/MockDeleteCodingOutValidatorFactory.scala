@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package v4.deleteCodingOut.def1.models
+package v4.deleteCodingOut
 
 import api.controllers.validators.{MockValidatorFactory, Validator}
 import config.SaAccountsConfig
 import org.scalamock.handlers.CallHandler
-import v4.deleteCodingOut.DeleteCodingOutValidatorFactory
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 trait MockDeleteCodingOutValidatorFactory extends MockValidatorFactory[DeleteCodingOutRequestData] {

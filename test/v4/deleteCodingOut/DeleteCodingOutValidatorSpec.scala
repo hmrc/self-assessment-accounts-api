@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package v4.deleteCodingOut.def1.models
+package v4.deleteCodingOut
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
 import config.MockSaAccountsConfig
-import v4.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
-import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
+import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
-class Def1_DeleteCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
+class DeleteCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
 
   private implicit val correlationId: String = "1234"
 
@@ -36,7 +35,7 @@ class Def1_DeleteCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConf
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
   private def validator(nino: String, taxYear: String) =
-    new Def1_DeleteCodingOutValidator(nino, taxYear, mockSaAccountsConfig)
+    new DeleteCodingOutValidator(nino, taxYear, mockSaAccountsConfig)
 
   private def setupMocks(): Unit = (MockedSaAccountsConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
 
@@ -47,7 +46,7 @@ class Def1_DeleteCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConf
         val result = validator(validNino, validTaxYear).validateAndWrapResult()
 
         result shouldBe Right(
-          Def1_DeleteCodingOutRequestData(parsedNino, parsedTaxYear)
+          DeleteCodingOutRequestData(parsedNino, parsedTaxYear)
         )
       }
     }

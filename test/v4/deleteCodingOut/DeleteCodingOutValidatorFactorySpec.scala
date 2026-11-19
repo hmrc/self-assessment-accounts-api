@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package v4.deleteCodingOut
 
 import api.utils.UnitSpec
 import config.MockSaAccountsConfig
-import v4.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 
 class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {
 
@@ -31,7 +30,7 @@ class DeleteCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsCo
       "given a valid request" in {
         MockedSaAccountsConfig.minimumPermittedTaxYear returns 2020
         val result = validatorFactory.validator(validNino, validTaxYear, mockSaAccountsConfig)
-        result shouldBe a[Def1_DeleteCodingOutValidator]
+        result shouldBe a[DeleteCodingOutValidator]
 
       }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v4.endpoints.optInToCodingOut.def1
+package v4.endpoints.optInToCodingOut
 
 import api.models.errors.*
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
@@ -27,7 +27,7 @@ import play.api.libs.ws.WSBodyWritables.writeableOf_WsBody
 import play.api.libs.ws.{EmptyBody, WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 
-class Def1_OptInToCodingOutISpec extends IntegrationBaseSpec {
+class OptInToCodingOutISpec extends IntegrationBaseSpec {
 
   "Calling the 'opt in to coding out' endpoint" when {
     "any valid request is made with nino and tax year" should {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v4.deleteCodingOut.def1
+package v4.deleteCodingOut
 
 import api.controllers.validators.Validator
 import api.controllers.validators.resolvers.ResolveNino
@@ -24,13 +24,12 @@ import api.models.errors.MtdError
 import cats.data.Validated
 import cats.implicits.catsSyntaxTuple2Semigroupal
 import config.SaAccountsConfig
-import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import javax.inject.Singleton
 
 @Singleton
-class Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: SaAccountsConfig) extends Validator[DeleteCodingOutRequestData] {
+class DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: SaAccountsConfig) extends Validator[DeleteCodingOutRequestData] {
 
   private val resolveTaxYear = ResolveDetailedTaxYear(TaxYear.ending(appConfig.minimumPermittedTaxYear))
 
@@ -38,6 +37,6 @@ class Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: Sa
     (
       ResolveNino(nino),
       resolveTaxYear(taxYear)
-    ).mapN(Def1_DeleteCodingOutRequestData.apply)
+    ).mapN(DeleteCodingOutRequestData.apply)
 
 }

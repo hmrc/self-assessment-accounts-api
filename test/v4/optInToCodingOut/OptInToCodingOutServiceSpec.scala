@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v4.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
+import v4.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 import scala.concurrent.Future
 
@@ -29,7 +29,7 @@ class OptInToCodingOutServiceSpec extends ServiceSpec {
   private val nino    = Nino("AA123456A")
   private val taxYear = TaxYear.ending(2014)
 
-  private val requestData = Def1_OptInToCodingOutRequestData(nino, taxYear)
+  private val requestData = OptInToCodingOutRequestData(nino, taxYear)
 
   "OptInToCodingOutService" when {
     "service call successful" must {

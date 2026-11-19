@@ -17,11 +17,5 @@
 package v4.deleteCodingOut.model.request
 
 import api.models.domain.{Nino, TaxYear}
-import v4.deleteCodingOut.DeleteCodingOutSchema
 
-trait DeleteCodingOutRequestData {
-  val nino: Nino
-  val taxYear: TaxYear
-
-  val schema: DeleteCodingOutSchema
-}
+case class DeleteCodingOutRequestData(nino: Nino, taxYear: TaxYear)

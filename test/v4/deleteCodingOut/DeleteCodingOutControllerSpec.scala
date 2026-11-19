@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,6 @@ import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
-import v4.deleteCodingOut.def1.models.MockDeleteCodingOutValidatorFactory
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +42,7 @@ class DeleteCodingOutControllerSpec
 
   private val taxYear = "2019-20"
 
-  private val requestData: DeleteCodingOutRequestData = Def1_DeleteCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear))
+  private val requestData: DeleteCodingOutRequestData = DeleteCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear))
 
   "handleRequest" should {
     "return NO_CONTENT" when {

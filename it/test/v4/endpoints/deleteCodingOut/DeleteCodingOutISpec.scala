@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v4.endpoints.deleteCodingOut.def1
+package v4.endpoints.deleteCodingOut
 
 import api.models.errors.*
 import api.services.{AuditStub, AuthStub, DownstreamStub, MtdIdLookupStub}
@@ -25,7 +25,7 @@ import play.api.libs.json.{JsObject, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
 
-class Def1_DeleteCodingOutISpec extends IntegrationBaseSpec {
+class DeleteCodingOutISpec extends IntegrationBaseSpec {
 
   "Calling the delete endpoint" should {
     "return a 204 status code for a non-TYS request" when {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
-import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.Future
@@ -37,7 +36,7 @@ class DeleteCodingOutConnectorSpec extends ConnectorSpec {
 
     def connectorRequest(taxYear: TaxYear): Unit = {
 
-      val validRequest: DeleteCodingOutRequestData = Def1_DeleteCodingOutRequestData(nino, taxYear)
+      val validRequest: DeleteCodingOutRequestData = DeleteCodingOutRequestData(nino, taxYear)
 
       val outcome = Right(ResponseWrapper(correlationId, ()))
 

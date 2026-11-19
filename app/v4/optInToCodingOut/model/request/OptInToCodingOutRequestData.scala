@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,8 @@
 package v4.optInToCodingOut.model.request
 
 import api.models.domain.{Nino, TaxYear}
-import v4.optInToCodingOut.OptInToCodingOutSchema
 
-trait OptInToCodingOutRequestData {
-  val nino: Nino
-  val taxYear: TaxYear
-
-  val schema: OptInToCodingOutSchema
-}
+case class OptInToCodingOutRequestData(
+    nino: Nino,
+    taxYear: TaxYear
+)

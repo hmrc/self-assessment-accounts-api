@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package v4.optInToCodingOut.def1
+package v4.optInToCodingOut
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
-import v4.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
+import v4.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
-class Def1_OptInToCodingOutValidatorSpec extends UnitSpec {
+class OptInToCodingOutValidatorSpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -30,13 +30,13 @@ class Def1_OptInToCodingOutValidatorSpec extends UnitSpec {
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, taxYear: String) = new Def1_OptInToCodingOutValidator(nino, taxYear)
+  private def validator(nino: String, taxYear: String) = new OptInToCodingOutValidator(nino, taxYear)
 
   "validator" should {
     "return the parsed domain object" when {
       "passed a valid request" in {
         validator(validNino, validTaxYear).validateAndWrapResult() shouldBe
-          Right(Def1_OptInToCodingOutRequestData(parsedNino, parsedTaxYear))
+          Right(OptInToCodingOutRequestData(parsedNino, parsedTaxYear))
       }
     }
 
