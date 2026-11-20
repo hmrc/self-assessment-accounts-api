@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,21 +18,21 @@ package v4.retrieveCodingOutStatus.model.responses
 
 import api.utils.UnitSpec
 import play.api.libs.json.Json
-import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
+import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.responses.ResponseFixture.*
 
-class Def1_RetrieveCodingOutStatusResponseSpec extends UnitSpec {
+class RetrieveCodingOutStatusResponseSpec extends UnitSpec {
 
-  "Def1_RetrieveCodingOutStatusResponse" when {
+  "RetrieveCodingOutStatusResponse" when {
     "read from valid JSON" should {
-      "produce the expected Def1_RetrieveCodingOutStatusResponse object" in {
-        downstreamResponseJson.as[Def1_RetrieveCodingOutStatusResponse] shouldBe def1ResponseModel
+      "produce the expected RetrieveCodingOutStatusResponse object" in {
+        downstreamResponseJson.as[RetrieveCodingOutStatusResponse] shouldBe ResponseModel
       }
     }
 
     "written to JSON" should {
       "produce the expected JSON object" in {
-        Json.toJson(def1ResponseModel) shouldBe mtdResponseJson
+        Json.toJson(ResponseModel) shouldBe mtdResponseJson
       }
     }
   }

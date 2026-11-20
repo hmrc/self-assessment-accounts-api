@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package v4.retrieveCodingOutStatus.def1
+package v4.retrieveCodingOutStatus
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
-import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 
-class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec {
+class RetrieveCodingOutStatusValidatorSpec extends UnitSpec {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -31,7 +30,7 @@ class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec {
   private val parsedNino    = Nino(validNino)
   private val parsedTaxYear = TaxYear.fromMtd(validTaxYear)
 
-  private def validator(nino: String, taxYear: String) = new Def1_RetrieveCodingOutStatusValidator(nino, taxYear)
+  private def validator(nino: String, taxYear: String) = new RetrieveCodingOutStatusValidator(nino, taxYear)
 
   "validator" should {
     "return the parsed domain object" when {
@@ -40,7 +39,7 @@ class Def1_RetrieveCodingOutStatusValidatorSpec extends UnitSpec {
         val result: Either[ErrorWrapper, RetrieveCodingOutStatusRequestData] =
           validator(validNino, validTaxYear).validateAndWrapResult()
 
-        result shouldBe Right(Def1_RetrieveCodingOutStatusRequestData(parsedNino, parsedTaxYear))
+        result shouldBe Right(RetrieveCodingOutStatusRequestData(parsedNino, parsedTaxYear))
       }
     }
 

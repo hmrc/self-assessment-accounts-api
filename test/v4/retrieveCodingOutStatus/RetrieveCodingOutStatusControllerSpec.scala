@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,7 @@ import api.routing.{Version, Version4}
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
-import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
+import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.responses.ResponseFixture.mtdResponseJson
 
@@ -45,13 +44,13 @@ class RetrieveCodingOutStatusControllerSpec
   private val taxYear                = "2023-24"
   private val processingDate: String = "2023-12-17T09:30:47Z"
 
-  private val requestData = Def1_RetrieveCodingOutStatusRequestData(
+  private val requestData = RetrieveCodingOutStatusRequestData(
     nino = parsedNino,
     taxYear = TaxYear.fromMtd(taxYear)
   )
 
   private val downstreamResponse: RetrieveCodingOutStatusResponse =
-    Def1_RetrieveCodingOutStatusResponse(
+    RetrieveCodingOutStatusResponse(
       processingDate = processingDate,
       nino = validNino,
       taxYear = TaxYear.fromMtd(taxYear),

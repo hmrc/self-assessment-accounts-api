@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
-import v4.retrieveCodingOutStatus.def1.model.request.Def1_RetrieveCodingOutStatusRequestData
-import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
@@ -37,14 +35,14 @@ class RetrieveCodingOutStatusConnectorSpec extends ConnectorSpec {
     self: ConnectorTest =>
 
     val response: RetrieveCodingOutStatusResponse =
-      Def1_RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = taxYear, optOutIndicator = true)
+      RetrieveCodingOutStatusResponse(processingDate = processingDate, nino = nino, taxYear = taxYear, optOutIndicator = true)
 
     protected val connector: RetrieveCodingOutStatusConnector = new RetrieveCodingOutStatusConnector(
       http = mockHttpClient,
       appConfig = mockAppConfig
     )
 
-    protected def request(nino: Nino, taxYear: TaxYear): RetrieveCodingOutStatusRequestData = Def1_RetrieveCodingOutStatusRequestData(nino, taxYear)
+    protected def request(nino: Nino, taxYear: TaxYear): RetrieveCodingOutStatusRequestData = RetrieveCodingOutStatusRequestData(nino, taxYear)
   }
 
   "RetrieveCodingOutStatusConnector" when {

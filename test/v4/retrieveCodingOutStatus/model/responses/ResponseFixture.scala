@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package v4.retrieveCodingOutStatus.model.responses
 
 import api.models.domain.TaxYear
 import play.api.libs.json.{JsObject, Json}
-import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
+import v4.retrieveCodingOutStatus.model.response.RetrieveCodingOutStatusResponse
 
 object ResponseFixture {
 
@@ -58,7 +58,7 @@ object ResponseFixture {
     )
     .as[JsObject]
 
-  val def1ResponseModel: Def1_RetrieveCodingOutStatusResponse =
-    Def1_RetrieveCodingOutStatusResponse("2023-12-17T09:30:47Z", "AB123456A", TaxYear.ending(2024), true)
+  val ResponseModel: RetrieveCodingOutStatusResponse =
+    RetrieveCodingOutStatusResponse("2023-12-17T09:30:47Z", "AB123456A", TaxYear.ending(2024), true)
 
 }
