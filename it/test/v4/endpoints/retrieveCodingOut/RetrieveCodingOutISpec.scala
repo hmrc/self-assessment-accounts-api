@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package v4.endpoints.retrieveCodingOut.def1
+package v4.endpoints.retrieveCodingOut
 
 import api.models.domain.TaxYear
 import api.models.errors.*
@@ -25,12 +25,12 @@ import play.api.http.Status.*
 import play.api.libs.json.{JsValue, Json}
 import play.api.libs.ws.{WSRequest, WSResponse}
 import play.api.test.Helpers.AUTHORIZATION
-import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
+import v4.retrieveCodingOut.model.reponse.RetrieveCodingOutFixture.{retrieveCodingOutMtdResponse, retrieveCodingOutMtdResponseNoId}
 
 import java.time.format.DateTimeFormatter
 import java.time.{LocalDate, ZoneOffset}
 
-class Def1_RetrieveCodingOutISpec extends IntegrationBaseSpec {
+class RetrieveCodingOutISpec extends IntegrationBaseSpec {
   val versions: Seq[String] = Seq("4.0")
 
   private trait Test {

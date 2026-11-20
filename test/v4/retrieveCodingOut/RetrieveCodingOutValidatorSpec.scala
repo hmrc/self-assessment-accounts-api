@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package v4.retrieveCodingOut.def1
+package v4.retrieveCodingOut
 
 import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.utils.UnitSpec
 import common.models.MtdSource
 import config.MockSaAccountsConfig
-import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
-class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
+class RetrieveCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
   private implicit val correlationId: String = "1234"
 
   private val validNino    = "AA123456A"
@@ -36,7 +35,7 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSaAccountsCo
   private val parsedSource  = Some(MtdSource.parser("hmrcHeld"))
 
   private def validator(nino: String, taxYear: String, source: Option[String]) =
-    new Def1_RetrieveCodingOutValidator(nino, taxYear, source, mockSaAccountsConfig)
+    new RetrieveCodingOutValidator(nino, taxYear, source, mockSaAccountsConfig)
 
   private def setupMocks(): Unit = (MockedSaAccountsConfig.minimumPermittedTaxYear returns 2022).anyNumberOfTimes()
 
@@ -48,7 +47,7 @@ class Def1_RetrieveCodingOutValidatorSpec extends UnitSpec with MockSaAccountsCo
         val result: Either[ErrorWrapper, RetrieveCodingOutRequestData] =
           validator(validNino, validTaxYear, validSource).validateAndWrapResult()
 
-        result shouldBe Right(Def1_RetrieveCodingOutRequestData(parsedNino, parsedTaxYear, parsedSource))
+        result shouldBe Right(RetrieveCodingOutRequestData(parsedNino, parsedTaxYear, parsedSource))
       }
     }
 

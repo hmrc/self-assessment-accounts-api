@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package v4.retrieveCodingOut.def1.model.reponse
+package v4.retrieveCodingOut.model.reponse
 
 import play.api.libs.json.{JsObject, Json}
-import v4.retrieveCodingOut.def1.model.response.*
+import v4.retrieveCodingOut.model.response.{
+  RetrieveCodingOutResponse,
+  TaxCodeComponents,
+  TaxCodeComponentsObject,
+  UnmatchedCustomerSubmissions,
+  UnmatchedCustomerSubmissionsObject
+}
 
 object RetrieveCodingOutFixture {
 
@@ -191,8 +197,8 @@ object RetrieveCodingOutFixture {
       Some(unmatchedCustomerSubmissions)
     )
 
-  val retrieveCodingOutResponse: Def1_RetrieveCodingOutResponse =
-    Def1_RetrieveCodingOutResponse(
+  val retrieveCodingOutResponse: RetrieveCodingOutResponse =
+    RetrieveCodingOutResponse(
       Some(taxCodeComponentObject),
       Some(unmatchedCustomerSubmissionsObject)
     )

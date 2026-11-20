@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
-package v4.retrieveCodingOut.def1.model.request
+package v4.retrieveCodingOut
 
-import api.models.domain.{Nino, TaxYear}
-import common.models.MtdSource
-import v4.retrieveCodingOut.RetrieveCodingOutSchema
+import api.controllers.validators.{MockValidatorFactory, Validator}
+import config.SaAccountsConfig
+import org.scalamock.handlers.CallHandler
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
-case class Def1_RetrieveCodingOutRequestData(nino: Nino, taxYear: TaxYear, source: Option[MtdSource]) extends RetrieveCodingOutRequestData {
+trait MockRetrieveCodingOutValidatorFactory extends MockValidatorFactory[RetrieveCodingOutRequestData] {
 
-  override val schema: RetrieveCodingOutSchema = RetrieveCodingOutSchema.Def1
+  val mockRetrieveCodingOutValidatorFactory: RetrieveCodingOutValidatorFactory = mock[RetrieveCodingOutValidatorFactory]
+
+  def validator(): CallHandler[Validator[RetrieveCodingOutRequestData]] =
+    (mockRetrieveCodingOutValidatorFactory.validator(_: String, _: String, _: Option[String], _: SaAccountsConfig)).expects(*, *, *, *)
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package v4.retrieveCodingOut.def1.model.reponse
+package v4.retrieveCodingOut.model.reponse
 
 import api.utils.UnitSpec
 import play.api.libs.json.Json
-import v4.retrieveCodingOut.def1.model.response.UnmatchedCustomerSubmissions
+import v4.retrieveCodingOut.model.response.UnmatchedCustomerSubmissions
 
 class UnmatchedCustomerSubmissionsSpec extends UnitSpec {
 

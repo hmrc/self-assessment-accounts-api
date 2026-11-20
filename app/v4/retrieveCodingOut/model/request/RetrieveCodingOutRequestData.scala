@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,5 @@ package v4.retrieveCodingOut.model.request
 
 import api.models.domain.{Nino, TaxYear}
 import common.models.MtdSource
-import v4.retrieveCodingOut.RetrieveCodingOutSchema
 
-trait RetrieveCodingOutRequestData {
-  val nino: Nino
-  val taxYear: TaxYear
-  val source: Option[MtdSource]
-
-  val schema: RetrieveCodingOutSchema
-
-}
+case class RetrieveCodingOutRequestData(nino: Nino, taxYear: TaxYear, source: Option[MtdSource])

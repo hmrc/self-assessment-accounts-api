@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,8 @@ import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{ServiceOutcome, ServiceSpec}
 import common.models.MtdSource.hmrcHeld
-import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.retrieveCodingOutResponse
-import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
-import v4.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
+import v4.retrieveCodingOut.model.reponse.RetrieveCodingOutFixture.retrieveCodingOutResponse
+import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
 import scala.concurrent.Future
@@ -34,9 +33,9 @@ class RetrieveCodingOutServiceSpec extends ServiceSpec {
   private val taxYear = TaxYear.fromMtd("2019-20")
   private val source  = hmrcHeld
 
-  private val requestData = Def1_RetrieveCodingOutRequestData(nino, taxYear, Some(source))
+  private val requestData = RetrieveCodingOutRequestData(nino, taxYear, Some(source))
 
-  val response: Def1_RetrieveCodingOutResponse = retrieveCodingOutResponse
+  val response: RetrieveCodingOutResponse = retrieveCodingOutResponse
 
   "RetrieveCodingOutService" should {
     "return the mapped result" when {

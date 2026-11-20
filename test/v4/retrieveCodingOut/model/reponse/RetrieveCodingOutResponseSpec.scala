@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
-package v4.retrieveCodingOut.def1.model.reponse
+package v4.retrieveCodingOut.model.reponse
 
 import api.utils.UnitSpec
 import play.api.libs.json.{JsValue, Json}
-import v4.retrieveCodingOut.def1.model.response.*
-import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
+import v4.retrieveCodingOut.model.response.{
+  RetrieveCodingOutResponse,
+  TaxCodeComponents,
+  TaxCodeComponentsObject,
+  UnmatchedCustomerSubmissions,
+  UnmatchedCustomerSubmissionsObject
+}
 
-class Def1_RetrieveCodingOutResponseSpec extends UnitSpec {
+class RetrieveCodingOutResponseSpec extends UnitSpec {
 
   val desResponse: JsValue = Json.parse(
     """
@@ -198,15 +203,15 @@ class Def1_RetrieveCodingOutResponseSpec extends UnitSpec {
     )
 
   val responseModel: RetrieveCodingOutResponse =
-    Def1_RetrieveCodingOutResponse(
+    RetrieveCodingOutResponse(
       Some(taxCodeComponentObject),
       Some(unmatchedCustomerSubmissionsObject)
     )
 
-  "Def1_RetrieveCodingOutResponse" when {
+  "RetrieveCodingOutResponse" when {
     "read from valid JSON" should {
-      "produce the expected Def1_RetrieveCodingOutResponse object" in {
-        desResponse.as[Def1_RetrieveCodingOutResponse] shouldBe responseModel
+      "produce the expected RetrieveCodingOutResponse object" in {
+        desResponse.as[RetrieveCodingOutResponse] shouldBe responseModel
       }
     }
 
