@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package v4.createOrAmendCodingOut
 import api.utils.UnitSpec
 import config.MockSaAccountsConfig
 import play.api.libs.json.Json
-import v4.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
 
 class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with MockSaAccountsConfig {
 
@@ -64,7 +63,7 @@ class CreateOrAmendCodingOutValidatorFactorySpec extends UnitSpec with MockSaAcc
       "given a valid request" in {
         MockedSaAccountsConfig.minimumPermittedTaxYear returns 2020
         val result = validatorFactory.validator(validNino, validTaxYear, validBody, temporalValidationEnabled, mockSaAccountsConfig)
-        result shouldBe a[Def1_CreateOrAmendCodingOutValidator]
+        result shouldBe a[CreateOrAmendCodingOutValidator]
 
       }
     }

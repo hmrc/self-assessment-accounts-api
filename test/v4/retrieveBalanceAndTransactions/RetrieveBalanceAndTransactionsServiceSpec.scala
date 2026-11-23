@@ -20,10 +20,10 @@ import api.models.domain.{DateRange, Nino}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{ServiceOutcome, ServiceSpec}
-import v4.retrieveBalanceAndTransactions.def1.model.BalanceDetailsFixture.balanceDetails
-import v4.retrieveBalanceAndTransactions.def1.model.CodingDetailsFixture.codingDetails
-import v4.retrieveBalanceAndTransactions.def1.model.DocumentDetailsFixture.{documentDetails, documentDetailsWithoutDocDueDate}
-import v4.retrieveBalanceAndTransactions.def1.model.FinancialDetailsFixture.financialDetailsFull
+import v4.retrieveBalanceAndTransactions.model.BalanceDetailsFixture.balanceDetails
+import v4.retrieveBalanceAndTransactions.model.CodingDetailsFixture.codingDetails
+import v4.retrieveBalanceAndTransactions.model.DocumentDetailsFixture.{documentDetails, documentDetailsWithoutDocDueDate}
+import v4.retrieveBalanceAndTransactions.model.FinancialDetailsFixture.financialDetailsFull
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 import v4.retrieveBalanceAndTransactions.model.response.RetrieveBalanceAndTransactionsResponse
 

@@ -38,7 +38,6 @@ class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClientV
       correlationId: String): Future[DownstreamOutcome[ListPaymentsAndAllocationDetailsResponse]] = {
 
     import request.*
-    import schema.*
 
     val dateFrom = fromAndToDates.map(_.startDate.toString)
     val dateTo   = fromAndToDates.map(_.endDate.toString)
@@ -61,9 +60,11 @@ class ListPaymentsAndAllocationDetailsConnector @Inject() (val http: HttpClientV
     )
 
     if (ConfigFeatureSwitches().isEnabled("des_hip_migration_1413")) {
-      get(HipUri[DownstreamResp](s"etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA", additionalContractHeaders), queryParams)
+      get(
+        HipUri[ListPaymentsAndAllocationDetailsResponse](s"etmp/RESTAdapter/payment-allocation/NINO/$nino/ITSA", additionalContractHeaders),
+        queryParams)
     } else {
-      get(DesUri[DownstreamResp](s"cross-regime/payment-allocation/NINO/$nino/ITSA"), queryParams)
+      get(DesUri[ListPaymentsAndAllocationDetailsResponse](s"cross-regime/payment-allocation/NINO/$nino/ITSA"), queryParams)
     }
 
   }

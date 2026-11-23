@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,25 @@
 
 package v4.listPaymentsAndAllocationDetails.model.response
 
-import api.utils.JsonWritesUtil
-import play.api.libs.json.*
-import v4.listPaymentsAndAllocationDetails.def1.model.response.Def1_ListPaymentsAndAllocationDetailsResponse
+import play.api.libs.json.{JsPath, Json, Reads, Writes}
 
-trait ListPaymentsAndAllocationDetailsResponse
+case class ListPaymentsAndAllocationDetailsResponse(
+    payments: List[Payment]
+)
 
-object ListPaymentsAndAllocationDetailsResponse extends JsonWritesUtil {
+object ListPaymentsAndAllocationDetailsResponse {
 
-  implicit val writes: OWrites[ListPaymentsAndAllocationDetailsResponse] = writesFrom { case def1: Def1_ListPaymentsAndAllocationDetailsResponse =>
-    Json.toJson(def1).as[JsObject]
+  implicit val writes: Writes[ListPaymentsAndAllocationDetailsResponse] =
+    Json.writes[ListPaymentsAndAllocationDetailsResponse]
+
+  implicit val reads: Reads[ListPaymentsAndAllocationDetailsResponse] = {
+    val paymentDetailsReads =
+      (JsPath \ "paymentDetails").read[List[Payment]]
+
+    (JsPath \ "success" \ "paymentDetails")
+      .read[List[Payment]]
+      .orElse(paymentDetailsReads)
+      .map(ListPaymentsAndAllocationDetailsResponse.apply)
   }
 
 }

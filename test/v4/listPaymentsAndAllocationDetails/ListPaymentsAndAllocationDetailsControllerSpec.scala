@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,9 +23,8 @@ import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
 import play.api.Configuration
 import play.api.mvc.Result
-import v4.listPaymentsAndAllocationDetails.def1.MockListPaymentsAndAllocationDetailsValidatorFactory
-import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
-import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.{mtdResponseJson, responseObject}
+import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.model.response.ResponseFixtures.{mtdResponseJson, responseObject}
 
 import java.time.LocalDate
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -40,7 +39,7 @@ class ListPaymentsAndAllocationDetailsControllerSpec
   override val apiVersion: Version = Version4
 
   private val requestData =
-    Def1_ListPaymentsAndAllocationDetailsRequestData(
+    ListPaymentsAndAllocationDetailsRequestData(
       parsedNino,
       Some(DateRange(LocalDate.parse("2022-08-15"), LocalDate.parse("2022-09-15"))),
       Some("paymentLot"),

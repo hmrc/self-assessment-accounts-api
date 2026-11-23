@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,7 @@ package v4.retrieveBalanceAndTransactions
 
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import v4.retrieveBalanceAndTransactions.def1.Def1_RetrieveBalanceAndTransactionsValidator
-import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
+import v4.retrieveBalanceAndTransactions.model.RequestFixture.*
 
 class RetrieveBalanceAndTransactionsValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
@@ -40,7 +39,7 @@ class RetrieveBalanceAndTransactionsValidatorFactorySpec extends UnitSpec with J
           Some("true"),
           Some("true"))
 
-        result shouldBe a[Def1_RetrieveBalanceAndTransactionsValidator]
+        result shouldBe a[RetrieveBalanceAndTransactionsValidator]
 
       }
     }

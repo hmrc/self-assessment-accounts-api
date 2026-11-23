@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,8 +22,8 @@ import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
 import play.api.Configuration
 import play.api.mvc.Result
-import v4.retrieveBalanceAndTransactions.def1.model.RequestFixture.*
-import v4.retrieveBalanceAndTransactions.def1.model.ResponseFixture.{mtdResponseJson, response}
+import v4.retrieveBalanceAndTransactions.model.RequestFixture.{requestEverythingTrue, validDocNumber}
+import v4.retrieveBalanceAndTransactions.model.ResponseFixture.{mtdResponseJson, response}
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global

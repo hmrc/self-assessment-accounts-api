@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,30 @@
 
 package v4.retrieveChargeHistoryByChargeReference
 
-import api.models.utils.JsonErrorValidators
+import api.models.domain.Nino
 import api.utils.UnitSpec
-import v4.retrieveChargeHistoryByChargeReference.def1.Def1_RetrieveChargeHistoryByChargeReferenceValidator
+import common.models.ChargeReference
+import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
-class RetrieveChargeHistoryByChargeReferenceValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
+class RetrieveChargeHistoryByChargeReferenceValidatorFactorySpec extends UnitSpec {
 
-  private val validNino    = "AA123456A"
-  private val validTaxYear = "2019-20"
+  private implicit val correlationId: String = "1234"
+
+  private val validNino            = "AA123456A"
+  private val validChargeReference = "XD000024425799"
+
+  private val expectedRequestData =
+    RetrieveChargeHistoryByChargeReferenceRequestData(Nino(validNino), ChargeReference(validChargeReference))
 
   private val validatorFactory = new RetrieveChargeHistoryByChargeReferenceValidatorFactory
 
-  "running a validation" should {
+  "creating a validator" should {
     "return the parsed domain object" when {
       "given a valid request" in {
-        val result = validatorFactory.validator(validNino, validTaxYear)
-        result shouldBe a[Def1_RetrieveChargeHistoryByChargeReferenceValidator]
-
+        val result = validatorFactory.validator(validNino, validChargeReference)
+        result.validateAndWrapResult() shouldBe Right(expectedRequestData)
       }
     }
-
   }
 
 }

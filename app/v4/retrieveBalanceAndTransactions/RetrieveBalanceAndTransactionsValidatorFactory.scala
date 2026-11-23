@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package v4.retrieveBalanceAndTransactions
 
 import api.controllers.validators.Validator
-import v4.retrieveBalanceAndTransactions.def1.Def1_RetrieveBalanceAndTransactionsValidator
 import v4.retrieveBalanceAndTransactions.model.request.RetrieveBalanceAndTransactionsRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -35,7 +34,7 @@ class RetrieveBalanceAndTransactionsValidatorFactory @Inject() {
                 removePOA: Option[String],
                 customerPaymentInformation: Option[String],
                 includeEstimatedCharges: Option[String]): Validator[RetrieveBalanceAndTransactionsRequestData] =
-    new Def1_RetrieveBalanceAndTransactionsValidator(
+    new RetrieveBalanceAndTransactionsValidator(
       nino,
       docNumber,
       fromDate,

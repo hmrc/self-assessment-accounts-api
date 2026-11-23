@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package v4.retrieveChargeHistoryByChargeReference.model.response
 
 import api.config.AppConfig
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.ChargeHistoryDetail
 
 case class RetrieveChargeHistoryResponse(chargeHistoryDetails: Seq[ChargeHistoryDetail])
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,9 @@ import api.models.domain.{Nino, TransactionId}
 import api.models.outcomes.ResponseWrapper
 import api.utils.DateUtils.isoDateTimeStamp
 import uk.gov.hmrc.http.StringContextOps
-import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
-import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
+import v4.retrieveChargeHistoryByTransactionId.model.responses.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 
 import scala.concurrent.Future
 
@@ -65,7 +64,7 @@ class RetrieveChargeHistoryByTransactionIdConnectorSpec extends ConnectorSpec {
       "sapDocumentNumber" -> transactionId
     )
 
-  private val validRequest: RetrieveChargeHistoryByTransactionIdRequestData = Def1_RetrieveChargeHistoryByTransactionIdRequestData(
+  private val validRequest: RetrieveChargeHistoryByTransactionIdRequestData = RetrieveChargeHistoryByTransactionIdRequestData(
     Nino(nino),
     TransactionId(transactionId)
   )

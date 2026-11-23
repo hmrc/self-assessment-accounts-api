@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 package v4.listPaymentsAndAllocationDetails
 
 import api.controllers.validators.Validator
-import v4.listPaymentsAndAllocationDetails.ListPaymentsAndAllocationDetailsSchema.Def1
-import v4.listPaymentsAndAllocationDetails.def1.Def1_ListPaymentsAndAllocationDetailsValidator
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -32,11 +30,7 @@ class ListPaymentsAndAllocationDetailsValidatorFactory @Inject() {
                 paymentLot: Option[String],
                 paymentLotItem: Option[String]): Validator[ListPaymentsAndAllocationDetailsRequestData] = {
 
-    val schema = ListPaymentsAndAllocationDetailsSchema.schemaFor(fromDate, toDate)
-
-    schema match {
-      case Def1 => new Def1_ListPaymentsAndAllocationDetailsValidator(nino, fromDate, toDate, paymentLot, paymentLotItem)
-    }
+    new ListPaymentsAndAllocationDetailsValidator(nino, fromDate, toDate, paymentLot, paymentLotItem)
   }
 
 }

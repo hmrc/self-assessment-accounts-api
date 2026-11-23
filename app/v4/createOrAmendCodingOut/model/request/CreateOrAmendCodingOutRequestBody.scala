@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,13 @@
 
 package v4.createOrAmendCodingOut.model.request
 
-import api.utils.JsonWritesUtil
-import play.api.libs.json.{JsObject, Json, OWrites}
-import v4.createOrAmendCodingOut.def1.model.request.Def1_CreateOrAmendCodingOutRequestBody
+import api.utils.EmptinessChecker
+import play.api.libs.json.{Json, OFormat}
 
-trait CreateOrAmendCodingOutRequestBody
+case class CreateOrAmendCodingOutRequestBody(taxCodeComponents: TaxCodeComponents)
 
-object CreateOrAmendCodingOutRequestBody extends JsonWritesUtil {
-
-  implicit val writes: OWrites[CreateOrAmendCodingOutRequestBody] = writesFrom { case def1: Def1_CreateOrAmendCodingOutRequestBody =>
-    Json.toJson(def1).as[JsObject]
-  }
+object CreateOrAmendCodingOutRequestBody {
+  implicit val format: OFormat[CreateOrAmendCodingOutRequestBody] = Json.format[CreateOrAmendCodingOutRequestBody]
+  given EmptinessChecker[CreateOrAmendCodingOutRequestBody]       = EmptinessChecker.derived
 
 }

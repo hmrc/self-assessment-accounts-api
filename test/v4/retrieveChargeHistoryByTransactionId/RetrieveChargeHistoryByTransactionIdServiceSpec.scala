@@ -20,9 +20,8 @@ import api.models.domain.{Nino, TransactionId}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
-import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
+import v4.retrieveChargeHistoryByTransactionId.model.responses.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 
 import scala.concurrent.Future
 
@@ -32,7 +31,7 @@ class RetrieveChargeHistoryByTransactionIdServiceSpec extends ServiceSpec {
   private val transactionId = TransactionId("anId")
 
   private val requestData: RetrieveChargeHistoryByTransactionIdRequestData =
-    Def1_RetrieveChargeHistoryByTransactionIdRequestData(
+    RetrieveChargeHistoryByTransactionIdRequestData(
       nino = nino,
       transactionId = transactionId
     )

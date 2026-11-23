@@ -21,8 +21,7 @@ import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import common.models.ChargeReference
-import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
 import scala.concurrent.Future
@@ -33,7 +32,7 @@ class RetrieveChargeHistoryByChargeReferenceServiceSpec extends ServiceSpec {
   private val chargeReference = ChargeReference("anId")
 
   private val requestData: RetrieveChargeHistoryByChargeReferenceRequestData =
-    Def1_RetrieveChargeHistoryByChargeReferenceRequestData(
+    RetrieveChargeHistoryByChargeReferenceRequestData(
       nino = nino,
       chargeReference = chargeReference
     )
