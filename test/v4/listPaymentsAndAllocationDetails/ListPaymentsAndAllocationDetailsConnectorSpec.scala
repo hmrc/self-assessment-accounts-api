@@ -21,8 +21,8 @@ import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
 import play.api.Configuration
 import uk.gov.hmrc.http.StringContextOps
-import v4.listPaymentsAndAllocationDetails.model.response.ResponseFixtures.responseObject
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.model.response.ResponseFixtures.responseObject
 
 import java.time.LocalDate
 import scala.concurrent.Future

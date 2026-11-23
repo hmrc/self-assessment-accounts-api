@@ -21,7 +21,7 @@ import api.models.errors.*
 import api.utils.UnitSpec
 import config.MockSaAccountsConfig
 import play.api.libs.json.{JsObject, JsPath, JsValue, Json}
-import v4.createOrAmendCodingOut.model.request.{CreateOrAmendCodingOutRequestData, CreateOrAmendCodingOutRequestBody, TaxCodeComponents}
+import v4.createOrAmendCodingOut.model.request.{CreateOrAmendCodingOutRequestBody, CreateOrAmendCodingOutRequestData, TaxCodeComponents}
 
 class CreateOrAmendCodingOutValidatorSpec extends UnitSpec with MockSaAccountsConfig {
 

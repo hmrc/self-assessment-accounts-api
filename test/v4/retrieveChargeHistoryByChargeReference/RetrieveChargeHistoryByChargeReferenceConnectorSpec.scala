@@ -22,8 +22,8 @@ import api.models.outcomes.ResponseWrapper
 import api.utils.DateUtils.isoDateTimeStamp
 import common.models.ChargeReference
 import uk.gov.hmrc.http.StringContextOps
-import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.Future

@@ -21,8 +21,8 @@ import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
 import common.models.ChargeReference
-import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 
 import scala.concurrent.Future
 

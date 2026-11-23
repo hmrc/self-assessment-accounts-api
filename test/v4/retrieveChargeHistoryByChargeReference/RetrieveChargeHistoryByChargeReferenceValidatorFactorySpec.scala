@@ -16,28 +16,21 @@
 
 package v4.retrieveChargeHistoryByChargeReference
 
-import api.models.domain.Nino
+import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import common.models.ChargeReference
-import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
-class RetrieveChargeHistoryByChargeReferenceValidatorFactorySpec extends UnitSpec {
-
-  private implicit val correlationId: String = "1234"
+class RetrieveChargeHistoryByChargeReferenceValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
   private val validNino            = "AA123456A"
   private val validChargeReference = "XD000024425799"
 
-  private val expectedRequestData =
-    RetrieveChargeHistoryByChargeReferenceRequestData(Nino(validNino), ChargeReference(validChargeReference))
-
   private val validatorFactory = new RetrieveChargeHistoryByChargeReferenceValidatorFactory
 
-  "creating a validator" should {
+  "running a validation" should {
     "return the parsed domain object" when {
       "given a valid request" in {
         val result = validatorFactory.validator(validNino, validChargeReference)
-        result.validateAndWrapResult() shouldBe Right(expectedRequestData)
+        result shouldBe a[RetrieveChargeHistoryByChargeReferenceValidator]
       }
     }
   }

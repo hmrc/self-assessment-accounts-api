@@ -20,8 +20,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{ServiceOutcome, ServiceSpec}
-import v4.createOrAmendCodingOut.models.request.CodingOutFixtures.validRequestBody
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
+import v4.createOrAmendCodingOut.models.request.CodingOutFixtures.validRequestBody
 
 import scala.concurrent.Future
 

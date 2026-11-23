@@ -19,7 +19,7 @@ package v4.retrieveChargeHistoryByChargeReference.model.response
 import api.config.MockAppConfig
 import api.utils.UnitSpec
 import play.api.libs.json.Json
-import RetrieveChargeHistoryFixture.*
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.*
 
 class RetrieveChargeHistoryByChargeReferenceResponseSpec extends UnitSpec with MockAppConfig {
 

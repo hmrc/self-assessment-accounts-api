@@ -20,8 +20,8 @@ import api.connectors.ConnectorSpec
 import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import uk.gov.hmrc.http.StringContextOps
-import v4.createOrAmendCodingOut.models.request.CodingOutFixtures.validRequestBody
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
+import v4.createOrAmendCodingOut.models.request.CodingOutFixtures.validRequestBody
 
 import scala.concurrent.Future
 

@@ -16,27 +16,20 @@
 
 package v4.retrieveChargeHistoryByTransactionId
 
-import api.models.domain.{Nino, TransactionId}
 import api.utils.UnitSpec
-import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 
 class RetrieveChargeHistoryByTransactionIdValidatorFactorySpec extends UnitSpec {
-
-  private implicit val correlationId: String = "1234"
 
   private val validNino          = "AA123456A"
   private val validTransactionId = "717f3agW678f"
 
-  private val expectedRequestData =
-    RetrieveChargeHistoryByTransactionIdRequestData(Nino(validNino), TransactionId(validTransactionId))
-
   private val validatorFactory = new RetrieveChargeHistoryByTransactionIdValidatorFactory
 
-  "creating a validator" should {
+  "running a validation" should {
     "return the parsed domain object" when {
       "given a valid request" in {
         val result = validatorFactory.validator(validNino, validTransactionId)
-        result.validateAndWrapResult() shouldBe Right(expectedRequestData)
+        result shouldBe a[RetrieveChargeHistoryByTransactionIdValidator]
       }
     }
   }

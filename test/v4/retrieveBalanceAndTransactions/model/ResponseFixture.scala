@@ -17,10 +17,10 @@
 package v4.retrieveBalanceAndTransactions.model
 
 import play.api.libs.json.{JsValue, Json}
-import BalanceDetailsFixture.*
-import CodingDetailsFixture.*
-import DocumentDetailsFixture.*
-import FinancialDetailsFixture.*
+import v4.retrieveBalanceAndTransactions.model.BalanceDetailsFixture.*
+import v4.retrieveBalanceAndTransactions.model.CodingDetailsFixture.*
+import v4.retrieveBalanceAndTransactions.model.DocumentDetailsFixture.*
+import v4.retrieveBalanceAndTransactions.model.FinancialDetailsFixture.*
 import v4.retrieveBalanceAndTransactions.model.response.{FinancialDetails, RetrieveBalanceAndTransactionsResponse}
 
 object ResponseFixture {

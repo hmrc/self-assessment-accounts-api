@@ -18,7 +18,7 @@ package v4.listPaymentsAndAllocationDetails.model.response
 
 import api.utils.UnitSpec
 import play.api.libs.json.Json
-import ResponseFixtures.*
+import v4.listPaymentsAndAllocationDetails.model.response.ResponseFixtures.*
 
 class ListPaymentsAndAllocationDetailsResponseSpec extends UnitSpec {
 

@@ -25,8 +25,8 @@ import common.models.ChargeReference
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global

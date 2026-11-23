@@ -20,9 +20,9 @@ import api.models.domain.Nino
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{ServiceOutcome, ServiceSpec}
-import v4.listPaymentsAndAllocationDetails.model.response.ResponseFixtures.responseObject
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
+import v4.listPaymentsAndAllocationDetails.model.response.ResponseFixtures.responseObject
 
 import scala.concurrent.Future
 

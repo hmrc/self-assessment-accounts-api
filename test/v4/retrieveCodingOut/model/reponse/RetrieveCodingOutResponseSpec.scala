@@ -18,13 +18,7 @@ package v4.retrieveCodingOut.model.reponse
 
 import api.utils.UnitSpec
 import play.api.libs.json.{JsValue, Json}
-import v4.retrieveCodingOut.model.response.{
-  RetrieveCodingOutResponse,
-  TaxCodeComponents,
-  TaxCodeComponentsObject,
-  UnmatchedCustomerSubmissions,
-  UnmatchedCustomerSubmissionsObject
-}
+import v4.retrieveCodingOut.model.response.*
 
 class RetrieveCodingOutResponseSpec extends UnitSpec {
 
