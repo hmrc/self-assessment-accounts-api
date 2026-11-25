@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,12 @@ import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.Result
-import v4.createOrAmendCodingOut.def1.MockCreateOrAmendCodingOutValidatorFactory
-import v4.createOrAmendCodingOut.def1.model.request.*
+import v4.createOrAmendCodingOut.model.request.{
+  CreateOrAmendCodingOutRequestBody,
+  CreateOrAmendCodingOutRequestData,
+  TaxCodeComponent,
+  TaxCodeComponents
+}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -73,14 +77,14 @@ class CreateOrAmendCodingOutControllerSpec
         |""".stripMargin
   )
 
-  private val requestBody = Def1_CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
+  private val requestBody = CreateOrAmendCodingOutRequestBody(taxCodeComponents = TaxCodeComponents(
     payeUnderpayment = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
     selfAssessmentUnderpayment = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
     debt = Some(List(TaxCodeComponent(id = 12345, amount = 123.45))),
     inYearAdjustment = Some(TaxCodeComponent(id = 12345, amount = 123.45))
   ))
 
-  private val requestData = Def1_CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear), requestBody)
+  private val requestData = CreateOrAmendCodingOutRequestData(parsedNino, TaxYear.fromMtd(taxYear), requestBody)
 
   "handleRequest" should {
     "return No Content" when {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,11 +38,10 @@ class OptOutOfCodingOutConnector @Inject() (val http: HttpClientV2, val appConfi
       correlationId: String): Future[DownstreamOutcome[OptOutOfCodingOutResponse]] = {
 
     import request.*
-    import schema.*
 
     put(
       EmptyJsonBody,
-      uri = IfsUri[DownstreamResp](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")
+      uri = IfsUri[OptOutOfCodingOutResponse](s"income-tax/accounts/self-assessment/tax-code/opt-out/ITSA/${nino.value}/${taxYear.asDownstream}")
     )
   }
 

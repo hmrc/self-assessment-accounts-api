@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package v4.retrieveCodingOut
 
 import api.controllers.validators.Validator
 import config.SaAccountsConfig
-import v4.retrieveCodingOut.RetrieveCodingOutSchema.Def1
-import v4.retrieveCodingOut.def1.Def1_RetrieveCodingOutValidator
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -28,12 +26,7 @@ import javax.inject.{Inject, Singleton}
 class RetrieveCodingOutValidatorFactory @Inject() {
 
   def validator(nino: String, taxYear: String, source: Option[String], appConfig: SaAccountsConfig): Validator[RetrieveCodingOutRequestData] = {
-
-    val schema = RetrieveCodingOutSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_RetrieveCodingOutValidator(nino, taxYear, source, appConfig)
-    }
+    new RetrieveCodingOutValidator(nino, taxYear, source, appConfig)
   }
 
 }

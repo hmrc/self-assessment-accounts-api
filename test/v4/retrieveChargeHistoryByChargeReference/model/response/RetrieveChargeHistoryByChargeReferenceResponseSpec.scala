@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,14 +19,14 @@ package v4.retrieveChargeHistoryByChargeReference.model.response
 import api.config.MockAppConfig
 import api.utils.UnitSpec
 import play.api.libs.json.Json
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.*
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.*
 
 class RetrieveChargeHistoryByChargeReferenceResponseSpec extends UnitSpec with MockAppConfig {
 
   val validObjectSingle: RetrieveChargeHistoryResponse   = RetrieveChargeHistoryResponse(List(validChargeHistoryDetailObject))
   val validObjectMultiple: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 
-  "Def1_RetrieveChargeHistoryResponse" when {
+  "RetrieveChargeHistoryResponse" when {
     "reading valid JSON" should {
       "return the expected object" in {
         downstreamResponse.as[RetrieveChargeHistoryResponse] shouldBe validObjectSingle
@@ -34,7 +34,7 @@ class RetrieveChargeHistoryByChargeReferenceResponseSpec extends UnitSpec with M
     }
   }
 
-  "Def1_RetrieveChargeHistoryResponse" when {
+  "RetrieveChargeHistoryResponse" when {
     "reading valid JSON with multiple charge history details" should {
       "return the expected object" in {
         downstreamResponseMultiple.as[RetrieveChargeHistoryResponse] shouldBe validObjectMultiple

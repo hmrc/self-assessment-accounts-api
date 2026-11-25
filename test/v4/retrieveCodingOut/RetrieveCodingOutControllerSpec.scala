@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,8 @@ import common.models.MtdSource
 import config.MockSaAccountsConfig
 import play.api.Configuration
 import play.api.mvc.Result
-import v4.retrieveCodingOut.def1.MockRetrieveCodingOutValidatorFactory
-import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
-import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
+import v4.retrieveCodingOut.model.reponse.RetrieveCodingOutFixture.{retrieveCodingOutMtdResponse, retrieveCodingOutResponse}
+import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -43,7 +42,7 @@ class RetrieveCodingOutControllerSpec
   private val taxYear              = "2021-22"
   private val source               = "hmrcHeld"
 
-  private val requestData = Def1_RetrieveCodingOutRequestData(
+  private val requestData = RetrieveCodingOutRequestData(
     nino = parsedNino,
     taxYear = TaxYear.fromMtd(taxYear),
     source = Some(MtdSource.parser(source))

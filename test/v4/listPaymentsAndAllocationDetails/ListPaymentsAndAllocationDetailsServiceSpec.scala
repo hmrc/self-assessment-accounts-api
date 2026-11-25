@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,9 @@ import api.models.domain.Nino
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{ServiceOutcome, ServiceSpec}
-import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
-import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
 import v4.listPaymentsAndAllocationDetails.model.response.ListPaymentsAndAllocationDetailsResponse
+import v4.listPaymentsAndAllocationDetails.model.response.ResponseFixtures.responseObject
 
 import scala.concurrent.Future
 
@@ -32,7 +31,7 @@ class ListPaymentsAndAllocationDetailsServiceSpec extends ServiceSpec {
   private val nino = "AA123456A"
 
   private val request: ListPaymentsAndAllocationDetailsRequestData =
-    Def1_ListPaymentsAndAllocationDetailsRequestData(Nino(nino), None, None, None)
+    ListPaymentsAndAllocationDetailsRequestData(Nino(nino), None, None, None)
 
   "ListPaymentsAndAllocationDetailsService" should {
     "service call successful" when {

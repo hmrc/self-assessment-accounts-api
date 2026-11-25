@@ -21,9 +21,8 @@ import api.models.domain.{DateRange, Nino}
 import api.models.outcomes.ResponseWrapper
 import play.api.Configuration
 import uk.gov.hmrc.http.StringContextOps
-import v4.listPaymentsAndAllocationDetails.def1.model.request.Def1_ListPaymentsAndAllocationDetailsRequestData
-import v4.listPaymentsAndAllocationDetails.def1.model.response.ResponseFixtures.responseObject
 import v4.listPaymentsAndAllocationDetails.model.request.ListPaymentsAndAllocationDetailsRequestData
+import v4.listPaymentsAndAllocationDetails.model.response.ResponseFixtures.responseObject
 
 import java.time.LocalDate
 import scala.concurrent.Future
@@ -37,7 +36,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
   private val paymentLotItem = "000001"
 
   private val validRequest: ListPaymentsAndAllocationDetailsRequestData =
-    Def1_ListPaymentsAndAllocationDetailsRequestData(
+    ListPaymentsAndAllocationDetailsRequestData(
       Nino(nino),
       Some(DateRange(LocalDate.parse(dateFrom), LocalDate.parse(dateTo))),
       Some(paymentLot),
@@ -94,11 +93,7 @@ class ListPaymentsAndAllocationDetailsConnectorSpec extends ConnectorSpec {
       "a valid request is supplied without the paymentLot query params" in new DesTest with Test {
         MockedAppConfig.featureSwitchConfig.returns(Configuration("des_hip_migration_1413.enabled" -> false))
         private val invalidRequest: ListPaymentsAndAllocationDetailsRequestData =
-          Def1_ListPaymentsAndAllocationDetailsRequestData(
-            Nino(nino),
-            Some(DateRange(LocalDate.parse(dateFrom), LocalDate.parse(dateTo))),
-            None,
-            None)
+          ListPaymentsAndAllocationDetailsRequestData(Nino(nino), Some(DateRange(LocalDate.parse(dateFrom), LocalDate.parse(dateTo))), None, None)
 
         val queryParams: Seq[(String, String)] =
           List(

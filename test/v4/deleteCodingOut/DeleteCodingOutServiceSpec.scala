@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.ServiceSpec
-import v4.deleteCodingOut.def1.model.request.Def1_DeleteCodingOutRequestData
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import scala.concurrent.Future
@@ -31,7 +30,7 @@ class DeleteCodingOutServiceSpec extends ServiceSpec {
 
   private val taxYear = TaxYear.fromMtd("2019-20")
 
-  private val requestData: DeleteCodingOutRequestData = Def1_DeleteCodingOutRequestData(nino, taxYear)
+  private val requestData: DeleteCodingOutRequestData = DeleteCodingOutRequestData(nino, taxYear)
 
   "DeleteCodingOutService" should {
     "return mapped result" when {

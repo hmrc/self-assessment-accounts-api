@@ -18,7 +18,6 @@ package v4.retrieveBalanceAndTransactions.model.response
 
 import play.api.libs.functional.syntax.*
 import play.api.libs.json.{JsPath, Json, OWrites, Reads}
-import v4.retrieveBalanceAndTransactions.def1.model.response.*
 
 case class RetrieveBalanceAndTransactionsResponse(
     balanceDetails: BalanceDetails,

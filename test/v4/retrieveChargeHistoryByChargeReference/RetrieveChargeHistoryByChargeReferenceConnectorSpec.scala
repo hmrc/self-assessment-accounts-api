@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,8 @@ import api.models.outcomes.ResponseWrapper
 import api.utils.DateUtils.isoDateTimeStamp
 import common.models.ChargeReference
 import uk.gov.hmrc.http.StringContextOps
-import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.validChargeHistoryResponseObject
 import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.Future
@@ -63,7 +62,7 @@ class RetrieveChargeHistoryByChargeReferenceConnectorSpec extends ConnectorSpec 
   def hipQueryParams: Seq[(String, String)] =
     Seq("idType" -> "NINO", "idValue" -> nino, "chargeReference" -> chargeReference)
 
-  private val validRequest: RetrieveChargeHistoryByChargeReferenceRequestData = Def1_RetrieveChargeHistoryByChargeReferenceRequestData(
+  private val validRequest: RetrieveChargeHistoryByChargeReferenceRequestData = RetrieveChargeHistoryByChargeReferenceRequestData(
     Nino(nino),
     ChargeReference(chargeReference)
   )

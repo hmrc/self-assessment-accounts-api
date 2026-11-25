@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,5 @@
 package v4.deleteCodingOut.model.request
 
 import api.models.domain.{Nino, TaxYear}
-import v4.deleteCodingOut.DeleteCodingOutSchema
 
-trait DeleteCodingOutRequestData {
-  val nino: Nino
-  val taxYear: TaxYear
-
-  val schema: DeleteCodingOutSchema
-}
+case class DeleteCodingOutRequestData(nino: Nino, taxYear: TaxYear)

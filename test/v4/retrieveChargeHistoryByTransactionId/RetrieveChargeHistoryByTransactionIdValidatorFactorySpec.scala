@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,22 @@
 
 package v4.retrieveChargeHistoryByTransactionId
 
-import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import v4.retrieveChargeHistoryByTransactionId.def1.Def1_RetrieveChargeHistoryByTransactionIdValidator
 
-class RetrieveChargeHistoryByTransactionIdValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
+class RetrieveChargeHistoryByTransactionIdValidatorFactorySpec extends UnitSpec {
 
-  private val validNino    = "AA123456A"
-  private val validTaxYear = "2019-20"
+  private val validNino          = "AA123456A"
+  private val validTransactionId = "717f3agW678f"
 
   private val validatorFactory = new RetrieveChargeHistoryByTransactionIdValidatorFactory
 
   "running a validation" should {
     "return the parsed domain object" when {
       "given a valid request" in {
-        val result = validatorFactory.validator(validNino, validTaxYear)
-        result shouldBe a[Def1_RetrieveChargeHistoryByTransactionIdValidator]
-
+        val result = validatorFactory.validator(validNino, validTransactionId)
+        result shouldBe a[RetrieveChargeHistoryByTransactionIdValidator]
       }
     }
-
   }
 
 }

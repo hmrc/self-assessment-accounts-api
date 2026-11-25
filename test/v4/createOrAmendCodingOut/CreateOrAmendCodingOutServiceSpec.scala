@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,8 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.errors.*
 import api.models.outcomes.ResponseWrapper
 import api.services.{ServiceOutcome, ServiceSpec}
-import v4.createOrAmendCodingOut.def1.model.request.Def1_CreateOrAmendCodingOutRequestData
-import v4.createOrAmendCodingOut.def1.models.request.CodingOutFixtures.validRequestBody
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
+import v4.createOrAmendCodingOut.models.request.CodingOutFixtures.validRequestBody
 
 import scala.concurrent.Future
 
@@ -33,7 +32,7 @@ class CreateOrAmendCodingOutServiceSpec extends ServiceSpec {
   private val taxYear = TaxYear.fromMtd("2019-20")
 
   private val request: CreateOrAmendCodingOutRequestData =
-    Def1_CreateOrAmendCodingOutRequestData(nino, taxYear, validRequestBody)
+    CreateOrAmendCodingOutRequestData(nino, taxYear, validRequestBody)
 
   "CreateOrAmendCodingOutService" should {
     "return mapped result" when {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,9 @@ import api.models.outcomes.ResponseWrapper
 import api.routing.{Version, Version4}
 import play.api.Configuration
 import play.api.mvc.Result
-import v4.retrieveChargeHistoryByTransactionId.def1.RetrieveChargeHistoryFixture.*
-import v4.retrieveChargeHistoryByTransactionId.def1.models.request.Def1_RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.request.RetrieveChargeHistoryByTransactionIdRequestData
 import v4.retrieveChargeHistoryByTransactionId.model.response.RetrieveChargeHistoryResponse
+import v4.retrieveChargeHistoryByTransactionId.model.responses.RetrieveChargeHistoryFixture.{mtdMultipleResponse, validChargeHistoryResponseObject}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -42,7 +41,7 @@ class RetrieveChargeHistoryByTransactionIdControllerSpec
   private val transactionId = "anId"
 
   private val requestData: RetrieveChargeHistoryByTransactionIdRequestData =
-    Def1_RetrieveChargeHistoryByTransactionIdRequestData(nino = parsedNino, transactionId = TransactionId(transactionId))
+    RetrieveChargeHistoryByTransactionIdRequestData(nino = parsedNino, transactionId = TransactionId(transactionId))
 
   val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 

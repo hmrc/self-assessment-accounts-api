@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,13 @@
 
 package v4.optOutOfCodingOut.model.response
 
-import api.utils.JsonWritesUtil.writesFrom
-import play.api.libs.json.{JsObject, Json, OWrites}
-import v4.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
+import play.api.libs.json.{Json, Reads, Writes}
 
-trait OptOutOfCodingOutResponse
+case class OptOutOfCodingOutResponse(processingDate: String)
 
 object OptOutOfCodingOutResponse {
+  implicit val writes: Writes[OptOutOfCodingOutResponse] = Json.writes[OptOutOfCodingOutResponse]
 
-  implicit val writes: OWrites[OptOutOfCodingOutResponse] = writesFrom { case def1: Def1_OptOutOfCodingOutResponse =>
-    Json.toJson(def1).as[JsObject]
-  }
+  implicit val reads: Reads[OptOutOfCodingOutResponse] = Json.reads[OptOutOfCodingOutResponse]
 
 }

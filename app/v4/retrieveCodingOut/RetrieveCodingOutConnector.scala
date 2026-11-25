@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,16 +37,15 @@ class RetrieveCodingOutConnector @Inject() (val http: HttpClientV2, val appConfi
       correlationId: String): Future[DownstreamOutcome[RetrieveCodingOutResponse]] = {
 
     import request.*
-    import schema.*
 
     val queryParams = Seq("view" -> source).collect { case (key, Some(value)) =>
       key -> value.toDownstreamSource
     }
 
     val downstreamUri = if (taxYear.useTaxYearSpecificApi) {
-      Ifs1891Uri[DownstreamResp](s"income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/${nino.value}")
+      Ifs1891Uri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/${taxYear.asTysDownstream}/${nino.value}")
     } else {
-      Ifs1891Uri[DownstreamResp](s"income-tax/accounts/self-assessment/collection/tax-code/${nino.value}/${taxYear.asMtd}")
+      Ifs1891Uri[RetrieveCodingOutResponse](s"income-tax/accounts/self-assessment/collection/tax-code/${nino.value}/${taxYear.asMtd}")
     }
 
     get(uri = downstreamUri, queryParams = queryParams)

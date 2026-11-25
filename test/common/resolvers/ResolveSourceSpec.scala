@@ -16,9 +16,9 @@
 
 package common.resolvers
 
+import api.models.errors.*
 import api.utils.UnitSpec
 import cats.data.Validated.{Invalid, Valid}
-import api.models.errors.*
 import common.models.MtdSource
 
 class ResolveSourceSpec extends UnitSpec {

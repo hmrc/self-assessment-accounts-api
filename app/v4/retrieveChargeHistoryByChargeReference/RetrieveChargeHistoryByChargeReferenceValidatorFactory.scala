@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 package v4.retrieveChargeHistoryByChargeReference
 
 import api.controllers.validators.Validator
-import v4.retrieveChargeHistoryByChargeReference.RetrieveChargeHistoryByChargeReferenceSchema.Def1
-import v4.retrieveChargeHistoryByChargeReference.def1.Def1_RetrieveChargeHistoryByChargeReferenceValidator
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -26,13 +24,8 @@ import javax.inject.{Inject, Singleton}
 @Singleton
 class RetrieveChargeHistoryByChargeReferenceValidatorFactory @Inject() {
 
-  def validator(nino: String, taxYear: String): Validator[RetrieveChargeHistoryByChargeReferenceRequestData] = {
-
-    val schema = RetrieveChargeHistoryByChargeReferenceSchema.schemaFor(nino, taxYear)
-
-    schema match {
-      case Def1 => new Def1_RetrieveChargeHistoryByChargeReferenceValidator(nino, taxYear)
-    }
+  def validator(nino: String, chargeReference: String): Validator[RetrieveChargeHistoryByChargeReferenceRequestData] = {
+    new RetrieveChargeHistoryByChargeReferenceValidator(nino, chargeReference)
   }
 
 }

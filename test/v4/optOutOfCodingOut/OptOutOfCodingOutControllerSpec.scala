@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,8 @@ import api.routing.{Version, Version4}
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v4.optOutOfCodingOut.def1.model.request.Def1_OptOutOfCodingOutRequestData
-import v4.optOutOfCodingOut.def1.model.response.Def1_OptOutOfCodingOutResponse
 import v4.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
+import v4.optOutOfCodingOut.model.response.OptOutOfCodingOutResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -73,12 +72,12 @@ class OptOutOfCodingOutControllerSpec
   private trait Test extends ControllerTest with AuditEventChecking[GenericAuditDetail] {
     private val taxYear = "2023-24"
 
-    protected val requestData: OptOutOfCodingOutRequestData = Def1_OptOutOfCodingOutRequestData(
+    protected val requestData: OptOutOfCodingOutRequestData = OptOutOfCodingOutRequestData(
       nino = parsedNino,
       taxYear = TaxYear.fromMtd(taxYear)
     )
 
-    protected val response: Def1_OptOutOfCodingOutResponse = Def1_OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
+    protected val response: OptOutOfCodingOutResponse = OptOutOfCodingOutResponse(processingDate = "2020-12-17T09:30:47Z")
 
     override protected val controller: OptOutOfCodingOutController = new OptOutOfCodingOutController(
       authService = mockEnrolmentsAuthService,

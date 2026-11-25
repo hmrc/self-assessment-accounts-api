@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 package v4.retrieveCodingOutStatus
 
 import api.controllers.validators.Validator
-import v4.retrieveCodingOutStatus.RetrieveCodingOutStatusSchema.Def1
-import v4.retrieveCodingOutStatus.def1.Def1_RetrieveCodingOutStatusValidator
 import v4.retrieveCodingOutStatus.model.request.RetrieveCodingOutStatusRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -28,11 +26,7 @@ class RetrieveCodingOutStatusValidatorFactory @Inject() {
 
   def validator(nino: String, taxYear: String): Validator[RetrieveCodingOutStatusRequestData] = {
 
-    val schema = RetrieveCodingOutStatusSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_RetrieveCodingOutStatusValidator(nino, taxYear)
-    }
+    new RetrieveCodingOutStatusValidator(nino, taxYear)
 
   }
 

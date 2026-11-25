@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,8 @@ import common.models.ChargeReference
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v4.retrieveChargeHistoryByChargeReference.def1.model.request.Def1_RetrieveChargeHistoryByChargeReferenceRequestData
-import v4.retrieveChargeHistoryByChargeReference.def1.model.response.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByChargeReference.model.request.RetrieveChargeHistoryByChargeReferenceRequestData
+import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryFixture.*
 import v4.retrieveChargeHistoryByChargeReference.model.response.RetrieveChargeHistoryResponse
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -44,7 +43,7 @@ class RetrieveChargeHistoryByChargeReferenceControllerSpec
   private val chargeReference = "anChargeReference"
 
   private val requestData: RetrieveChargeHistoryByChargeReferenceRequestData =
-    Def1_RetrieveChargeHistoryByChargeReferenceRequestData(nino = parsedNino, chargeReference = ChargeReference(chargeReference))
+    RetrieveChargeHistoryByChargeReferenceRequestData(nino = parsedNino, chargeReference = ChargeReference(chargeReference))
 
   val response: RetrieveChargeHistoryResponse = validChargeHistoryResponseObject
 

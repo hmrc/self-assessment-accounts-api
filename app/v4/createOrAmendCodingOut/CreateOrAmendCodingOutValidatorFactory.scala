@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,6 @@ package v4.createOrAmendCodingOut
 import api.controllers.validators.Validator
 import config.SaAccountsConfig
 import play.api.libs.json.JsValue
-import v4.createOrAmendCodingOut.CreateOrAmendCodingOutSchema.Def1
-import v4.createOrAmendCodingOut.def1.Def1_CreateOrAmendCodingOutValidator
 import v4.createOrAmendCodingOut.model.request.CreateOrAmendCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -34,11 +32,7 @@ class CreateOrAmendCodingOutValidatorFactory @Inject() {
                 temporalValidationEnabled: Boolean,
                 appConfig: SaAccountsConfig): Validator[CreateOrAmendCodingOutRequestData] = {
 
-    val schema = CreateOrAmendCodingOutSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_CreateOrAmendCodingOutValidator(nino, taxYear, body, temporalValidationEnabled, appConfig)
-    }
+    new CreateOrAmendCodingOutValidator(nino, taxYear, body, temporalValidationEnabled, appConfig)
 
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import api.models.errors.{ErrorWrapper, InternalError}
 import api.models.outcomes.ResponseWrapper
 import api.services.DownstreamResponseMappingSupport
 import api.utils.Logging
-import v4.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
 import v4.retrieveCodingOut.model.response.RetrieveCodingOutResponse
 
 trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
@@ -39,7 +38,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
       )
 
     desResponseWrapper.responseData match {
-      case retrieveCodingOutDetailsResponse: Def1_RetrieveCodingOutResponse
+      case retrieveCodingOutDetailsResponse: RetrieveCodingOutResponse
           if taxYear.year < currentTaxYear.year && idsMissing(retrieveCodingOutDetailsResponse) =>
         logger.warn(
           s"[${endpointLogContext.controllerName}][${endpointLogContext.endpointName}] " +
@@ -52,7 +51,7 @@ trait MappingSupportDownstream extends DownstreamResponseMappingSupport {
     }
   }
 
-  def idsMissing(response: Def1_RetrieveCodingOutResponse): Boolean = {
+  def idsMissing(response: RetrieveCodingOutResponse): Boolean = {
     import response.*
 
     lazy val taxCodeComponentsIdsMissing = taxCodeComponents.fold(false)(taxCodeComponents => {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,20 @@
 
 package v4.retrieveCodingOutStatus.model.response
 
-import api.utils.JsonWritesUtil
+import api.models.domain.TaxYear
 import play.api.libs.json.*
-import v4.retrieveCodingOutStatus.def1.model.response.Def1_RetrieveCodingOutStatusResponse
 
-trait RetrieveCodingOutStatusResponse
+case class RetrieveCodingOutStatusResponse(processingDate: String, nino: String, taxYear: TaxYear, optOutIndicator: Boolean)
 
-object RetrieveCodingOutStatusResponse extends JsonWritesUtil {
+object RetrieveCodingOutStatusResponse {
 
-  implicit val writes: OWrites[RetrieveCodingOutStatusResponse] = writesFrom { case def1: Def1_RetrieveCodingOutStatusResponse =>
-    Json.toJson(def1).as[JsObject]
-  }
+  private implicit val taxYearFormat: Format[TaxYear] = Format(
+    implicitly[Reads[String]].map(TaxYear.fromDownstream),
+    TaxYear.writes
+  )
+
+  implicit val reads: Reads[RetrieveCodingOutStatusResponse] = Json.reads[RetrieveCodingOutStatusResponse]
+
+  implicit val writes: OWrites[RetrieveCodingOutStatusResponse] = Json.writes[RetrieveCodingOutStatusResponse]
 
 }

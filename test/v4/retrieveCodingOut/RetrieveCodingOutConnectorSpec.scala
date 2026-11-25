@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,7 @@ import api.models.domain.{Nino, TaxYear}
 import api.models.outcomes.ResponseWrapper
 import common.models.MtdSource.hmrcHeld
 import uk.gov.hmrc.http.StringContextOps
-import v4.retrieveCodingOut.def1.model.reponse.RetrieveCodingOutFixture.*
-import v4.retrieveCodingOut.def1.model.request.Def1_RetrieveCodingOutRequestData
+import v4.retrieveCodingOut.model.reponse.RetrieveCodingOutFixture.retrieveCodingOutResponse
 import v4.retrieveCodingOut.model.request.RetrieveCodingOutRequestData
 
 import scala.concurrent.Future
@@ -41,7 +40,7 @@ class RetrieveCodingOutConnectorSpec extends ConnectorSpec {
 
     def connectorRequest(taxYear: TaxYear): Unit = {
 
-      val request: RetrieveCodingOutRequestData = Def1_RetrieveCodingOutRequestData(nino, taxYear, Some(source))
+      val request: RetrieveCodingOutRequestData = RetrieveCodingOutRequestData(nino, taxYear, Some(source))
 
       val outcome = Right(ResponseWrapper(correlationId, retrieveCodingOutResponse))
 

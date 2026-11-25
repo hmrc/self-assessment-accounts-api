@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package v4.retrieveCodingOutStatus
 
 import api.models.utils.JsonErrorValidators
 import api.utils.UnitSpec
-import v4.retrieveCodingOutStatus.def1.Def1_RetrieveCodingOutStatusValidator
 
 class RetrieveCodingOutStatusValidatorFactorySpec extends UnitSpec with JsonErrorValidators {
 
@@ -31,7 +30,7 @@ class RetrieveCodingOutStatusValidatorFactorySpec extends UnitSpec with JsonErro
     "return the parsed domain object" when {
       "given a valid request" in {
         val result = validatorFactory.validator(validNino, validTaxYear)
-        result shouldBe a[Def1_RetrieveCodingOutStatusValidator]
+        result shouldBe a[RetrieveCodingOutStatusValidator]
 
       }
     }

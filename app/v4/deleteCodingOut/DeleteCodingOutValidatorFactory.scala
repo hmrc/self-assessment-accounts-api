@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,8 +18,6 @@ package v4.deleteCodingOut
 
 import api.controllers.validators.Validator
 import config.SaAccountsConfig
-import v4.deleteCodingOut.DeleteCodingOutSchema.Def1
-import v4.deleteCodingOut.def1.Def1_DeleteCodingOutValidator
 import v4.deleteCodingOut.model.request.DeleteCodingOutRequestData
 
 import javax.inject.Singleton
@@ -29,11 +27,7 @@ class DeleteCodingOutValidatorFactory {
 
   def validator(nino: String, taxYear: String, appConfig: SaAccountsConfig): Validator[DeleteCodingOutRequestData] = {
 
-    val schema = DeleteCodingOutSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_DeleteCodingOutValidator(nino: String, taxYear: String, appConfig: SaAccountsConfig)
-    }
+    new DeleteCodingOutValidator(nino, taxYear, appConfig)
 
   }
 

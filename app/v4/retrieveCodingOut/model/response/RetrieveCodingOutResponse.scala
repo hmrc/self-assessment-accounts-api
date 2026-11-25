@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,15 @@
 
 package v4.retrieveCodingOut.model.response
 
-import api.utils.JsonWritesUtil
-import play.api.libs.json.{JsObject, Json, OWrites}
-import v4.retrieveCodingOut.def1.model.response.Def1_RetrieveCodingOutResponse
+import play.api.libs.json.{Json, Reads, Writes}
 
-trait RetrieveCodingOutResponse
+case class RetrieveCodingOutResponse(taxCodeComponents: Option[TaxCodeComponentsObject],
+                                     unmatchedCustomerSubmissions: Option[UnmatchedCustomerSubmissionsObject])
 
-object RetrieveCodingOutResponse extends JsonWritesUtil {
+object RetrieveCodingOutResponse {
 
-  implicit val writes: OWrites[RetrieveCodingOutResponse] = writesFrom { case def1: Def1_RetrieveCodingOutResponse =>
-    Json.toJson(def1).as[JsObject]
-  }
+  implicit val writes: Writes[RetrieveCodingOutResponse] = Json.writes[RetrieveCodingOutResponse]
+
+  implicit val reads: Reads[RetrieveCodingOutResponse] = Json.reads[RetrieveCodingOutResponse]
 
 }

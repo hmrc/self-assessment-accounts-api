@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,6 @@ import api.routing.{Version, Version4}
 import play.api.Configuration
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
-import v4.optInToCodingOut.def1.model.request.Def1_OptInToCodingOutRequestData
 import v4.optInToCodingOut.model.request.OptInToCodingOutRequestData
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -82,7 +81,7 @@ class OptInToCodingOutControllerSpec
 
     private val taxYear = "2023-24"
 
-    protected val requestData: OptInToCodingOutRequestData = Def1_OptInToCodingOutRequestData(
+    protected val requestData: OptInToCodingOutRequestData = OptInToCodingOutRequestData(
       nino = parsedNino,
       taxYear = TaxYear.fromMtd(taxYear)
     )

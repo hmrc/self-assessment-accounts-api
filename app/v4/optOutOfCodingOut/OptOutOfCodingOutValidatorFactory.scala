@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 HM Revenue & Customs
+ * Copyright 2026 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,6 @@
 package v4.optOutOfCodingOut
 
 import api.controllers.validators.Validator
-import v4.optOutOfCodingOut.OptOutOfCodingOutSchema.Def1
-import v4.optOutOfCodingOut.def1.Def1_OptOutOfCodingOutValidator
 import v4.optOutOfCodingOut.model.request.OptOutOfCodingOutRequestData
 
 import javax.inject.{Inject, Singleton}
@@ -28,11 +26,7 @@ class OptOutOfCodingOutValidatorFactory @Inject() {
 
   def validator(nino: String, taxYear: String): Validator[OptOutOfCodingOutRequestData] = {
 
-    val schema = OptOutOfCodingOutSchema.schemaFor(taxYear)
-
-    schema match {
-      case Def1 => new Def1_OptOutOfCodingOutValidator(nino, taxYear)
-    }
+    new OptOutOfCodingOutValidator(nino, taxYear)
 
   }
 
